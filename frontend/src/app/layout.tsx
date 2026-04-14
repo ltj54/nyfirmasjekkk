@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const sans = Manrope({
+const sans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const heading = Cormorant_Garamond({
-  variable: "--font-heading",
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Nye AS med varsellamper",
-  description:
-    "En Next.js-frontend for B2B-vurdering av nye aksjeselskaper med enkel risikovisning.",
+  title: "nyfirmasjekk — B2B-vurdering av nye selskaper",
+  description: "Presis risikovisning for nye aksjeselskaper basert på åpne data.",
 };
 
 export default function RootLayout({
@@ -27,9 +27,11 @@ export default function RootLayout({
   return (
     <html
       lang="no"
-      className={`${sans.variable} ${heading.variable} h-full antialiased`}
+      className={`${sans.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full bg-[#fafafa] text-[#171717] selection:bg-[#064e3b]/10 selection:text-[#064e3b]">
+        {children}
+      </body>
     </html>
   );
 }
