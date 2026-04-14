@@ -163,6 +163,7 @@ const pageInfo=document.getElementById("page-info");
 
 document.addEventListener("DOMContentLoaded",async()=>{await loadMetadata();await searchCompanies(true);});
 form.addEventListener("submit",async event=>{event.preventDefault();state.page=0;await searchCompanies(false);});
+daysInput.addEventListener("change",async()=>{state.page=0;await searchCompanies(false);});
 prevPageButton.addEventListener("click",async()=>{if(state.page===0)return;state.page-=1;await searchCompanies(false);});
 nextPageButton.addEventListener("click",async()=>{if(state.page+1>=state.totalPages)return;state.page+=1;await searchCompanies(false);});
 

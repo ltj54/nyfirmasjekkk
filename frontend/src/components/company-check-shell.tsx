@@ -66,7 +66,12 @@ export function CompanyCheckShell() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/company-check/${term.trim()}`, {
+      const isOrgNumber = /^\d{9}$/.test(term.trim());
+      const endpoint = isOrgNumber 
+        ? `/api/company-check/${term.trim()}`
+        : `/api/company-check/search?q=${encodeURIComponent(term.trim())}`;
+      
+      const response = await fetch(endpoint, {
         cache: "no-store",
       });
 
@@ -77,13 +82,16 @@ export function CompanyCheckShell() {
       }
 
       startTransition(() => {
-        // Handle both old and new API formats for compatibility during migration
-        if (payload.score) {
+        if (isOrgNumber && payload.score) {
           setSelectedCompany(payload as CompanyDetails);
         } else {
-          // Map old format to new format if necessary, or just use as is for now
-          // For simplicity, we assume v1 API is active
-          setSelectedCompany(payload as CompanyDetails);
+          // It's a search result list
+          const items = Array.isArray(payload) ? payload : payload.items || [];
+          setRecentCompanies(items);
+          setSelectedCompany(null);
+          if (items.length === 0) {
+            setError("Ingen selskaper funnet.");
+          }
         }
       });
     } catch (caughtError) {
@@ -176,6 +184,15 @@ export function CompanyCheckShell() {
                   <button
                     className="group flex items-center gap-2 rounded-full border border-[#e5e5e5] bg-white px-5 py-2 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md"
                     key={filter.id}
+                    onClick={() => {
+                      if (filter.id === "days") {
+                        // For demo/simplicity, we just cycle or set a specific value
+                        // In a real app, this might open a dropdown or cycle values
+                        const nextValue = searchTerm === "90" ? "30" : "90";
+                        setSearchTerm(nextValue);
+                        handleSearch(nextValue);
+                      }
+                    }}
                   >
                     {filter.label}
                     <ChevronDown className="size-3.5 text-[#a3a3a3] group-hover:text-[#064e3b]" />
@@ -215,7 +232,13 @@ export function CompanyCheckShell() {
                   <h2 className="text-2xl font-extrabold text-[#171717]">Nye selskaper</h2>
                   <p className="text-[14px] font-medium text-[#737373]">Siste 30 dager i hele landet</p>
                 </div>
-                <Button variant="outline" className="rounded-full border-[#e5e5e5] font-bold text-[#171717]">Se alle</Button>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full border-[#e5e5e5] font-bold text-[#171717]"
+                  onClick={() => fetchRecent()}
+                >
+                  Se alle
+                </Button>
               </div>
 
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -258,6 +281,8 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
     YELLOW: "bg-amber-500",
     RED: "bg-rose-500",
   };
+  
+  const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
 
   return (
     <div
@@ -265,7 +290,7 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
       onClick={onClick}
     >
       <div className="mb-4 flex items-start justify-between">
-        <div className={`size-3 rounded-full ${scoreColors[company.scoreColor]} shadow-sm`} />
+        <div className={`size-3 rounded-full ${colorClass} shadow-sm`} />
         <Badge variant="outline" className="rounded-md border-[#f0f0f0] bg-[#fafafa] px-2 py-0 text-[10px] font-bold text-[#737373]">
           {company.organizationFormCode}
         </Badge>
@@ -313,8 +338,12 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
     RED: { icon: AlertCircle, text: "bg-rose-50 text-rose-700 border-rose-100", iconColor: "text-rose-500" },
   };
 
-  const config = scoreConfig[company.scoreColor];
+  const config = scoreConfig[company.scoreColor] || scoreConfig.YELLOW;
   const StatusIcon = config.icon;
+
+  const scoreLabel = company.score?.scoreLabel || "Ukjent status";
+  const scoreReasons = company.score?.scoreReasons || [];
+  const primaryReason = scoreReasons.length > 0 ? scoreReasons[0] : "Ingen begrunnelse oppgitt.";
 
   return (
     <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -346,7 +375,7 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
               </div>
             </div>
             <div className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-[14px] font-extrabold ${config.text} border`}>
-              {company.score.scoreLabel}
+              {scoreLabel}
             </div>
           </div>
 
@@ -364,7 +393,7 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
 
           {/* Summary Box */}
           <div className={`mt-12 rounded-2xl p-6 text-[15px] font-medium leading-relaxed ${config.text} border border-opacity-50`}>
-            {company.score.scoreReasons[0]}
+            {primaryReason}
           </div>
         </div>
 
@@ -388,10 +417,10 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
 
       {/* Findings Grid */}
       <div className="mt-8 grid gap-6 md:grid-cols-2">
-        {company.score.scoreReasons.slice(1).map((reason, i) => (
+        {scoreReasons.slice(1).map((reason, i) => (
           <div key={i} className="rounded-2xl border border-[#eeeeee] bg-white p-6 shadow-sm">
             <div className="mb-3 flex items-center gap-2">
-              <div className={`size-2 rounded-full ${scoreColors[company.scoreColor]}`} />
+              <div className={`size-2 rounded-full ${scoreColors[company.scoreColor] || scoreColors.YELLOW}`} />
               <h4 className="text-[14px] font-bold text-[#171717]">Analysepunkt</h4>
             </div>
             <p className="text-[14px] leading-relaxed text-[#737373] font-medium">
