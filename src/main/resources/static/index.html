@@ -51,17 +51,17 @@
                             <button id="submit-button" type="submit">Søk</button>
                         </div>
                         <div class="filters">
-                            <select id="days">
+                            <select id="days" aria-label="Antall dager registrert">
                                 <option value="7">Registrert siste 7 dager</option>
                                 <option value="30" selected>Registrert siste 30 dager</option>
                                 <option value="90">Registrert siste 90 dager</option>
                                 <option value="365">Registrert siste 12 måneder</option>
                             </select>
-                            <select id="county"><option value="">Alle fylker</option></select>
-                            <input id="municipality" placeholder="Kommune">
-                            <input id="naceCode" placeholder="Næringskode / bransje">
-                            <select id="organizationForm"><option value="">Alle organisasjonsformer</option></select>
-                            <select id="score"><option value="">Alle vurderinger</option></select>
+                            <select id="county" aria-label="Fylke"><option value="">Alle fylker</option></select>
+                            <input id="municipality" placeholder="Kommune" aria-label="Kommune">
+                            <input id="naceCode" placeholder="Næringskode / bransje" aria-label="Næringskode eller bransje">
+                            <select id="organizationForm" aria-label="Organisasjonsform"><option value="">Alle organisasjonsformer</option></select>
+                            <select id="score" aria-label="Vurdering"><option value="">Alle vurderinger</option></select>
                         </div>
                     </form>
 
@@ -170,13 +170,16 @@ nextPageButton.addEventListener("click",async()=>{if(state.page+1>=state.totalPa
 async function loadMetadata(){
     try{
         const response=await fetch("/api/v1/metadata/filters");
-        if(!response.ok)throw new Error("Klarte ikke hente filterdata.");
+        if(!response.ok){
+            error.textContent="Klarte ikke hente filterdata.";
+            return;
+        }
         const data=await response.json();
         countyInput.innerHTML=`<option value="">Alle fylker</option>${(data.counties||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
         organizationFormInput.innerHTML=`<option value="">Alle organisasjonsformer</option>${(data.organizationForms||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
         scoreInput.innerHTML=`<option value="">Alle vurderinger</option>${(data.scores||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(capitalize(item.toLowerCase()))}</option>`).join("")}`;
     }catch(err){
-        error.textContent=err.message||"Klarte ikke hente metadata.";
+        error.textContent="Klarte ikke hente metadata.";
     }
 }
 
@@ -196,7 +199,8 @@ async function searchCompanies(isDefault){
         const response=await fetch(`/api/v1/companies?${params.toString()}`);
         if(!response.ok){
             const payload=await response.json().catch(()=>({}));
-            throw new Error(payload.detail||"Klarte ikke hente virksomheter.");
+            listError.textContent=payload.detail||"Klarte ikke hente virksomheter.";
+            return;
         }
 
         const data=await response.json();

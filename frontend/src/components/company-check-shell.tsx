@@ -16,7 +16,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-import type { CompanyDetails, CompanySummary, ScoreColor } from "@/lib/company-check";
+import type { CompanyDetails, CompanySummary } from "@/lib/company-check";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -39,7 +39,7 @@ export function CompanyCheckShell() {
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   // Fetch recent companies on mount
   useEffect(() => {
@@ -78,7 +78,8 @@ export function CompanyCheckShell() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.detail ?? "Klarte ikke hente selskapsdata.");
+        setError(payload.detail ?? "Klarte ikke hente selskapsdata.");
+        return;
       }
 
       startTransition(() => {
@@ -94,8 +95,8 @@ export function CompanyCheckShell() {
           }
         }
       });
-    } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Noe gikk galt.");
+    } catch {
+      setError("Noe gikk galt ved kontakt med serveren.");
     } finally {
       setIsLoading(false);
     }
