@@ -11,9 +11,12 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class CompanyCheckService {
@@ -35,15 +38,20 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
-        LocalDate fraDato = LocalDate.now(clock).minusDays(dagerSiden);
-        var searchResponse = brregClient.sokEtterNyeAS(fraDato);
+        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS"));
+    }
 
-        if (searchResponse == null || searchResponse._embedded() == null) {
+    public List<CompanyCheck> sok(CompanySearchRequest request) {
+        var searchResponse = brregClient.sok(byggFilter(request));
+
+        if (searchResponse == null || searchResponse._embedded() == null || searchResponse._embedded().enheter() == null) {
             return List.of();
         }
 
         return searchResponse._embedded().enheter().stream()
-                .map(enhet -> vurderEnhet(enhet, null))
+                .filter(Objects::nonNull)
+                .filter(enhet -> matcherLokalFiltrering(enhet, request))
+                .map(this::vurderFraSok)
                 .toList();
     }
 
@@ -51,6 +59,10 @@ public class CompanyCheckService {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         var roller = brregClient.hentRoller(organisasjonsnummer);
         return vurderEnhet(enhet, roller);
+    }
+
+    private CompanyCheck vurderFraSok(EnhetResponse enhet) {
+        return vurderEnhet(enhet, brregClient.hentRoller(enhet.organisasjonsnummer()));
     }
 
     private CompanyCheck vurderEnhet(EnhetResponse enhet, RollerResponse roller) {
@@ -71,6 +83,8 @@ public class CompanyCheckService {
         String modenhet = erNyttSelskap(enhet) ? "Nytt selskap" : "Etablert selskap";
         String naeringskode = hentNaeringskodeBeskrivelse(enhet);
         String aktivitet = hentPrimarAktivitet(enhet);
+        String dagligLeder = hentRollenavn(roller, "daglig leder");
+        List<String> styre = hentRoller(roller, "styre");
         String lokasjon = utledLokasjon(enhet);
 
         return new CompanyCheck(
@@ -85,6 +99,8 @@ public class CompanyCheckService {
                         modenhet,
                         naeringskode,
                         aktivitet,
+                        dagligLeder,
+                        styre,
                         enhet.hjemmeside(),
                         enhet.epostadresse(),
                         førsteIkkeTom(enhet.telefon(), enhet.mobil()),
@@ -236,19 +252,23 @@ public class CompanyCheckService {
     }
 
     private boolean harRolle(RollerResponse roller, String needle) {
+        return !hentRoller(roller, needle).isEmpty();
+    }
+
+    private List<String> hentRoller(RollerResponse roller, String needle) {
         if (roller == null || roller.rollegrupper() == null) {
-            return false;
+            return List.of();
         }
 
         return roller.rollegrupper().stream()
                 .filter(Objects::nonNull)
-                .flatMap(gruppe -> gruppe.roller() == null ? java.util.stream.Stream.empty() : gruppe.roller().stream())
-                .map(RollerResponse.Rolle::type)
-                .filter(Objects::nonNull)
-                .map(RollerResponse.Rolletype::beskrivelse)
-                .filter(Objects::nonNull)
-                .map(value -> value.toLowerCase(Locale.ROOT))
-                .anyMatch(value -> value.contains(needle));
+                .flatMap(gruppe -> gruppe.roller() == null ? Stream.empty() : gruppe.roller().stream())
+                .filter(this::erAktivRolle)
+                .filter(rolle -> rolleMatcher(rolle, needle))
+                .map(this::rollenavn)
+                .filter(this::hasText)
+                .distinct()
+                .toList();
     }
 
     private boolean harKontaktdata(EnhetResponse enhet) {
@@ -314,6 +334,12 @@ public class CompanyCheckService {
         return enhet.aktivitet().getFirst();
     }
 
+    private String hentRollenavn(RollerResponse roller, String needle) {
+        return hentRoller(roller, needle).stream()
+                .findFirst()
+                .orElse(null);
+    }
+
     private String lagSammendrag(TrafficLight status, List<CheckFinding> funn) {
         long red = funn.stream().filter(f -> f.severity() == TrafficLight.RED).count();
         long yellow = funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
@@ -348,5 +374,74 @@ public class CompanyCheckService {
             }
         }
         return null;
+    }
+
+    private Map<String, String> byggFilter(CompanySearchRequest request) {
+        Map<String, String> filter = new HashMap<>();
+        filter.put("size", "25");
+
+        if (request.dager() > 0) {
+            filter.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(request.dager()).toString());
+        }
+        if (hasText(request.navn())) {
+            filter.put("navn", request.navn().trim());
+            filter.put("navnMetodeForSoek", "FORTLOEPENDE");
+        }
+        if (hasText(request.organisasjonsform())) {
+            filter.put("organisasjonsform.kode", request.organisasjonsform().trim().toUpperCase(Locale.ROOT));
+        }
+        if (hasText(request.kommune())) {
+            filter.put("forretningsadresse.kommune", request.kommune().trim().toUpperCase(Locale.ROOT));
+        }
+        if (hasText(request.naeringskode())) {
+            filter.put("naeringskode1.kode", request.naeringskode().trim());
+        }
+
+        return filter;
+    }
+
+    private boolean matcherLokalFiltrering(EnhetResponse enhet, CompanySearchRequest request) {
+        return !hasText(request.fylke()) || matcherFylke(enhet, request.fylke());
+    }
+
+    private boolean matcherFylke(EnhetResponse enhet, String fylke) {
+        String normalized = fylke.trim().toUpperCase(Locale.ROOT);
+        return Stream.of(enhet.forretningsadresse(), enhet.postadresse())
+                .filter(Objects::nonNull)
+                .map(EnhetResponse.Adresse::fylke)
+                .filter(this::hasText)
+                .map(value -> value.toUpperCase(Locale.ROOT))
+                .anyMatch(normalized::equals);
+    }
+
+    private boolean erAktivRolle(RollerResponse.Rolle rolle) {
+        return !Boolean.TRUE.equals(rolle.fratraadt()) && !Boolean.TRUE.equals(rolle.avregistrert());
+    }
+
+    private boolean rolleMatcher(RollerResponse.Rolle rolle, String needle) {
+        return rolle.type() != null
+                && hasText(rolle.type().beskrivelse())
+                && rolle.type().beskrivelse().toLowerCase(Locale.ROOT).contains(needle);
+    }
+
+    private String rollenavn(RollerResponse.Rolle rolle) {
+        if (rolle.person() != null && rolle.person().navn() != null) {
+            return joinNonBlank(
+                    rolle.person().navn().fornavn(),
+                    rolle.person().navn().mellomnavn(),
+                    rolle.person().navn().etternavn()
+            );
+        }
+        if (rolle.enhet() != null && rolle.enhet().navn() != null && !rolle.enhet().navn().isEmpty()) {
+            return rolle.enhet().navn().getFirst();
+        }
+        return null;
+    }
+
+    private String joinNonBlank(String... parts) {
+        return Stream.of(parts)
+                .filter(this::hasText)
+                .reduce((left, right) -> left + " " + right)
+                .orElse(null);
     }
 }

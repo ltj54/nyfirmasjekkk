@@ -101,7 +101,22 @@ class CompanyCheckServiceTests {
                         new RollerResponse(List.of(
                                 new RollerResponse.Rollegruppe(
                                         new RollerResponse.Rolletype("LEDE", "Ledelse"),
-                                        List.of(new RollerResponse.Rolle(new RollerResponse.Rolletype("DAGL", "Daglig leder")))
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                ),
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("STYR", "Styremedlem"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Grace", null, "Hopper")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
                                 )
                         ))
                 ),
@@ -111,6 +126,8 @@ class CompanyCheckServiceTests {
         var result = service.vurder("111222333");
 
         assertThat(result.status()).isEqualTo(TrafficLight.GREEN);
+        assertThat(result.fakta().dagligLeder()).isEqualTo("Ada Lovelace");
+        assertThat(result.fakta().styre()).containsExactly("Grace Hopper");
     }
 
     private Clock fixedClock() {

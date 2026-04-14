@@ -40,6 +40,25 @@ public class CompanyCheckController {
         return companyCheckService.hentNyeAs(dager);
     }
 
+    @GetMapping("/search")
+    public List<CompanyCheck> sok(
+            @RequestParam(required = false) String navn,
+            @RequestParam(defaultValue = "30") int dager,
+            @RequestParam(required = false) String kommune,
+            @RequestParam(required = false) String fylke,
+            @RequestParam(required = false) String naeringskode,
+            @RequestParam(required = false) String organisasjonsform
+    ) {
+        return companyCheckService.sok(new CompanySearchRequest(
+                navn,
+                dager,
+                kommune,
+                fylke,
+                naeringskode,
+                organisasjonsform
+        ));
+    }
+
     @ExceptionHandler(EnhetFinnesIkkeException.class)
     ProblemDetail handleNotFound(EnhetFinnesIkkeException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());

@@ -1,6 +1,7 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record CompanyFacts(
         String organisasjonsform,
@@ -8,6 +9,8 @@ public record CompanyFacts(
         String modenhet,
         String naeringskode,
         String aktivitet,
+        String dagligLeder,
+        List<String> styre,
         String hjemmeside,
         String epostadresse,
         String telefon,
