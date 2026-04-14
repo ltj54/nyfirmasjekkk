@@ -32,7 +32,9 @@ class CompanyCheckServiceTests {
                                 true,
                                 false,
                                 false,
-                                LocalDate.of(2025, 1, 10)
+                                LocalDate.of(2025, 1, 10),
+                                null,
+                                null
                         ),
                         new RollerResponse(List.of())
                 ),
@@ -61,7 +63,9 @@ class CompanyCheckServiceTests {
                                 false,
                                 false,
                                 false,
-                                LocalDate.of(2026, 3, 15)
+                                LocalDate.of(2026, 3, 15),
+                                null,
+                                null
                         ),
                         new RollerResponse(List.of())
                 ),
@@ -90,7 +94,9 @@ class CompanyCheckServiceTests {
                                 false,
                                 false,
                                 false,
-                                LocalDate.of(2024, 1, 5)
+                                LocalDate.of(2024, 1, 5),
+                                null,
+                                null
                         ),
                         new RollerResponse(List.of(
                                 new RollerResponse.Rollegruppe(

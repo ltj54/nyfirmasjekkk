@@ -36,8 +36,8 @@ public class CompanyCheckController {
     }
 
     @GetMapping("/nye-as")
-    public List<CompanyCheck> hentNyeAS(@RequestParam(defaultValue = "30") int dager) {
-        return companyCheckService.hentNyeAS(dager);
+    public List<CompanyCheck> hentNyeAs(@RequestParam(defaultValue = "30") int dager) {
+        return companyCheckService.hentNyeAs(dager);
     }
 
     @ExceptionHandler(EnhetFinnesIkkeException.class)
