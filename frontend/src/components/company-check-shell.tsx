@@ -9,23 +9,22 @@ import {
   Mail,
   Phone,
   Landmark,
-  ChevronDown,
   MapPin,
   AlertCircle,
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
 
-import type { CompanyDetails, CompanySummary } from "@/lib/company-check";
+import type {
+  CompanyDetails,
+  CompanySummary,
+  MetadataFiltersResponse,
+} from "@/lib/company-check";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-const filters = [
-  { id: "days", label: "Siste 30 dager", options: ["30 dager", "90 dager", "180 dager", "365 dager"] },
-  { id: "county", label: "Alle fylker", options: ["Oslo", "Viken", "Rogaland", "Vestland", "Trøndelag"] },
-  { id: "form", label: "Alle org.former", options: ["AS", "ENK", "ASA", "SA"] },
-];
+const dayOptions = ["30", "90", "180", "365"];
 
 const legend = [
   { status: "GREEN", label: "Ingen varselflagg", color: "bg-emerald-500" },
@@ -37,21 +36,50 @@ export function CompanyCheckShell() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
+  const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
+    organizationForms: [],
+    counties: [],
+    scores: [],
+  });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [daysFilter, setDaysFilter] = useState("30");
+  const [countyFilter, setCountyFilter] = useState("");
+  const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [, startTransition] = useTransition();
 
   // Fetch recent companies on mount
   useEffect(() => {
-    fetchRecent();
+    void fetchFilters();
+    void fetchRecent();
   }, []);
 
-  async function fetchRecent() {
+  async function fetchFilters() {
     try {
-      const response = await fetch("/api/company-check/search?dager=30");
+      const response = await fetch("/api/company-check/filters", {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        return;
+      }
+
+      const data = (await response.json()) as MetadataFiltersResponse;
+      setMetadata(data);
+    } catch (err) {
+      console.error("Failed to fetch filters", err);
+    }
+  }
+
+  async function fetchRecent() {
+    const params = new URLSearchParams();
+    params.set("dager", daysFilter);
+    if (countyFilter) params.set("county", countyFilter);
+    if (organizationFormFilter) params.set("organizationForm", organizationFormFilter);
+
+    try {
+      const response = await fetch(`/api/company-check/search?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        // The old API returns a list, the new one returns a search response
         setRecentCompanies(Array.isArray(data) ? data : data.items || []);
       }
     } catch (err) {
@@ -59,17 +87,35 @@ export function CompanyCheckShell() {
     }
   }
 
+  useEffect(() => {
+    if (!selectedCompany) {
+      void fetchRecent();
+    }
+  }, [daysFilter, countyFilter, organizationFormFilter, selectedCompany]);
+
   async function handleSearch(term: string) {
-    if (!term.trim()) return;
+    const trimmedTerm = term.trim();
+    if (!trimmedTerm && !countyFilter && !organizationFormFilter) return;
 
     setError(null);
     setIsLoading(true);
 
     try {
-      const isOrgNumber = /^\d{9}$/.test(term.trim());
+      const isOrgNumber = /^\d{9}$/.test(trimmedTerm);
+      const params = new URLSearchParams();
+      params.set("dager", daysFilter);
+      if (trimmedTerm) {
+        params.set("q", trimmedTerm);
+      }
+      if (countyFilter) {
+        params.set("county", countyFilter);
+      }
+      if (organizationFormFilter) {
+        params.set("organizationForm", organizationFormFilter);
+      }
       const endpoint = isOrgNumber 
-        ? `/api/company-check/${term.trim()}`
-        : `/api/company-check/search?q=${encodeURIComponent(term.trim())}`;
+        ? `/api/company-check/${trimmedTerm}`
+        : `/api/company-check/search?${params.toString()}`;
       
       const response = await fetch(endpoint, {
         cache: "no-store",
@@ -87,7 +133,7 @@ export function CompanyCheckShell() {
           setSelectedCompany(payload as CompanyDetails);
         } else {
           // It's a search result list
-          const items = Array.isArray(payload) ? payload : payload.items || [];
+        const items = Array.isArray(payload) ? payload : payload.items || [];
           setRecentCompanies(items);
           setSelectedCompany(null);
           if (items.length === 0) {
@@ -181,24 +227,56 @@ export function CompanyCheckShell() {
 
             {!selectedCompany && (
               <div className="mt-8 flex flex-wrap justify-center gap-3 animate-in fade-in duration-1000 delay-300">
-                {filters.map((filter) => (
-                  <button
-                    className="group flex items-center gap-2 rounded-full border border-[#e5e5e5] bg-white px-5 py-2 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md"
-                    key={filter.id}
-                    onClick={() => {
-                      if (filter.id === "days") {
-                        // For demo/simplicity, we just cycle or set a specific value
-                        // In a real app, this might open a dropdown or cycle values
-                        const nextValue = searchTerm === "90" ? "30" : "90";
-                        setSearchTerm(nextValue);
-                        handleSearch(nextValue);
-                      }
-                    }}
+                <label className="flex items-center rounded-full border border-[#e5e5e5] bg-white pr-4 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md">
+                  <select
+                    aria-label="Siste 30 dager"
+                    className="rounded-full bg-transparent px-5 py-2 outline-none"
+                    onChange={(event) => setDaysFilter(event.target.value)}
+                    value={daysFilter}
                   >
-                    {filter.label}
-                    <ChevronDown className="size-3.5 text-[#a3a3a3] group-hover:text-[#064e3b]" />
-                  </button>
-                ))}
+                    <option value="">Siste 30 dager</option>
+                    {dayOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option} dager
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="flex items-center rounded-full border border-[#e5e5e5] bg-white pr-4 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md">
+                  <select
+                    aria-label="Alle fylker"
+                    className="rounded-full bg-transparent px-5 py-2 outline-none"
+                    onChange={(event) => setCountyFilter(event.target.value)}
+                    value={countyFilter}
+                  >
+                    <option value="">Alle fylker</option>
+                    {metadata.counties.map((county) => (
+                      <option key={county} value={county}>
+                        {county}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="flex items-center rounded-full border border-[#e5e5e5] bg-white pr-4 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md">
+                  <select
+                    aria-label="Alle org.former"
+                    className="rounded-full bg-transparent px-5 py-2 outline-none"
+                    onChange={(event) => setOrganizationFormFilter(event.target.value)}
+                    value={organizationFormFilter}
+                  >
+                    <option value="">Alle org.former</option>
+                    {metadata.organizationForms.map((organizationForm) => {
+                      const [code] = organizationForm.split(" - ", 1);
+                      return (
+                        <option key={organizationForm} value={code}>
+                          {organizationForm}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </label>
               </div>
             )}
           </div>
@@ -236,7 +314,7 @@ export function CompanyCheckShell() {
                 <Button 
                   variant="outline" 
                   className="rounded-full border-[#e5e5e5] font-bold text-[#171717]"
-                  onClick={() => fetchRecent()}
+                  onClick={() => void fetchRecent()}
                 >
                   Se alle
                 </Button>

@@ -47,6 +47,7 @@
 
                     <form id="search-form" class="searchbox">
                         <div class="searchtop">
+                            <label for="query" class="eyebrow" style="display:none">Søk</label>
                             <input id="query" name="query" placeholder="Søk på firmanavn eller organisasjonsnummer">
                             <button id="submit-button" type="submit">Søk</button>
                         </div>
@@ -163,7 +164,8 @@ const pageInfo=document.getElementById("page-info");
 
 document.addEventListener("DOMContentLoaded",async()=>{await loadMetadata();await searchCompanies(true);});
 form.addEventListener("submit",async event=>{event.preventDefault();state.page=0;await searchCompanies(false);});
-daysInput.addEventListener("change",async()=>{state.page=0;await searchCompanies(false);});
+[daysInput,countyInput,organizationFormInput,scoreInput].forEach(el=>el.addEventListener("change",async()=>{state.page=0;await searchCompanies(false);}));
+[municipalityInput,naceCodeInput].forEach(el=>el.addEventListener("input",debounce(async()=>{state.page=0;await searchCompanies(false);},500)));
 prevPageButton.addEventListener("click",async()=>{if(state.page===0)return;state.page-=1;await searchCompanies(false);});
 nextPageButton.addEventListener("click",async()=>{if(state.page+1>=state.totalPages)return;state.page+=1;await searchCompanies(false);});
 
@@ -175,8 +177,13 @@ async function loadMetadata(){
             return;
         }
         const data=await response.json();
+        console.log("Metadata:", data);
+        const orgForms = data.organizationForms || data.organizationForm || [];
         countyInput.innerHTML=`<option value="">Alle fylker</option>${(data.counties||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
-        organizationFormInput.innerHTML=`<option value="">Alle organisasjonsformer</option>${(data.organizationForms||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
+        organizationFormInput.innerHTML=`<option value="">Alle organisasjonsformer</option>${orgForms.map(item=>{
+            const code = item.includes(" - ") ? item.split(" - ")[0] : item;
+            return `<option value="${escapeHtml(code)}">${escapeHtml(item)}</option>`;
+        }).join("")}`;
         scoreInput.innerHTML=`<option value="">Alle vurderinger</option>${(data.scores||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(capitalize(item.toLowerCase()))}</option>`).join("")}`;
     }catch(err){
         error.textContent="Klarte ikke hente metadata.";
@@ -270,6 +277,7 @@ function setLoading(isLoading){
 function clearErrors(){error.textContent="";listError.textContent="";}
 function capitalize(value){return value.charAt(0).toUpperCase()+value.slice(1);}
 function escapeHtml(value){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("\"","&quot;").replaceAll("'","&#39;");}
+function debounce(fn,wait){let timer;return(...args)=>{clearTimeout(timer);timer=setTimeout(()=>fn(...args),wait);};}
 </script>
 </body>
 </html>

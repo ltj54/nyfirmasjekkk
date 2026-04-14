@@ -23,6 +23,12 @@ export interface CompanySearchResponse {
   items: CompanySummary[];
 }
 
+export interface MetadataFiltersResponse {
+  organizationForms: string[];
+  counties: string[];
+  scores: ScoreColor[];
+}
+
 export interface CompanyDetails extends CompanySummary {
   status: string;
   address: string | null;
