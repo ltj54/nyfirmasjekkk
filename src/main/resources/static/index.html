@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nyfirmasjekk - Nye AS med varselflagg</title>
+    <style>
+        :root {
+            --bg: #f3ede3;
+            --surface: rgba(248, 242, 234, 0.82);
+            --surface-strong: rgba(255, 250, 245, 0.94);
+            --ink: #1e2329;
+            --muted: #5b615f;
+            --line: rgba(30, 35, 41, 0.14);
+            --green: #198754;
+            --yellow: #df9a08;
+            --red: #c94932;
+            --accent: #103d35;
+            --accent-soft: #dbe4d6;
+            --shadow: 0 22px 60px rgba(44, 36, 23, 0.12);
+            --radius: 26px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                    radial-gradient(circle at 8% 12%, rgba(255, 189, 99, 0.22), transparent 24%),
+                    radial-gradient(circle at 92% 18%, rgba(79, 120, 212, 0.14), transparent 22%),
+                    linear-gradient(180deg, #f7f0e6 0%, var(--bg) 44%, #efe6d7 100%);
+        }
+
+        a { color: inherit; }
+
+        .shell {
+            width: min(1180px, calc(100% - 28px));
+            margin: 0 auto;
+        }
+
+        .hero {
+            min-height: 100svh;
+            display: grid;
+            align-items: center;
+            padding: 32px 0 36px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+            gap: 30px;
+            align-items: center;
+        }
+
+        .eyebrow,
+        .section-kicker {
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .hero-copy h1 {
+            margin: 12px 0 0;
+            font-size: clamp(3.4rem, 8vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -0.055em;
+            max-width: 8ch;
+        }
+
+        .hero-copy .lede {
+            max-width: 56ch;
+            margin: 20px 0 0;
+            font-size: 1.08rem;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        .lookup-bar {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 999px;
+            background: rgba(255, 249, 242, 0.8);
+            border: 1px solid rgba(16, 61, 53, 0.12);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        .lookup-bar input,
+        .lookup-bar button {
+            border: 0;
+            border-radius: 999px;
+            font: inherit;
+            padding: 16px 20px;
+        }
+
+        .lookup-bar input {
+            min-width: 0;
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .lookup-bar button {
+            background: var(--accent);
+            color: #f8f3ea;
+            min-width: 160px;
+            cursor: pointer;
+            transition: transform 180ms ease, opacity 180ms ease;
+        }
+
+        .lookup-bar button:hover { transform: translateY(-1px); }
+        .lookup-bar button:disabled { opacity: 0.72; cursor: wait; }
+
+        .hero-notes {
+            margin-top: 18px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .tower {
+            position: relative;
+            min-height: 640px;
+            border-radius: 38px;
+            overflow: hidden;
+            background:
+                    linear-gradient(180deg, rgba(14, 26, 30, 0.92), rgba(27, 34, 39, 0.9)),
+                    linear-gradient(180deg, rgba(217, 171, 94, 0.15), rgba(255, 255, 255, 0));
+            box-shadow: var(--shadow);
+            isolation: isolate;
+        }
+
+        .tower::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                    linear-gradient(90deg, transparent 0, rgba(255,255,255,0.05) 42%, transparent 62%),
+                    radial-gradient(circle at 30% 15%, rgba(255, 206, 136, 0.14), transparent 22%);
+            mix-blend-mode: screen;
+        }
+
+        .tower-inner {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            height: 100%;
+            padding: 34px;
+            align-content: space-between;
+        }
+
+        .traffic-body {
+            width: min(260px, 64%);
+            margin-left: auto;
+            border-radius: 120px;
+            padding: 22px 20px;
+            background: linear-gradient(180deg, #161b1f 0%, #0f1417 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.28);
+        }
+
+        .lamp {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            margin: 14px 0;
+            border: 10px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.08);
+            overflow: hidden;
+        }
+
+        .lamp::after {
+            content: "";
+            position: absolute;
+            inset: 10%;
+            border-radius: 50%;
+            box-shadow: inset 0 14px 18px rgba(255,255,255,0.26), inset 0 -18px 22px rgba(0,0,0,0.3);
+        }
+
+        .lamp.green { background: radial-gradient(circle at 35% 30%, #7ff1ad, var(--green) 58%, #145237 100%); }
+        .lamp.yellow { background: radial-gradient(circle at 35% 30%, #ffe58f, var(--yellow) 56%, #7f5300 100%); }
+        .lamp.red { background: radial-gradient(circle at 35% 30%, #ff9f90, var(--red) 54%, #6f1f18 100%); }
+
+        .tower-copy {
+            max-width: 26ch;
+            color: rgba(247, 240, 233, 0.88);
+        }
+
+        .tower-copy h2 {
+            margin: 12px 0 0;
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 0.98;
+            letter-spacing: -0.04em;
+        }
+
+        .tower-copy p {
+            margin: 14px 0 0;
+            line-height: 1.7;
+            color: rgba(247, 240, 233, 0.7);
+        }
+
+        .tower-status {
+            display: grid;
+            gap: 10px;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: rgba(247, 240, 233, 0.72);
+        }
+
+        .tower-status strong {
+            font-size: 1.05rem;
+            color: #fff4eb;
+        }
+
+        .results {
+            display: none;
+            padding: 10px 0 72px;
+        }
+
+        .results.visible { display: block; }
+
+        .section {
+            border-top: 1px solid rgba(16, 61, 53, 0.12);
+            padding: 28px 0;
+        }
+
+        .overview {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 28px;
+            align-items: start;
+        }
+
+        .headline-block h2 {
+            margin: 10px 0 0;
+            font-size: clamp(2.2rem, 5vw, 4.5rem);
+            line-height: 0.92;
+            letter-spacing: -0.05em;
+            max-width: 10ch;
+        }
+
+        .summary {
+            margin-top: 18px;
+            max-width: 52ch;
+            font-size: 1.03rem;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        .status-banner {
+            display: grid;
+            gap: 16px;
+            align-content: start;
+            padding-top: 10px;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            width: fit-content;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.68);
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.78rem;
+        }
+
+        .status-chip .dot {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+        }
+
+        .stats-rail {
+            display: grid;
+            gap: 10px;
+        }
+
+        .stat-line {
+            display: grid;
+            grid-template-columns: 72px 1fr 44px;
+            gap: 14px;
+            align-items: center;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            font-size: 0.93rem;
+        }
+
+        .bar {
+            position: relative;
+            height: 11px;
+            border-radius: 999px;
+            background: rgba(16, 61, 53, 0.08);
+            overflow: hidden;
+        }
+
+        .bar > span {
+            position: absolute;
+            inset: 0 auto 0 0;
+            border-radius: inherit;
+        }
+
+        .facts-layout,
+        .risk-layout {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 26px;
+        }
+
+        .fact-list,
+        .risk-list,
+        .finding-list,
+        .limitations-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .fact-item,
+        .risk-item,
+        .finding-item,
+        .limitation-item {
+            padding: 0 0 14px;
+            border-bottom: 1px solid rgba(16, 61, 53, 0.1);
+        }
+
+        .fact-item span,
+        .risk-item span,
+        .finding-item span,
+        .limitation-item span {
+            display: block;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .fact-item strong,
+        .risk-item strong,
+        .finding-item strong,
+        .limitation-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            font-size: 0.86rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .finding-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px 34px;
+        }
+
+        .finding-item {
+            display: grid;
+            grid-template-columns: 18px 1fr;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .finding-item .dot { margin-top: 5px; }
+
+        .error,
+        .loading {
+            margin-top: 16px;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        }
+
+        .error {
+            display: none;
+            color: var(--red);
+        }
+
+        .loading {
+            display: none;
+            color: var(--muted);
+        }
+
+        .loading.visible,
+        .error.visible {
+            display: block;
+        }
+
+        .fade-up {
+            animation: fadeUp 520ms ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* New companies list styling */
+        .new-companies-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(16, 61, 53, 0.12);
+        }
+
+        .company-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: var(--surface-strong);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .company-list-table th,
+        .company-list-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .company-list-table th {
+            background: rgba(16, 61, 53, 0.05);
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .company-list-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .company-list-table tbody tr:hover {
+            background: rgba(16, 61, 53, 0.03);
+            cursor: pointer;
+        }
+
+        .company-list-table .dot {
+            width: 12px;
+            height: 12px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 960px) {
+            .hero { min-height: auto; }
+            .hero-grid,
+            .overview,
+            .facts-layout,
+            .risk-layout,
+            .finding-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tower {
+                min-height: 520px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell { width: min(100% - 18px, 1180px); }
+            .hero-copy h1 { font-size: clamp(2.7rem, 16vw, 4rem); }
+            .lookup-bar { grid-template-columns: 1fr; border-radius: 28px; }
+            .lookup-bar button { min-width: 0; }
+            .tower-inner { padding: 24px; }
+            .traffic-body { width: 66%; }
+            .headline-block h2 { font-size: clamp(2rem, 13vw, 3rem); }
+            .stat-line { grid-template-columns: 60px 1fr 32px; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <section class="hero">
+        <div class="shell hero-grid">
+            <div class="hero-copy fade-up">
+                <div class="eyebrow">Firmasjekk før samarbeid</div>
+                <h1>Nye AS med varsellamper.</h1>
+                <p class="lede">
+                    For småbedrifter, byråer og B2B-folk som vurderer et nytt aksjeselskap før samarbeid. Søk på organisasjonsnummer og få en enkel grønn, gul eller rød førstelesning av åpne BRREG-data med forklaring.
+                </p>
+
+                <form id="lookup-form" class="lookup-bar">
+                    <input id="orgnr" name="orgnr" inputmode="numeric" pattern="\d{9}" maxlength="9" placeholder="Nytt AS du vil vurdere, f.eks. 974760673" required>
+                    <button id="submit-button" type="submit">Vurder selskap</button>
+                </form>
+
+                <div class="hero-notes">
+                    <span>Nye aksjeselskaper</span>
+                    <span>B2B-risiko før samarbeid</span>
+                    <span>Åpne BRREG-data</span>
+                </div>
+
+                <p id="loading" class="loading">Henter selskapsdata og bygger vurdering ...</p>
+                <p id="error" class="error"></p>
+            </div>
+
+            <section class="tower fade-up" aria-label="Trafikklysillustrasjon">
+                <div class="tower-inner">
+                    <div class="tower-copy">
+                        <div class="section-kicker">Signalmodell</div>
+                        <h2>En rask lesning før du sier ja til et nytt samarbeid.</h2>
+                        <p>
+                            Grønt betyr at basisdata ser ryddige ut. Gult betyr at selskapet er nytt eller tynt registrert. Rødt betyr at åpne registre allerede viser signaler du bør undersøke før du bruker tid, penger eller tillit.
+                        </p>
+                    </div>
+
+                    <div class="traffic-body" aria-hidden="true">
+                        <div class="lamp red"></div>
+                        <div class="lamp yellow"></div>
+                        <div class="lamp green"></div>
+                    </div>
+
+                    <div class="tower-status">
+                        <strong>Bygget for B2B-kjøpere</strong>
+                        <span>Signatur/prokura, reelle rettighetshavere og kunngjøringer ligger utenfor denne siden foreløpig.</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section id="new-companies-section" class="new-companies-section shell">
+        <div class="section-kicker">Nye AS siste 30 dager</div>
+        <p class="lede">Klikk på et firma i listen for å se detaljert risikoanalyse.</p>
+        <p id="list-loading" class="loading visible">Henter nyeste selskaper...</p>
+        <p id="list-error" class="error"></p>
+        <table class="company-list-table" id="company-list-table" style="display:none;">
+            <thead>
+            <tr>
+                <th>Navn</th>
+                <th>Org.nr</th>
+                <th>Status</th>
+                <th>Registrert</th>
+            </tr>
+            </thead>
+            <tbody id="company-list-body">
+            <!-- New companies will be inserted here -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="results" class="results shell" aria-live="polite">
+        <div class="section overview fade-up">
+            <div class="headline-block">
+                <div class="section-kicker">Førstesjekk</div>
+                <h2 id="company-name">Selskap</h2>
+                <p id="summary" class="summary"></p>
+            </div>
+
+            <aside class="status-banner">
+                <div class="status-chip">
+                    <span id="status-dot" class="dot green"></span>
+                    <span id="status-text">Grønn</span>
+                </div>
+
+                <div class="stats-rail">
+                    <div class="stat-line">
+                        <span>Grønn</span>
+                        <div class="bar"><span id="green-bar" style="background:var(--green);width:0%"></span></div>
+                        <strong id="green-count">0</strong>
+                    </div>
+                    <div class="stat-line">
+                        <span>Gul</span>
+                        <div class="bar"><span id="yellow-bar" style="background:var(--yellow);width:0%"></span></div>
+                        <strong id="yellow-count">0</strong>
+                    </div>
+                    <div class="stat-line">
+                        <span>Rød</span>
+                        <div class="bar"><span id="red-bar" style="background:var(--red);width:0%"></span></div>
+                        <strong id="red-count">0</strong>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="section facts-layout fade-up">
+            <div>
+                <div class="section-kicker">Leverandørkort</div>
+                <div id="fact-list" class="fact-list"></div>
+            </div>
+            <div>
+                <div class="section-kicker">Samarbeidsrisiko</div>
+                <div id="risk-list" class="risk-list"></div>
+            </div>
+        </div>
+
+        <div class="section fade-up">
+            <div class="section-kicker">Hvorfor dette lyset</div>
+            <div id="finding-list" class="finding-grid"></div>
+        </div>
+
+        <div class="section risk-layout fade-up">
+            <div>
+                <div class="section-kicker">Datakilder</div>
+                <div id="source-list" class="limitations-list"></div>
+            </div>
+            <div>
+                <div class="section-kicker">Ikke med ennå</div>
+                <div id="limitations-list" class="limitations-list"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const form = document.getElementById("lookup-form");
+    const orgnrInput = document.getElementById("orgnr");
+    const submitButton = document.getElementById("submit-button");
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const results = document.getElementById("results");
+    const companyName = document.getElementById("company-name");
+    const summary = document.getElementById("summary");
+    const statusDot = document.getElementById("status-dot");
+    const statusText = document.getElementById("status-text");
+    const greenCount = document.getElementById("green-count");
+    const yellowCount = document.getElementById("yellow-count");
+    const redCount = document.getElementById("red-count");
+    const greenBar = document.getElementById("green-bar");
+    const yellowBar = document.getElementById("yellow-bar");
+    const redBar = document.getElementById("red-bar");
+    const factList = document.getElementById("fact-list");
+    const riskList = document.getElementById("risk-list");
+    const findingList = document.getElementById("finding-list");
+    const sourceList = document.getElementById("source-list");
+    const limitationsList = document.getElementById("limitations-list");
+
+    // Elements for new companies list
+    const newCompaniesSection = document.getElementById("new-companies-section");
+    const companyListTable = document.getElementById("company-list-table");
+    const companyListBody = document.getElementById("company-list-body");
+    const listLoading = document.getElementById("list-loading");
+    const listError = document.getElementById("list-error");
+
+
+    const statusMap = {
+        GREEN: { label: "Grønn", className: "green" },
+        YELLOW: { label: "Gul", className: "yellow" },
+        RED: { label: "Rød", className: "red" }
+    };
+
+    // --- Event Listeners ---
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const orgnr = orgnrInput.value.trim();
+        if (!orgnr) return;
+
+        await loadCompany(orgnr);
+    });
+
+    // Load new companies on page load
+    document.addEventListener("DOMContentLoaded", fetchNewCompanies);
+
+
+    // --- Functions ---
+    async function fetchNewCompanies() {
+        listLoading.classList.add("visible");
+        listError.classList.remove("visible");
+        companyListTable.style.display = 'none';
+        companyListBody.innerHTML = '';
+
+        try {
+            const response = await fetch('/api/company-check/nye-as');
+            if (!response.ok) {
+                const payload = await response.json().catch(() => ({}));
+                throw new Error(payload.detail || "Klarte ikke hente listen over nye selskaper.");
+            }
+            const data = await response.json();
+
+            if (data.length === 0) {
+                listError.textContent = "Ingen nye selskaper funnet de siste 30 dagene.";
+                listError.classList.add("visible");
+            } else {
+                data.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.onclick = () => loadCompany(c.organisasjonsnummer);
+                    tr.innerHTML = `
+                        <td style="font-weight:bold;">${escapeHtml(c.navn)}</td>
+                        <td>${escapeHtml(c.organisasjonsnummer)}</td>
+                        <td><span class="dot ${c.status.toLowerCase()}"></span>${escapeHtml(c.status)}</td>
+                        <td>${escapeHtml(c.fakta.registreringsdato)}</td>
+                    `;
+                    companyListBody.appendChild(tr);
+                });
+                companyListTable.style.display = 'table';
+            }
+        } catch (err) {
+            listError.textContent = err.message || "Noe gikk galt ved henting av nye selskaper.";
+            listError.classList.add("visible");
+        } finally {
+            listLoading.classList.remove("visible");
+        }
+    }
+
+    async function loadCompany(orgnr) {
+        setLoading(true);
+        clearError();
+        results.classList.remove("visible");
+
+        try {
+            const response = await fetch(`/api/company-check/${orgnr}`);
+            if (!response.ok) {
+                const payload = await response.json().catch(() => ({}));
+                throw new Error(payload.detail || "Klarte ikke hente selskapsdata.");
+            }
+
+            const payload = await response.json();
+            renderResult(payload);
+            results.classList.add("visible");
+            results.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch (err) {
+            showError(err.message || "Noe gikk galt.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    function renderResult(payload) {
+        const state = statusMap[payload.status] || statusMap.YELLOW;
+        companyName.textContent = `${payload.navn} (${payload.organisasjonsnummer})`;
+        summary.textContent = payload.sammendrag;
+        statusDot.className = `dot ${state.className}`;
+        statusText.textContent = state.label;
+
+        const metrics = payload.statistikk || { gronneFunn: 0, guleFunn: 0, rodeFunn: 0 };
+        const total = Math.max(metrics.gronneFunn + metrics.guleFunn + metrics.rodeFunn, 1);
+
+        greenCount.textContent = metrics.gronneFunn;
+        yellowCount.textContent = metrics.guleFunn;
+        redCount.textContent = metrics.rodeFunn;
+        greenBar.style.width = `${(metrics.gronneFunn / total) * 100}%`;
+        yellowBar.style.width = `${(metrics.guleFunn / total) * 100}%`;
+        redBar.style.width = `${(metrics.rodeFunn / total) * 100}%`;
+
+        const facts = payload.fakta || {};
+        renderDefinitionList(factList, [
+            ["Organisasjonsform", facts.organisasjonsform || "Ikke oppgitt"],
+            ["Registrert", facts.registreringsdato || "Ikke oppgitt"],
+            ["Modenhet", facts.modenhet || "Ukjent"],
+            ["Næringskode", facts.naeringskode || "Mangler i åpne data"],
+            ["Aktivitet", facts.aktivitet || "Mangler i åpne data"],
+            ["Nettside", facts.hjemmeside || "Ikke registrert"],
+            ["E-post", facts.epostadresse || "Ikke registrert"],
+            ["Telefon", facts.telefon || "Ikke registrert"]
+        ]);
+
+        renderDefinitionList(riskList, [
+            ["Trafikklys", statusMap[payload.status].label],
+            ["Kontaktdata", facts.harKontaktdata ? "Kontaktdata finnes" : "Kontaktdata mangler"],
+            ["Roller", facts.harRoller ? "Styre eller daglig leder registrert" : "Roller er ikke funnet i åpne data"],
+            ["Alvorlige signaler", facts.harAlvorligeSignal ? "Ja, undersøk manuelt" : "Ingen alvorlige signaler funnet i åpne data"],
+            ["Manuell oppfølging", buildManualFollowUp(payload.status, facts)],
+            ["Historikklesning", buildHistoryRead(facts)]
+        ]);
+
+        findingList.innerHTML = "";
+        payload.funn.forEach((finding) => {
+            const state = statusMap[finding.severity] || statusMap.YELLOW;
+            const article = document.createElement("article");
+            article.className = "finding-item";
+            article.innerHTML = `
+                <span class="dot ${state.className}"></span>
+                <div>
+                    <strong>${escapeHtml(finding.label)}</strong>
+                    <span>${escapeHtml(finding.detail)}</span>
+                </div>
+            `;
+            findingList.appendChild(article);
+        });
+
+        renderDefinitionList(sourceList, payload.kilder.map((source) => ["Kilde", source]), true);
+        renderDefinitionList(limitationsList, payload.begrensninger.map((item) => ["Merk", item]));
+    }
+
+    function renderDefinitionList(target, items, asLinks = false) {
+        target.innerHTML = "";
+        items.forEach(([label, value]) => {
+            const article = document.createElement("article");
+            article.className = target === factList ? "fact-item" : target === riskList ? "risk-item" : "limitation-item";
+
+            const detail = asLinks
+                ? `<a href="${escapeHtml(String(value))}" target="_blank" rel="noreferrer">${escapeHtml(String(value))}</a>`
+                : escapeHtml(String(value));
+
+            article.innerHTML = `
+                <strong>${escapeHtml(label)}</strong>
+                <span>${detail}</span>
+            `;
+            target.appendChild(article);
+        });
+    }
+
+    function buildManualFollowUp(status, facts) {
+        if (status === "RED") return "Sjekk kunngjøringer, konkursforhold og signatur/prokura før videre bruk.";
+        if (status === "YELLOW") return "Bekreft nettside, kontaktdata og eventuelle rolleopplysninger manuelt.";
+        if (!facts.harRoller) return "Se rolle- og signaturdata før du stoler fullt på vurderingen.";
+        return "Ingen tydelig manuell blokkering, men utvidede registre kan fortsatt gi mer presisjon.";
+    }
+
+    function buildHistoryRead(facts) {
+        if (facts.modenhet === "Nytt selskap") return "Kort historikk i registeret. Tynn datamengde er mindre overraskende.";
+        if (facts.harAlvorligeSignal) return "Historikken inneholder signaler som normalt trekker vurderingen ned.";
+        return "Registerhistorikken ser stabil ut ut fra feltene som er lest i førsteversjonen.";
+    }
+
+    function setLoading(isLoading) {
+        submitButton.disabled = isLoading;
+        loading.classList.toggle("visible", isLoading);
+        submitButton.textContent = isLoading ? "Vurderer ..." : "Vurder selskap";
+    }
+
+    function showError(message) {
+        error.textContent = message;
+        error.classList.add("visible");
+    }
+
+    function clearError() {
+        error.textContent = "";
+        error.classList.remove("visible");
+    }
+
+    function escapeHtml(value) {
+        return value
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll("\"", "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+</script>
+</body>
+</html>

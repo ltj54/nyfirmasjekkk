@@ -1,0 +1,56 @@
+package io.ltj.nyfirmasjekk.companycheck;
+
+import io.ltj.nyfirmasjekk.brreg.BrregClientException;
+import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Validated
+@RestController
+@RequestMapping("/api/company-check")
+public class CompanyCheckController {
+
+    private final CompanyCheckService companyCheckService;
+
+    public CompanyCheckController(CompanyCheckService companyCheckService) {
+        this.companyCheckService = companyCheckService;
+    }
+
+    @GetMapping("/{organisasjonsnummer}")
+    public CompanyCheck vurder(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        return companyCheckService.vurder(organisasjonsnummer);
+    }
+
+    @GetMapping("/nye-as")
+    public List<CompanyCheck> hentNyeAS(@RequestParam(defaultValue = "30") int dager) {
+        return companyCheckService.hentNyeAS(dager);
+    }
+
+    @ExceptionHandler(EnhetFinnesIkkeException.class)
+    ProblemDetail handleNotFound(EnhetFinnesIkkeException exception) {
+        var detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
+        detail.setTitle("Virksomhet ikke funnet");
+        return detail;
+    }
+
+    @ExceptionHandler(BrregClientException.class)
+    ProblemDetail handleBrregFailure(BrregClientException exception) {
+        var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, exception.getMessage());
+        detail.setTitle("Feil mot BRREG");
+        return detail;
+    }
+}
