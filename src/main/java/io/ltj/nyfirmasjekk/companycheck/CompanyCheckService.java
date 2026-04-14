@@ -38,7 +38,7 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
-        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS"));
+        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", 25));
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request) {
@@ -378,7 +378,8 @@ public class CompanyCheckService {
 
     private Map<String, String> byggFilter(CompanySearchRequest request) {
         Map<String, String> filter = new HashMap<>();
-        filter.put("size", "25");
+        int requestedSize = request.resultSize() > 0 ? request.resultSize() : 25;
+        filter.put("size", String.valueOf(Math.min(requestedSize, 100)));
 
         if (request.dager() > 0) {
             filter.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(request.dager()).toString());

@@ -268,7 +268,7 @@ export function CompanyCheckShell() {
                   >
                     <option value="">Alle org.former</option>
                     {metadata.organizationForms.map((organizationForm) => {
-                      const [code] = organizationForm.split(" - ", 1);
+                      const code = organizationForm.split(" - ")[0];
                       return (
                         <option key={organizationForm} value={code}>
                           {organizationForm}
@@ -464,7 +464,7 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
           <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
             <DetailDataPoint icon={CalendarDays} label="Etablert" value={company.registrationDate || "Ukjent"} />
             <DetailDataPoint icon={Landmark} label="Bransje" value={company.naceDescription || "Ikke oppgitt"} />
-            <DetailDataPoint icon={Globe} label="Nettside" value={company.hjemmeside || "Ingen registrert"} isLink />
+            <DetailDataPoint icon={Globe} label="Nettside" value={company.website || "Ingen registrert"} isLink />
             <DetailDataPoint icon={Mail} label="E-post" value="Ikke tilgjengelig" />
             <DetailDataPoint icon={Phone} label="Telefon" value="Ikke tilgjengelig" />
             <DetailDataPoint icon={MapPin} label="Fylke" value={company.county || "Ukjent"} />

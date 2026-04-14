@@ -6,6 +6,7 @@ public record CompanySearchRequest(
         String kommune,
         String fylke,
         String naeringskode,
-        String organisasjonsform
+        String organisasjonsform,
+        int resultSize
 ) {
 }

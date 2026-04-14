@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.companycheck;
 
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
+import io.ltj.nyfirmasjekk.brreg.EnheterSearchResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -130,6 +132,20 @@ class CompanyCheckServiceTests {
         assertThat(result.fakta().styre()).containsExactly("Grace Hopper");
     }
 
+    @Test
+    void brukerEtterspurtResultatstorrelseINyttSok() {
+        var client = new StubBrregClient(
+                null,
+                new RollerResponse(List.of()),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of()), null)
+        );
+        var service = new CompanyCheckService(client, fixedClock());
+
+        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", 60));
+
+        assertThat(client.lastSearchFilter()).containsEntry("size", "60");
+    }
+
     private Clock fixedClock() {
         return Clock.fixed(Instant.parse("2026-04-13T10:15:30Z"), ZoneId.of("Europe/Oslo"));
     }
@@ -138,11 +154,18 @@ class CompanyCheckServiceTests {
 
         private final EnhetResponse enhet;
         private final RollerResponse roller;
+        private final EnheterSearchResponse searchResponse;
+        private Map<String, String> lastSearchFilter;
 
         private StubBrregClient(EnhetResponse enhet, RollerResponse roller) {
+            this(enhet, roller, new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of()), null));
+        }
+
+        private StubBrregClient(EnhetResponse enhet, RollerResponse roller, EnheterSearchResponse searchResponse) {
             super(null);
             this.enhet = enhet;
             this.roller = roller;
+            this.searchResponse = searchResponse;
         }
 
         @Override
@@ -153,6 +176,16 @@ class CompanyCheckServiceTests {
         @Override
         public RollerResponse hentRoller(String organisasjonsnummer) {
             return roller;
+        }
+
+        @Override
+        public EnheterSearchResponse sok(Map<String, String> filter) {
+            lastSearchFilter = Map.copyOf(filter);
+            return searchResponse;
+        }
+
+        private Map<String, String> lastSearchFilter() {
+            return lastSearchFilter;
         }
     }
 }

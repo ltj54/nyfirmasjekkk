@@ -34,7 +34,7 @@ export interface CompanyDetails extends CompanySummary {
   address: string | null;
   postalCode: string | null;
   postalPlace: string | null;
-  hjemmeside: string | null;
+  website: string | null;
   score: {
     orgNumber: string;
     scoreColor: ScoreColor;

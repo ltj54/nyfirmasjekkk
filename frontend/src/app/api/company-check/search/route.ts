@@ -11,12 +11,16 @@ export async function GET(request: Request) {
   const county = searchParams.get("county");
   const municipality = searchParams.get("municipality");
   const organizationForm = searchParams.get("organizationForm");
+  const page = searchParams.get("page");
+  const size = searchParams.get("size");
   const params = new URLSearchParams();
   params.set("daysRegisteredMax", dager);
   if (q) params.set("q", q);
   if (county) params.set("county", county);
   if (municipality) params.set("municipality", municipality);
   if (organizationForm) params.set("organizationForm", organizationForm);
+  if (page) params.set("page", page);
+  if (size) params.set("size", size);
   
   const url = `${backendBaseUrl}/api/v1/companies?${params.toString()}`;
 

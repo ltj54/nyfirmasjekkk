@@ -59,7 +59,7 @@ public class CompanyApiV1Controller {
     ) {
         List<CompanySummary> items = exactOrgNumber(q)
                 .map(this::searchByOrgNumber)
-                .orElseGet(() -> searchByFilters(q, daysRegisteredMax, county, municipality, organizationForm, naceCode));
+                .orElseGet(() -> searchByFilters(q, daysRegisteredMax, county, municipality, organizationForm, naceCode, page, size));
 
         List<CompanySummary> filtered = items.stream()
                 .filter(company -> matchesScore(company, score))
@@ -128,15 +128,19 @@ public class CompanyApiV1Controller {
             String county,
             String municipality,
             String organizationForm,
-            String naceCode
+            String naceCode,
+            int page,
+            int size
     ) {
+        int requestedResultSize = Math.min(Math.max((page + 1) * size, size), 100);
         return companyCheckService.sok(new CompanySearchRequest(
                         blankToNull(q),
                         daysRegisteredMax,
                         blankToNull(municipality),
                         blankToNull(county),
                         blankToNull(naceCode),
-                        blankToNull(organizationForm)
+                        blankToNull(organizationForm),
+                        requestedResultSize
                 )).stream()
                 .map(company -> mapper.toSummary(company, brregClient.hentEnhet(company.organisasjonsnummer())))
                 .toList();

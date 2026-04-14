@@ -55,7 +55,8 @@ public class CompanyCheckController {
                 kommune,
                 fylke,
                 naeringskode,
-                organisasjonsform
+                organisasjonsform,
+                25
         ));
     }
 
