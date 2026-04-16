@@ -34,7 +34,13 @@ class CompanyCheckServiceTests {
                                 true,
                                 false,
                                 false,
+                                true,
+                                true,
+                                4,
+                                true,
+                                "2024",
                                 LocalDate.of(2025, 1, 10),
+                                LocalDate.of(2025, 1, 8),
                                 null,
                                 null
                         ),
@@ -65,6 +71,12 @@ class CompanyCheckServiceTests {
                                 false,
                                 false,
                                 false,
+                                false,
+                                false,
+                                null,
+                                false,
+                                null,
+                                LocalDate.of(2026, 3, 15),
                                 LocalDate.of(2026, 3, 15),
                                 null,
                                 null
@@ -96,7 +108,13 @@ class CompanyCheckServiceTests {
                                 false,
                                 false,
                                 false,
+                                true,
+                                true,
+                                3,
+                                true,
+                                "2024",
                                 LocalDate.of(2024, 1, 5),
+                                LocalDate.of(2023, 12, 20),
                                 null,
                                 null
                         ),
@@ -130,6 +148,93 @@ class CompanyCheckServiceTests {
         assertThat(result.status()).isEqualTo(TrafficLight.GREEN);
         assertThat(result.fakta().dagligLeder()).isEqualTo("Ada Lovelace");
         assertThat(result.fakta().styre()).containsExactly("Grace Hopper");
+    }
+
+    @Test
+    void girGronnForNyttEnkMedEllersSunneBasisdata() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "222333444",
+                                "Trygg ENK",
+                                new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
+                                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                                List.of("Konsulenttjenester"),
+                                "trygg.no",
+                                "post@trygg.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                null,
+                                false,
+                                null,
+                                LocalDate.of(2026, 3, 20),
+                                LocalDate.of(2026, 3, 18),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of())
+                ),
+                fixedClock()
+        );
+
+        var result = service.vurder("222333444");
+
+        assertThat(result.status()).isEqualTo(TrafficLight.GREEN);
+    }
+
+    @Test
+    void girGulForEldreAsMedManglendeRegistersignaler() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "333444555",
+                                "Tynt AS",
+                                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                                List.of("Konsulenttjenester"),
+                                "tynt.no",
+                                "post@tynt.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                0,
+                                true,
+                                null,
+                                LocalDate.of(2024, 1, 5),
+                                LocalDate.of(2024, 1, 1),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                fixedClock()
+        );
+
+        var result = service.vurder("333444555");
+
+        assertThat(result.status()).isEqualTo(TrafficLight.YELLOW);
     }
 
     @Test

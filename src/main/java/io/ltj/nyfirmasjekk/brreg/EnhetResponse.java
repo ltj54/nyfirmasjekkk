@@ -16,7 +16,13 @@ public record EnhetResponse(
         Boolean konkurs,
         Boolean underAvvikling,
         Boolean underTvangsavviklingEllerTvangsopplosning,
+        Boolean registrertIMvaregisteret,
+        Boolean registrertIForetaksregisteret,
+        Integer antallAnsatte,
+        Boolean harRegistrertAntallAnsatte,
+        String sisteInnsendteAarsregnskap,
         LocalDate registreringsdatoEnhetsregisteret,
+        LocalDate stiftelsesdato,
         Adresse forretningsadresse,
         Adresse postadresse
 ) {

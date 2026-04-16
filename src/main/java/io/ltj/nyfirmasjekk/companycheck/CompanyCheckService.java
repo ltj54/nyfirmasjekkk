@@ -23,6 +23,11 @@ public class CompanyCheckService {
 
     private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "SA");
     private static final String ROLE_LABEL = "Roller";
+    private static final int HIGH_ATTENTION_COMPANY_DAYS = 90;
+    private static final int NEW_COMPANY_DAYS = 365;
+    private static final int YELLOW_SCORE_THRESHOLD = 3;
+    private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS");
+    private static final List<String> ANNUAL_ACCOUNTS_EXPECTED_FORMS = List.of("AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS");
 
     private final BrregClient brregClient;
     private final Clock clock;
@@ -71,10 +76,7 @@ public class CompanyCheckService {
         List<CheckFinding> funn = new ArrayList<>();
         byggFunn(enhet, roller, hasRoles, hasSeriousSignals, funn);
 
-        var status = funn.stream()
-                .map(CheckFinding::severity)
-                .max(Comparator.comparingInt(this::severityRank))
-                .orElse(TrafficLight.YELLOW);
+        var status = bestemStatus(enhet, hasRoles, hasSeriousSignals);
         int greenCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.GREEN).count();
         int yellowCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
         int redCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.RED).count();
@@ -104,6 +106,12 @@ public class CompanyCheckService {
                         enhet.hjemmeside(),
                         enhet.epostadresse(),
                         førsteIkkeTom(enhet.telefon(), enhet.mobil()),
+                        enhet.registrertIMvaregisteret(),
+                        enhet.registrertIForetaksregisteret(),
+                        enhet.antallAnsatte(),
+                        enhet.harRegistrertAntallAnsatte(),
+                        enhet.sisteInnsendteAarsregnskap(),
+                        enhet.stiftelsesdato(),
                         harKontaktdata(enhet),
                         hasRoles,
                         hasSeriousSignals,
@@ -147,7 +155,7 @@ public class CompanyCheckService {
             funn.add(new CheckFinding(
                     TrafficLight.GREEN,
                     "Registrering",
-                    "Registrert i Enhetsregisteret " + enhet.registreringsdatoEnhetsregisteret() + "."
+                    "Selskapet er registrert i Enhetsregisteret."
             ));
         }
     }
@@ -157,25 +165,25 @@ public class CompanyCheckService {
             funn.add(new CheckFinding(
                     TrafficLight.RED,
                     "Alvorlige registreringssignaler",
-                    "Enheten er merket med konkurs, avvikling eller tvangsoppløsning i åpne BRREG-data."
+                    "Åpne registerdata viser alvorlige forhold som bør sjekkes før samarbeid."
             ));
         }
     }
 
     private void leggTilKontaktfunn(EnhetResponse enhet, List<CheckFinding> funn) {
         if (harKontaktdata(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.GREEN, "Kontaktdata", "Nettside eller e-post er registrert."));
+            funn.add(new CheckFinding(TrafficLight.GREEN, "Kontaktdata", "Det finnes synlige kontaktopplysninger i registeret."));
             return;
         }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Kontaktdata", "Nettside og e-post mangler i åpne data."));
+        funn.add(new CheckFinding(TrafficLight.YELLOW, "Kontaktdata", "Det finnes få kontaktopplysninger i åpne registerdata."));
     }
 
     private void leggTilTelefonfunn(EnhetResponse enhet, List<CheckFinding> funn) {
         if (harTelefondata(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.GREEN, "Telefon", "Telefon eller mobil er registrert."));
+            funn.add(new CheckFinding(TrafficLight.GREEN, "Telefon", "Telefonopplysninger er registrert."));
             return;
         }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Telefon", "Telefon og mobil mangler i åpne data."));
+        funn.add(new CheckFinding(TrafficLight.YELLOW, "Telefon", "Telefonopplysninger mangler i åpne registerdata."));
     }
 
     private void leggTilNaeringskodefunn(EnhetResponse enhet, List<CheckFinding> funn) {
@@ -183,19 +191,19 @@ public class CompanyCheckService {
             funn.add(new CheckFinding(
                     TrafficLight.GREEN,
                     "Næringskode",
-                    "Næringskode " + enhet.naeringskode1().kode() + " er registrert."
+                    "Bransje er registrert."
             ));
             return;
         }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Næringskode", "Næringskode mangler eller er uklar."));
+        funn.add(new CheckFinding(TrafficLight.YELLOW, "Næringskode", "Bransjeopplysninger mangler eller er uklare."));
     }
 
     private void leggTilAktivitetsfunn(EnhetResponse enhet, List<CheckFinding> funn) {
         if (harAktivitet(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.GREEN, "Aktivitet", "Virksomhetsaktivitet er beskrevet i registeret."));
+            funn.add(new CheckFinding(TrafficLight.GREEN, "Aktivitet", "Selskapet har en registrert aktivitetsbeskrivelse."));
             return;
         }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Aktivitet", "Aktivitetsbeskrivelse mangler i åpne data."));
+        funn.add(new CheckFinding(TrafficLight.YELLOW, "Aktivitet", "Selskapet mangler en tydelig aktivitetsbeskrivelse i åpne data."));
     }
 
     private void leggTilRollefunn(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, List<CheckFinding> funn) {
@@ -203,21 +211,26 @@ public class CompanyCheckService {
             funn.add(vurderRoller(enhet, hasRoles));
             return;
         }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, ROLE_LABEL, "Rolledata ikke sjekket i listevisning."));
+        funn.add(new CheckFinding(TrafficLight.YELLOW, ROLE_LABEL, "Rolleopplysninger kunne ikke vurderes i denne visningen."));
     }
 
     private void leggTilAldersfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (erNyttSelskap(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Selskapet er nylig registrert og har begrenset historikk."));
+        long alderDager = alderDager(enhet);
+        if (alderDager <= HIGH_ATTENTION_COMPANY_DAYS) {
+            funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Selskapet er helt nytt og har lite historikk."));
+            return;
+        }
+        if (alderDager <= NEW_COMPANY_DAYS) {
+            funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Selskapet er forholdsvis nytt og har begrenset historikk."));
         }
     }
 
     private void leggTilDatakvalitetsfunn(EnhetResponse enhet, List<CheckFinding> funn) {
         if (harFaaBasisopplysninger(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.YELLOW, "Datakvalitet", "Det finnes få basisopplysninger i åpne data."));
+            funn.add(new CheckFinding(TrafficLight.YELLOW, "Datakvalitet", "Det finnes lite offentlig informasjon å støtte vurderingen på."));
             return;
         }
-        funn.add(new CheckFinding(TrafficLight.GREEN, "Datakvalitet", "Basisdata ser forholdsvis komplette ut."));
+        funn.add(new CheckFinding(TrafficLight.GREEN, "Datakvalitet", "Det finnes et greit grunnlag i åpne registerdata."));
     }
 
     private String utledLokasjon(EnhetResponse enhet) {
@@ -241,14 +254,14 @@ public class CompanyCheckService {
         boolean centralForm = erSentralOrganisasjonsform(enhet);
 
         if (hasRoles) {
-            return new CheckFinding(TrafficLight.GREEN, ROLE_LABEL, "Styre eller daglig leder er registrert.");
+            return new CheckFinding(TrafficLight.GREEN, ROLE_LABEL, "Ledelse eller sentrale roller er registrert.");
         }
 
         if (centralForm) {
-            return new CheckFinding(TrafficLight.RED, ROLE_LABEL, "Fant ikke styre eller daglig leder for en selskapsform som normalt bør ha det.");
+            return new CheckFinding(TrafficLight.RED, ROLE_LABEL, "Sentrale rolleopplysninger mangler for en selskapsform som normalt skal ha dem.");
         }
 
-        return new CheckFinding(TrafficLight.YELLOW, ROLE_LABEL, "Fant ikke styre eller daglig leder i åpne rolledata.");
+        return new CheckFinding(TrafficLight.GREEN, ROLE_LABEL, "Ingen tydelige rolleavvik er funnet for denne organisasjonsformen.");
     }
 
     private boolean harRolle(RollerResponse roller, String needle) {
@@ -288,11 +301,14 @@ public class CompanyCheckService {
     }
 
     private boolean erNyttSelskap(EnhetResponse enhet) {
+        return alderDager(enhet) <= NEW_COMPANY_DAYS;
+    }
+
+    private long alderDager(EnhetResponse enhet) {
         if (enhet.registreringsdatoEnhetsregisteret() == null) {
-            return false;
+            return Long.MAX_VALUE;
         }
-        long dager = ChronoUnit.DAYS.between(enhet.registreringsdatoEnhetsregisteret(), LocalDate.now(clock));
-        return dager <= 180;
+        return ChronoUnit.DAYS.between(enhet.registreringsdatoEnhetsregisteret(), LocalDate.now(clock));
     }
 
     private boolean harFaaBasisopplysninger(EnhetResponse enhet) {
@@ -345,10 +361,10 @@ public class CompanyCheckService {
         long yellow = funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
 
         return switch (status) {
-            case GREEN -> "Grønn førstelesning for B2B-samarbeid basert på åpne basisdata fra BRREG.";
-            case YELLOW -> "Gul førstelesning: selskapet er nytt, tynt registrert eller har flere mangler i åpne data.";
-            case RED -> "Rød førstelesning: åpne data viser minst ett alvorlig signal som bør undersøkes før samarbeid.";
-        } + " Funn: " + red + " røde, " + yellow + " gule.";
+            case GREEN -> "Åpne registerdata gir et ryddig førsteinntrykk.";
+            case YELLOW -> "Åpne registerdata viser noen forhold som bør vurderes litt nærmere.";
+            case RED -> "Åpne registerdata viser forhold som bør undersøkes før samarbeid.";
+        } + " Registrerte signaler: " + red + " alvorlige og " + yellow + " moderate.";
     }
 
     private int severityRank(TrafficLight status) {
@@ -359,8 +375,80 @@ public class CompanyCheckService {
         };
     }
 
+    private TrafficLight bestemStatus(EnhetResponse enhet, boolean hasRoles, boolean hasSeriousSignals) {
+        if (hasSeriousSignals || (erSentralOrganisasjonsform(enhet) && !hasRoles)) {
+            return TrafficLight.RED;
+        }
+        return beregnVarselpoeng(enhet) >= YELLOW_SCORE_THRESHOLD ? TrafficLight.YELLOW : TrafficLight.GREEN;
+    }
+
+    private int beregnVarselpoeng(EnhetResponse enhet) {
+        int poeng = 0;
+        long alderDager = alderDager(enhet);
+
+        if (alderDager <= HIGH_ATTENTION_COMPANY_DAYS) {
+            poeng += 2;
+        } else if (alderDager <= NEW_COMPANY_DAYS) {
+            poeng += 1;
+        }
+        poeng += harKontaktdata(enhet) ? 0 : 1;
+        poeng += harTelefondata(enhet) ? 0 : 1;
+        poeng += harNaeringskode(enhet) ? 0 : 1;
+        poeng += harAktivitet(enhet) ? 0 : 1;
+        poeng += harFaaBasisopplysninger(enhet) ? 1 : 0;
+        poeng += manglerForventetForetaksregister(enhet) ? 1 : 0;
+        poeng += manglerForventetMva(enhet, alderDager) ? 1 : 0;
+        poeng += manglerForventetAnsattsignal(enhet, alderDager) ? 1 : 0;
+        poeng += manglerForventetAarsregnskap(enhet, alderDager) ? 1 : 0;
+
+        return poeng;
+    }
+
     private boolean isTrue(Boolean value) {
         return Boolean.TRUE.equals(value);
+    }
+
+    private boolean manglerForventetForetaksregister(EnhetResponse enhet) {
+        return forventerForetaksregister(enhet) && !Boolean.TRUE.equals(enhet.registrertIForetaksregisteret());
+    }
+
+    private boolean manglerForventetMva(EnhetResponse enhet, long alderDager) {
+        if (alderDager <= NEW_COMPANY_DAYS) {
+            return false;
+        }
+        return forventerMvaSignal(enhet) && !Boolean.TRUE.equals(enhet.registrertIMvaregisteret());
+    }
+
+    private boolean manglerForventetAnsattsignal(EnhetResponse enhet, long alderDager) {
+        if (alderDager <= NEW_COMPANY_DAYS) {
+            return false;
+        }
+        return Boolean.TRUE.equals(enhet.harRegistrertAntallAnsatte()) && Integer.valueOf(0).equals(enhet.antallAnsatte());
+    }
+
+    private boolean manglerForventetAarsregnskap(EnhetResponse enhet, long alderDager) {
+        if (alderDager <= NEW_COMPANY_DAYS) {
+            return false;
+        }
+        return forventerAarsregnskap(enhet) && !hasText(enhet.sisteInnsendteAarsregnskap());
+    }
+
+    private boolean forventerForetaksregister(EnhetResponse enhet) {
+        return harOrganisasjonsform(enhet, BUSINESS_REGISTRY_EXPECTED_FORMS);
+    }
+
+    private boolean forventerAarsregnskap(EnhetResponse enhet) {
+        return harOrganisasjonsform(enhet, ANNUAL_ACCOUNTS_EXPECTED_FORMS);
+    }
+
+    private boolean forventerMvaSignal(EnhetResponse enhet) {
+        return harOrganisasjonsform(enhet, BUSINESS_REGISTRY_EXPECTED_FORMS) || hasText(enhet.hjemmeside()) || harAktivitet(enhet);
+    }
+
+    private boolean harOrganisasjonsform(EnhetResponse enhet, List<String> forms) {
+        return enhet.organisasjonsform() != null
+                && hasText(enhet.organisasjonsform().kode())
+                && forms.contains(enhet.organisasjonsform().kode().trim().toUpperCase(Locale.ROOT));
     }
 
     private boolean hasText(String value) {

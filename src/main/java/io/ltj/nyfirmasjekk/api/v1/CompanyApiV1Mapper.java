@@ -28,6 +28,8 @@ public class CompanyApiV1Mapper {
                 county(enhet),
                 naceCode(enhet),
                 naceDescription(enhet),
+                enhet.registrertIMvaregisteret(),
+                enhet.registrertIForetaksregisteret(),
                 toScoreColor(companyCheck.status()),
                 scoreReasons(companyCheck),
                 flags(enhet, facts)
@@ -41,7 +43,7 @@ public class CompanyApiV1Mapper {
                 companyCheck.navn(),
                 organizationFormCode(enhet, facts),
                 facts.registreringsdato(),
-                null,
+                facts.stiftelsesdato(),
                 status(enhet),
                 address(enhet),
                 postalCode(enhet),
@@ -51,6 +53,11 @@ public class CompanyApiV1Mapper {
                 naceCode(enhet),
                 naceDescription(enhet),
                 enhet.hjemmeside(),
+                enhet.registrertIMvaregisteret(),
+                enhet.registrertIForetaksregisteret(),
+                enhet.antallAnsatte(),
+                enhet.harRegistrertAntallAnsatte(),
+                enhet.sisteInnsendteAarsregnskap(),
                 toScore(companyCheck),
                 roles(roller),
                 announcements(enhet),
@@ -135,6 +142,12 @@ public class CompanyApiV1Mapper {
         if (!facts.harKontaktdata()) {
             flags.add("LIMITED_PUBLIC_INFO");
         }
+        if (Boolean.FALSE.equals(facts.registrertIMvaregisteret())) {
+            flags.add("NOT_VAT_REGISTERED");
+        }
+        if (Boolean.FALSE.equals(facts.registrertIForetaksregisteret()) && shouldExpectBusinessRegistry(facts.organisasjonsform())) {
+            flags.add("NOT_REGISTERED_IN_FORETAKSREGISTERET");
+        }
         if (!facts.harRoller()) {
             flags.add("LIMITED_ROLE_INFO");
         }
@@ -148,6 +161,16 @@ public class CompanyApiV1Mapper {
             flags.add("WINDING_UP");
         }
         return List.copyOf(flags);
+    }
+
+    private boolean shouldExpectBusinessRegistry(String organizationForm) {
+        if (organizationForm == null) {
+            return false;
+        }
+        return switch (organizationForm.toUpperCase(Locale.ROOT)) {
+            case "AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS" -> true;
+            default -> false;
+        };
     }
 
     private List<Role> roles(RollerResponse roller) {

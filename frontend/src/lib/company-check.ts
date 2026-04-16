@@ -4,12 +4,14 @@ export type ScoreColor = "GREEN" | "YELLOW" | "RED";
 export interface CompanySummary {
   orgNumber: string;
   name: string;
-  organizationFormCode: string | null;
+  organizationForm: string | null;
   registrationDate: string | null;
   municipality: string | null;
   county: string | null;
   naceCode: string | null;
   naceDescription: string | null;
+  vatRegistered: boolean | null;
+  registeredInBusinessRegistry: boolean | null;
   scoreColor: ScoreColor;
   scoreReasons: string[];
   flags: string[];
@@ -34,13 +36,19 @@ export interface CompanyDetails extends CompanySummary {
   address: string | null;
   postalCode: string | null;
   postalPlace: string | null;
+  foundationDate: string | null;
   website: string | null;
+  vatRegistered: boolean | null;
+  registeredInBusinessRegistry: boolean | null;
+  employeeCount: number | null;
+  employeeCountRegistered: boolean | null;
+  latestAnnualAccountsYear: string | null;
   score: {
     orgNumber: string;
-    scoreColor: ScoreColor;
-    scoreLabel: string;
-    scoreReasons: string[];
-    rules: string[];
+    color: ScoreColor;
+    label: string;
+    reasons: string[];
+    rulesTriggered: string[];
   };
   roles: Array<{
     type: string;

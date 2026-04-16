@@ -12,6 +12,8 @@ public record CompanySummary(
         String county,
         String naceCode,
         String naceDescription,
+        Boolean vatRegistered,
+        Boolean registeredInBusinessRegistry,
         ScoreColor scoreColor,
         List<String> scoreReasons,
         List<String> flags
