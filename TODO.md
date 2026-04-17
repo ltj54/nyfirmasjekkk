@@ -102,3 +102,36 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - Fase 5-oppgavene er gjennomført og reflektert i kodebasen.
 - Produksjonsklarhet er neste arbeidspakke, ikke nye funksjonskrav.
 - `TODO.md` bør heretter brukes som operativ sjekkliste for verifisering før produksjonssetting.
+
+## BRREG-roadmap
+
+### Kan bruke nå
+
+- [x] Utnytt `underKonkursbehandling` mer direkte i søk og vurdering
+- [x] Utnytt `underAvvikling` og `underTvangsavviklingEllerTvangsopplosning` mer systematisk i listefiltre
+- [x] Bruk `registrertIForetaksregisteret` tydeligere som positivt struktursignal
+- [x] Bruk `fraStiftelsesdato` og `tilStiftelsesdato` mer aktivt i modenhetsvurdering
+- [x] Skill tydeligere mellom raske listefiltre og full detaljvurdering
+
+### Høy produktverdi
+
+- [ ] Bygg tydelig hendelsesprofil per selskap: nyregistrering, vedtektsendring, adresseendring, avvikling, konkurs
+- [ ] Bygg forklarbar aktørkontekst: hvor mange selskaper en rolleholder er knyttet til, og hvor mange av dem som er røde eller avviklet
+- [ ] Vis strukturmønstre rundt nye selskaper: samme personer, nylige konkurser, bo-signaler, omregistreringer
+- [ ] Gjør scoreforklaringen mer konkret i UI med registerspor i stedet for generelle etiketter
+- [ ] Introduser to nivåer i produktet: hurtigsjekk og dyp analyse
+
+### Krever mer integrasjon eller videre modellering
+
+- [ ] Rollehistorikk og endring over tid
+- [ ] Bedre tidslinje for strukturelle hendelser på tvers av kunngjøringer og snapshots
+- [ ] Mønstre på tvers av selskaper og personer, ikke bare enkeltoppslag
+- [ ] Vurdere precomputede signaler eller batch-oppdaterte risikofelter for raskere søk
+- [ ] Vurdere materialiserte felter eller egen indeks for hurtigfiltrering
+
+### Arbeidsprinsipper videre
+
+- [x] Prioriter forklarbarhet foran mer kompleks score
+- [x] Utvid ikke røde regler uten tydelig dokumenterbare registersignaler
+- [x] La BRREG gjøre mest mulig grovsortering før lokal scoring
+- [ ] Bruk nye datakilder bare når de gir tydelig produktverdi i UI eller risikoanalyse

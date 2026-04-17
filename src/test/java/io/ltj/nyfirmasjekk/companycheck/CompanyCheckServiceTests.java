@@ -293,6 +293,60 @@ class CompanyCheckServiceTests {
     }
 
     @Test
+    void brukerStiftelsesdatoAktivtIModenhetsvurdering() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "444333112",
+                                "Omorganisert Men Etablert AS",
+                                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                                List.of("Konsulenttjenester"),
+                                "etablert.no",
+                                "post@etablert.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                true,
+                                true,
+                                2,
+                                true,
+                                null,
+                                LocalDate.of(2026, 3, 20),
+                                LocalDate.of(2025, 1, 10),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                fixedClock(),
+                ActorRiskService.noOp(),
+                announcementService
+        );
+
+        var result = service.vurder("444333112");
+
+        assertThat(result.status()).isEqualTo(TrafficLight.GREEN);
+        assertThat(result.funn()).extracting(CheckFinding::label).doesNotContain("Alder");
+        assertThat(result.fakta().modenhet()).isEqualTo("Etablert selskap");
+    }
+
+    @Test
     void girGulNarMinimumPositivStrukturManglerSelvUtenAlvorligeSignal() {
         var service = new CompanyCheckService(
                 new StubBrregClient(

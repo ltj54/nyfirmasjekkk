@@ -249,7 +249,7 @@ public class CompanyCheckService {
         boolean isForcedDissolution = isForcedDissolution(enhet);
         boolean isVoluntaryDissolution = isVoluntaryDissolution(enhet);
         
-        long alderDager = alderDager(enhet);
+        long alderDager = modenhetsAlderDager(enhet);
         boolean isVeryNew = alderDager < NEW_COMPANY_DAYS;
 
         ActorRiskSummary actorRisk = actorRiskService.summarize(enhet.organisasjonsnummer(), roller);
@@ -314,7 +314,7 @@ public class CompanyCheckService {
     }
 
     private CompanyFacts byggCompanyFacts(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, boolean hasSeriousSignals) {
-        long alderDager = alderDager(enhet);
+        long alderDager = modenhetsAlderDager(enhet);
         return new CompanyFacts(
                 hentOrganisasjonsformBeskrivelse(enhet),
                 enhet.registreringsdatoEnhetsregisteret(),
@@ -358,7 +358,7 @@ public class CompanyCheckService {
     }
 
     private void leggTilAldersfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        long alder = alderDager(enhet);
+        long alder = modenhetsAlderDager(enhet);
         if (alder < NEW_COMPANY_DAYS) {
             funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Nytt selskap."));
         }
@@ -403,8 +403,9 @@ public class CompanyCheckService {
         int s = 100;
         if (isB) s -= 70; if (isF) s -= 60; if (erSentralOrganisasjonsform(en) && !hr) s -= 50;
         if (ar.riskLevel() == TrafficLight.RED) s -= 40; if (ar.riskLevel() == TrafficLight.YELLOW) s -= 15;
-        if (alderDager(en) < NEW_COMPANY_DAYS) s -= 15;
-        if (alderDager(en) >= NEW_COMPANY_DAYS && !hasText(en.sisteInnsendteAarsregnskap())) s -= 10;
+        long modenhetsAlder = modenhetsAlderDager(en);
+        if (modenhetsAlder < NEW_COMPANY_DAYS) s -= 15;
+        if (modenhetsAlder >= NEW_COMPANY_DAYS && !hasText(en.sisteInnsendteAarsregnskap())) s -= 10;
         if (hasFM) s -= 5; if (isV && !isB && !isF) s -= 10;
         if (isN && !isB && !isF && !(erSentralOrganisasjonsform(en) && !hr) && s < 55) s = 55;
         return Math.max(0, Math.min(100, s));
@@ -472,6 +473,24 @@ public class CompanyCheckService {
 
     private long alderDager(EnhetResponse en) {
         return en.registreringsdatoEnhetsregisteret() == null ? 9999 : ChronoUnit.DAYS.between(en.registreringsdatoEnhetsregisteret(), LocalDate.now(clock));
+    }
+
+    private long modenhetsAlderDager(EnhetResponse enhet) {
+        LocalDate registreringsdato = enhet.registreringsdatoEnhetsregisteret();
+        LocalDate stiftelsesdato = enhet.stiftelsesdato();
+
+        if (registreringsdato == null && stiftelsesdato == null) {
+            return 9999;
+        }
+        if (registreringsdato == null) {
+            return ChronoUnit.DAYS.between(stiftelsesdato, LocalDate.now(clock));
+        }
+        if (stiftelsesdato == null) {
+            return ChronoUnit.DAYS.between(registreringsdato, LocalDate.now(clock));
+        }
+
+        LocalDate modenhetsdato = stiftelsesdato.isBefore(registreringsdato) ? stiftelsesdato : registreringsdato;
+        return ChronoUnit.DAYS.between(modenhetsdato, LocalDate.now(clock));
     }
 
     private String utledLokasjon(EnhetResponse en) {
