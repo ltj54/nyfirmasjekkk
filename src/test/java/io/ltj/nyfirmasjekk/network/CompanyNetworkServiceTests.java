@@ -1,6 +1,7 @@
 package io.ltj.nyfirmasjekk.network;
 
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
+import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -37,14 +38,17 @@ class CompanyNetworkServiceTests {
                 )
         ));
 
-        service.captureRoles("111111111", "Alpha AS", roller);
-        service.captureRoles("222222222", "Beta AS", roller);
+        service.captureRoles("111111111", "Alpha AS", TrafficLight.GREEN, roller);
+        service.captureRoles("222222222", "Beta AS", TrafficLight.RED, roller);
 
         var network = service.networkFor("111111111");
 
         assertThat(network).hasSize(1);
         assertThat(network.getFirst().actorName()).isEqualTo("Ada Lovelace");
         assertThat(network.getFirst().roleTypesInSelectedCompany()).containsExactly("DAGLIG_LEDER");
+        assertThat(network.getFirst().riskLevel()).isEqualTo(TrafficLight.RED);
+        assertThat(network.getFirst().redCompanyCount()).isEqualTo(1);
+        assertThat(network.getFirst().greenCompanyCount()).isEqualTo(1);
         assertThat(network.getFirst().relatedCompanies())
                 .extracting(link -> link.orgNumber() + ":" + link.companyName())
                 .containsExactly("222222222:Beta AS", "111111111:Alpha AS");

@@ -39,15 +39,21 @@ public class CompanyCheckService {
 
     private final BrregClient brregClient;
     private final Clock clock;
+    private final ActorRiskService actorRiskService;
 
     @Autowired
-    public CompanyCheckService(BrregClient brregClient) {
-        this(brregClient, Clock.systemDefaultZone());
+    public CompanyCheckService(BrregClient brregClient, ActorRiskService actorRiskService) {
+        this(brregClient, Clock.systemDefaultZone(), actorRiskService);
     }
 
     CompanyCheckService(BrregClient brregClient, Clock clock) {
+        this(brregClient, clock, ActorRiskService.noOp());
+    }
+
+    CompanyCheckService(BrregClient brregClient, Clock clock, ActorRiskService actorRiskService) {
         this.brregClient = brregClient;
         this.clock = clock;
+        this.actorRiskService = actorRiskService;
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
@@ -106,7 +112,7 @@ public class CompanyCheckService {
                 }
 
                 upstreamPage++;
-                if (!harFlereSider(searchResponse, upstreamPage)) {
+                if (erSisteSide(searchResponse, upstreamPage)) {
                     break;
                 }
             }
@@ -158,7 +164,7 @@ public class CompanyCheckService {
                 }
 
                 upstreamPage++;
-                if (!harFlereSider(searchResponse, upstreamPage)) {
+                if (erSisteSide(searchResponse, upstreamPage)) {
                     break;
                 }
             }
@@ -199,7 +205,7 @@ public class CompanyCheckService {
                 }
 
                 upstreamPage++;
-                if (!harFlereSider(response, upstreamPage)) {
+                if (erSisteSide(response, upstreamPage)) {
                     break;
                 }
             }
@@ -259,12 +265,13 @@ public class CompanyCheckService {
     }
 
     private CompanyCheck vurderEnhet(EnhetResponse enhet, RollerResponse roller) {
-        boolean hasRoles = roller != null && (harRolle(roller, "styre") || harRolle(roller, "daglig leder"));
+        boolean hasRoles = roller != null && (harRolle(roller, "styre") || harDagligLeder(roller));
         boolean hasSeriousSignals = isTrue(enhet.konkurs()) || isTrue(enhet.underTvangsavviklingEllerTvangsopplosning()) || isTrue(enhet.underAvvikling());
+        ActorRiskSummary actorRisk = actorRiskService.summarize(enhet.organisasjonsnummer(), roller);
         List<CheckFinding> funn = new ArrayList<>();
-        byggFunn(enhet, roller, hasRoles, hasSeriousSignals, funn);
+        byggFunn(enhet, roller, hasRoles, hasSeriousSignals, actorRisk, funn);
 
-        var status = bestemStatus(enhet, hasRoles, hasSeriousSignals);
+        var status = bestemStatus(enhet, hasRoles, hasSeriousSignals, actorRisk);
         int greenCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.GREEN).count();
         int yellowCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
         int redCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.RED).count();
@@ -273,7 +280,7 @@ public class CompanyCheckService {
         String modenhet = erNyttSelskap(enhet) ? "Nytt selskap" : "Etablert selskap";
         String naeringskode = hentNaeringskodeBeskrivelse(enhet);
         String aktivitet = hentPrimarAktivitet(enhet);
-        String dagligLeder = hentRollenavn(roller, "daglig leder");
+        String dagligLeder = hentDagligLeder(roller);
         List<String> styre = hentRoller(roller, "styre");
         String lokasjon = utledLokasjon(enhet);
 
@@ -324,6 +331,7 @@ public class CompanyCheckService {
             RollerResponse roller,
             boolean hasRoles,
             boolean hasSeriousSignals,
+            ActorRiskSummary actorRisk,
             List<CheckFinding> funn
     ) {
         funn.add(new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "Virksomheten finnes i Enhetsregisteret."));
@@ -334,6 +342,7 @@ public class CompanyCheckService {
         leggTilNaeringskodefunn(enhet, funn);
         leggTilAktivitetsfunn(enhet, funn);
         leggTilRollefunn(enhet, roller, hasRoles, funn);
+        leggTilAktorrisikoFunn(actorRisk, funn);
         leggTilAldersfunn(enhet, funn);
         leggTilDatakvalitetsfunn(enhet, funn);
     }
@@ -421,6 +430,27 @@ public class CompanyCheckService {
         funn.add(new CheckFinding(TrafficLight.GREEN, "Datakvalitet", "Det finnes et greit grunnlag i åpne registerdata."));
     }
 
+    private void leggTilAktorrisikoFunn(ActorRiskSummary actorRisk, List<CheckFinding> funn) {
+        if (actorRisk.totalRelatedCompanyCount() == 0) {
+            return;
+        }
+        if (actorRisk.riskLevel() == TrafficLight.RED) {
+            funn.add(new CheckFinding(
+                    TrafficLight.RED,
+                    "Aktørrisiko",
+                    "Tilknyttede aktører går igjen i flere selskaper med alvorlige signaler."
+            ));
+            return;
+        }
+        if (actorRisk.riskLevel() == TrafficLight.YELLOW) {
+            funn.add(new CheckFinding(
+                    TrafficLight.YELLOW,
+                    "Aktørrisiko",
+                    "Tilknyttede aktører har historikk fra selskaper som bør vurderes nærmere."
+            ));
+        }
+    }
+
     private String utledLokasjon(EnhetResponse enhet) {
         if (enhet.forretningsadresse() != null) {
             return formatAdresse(enhet.forretningsadresse());
@@ -454,6 +484,10 @@ public class CompanyCheckService {
 
     private boolean harRolle(RollerResponse roller, String needle) {
         return !hentRoller(roller, needle).isEmpty();
+    }
+
+    private boolean harDagligLeder(RollerResponse roller) {
+        return hentDagligLeder(roller) != null;
     }
 
     private List<String> hentRoller(RollerResponse roller, String needle) {
@@ -538,8 +572,8 @@ public class CompanyCheckService {
         return enhet.aktivitet().getFirst();
     }
 
-    private String hentRollenavn(RollerResponse roller, String needle) {
-        return hentRoller(roller, needle).stream()
+    private String hentDagligLeder(RollerResponse roller) {
+        return hentRoller(roller, "daglig leder").stream()
                 .findFirst()
                 .orElse(null);
     }
@@ -555,14 +589,17 @@ public class CompanyCheckService {
         } + " Registrerte signaler: " + red + " alvorlige and " + yellow + " moderate.";
     }
 
-    private TrafficLight bestemStatus(EnhetResponse enhet, boolean hasRoles, boolean hasSeriousSignals) {
-        if (hasSeriousSignals || (erSentralOrganisasjonsform(enhet) && !hasRoles)) {
+    private TrafficLight bestemStatus(EnhetResponse enhet, boolean hasRoles, boolean hasSeriousSignals, ActorRiskSummary actorRisk) {
+        if (hasSeriousSignals || (erSentralOrganisasjonsform(enhet) && !hasRoles) || actorRisk.riskLevel() == TrafficLight.RED) {
             return TrafficLight.RED;
         }
-        return beregnVarselpoeng(enhet) >= YELLOW_SCORE_THRESHOLD ? TrafficLight.YELLOW : TrafficLight.GREEN;
+        if (actorRisk.riskLevel() == TrafficLight.YELLOW) {
+            return TrafficLight.YELLOW;
+        }
+        return beregnVarselpoeng(enhet, actorRisk) >= YELLOW_SCORE_THRESHOLD ? TrafficLight.YELLOW : TrafficLight.GREEN;
     }
 
-    private int beregnVarselpoeng(EnhetResponse enhet) {
+    private int beregnVarselpoeng(EnhetResponse enhet, ActorRiskSummary actorRisk) {
         int poeng = 0;
         long alderDager = alderDager(enhet);
 
@@ -580,6 +617,7 @@ public class CompanyCheckService {
         poeng += manglerForventetMva(enhet, alderDager) ? 1 : 0;
         poeng += manglerForventetAnsattsignal(enhet, alderDager) ? 1 : 0;
         poeng += manglerForventetAarsregnskap(enhet, alderDager) ? 1 : 0;
+        poeng += actorRisk.riskLevel() == TrafficLight.YELLOW ? 1 : 0;
 
         return poeng;
     }
@@ -686,10 +724,10 @@ public class CompanyCheckService {
         return searchResponse._embedded().enheter();
     }
 
-    private boolean harFlereSider(EnheterSearchResponse searchResponse, int nextPage) {
-        return searchResponse != null
-                && searchResponse.page() != null
-                && nextPage < searchResponse.page().totalPages();
+    private boolean erSisteSide(EnheterSearchResponse searchResponse, int nextPage) {
+        return searchResponse == null
+                || searchResponse.page() == null
+                || nextPage >= searchResponse.page().totalPages();
     }
 
     private boolean matcherLokalFiltrering(EnhetResponse enhet, CompanySearchRequest request) {
@@ -716,7 +754,7 @@ public class CompanyCheckService {
         if (isTrue(enhet.konkurs()) || isTrue(enhet.underTvangsavviklingEllerTvangsopplosning()) || isTrue(enhet.underAvvikling())) {
             return false;
         }
-        return beregnVarselpoeng(enhet) < YELLOW_SCORE_THRESHOLD;
+        return beregnVarselpoeng(enhet, ActorRiskSummary.none()) < YELLOW_SCORE_THRESHOLD;
     }
 
     private String normaliserSoketekst(String value) {

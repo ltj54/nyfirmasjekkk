@@ -87,7 +87,7 @@ public class CompanyApiV1Controller {
         companyHistoryService.captureSnapshot(check);
         var enhet = brregClient.hentEnhet(orgNumber);
         var roller = brregClient.hentRoller(orgNumber);
-        companyNetworkService.captureRoles(orgNumber, check.navn(), roller);
+        companyNetworkService.captureRoles(orgNumber, check.navn(), check.status(), roller);
         return mapper.toDetails(check, enhet, roller);
     }
 
@@ -148,7 +148,7 @@ public class CompanyApiV1Controller {
         CompanyCheck check = companyCheckService.vurder(orgNumber);
         companyHistoryService.captureSnapshot(check);
         var enhet = brregClient.hentEnhet(orgNumber);
-        companyNetworkService.captureRoles(orgNumber, check.navn(), brregClient.hentRoller(orgNumber));
+        companyNetworkService.captureRoles(orgNumber, check.navn(), check.status(), brregClient.hentRoller(orgNumber));
         return List.of(mapper.toSummary(check, enhet));
     }
 
@@ -162,7 +162,7 @@ public class CompanyApiV1Controller {
             int page,
             int size
     ) {
-        int requestedResultSize = Math.min(Math.max((page + 1) * size, size), 100);
+        int requestedResultSize = Math.clamp((page + 1) * size, size, 100);
         return companyCheckService.sok(new CompanySearchRequest(
                         blankToNull(q),
                         daysRegisteredMax,

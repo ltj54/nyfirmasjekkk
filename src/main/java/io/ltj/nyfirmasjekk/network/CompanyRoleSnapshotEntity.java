@@ -1,7 +1,10 @@
 package io.ltj.nyfirmasjekk.network;
 
+import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +34,10 @@ public class CompanyRoleSnapshotEntity {
 
     @Column(nullable = false)
     private String roleType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
+    private TrafficLight companyScoreColor;
 
     @Column(nullable = false)
     private Boolean active;
@@ -80,6 +87,14 @@ public class CompanyRoleSnapshotEntity {
 
     public void setRoleType(String roleType) {
         this.roleType = roleType;
+    }
+
+    public TrafficLight getCompanyScoreColor() {
+        return companyScoreColor;
+    }
+
+    public void setCompanyScoreColor(TrafficLight companyScoreColor) {
+        this.companyScoreColor = companyScoreColor;
     }
 
     public Boolean getActive() {

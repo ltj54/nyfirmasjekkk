@@ -398,6 +398,110 @@ class CompanyCheckServiceTests {
         assertThat(client.roleLookups()).isZero();
     }
 
+    @Test
+    void girGulNarAktorhistorikkErUrovekkende() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "444555666",
+                                "Rolig AS",
+                                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                                List.of("Konsulenttjenester"),
+                                "rolig.no",
+                                "post@rolig.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                true,
+                                true,
+                                3,
+                                true,
+                                "2024",
+                                LocalDate.of(2024, 1, 5),
+                                LocalDate.of(2023, 12, 20),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                fixedClock(),
+                (orgNumber, rollerResponse) -> new ActorRiskSummary(TrafficLight.YELLOW, 2, 1, 1, 0)
+        );
+
+        var result = service.vurder("444555666");
+
+        assertThat(result.status()).isEqualTo(TrafficLight.YELLOW);
+        assertThat(result.funn()).extracting(CheckFinding::label).contains("Aktørrisiko");
+    }
+
+    @Test
+    void girRodNarAktorhistorikkErAlvorlig() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "555666777",
+                                "Rolig AS",
+                                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                                List.of("Konsulenttjenester"),
+                                "rolig.no",
+                                "post@rolig.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                true,
+                                true,
+                                3,
+                                true,
+                                "2024",
+                                LocalDate.of(2024, 1, 5),
+                                LocalDate.of(2023, 12, 20),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                fixedClock(),
+                (orgNumber, rollerResponse) -> new ActorRiskSummary(TrafficLight.RED, 3, 2, 1, 0)
+        );
+
+        var result = service.vurder("555666777");
+
+        assertThat(result.status()).isEqualTo(TrafficLight.RED);
+        assertThat(result.funn()).extracting(CheckFinding::label).contains("Aktørrisiko");
+    }
+
     private Clock fixedClock() {
         return Clock.fixed(Instant.parse("2026-04-13T10:15:30Z"), ZoneId.of("Europe/Oslo"));
     }
@@ -437,20 +541,6 @@ class CompanyCheckServiceTests {
             this.roller = null;
             this.searchResponse = searchResponse;
             this.searchResponsesByPage = Map.of();
-            this.enheterByOrgNumber = new HashMap<>(enheterByOrgNumber);
-            this.rollerByOrgNumber = new HashMap<>(rollerByOrgNumber);
-        }
-
-        private StubBrregClient(
-                Map<String, EnhetResponse> enheterByOrgNumber,
-                Map<String, RollerResponse> rollerByOrgNumber,
-                Map<Integer, EnheterSearchResponse> searchResponsesByPage
-        ) {
-            super(null);
-            this.enhet = null;
-            this.roller = null;
-            this.searchResponse = null;
-            this.searchResponsesByPage = new HashMap<>(searchResponsesByPage);
             this.enheterByOrgNumber = new HashMap<>(enheterByOrgNumber);
             this.rollerByOrgNumber = new HashMap<>(rollerByOrgNumber);
         }

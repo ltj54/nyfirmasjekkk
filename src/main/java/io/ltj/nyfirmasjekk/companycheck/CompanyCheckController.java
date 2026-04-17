@@ -66,7 +66,7 @@ public class CompanyCheckController {
         companyHistoryService.captureSnapshot(check);
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         var roller = brregClient.hentRoller(organisasjonsnummer);
-        companyNetworkService.captureRoles(organisasjonsnummer, check.navn(), roller);
+        companyNetworkService.captureRoles(organisasjonsnummer, check.navn(), check.status(), roller);
         return mapper.toDetails(check, enhet, roller);
     }
 

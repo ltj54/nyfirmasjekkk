@@ -3,6 +3,7 @@ package io.ltj.nyfirmasjekk.network;
 import io.ltj.nyfirmasjekk.api.v1.NetworkActor;
 import io.ltj.nyfirmasjekk.api.v1.NetworkCompanyLink;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
+import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class CompanyNetworkService {
         this.clock = clock;
     }
 
-    public void captureRoles(String orgNumber, String companyName, RollerResponse rollerResponse) {
+    public void captureRoles(String orgNumber, String companyName, TrafficLight companyScoreColor, RollerResponse rollerResponse) {
         if (rollerResponse == null || rollerResponse.rollegrupper() == null) {
             return;
         }
@@ -45,7 +46,7 @@ public class CompanyNetworkService {
                 .flatMap(group -> group.roller() == null ? Stream.empty() : group.roller().stream())
                 .filter(Objects::nonNull)
                 .filter(this::isActiveRole)
-                .map(role -> toEntity(orgNumber, companyName, role, now))
+                .map(role -> toEntity(orgNumber, companyName, companyScoreColor, role, now))
                 .filter(Objects::nonNull)
                 .forEach(repository::save);
     }
@@ -87,16 +88,26 @@ public class CompanyNetworkService {
                                                 .distinct()
                                                 .sorted()
                                                 .toList(),
+                                        latestCompanyEntry.getCompanyScoreColor(),
                                         latestCompanyEntry.getCapturedAt()
                                 );
                             })
                             .sorted(Comparator.comparing(NetworkCompanyLink::lastSeenAt).reversed())
                             .toList();
 
+                    int redCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.RED).count();
+                    int yellowCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.YELLOW).count();
+                    int greenCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.GREEN).count();
+
                     return new NetworkActor(
                             actorKey,
                             latest.getActorName(),
                             roleTypesInSelectedCompany,
+                            actorRiskLevel(redCompanyCount, yellowCompanyCount, greenCompanyCount),
+                            relatedCompanies.size(),
+                            redCompanyCount,
+                            yellowCompanyCount,
+                            greenCompanyCount,
                             relatedCompanies
                     );
                 })
@@ -107,6 +118,7 @@ public class CompanyNetworkService {
     private CompanyRoleSnapshotEntity toEntity(
             String orgNumber,
             String companyName,
+            TrafficLight companyScoreColor,
             RollerResponse.Rolle role,
             LocalDateTime capturedAt
     ) {
@@ -124,6 +136,7 @@ public class CompanyNetworkService {
         entity.setActorKey(actorKey);
         entity.setActorName(actorName);
         entity.setRoleType(roleType);
+        entity.setCompanyScoreColor(companyScoreColor);
         entity.setActive(true);
         entity.setCapturedAt(capturedAt);
         return entity;
@@ -181,5 +194,18 @@ public class CompanyNetworkService {
             return "PROKURA";
         }
         return normalized.replaceAll("[^A-Z0-9]+", "_");
+    }
+
+    private TrafficLight actorRiskLevel(int redCompanyCount, int yellowCompanyCount, int greenCompanyCount) {
+        if (redCompanyCount > 0) {
+            return TrafficLight.RED;
+        }
+        if (yellowCompanyCount > 0) {
+            return TrafficLight.YELLOW;
+        }
+        if (greenCompanyCount > 0) {
+            return TrafficLight.GREEN;
+        }
+        return TrafficLight.YELLOW;
     }
 }

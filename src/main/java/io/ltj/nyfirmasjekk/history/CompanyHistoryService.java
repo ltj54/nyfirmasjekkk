@@ -36,7 +36,7 @@ public class CompanyHistoryService {
         entity.setScoreColor(companyCheck.status());
         entity.setSummary(companyCheck.sammendrag());
         entity.setMunicipality(extractMunicipality(facts));
-        entity.setCounty(extractCounty(facts));
+        entity.setCounty(null);
         entity.setNaceCode(facts == null ? null : facts.naeringskode());
         entity.setLatestAnnualAccountsYear(facts == null ? null : facts.sisteInnsendteAarsregnskap());
         entity.setVatRegistered(facts == null ? null : facts.registrertIMvaregisteret());
@@ -82,10 +82,6 @@ public class CompanyHistoryService {
         if (start >= 0 && end > start) {
             return facts.lokasjon().substring(start + 1, end);
         }
-        return null;
-    }
-
-    private String extractCounty(CompanyFacts facts) {
         return null;
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -82,14 +81,6 @@ public class BrregClient {
             }
             throw new BrregClientException("Klarte ikke hente roller", exception);
         }
-    }
-
-    public EnheterSearchResponse sokEtterNyeAS(LocalDate fraDato) {
-        Map<String, String> filter = new HashMap<>();
-        filter.put("organisasjonsform.kode", "AS");
-        filter.put("fraRegistreringsdatoEnhetsregisteret", fraDato.toString());
-        filter.put("size", "25");
-        return sok(filter);
     }
 
     public EnheterSearchResponse sok(Map<String, String> filter) {

@@ -88,6 +88,7 @@ export interface NetworkCompanyLink {
   orgNumber: string;
   companyName: string;
   roleTypes: string[];
+  scoreColor: ScoreColor;
   lastSeenAt: string;
 }
 
@@ -95,6 +96,11 @@ export interface NetworkActor {
   actorKey: string;
   actorName: string;
   roleTypesInSelectedCompany: string[];
+  riskLevel: ScoreColor;
+  totalCompanyCount: number;
+  redCompanyCount: number;
+  yellowCompanyCount: number;
+  greenCompanyCount: number;
   relatedCompanies: NetworkCompanyLink[];
 }
 

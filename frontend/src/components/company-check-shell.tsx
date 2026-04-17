@@ -22,6 +22,7 @@ import type {
   NetworkActor,
   CompanySummary,
   MetadataFiltersResponse,
+  ScoreColor,
 } from "@/lib/company-check";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,7 @@ const ruleLabels: Record<string, string> = {
   AKTIVITET: "Aktivitetsbeskrivelse mangler",
   DATAKVALITET: "Det finnes få grunnopplysninger i registeret",
   ROLLER: "Ledelse eller roller er ufullstendige",
+  AKTORRISIKO: "Tilknyttede aktører har urovekkende historikk",
   ALVORLIGE_REGISTRERINGSSIGNALER: "Alvorlige registreringssignaler er funnet",
   REGISTRERING: "Virksomheten er registrert",
   ORGANISASJONSNUMMER: "Virksomheten finnes i registeret",
@@ -758,6 +760,7 @@ function CompanyDetailView({
   const scoreReasons = company.score?.reasons || [];
   const triggeredRules = company.score?.rulesTriggered || [];
   const primaryReason = scoreReasons.length > 0 ? scoreReasons[0] : "Ingen begrunnelse oppgitt.";
+  const historyPatterns = analyzeHistoryPatterns(history);
 
   return (
     <div className="detail-shell mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -871,6 +874,32 @@ function CompanyDetailView({
 
         <div className="space-y-6">
         <div className="insight-card rounded-[26px] border border-white/80 p-6">
+          <h4 className="mb-4 text-[14px] font-bold text-[#171717]">Utvikling over tid</h4>
+          {historyPatterns ? (
+            <div className="space-y-3">
+              <p className="text-[14px] font-medium leading-relaxed text-[#626262]">
+                {historyPatterns.scoreTrend}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {historyPatterns.changeSignals.map((signal) => (
+                  <Badge
+                    key={signal}
+                    variant="outline"
+                    className="border-[#e5e5e5] bg-[#fafafa] text-[11px] font-bold text-[#525252]"
+                  >
+                    {signal}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-[14px] text-[#737373]">
+              Det finnes foreløpig for lite historikk til å vise tydelige endringsmønstre.
+            </p>
+          )}
+        </div>
+
+        <div className="insight-card rounded-[26px] border border-white/80 p-6">
           <h4 className="mb-4 text-[14px] font-bold text-[#171717]">Nettverk</h4>
           <div className="space-y-3">
             {network.length > 0 ? (
@@ -883,16 +912,24 @@ function CompanyDetailView({
                         {actor.roleTypesInSelectedCompany.map(formatRoleType).join(" · ")}
                       </p>
                     </div>
-                    <p className="whitespace-nowrap text-[12px] font-medium text-[#737373]">
-                      {actor.relatedCompanies.length} selskaper
-                    </p>
+                    <div className="text-right">
+                      <p className={`text-[11px] font-extrabold uppercase tracking-wider ${networkRiskTextClass(actor.riskLevel)}`}>
+                        {formatRiskLabel(actor.riskLevel)}
+                      </p>
+                      <p className="mt-1 whitespace-nowrap text-[12px] font-medium text-[#737373]">
+                        {actor.totalCompanyCount} selskaper
+                      </p>
+                    </div>
                   </div>
+                  <p className="mt-3 text-[12px] font-medium text-[#737373]">
+                    {actor.redCompanyCount} røde · {actor.yellowCompanyCount} gule · {actor.greenCompanyCount} grønne
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {actor.relatedCompanies.slice(0, 4).map((link) => (
                       <Badge
                         key={`${actor.actorKey}-${link.orgNumber}`}
                         variant="outline"
-                        className="border-[#e5e5e5] bg-white text-[11px] font-bold text-[#525252]"
+                        className={`border-[#e5e5e5] bg-white text-[11px] font-bold ${networkRiskTextClass(link.scoreColor)}`}
                       >
                         {link.companyName}
                       </Badge>
@@ -1082,6 +1119,28 @@ function formatDateTime(value: string) {
   }).format(date);
 }
 
+function formatRiskLabel(scoreColor: ScoreColor) {
+  switch (scoreColor) {
+    case "RED":
+      return "Høy aktørrisiko";
+    case "YELLOW":
+      return "Noe aktørrisiko";
+    case "GREEN":
+      return "Lav aktørrisiko";
+  }
+}
+
+function networkRiskTextClass(scoreColor: ScoreColor) {
+  switch (scoreColor) {
+    case "RED":
+      return "text-rose-700";
+    case "YELLOW":
+      return "text-amber-700";
+    case "GREEN":
+      return "text-emerald-700";
+  }
+}
+
 function softenReason(reason: string) {
   return reason
     .replace("Åpne registerdata viser alvorlige forhold som bør sjekkes før samarbeid.", "Det finnes alvorlige registersignaler som bør undersøkes før man går videre.")
@@ -1134,4 +1193,90 @@ function estimateListProgress(elapsedMs: number) {
     return 75 + ((elapsedMs - 15000) / 30000) * 15;
   }
   return 90;
+}
+
+function analyzeHistoryPatterns(history: CompanyHistoryEntry[]) {
+  if (history.length < 2) {
+    return null;
+  }
+
+  const ordered = [...history].sort(
+    (left, right) => new Date(left.capturedAt).getTime() - new Date(right.capturedAt).getTime()
+  );
+
+  let scoreChanges = 0;
+  let organizationFormChanges = 0;
+  let naceChanges = 0;
+  let contactChanges = 0;
+  let roleChanges = 0;
+
+  for (let index = 1; index < ordered.length; index += 1) {
+    const previous = ordered[index - 1];
+    const current = ordered[index];
+
+    if (previous.scoreColor !== current.scoreColor) {
+      scoreChanges += 1;
+    }
+    if ((previous.organizationForm ?? "") !== (current.organizationForm ?? "")) {
+      organizationFormChanges += 1;
+    }
+    if ((previous.naceCode ?? "") !== (current.naceCode ?? "")) {
+      naceChanges += 1;
+    }
+    if (previous.hasContactData !== current.hasContactData) {
+      contactChanges += 1;
+    }
+    if (previous.hasRoles !== current.hasRoles) {
+      roleChanges += 1;
+    }
+  }
+
+  const first = ordered[0];
+  const latest = ordered[ordered.length - 1];
+  const changeSignals: string[] = [];
+
+  if (scoreChanges > 0) {
+    changeSignals.push(`${scoreChanges} scoreendringer`);
+  }
+  if (organizationFormChanges > 0) {
+    changeSignals.push(`${organizationFormChanges} endringer i org.form`);
+  }
+  if (naceChanges > 0) {
+    changeSignals.push(`${naceChanges} bransjeendringer`);
+  }
+  if (contactChanges > 0) {
+    changeSignals.push(`${contactChanges} endringer i kontaktdata`);
+  }
+  if (roleChanges > 0) {
+    changeSignals.push(`${roleChanges} endringer i roller`);
+  }
+  if (changeSignals.length === 0) {
+    changeSignals.push("Stabil historikk så langt");
+  }
+
+  return {
+    scoreTrend: buildScoreTrendText(first.scoreColor as ScoreColor, latest.scoreColor as ScoreColor, scoreChanges),
+    changeSignals,
+  };
+}
+
+function buildScoreTrendText(from: ScoreColor, to: ScoreColor, scoreChanges: number) {
+  if (from === to && scoreChanges === 0) {
+    return `Vurderingen har vært stabil på ${formatLegendLabel(to).toLowerCase()} i den lagrede historikken.`;
+  }
+  if (from === to) {
+    return `Vurderingen har beveget seg underveis, men står nå igjen på ${formatLegendLabel(to).toLowerCase()}.`;
+  }
+  return `Vurderingen har beveget seg fra ${formatLegendLabel(from).toLowerCase()} til ${formatLegendLabel(to).toLowerCase()}.`;
+}
+
+function formatLegendLabel(scoreColor: ScoreColor) {
+  switch (scoreColor) {
+    case "GREEN":
+      return "Ingen varselflagg";
+    case "YELLOW":
+      return "Begrenset info";
+    case "RED":
+      return "Alvorlige signaler";
+  }
 }
