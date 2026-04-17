@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const backendBaseUrl =
-  process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:8080";
+  process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
 
 export async function GET(
   request: Request,
@@ -9,11 +9,8 @@ export async function GET(
 ) {
   const { organisasjonsnummer } = await context.params;
 
-  // Use the new V1 API if it's a 9-digit number
-  const isOrgNumber = /^\d{9}$/.test(organisasjonsnummer);
-  const url = isOrgNumber
-    ? `${backendBaseUrl}/api/v1/companies/${organisasjonsnummer}`
-    : `${backendBaseUrl}/api/v1/companies?q=${encodeURIComponent(organisasjonsnummer)}`;
+  // Point to the improved CompanyCheckController
+  const url = `${backendBaseUrl}/api/company-check/${organisasjonsnummer}`;
 
   try {
     const response = await fetch(url, {
@@ -23,22 +20,18 @@ export async function GET(
       },
     });
 
-    const contentType =
-      response.headers.get("content-type") ?? "application/json; charset=utf-8";
-    const body = await response.text();
+    if (!response.ok) {
+        return new NextResponse(await response.text(), { status: response.status });
+    }
 
-    return new NextResponse(body, {
-      status: response.status,
-      headers: {
-        "content-type": contentType,
-      },
-    });
-  } catch {
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error("Fetch error:", err);
     return NextResponse.json(
       {
         title: "Backend utilgjengelig",
-        detail:
-          "Klarte ikke kontakte Spring-backend. Start backend-en og prøv igjen.",
+        detail: "Klarte ikke kontakte Spring-backend på " + url,
       },
       { status: 502 }
     );

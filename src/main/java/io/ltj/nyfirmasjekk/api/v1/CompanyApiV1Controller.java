@@ -140,6 +140,7 @@ public class CompanyApiV1Controller {
                         blankToNull(county),
                         blankToNull(naceCode),
                         blankToNull(organizationForm),
+                        null,
                         requestedResultSize
                 )).stream()
                 .map(company -> mapper.toSummary(company, brregClient.hentEnhet(company.organisasjonsnummer())))

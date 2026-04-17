@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const backendBaseUrl =
-  process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:8080";
+  process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
 
 export async function GET() {
   const url = `${backendBaseUrl}/api/v1/metadata/filters`;
@@ -14,18 +14,18 @@ export async function GET() {
       },
     });
 
-    const body = await response.text();
-    return new NextResponse(body, {
-      status: response.status,
-      headers: {
-        "content-type": response.headers.get("content-type") ?? "application/json",
-      },
-    });
-  } catch {
+    if (!response.ok) {
+        return new NextResponse(await response.text(), { status: response.status });
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error("Fetch error:", err);
     return NextResponse.json(
       {
         title: "Backend utilgjengelig",
-        detail: "Klarte ikke kontakte Spring-backend.",
+        detail: "Klarte ikke kontakte Spring-backend på " + url,
       },
       { status: 502 }
     );

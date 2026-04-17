@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.companycheck;
 
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
+import io.ltj.nyfirmasjekk.brreg.EnheterSearchResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -43,21 +43,56 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
-        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", 25));
+        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, 25));
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request) {
-        var searchResponse = brregClient.sok(byggFilter(request));
+        return sok(request, 0);
+    }
 
-        if (searchResponse == null || searchResponse._embedded() == null || searchResponse._embedded().enheter() == null) {
-            return List.of();
+    public List<CompanyCheck> sok(CompanySearchRequest request, int page) {
+        int requestedPage = Math.max(page, 0);
+        int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
+        int offset = requestedPage * pageSize;
+        int matchedCount = 0;
+        int upstreamPage = 0;
+        List<CompanyCheck> results = new ArrayList<>();
+
+        while (true) {
+            var searchResponse = brregClient.sok(byggFilter(request, upstreamPage));
+            var enheter = hentEnheter(searchResponse);
+
+            if (enheter.isEmpty()) {
+                break;
+            }
+
+            for (var enhet : enheter) {
+                if (enhet == null || !matcherLokalFiltrering(enhet, request)) {
+                    continue;
+                }
+
+                var check = vurderFraSok(enhet);
+                if (!matcherScore(check, request.score())) {
+                    continue;
+                }
+
+                if (matchedCount++ < offset) {
+                    continue;
+                }
+
+                results.add(check);
+                if (results.size() >= pageSize) {
+                    return results;
+                }
+            }
+
+            upstreamPage++;
+            if (!harFlereSider(searchResponse, upstreamPage)) {
+                break;
+            }
         }
 
-        return searchResponse._embedded().enheter().stream()
-                .filter(Objects::nonNull)
-                .filter(enhet -> matcherLokalFiltrering(enhet, request))
-                .map(this::vurderFraSok)
-                .toList();
+        return results;
     }
 
     public CompanyCheck vurder(String organisasjonsnummer) {
@@ -105,7 +140,7 @@ public class CompanyCheckService {
                         styre,
                         enhet.hjemmeside(),
                         enhet.epostadresse(),
-                        førsteIkkeTom(enhet.telefon(), enhet.mobil()),
+                        forsteIkkeTom(enhet.telefon(), enhet.mobil()),
                         enhet.registrertIMvaregisteret(),
                         enhet.registrertIForetaksregisteret(),
                         enhet.antallAnsatte(),
@@ -125,7 +160,7 @@ public class CompanyCheckService {
                 ),
                 List.of(
                         "Denne førsteversjonen bruker bare åpne data fra Enhetsregisteret.",
-                        "Signatur/prokura, reelle rettighetshavere, kunngjøringer og oppdateringsstrømmer er ikke vurdert ennå.",
+                        "Signatur/prokura, reelle rettighetshavere, kunngjøringer og oppdateringsstrømmer are ikke vurdert ennå.",
                         "Rød status dekker foreløpig bare alvorlige signaler som faktisk finnes i de åpne feltene vi leser."
                 )
         );
@@ -364,15 +399,7 @@ public class CompanyCheckService {
             case GREEN -> "Åpne registerdata gir et ryddig førsteinntrykk.";
             case YELLOW -> "Åpne registerdata viser noen forhold som bør vurderes litt nærmere.";
             case RED -> "Åpne registerdata viser forhold som bør undersøkes før samarbeid.";
-        } + " Registrerte signaler: " + red + " alvorlige og " + yellow + " moderate.";
-    }
-
-    private int severityRank(TrafficLight status) {
-        return switch (status) {
-            case GREEN -> 1;
-            case YELLOW -> 2;
-            case RED -> 3;
-        };
+        } + " Registrerte signaler: " + red + " alvorlige and " + yellow + " moderate.";
     }
 
     private TrafficLight bestemStatus(EnhetResponse enhet, boolean hasRoles, boolean hasSeriousSignals) {
@@ -455,7 +482,7 @@ public class CompanyCheckService {
         return value != null && !value.isBlank();
     }
 
-    private String førsteIkkeTom(String... values) {
+    private String forsteIkkeTom(String... values) {
         for (String value : values) {
             if (hasText(value)) {
                 return value;
@@ -464,17 +491,17 @@ public class CompanyCheckService {
         return null;
     }
 
-    private Map<String, String> byggFilter(CompanySearchRequest request) {
+    private Map<String, String> byggFilter(CompanySearchRequest request, int page) {
         Map<String, String> filter = new HashMap<>();
-        int requestedSize = request.resultSize() > 0 ? request.resultSize() : 25;
+        int requestedSize = request.resultSize() > 0 ? request.resultSize() : 100;
         filter.put("size", String.valueOf(Math.min(requestedSize, 100)));
+        filter.put("page", String.valueOf(page));
 
         if (request.dager() > 0) {
             filter.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(request.dager()).toString());
         }
         if (hasText(request.navn())) {
             filter.put("navn", request.navn().trim());
-            filter.put("navnMetodeForSoek", "FORTLOEPENDE");
         }
         if (hasText(request.organisasjonsform())) {
             filter.put("organisasjonsform.kode", request.organisasjonsform().trim().toUpperCase(Locale.ROOT));
@@ -486,11 +513,52 @@ public class CompanyCheckService {
             filter.put("naeringskode1.kode", request.naeringskode().trim());
         }
 
+        // Sorter etter registreringsdato for å få de nyeste først
+        filter.put("sort", "registreringsdatoEnhetsregisteret,desc");
+
         return filter;
     }
 
+    private List<EnhetResponse> hentEnheter(EnheterSearchResponse searchResponse) {
+        if (searchResponse == null || searchResponse._embedded() == null || searchResponse._embedded().enheter() == null) {
+            return List.of();
+        }
+        return searchResponse._embedded().enheter();
+    }
+
+    private boolean harFlereSider(EnheterSearchResponse searchResponse, int nextPage) {
+        return searchResponse != null
+                && searchResponse.page() != null
+                && nextPage < searchResponse.page().totalPages();
+    }
+
     private boolean matcherLokalFiltrering(EnhetResponse enhet, CompanySearchRequest request) {
-        return !hasText(request.fylke()) || matcherFylke(enhet, request.fylke());
+        return matcherNavn(enhet, request.navn())
+                && (!hasText(request.fylke()) || matcherFylke(enhet, request.fylke()));
+    }
+
+    private boolean matcherNavn(EnhetResponse enhet, String navn) {
+        if (!hasText(navn)) {
+            return true;
+        }
+
+        String normalizedName = normaliserSoketekst(enhet.navn());
+        return Stream.of(normaliserSoketekst(navn).split(" "))
+                .filter(this::hasText)
+                .allMatch(normalizedName::contains);
+    }
+
+    private boolean matcherScore(CompanyCheck check, String score) {
+        return !hasText(score) || check.status().name().equalsIgnoreCase(score);
+    }
+
+    private String normaliserSoketekst(String value) {
+        if (!hasText(value)) {
+            return "";
+        }
+        return value.trim()
+                .replaceAll("\\s+", " ")
+                .toUpperCase(Locale.ROOT);
     }
 
     private boolean matcherFylke(EnhetResponse enhet, String fylke) {

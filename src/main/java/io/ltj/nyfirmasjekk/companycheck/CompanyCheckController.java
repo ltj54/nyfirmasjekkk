@@ -1,5 +1,9 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
+import io.ltj.nyfirmasjekk.api.v1.CompanyApiV1Mapper;
+import io.ltj.nyfirmasjekk.api.v1.CompanyDetails;
+import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
+import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
 import jakarta.validation.constraints.Pattern;
@@ -21,33 +25,44 @@ import java.util.List;
 public class CompanyCheckController {
 
     private final CompanyCheckService companyCheckService;
+    private final CompanyApiV1Mapper mapper;
+    private final BrregClient brregClient;
 
-    public CompanyCheckController(CompanyCheckService companyCheckService) {
+    public CompanyCheckController(CompanyCheckService companyCheckService, CompanyApiV1Mapper mapper, BrregClient brregClient) {
         this.companyCheckService = companyCheckService;
+        this.mapper = mapper;
+        this.brregClient = brregClient;
     }
 
     @GetMapping("/{organisasjonsnummer}")
-    public CompanyCheck vurder(
+    public CompanyDetails vurder(
             @PathVariable
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer
     ) {
-        return companyCheckService.vurder(organisasjonsnummer);
+        CompanyCheck check = companyCheckService.vurder(organisasjonsnummer);
+        var enhet = brregClient.hentEnhet(organisasjonsnummer);
+        var roller = brregClient.hentRoller(organisasjonsnummer);
+        return mapper.toDetails(check, enhet, roller);
     }
 
     @GetMapping("/nye-as")
-    public List<CompanyCheck> hentNyeAs(@RequestParam(defaultValue = "30") int dager) {
-        return companyCheckService.hentNyeAs(dager);
+    public List<CompanySummary> hentNyeAs(@RequestParam(defaultValue = "30") int dager) {
+        return companyCheckService.hentNyeAs(dager).stream()
+                .map(check -> mapper.toSummary(check, brregClient.hentEnhet(check.organisasjonsnummer())))
+                .toList();
     }
 
     @GetMapping("/search")
-    public List<CompanyCheck> sok(
+    public List<CompanySummary> sok(
             @RequestParam(required = false) String navn,
             @RequestParam(defaultValue = "30") int dager,
             @RequestParam(required = false) String kommune,
             @RequestParam(required = false) String fylke,
             @RequestParam(required = false) String naeringskode,
-            @RequestParam(required = false) String organisasjonsform
+            @RequestParam(required = false) String organisasjonsform,
+            @RequestParam(required = false) String score,
+            @RequestParam(defaultValue = "0") int page
     ) {
         return companyCheckService.sok(new CompanySearchRequest(
                 navn,
@@ -56,8 +71,11 @@ public class CompanyCheckController {
                 fylke,
                 naeringskode,
                 organisasjonsform,
-                25
-        ));
+                score,
+                100
+        ), page).stream()
+                .map(check -> mapper.toSummary(check, brregClient.hentEnhet(check.organisasjonsnummer())))
+                .toList();
     }
 
     @ExceptionHandler(EnhetFinnesIkkeException.class)

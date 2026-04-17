@@ -10,6 +10,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -246,9 +247,189 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock());
 
-        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", 60));
+        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, 60));
 
         assertThat(client.lastSearchFilter()).containsEntry("size", "60");
+    }
+
+    @Test
+    void filtrererPaAlleSokeordOgScoreLokalt() {
+        var trygEnhet = new EnhetResponse(
+                "911934558",
+                "FUNKSJONÆRLAGET TRYG FORSIKRING AVD. TØNSBERG",
+                new EnhetResponse.Organisasjonsform("FLI", "Forening/lag/innretning"),
+                new EnhetResponse.Naeringskode("94.992", "Aktiviteter i andre medlemsorganisasjoner ellers"),
+                List.of("Interesseorganisasjon"),
+                "tryg.no",
+                "post@tryg.no",
+                "12345678",
+                null,
+                false,
+                false,
+                false,
+                false,
+                false,
+                null,
+                false,
+                null,
+                LocalDate.of(2013, 11, 4),
+                LocalDate.of(2013, 11, 4),
+                null,
+                null
+        );
+        var redEnhet = new EnhetResponse(
+                "915488641",
+                "UNI FORSIKRING AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("66.220", "Forsikringsformidling"),
+                List.of("Forsikringsformidling"),
+                null,
+                null,
+                null,
+                null,
+                false,
+                true,
+                false,
+                true,
+                false,
+                null,
+                false,
+                null,
+                LocalDate.of(2015, 6, 29),
+                LocalDate.of(2015, 6, 29),
+                null,
+                null
+        );
+        var client = new StubBrregClient(
+                Map.of(
+                        trygEnhet.organisasjonsnummer(), trygEnhet,
+                        redEnhet.organisasjonsnummer(), redEnhet
+                ),
+                Map.of(
+                        trygEnhet.organisasjonsnummer(), new RollerResponse(List.of()),
+                        redEnhet.organisasjonsnummer(), new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of(trygEnhet, redEnhet)), null)
+        );
+        var service = new CompanyCheckService(client, fixedClock());
+
+        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", 100));
+
+        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("911934558");
+    }
+
+    @Test
+    void henterFlereBrregSiderNarFiltrerteTreffIkkeFinnesPaForsteSide() {
+        var yellowEnhet = new EnhetResponse(
+                "111111111",
+                "FORSIKRING ALFA AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("66.220", "Forsikringsformidling"),
+                List.of("Forsikringsformidling"),
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                false,
+                null,
+                false,
+                null,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 1, 1),
+                null,
+                null
+        );
+        var redEnhet = new EnhetResponse(
+                "222222222",
+                "FORSIKRING BETA AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("66.220", "Forsikringsformidling"),
+                List.of("Forsikringsformidling"),
+                null,
+                null,
+                null,
+                null,
+                false,
+                true,
+                false,
+                true,
+                false,
+                null,
+                false,
+                null,
+                LocalDate.of(2020, 1, 1),
+                LocalDate.of(2020, 1, 1),
+                null,
+                null
+        );
+        var client = new StubBrregClient(
+                Map.of(
+                        yellowEnhet.organisasjonsnummer(), yellowEnhet,
+                        redEnhet.organisasjonsnummer(), redEnhet
+                ),
+                Map.of(
+                        yellowEnhet.organisasjonsnummer(), new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        )),
+                        redEnhet.organisasjonsnummer(), new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Grace", null, "Hopper")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                Map.of(
+                        0, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(yellowEnhet)),
+                                new EnheterSearchResponse.Page(1, 2, 2, 0)
+                        ),
+                        1, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(redEnhet)),
+                                new EnheterSearchResponse.Page(1, 2, 2, 1)
+                        )
+                )
+        );
+        var service = new CompanyCheckService(client, fixedClock());
+
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "RED", 1), 0);
+
+        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("222222222");
     }
 
     private Clock fixedClock() {
@@ -260,6 +441,9 @@ class CompanyCheckServiceTests {
         private final EnhetResponse enhet;
         private final RollerResponse roller;
         private final EnheterSearchResponse searchResponse;
+        private final Map<Integer, EnheterSearchResponse> searchResponsesByPage;
+        private final Map<String, EnhetResponse> enheterByOrgNumber;
+        private final Map<String, RollerResponse> rollerByOrgNumber;
         private Map<String, String> lastSearchFilter;
 
         private StubBrregClient(EnhetResponse enhet, RollerResponse roller) {
@@ -271,21 +455,59 @@ class CompanyCheckServiceTests {
             this.enhet = enhet;
             this.roller = roller;
             this.searchResponse = searchResponse;
+            this.searchResponsesByPage = Map.of();
+            this.enheterByOrgNumber = Map.of();
+            this.rollerByOrgNumber = Map.of();
+        }
+
+        private StubBrregClient(
+                Map<String, EnhetResponse> enheterByOrgNumber,
+                Map<String, RollerResponse> rollerByOrgNumber,
+                EnheterSearchResponse searchResponse
+        ) {
+            super(null);
+            this.enhet = null;
+            this.roller = null;
+            this.searchResponse = searchResponse;
+            this.searchResponsesByPage = Map.of();
+            this.enheterByOrgNumber = new HashMap<>(enheterByOrgNumber);
+            this.rollerByOrgNumber = new HashMap<>(rollerByOrgNumber);
+        }
+
+        private StubBrregClient(
+                Map<String, EnhetResponse> enheterByOrgNumber,
+                Map<String, RollerResponse> rollerByOrgNumber,
+                Map<Integer, EnheterSearchResponse> searchResponsesByPage
+        ) {
+            super(null);
+            this.enhet = null;
+            this.roller = null;
+            this.searchResponse = null;
+            this.searchResponsesByPage = new HashMap<>(searchResponsesByPage);
+            this.enheterByOrgNumber = new HashMap<>(enheterByOrgNumber);
+            this.rollerByOrgNumber = new HashMap<>(rollerByOrgNumber);
         }
 
         @Override
         public EnhetResponse hentEnhet(String organisasjonsnummer) {
-            return enhet;
+            return enheterByOrgNumber.getOrDefault(organisasjonsnummer, enhet);
         }
 
         @Override
         public RollerResponse hentRoller(String organisasjonsnummer) {
-            return roller;
+            return rollerByOrgNumber.getOrDefault(organisasjonsnummer, roller);
         }
 
         @Override
         public EnheterSearchResponse sok(Map<String, String> filter) {
             lastSearchFilter = Map.copyOf(filter);
+            if (!searchResponsesByPage.isEmpty()) {
+                int page = Integer.parseInt(filter.getOrDefault("page", "0"));
+                return searchResponsesByPage.getOrDefault(
+                        page,
+                        new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of()), new EnheterSearchResponse.Page(0, 0, page, page))
+                );
+            }
             return searchResponse;
         }
 

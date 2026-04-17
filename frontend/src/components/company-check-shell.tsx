@@ -24,7 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-const dayOptions = ["30", "90", "180", "365"];
+const dayOptions = ["30", "90", "180", "365", "0"];
 
 const legend = [
   { status: "GREEN", label: "Ingen varselflagg", color: "bg-emerald-500" },
@@ -76,6 +76,7 @@ const analysisTitles = [
 
 export function CompanyCheckShell() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeQuery, setActiveQuery] = useState("");
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
   const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
@@ -89,6 +90,7 @@ export function CompanyCheckShell() {
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
+  const [page, setPage] = useState(0);
   const [, startTransition] = useTransition();
 
   // Fetch recent companies on mount
@@ -113,17 +115,21 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function fetchRecent() {
+  async function fetchRecent(pageNum = 0, query = activeQuery) {
     const params = new URLSearchParams();
     params.set("dager", daysFilter);
+    params.set("page", pageNum.toString());
+    if (query) params.set("q", query);
     if (countyFilter) params.set("county", countyFilter);
     if (organizationFormFilter) params.set("organizationForm", organizationFormFilter);
+    if (selectedLegend) params.set("score", selectedLegend);
 
     try {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
         setRecentCompanies(Array.isArray(data) ? data : data.items || []);
+        setPage(pageNum);
       }
     } catch (err) {
       console.error("Failed to fetch recent companies", err);
@@ -132,15 +138,22 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     if (!selectedCompany) {
-      void fetchRecent();
+      void fetchRecent(0);
     }
-  }, [daysFilter, countyFilter, organizationFormFilter, selectedCompany]);
+  }, [daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany, activeQuery]);
 
   async function handleSearch(term: string) {
     const trimmedTerm = term.trim();
-    if (!trimmedTerm && !countyFilter && !organizationFormFilter) return;
 
     setError(null);
+
+    if (!trimmedTerm) {
+      setSelectedCompany(null);
+      setActiveQuery("");
+      await fetchRecent(0, "");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -155,6 +168,9 @@ export function CompanyCheckShell() {
       }
       if (organizationFormFilter) {
         params.set("organizationForm", organizationFormFilter);
+      }
+      if (selectedLegend) {
+        params.set("score", selectedLegend);
       }
       const endpoint = isOrgNumber 
         ? `/api/company-check/${trimmedTerm}`
@@ -176,7 +192,8 @@ export function CompanyCheckShell() {
           setSelectedCompany(payload as CompanyDetails);
         } else {
           // It's a search result list
-        const items = Array.isArray(payload) ? payload : payload.items || [];
+          const items = Array.isArray(payload) ? payload : payload.items || [];
+          setActiveQuery(trimmedTerm);
           setRecentCompanies(items);
           setSelectedCompany(null);
           if (items.length === 0) {
@@ -196,9 +213,7 @@ export function CompanyCheckShell() {
     handleSearch(searchTerm);
   };
 
-  const filteredCompanies = selectedLegend
-    ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
-    : recentCompanies;
+  const filteredCompanies = recentCompanies;
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
@@ -283,15 +298,15 @@ export function CompanyCheckShell() {
               <div className="mt-8 flex flex-wrap justify-center gap-3 animate-in fade-in duration-1000 delay-300">
                 <label className="flex items-center rounded-full border border-[#e5e5e5] bg-white pr-4 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md">
                   <select
-                    aria-label="Siste 30 dager"
+                    aria-label={daysFilter === "0" ? "Hele tiden" : `Siste ${daysFilter || "30"} dager`}
                     className="rounded-full bg-transparent px-5 py-2 outline-none"
                     onChange={(event) => setDaysFilter(event.target.value)}
                     value={daysFilter}
                   >
-                    <option value="">Siste 30 dager</option>
+                    <option value="">{daysFilter === "0" ? "Hele tiden" : "Siste 30 dager"}</option>
                     {dayOptions.map((option) => (
                       <option key={option} value={option}>
-                        {option} dager
+                        {option === "0" ? "Hele tiden" : `${option} dager`}
                       </option>
                     ))}
                   </select>
@@ -391,26 +406,45 @@ export function CompanyCheckShell() {
                   <h2 className="text-2xl font-extrabold text-[#171717]">Nye selskaper</h2>
                   <p className="text-[14px] font-medium text-[#737373]">{resultsSummary}</p>
                 </div>
-                <Button 
-                  variant="outline" 
-                  className="rounded-full border-[#e5e5e5] font-bold text-[#171717]"
-                  onClick={() => void fetchRecent()}
-                >
-                  Se alle
-                </Button>
-              </div>
-
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page === 0 || isLoading}
+                      onClick={() => void fetchRecent(page - 1)}
+                    >
+                      Forrige
+                    </Button>
+                    <span className="text-sm font-medium">Side {page + 1}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={recentCompanies.length < 100 || isLoading}
+                      onClick={() => void fetchRecent(page + 1)}
+                    >
+                      Neste
+                    </Button>
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-[#e5e5e5] font-bold text-[#171717]"
+                    onClick={() => void fetchRecent(0)}
+                  >
+                    Oppdater
+                  </Button>
+                </div>
+                </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filteredCompanies.length > 0 ? (
-                  filteredCompanies.map((company) => (
-                    <CompanyCard
-                      key={company.orgNumber}
-                      company={company}
-                      onClick={() => handleSearch(company.orgNumber)}
-                    />
-                  ))
-                ) : (
-                  <div className="col-span-full rounded-[26px] border border-[#ece6da] bg-white/90 px-6 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
+              {filteredCompanies.length > 0 ? (
+                filteredCompanies.map((company, i) => (
+                  <CompanyCard
+                    key={`${company.orgNumber}-${i}`}
+                    company={company}
+                    onClick={() => handleSearch(company.orgNumber)}
+                  />
+                ))
+              ) : (                  <div className="col-span-full rounded-[26px] border border-[#ece6da] bg-white/90 px-6 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
                     <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#a3a3a3]">
                       Ingen treff
                     </p>
@@ -475,23 +509,6 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
           <CalendarDays className="size-3.5" />
           <span>{company.registrationDate || "Nylig"}</span>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function CompanyCardSkeleton() {
-  return (
-    <div className="rounded-2xl border border-[#eeeeee] bg-white p-5 animate-pulse">
-      <div className="mb-4 flex justify-between">
-        <div className="size-3 rounded-full bg-gray-100" />
-        <div className="h-4 w-12 rounded bg-gray-100" />
-      </div>
-      <div className="mb-2 h-5 w-3/4 rounded bg-gray-100" />
-      <div className="mb-4 h-4 w-1/2 rounded bg-gray-100" />
-      <div className="space-y-2">
-        <div className="h-3 w-full rounded bg-gray-50" />
-        <div className="h-3 w-2/3 rounded bg-gray-50" />
       </div>
     </div>
   );
@@ -595,7 +612,7 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {company.roles && company.roles.length > 0 ? (
               company.roles.map((role, i) => (
-                <div key={i} className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)]">
+                <div key={`${role.type}-${role.name}-${i}`} className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)]">
                   <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-[#a3a3a3]">{role.type}</p>
                   <p className="text-[14px] font-bold text-[#171717]">{role.name}</p>
                 </div>
@@ -610,7 +627,7 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
       <div className="mt-8 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <div className="grid gap-6 md:grid-cols-2">
         {scoreReasons.slice(1).map((reason, i) => (
-          <div key={i} className="insight-card rounded-[26px] border border-white/80 p-6">
+          <div key={`reason-${i}`} className="insight-card rounded-[26px] border border-white/80 p-6">
             <div className="mb-3 flex items-center gap-2">
               <div className={`size-2 rounded-full ${scoreColors[company.scoreColor] || scoreColors.YELLOW}`} />
               <h4 className="text-[14px] font-bold text-[#171717]">{analysisTitles[i % analysisTitles.length]}</h4>
@@ -730,6 +747,7 @@ function buildResultsSummary(
   selectedLegend: keyof typeof legendDetails | null,
 ) {
   const days = daysFilter || "30";
+  const timePart = days === "0" ? "Hele tiden" : `Siste ${days} dager`;
   const countyPart = countyFilter ? `i ${countyFilter}` : "i hele landet";
   const organizationFormLabel = organizationForms.find((item) => item.startsWith(`${organizationFormFilter} - `));
   const formPart = organizationFormFilter
@@ -737,5 +755,5 @@ function buildResultsSummary(
     : "";
   const signalPart = selectedLegend ? `med ${legendDetails[selectedLegend].title.toLowerCase()}` : "";
 
-  return [`Siste ${days} dager`, countyPart, formPart, signalPart].filter(Boolean).join(" ");
+  return [timePart, countyPart, formPart, signalPart].filter(Boolean).join(" ");
 }
