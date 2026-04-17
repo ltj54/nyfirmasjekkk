@@ -1,13 +1,15 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
+import io.ltj.nyfirmasjekk.announcements.AnnouncementService;
+import io.ltj.nyfirmasjekk.api.v1.Announcement;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.EnheterSearchResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -20,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
@@ -27,33 +30,34 @@ import java.util.stream.Stream;
 @Service
 public class CompanyCheckService {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckService.class);
+    private static final int SOURCE_PAGE_SIZE = 100;
+    private static final int FILTERED_SOURCE_PAGE_SIZE = 25;
+    private static final int MAX_SOURCE_PAGES_WITH_SCORE_FILTER = 400;
 
-    private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "SA");
+    private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA", "STIFT");
+    private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA");
+    private static final List<String> ANNUAL_ACCOUNTS_EXPECTED_FORMS = List.of("AS", "ASA", "SA", "STIFT");
+
+    private static final int NEW_COMPANY_DAYS = 180;
     private static final String ROLE_LABEL = "Roller";
-    private static final int HIGH_ATTENTION_COMPANY_DAYS = 90;
-    private static final int NEW_COMPANY_DAYS = 365;
-    private static final int YELLOW_SCORE_THRESHOLD = 3;
-    private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS");
-    private static final List<String> ANNUAL_ACCOUNTS_EXPECTED_FORMS = List.of("AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS");
     private static final RollerResponse EMPTY_ROLLER = new RollerResponse(List.of());
 
     private final BrregClient brregClient;
     private final Clock clock;
     private final ActorRiskService actorRiskService;
+    private final AnnouncementService announcementService;
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
 
     @Autowired
-    public CompanyCheckService(BrregClient brregClient, ActorRiskService actorRiskService) {
-        this(brregClient, Clock.systemDefaultZone(), actorRiskService);
+    public CompanyCheckService(BrregClient brregClient, ActorRiskService actorRiskService, AnnouncementService announcementService) {
+        this(brregClient, Clock.systemDefaultZone(), actorRiskService, announcementService);
     }
 
-    CompanyCheckService(BrregClient brregClient, Clock clock) {
-        this(brregClient, clock, ActorRiskService.noOp());
-    }
-
-    CompanyCheckService(BrregClient brregClient, Clock clock, ActorRiskService actorRiskService) {
+    CompanyCheckService(BrregClient brregClient, Clock clock, ActorRiskService actorRiskService, AnnouncementService announcementService) {
         this.brregClient = brregClient;
         this.clock = clock;
         this.actorRiskService = actorRiskService;
+        this.announcementService = announcementService;
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
@@ -65,192 +69,125 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request, int page) {
-        if ("RED".equalsIgnoreCase(request.score())) {
-            return sokRodeSelskaper(request, page);
-        }
-        if ("GREEN".equalsIgnoreCase(request.score())) {
-            return sokGronneSelskaper(request, page);
-        }
-
-        int requestedPage = Math.max(page, 0);
-        int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
-        int offset = requestedPage * pageSize;
-        int matchedCount = 0;
-        int upstreamPage = 0;
-        List<CompanyCheck> results = new ArrayList<>();
         long startedAt = System.nanoTime();
+        SearchDiagnostics diagnostics = new SearchDiagnostics(request, page);
+        List<CompanyCheck> results = harTekst(request.score())
+                ? sokMedScoreFilter(request, page, diagnostics)
+                : sokUtenScoreFilter(request, page, diagnostics);
 
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            while (true) {
-                var searchResponse = brregClient.sok(byggFilter(request, upstreamPage));
-                var enheter = hentEnheter(searchResponse);
-
-                if (enheter.isEmpty()) {
-                    break;
-                }
-
-                List<Future<CompanyCheck>> futures = enheter.stream()
-                        .filter(Objects::nonNull)
-                        .filter(enhet -> matcherLokalFiltrering(enhet, request))
-                        .map(enhet -> executor.submit(() -> vurderFraSok(enhet)))
-                        .toList();
-
-                for (Future<CompanyCheck> future : futures) {
-                    var check = awaitCheck(future);
-                    if (!matcherScore(check, request.score())) {
-                        continue;
-                    }
-
-                    if (matchedCount++ < offset) {
-                        continue;
-                    }
-
-                    results.add(check);
-                    if (results.size() >= pageSize) {
-                        return results;
-                    }
-                }
-
-                upstreamPage++;
-                if (erSisteSide(searchResponse, upstreamPage)) {
-                    break;
-                }
-            }
-        }
-
-        logSearchPath("DEFAULT", request, page, upstreamPage, matchedCount, results.size(), startedAt);
+        long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
+        log.info("Search completed in {} ms: score={}, page={}, results={}", 
+                durationMs, request.score() == null ? "ALL" : request.score(), page, results.size());
+        diagnostics.logSummary(durationMs, results.size());
+        
         return results;
     }
 
-    private List<CompanyCheck> sokGronneSelskaper(CompanySearchRequest request, int page) {
-        int requestedPage = Math.max(page, 0);
-        int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
-        int offset = requestedPage * pageSize;
-        int matchedCount = 0;
-        int upstreamPage = 0;
-        List<CompanyCheck> results = new ArrayList<>();
-        long startedAt = System.nanoTime();
-
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            while (true) {
-                var searchResponse = brregClient.sok(byggFilter(request, upstreamPage));
-                var enheter = hentEnheter(searchResponse);
-
-                if (enheter.isEmpty()) {
-                    break;
-                }
-
-                List<Future<CompanyCheck>> futures = enheter.stream()
-                        .filter(Objects::nonNull)
-                        .filter(enhet -> matcherLokalFiltrering(enhet, request))
-                        .filter(this::kanVaereGrontTreff)
-                        .map(enhet -> executor.submit(() -> vurderGrontSoketreff(enhet)))
-                        .toList();
-
-                for (Future<CompanyCheck> future : futures) {
-                    CompanyCheck check = awaitCheck(future);
-                    if (check == null || !matcherScore(check, request.score())) {
-                        continue;
-                    }
-
-                    if (matchedCount++ < offset) {
-                        continue;
-                    }
-
-                    results.add(check);
-                    if (results.size() >= pageSize) {
-                        return results;
-                    }
-                }
-
-                upstreamPage++;
-                if (erSisteSide(searchResponse, upstreamPage)) {
-                    break;
-                }
-            }
-        }
-
-        logSearchPath("GREEN", request, page, upstreamPage, matchedCount, results.size(), startedAt);
-        return results;
+    private List<CompanyCheck> sokUtenScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+        var filter = byggFilter(request, page);
+        long fetchStartedAt = System.nanoTime();
+        EnheterSearchResponse searchResponse = brregClient.sok(filter);
+        diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+        return vurderSide(searchResponse, request, diagnostics);
     }
 
-    private List<CompanyCheck> sokRodeSelskaper(CompanySearchRequest request, int page) {
-        int requestedPage = Math.max(page, 0);
-        int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
-        int offset = requestedPage * pageSize;
-        int targetCount = offset + pageSize;
-        List<EnhetResponse> collected = new ArrayList<>();
-        Map<String, EnhetResponse> unique = new HashMap<>();
-        String[] seriousSignalFilters = {"konkurs", "underAvvikling", "underTvangsavviklingEllerTvangsopplosning"};
-        long startedAt = System.nanoTime();
-        int upstreamPage = 0;
+    private List<CompanyCheck> sokMedScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+        List<CompanyCheck> matches = new ArrayList<>();
+        int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
+        int matchedBeforePage = 0;
+        int sourcePage = 0;
 
-        for (String signalFilter : seriousSignalFilters) {
-            upstreamPage = 0;
-
-            while (unique.size() < targetCount) {
-                var response = brregClient.sok(byggFilter(request, upstreamPage, signalFilter));
-                var enheter = hentEnheter(response);
-                if (enheter.isEmpty()) {
-                    break;
-                }
-
-                for (var enhet : enheter) {
-                    if (enhet == null || !matcherLokalFiltrering(enhet, request)) {
-                        continue;
-                    }
-                    if (unique.putIfAbsent(enhet.organisasjonsnummer(), enhet) == null) {
-                        collected.add(enhet);
-                    }
-                }
-
-                upstreamPage++;
-                if (erSisteSide(response, upstreamPage)) {
-                    break;
-                }
+        while (matches.size() < request.resultSize() && sourcePage < MAX_SOURCE_PAGES_WITH_SCORE_FILTER) {
+            var filter = byggFilter(request, sourcePage, FILTERED_SOURCE_PAGE_SIZE);
+            long fetchStartedAt = System.nanoTime();
+            EnheterSearchResponse searchResponse = brregClient.sok(filter);
+            diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+            var pageMatches = vurderSide(searchResponse, request, diagnostics);
+            if (matchedBeforePage + pageMatches.size() > requestedOffset) {
+                int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
+                matches.addAll(pageMatches.subList(fromIndex, pageMatches.size()));
             }
+            matchedBeforePage += pageMatches.size();
+
+            var pageInfo = searchResponse.page();
+            boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
+            if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
+                break;
+            }
+
+            sourcePage += 1;
         }
 
-        var results = collected.stream()
-                .map(enhet -> vurderEnhet(enhet, null))
-                .filter(check -> matcherScore(check, request.score()))
-                .sorted((left, right) -> {
-                    LocalDate leftDate = left.fakta() == null ? null : left.fakta().registreringsdato();
-                    LocalDate rightDate = right.fakta() == null ? null : right.fakta().registreringsdato();
-                    if (leftDate == null && rightDate == null) {
-                        return left.navn().compareToIgnoreCase(right.navn());
-                    }
-                    if (leftDate == null) {
-                        return 1;
-                    }
-                    if (rightDate == null) {
-                        return -1;
-                    }
-                    int byDate = rightDate.compareTo(leftDate);
-                    return byDate != 0 ? byDate : left.navn().compareToIgnoreCase(right.navn());
-                })
-                .skip(offset)
-                .limit(pageSize)
+        return matches.stream()
+                .limit(request.resultSize())
                 .toList();
-        logSearchPath("RED", request, page, upstreamPage, unique.size(), results.size(), startedAt);
+    }
+
+    private List<CompanyCheck> vurderSide(EnheterSearchResponse searchResponse, CompanySearchRequest request, SearchDiagnostics diagnostics) {
+        var enheter = hentEnheter(searchResponse);
+        if (enheter.isEmpty()) {
+            return List.of();
+        }
+
+        long preFilterStartedAt = System.nanoTime();
+        List<EnhetResponse> filteredEnheter = enheter.stream()
+                .filter(enhet -> matcherEnhet(enhet, request))
+                .toList();
+        diagnostics.recordPrefilter(enheter.size(), filteredEnheter.size(), preFilterStartedAt);
+
+        if (isHardRedSearch(request)) {
+            long scoringStartedAt = System.nanoTime();
+            List<CompanyCheck> results = filteredEnheter.stream()
+                    .filter(this::hasHardRedSignal)
+                    .map(this::byggHardRedSearchCheck)
+                    .toList();
+            diagnostics.recordScoring(filteredEnheter.size(), results.size(), scoringStartedAt);
+            return results;
+        }
+
+        if (isFastGreenSearch(request)) {
+            long scoringStartedAt = System.nanoTime();
+            List<CompanyCheck> results = filteredEnheter.stream()
+                    .filter(this::canBeFastGreen)
+                    .map(this::byggFastGreenSearchCheck)
+                    .toList();
+            diagnostics.recordScoring(filteredEnheter.size(), results.size(), scoringStartedAt);
+            return results;
+        }
+
+        long scoringStartedAt = System.nanoTime();
+        List<Future<CompanyCheck>> futures = filteredEnheter.stream()
+                .map(enhet -> executor.submit(() -> vurderFraSok(enhet)))
+                .toList();
+
+        List<CompanyCheck> results = futures.stream()
+                .map(this::awaitCheck)
+                .filter(Objects::nonNull)
+                .filter(check -> matcherRequest(check, request))
+                .toList();
+        diagnostics.recordScoring(filteredEnheter.size(), results.size(), scoringStartedAt);
         return results;
+    }
+
+    private boolean isHardRedSearch(CompanySearchRequest request) {
+        return request != null && "RED".equalsIgnoreCase(request.score());
+    }
+
+    private boolean isFastGreenSearch(CompanySearchRequest request) {
+        return request != null && "GREEN".equalsIgnoreCase(request.score());
     }
 
     public CompanyCheck vurder(String organisasjonsnummer) {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         var roller = brregClient.hentRoller(organisasjonsnummer);
-        return vurderEnhet(enhet, roller);
+        var announcements = announcementService.announcementsFor(enhet);
+        return vurderEnhet(enhet, roller, announcements);
     }
 
     private CompanyCheck vurderFraSok(EnhetResponse enhet) {
-        return vurderEnhet(enhet, brregClient.hentRoller(enhet.organisasjonsnummer()));
-    }
-
-    private CompanyCheck vurderGrontSoketreff(EnhetResponse enhet) {
-        if (!erSentralOrganisasjonsform(enhet)) {
-            return vurderEnhet(enhet, EMPTY_ROLLER);
-        }
-        return vurderEnhet(enhet, brregClient.hentRoller(enhet.organisasjonsnummer()));
+        var roller = brregClient.hentRoller(enhet.organisasjonsnummer());
+        // Ingen kunngjøringer i søkemodus (lazy loading i detaljer)
+        return vurderEnhet(enhet, roller, List.of());
     }
 
     private CompanyCheck awaitCheck(Future<CompanyCheck> future) {
@@ -258,575 +195,419 @@ public class CompanyCheckService {
             return future.get();
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new BrregClientException("Avbrutt under vurdering av selskaper", exception);
+            throw new BrregClientException("Avbrutt", exception);
         } catch (ExecutionException exception) {
-            throw new BrregClientException("Klarte ikke vurdere selskaper i søket", exception.getCause());
+            throw new BrregClientException("Feil under søk", exception.getCause());
         }
     }
 
-    private CompanyCheck vurderEnhet(EnhetResponse enhet, RollerResponse roller) {
-        boolean hasRoles = roller != null && (harRolle(roller, "styre") || harDagligLeder(roller));
-        boolean hasSeriousSignals = isTrue(enhet.konkurs()) || isTrue(enhet.underTvangsavviklingEllerTvangsopplosning()) || isTrue(enhet.underAvvikling());
+    private CompanyCheck vurderEnhet(EnhetResponse enhet, RollerResponse roller, List<Announcement> announcements) {
+        boolean hasRoles = roller != null && (!hentRoller(roller, "styre").isEmpty() || hentDagligLeder(roller) != null);
+        boolean hasFissionOrMerger = announcements.stream()
+                .anyMatch(a -> "FISSION".equals(a.type()) || "MERGER".equals(a.type()));
+        boolean isBankruptcy = isBankruptcy(enhet);
+        boolean isForcedDissolution = isForcedDissolution(enhet);
+        boolean isVoluntaryDissolution = isVoluntaryDissolution(enhet);
+        
+        long alderDager = alderDager(enhet);
+        boolean isVeryNew = alderDager < NEW_COMPANY_DAYS;
+
         ActorRiskSummary actorRisk = actorRiskService.summarize(enhet.organisasjonsnummer(), roller);
         List<CheckFinding> funn = new ArrayList<>();
-        byggFunn(enhet, roller, hasRoles, hasSeriousSignals, actorRisk, funn);
+        byggFunn(enhet, roller, hasRoles, isBankruptcy, isForcedDissolution, isVoluntaryDissolution, hasFissionOrMerger, isVeryNew, actorRisk, funn);
 
-        var status = bestemStatus(enhet, hasRoles, hasSeriousSignals, actorRisk);
+        var status = bestemStatus(enhet, hasRoles, isBankruptcy, isForcedDissolution, isVoluntaryDissolution, hasFissionOrMerger, isVeryNew, actorRisk);
         int greenCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.GREEN).count();
         int yellowCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
         int redCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.RED).count();
 
-        String organisasjonsformBeskrivelse = hentOrganisasjonsformBeskrivelse(enhet);
-        String modenhet = erNyttSelskap(enhet) ? "Nytt selskap" : "Etablert selskap";
-        String naeringskode = hentNaeringskodeBeskrivelse(enhet);
-        String aktivitet = hentPrimarAktivitet(enhet);
-        String dagligLeder = hentDagligLeder(roller);
-        List<String> styre = hentRoller(roller, "styre");
-        String lokasjon = utledLokasjon(enhet);
-
         return new CompanyCheck(
                 enhet.organisasjonsnummer(),
                 enhet.navn(),
-                organisasjonsformBeskrivelse,
+                hentOrganisasjonsformBeskrivelse(enhet),
                 status,
                 lagSammendrag(status, funn),
-                new CompanyFacts(
-                        organisasjonsformBeskrivelse,
-                        enhet.registreringsdatoEnhetsregisteret(),
-                        modenhet,
-                        naeringskode,
-                        aktivitet,
-                        dagligLeder,
-                        styre,
-                        enhet.hjemmeside(),
-                        enhet.epostadresse(),
-                        forsteIkkeTom(enhet.telefon(), enhet.mobil()),
-                        enhet.registrertIMvaregisteret(),
-                        enhet.registrertIForetaksregisteret(),
-                        enhet.antallAnsatte(),
-                        enhet.harRegistrertAntallAnsatte(),
-                        enhet.sisteInnsendteAarsregnskap(),
-                        enhet.stiftelsesdato(),
-                        harKontaktdata(enhet),
-                        hasRoles,
-                        hasSeriousSignals,
-                        lokasjon
-                ),
+                byggCompanyFacts(enhet, roller, hasRoles, isBankruptcy || isForcedDissolution || isVoluntaryDissolution),
                 new CompanyMetrics(greenCount, yellowCount, redCount),
                 List.copyOf(funn),
-                List.of(
-                        "https://data.brreg.no/enhetsregisteret/api/enheter/{organisasjonsnummer}",
-                        "https://data.brreg.no/enhetsregisteret/api/enheter/{organisasjonsnummer}/roller"
-                ),
-                List.of(
-                        "Denne førsteversjonen bruker bare åpne data fra Enhetsregisteret.",
-                        "Signatur/prokura, reelle rettighetshavere, kunngjøringer og oppdateringsstrømmer are ikke vurdert ennå.",
-                        "Rød status dekker foreløpig bare alvorlige signaler som faktisk finnes i de åpne feltene vi leser."
-                )
+                List.of("BRREG API"),
+                List.of("Basert på åpne registerdata.")
         );
     }
 
-    private void byggFunn(
-            EnhetResponse enhet,
-            RollerResponse roller,
-            boolean hasRoles,
-            boolean hasSeriousSignals,
-            ActorRiskSummary actorRisk,
-            List<CheckFinding> funn
-    ) {
-        funn.add(new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "Virksomheten finnes i Enhetsregisteret."));
-        leggTilRegistreringsfunn(enhet, funn);
-        leggTilAlvorligeSignalFunn(hasSeriousSignals, funn);
-        leggTilKontaktfunn(enhet, funn);
-        leggTilTelefonfunn(enhet, funn);
-        leggTilNaeringskodefunn(enhet, funn);
-        leggTilAktivitetsfunn(enhet, funn);
-        leggTilRollefunn(enhet, roller, hasRoles, funn);
-        leggTilAktorrisikoFunn(actorRisk, funn);
+    private CompanyCheck byggHardRedSearchCheck(EnhetResponse enhet) {
+        List<CheckFinding> funn = List.of(
+                new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"),
+                new CheckFinding(TrafficLight.RED, "Alvorlige signaler", "Konkurs eller tvangsoppløsning.")
+        );
+        return new CompanyCheck(
+                enhet.organisasjonsnummer(),
+                enhet.navn(),
+                hentOrganisasjonsformBeskrivelse(enhet),
+                TrafficLight.RED,
+                "Forhold som kan påvirke drift eller betalingsevne. Undersøk!",
+                byggCompanyFacts(enhet, EMPTY_ROLLER, false, true),
+                new CompanyMetrics(1, 0, 1),
+                funn,
+                List.of("BRREG API"),
+                List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
+        );
+    }
+
+    private CompanyCheck byggFastGreenSearchCheck(EnhetResponse enhet) {
+        List<CheckFinding> funn = List.of(
+                new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"),
+                new CheckFinding(TrafficLight.GREEN, "Struktur", "Ryddige grunnsignaler.")
+        );
+        return new CompanyCheck(
+                enhet.organisasjonsnummer(),
+                enhet.navn(),
+                hentOrganisasjonsformBeskrivelse(enhet),
+                TrafficLight.GREEN,
+                "Ryddig førsteinntrykk.",
+                byggCompanyFacts(enhet, EMPTY_ROLLER, false, false),
+                new CompanyMetrics(2, 0, 0),
+                funn,
+                List.of("BRREG API"),
+                List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
+        );
+    }
+
+    private CompanyFacts byggCompanyFacts(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, boolean hasSeriousSignals) {
+        long alderDager = alderDager(enhet);
+        return new CompanyFacts(
+                hentOrganisasjonsformBeskrivelse(enhet),
+                enhet.registreringsdatoEnhetsregisteret(),
+                alderDager < NEW_COMPANY_DAYS ? "Nytt selskap" : "Etablert selskap",
+                hentNaeringskodeBeskrivelse(enhet),
+                hentPrimarAktivitet(enhet),
+                hentDagligLeder(roller),
+                hentRoller(roller, "styre"),
+                enhet.hjemmeside(),
+                enhet.epostadresse(),
+                forsteIkkeTom(enhet.telefon(), enhet.mobil()),
+                enhet.registrertIMvaregisteret(),
+                enhet.registrertIForetaksregisteret(),
+                enhet.antallAnsatte(),
+                enhet.harRegistrertAntallAnsatte(),
+                enhet.sisteInnsendteAarsregnskap(),
+                enhet.stiftelsesdato(),
+                harKontaktdata(enhet),
+                hasRoles,
+                hasSeriousSignals,
+                utledLokasjon(enhet)
+        );
+    }
+
+    private void byggFunn(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, ActorRiskSummary ar, List<CheckFinding> funn) {
+        funn.add(new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"));
+        leggTilStrukturelleFunn(isB, isF, isV, hasFM, isN, funn);
         leggTilAldersfunn(enhet, funn);
-        leggTilDatakvalitetsfunn(enhet, funn);
+        leggTilAktorrisikoFunn(ar, funn);
+        leggTilRollefunn(enhet, roller, hasRoles, funn);
     }
 
-    private void leggTilRegistreringsfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (enhet.registreringsdatoEnhetsregisteret() != null) {
-            funn.add(new CheckFinding(
-                    TrafficLight.GREEN,
-                    "Registrering",
-                    "Selskapet er registrert i Enhetsregisteret."
-            ));
+    private void leggTilStrukturelleFunn(boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, List<CheckFinding> funn) {
+        if (isB || isF) {
+            funn.add(new CheckFinding(TrafficLight.RED, "Alvorlige signaler", "Konkurs eller tvangsoppløsning."));
+        } else if (isV) {
+            funn.add(new CheckFinding(hasFM || isN ? TrafficLight.YELLOW : TrafficLight.RED, "Avvikling", "Selskapet er under oppløsning."));
+        } else if (hasFM) {
+            funn.add(new CheckFinding(TrafficLight.GREEN, "Struktur", "Fisjon/Fusjon."));
         }
     }
 
-    private void leggTilAlvorligeSignalFunn(boolean hasSeriousSignals, List<CheckFinding> funn) {
-        if (hasSeriousSignals) {
-            funn.add(new CheckFinding(
-                    TrafficLight.RED,
-                    "Alvorlige registreringssignaler",
-                    "Åpne registerdata viser alvorlige forhold som bør sjekkes før samarbeid."
-            ));
+    private void leggTilAldersfunn(EnhetResponse enhet, List<CheckFinding> funn) {
+        long alder = alderDager(enhet);
+        if (alder < NEW_COMPANY_DAYS) {
+            funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Nytt selskap."));
         }
-    }
-
-    private void leggTilKontaktfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (harKontaktdata(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.GREEN, "Kontaktdata", "Det finnes synlige kontaktopplysninger i registeret."));
-            return;
-        }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Kontaktdata", "Det finnes få kontaktopplysninger i åpne registerdata."));
-    }
-
-    private void leggTilTelefonfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (harTelefondata(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.GREEN, "Telefon", "Telefonopplysninger er registrert."));
-            return;
-        }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Telefon", "Telefonopplysninger mangler i åpne registerdata."));
-    }
-
-    private void leggTilNaeringskodefunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (harNaeringskode(enhet)) {
-            funn.add(new CheckFinding(
-                    TrafficLight.GREEN,
-                    "Næringskode",
-                    "Bransje er registrert."
-            ));
-            return;
-        }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Næringskode", "Bransjeopplysninger mangler eller er uklare."));
-    }
-
-    private void leggTilAktivitetsfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (harAktivitet(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.GREEN, "Aktivitet", "Selskapet har en registrert aktivitetsbeskrivelse."));
-            return;
-        }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, "Aktivitet", "Selskapet mangler en tydelig aktivitetsbeskrivelse i åpne data."));
     }
 
     private void leggTilRollefunn(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, List<CheckFinding> funn) {
         if (roller != null) {
-            funn.add(vurderRoller(enhet, hasRoles));
-            return;
-        }
-        funn.add(new CheckFinding(TrafficLight.YELLOW, ROLE_LABEL, "Rolleopplysninger kunne ikke vurderes i denne visningen."));
-    }
-
-    private void leggTilAldersfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        long alderDager = alderDager(enhet);
-        if (alderDager <= HIGH_ATTENTION_COMPANY_DAYS) {
-            funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Selskapet er helt nytt og har lite historikk."));
-            return;
-        }
-        if (alderDager <= NEW_COMPANY_DAYS) {
-            funn.add(new CheckFinding(TrafficLight.YELLOW, "Alder", "Selskapet er forholdsvis nytt og har begrenset historikk."));
+            if (hasRoles) {
+                funn.add(new CheckFinding(TrafficLight.GREEN, ROLE_LABEL, "Registrert."));
+            } else if (erSentralOrganisasjonsform(enhet)) {
+                funn.add(new CheckFinding(TrafficLight.RED, ROLE_LABEL, "Mangler ledelse."));
+            }
         }
     }
 
-    private void leggTilDatakvalitetsfunn(EnhetResponse enhet, List<CheckFinding> funn) {
-        if (harFaaBasisopplysninger(enhet)) {
-            funn.add(new CheckFinding(TrafficLight.YELLOW, "Datakvalitet", "Det finnes lite offentlig informasjon å støtte vurderingen på."));
-            return;
+    private void leggTilAktorrisikoFunn(ActorRiskSummary ar, List<CheckFinding> funn) {
+        if (ar.riskLevel() != TrafficLight.GREEN) {
+            funn.add(new CheckFinding(ar.riskLevel(), "Aktørrisiko", "Historikk hos tilknyttede personer."));
         }
-        funn.add(new CheckFinding(TrafficLight.GREEN, "Datakvalitet", "Det finnes et greit grunnlag i åpne registerdata."));
-    }
-
-    private void leggTilAktorrisikoFunn(ActorRiskSummary actorRisk, List<CheckFinding> funn) {
-        if (actorRisk.totalRelatedCompanyCount() == 0) {
-            return;
-        }
-        if (actorRisk.riskLevel() == TrafficLight.RED) {
-            funn.add(new CheckFinding(
-                    TrafficLight.RED,
-                    "Aktørrisiko",
-                    "Tilknyttede aktører går igjen i flere selskaper med alvorlige signaler."
-            ));
-            return;
-        }
-        if (actorRisk.riskLevel() == TrafficLight.YELLOW) {
-            funn.add(new CheckFinding(
-                    TrafficLight.YELLOW,
-                    "Aktørrisiko",
-                    "Tilknyttede aktører har historikk fra selskaper som bør vurderes nærmere."
-            ));
-        }
-    }
-
-    private String utledLokasjon(EnhetResponse enhet) {
-        if (enhet.forretningsadresse() != null) {
-            return formatAdresse(enhet.forretningsadresse());
-        }
-        if (enhet.postadresse() != null) {
-            return formatAdresse(enhet.postadresse());
-        }
-        return "Ukjent lokasjon";
-    }
-
-    private String formatAdresse(EnhetResponse.Adresse adresse) {
-        if (hasText(adresse.poststed()) && hasText(adresse.kommune())) {
-            return adresse.poststed() + " (" + adresse.kommune() + ")";
-        }
-        return Objects.requireNonNullElse(adresse.poststed(), "Ukjent sted");
-    }
-
-    private CheckFinding vurderRoller(EnhetResponse enhet, boolean hasRoles) {
-        boolean centralForm = erSentralOrganisasjonsform(enhet);
-
-        if (hasRoles) {
-            return new CheckFinding(TrafficLight.GREEN, ROLE_LABEL, "Ledelse eller sentrale roller er registrert.");
-        }
-
-        if (centralForm) {
-            return new CheckFinding(TrafficLight.RED, ROLE_LABEL, "Sentrale rolleopplysninger mangler for en selskapsform som normalt skal ha dem.");
-        }
-
-        return new CheckFinding(TrafficLight.GREEN, ROLE_LABEL, "Ingen tydelige rolleavvik er funnet for denne organisasjonsformen.");
-    }
-
-    private boolean harRolle(RollerResponse roller, String needle) {
-        return !hentRoller(roller, needle).isEmpty();
-    }
-
-    private boolean harDagligLeder(RollerResponse roller) {
-        return hentDagligLeder(roller) != null;
-    }
-
-    private List<String> hentRoller(RollerResponse roller, String needle) {
-        if (roller == null || roller.rollegrupper() == null) {
-            return List.of();
-        }
-
-        return roller.rollegrupper().stream()
-                .filter(Objects::nonNull)
-                .flatMap(gruppe -> gruppe.roller() == null ? Stream.empty() : gruppe.roller().stream())
-                .filter(this::erAktivRolle)
-                .filter(rolle -> rolleMatcher(rolle, needle))
-                .map(this::rollenavn)
-                .filter(this::hasText)
-                .distinct()
-                .toList();
-    }
-
-    private boolean harKontaktdata(EnhetResponse enhet) {
-        return hasText(enhet.hjemmeside()) || hasText(enhet.epostadresse());
-    }
-
-    private boolean harTelefondata(EnhetResponse enhet) {
-        return hasText(enhet.telefon()) || hasText(enhet.mobil());
-    }
-
-    private boolean harNaeringskode(EnhetResponse enhet) {
-        return enhet.naeringskode1() != null && hasText(enhet.naeringskode1().kode()) && hasText(enhet.naeringskode1().beskrivelse());
-    }
-
-    private boolean harAktivitet(EnhetResponse enhet) {
-        return enhet.aktivitet() != null && enhet.aktivitet().stream().anyMatch(this::hasText);
-    }
-
-    private boolean erNyttSelskap(EnhetResponse enhet) {
-        return alderDager(enhet) <= NEW_COMPANY_DAYS;
-    }
-
-    private long alderDager(EnhetResponse enhet) {
-        if (enhet.registreringsdatoEnhetsregisteret() == null) {
-            return Long.MAX_VALUE;
-        }
-        return ChronoUnit.DAYS.between(enhet.registreringsdatoEnhetsregisteret(), LocalDate.now(clock));
-    }
-
-    private boolean harFaaBasisopplysninger(EnhetResponse enhet) {
-        int antall = 0;
-        antall += hasText(enhet.navn()) ? 1 : 0;
-        antall += enhet.organisasjonsform() != null && hasText(enhet.organisasjonsform().kode()) ? 1 : 0;
-        antall += hasText(enhet.hjemmeside()) ? 1 : 0;
-        antall += hasText(enhet.epostadresse()) ? 1 : 0;
-        antall += hasText(enhet.telefon()) ? 1 : 0;
-        antall += hasText(enhet.mobil()) ? 1 : 0;
-        antall += harNaeringskode(enhet) ? 1 : 0;
-        antall += harAktivitet(enhet) ? 1 : 0;
-        antall += enhet.registreringsdatoEnhetsregisteret() != null ? 1 : 0;
-        return antall < 5;
-    }
-
-    private boolean erSentralOrganisasjonsform(EnhetResponse enhet) {
-        return enhet.organisasjonsform() != null && CENTRAL_ORG_FORMS.contains(enhet.organisasjonsform().kode());
-    }
-
-    private String hentOrganisasjonsformBeskrivelse(EnhetResponse enhet) {
-        if (enhet.organisasjonsform() == null) {
-            return null;
-        }
-        return enhet.organisasjonsform().beskrivelse();
-    }
-
-    private String hentNaeringskodeBeskrivelse(EnhetResponse enhet) {
-        if (!harNaeringskode(enhet)) {
-            return null;
-        }
-        return enhet.naeringskode1().kode() + " - " + enhet.naeringskode1().beskrivelse();
-    }
-
-    private String hentPrimarAktivitet(EnhetResponse enhet) {
-        if (!harAktivitet(enhet)) {
-            return null;
-        }
-        return enhet.aktivitet().getFirst();
-    }
-
-    private String hentDagligLeder(RollerResponse roller) {
-        return hentRoller(roller, "daglig leder").stream()
-                .findFirst()
-                .orElse(null);
     }
 
     private String lagSammendrag(TrafficLight status, List<CheckFinding> funn) {
-        long red = funn.stream().filter(f -> f.severity() == TrafficLight.RED).count();
-        long yellow = funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
-
         return switch (status) {
-            case GREEN -> "Åpne registerdata gir et ryddig førsteinntrykk.";
-            case YELLOW -> "Åpne registerdata viser noen forhold som bør vurderes litt nærmere.";
-            case RED -> "Åpne registerdata viser forhold som bør undersøkes før samarbeid.";
-        } + " Registrerte signaler: " + red + " alvorlige and " + yellow + " moderate.";
+            case GREEN -> "Ryddig førsteinntrykk.";
+            case YELLOW -> "Selskapet er nytt eller har begrenset info. Sjekk nærmere.";
+            case RED -> "Forhold som kan påvirke drift eller betalingsevne. Undersøk!";
+        };
     }
 
-    private TrafficLight bestemStatus(EnhetResponse enhet, boolean hasRoles, boolean hasSeriousSignals, ActorRiskSummary actorRisk) {
-        if (hasSeriousSignals || (erSentralOrganisasjonsform(enhet) && !hasRoles) || actorRisk.riskLevel() == TrafficLight.RED) {
-            return TrafficLight.RED;
-        }
-        if (actorRisk.riskLevel() == TrafficLight.YELLOW) {
-            return TrafficLight.YELLOW;
-        }
-        return beregnVarselpoeng(enhet, actorRisk) >= YELLOW_SCORE_THRESHOLD ? TrafficLight.YELLOW : TrafficLight.GREEN;
+    private TrafficLight bestemStatus(EnhetResponse en, boolean hr, boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, ActorRiskSummary ar) {
+        int score = beregnPoengsum(en, hr, isB, isF, isV, hasFM, ar, isN);
+        if (isB || isF || ar.riskLevel() == TrafficLight.RED) return TrafficLight.RED;
+        if (isV && !hasFM && !isN) return TrafficLight.RED;
+        if (erSentralOrganisasjonsform(en) && !hr && !isN) return TrafficLight.RED;
+        if (isN && harTyntDatagrunnlag(en, hr)) return TrafficLight.YELLOW;
+        if (!harMinimumPositivStruktur(en, hr)) return TrafficLight.YELLOW;
+        if (score < 80 || ar.riskLevel() == TrafficLight.YELLOW) return TrafficLight.YELLOW;
+        return TrafficLight.GREEN;
     }
 
-    private int beregnVarselpoeng(EnhetResponse enhet, ActorRiskSummary actorRisk) {
-        int poeng = 0;
-        long alderDager = alderDager(enhet);
-
-        if (alderDager <= HIGH_ATTENTION_COMPANY_DAYS) {
-            poeng += 2;
-        } else if (alderDager <= NEW_COMPANY_DAYS) {
-            poeng += 1;
-        }
-        poeng += harKontaktdata(enhet) ? 0 : 1;
-        poeng += harTelefondata(enhet) ? 0 : 1;
-        poeng += harNaeringskode(enhet) ? 0 : 1;
-        poeng += harAktivitet(enhet) ? 0 : 1;
-        poeng += harFaaBasisopplysninger(enhet) ? 1 : 0;
-        poeng += manglerForventetForetaksregister(enhet) ? 1 : 0;
-        poeng += manglerForventetMva(enhet, alderDager) ? 1 : 0;
-        poeng += manglerForventetAnsattsignal(enhet, alderDager) ? 1 : 0;
-        poeng += manglerForventetAarsregnskap(enhet, alderDager) ? 1 : 0;
-        poeng += actorRisk.riskLevel() == TrafficLight.YELLOW ? 1 : 0;
-
-        return poeng;
+    private int beregnPoengsum(EnhetResponse en, boolean hr, boolean isB, boolean isF, boolean isV, boolean hasFM, ActorRiskSummary ar, boolean isN) {
+        int s = 100;
+        if (isB) s -= 70; if (isF) s -= 60; if (erSentralOrganisasjonsform(en) && !hr) s -= 50;
+        if (ar.riskLevel() == TrafficLight.RED) s -= 40; if (ar.riskLevel() == TrafficLight.YELLOW) s -= 15;
+        if (alderDager(en) < NEW_COMPANY_DAYS) s -= 15;
+        if (alderDager(en) >= NEW_COMPANY_DAYS && !hasText(en.sisteInnsendteAarsregnskap())) s -= 10;
+        if (hasFM) s -= 5; if (isV && !isB && !isF) s -= 10;
+        if (isN && !isB && !isF && !(erSentralOrganisasjonsform(en) && !hr) && s < 55) s = 55;
+        return Math.max(0, Math.min(100, s));
     }
 
-    private boolean isTrue(Boolean value) {
-        return Boolean.TRUE.equals(value);
+    private boolean erSentralOrganisasjonsform(EnhetResponse en) {
+        return en.organisasjonsform() != null && CENTRAL_ORG_FORMS.contains(en.organisasjonsform().kode());
     }
 
-    private boolean manglerForventetForetaksregister(EnhetResponse enhet) {
-        return forventerForetaksregister(enhet) && !Boolean.TRUE.equals(enhet.registrertIForetaksregisteret());
+    private boolean harTyntDatagrunnlag(EnhetResponse en, boolean hasRoles) {
+        int mangler = 0;
+        if (!harKontaktdata(en)) mangler += 1;
+        if (en.naeringskode1() == null) mangler += 1;
+        if (!hasText(hentPrimarAktivitet(en))) mangler += 1;
+        if (erSentralOrganisasjonsform(en) && !hasRoles) mangler += 1;
+        return mangler >= 2;
     }
 
-    private boolean manglerForventetMva(EnhetResponse enhet, long alderDager) {
-        if (alderDager <= NEW_COMPANY_DAYS) {
-            return false;
-        }
-        return forventerMvaSignal(enhet) && !Boolean.TRUE.equals(enhet.registrertIMvaregisteret());
-    }
-
-    private boolean manglerForventetAnsattsignal(EnhetResponse enhet, long alderDager) {
-        if (alderDager <= NEW_COMPANY_DAYS) {
-            return false;
-        }
-        return Boolean.TRUE.equals(enhet.harRegistrertAntallAnsatte()) && Integer.valueOf(0).equals(enhet.antallAnsatte());
-    }
-
-    private boolean manglerForventetAarsregnskap(EnhetResponse enhet, long alderDager) {
-        if (alderDager <= NEW_COMPANY_DAYS) {
-            return false;
-        }
-        return forventerAarsregnskap(enhet) && !hasText(enhet.sisteInnsendteAarsregnskap());
-    }
-
-    private boolean forventerForetaksregister(EnhetResponse enhet) {
-        return harOrganisasjonsform(enhet, BUSINESS_REGISTRY_EXPECTED_FORMS);
-    }
-
-    private boolean forventerAarsregnskap(EnhetResponse enhet) {
-        return harOrganisasjonsform(enhet, ANNUAL_ACCOUNTS_EXPECTED_FORMS);
-    }
-
-    private boolean forventerMvaSignal(EnhetResponse enhet) {
-        return harOrganisasjonsform(enhet, BUSINESS_REGISTRY_EXPECTED_FORMS) || hasText(enhet.hjemmeside()) || harAktivitet(enhet);
-    }
-
-    private boolean harOrganisasjonsform(EnhetResponse enhet, List<String> forms) {
-        return enhet.organisasjonsform() != null
-                && hasText(enhet.organisasjonsform().kode())
-                && forms.contains(enhet.organisasjonsform().kode().trim().toUpperCase(Locale.ROOT));
-    }
-
-    private boolean hasText(String value) {
-        return value != null && !value.isBlank();
-    }
-
-    private String forsteIkkeTom(String... values) {
-        for (String value : values) {
-            if (hasText(value)) {
-                return value;
-            }
-        }
-        return null;
-    }
-
-    private Map<String, String> byggFilter(CompanySearchRequest request, int page) {
-        return byggFilter(request, page, null);
-    }
-
-    private Map<String, String> byggFilter(CompanySearchRequest request, int page, String seriousSignalFilter) {
-        Map<String, String> filter = new HashMap<>();
-        int requestedSize = request.resultSize() > 0 ? request.resultSize() : 100;
-        filter.put("size", String.valueOf(Math.min(requestedSize, 100)));
-        filter.put("page", String.valueOf(page));
-
-        if (request.dager() > 0) {
-            filter.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(request.dager()).toString());
-        }
-        if (hasText(request.navn())) {
-            filter.put("navn", request.navn().trim());
-        }
-        if (hasText(request.organisasjonsform())) {
-            filter.put("organisasjonsform.kode", request.organisasjonsform().trim().toUpperCase(Locale.ROOT));
-        }
-        if (hasText(request.kommune())) {
-            filter.put("forretningsadresse.kommune", request.kommune().trim().toUpperCase(Locale.ROOT));
-        }
-        if (hasText(request.naeringskode())) {
-            filter.put("naeringskode1.kode", request.naeringskode().trim());
-        }
-        if (hasText(seriousSignalFilter)) {
-            filter.put(seriousSignalFilter, "true");
-        }
-
-        // Sorter etter registreringsdato for å få de nyeste først
-        filter.put("sort", "registreringsdatoEnhetsregisteret,desc");
-
-        return filter;
-    }
-
-    private List<EnhetResponse> hentEnheter(EnheterSearchResponse searchResponse) {
-        if (searchResponse == null || searchResponse._embedded() == null || searchResponse._embedded().enheter() == null) {
-            return List.of();
-        }
-        return searchResponse._embedded().enheter();
-    }
-
-    private boolean erSisteSide(EnheterSearchResponse searchResponse, int nextPage) {
-        return searchResponse == null
-                || searchResponse.page() == null
-                || nextPage >= searchResponse.page().totalPages();
-    }
-
-    private boolean matcherLokalFiltrering(EnhetResponse enhet, CompanySearchRequest request) {
-        return matcherNavn(enhet, request.navn())
-                && (!hasText(request.fylke()) || matcherFylke(enhet, request.fylke()));
-    }
-
-    private boolean matcherNavn(EnhetResponse enhet, String navn) {
-        if (!hasText(navn)) {
+    private boolean harMinimumPositivStruktur(EnhetResponse en, boolean hasRoles) {
+        if (shouldExpectBusinessRegistry(en) && Boolean.TRUE.equals(en.registrertIForetaksregisteret())) {
             return true;
         }
-
-        String normalizedName = normaliserSoketekst(enhet.navn());
-        return Stream.of(normaliserSoketekst(navn).split(" "))
-                .filter(this::hasText)
-                .allMatch(normalizedName::contains);
-    }
-
-    private boolean matcherScore(CompanyCheck check, String score) {
-        return !hasText(score) || check.status().name().equalsIgnoreCase(score);
-    }
-
-    private boolean kanVaereGrontTreff(EnhetResponse enhet) {
-        if (isTrue(enhet.konkurs()) || isTrue(enhet.underTvangsavviklingEllerTvangsopplosning()) || isTrue(enhet.underAvvikling())) {
-            return false;
+        if (erSentralOrganisasjonsform(en) && hasRoles) {
+            return true;
         }
-        return beregnVarselpoeng(enhet, ActorRiskSummary.none()) < YELLOW_SCORE_THRESHOLD;
+        return hasText(hentPrimarAktivitet(en)) && en.naeringskode1() != null && harKontaktdata(en);
     }
 
-    private String normaliserSoketekst(String value) {
-        if (!hasText(value)) {
-            return "";
+    private boolean shouldExpectBusinessRegistry(EnhetResponse en) {
+        return en.organisasjonsform() != null && BUSINESS_REGISTRY_EXPECTED_FORMS.contains(en.organisasjonsform().kode());
+    }
+
+    private String hentOrganisasjonsformBeskrivelse(EnhetResponse en) {
+        return en.organisasjonsform() != null ? en.organisasjonsform().beskrivelse() : null;
+    }
+
+    private String hentNaeringskodeBeskrivelse(EnhetResponse en) {
+        return (en.naeringskode1() != null) ? en.naeringskode1().kode() + " - " + en.naeringskode1().beskrivelse() : null;
+    }
+
+    private String hentPrimarAktivitet(EnhetResponse en) {
+        return (en.aktivitet() != null && !en.aktivitet().isEmpty()) ? en.aktivitet().getFirst() : null;
+    }
+
+    private String hentDagligLeder(RollerResponse r) {
+        return hentRoller(r, "daglig leder").stream().findFirst().orElse(null);
+    }
+
+    private List<String> hentRoller(RollerResponse r, String needle) {
+        if (r == null || r.rollegrupper() == null) return List.of();
+        return r.rollegrupper().stream().filter(Objects::nonNull)
+                .flatMap(g -> g.roller() == null ? Stream.empty() : g.roller().stream())
+                .filter(rolle -> !Boolean.TRUE.equals(rolle.fratraadt()) && !Boolean.TRUE.equals(rolle.avregistrert()))
+                .filter(rolle -> rolle.type() != null && hasText(rolle.type().beskrivelse()) && rolle.type().beskrivelse().toLowerCase(Locale.ROOT).contains(needle))
+                .map(this::rollenavn).filter(Objects::nonNull).distinct().toList();
+    }
+
+    private String rollenavn(RollerResponse.Rolle r) {
+        if (r.person() != null && r.person().navn() != null) {
+            return Stream.of(r.person().navn().fornavn(), r.person().navn().mellomnavn(), r.person().navn().etternavn())
+                    .filter(this::hasText).reduce((l, ri) -> l + " " + ri).orElse(null);
         }
-        return value.trim()
-                .replaceAll("\\s+", " ")
-                .toUpperCase(Locale.ROOT);
+        return (r.enhet() != null && r.enhet().navn() != null && !r.enhet().navn().isEmpty()) ? r.enhet().navn().getFirst() : null;
+    }
+
+    private long alderDager(EnhetResponse en) {
+        return en.registreringsdatoEnhetsregisteret() == null ? 9999 : ChronoUnit.DAYS.between(en.registreringsdatoEnhetsregisteret(), LocalDate.now(clock));
+    }
+
+    private String utledLokasjon(EnhetResponse en) {
+        var adr = preferredAddress(en);
+        if (adr == null) return "Ukjent";
+        return hasText(adr.poststed()) && hasText(adr.kommune()) ? adr.poststed() + " (" + adr.kommune() + ")" : Objects.requireNonNullElse(adr.poststed(), "Ukjent");
+    }
+
+    private EnhetResponse.Adresse preferredAddress(EnhetResponse enhet) {
+        return enhet.forretningsadresse() != null ? enhet.forretningsadresse() : enhet.postadresse();
+    }
+
+    private boolean harKontaktdata(EnhetResponse en) { return hasText(en.hjemmeside()) || hasText(en.epostadresse()); }
+    private boolean isTrue(Boolean b) { return Boolean.TRUE.equals(b); }
+    private boolean hasText(String s) { return s != null && !s.isBlank(); }
+    private String forsteIkkeTom(String... v) { for (String s : v) if (hasText(s)) return s; return null; }
+
+    private Map<String, String> byggFilter(CompanySearchRequest r, int p) {
+        return byggFilter(r, p, SOURCE_PAGE_SIZE);
+    }
+
+    private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size) {
+        Map<String, String> f = new HashMap<>();
+        f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
+        if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
+        if (hasText(r.navn())) f.put("navn", r.navn().trim());
+        f.put("sort", "registreringsdatoEnhetsregisteret,desc");
+        return f;
+    }
+
+    private List<EnhetResponse> hentEnheter(EnheterSearchResponse s) {
+        return (s != null && s._embedded() != null && s._embedded().enheter() != null) ? s._embedded().enheter() : List.of();
+    }
+
+    private boolean matcherRequest(CompanyCheck check, CompanySearchRequest request) {
+        return matcherScore(check, request.score());
+    }
+
+    private boolean matcherScore(CompanyCheck c, String s) { return !hasText(s) || c.status().name().equalsIgnoreCase(s); }
+    private boolean matcherEnhet(EnhetResponse enhet, CompanySearchRequest request) {
+        return matcherOrganisasjonsform(enhet, request.organisasjonsform())
+                && matcherFylke(enhet, request.fylke())
+                && matcherKommune(enhet, request.kommune());
+    }
+
+    private boolean matcherOrganisasjonsform(EnhetResponse enhet, String organisasjonsform) {
+        if (!hasText(organisasjonsform)) {
+            return true;
+        }
+        return enhet.organisasjonsform() != null
+                && organisasjonsform.trim().equalsIgnoreCase(enhet.organisasjonsform().kode());
     }
 
     private boolean matcherFylke(EnhetResponse enhet, String fylke) {
-        String normalized = fylke.trim().toUpperCase(Locale.ROOT);
-        return Stream.of(enhet.forretningsadresse(), enhet.postadresse())
-                .filter(Objects::nonNull)
+        if (!hasText(fylke)) {
+            return true;
+        }
+        return java.util.Optional.ofNullable(preferredAddress(enhet))
                 .map(EnhetResponse.Adresse::fylke)
-                .filter(this::hasText)
-                .map(value -> value.toUpperCase(Locale.ROOT))
-                .anyMatch(normalized::equals);
+                .map(value -> value.equalsIgnoreCase(fylke.trim()))
+                .orElse(false);
     }
 
-    private boolean erAktivRolle(RollerResponse.Rolle rolle) {
-        return !Boolean.TRUE.equals(rolle.fratraadt()) && !Boolean.TRUE.equals(rolle.avregistrert());
+    private boolean matcherKommune(EnhetResponse enhet, String kommune) {
+        if (!hasText(kommune)) {
+            return true;
+        }
+        return java.util.Optional.ofNullable(preferredAddress(enhet))
+                .map(EnhetResponse.Adresse::kommune)
+                .map(value -> value.equalsIgnoreCase(kommune.trim()))
+                .orElse(false);
+    }
+    private boolean harTekst(String value) { return hasText(value); }
+    private boolean isBankruptcy(EnhetResponse enhet) {
+        return isTrue(enhet.konkurs())
+                || hasOrgForm(enhet, "KBO")
+                || containsInName(enhet, "KONKURSBO");
     }
 
-    private boolean rolleMatcher(RollerResponse.Rolle rolle, String needle) {
-        return rolle.type() != null
-                && hasText(rolle.type().beskrivelse())
-                && rolle.type().beskrivelse().toLowerCase(Locale.ROOT).contains(needle);
+    private boolean isForcedDissolution(EnhetResponse enhet) {
+        return isTrue(enhet.underTvangsavviklingEllerTvangsopplosning())
+                || containsInName(enhet, "TVANGSAVVIKLINGSBO")
+                || containsInName(enhet, "TVANGSOPPLOSNINGSBO");
     }
 
-    private String rollenavn(RollerResponse.Rolle rolle) {
-        if (rolle.person() != null && rolle.person().navn() != null) {
-            return joinNonBlank(
-                    rolle.person().navn().fornavn(),
-                    rolle.person().navn().mellomnavn(),
-                    rolle.person().navn().etternavn()
+    private boolean isVoluntaryDissolution(EnhetResponse enhet) {
+        return isTrue(enhet.underAvvikling())
+                || containsInName(enhet, "AVVIKLINGSBO");
+    }
+
+    private boolean hasOrgForm(EnhetResponse enhet, String code) {
+        return enhet.organisasjonsform() != null && code.equalsIgnoreCase(enhet.organisasjonsform().kode());
+    }
+
+    private boolean containsInName(EnhetResponse enhet, String token) {
+        return hasText(enhet.navn()) && enhet.navn().toUpperCase(Locale.ROOT).contains(token);
+    }
+
+    private boolean hasHardRedSignal(EnhetResponse enhet) {
+        return isBankruptcy(enhet) || isForcedDissolution(enhet);
+    }
+
+    private boolean canBeFastGreen(EnhetResponse enhet) {
+        if (hasHardRedSignal(enhet) || isVoluntaryDissolution(enhet)) {
+            return false;
+        }
+        if (harTyntDatagrunnlag(enhet, false)) {
+            return false;
+        }
+        if (erSentralOrganisasjonsform(enhet) && !Boolean.TRUE.equals(enhet.registrertIForetaksregisteret())) {
+            return false;
+        }
+        return hasEnhetOnlyPositiveStructure(enhet);
+    }
+
+    private boolean hasEnhetOnlyPositiveStructure(EnhetResponse enhet) {
+        if (shouldExpectBusinessRegistry(enhet) && Boolean.TRUE.equals(enhet.registrertIForetaksregisteret())) {
+            return true;
+        }
+        return hasText(hentPrimarAktivitet(enhet)) && enhet.naeringskode1() != null && harKontaktdata(enhet);
+    }
+
+    private static final class SearchDiagnostics {
+        private final String score;
+        private final int requestedPage;
+        private int fetchCalls;
+        private int fetchedCandidates;
+        private int prefilteredCandidates;
+        private int scoredCandidates;
+        private int matchedCandidates;
+        private long fetchMs;
+        private long prefilterMs;
+        private long scoringMs;
+
+        private SearchDiagnostics(CompanySearchRequest request, int page) {
+            this.score = request.score() == null ? "ALL" : request.score();
+            this.requestedPage = page;
+        }
+
+        private void recordFetch(int fetchedCount, long startedAt) {
+            fetchCalls += 1;
+            fetchedCandidates += fetchedCount;
+            fetchMs += elapsedMs(startedAt);
+        }
+
+        private void recordPrefilter(int inputCount, int filteredCount, long startedAt) {
+            prefilteredCandidates += filteredCount;
+            prefilterMs += elapsedMs(startedAt);
+        }
+
+        private void recordScoring(int scoredCount, int matchedCount, long startedAt) {
+            scoredCandidates += scoredCount;
+            matchedCandidates += matchedCount;
+            scoringMs += elapsedMs(startedAt);
+        }
+
+        private void logSummary(long totalMs, int returnedCount) {
+            log.info(
+                    "Search diagnostics: score={}, requestedPage={}, fetchCalls={}, fetchedCandidates={}, prefilteredCandidates={}, scoredCandidates={}, matchedCandidates={}, returnedCount={}, fetchMs={}, prefilterMs={}, scoringMs={}, totalMs={}",
+                    score,
+                    requestedPage,
+                    fetchCalls,
+                    fetchedCandidates,
+                    prefilteredCandidates,
+                    scoredCandidates,
+                    matchedCandidates,
+                    returnedCount,
+                    fetchMs,
+                    prefilterMs,
+                    scoringMs,
+                    totalMs
             );
         }
-        if (rolle.enhet() != null && rolle.enhet().navn() != null && !rolle.enhet().navn().isEmpty()) {
-            return rolle.enhet().navn().getFirst();
+
+        private long elapsedMs(long startedAt) {
+            return (System.nanoTime() - startedAt) / 1_000_000;
         }
-        return null;
-    }
-
-    private String joinNonBlank(String... parts) {
-        return Stream.of(parts)
-                .filter(this::hasText)
-                .reduce((left, right) -> left + " " + right)
-                .orElse(null);
-    }
-
-    private void logSearchPath(
-            String path,
-            CompanySearchRequest request,
-            int page,
-            int upstreamPage,
-            int matchedCount,
-            int resultCount,
-            long startedAt
-    ) {
-        long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
-        log.info(
-                "company-check {} path in {} ms: score={}, dager={}, page={}, upstreamPages={}, matched={}, returned={}",
-                path,
-                durationMs,
-                request.score() == null ? "ALL" : request.score(),
-                request.dager(),
-                Math.max(page, 0),
-                upstreamPage + 1,
-                matchedCount,
-                resultCount
-        );
     }
 }

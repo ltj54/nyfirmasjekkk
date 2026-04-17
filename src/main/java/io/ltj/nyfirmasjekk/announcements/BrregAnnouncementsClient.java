@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.announcements;
 
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ public class BrregAnnouncementsClient {
         this.restClient = brregAnnouncementsRestClient;
     }
 
+    @Cacheable(value = "announcements", key = "#organisasjonsnummer")
     public String hentKunngjoringerHtml(String organisasjonsnummer) {
         try {
             byte[] response = restClient.get()

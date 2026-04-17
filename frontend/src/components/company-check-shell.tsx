@@ -96,7 +96,7 @@ export function CompanyCheckShell() {
   const [isListLoading, setIsListLoading] = useState(false);
   const [listLoadProgress, setListLoadProgress] = useState(0);
   const [listLoadSeconds, setListLoadSeconds] = useState(0);
-  const [daysFilter, setDaysFilter] = useState("10");
+  const [daysFilter, setDaysFilter] = useState("0");
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
@@ -572,9 +572,21 @@ export function CompanyCheckShell() {
         {/* Dynamic Content */}
         <section className="mx-auto max-w-7xl px-6 pb-24">
           {error && (
-            <div className="mx-auto max-w-2xl rounded-2xl bg-rose-50 p-4 text-center border border-rose-100 text-rose-700 animate-in zoom-in duration-300">
-              <AlertCircle className="mx-auto mb-2 size-6" />
-              <p className="font-semibold">{error}</p>
+            <div className="mx-auto mb-12 max-w-2xl rounded-[32px] bg-rose-50/50 p-8 text-center border border-rose-100/60 animate-in zoom-in duration-300">
+              <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+                <AlertCircle className="size-6" />
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-rose-900">Noe gikk galt</h3>
+              <p className="mb-6 text-[15px] font-medium text-rose-700/80">{error}</p>
+              <Button
+                className="rounded-full bg-rose-600 font-bold text-white hover:bg-rose-700"
+                onClick={() => {
+                  setError(null);
+                  void fetchRecent(0);
+                }}
+              >
+                Prøv igjen
+              </Button>
             </div>
           )}
 
@@ -650,14 +662,20 @@ export function CompanyCheckShell() {
                 </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {isListLoading && recentCompanies.length === 0 ? (
-                <div className="col-span-full rounded-[26px] border border-[#ece6da] bg-white/90 px-6 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
-                  <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#a3a3a3]">
-                    Laster treff
-                  </p>
-                  <p className="text-[15px] font-medium leading-relaxed text-[#626262]">
-                    Første liste varmes opp etter restart. Filterknappene blir aktive straks treffene er klare.
-                  </p>
-                </div>
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="animate-pulse rounded-2xl border border-[#eeeeee] bg-white p-5">
+                    <div className="mb-4 flex items-start justify-between">
+                      <div className="size-3 rounded-full bg-[#eeeeee]" />
+                      <div className="h-4 w-16 rounded bg-[#eeeeee]" />
+                    </div>
+                    <div className="mb-2 h-5 w-3/4 rounded bg-[#eeeeee]" />
+                    <div className="mb-4 h-4 w-1/2 rounded bg-[#eeeeee]" />
+                    <div className="space-y-2">
+                      <div className="h-3 w-1/3 rounded bg-[#eeeeee]" />
+                      <div className="h-3 w-1/4 rounded bg-[#eeeeee]" />
+                    </div>
+                  </div>
+                ))
               ) : filteredCompanies.length > 0 ? (
                 filteredCompanies.map((company, i) => (
                   <CompanyCard
@@ -666,13 +684,32 @@ export function CompanyCheckShell() {
                     onClick={() => handleSearch(company.orgNumber)}
                   />
                 ))
-              ) : (                  <div className="col-span-full rounded-[26px] border border-[#ece6da] bg-white/90 px-6 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
+              ) : (
+                  <div className="col-span-full rounded-[32px] border border-dashed border-[#dcd6c9] bg-[#fdfcfb] px-6 py-20 text-center">
+                    <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-white shadow-sm border border-[#eeeeee]">
+                      <Search className="size-8 text-[#a3a3a3]" />
+                    </div>
                     <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#a3a3a3]">
-                      Ingen treff
+                      Ingen selskaper funnet
                     </p>
-                    <p className="text-[15px] font-medium leading-relaxed text-[#626262]">
-                      Vi fant ingen selskaper som matcher denne perioden og denne signaltypen.
+                    <p className="mx-auto max-w-sm text-[16px] font-medium leading-relaxed text-[#626262]">
+                      Vi fant ingen virksomheter som samsvarer med valgte filtre eller søkeord.
                     </p>
+                    <div className="mt-8 flex justify-center gap-4">
+                      <Button
+                        variant="outline"
+                        className="rounded-full bg-white font-bold"
+                        onClick={() => {
+                          setSearchTerm("");
+                          setCountyFilter("");
+                          setOrganizationFormFilter("");
+                          setSelectedLegend(null);
+                          void fetchRecent(0);
+                        }}
+                      >
+                        Nullstill alle filtre
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>

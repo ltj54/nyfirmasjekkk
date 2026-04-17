@@ -1,65 +1,104 @@
 # TODO
 
-Dette dokumentet er arbeidslisten for fase 5 i `nyfirmasjekk`.
+## Gjeldende scoringsregler
 
-## Ukeplan
+### Grønn
 
-### Gjør denne først
+- Ingen tydelige alvorlige signaler i åpne registerdata
+- Ingen gul eller rød aktørrisiko
+- Selskapet må ha et minimum av positiv struktur, ikke bare fravær av rødt
+- Nye selskaper kan være grønne hvis grunnsignalene ellers er ryddige
 
-- Konsolider API til én offentlig flate
-- Grunn: dette fjerner duplisering, gjør frontend/backend-retningen tydelig og forenkler de neste oppgavene
+Minimum av positiv struktur betyr minst én av disse:
+- Registrert i Foretaksregisteret når organisasjonsformen normalt forventer det
+- Sentrale roller er på plass der de forventes
+- Næringskode, aktivitetsbeskrivelse og kontaktdata finnes
 
-Status:
-- Startet 2026-04-17
-- `filters` er flyttet inn i `/api/company-check`, slik at frontend nå bruker samme backendflate for søk, detaljer, `history`, `network`, `events` og filtre
-- Gradle-testene passerer etter endringen
+### Gul
 
-### 1. Konsolider API til én offentlig flate
-- Velg én API-kontrakt: `/api/company-check` eller `/api/v1`
-- Oppdater frontend-proxyer til å bruke valgt flate
-- Fjern eller marker gammel API som deprecated
+- Selskapet er nytt, og datagrunnlaget er tynt eller uklart
+- Totalscoren er under grønn terskel
+- Aktørrisiko er gul
+- Selskapet er under avvikling, men uten tydelige røde struktursignaler
 
-Ferdig når:
-- Alle frontend-kall går mot én API-flate
-- Dupliserte endepunkter er borte eller deprecated
-- Testene passerer
+Tynt datagrunnlag betyr minst to av disse:
+- Mangler kontaktdata
+- Mangler næringskode
+- Mangler aktivitetsbeskrivelse
+- Mangler roller i organisasjonsformer der roller normalt forventes
 
-### 2. Legg til integrasjonstester for API-endepunkter
-- Test søk, detaljer, `history`, `network` og `events`
-- Test ugyldig orgnr, 404 og 502
+### Rød
 
-Ferdig når:
-- Kritiske endepunkter har integrasjonstester
-- Feiltilfeller returnerer forventet status og format
+- Konkurs eller tvangsoppløsning er registrert
+- Navn eller organisasjonsform viser tydelig bo-signal som `KBO`, `KONKURSBO`, `TVANGSAVVIKLINGSBO` eller `TVANGSOPPLOSNINGSBO`
+- Aktørrisiko er rød
+- Selskapet er under avvikling uten dempende struktursignal
+- Sentrale roller mangler i organisasjonsformer der dette er kritisk
 
-### 3. Gjør databaseoppsettet miljøstyrt
-- Innfør profiler for `dev`, `test` og `prod`
-- Flytt databasevalg og JPA-oppsett til miljøspesifikk konfig
+Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenstående arbeid før produksjonssetting.
 
-Ferdig når:
-- Databasen styres av miljø/profil
-- Produksjon bruker ikke ukritisk `ddl-auto=update`
+## Status per 2026-04-17
 
-### 4. Innfør databasemigreringer
-- Velg Flyway eller Liquibase
-- Lag første migrasjon for eksisterende tabeller
+### Fullført i denne fasen
 
-Ferdig når:
-- Skjema opprettes via migrasjoner
-- Skjemaendringer spores i repoet
+- [x] Konsolidert offentlig API til `/api/company-check`
+- [x] Fjernet dupliserte controllere for gammel API-flate
+- [x] Flyttet `filters` inn under samme API-flate
+- [x] Oppdatert frontend-proxyer til å bruke kun ny flate
+- [x] Lagt til integrasjonstester for `search`, detaljer, `history`, `network`, `events`, ugyldig orgnr, `404` og `502`
+- [x] Gjort databaseoppsett miljøstyrt med profiler for `dev`, `test` og `prod`
+- [x] Flyttet database- og JPA-oppsett til miljøspesifikk konfigurasjon
+- [x] Innført Flyway
+- [x] Lagt inn første migrasjon for eksisterende skjema
+- [x] Ryddet frontend-kontrakt og TypeScript-typer mot backend
+- [x] Lagt til Caffeine-cache for BRREG-oppslag
+- [x] Konfigurert cache-TTL
+- [x] Lagt til observability med Actuator, Micrometer og Prometheus
+- [x] Forbedret logging av søkeparametere og responstid
+- [x] Gjort filtermetadata datadrevet
+- [x] Forbedret empty states og feilhåndtering i UI
+- [x] Justert risikomodell for strukturelle hendelser og nye selskaper
 
-### 5. Rydd frontend-kontrakten mot backend
-- Normaliser proxy-ruter og responsbruk
-- Rydd i TypeScript-typer som overlapper gammel og ny modell
+### Verifisert i kodebasen
 
-Ferdig når:
-- Frontend bruker én konsistent kontrakt
-- TypeScript-typene stemmer med backendrespons
+- [x] `CompanyCheckController` eksponerer `/api/company-check`
+- [x] Frontend bruker `/api/company-check` i proxy-ruter og UI-kall
+- [x] `application.properties` eksponerer `health`, `info`, `metrics` og `prometheus`
+- [x] `build.gradle` inkluderer `flyway-core`, `caffeine` og Prometheus-registry
+- [x] Første Flyway-migrasjon finnes i `src/main/resources/db/migration/V1__Create_initial_schema.sql`
+- [x] Miljøfiler finnes for `application-dev.properties`, `application-test.properties` og `application-prod.properties`
 
-## Senere
+## Produksjonsklarhetssjekkliste
 
-- Caching for BRREG-oppslag
-- Observability for søk og detaljvisning
-- Datadrevne filtermetadata
-- Tydelige empty states i UI
-- Produksjonsklarhetssjekkliste
+### Må være på plass før produksjon
+
+- [ ] Kjør full backend-testpakke og bekreft grønn build
+- [ ] Kjør frontend-build og bekreft at proxy-ruter fungerer mot backend
+- [ ] Verifiser `application-prod.properties` mot faktisk produksjonsmiljø
+- [ ] Bekreft at produksjon ikke bruker H2 eller lokal filbasert database
+- [ ] Sett eksplisitt produksjonsdatabase med riktige credentials via miljøvariabler eller secrets
+- [ ] Bekreft at Flyway kjører automatisk og trygt i produksjon
+- [ ] Verifiser at `ddl-auto` i produksjon ikke gjør ukontrollerte skjemaendringer
+- [ ] Test end-to-end mot BRREG fra et produksjonsnært miljø
+- [ ] Definer timeout, retry-strategi og feilhåndtering for eksterne BRREG-kall
+- [ ] Verifiser at cache-oppsett og TTL er riktige for produksjonslast
+- [ ] Bekreft at `/actuator/health` og `/actuator/prometheus` er riktig eksponert og beskyttet
+- [ ] Sikre at sensitive data ikke logges i applikasjonslogger eller proxy-logger
+- [ ] Verifiser CORS, origin-policy og proxy-oppsett for frontend i produksjon
+- [ ] Dokumenter nødvendige miljøvariabler for backend og frontend
+- [ ] Lag enkel deploy- og rollback-prosedyre
+
+### Bør være på plass snart etterpå
+
+- [ ] Legg til alarmer for høy feilrate, høy responstid og BRREG-feil
+- [ ] Legg til dashbord for søk, detaljvisning, cache-hit-rate og eksterne feil
+- [ ] Verifiser rate limiting eller annen beskyttelse mot misbruk
+- [ ] Legg til smoke-test etter deploy
+- [ ] Vurder readiness/liveness-prober hvis appen skal kjøres i containerplattform
+- [ ] Dokumenter driftshåndtering for migrasjoner og incident-respons
+
+## Merknader
+
+- Fase 5-oppgavene er gjennomført og reflektert i kodebasen.
+- Produksjonsklarhet er neste arbeidspakke, ikke nye funksjonskrav.
+- `TODO.md` bør heretter brukes som operativ sjekkliste for verifisering før produksjonssetting.

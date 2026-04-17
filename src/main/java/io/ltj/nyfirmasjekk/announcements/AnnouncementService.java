@@ -132,7 +132,13 @@ public class AnnouncementService {
         if (normalized.contains("tvangsoppl")) {
             return "DISSOLUTION";
         }
-        if (normalized.contains("avvikling")) {
+        if (normalized.contains("fisjon")) {
+            return "FISSION";
+        }
+        if (normalized.contains("fusjon")) {
+            return "MERGER";
+        }
+        if (normalized.contains("avvikling") || normalized.contains("oppløsning")) {
             return "WINDING_UP";
         }
         if (normalized.contains("årsregnskap")) {

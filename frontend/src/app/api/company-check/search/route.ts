@@ -7,7 +7,7 @@ const backendBaseUrl =
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const dager = searchParams.get("dager") || "10";
+  const dager = searchParams.get("dager") || "0";
   const q = searchParams.get("q");
   const county = searchParams.get("county");
   const organizationForm = searchParams.get("organizationForm");
@@ -32,6 +32,11 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json();
+    const items = Array.isArray(data) ? data : data.items || [];
+    const totalElements = Array.isArray(data) ? items.length : (data.totalElements ?? items.length);
+    console.info(
+      `[company-check/search] dager=${dager} page=${page} score=${score ?? "ALL"} q=${q ?? "-"} county=${county ?? "-"} organizationForm=${organizationForm ?? "-"} items=${items.length} totalElements=${totalElements}`
+    );
     return NextResponse.json(data);
   } catch (err) {
     console.error("Fetch error:", err);
