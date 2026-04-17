@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class CompanyCheckService {
     private static final int SOURCE_PAGE_SIZE = 100;
     private static final int FILTERED_SOURCE_PAGE_SIZE = 25;
     private static final int MAX_SOURCE_PAGES_WITH_SCORE_FILTER = 400;
+    private static final int MAX_RED_SOURCE_PAGES_PER_VARIANT = 40;
 
     private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA", "STIFT");
     private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA");
@@ -71,7 +73,9 @@ public class CompanyCheckService {
     public List<CompanyCheck> sok(CompanySearchRequest request, int page) {
         long startedAt = System.nanoTime();
         SearchDiagnostics diagnostics = new SearchDiagnostics(request, page);
-        List<CompanyCheck> results = harTekst(request.score())
+        List<CompanyCheck> results = isHardRedSearch(request)
+                ? sokMedRegisterdrevetRedFilter(request, page, diagnostics)
+                : harTekst(request.score())
                 ? sokMedScoreFilter(request, page, diagnostics)
                 : sokUtenScoreFilter(request, page, diagnostics);
 
@@ -81,6 +85,42 @@ public class CompanyCheckService {
         diagnostics.logSummary(durationMs, results.size());
         
         return results;
+    }
+
+    private List<CompanyCheck> sokMedRegisterdrevetRedFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+        Map<String, CompanyCheck> matches = new LinkedHashMap<>();
+        int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
+
+        for (Map<String, String> redFilter : redSearchVariants()) {
+            int sourcePage = 0;
+
+            while (matches.size() < requestedOffset + request.resultSize() && sourcePage < MAX_RED_SOURCE_PAGES_PER_VARIANT) {
+                var filter = byggFilter(request, sourcePage, FILTERED_SOURCE_PAGE_SIZE, redFilter);
+                long fetchStartedAt = System.nanoTime();
+                EnheterSearchResponse searchResponse = brregClient.sok(filter);
+                diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+
+                var pageMatches = vurderSide(searchResponse, request, diagnostics);
+                pageMatches.forEach(match -> matches.putIfAbsent(match.organisasjonsnummer(), match));
+
+                var pageInfo = searchResponse.page();
+                boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
+                if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
+                    break;
+                }
+
+                sourcePage += 1;
+            }
+
+            if (matches.size() >= requestedOffset + request.resultSize()) {
+                break;
+            }
+        }
+
+        return matches.values().stream()
+                .skip(requestedOffset)
+                .limit(request.resultSize())
+                .toList();
     }
 
     private List<CompanyCheck> sokUtenScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
@@ -454,10 +494,15 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size) {
+        return byggFilter(r, p, size, Map.of());
+    }
+
+    private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size, Map<String, String> extraParams) {
         Map<String, String> f = new HashMap<>();
         f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
         if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
         if (hasText(r.navn())) f.put("navn", r.navn().trim());
+        extraParams.forEach(f::put);
         f.put("sort", "registreringsdatoEnhetsregisteret,desc");
         return f;
     }
@@ -532,6 +577,15 @@ public class CompanyCheckService {
 
     private boolean hasHardRedSignal(EnhetResponse enhet) {
         return isBankruptcy(enhet) || isForcedDissolution(enhet);
+    }
+
+    private List<Map<String, String>> redSearchVariants() {
+        return List.of(
+                Map.of("konkurs", "true"),
+                Map.of("underTvangsavviklingEllerTvangsopplosning", "true"),
+                Map.of("underAvvikling", "true"),
+                Map.of("underKonkursbehandling", "true")
+        );
     }
 
     private boolean canBeFastGreen(EnhetResponse enhet) {
