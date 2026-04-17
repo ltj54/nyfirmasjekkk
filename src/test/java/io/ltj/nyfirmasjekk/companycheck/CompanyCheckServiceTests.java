@@ -332,104 +332,70 @@ class CompanyCheckServiceTests {
     }
 
     @Test
-    void henterFlereBrregSiderNarFiltrerteTreffIkkeFinnesPaForsteSide() {
-        var yellowEnhet = new EnhetResponse(
+    void grontSokHopperOverRolleoppslagForApenbartIkkeGronneTreff() {
+        var greenEnhet = new EnhetResponse(
                 "111111111",
-                "FORSIKRING ALFA AS",
-                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
-                new EnhetResponse.Naeringskode("66.220", "Forsikringsformidling"),
-                List.of("Forsikringsformidling"),
+                "Stabil ENK",
+                new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "stabil.no",
+                "post@stabil.no",
+                "12345678",
                 null,
-                null,
-                null,
-                null,
+                false,
                 false,
                 false,
                 false,
-                true,
                 false,
                 null,
                 false,
                 null,
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, 1, 10),
                 null,
                 null
         );
-        var redEnhet = new EnhetResponse(
+        var yellowEnhet = new EnhetResponse(
                 "222222222",
-                "FORSIKRING BETA AS",
-                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
-                new EnhetResponse.Naeringskode("66.220", "Forsikringsformidling"),
-                List.of("Forsikringsformidling"),
+                "Tynt ENK",
+                new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
+                null,
+                List.of(),
                 null,
                 null,
                 null,
                 null,
                 false,
-                true,
                 false,
-                true,
                 false,
-                null,
+                false,
                 false,
                 null,
-                LocalDate.of(2020, 1, 1),
-                LocalDate.of(2020, 1, 1),
+                false,
+                null,
+                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, 1, 10),
                 null,
                 null
         );
         var client = new StubBrregClient(
                 Map.of(
-                        yellowEnhet.organisasjonsnummer(), yellowEnhet,
-                        redEnhet.organisasjonsnummer(), redEnhet
+                        greenEnhet.organisasjonsnummer(), greenEnhet,
+                        yellowEnhet.organisasjonsnummer(), yellowEnhet
                 ),
-                Map.of(
-                        yellowEnhet.organisasjonsnummer(), new RollerResponse(List.of(
-                                new RollerResponse.Rollegruppe(
-                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
-                                        List.of(
-                                                new RollerResponse.Rolle(
-                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
-                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
-                                                        null,
-                                                        false,
-                                                        false
-                                                )
-                                        )
-                                )
-                        )),
-                        redEnhet.organisasjonsnummer(), new RollerResponse(List.of(
-                                new RollerResponse.Rollegruppe(
-                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
-                                        List.of(
-                                                new RollerResponse.Rolle(
-                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
-                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Grace", null, "Hopper")),
-                                                        null,
-                                                        false,
-                                                        false
-                                                )
-                                        )
-                                )
-                        ))
-                ),
-                Map.of(
-                        0, new EnheterSearchResponse(
-                                new EnheterSearchResponse.Embedded(List.of(yellowEnhet)),
-                                new EnheterSearchResponse.Page(1, 2, 2, 0)
-                        ),
-                        1, new EnheterSearchResponse(
-                                new EnheterSearchResponse.Embedded(List.of(redEnhet)),
-                                new EnheterSearchResponse.Page(1, 2, 2, 1)
-                        )
+                Map.of(),
+                new EnheterSearchResponse(
+                        new EnheterSearchResponse.Embedded(List.of(greenEnhet, yellowEnhet)),
+                        new EnheterSearchResponse.Page(100, 2, 1, 0)
                 )
         );
         var service = new CompanyCheckService(client, fixedClock());
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "RED", 1), 0);
+        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", 100));
 
-        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("222222222");
+        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
+        assertThat(client.roleLookups()).isZero();
     }
 
     private Clock fixedClock() {
@@ -444,6 +410,7 @@ class CompanyCheckServiceTests {
         private final Map<Integer, EnheterSearchResponse> searchResponsesByPage;
         private final Map<String, EnhetResponse> enheterByOrgNumber;
         private final Map<String, RollerResponse> rollerByOrgNumber;
+        private int roleLookups;
         private Map<String, String> lastSearchFilter;
 
         private StubBrregClient(EnhetResponse enhet, RollerResponse roller) {
@@ -495,6 +462,7 @@ class CompanyCheckServiceTests {
 
         @Override
         public RollerResponse hentRoller(String organisasjonsnummer) {
+            roleLookups++;
             return rollerByOrgNumber.getOrDefault(organisasjonsnummer, roller);
         }
 
@@ -513,6 +481,10 @@ class CompanyCheckServiceTests {
 
         private Map<String, String> lastSearchFilter() {
             return lastSearchFilter;
+        }
+
+        private int roleLookups() {
+            return roleLookups;
         }
     }
 }

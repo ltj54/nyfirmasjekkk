@@ -1,10 +1,13 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
+import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.EnheterSearchResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -16,10 +19,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 @Service
 public class CompanyCheckService {
+    private static final Logger log = LoggerFactory.getLogger(CompanyCheckService.class);
 
     private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "SA");
     private static final String ROLE_LABEL = "Roller";
@@ -28,6 +35,7 @@ public class CompanyCheckService {
     private static final int YELLOW_SCORE_THRESHOLD = 3;
     private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS");
     private static final List<String> ANNUAL_ACCOUNTS_EXPECTED_FORMS = List.of("AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS");
+    private static final RollerResponse EMPTY_ROLLER = new RollerResponse(List.of());
 
     private final BrregClient brregClient;
     private final Clock clock;
@@ -51,47 +59,174 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request, int page) {
+        if ("RED".equalsIgnoreCase(request.score())) {
+            return sokRodeSelskaper(request, page);
+        }
+        if ("GREEN".equalsIgnoreCase(request.score())) {
+            return sokGronneSelskaper(request, page);
+        }
+
         int requestedPage = Math.max(page, 0);
         int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
         int offset = requestedPage * pageSize;
         int matchedCount = 0;
         int upstreamPage = 0;
         List<CompanyCheck> results = new ArrayList<>();
+        long startedAt = System.nanoTime();
 
-        while (true) {
-            var searchResponse = brregClient.sok(byggFilter(request, upstreamPage));
-            var enheter = hentEnheter(searchResponse);
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            while (true) {
+                var searchResponse = brregClient.sok(byggFilter(request, upstreamPage));
+                var enheter = hentEnheter(searchResponse);
 
-            if (enheter.isEmpty()) {
-                break;
-            }
-
-            for (var enhet : enheter) {
-                if (enhet == null || !matcherLokalFiltrering(enhet, request)) {
-                    continue;
+                if (enheter.isEmpty()) {
+                    break;
                 }
 
-                var check = vurderFraSok(enhet);
-                if (!matcherScore(check, request.score())) {
-                    continue;
+                List<Future<CompanyCheck>> futures = enheter.stream()
+                        .filter(Objects::nonNull)
+                        .filter(enhet -> matcherLokalFiltrering(enhet, request))
+                        .map(enhet -> executor.submit(() -> vurderFraSok(enhet)))
+                        .toList();
+
+                for (Future<CompanyCheck> future : futures) {
+                    var check = awaitCheck(future);
+                    if (!matcherScore(check, request.score())) {
+                        continue;
+                    }
+
+                    if (matchedCount++ < offset) {
+                        continue;
+                    }
+
+                    results.add(check);
+                    if (results.size() >= pageSize) {
+                        return results;
+                    }
                 }
 
-                if (matchedCount++ < offset) {
-                    continue;
+                upstreamPage++;
+                if (!harFlereSider(searchResponse, upstreamPage)) {
+                    break;
                 }
-
-                results.add(check);
-                if (results.size() >= pageSize) {
-                    return results;
-                }
-            }
-
-            upstreamPage++;
-            if (!harFlereSider(searchResponse, upstreamPage)) {
-                break;
             }
         }
 
+        logSearchPath("DEFAULT", request, page, upstreamPage, matchedCount, results.size(), startedAt);
+        return results;
+    }
+
+    private List<CompanyCheck> sokGronneSelskaper(CompanySearchRequest request, int page) {
+        int requestedPage = Math.max(page, 0);
+        int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
+        int offset = requestedPage * pageSize;
+        int matchedCount = 0;
+        int upstreamPage = 0;
+        List<CompanyCheck> results = new ArrayList<>();
+        long startedAt = System.nanoTime();
+
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            while (true) {
+                var searchResponse = brregClient.sok(byggFilter(request, upstreamPage));
+                var enheter = hentEnheter(searchResponse);
+
+                if (enheter.isEmpty()) {
+                    break;
+                }
+
+                List<Future<CompanyCheck>> futures = enheter.stream()
+                        .filter(Objects::nonNull)
+                        .filter(enhet -> matcherLokalFiltrering(enhet, request))
+                        .filter(this::kanVaereGrontTreff)
+                        .map(enhet -> executor.submit(() -> vurderGrontSoketreff(enhet)))
+                        .toList();
+
+                for (Future<CompanyCheck> future : futures) {
+                    CompanyCheck check = awaitCheck(future);
+                    if (check == null || !matcherScore(check, request.score())) {
+                        continue;
+                    }
+
+                    if (matchedCount++ < offset) {
+                        continue;
+                    }
+
+                    results.add(check);
+                    if (results.size() >= pageSize) {
+                        return results;
+                    }
+                }
+
+                upstreamPage++;
+                if (!harFlereSider(searchResponse, upstreamPage)) {
+                    break;
+                }
+            }
+        }
+
+        logSearchPath("GREEN", request, page, upstreamPage, matchedCount, results.size(), startedAt);
+        return results;
+    }
+
+    private List<CompanyCheck> sokRodeSelskaper(CompanySearchRequest request, int page) {
+        int requestedPage = Math.max(page, 0);
+        int pageSize = request.resultSize() > 0 ? request.resultSize() : 100;
+        int offset = requestedPage * pageSize;
+        int targetCount = offset + pageSize;
+        List<EnhetResponse> collected = new ArrayList<>();
+        Map<String, EnhetResponse> unique = new HashMap<>();
+        String[] seriousSignalFilters = {"konkurs", "underAvvikling", "underTvangsavviklingEllerTvangsopplosning"};
+        long startedAt = System.nanoTime();
+        int upstreamPage = 0;
+
+        for (String signalFilter : seriousSignalFilters) {
+            upstreamPage = 0;
+
+            while (unique.size() < targetCount) {
+                var response = brregClient.sok(byggFilter(request, upstreamPage, signalFilter));
+                var enheter = hentEnheter(response);
+                if (enheter.isEmpty()) {
+                    break;
+                }
+
+                for (var enhet : enheter) {
+                    if (enhet == null || !matcherLokalFiltrering(enhet, request)) {
+                        continue;
+                    }
+                    if (unique.putIfAbsent(enhet.organisasjonsnummer(), enhet) == null) {
+                        collected.add(enhet);
+                    }
+                }
+
+                upstreamPage++;
+                if (!harFlereSider(response, upstreamPage)) {
+                    break;
+                }
+            }
+        }
+
+        var results = collected.stream()
+                .map(enhet -> vurderEnhet(enhet, null))
+                .filter(check -> matcherScore(check, request.score()))
+                .sorted((left, right) -> {
+                    LocalDate leftDate = left.fakta() == null ? null : left.fakta().registreringsdato();
+                    LocalDate rightDate = right.fakta() == null ? null : right.fakta().registreringsdato();
+                    if (leftDate == null && rightDate == null) {
+                        return left.navn().compareToIgnoreCase(right.navn());
+                    }
+                    if (leftDate == null) {
+                        return 1;
+                    }
+                    if (rightDate == null) {
+                        return -1;
+                    }
+                    int byDate = rightDate.compareTo(leftDate);
+                    return byDate != 0 ? byDate : left.navn().compareToIgnoreCase(right.navn());
+                })
+                .skip(offset)
+                .limit(pageSize)
+                .toList();
+        logSearchPath("RED", request, page, upstreamPage, unique.size(), results.size(), startedAt);
         return results;
     }
 
@@ -103,6 +238,24 @@ public class CompanyCheckService {
 
     private CompanyCheck vurderFraSok(EnhetResponse enhet) {
         return vurderEnhet(enhet, brregClient.hentRoller(enhet.organisasjonsnummer()));
+    }
+
+    private CompanyCheck vurderGrontSoketreff(EnhetResponse enhet) {
+        if (!erSentralOrganisasjonsform(enhet)) {
+            return vurderEnhet(enhet, EMPTY_ROLLER);
+        }
+        return vurderEnhet(enhet, brregClient.hentRoller(enhet.organisasjonsnummer()));
+    }
+
+    private CompanyCheck awaitCheck(Future<CompanyCheck> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new BrregClientException("Avbrutt under vurdering av selskaper", exception);
+        } catch (ExecutionException exception) {
+            throw new BrregClientException("Klarte ikke vurdere selskaper i søket", exception.getCause());
+        }
     }
 
     private CompanyCheck vurderEnhet(EnhetResponse enhet, RollerResponse roller) {
@@ -492,6 +645,10 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFilter(CompanySearchRequest request, int page) {
+        return byggFilter(request, page, null);
+    }
+
+    private Map<String, String> byggFilter(CompanySearchRequest request, int page, String seriousSignalFilter) {
         Map<String, String> filter = new HashMap<>();
         int requestedSize = request.resultSize() > 0 ? request.resultSize() : 100;
         filter.put("size", String.valueOf(Math.min(requestedSize, 100)));
@@ -511,6 +668,9 @@ public class CompanyCheckService {
         }
         if (hasText(request.naeringskode())) {
             filter.put("naeringskode1.kode", request.naeringskode().trim());
+        }
+        if (hasText(seriousSignalFilter)) {
+            filter.put(seriousSignalFilter, "true");
         }
 
         // Sorter etter registreringsdato for å få de nyeste først
@@ -550,6 +710,13 @@ public class CompanyCheckService {
 
     private boolean matcherScore(CompanyCheck check, String score) {
         return !hasText(score) || check.status().name().equalsIgnoreCase(score);
+    }
+
+    private boolean kanVaereGrontTreff(EnhetResponse enhet) {
+        if (isTrue(enhet.konkurs()) || isTrue(enhet.underTvangsavviklingEllerTvangsopplosning()) || isTrue(enhet.underAvvikling())) {
+            return false;
+        }
+        return beregnVarselpoeng(enhet) < YELLOW_SCORE_THRESHOLD;
     }
 
     private String normaliserSoketekst(String value) {
@@ -600,5 +767,28 @@ public class CompanyCheckService {
                 .filter(this::hasText)
                 .reduce((left, right) -> left + " " + right)
                 .orElse(null);
+    }
+
+    private void logSearchPath(
+            String path,
+            CompanySearchRequest request,
+            int page,
+            int upstreamPage,
+            int matchedCount,
+            int resultCount,
+            long startedAt
+    ) {
+        long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
+        log.info(
+                "company-check {} path in {} ms: score={}, dager={}, page={}, upstreamPages={}, matched={}, returned={}",
+                path,
+                durationMs,
+                request.score() == null ? "ALL" : request.score(),
+                request.dager(),
+                Math.max(page, 0),
+                upstreamPage + 1,
+                matchedCount,
+                resultCount
+        );
     }
 }

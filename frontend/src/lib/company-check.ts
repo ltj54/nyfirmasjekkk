@@ -55,12 +55,47 @@ export interface CompanyDetails extends CompanySummary {
     name: string;
     title: string | null;
   }>;
-  announcements: Array<{
-    type: string;
-    description: string;
-    date: string | null;
-    source: string;
-  }>;
+  announcements: Announcement[];
+}
+
+export interface Announcement {
+  type: string;
+  title: string;
+  date: string | null;
+  source: string;
+}
+
+export interface CompanyHistoryEntry {
+  capturedAt: string;
+  orgNumber: string;
+  name: string;
+  organizationForm: string | null;
+  scoreColor: ScoreColor;
+  summary: string;
+  municipality: string | null;
+  county: string | null;
+  naceCode: string | null;
+  latestAnnualAccountsYear: string | null;
+  vatRegistered: boolean | null;
+  registeredInBusinessRegistry: boolean | null;
+  hasContactData: boolean | null;
+  hasRoles: boolean | null;
+  hasSeriousSignals: boolean | null;
+  registrationDate: string | null;
+}
+
+export interface NetworkCompanyLink {
+  orgNumber: string;
+  companyName: string;
+  roleTypes: string[];
+  lastSeenAt: string;
+}
+
+export interface NetworkActor {
+  actorKey: string;
+  actorName: string;
+  roleTypesInSelectedCompany: string[];
+  relatedCompanies: NetworkCompanyLink[];
 }
 
 export interface CompanyFacts {

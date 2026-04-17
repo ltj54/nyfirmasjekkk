@@ -6,6 +6,8 @@ import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
 import io.ltj.nyfirmasjekk.companycheck.CompanyCheck;
 import io.ltj.nyfirmasjekk.companycheck.CompanyCheckService;
 import io.ltj.nyfirmasjekk.companycheck.CompanySearchRequest;
+import io.ltj.nyfirmasjekk.history.CompanyHistoryService;
+import io.ltj.nyfirmasjekk.network.CompanyNetworkService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -31,17 +33,23 @@ public class CompanyApiV1Controller {
     private final CompanyApiV1Mapper mapper;
     private final MetadataService metadataService;
     private final BrregClient brregClient;
+    private final CompanyHistoryService companyHistoryService;
+    private final CompanyNetworkService companyNetworkService;
 
     public CompanyApiV1Controller(
             CompanyCheckService companyCheckService,
             CompanyApiV1Mapper mapper,
             MetadataService metadataService,
-            BrregClient brregClient
+            BrregClient brregClient,
+            CompanyHistoryService companyHistoryService,
+            CompanyNetworkService companyNetworkService
     ) {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
         this.metadataService = metadataService;
         this.brregClient = brregClient;
+        this.companyHistoryService = companyHistoryService;
+        this.companyNetworkService = companyNetworkService;
     }
 
     @GetMapping("/companies")
@@ -76,9 +84,29 @@ public class CompanyApiV1Controller {
             String orgNumber
     ) {
         CompanyCheck check = companyCheckService.vurder(orgNumber);
+        companyHistoryService.captureSnapshot(check);
         var enhet = brregClient.hentEnhet(orgNumber);
         var roller = brregClient.hentRoller(orgNumber);
+        companyNetworkService.captureRoles(orgNumber, check.navn(), roller);
         return mapper.toDetails(check, enhet, roller);
+    }
+
+    @GetMapping("/companies/{orgNumber}/history")
+    public List<CompanyHistoryEntry> history(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String orgNumber
+    ) {
+        return companyHistoryService.historyFor(orgNumber);
+    }
+
+    @GetMapping("/companies/{orgNumber}/network")
+    public List<NetworkActor> network(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String orgNumber
+    ) {
+        return companyNetworkService.networkFor(orgNumber);
     }
 
     @GetMapping("/companies/{orgNumber}/score")
@@ -118,7 +146,9 @@ public class CompanyApiV1Controller {
 
     private List<CompanySummary> searchByOrgNumber(String orgNumber) {
         CompanyCheck check = companyCheckService.vurder(orgNumber);
+        companyHistoryService.captureSnapshot(check);
         var enhet = brregClient.hentEnhet(orgNumber);
+        companyNetworkService.captureRoles(orgNumber, check.navn(), brregClient.hentRoller(orgNumber));
         return List.of(mapper.toSummary(check, enhet));
     }
 

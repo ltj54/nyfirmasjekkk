@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import {
   Search,
   Building2,
@@ -16,7 +16,10 @@ import {
 } from "lucide-react";
 
 import type {
+  Announcement,
   CompanyDetails,
+  CompanyHistoryEntry,
+  NetworkActor,
   CompanySummary,
   MetadataFiltersResponse,
 } from "@/lib/company-check";
@@ -24,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-const dayOptions = ["30", "90", "180", "365", "0"];
+const dayOptions = ["10", "30", "90", "180", "365", "0"];
 
 const legend = [
   { status: "GREEN", label: "Ingen varselflagg", color: "bg-emerald-500" },
@@ -77,6 +80,8 @@ const analysisTitles = [
 export function CompanyCheckShell() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
+  const [backendReady, setBackendReady] = useState(false);
+  const [initialResultsReady, setInitialResultsReady] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
   const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
@@ -86,25 +91,114 @@ export function CompanyCheckShell() {
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [daysFilter, setDaysFilter] = useState("30");
+  const [isListLoading, setIsListLoading] = useState(false);
+  const [listLoadProgress, setListLoadProgress] = useState(0);
+  const [listLoadSeconds, setListLoadSeconds] = useState(0);
+  const [daysFilter, setDaysFilter] = useState("10");
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
+  const [selectedCompanyAnnouncements, setSelectedCompanyAnnouncements] = useState<Announcement[]>([]);
+  const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
+  const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
   const [page, setPage] = useState(0);
   const [, startTransition] = useTransition();
+  const latestListRequestId = useRef(0);
 
-  // Fetch recent companies on mount
   useEffect(() => {
-    void fetchFilters();
-    void fetchRecent();
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    async function checkBackendHealth() {
+      try {
+        const response = await fetch("/api/company-check/health", {
+          cache: "no-store",
+        });
+
+        if (!cancelled && response.ok) {
+          setBackendReady(true);
+          setError(null);
+          return;
+        }
+      } catch {
+        // Ignore expected startup failures while polling for readiness.
+      }
+
+      if (!cancelled) {
+        setBackendReady(false);
+        setError("Backend starter fortsatt. Prøv igjen om et øyeblikk.");
+        timeoutId = setTimeout(() => {
+          void checkBackendHealth();
+        }, 1500);
+      }
+    }
+
+    void checkBackendHealth();
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
+  useEffect(() => {
+    if (!backendReady) {
+      return;
+    }
+
+    void hydrateLandingData();
+  }, [backendReady]);
+
+  useEffect(() => {
+    if (!isListLoading) {
+      setListLoadProgress(0);
+      setListLoadSeconds(0);
+      return;
+    }
+
+    const startedAt = Date.now();
+    const updateProgress = () => {
+      const elapsedMs = Date.now() - startedAt;
+      const elapsedSeconds = Math.floor(elapsedMs / 1000);
+      setListLoadSeconds(elapsedSeconds);
+      setListLoadProgress(estimateListProgress(elapsedMs));
+    };
+
+    updateProgress();
+    const intervalId = setInterval(updateProgress, 200);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isListLoading]);
+
+  async function hydrateLandingData() {
+    setIsListLoading(true);
+
+    try {
+      await Promise.all([fetchFilters(), fetchRecent(0)]);
+      setInitialResultsReady(true);
+    } finally {
+      setIsListLoading(false);
+    }
+  }
+
   async function fetchFilters() {
+    if (!backendReady) {
+      return;
+    }
+
     try {
       const response = await fetch("/api/company-check/filters", {
         cache: "no-store",
       });
       if (!response.ok) {
+        if (response.status === 502) {
+          const payload = await response.json().catch(() => null);
+          setError(payload?.title ?? "Backend starter fortsatt. Prøv igjen om et øyeblikk.");
+        }
         return;
       }
 
@@ -116,6 +210,12 @@ export function CompanyCheckShell() {
   }
 
   async function fetchRecent(pageNum = 0, query = activeQuery) {
+    if (!backendReady) {
+      return;
+    }
+
+    const requestId = ++latestListRequestId.current;
+    setIsListLoading(true);
     const params = new URLSearchParams();
     params.set("dager", daysFilter);
     params.set("page", pageNum.toString());
@@ -128,21 +228,92 @@ export function CompanyCheckShell() {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        setRecentCompanies(Array.isArray(data) ? data : data.items || []);
+        if (requestId !== latestListRequestId.current) {
+          return;
+        }
+        const items = Array.isArray(data) ? data : data.items || [];
+        setRecentCompanies(items);
         setPage(pageNum);
+        setError(null);
+      } else if (response.status === 502) {
+        const payload = await response.json().catch(() => null);
+        if (requestId !== latestListRequestId.current) {
+          return;
+        }
+        setRecentCompanies([]);
+        setError(payload?.title ?? "Backend starter fortsatt. Prøv igjen om et øyeblikk.");
       }
     } catch (err) {
       console.error("Failed to fetch recent companies", err);
+    } finally {
+      if (requestId === latestListRequestId.current) {
+        setIsListLoading(false);
+      }
     }
   }
 
   useEffect(() => {
-    if (!selectedCompany) {
+    if (backendReady && initialResultsReady && !selectedCompany) {
       void fetchRecent(0);
     }
-  }, [daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany, activeQuery]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany, activeQuery]);
+
+  useEffect(() => {
+    if (!backendReady || !selectedCompany) {
+      setSelectedCompanyAnnouncements([]);
+      setSelectedCompanyHistory([]);
+      setSelectedCompanyNetwork([]);
+      return;
+    }
+
+    let active = true;
+    const orgNumber = selectedCompany.orgNumber;
+
+    async function fetchSelectedCompanyData() {
+      try {
+        const [eventsResponse, historyResponse, networkResponse] = await Promise.all([
+          fetch(`/api/company-check/${orgNumber}/events`, {
+            cache: "no-store",
+          }),
+          fetch(`/api/company-check/${orgNumber}/history`, {
+            cache: "no-store",
+          }),
+          fetch(`/api/company-check/${orgNumber}/network`, {
+            cache: "no-store",
+          }),
+        ]);
+
+        if (!active) {
+          return;
+        }
+
+        const [eventsPayload, historyPayload, networkPayload] = await Promise.all([
+          eventsResponse.ok ? eventsResponse.json() : Promise.resolve([]),
+          historyResponse.ok ? historyResponse.json() : Promise.resolve([]),
+          networkResponse.ok ? networkResponse.json() : Promise.resolve([]),
+        ]);
+
+        setSelectedCompanyAnnouncements(Array.isArray(eventsPayload) ? (eventsPayload as Announcement[]) : []);
+        setSelectedCompanyHistory(Array.isArray(historyPayload) ? (historyPayload as CompanyHistoryEntry[]) : []);
+        setSelectedCompanyNetwork(Array.isArray(networkPayload) ? (networkPayload as NetworkActor[]) : []);
+      } catch (err) {
+        console.error("Failed to fetch company detail extras", err);
+      }
+    }
+
+    void fetchSelectedCompanyData();
+
+    return () => {
+      active = false;
+    };
+  }, [selectedCompany]);
 
   async function handleSearch(term: string) {
+    if (!backendReady) {
+      setError("Backend starter fortsatt. Prøv igjen om et øyeblikk.");
+      return;
+    }
+
     const trimmedTerm = term.trim();
 
     setError(null);
@@ -157,6 +328,7 @@ export function CompanyCheckShell() {
     setIsLoading(true);
 
     try {
+      const requestId = ++latestListRequestId.current;
       const isOrgNumber = /^\d{9}$/.test(trimmedTerm);
       const params = new URLSearchParams();
       params.set("dager", daysFilter);
@@ -181,6 +353,10 @@ export function CompanyCheckShell() {
       });
 
       const payload = await response.json();
+
+      if (requestId !== latestListRequestId.current) {
+        return;
+      }
 
       if (!response.ok) {
         setError(payload.detail ?? "Klarte ikke hente selskapsdata.");
@@ -213,7 +389,9 @@ export function CompanyCheckShell() {
     handleSearch(searchTerm);
   };
 
-  const filteredCompanies = recentCompanies;
+  const filteredCompanies = selectedLegend
+    ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
+    : recentCompanies;
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
@@ -286,10 +464,10 @@ export function CompanyCheckShell() {
                 </div>
                 <Button
                   className="h-12 rounded-full bg-[#064e3b] px-8 text-[15px] font-bold text-white hover:bg-[#065f46] shadow-lg shadow-[#064e3b]/10 transition-all active:scale-95"
-                  disabled={isLoading}
+                  disabled={isLoading || !backendReady}
                   type="submit"
                 >
-                  {isLoading ? "Søker..." : "Søk"}
+                  {!backendReady ? "Starter..." : isLoading ? "Søker..." : "Søk"}
                 </Button>
               </form>
             </div>
@@ -298,12 +476,12 @@ export function CompanyCheckShell() {
               <div className="mt-8 flex flex-wrap justify-center gap-3 animate-in fade-in duration-1000 delay-300">
                 <label className="flex items-center rounded-full border border-[#e5e5e5] bg-white pr-4 text-[13px] font-bold text-[#525252] transition-all hover:border-[#064e3b] hover:text-[#064e3b] hover:shadow-md">
                   <select
-                    aria-label={daysFilter === "0" ? "Hele tiden" : `Siste ${daysFilter || "30"} dager`}
+                    aria-label={daysFilter === "0" ? "Hele tiden" : `Siste ${daysFilter || "10"} dager`}
                     className="rounded-full bg-transparent px-5 py-2 outline-none"
                     onChange={(event) => setDaysFilter(event.target.value)}
                     value={daysFilter}
                   >
-                    <option value="">{daysFilter === "0" ? "Hele tiden" : "Siste 30 dager"}</option>
+                    <option value="">{daysFilter === "0" ? "Hele tiden" : "Siste 10 dager"}</option>
                     {dayOptions.map((option) => (
                       <option key={option} value={option}>
                         {option === "0" ? "Hele tiden" : `${option} dager`}
@@ -361,6 +539,7 @@ export function CompanyCheckShell() {
                       ? "border-[#d9d4c7] bg-white text-[#171717] shadow-sm"
                       : "border-transparent bg-transparent hover:border-[#e7e2d8] hover:bg-white/80 hover:text-[#525252]"
                   }`}
+                  disabled={!initialResultsReady || isListLoading}
                   onClick={() =>
                     setSelectedLegend((current) =>
                       current === item.status ? null : (item.status as keyof typeof legendDetails)
@@ -398,9 +577,40 @@ export function CompanyCheckShell() {
           )}
 
           {selectedCompany ? (
-            <CompanyDetailView company={selectedCompany} />
+            <CompanyDetailView
+              company={selectedCompany}
+              announcements={selectedCompanyAnnouncements.length > 0 ? selectedCompanyAnnouncements : selectedCompany.announcements}
+              history={selectedCompanyHistory}
+              network={selectedCompanyNetwork}
+            />
           ) : (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700">
+              {isListLoading && (
+                <div className="rounded-[26px] border border-[#ece6da] bg-white/90 px-6 py-5 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
+                  <div className="mb-3 flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#a3a3a3]">
+                        Søker i registerdata
+                      </p>
+                      <p className="mt-1 text-[14px] font-medium text-[#626262]">
+                        {listLoadSeconds < 8
+                          ? "Henter første treffliste."
+                          : "Søket er fortsatt i gang. Filteret jobber mot mange selskaper."}
+                      </p>
+                    </div>
+                    <p className="whitespace-nowrap text-[12px] font-bold text-[#525252]">
+                      {listLoadSeconds}s
+                    </p>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-[#efe9dd]">
+                    <div
+                      className="h-full rounded-full bg-[#064e3b] transition-[width] duration-200 ease-out"
+                      style={{ width: `${listLoadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-extrabold text-[#171717]">Nye selskaper</h2>
@@ -411,7 +621,7 @@ export function CompanyCheckShell() {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={page === 0 || isLoading}
+                      disabled={page === 0 || isLoading || isListLoading}
                       onClick={() => void fetchRecent(page - 1)}
                     >
                       Forrige
@@ -420,7 +630,7 @@ export function CompanyCheckShell() {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={recentCompanies.length < 100 || isLoading}
+                      disabled={recentCompanies.length < 100 || isLoading || isListLoading}
                       onClick={() => void fetchRecent(page + 1)}
                     >
                       Neste
@@ -429,14 +639,24 @@ export function CompanyCheckShell() {
                   <Button
                     variant="outline"
                     className="rounded-full border-[#e5e5e5] font-bold text-[#171717]"
+                    disabled={isListLoading}
                     onClick={() => void fetchRecent(0)}
                   >
-                    Oppdater
+                    {isListLoading ? "Laster..." : "Oppdater"}
                   </Button>
                 </div>
                 </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredCompanies.length > 0 ? (
+              {isListLoading && recentCompanies.length === 0 ? (
+                <div className="col-span-full rounded-[26px] border border-[#ece6da] bg-white/90 px-6 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
+                  <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#a3a3a3]">
+                    Laster treff
+                  </p>
+                  <p className="text-[15px] font-medium leading-relaxed text-[#626262]">
+                    Første liste varmes opp etter restart. Filterknappene blir aktive straks treffene er klare.
+                  </p>
+                </div>
+              ) : filteredCompanies.length > 0 ? (
                 filteredCompanies.map((company, i) => (
                   <CompanyCard
                     key={`${company.orgNumber}-${i}`}
@@ -514,7 +734,17 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
   );
 }
 
-function CompanyDetailView({ company }: { company: CompanyDetails }) {
+function CompanyDetailView({
+  company,
+  announcements,
+  history,
+  network,
+}: {
+  company: CompanyDetails;
+  announcements: Announcement[];
+  history: CompanyHistoryEntry[];
+  network: NetworkActor[];
+}) {
   const scoreConfig = {
     GREEN: { icon: CheckCircle2, text: "bg-emerald-50 text-emerald-700 border-emerald-100", wash: "from-emerald-100/80 via-emerald-50/40 to-transparent", iconColor: "text-emerald-500" },
     YELLOW: { icon: AlertTriangle, text: "bg-amber-50 text-amber-700 border-amber-100", wash: "from-amber-100/80 via-amber-50/40 to-transparent", iconColor: "text-amber-500" },
@@ -641,6 +871,95 @@ function CompanyDetailView({ company }: { company: CompanyDetails }) {
 
         <div className="space-y-6">
         <div className="insight-card rounded-[26px] border border-white/80 p-6">
+          <h4 className="mb-4 text-[14px] font-bold text-[#171717]">Nettverk</h4>
+          <div className="space-y-3">
+            {network.length > 0 ? (
+              network.slice(0, 5).map((actor) => (
+                <div key={actor.actorKey} className="rounded-2xl border border-[#f0f0f0] bg-[#fafafa] px-4 py-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[13px] font-bold text-[#171717]">{actor.actorName}</p>
+                      <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-[#a3a3a3]">
+                        {actor.roleTypesInSelectedCompany.map(formatRoleType).join(" · ")}
+                      </p>
+                    </div>
+                    <p className="whitespace-nowrap text-[12px] font-medium text-[#737373]">
+                      {actor.relatedCompanies.length} selskaper
+                    </p>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {actor.relatedCompanies.slice(0, 4).map((link) => (
+                      <Badge
+                        key={`${actor.actorKey}-${link.orgNumber}`}
+                        variant="outline"
+                        className="border-[#e5e5e5] bg-white text-[11px] font-bold text-[#525252]"
+                      >
+                        {link.companyName}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-[14px] text-[#737373]">Ingen nettverksdata bygget opp ennå.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="insight-card rounded-[26px] border border-white/80 p-6">
+          <h4 className="mb-4 text-[14px] font-bold text-[#171717]">Historikk</h4>
+          <div className="space-y-3">
+            {history.length > 0 ? (
+              history.slice(0, 6).map((entry, index) => (
+                <div key={`${entry.capturedAt}-${index}`} className="rounded-2xl border border-[#f0f0f0] bg-[#fafafa] px-4 py-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[13px] font-bold text-[#171717]">{entry.summary}</p>
+                      <p className="mt-1 text-[12px] font-medium text-[#737373]">
+                        {entry.organizationForm ?? "Ukjent org.form"}{entry.naceCode ? ` · ${entry.naceCode}` : ""}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[12px] font-bold text-[#525252]">{formatDateTime(entry.capturedAt)}</p>
+                      <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-[#a3a3a3]">
+                        {entry.scoreColor === "GREEN" ? "Ingen varselflagg" : entry.scoreColor === "YELLOW" ? "Begrenset info" : "Alvorlige signaler"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-[14px] text-[#737373]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="insight-card rounded-[26px] border border-white/80 p-6">
+          <h4 className="mb-4 text-[14px] font-bold text-[#171717]">Registrerte hendelser</h4>
+          <div className="space-y-3">
+            {announcements.length > 0 ? (
+              announcements.slice(0, 8).map((announcement, index) => (
+                <div key={`${announcement.type}-${announcement.date}-${index}`} className="rounded-2xl border border-[#f0f0f0] bg-[#fafafa] px-4 py-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[13px] font-bold text-[#171717]">{announcement.title}</p>
+                      <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-[#a3a3a3]">
+                        {formatAnnouncementType(announcement.type)}
+                      </p>
+                    </div>
+                    <p className="whitespace-nowrap text-[12px] font-medium text-[#737373]">
+                      {announcement.date ?? "Udatert"}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-[14px] text-[#737373]">Ingen registrerte hendelser funnet.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="insight-card rounded-[26px] border border-white/80 p-6">
           <h4 className="mb-4 text-[14px] font-bold text-[#171717]">Det som påvirker vurderingen</h4>
           <div className="flex flex-wrap gap-2">
             {triggeredRules.length > 0 ? (
@@ -717,6 +1036,52 @@ function formatRuleLabel(rule: string) {
   return ruleLabels[rule] ?? rule.replaceAll("_", " ").toLowerCase();
 }
 
+function formatAnnouncementType(type: string) {
+  switch (type) {
+    case "BANKRUPTCY":
+      return "Konkurs";
+    case "DISSOLUTION":
+      return "Tvangsoppløsning";
+    case "WINDING_UP":
+      return "Avvikling";
+    case "ANNUAL_ACCOUNTS":
+      return "Årsregnskap";
+    case "REGISTRATION":
+      return "Registrering";
+    case "ADDRESS_CHANGE":
+      return "Adresseendring";
+    case "ARTICLES_OF_ASSOCIATION":
+      return "Vedtekter";
+    default:
+      return type.replaceAll("_", " ").toLowerCase();
+  }
+}
+
+function formatRoleType(roleType: string) {
+  switch (roleType) {
+    case "DAGLIG_LEDER":
+      return "Daglig leder";
+    case "STYRELEDER":
+      return "Styreleder";
+    case "STYREMEDLEM":
+      return "Styremedlem";
+    default:
+      return roleType.replaceAll("_", " ").toLowerCase();
+  }
+}
+
+function formatDateTime(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("nb-NO", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+}
+
 function softenReason(reason: string) {
   return reason
     .replace("Åpne registerdata viser alvorlige forhold som bør sjekkes før samarbeid.", "Det finnes alvorlige registersignaler som bør undersøkes før man går videre.")
@@ -756,4 +1121,17 @@ function buildResultsSummary(
   const signalPart = selectedLegend ? `med ${legendDetails[selectedLegend].title.toLowerCase()}` : "";
 
   return [timePart, countyPart, formPart, signalPart].filter(Boolean).join(" ");
+}
+
+function estimateListProgress(elapsedMs: number) {
+  if (elapsedMs <= 4000) {
+    return 12 + (elapsedMs / 4000) * 33;
+  }
+  if (elapsedMs <= 15000) {
+    return 45 + ((elapsedMs - 4000) / 11000) * 30;
+  }
+  if (elapsedMs <= 45000) {
+    return 75 + ((elapsedMs - 15000) / 30000) * 15;
+  }
+  return 90;
 }

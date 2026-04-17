@@ -1,5 +1,6 @@
 package io.ltj.nyfirmasjekk.api.v1;
 
+import io.ltj.nyfirmasjekk.announcements.AnnouncementService;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
 import io.ltj.nyfirmasjekk.companycheck.CheckFinding;
@@ -16,6 +17,12 @@ import java.util.stream.Stream;
 
 @Component
 public class CompanyApiV1Mapper {
+
+    private final AnnouncementService announcementService;
+
+    public CompanyApiV1Mapper(AnnouncementService announcementService) {
+        this.announcementService = announcementService;
+    }
 
     public CompanySummary toSummary(CompanyCheck companyCheck, EnhetResponse enhet) {
         CompanyFacts facts = companyCheck.fakta();
@@ -239,17 +246,7 @@ public class CompanyApiV1Mapper {
     }
 
     private List<Announcement> announcements(EnhetResponse enhet) {
-        List<Announcement> announcements = new ArrayList<>();
-        if (Boolean.TRUE.equals(enhet.konkurs())) {
-            announcements.add(new Announcement("BANKRUPTCY", "Konkursrelatert signal registrert i åpne data", null, "BRREG"));
-        }
-        if (Boolean.TRUE.equals(enhet.underTvangsavviklingEllerTvangsopplosning())) {
-            announcements.add(new Announcement("DISSOLUTION", "Tvangsoppløsning eller tvangsavvikling registrert i åpne data", null, "BRREG"));
-        }
-        if (Boolean.TRUE.equals(enhet.underAvvikling())) {
-            announcements.add(new Announcement("WINDING_UP", "Avvikling registrert i åpne data", null, "BRREG"));
-        }
-        return List.copyOf(announcements);
+        return announcementService.announcementsFor(enhet);
     }
 
     private String organizationFormCode(EnhetResponse enhet, CompanyFacts facts) {

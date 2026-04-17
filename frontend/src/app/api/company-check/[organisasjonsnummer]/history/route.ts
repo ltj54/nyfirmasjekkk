@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
-import { fetchBackendJson } from "../_lib/backend-fetch";
+import { fetchBackendJson } from "../../_lib/backend-fetch";
 
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
 
-export async function GET() {
-  const url = `${backendBaseUrl}/api/v1/metadata/filters`;
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ organisasjonsnummer: string }> }
+) {
+  const { organisasjonsnummer } = await context.params;
+  const url = `${backendBaseUrl}/api/company-check/${organisasjonsnummer}/history`;
 
   try {
     const response = await fetchBackendJson(url);
 
     if (!response.ok) {
-        return new NextResponse(await response.text(), { status: response.status });
+      return new NextResponse(await response.text(), { status: response.status });
     }
 
     const data = await response.json();

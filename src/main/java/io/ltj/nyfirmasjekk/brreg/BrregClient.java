@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.brreg;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
@@ -32,7 +33,7 @@ public class BrregClient {
     private final RestClient restClient;
     private final ConcurrentHashMap<String, CacheEntry<?>> cache = new ConcurrentHashMap<>();
 
-    public BrregClient(RestClient restClient) {
+    public BrregClient(@Qualifier("brregRestClient") RestClient restClient) {
         this.restClient = restClient;
     }
 
@@ -107,11 +108,22 @@ public class BrregClient {
                     })
                     .retrieve()
                     .body(EnheterSearchResponse.class);
+            cacheSearchResults(response);
             leggICache(cacheKey, response);
             return response;
         } catch (RestClientResponseException exception) {
             throw new BrregClientException("Søk feilet: " + exception.getResponseBodyAsString(), exception);
         }
+    }
+
+    private void cacheSearchResults(EnheterSearchResponse response) {
+        if (response == null || response._embedded() == null || response._embedded().enheter() == null) {
+            return;
+        }
+
+        response._embedded().enheter().stream()
+                .filter(enhet -> enhet != null && enhet.organisasjonsnummer() != null && !enhet.organisasjonsnummer().isBlank())
+                .forEach(enhet -> leggICache("enhet:" + enhet.organisasjonsnummer(), enhet));
     }
 
     private String cacheNokkel(Map<String, String> filter) {

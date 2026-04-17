@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fetchBackendJson } from "../_lib/backend-fetch";
 
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
@@ -6,7 +7,7 @@ const backendBaseUrl =
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const dager = searchParams.get("dager") || "30";
+  const dager = searchParams.get("dager") || "10";
   const q = searchParams.get("q");
   const county = searchParams.get("county");
   const organizationForm = searchParams.get("organizationForm");
@@ -25,12 +26,7 @@ export async function GET(request: Request) {
   const url = `${backendBaseUrl}/api/company-check/search?${params.toString()}`;
 
   try {
-    const response = await fetch(url, {
-      cache: "no-store",
-      headers: {
-        Accept: "application/json",
-      },
-    });
+    const response = await fetchBackendJson(url);
 
     if (!response.ok) {
         return new NextResponse(await response.text(), { status: response.status });
@@ -42,8 +38,8 @@ export async function GET(request: Request) {
     console.error("Fetch error:", err);
     return NextResponse.json(
       {
-        title: "Backend utilgjengelig",
-        detail: "Klarte ikke kontakte Spring-backend på " + url,
+        title: "Backend starter fortsatt",
+        detail: "Spring-backend svarer ikke ennå på " + url,
       },
       { status: 502 }
     );

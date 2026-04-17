@@ -1,12 +1,20 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
+import io.ltj.nyfirmasjekk.announcements.AnnouncementService;
+import io.ltj.nyfirmasjekk.api.v1.Announcement;
 import io.ltj.nyfirmasjekk.api.v1.CompanyApiV1Mapper;
 import io.ltj.nyfirmasjekk.api.v1.CompanyDetails;
+import io.ltj.nyfirmasjekk.api.v1.CompanyHistoryEntry;
+import io.ltj.nyfirmasjekk.api.v1.NetworkActor;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
+import io.ltj.nyfirmasjekk.history.CompanyHistoryService;
+import io.ltj.nyfirmasjekk.network.CompanyNetworkService;
 import jakarta.validation.constraints.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.annotation.Validated;
@@ -23,15 +31,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/company-check")
 public class CompanyCheckController {
+    private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
 
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
     private final BrregClient brregClient;
+    private final AnnouncementService announcementService;
+    private final CompanyHistoryService companyHistoryService;
+    private final CompanyNetworkService companyNetworkService;
 
-    public CompanyCheckController(CompanyCheckService companyCheckService, CompanyApiV1Mapper mapper, BrregClient brregClient) {
+    public CompanyCheckController(
+            CompanyCheckService companyCheckService,
+            CompanyApiV1Mapper mapper,
+            BrregClient brregClient,
+            AnnouncementService announcementService,
+            CompanyHistoryService companyHistoryService,
+            CompanyNetworkService companyNetworkService
+    ) {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
         this.brregClient = brregClient;
+        this.announcementService = announcementService;
+        this.companyHistoryService = companyHistoryService;
+        this.companyNetworkService = companyNetworkService;
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -41,13 +63,43 @@ public class CompanyCheckController {
             String organisasjonsnummer
     ) {
         CompanyCheck check = companyCheckService.vurder(organisasjonsnummer);
+        companyHistoryService.captureSnapshot(check);
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         var roller = brregClient.hentRoller(organisasjonsnummer);
+        companyNetworkService.captureRoles(organisasjonsnummer, check.navn(), roller);
         return mapper.toDetails(check, enhet, roller);
     }
 
+    @GetMapping("/{organisasjonsnummer}/history")
+    public List<CompanyHistoryEntry> history(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        return companyHistoryService.historyFor(organisasjonsnummer);
+    }
+
+    @GetMapping("/{organisasjonsnummer}/network")
+    public List<NetworkActor> network(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        return companyNetworkService.networkFor(organisasjonsnummer);
+    }
+
+    @GetMapping("/{organisasjonsnummer}/events")
+    public List<Announcement> hendelser(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        var enhet = brregClient.hentEnhet(organisasjonsnummer);
+        return announcementService.announcementsFor(enhet);
+    }
+
     @GetMapping("/nye-as")
-    public List<CompanySummary> hentNyeAs(@RequestParam(defaultValue = "30") int dager) {
+    public List<CompanySummary> hentNyeAs(@RequestParam(defaultValue = "10") int dager) {
         return companyCheckService.hentNyeAs(dager).stream()
                 .map(check -> mapper.toSummary(check, brregClient.hentEnhet(check.organisasjonsnummer())))
                 .toList();
@@ -56,7 +108,7 @@ public class CompanyCheckController {
     @GetMapping("/search")
     public List<CompanySummary> sok(
             @RequestParam(required = false) String navn,
-            @RequestParam(defaultValue = "30") int dager,
+            @RequestParam(defaultValue = "10") int dager,
             @RequestParam(required = false) String kommune,
             @RequestParam(required = false) String fylke,
             @RequestParam(required = false) String naeringskode,
@@ -64,7 +116,8 @@ public class CompanyCheckController {
             @RequestParam(required = false) String score,
             @RequestParam(defaultValue = "0") int page
     ) {
-        return companyCheckService.sok(new CompanySearchRequest(
+        long startedAt = System.nanoTime();
+        var request = new CompanySearchRequest(
                 navn,
                 dager,
                 kommune,
@@ -73,9 +126,25 @@ public class CompanyCheckController {
                 organisasjonsform,
                 score,
                 100
-        ), page).stream()
+        );
+
+        var results = companyCheckService.sok(request, page).stream()
                 .map(check -> mapper.toSummary(check, brregClient.hentEnhet(check.organisasjonsnummer())))
                 .toList();
+
+        long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
+        log.info(
+                "company-check search completed in {} ms: score={}, dager={}, page={}, navn={}, fylke={}, organisasjonsform={}, results={}",
+                durationMs,
+                score == null ? "ALL" : score,
+                dager,
+                page,
+                navn == null || navn.isBlank() ? "-" : navn,
+                fylke == null || fylke.isBlank() ? "-" : fylke,
+                organisasjonsform == null || organisasjonsform.isBlank() ? "-" : organisasjonsform,
+                results.size()
+        );
+        return results;
     }
 
     @ExceptionHandler(EnhetFinnesIkkeException.class)
