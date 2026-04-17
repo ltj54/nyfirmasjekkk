@@ -5,7 +5,7 @@ const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
 
 export async function GET() {
-  const url = `${backendBaseUrl}/api/v1/metadata/filters`;
+  const url = `${backendBaseUrl}/api/company-check/filters`;
 
   try {
     const response = await fetchBackendJson(url);

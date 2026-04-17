@@ -9,7 +9,6 @@ export async function GET(
 ) {
   const { organisasjonsnummer } = await context.params;
 
-  // Point to the improved CompanyCheckController
   const url = `${backendBaseUrl}/api/company-check/${organisasjonsnummer}`;
 
   try {

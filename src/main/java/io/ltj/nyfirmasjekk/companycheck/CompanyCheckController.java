@@ -5,6 +5,8 @@ import io.ltj.nyfirmasjekk.api.v1.Announcement;
 import io.ltj.nyfirmasjekk.api.v1.CompanyApiV1Mapper;
 import io.ltj.nyfirmasjekk.api.v1.CompanyDetails;
 import io.ltj.nyfirmasjekk.api.v1.CompanyHistoryEntry;
+import io.ltj.nyfirmasjekk.api.v1.MetadataFiltersResponse;
+import io.ltj.nyfirmasjekk.api.v1.MetadataService;
 import io.ltj.nyfirmasjekk.api.v1.NetworkActor;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
@@ -39,6 +41,7 @@ public class CompanyCheckController {
     private final AnnouncementService announcementService;
     private final CompanyHistoryService companyHistoryService;
     private final CompanyNetworkService companyNetworkService;
+    private final MetadataService metadataService;
 
     public CompanyCheckController(
             CompanyCheckService companyCheckService,
@@ -46,7 +49,8 @@ public class CompanyCheckController {
             BrregClient brregClient,
             AnnouncementService announcementService,
             CompanyHistoryService companyHistoryService,
-            CompanyNetworkService companyNetworkService
+            CompanyNetworkService companyNetworkService,
+            MetadataService metadataService
     ) {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
@@ -54,6 +58,7 @@ public class CompanyCheckController {
         this.announcementService = announcementService;
         this.companyHistoryService = companyHistoryService;
         this.companyNetworkService = companyNetworkService;
+        this.metadataService = metadataService;
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -96,6 +101,11 @@ public class CompanyCheckController {
     ) {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         return announcementService.announcementsFor(enhet);
+    }
+
+    @GetMapping("/filters")
+    public MetadataFiltersResponse filters() {
+        return metadataService.filters();
     }
 
     @GetMapping("/nye-as")

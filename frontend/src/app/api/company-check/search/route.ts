@@ -22,7 +22,6 @@ export async function GET(request: Request) {
   if (organizationForm) params.set("organisasjonsform", organizationForm);
   if (score) params.set("score", score);
 
-  // Point to the improved CompanyCheckController
   const url = `${backendBaseUrl}/api/company-check/search?${params.toString()}`;
 
   try {
