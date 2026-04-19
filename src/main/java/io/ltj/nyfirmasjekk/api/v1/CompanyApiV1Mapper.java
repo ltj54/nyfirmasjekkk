@@ -3,6 +3,7 @@ package io.ltj.nyfirmasjekk.api.v1;
 import io.ltj.nyfirmasjekk.announcements.AnnouncementService;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
+import io.ltj.nyfirmasjekk.companycheck.OrganizationFormCatalog;
 import io.ltj.nyfirmasjekk.companycheck.CheckFinding;
 import io.ltj.nyfirmasjekk.companycheck.CompanyCheck;
 import io.ltj.nyfirmasjekk.companycheck.CompanyFacts;
@@ -171,10 +172,11 @@ public class CompanyApiV1Mapper {
     }
 
     private boolean shouldExpectBusinessRegistry(String organizationForm) {
-        if (organizationForm == null) {
+        String normalized = OrganizationFormCatalog.normalizeCode(organizationForm);
+        if (normalized == null) {
             return false;
         }
-        return switch (organizationForm.toUpperCase(Locale.ROOT)) {
+        return switch (normalized.toUpperCase(Locale.ROOT)) {
             case "AS", "ASA", "ANS", "DA", "NUF", "SA", "SE", "KS" -> true;
             default -> false;
         };

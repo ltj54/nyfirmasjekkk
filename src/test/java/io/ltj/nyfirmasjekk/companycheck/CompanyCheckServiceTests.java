@@ -102,6 +102,46 @@ class CompanyCheckServiceTests {
     }
 
     @Test
+    void normalisererOrganisasjonsformTilKodeSelvNarBRREGBareHarBeskrivelse() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "123456779",
+                                "Test AS",
+                                new EnhetResponse.Organisasjonsform(null, "Aksjeselskap"),
+                                null,
+                                List.of(),
+                                "example.no",
+                                "post@example.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                true,
+                                false,
+                                0,
+                                false,
+                                null,
+                                LocalDate.of(2025, 1, 10),
+                                LocalDate.of(2025, 1, 8),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of())
+                ),
+                fixedClock(),
+                ActorRiskService.noOp(),
+                announcementService
+        );
+
+        var result = service.vurder("123456779");
+
+        assertThat(result.organisasjonsform()).isEqualTo("AS");
+        assertThat(result.fakta().organisasjonsform()).isEqualTo("AS");
+    }
+
+    @Test
     void girGulForNyttSelskapMedLiteData() {
         var service = new CompanyCheckService(
                 new StubBrregClient(
@@ -238,6 +278,129 @@ class CompanyCheckServiceTests {
         var result = service.vurder("222333444");
 
         assertThat(result.status()).isEqualTo(TrafficLight.GREEN);
+    }
+
+    @Test
+    void leggerTilOrganisasjonsformSomForklarbartSignalIFullVurdering() {
+        var service = new CompanyCheckService(
+                new StubBrregClient(
+                        new EnhetResponse(
+                                "222333445",
+                                "Nordic Branch NUF",
+                                new EnhetResponse.Organisasjonsform("NUF", "Norskregistrert utenlandsk foretak"),
+                                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                                List.of("Konsulenttjenester"),
+                                "branch.no",
+                                "post@branch.no",
+                                "12345678",
+                                null,
+                                false,
+                                false,
+                                false,
+                                false,
+                                true,
+                                null,
+                                false,
+                                "2024",
+                                LocalDate.of(2023, 3, 20),
+                                LocalDate.of(2023, 3, 20),
+                                null,
+                                null
+                        ),
+                        new RollerResponse(List.of(
+                                new RollerResponse.Rollegruppe(
+                                        new RollerResponse.Rolletype("LEDE", "Ledelse"),
+                                        List.of(
+                                                new RollerResponse.Rolle(
+                                                        new RollerResponse.Rolletype("DAGL", "Daglig leder"),
+                                                        new RollerResponse.Person(new RollerResponse.Personnavn("Ada", null, "Lovelace")),
+                                                        null,
+                                                        false,
+                                                        false
+                                                )
+                                        )
+                                )
+                        ))
+                ),
+                fixedClock(),
+                ActorRiskService.noOp(),
+                announcementService
+        );
+
+        var result = service.vurder("222333445");
+
+        assertThat(result.funn())
+                .anySatisfy(finding -> {
+                    assertThat(finding.label()).isEqualTo("Organisasjonsform");
+                    assertThat(finding.detail()).contains("NUF", "-3");
+                });
+    }
+
+    @Test
+    void sterkNegativOrganisasjonsformBlirIkkeGrontHurtigsok() {
+        var asEnhet = new EnhetResponse(
+                "111111110",
+                "Stabil AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "stabil.no",
+                "post@stabil.no",
+                "12345678",
+                null,
+                false,
+                false,
+                false,
+                false,
+                true,
+                null,
+                false,
+                null,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 1, 1),
+                null,
+                null
+        );
+        var nufEnhet = new EnhetResponse(
+                "111111109",
+                "Branch NUF",
+                new EnhetResponse.Organisasjonsform("NUF", "Norskregistrert utenlandsk foretak"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "branch.no",
+                "post@branch.no",
+                "12345678",
+                null,
+                false,
+                false,
+                false,
+                false,
+                true,
+                null,
+                false,
+                null,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 1, 1),
+                null,
+                null
+        );
+        var client = new StubBrregClient(
+                Map.of(
+                        asEnhet.organisasjonsnummer(), asEnhet,
+                        nufEnhet.organisasjonsnummer(), nufEnhet
+                ),
+                Map.of(
+                        asEnhet.organisasjonsnummer(), new RollerResponse(List.of()),
+                        nufEnhet.organisasjonsnummer(), new RollerResponse(List.of())
+                ),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of(asEnhet, nufEnhet)), null)
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
+
+        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111110");
+        assertThat(client.roleLookups()).isZero();
     }
 
     @Test

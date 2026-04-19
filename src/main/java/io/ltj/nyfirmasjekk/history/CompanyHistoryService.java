@@ -3,6 +3,7 @@ package io.ltj.nyfirmasjekk.history;
 import io.ltj.nyfirmasjekk.api.v1.CompanyHistoryEntry;
 import io.ltj.nyfirmasjekk.companycheck.CompanyCheck;
 import io.ltj.nyfirmasjekk.companycheck.CompanyFacts;
+import io.ltj.nyfirmasjekk.companycheck.OrganizationFormCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class CompanyHistoryService {
         CompanyHistorySnapshotEntity entity = new CompanyHistorySnapshotEntity();
         entity.setOrgNumber(companyCheck.organisasjonsnummer());
         entity.setName(companyCheck.navn());
-        entity.setOrganizationForm(companyCheck.organisasjonsform());
+        entity.setOrganizationForm(OrganizationFormCatalog.normalizeCode(companyCheck.organisasjonsform()));
         entity.setScoreColor(companyCheck.status());
         entity.setSummary(companyCheck.sammendrag());
         entity.setMunicipality(extractMunicipality(facts));
@@ -56,7 +57,7 @@ public class CompanyHistoryService {
                         entity.getCapturedAt(),
                         entity.getOrgNumber(),
                         entity.getName(),
-                        entity.getOrganizationForm(),
+                        OrganizationFormCatalog.normalizeCode(entity.getOrganizationForm()),
                         entity.getScoreColor().name(),
                         entity.getSummary(),
                         entity.getMunicipality(),
