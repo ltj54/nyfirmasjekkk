@@ -15,8 +15,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "nyfirmasjekk — B2B-vurdering av nye selskaper",
-  description: "Presis risikovisning for nye aksjeselskaper basert på åpne data.",
+  title: "nyfirmasjekk — virksomhetssøk",
+  description: "Søk i norske virksomheter med åpne BRREG-data, filtre og forklarbar score.",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="no"
       className={`${sans.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#fafafa] text-[#171717] selection:bg-[#064e3b]/10 selection:text-[#064e3b]">
+      <body className="min-h-full bg-background text-foreground selection:bg-primary/10 selection:text-primary">
         {children}
       </body>
     </html>

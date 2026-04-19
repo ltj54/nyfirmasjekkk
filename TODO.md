@@ -73,7 +73,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 ### Må være på plass før produksjon
 
 - [ ] Kjør full backend-testpakke og bekreft grønn build
-- [ ] Kjør frontend-build og bekreft at proxy-ruter fungerer mot backend
+- [x] Kjør frontend-build og bekreft at proxy-ruter fungerer mot backend
 - [ ] Verifiser `application-prod.properties` mot faktisk produksjonsmiljø
 - [ ] Bekreft at produksjon ikke bruker H2 eller lokal filbasert database
 - [ ] Sett eksplisitt produksjonsdatabase med riktige credentials via miljøvariabler eller secrets
@@ -102,6 +102,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - Fase 5-oppgavene er gjennomført og reflektert i kodebasen.
 - Produksjonsklarhet er neste arbeidspakke, ikke nye funksjonskrav.
 - `TODO.md` bør heretter brukes som operativ sjekkliste for verifisering før produksjonssetting.
+- 2026-04-20: Frontend-build og proxy-ruter verifisert etter siste UI-opprydding.
 
 ## BRREG-roadmap
 

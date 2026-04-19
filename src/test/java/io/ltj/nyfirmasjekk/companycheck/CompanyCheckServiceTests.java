@@ -344,7 +344,7 @@ class CompanyCheckServiceTests {
                 new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
                 new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
                 List.of("Konsulenttjenester"),
-                "stabil.no",
+                null,
                 "post@stabil.no",
                 "12345678",
                 null,
@@ -397,10 +397,76 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100, true));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111110");
         assertThat(client.roleLookups()).isZero();
+    }
+
+    @Test
+    void filtrererUtTreffMedNettsideNarFilteretErPaa() {
+        var medNettside = new EnhetResponse(
+                "123123123",
+                "Med Nettside AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "med.no",
+                "post@med.no",
+                "12345678",
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                2,
+                true,
+                null,
+                LocalDate.of(2025, 10, 1),
+                LocalDate.of(2025, 9, 20),
+                null,
+                null
+        );
+        var utenNettside = new EnhetResponse(
+                "123123124",
+                "Uten Nettside AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                null,
+                "post@uten.no",
+                "87654321",
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                2,
+                true,
+                null,
+                LocalDate.of(2025, 10, 1),
+                LocalDate.of(2025, 9, 20),
+                null,
+                null
+        );
+        var client = new StubBrregClient(
+                Map.of(
+                        medNettside.organisasjonsnummer(), medNettside,
+                        utenNettside.organisasjonsnummer(), utenNettside
+                ),
+                Map.of(
+                        medNettside.organisasjonsnummer(), new RollerResponse(List.of()),
+                        utenNettside.organisasjonsnummer(), new RollerResponse(List.of())
+                ),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of(medNettside, utenNettside)), null)
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100, true));
+
+        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123123124");
     }
 
     @Test
@@ -610,7 +676,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, 60));
+        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, 60, true));
 
         // Vi bruker nå alltid size=100 for å være effektive mot BRREG-cachen
         assertThat(client.lastSearchFilter()).containsEntry("size", "100");
@@ -624,7 +690,7 @@ class CompanyCheckServiceTests {
                 new EnhetResponse.Organisasjonsform("FLI", "Forening/lag/innretning"),
                 new EnhetResponse.Naeringskode("94.992", "Aktiviteter i andre medlemsorganisasjoner ellers"),
                 List.of("Interesseorganisasjon"),
-                "tryg.no",
+                null,
                 "post@tryg.no",
                 "12345678",
                 null,
@@ -690,7 +756,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", 100));
+        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", 100, true));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("911934558");
     }
@@ -703,7 +769,7 @@ class CompanyCheckServiceTests {
                 new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
                 new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
                 List.of("Konsulenttjenester"),
-                "stabil.no",
+                null,
                 "post@stabil.no",
                 "12345678",
                 null,
@@ -759,7 +825,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", 100));
+        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", 100, true));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
         assertThat(result.get(0).status()).isEqualTo(TrafficLight.GREEN);
@@ -797,7 +863,7 @@ class CompanyCheckServiceTests {
                 new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
                 new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
                 List.of("Konsulenttjenester"),
-                "stabil.no",
+                null,
                 "post@stabil.no",
                 "12345678",
                 null,
@@ -837,7 +903,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100, true));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
     }
@@ -850,7 +916,7 @@ class CompanyCheckServiceTests {
                 new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
                 new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
                 List.of("Konsulenttjenester"),
-                "eksempel.no",
+                null,
                 "post@eksempel.no",
                 "12345678",
                 null,
@@ -907,7 +973,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, "AS", "RED", 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, "AS", "RED", 100, true));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("999111111");
         assertThat(client.lastSearchFilter()).doesNotContainKey("organisasjonsform.kode");

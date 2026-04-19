@@ -136,6 +136,7 @@ public class CompanyCheckController {
             @RequestParam(required = false) String naeringskode,
             @RequestParam(required = false) String organisasjonsform,
             @RequestParam(required = false) String score,
+            @RequestParam(defaultValue = "true") boolean utenNettside,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
@@ -149,7 +150,8 @@ public class CompanyCheckController {
                     naeringskode,
                     organisasjonsform,
                     score,
-                    100
+                    100,
+                    utenNettside
             );
 
             var results = companyCheckService.sok(request, page).stream()
@@ -160,7 +162,7 @@ public class CompanyCheckController {
 
             long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
             log.info(
-                    "company-check search completed in {} ms: score={}, dager={}, page={}, navn={}, fylke={}, organisasjonsform={}, results={}, scoreCounts={}",
+                    "company-check search completed in {} ms: score={}, dager={}, page={}, navn={}, fylke={}, organisasjonsform={}, utenNettside={}, results={}, scoreCounts={}",
                     durationMs,
                     score == null ? "ALL" : score,
                     dager,
@@ -168,6 +170,7 @@ public class CompanyCheckController {
                     navn == null || navn.isBlank() ? "-" : navn,
                     fylke == null || fylke.isBlank() ? "-" : fylke,
                     organisasjonsform == null || organisasjonsform.isBlank() ? "-" : organisasjonsform,
+                    utenNettside,
                     results.size(),
                     scoreCounts
             );

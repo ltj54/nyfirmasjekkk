@@ -63,7 +63,7 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
-        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, 25));
+        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, 25, true));
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request) {
@@ -576,7 +576,8 @@ public class CompanyCheckService {
     private boolean matcherEnhet(EnhetResponse enhet, CompanySearchRequest request) {
         return matcherOrganisasjonsform(enhet, request.organisasjonsform())
                 && matcherFylke(enhet, request.fylke())
-                && matcherKommune(enhet, request.kommune());
+                && matcherKommune(enhet, request.kommune())
+                && (!request.utenNettside() || !hasText(enhet.hjemmeside()));
     }
 
     private boolean matcherOrganisasjonsform(EnhetResponse enhet, String organisasjonsform) {

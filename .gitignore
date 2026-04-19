@@ -39,3 +39,6 @@ out/
 
 ### Local backups ###
 /frontend/.git.nested-backup/
+
+### Runtime locks ###
+/data/nyfirmasjekk-dev.lock
