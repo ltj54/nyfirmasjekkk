@@ -72,7 +72,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 
 ### Må være på plass før produksjon
 
-- [ ] Kjør full backend-testpakke og bekreft grønn build
+- [x] Kjør full backend-testpakke og bekreft grønn build
 - [x] Kjør frontend-build og bekreft at proxy-ruter fungerer mot backend
 - [ ] Verifiser `application-prod.properties` mot faktisk produksjonsmiljø
 - [ ] Bekreft at produksjon ikke bruker H2 eller lokal filbasert database
@@ -103,6 +103,12 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - Produksjonsklarhet er neste arbeidspakke, ikke nye funksjonskrav.
 - `TODO.md` bør heretter brukes som operativ sjekkliste for verifisering før produksjonssetting.
 - 2026-04-20: Frontend-build og proxy-ruter verifisert etter siste UI-opprydding.
+- 2026-04-20: Dublettreff i søk er fikset ved deduplisering på organisasjonsnummer før paginering.
+- 2026-04-20: `CompanyCheckServiceTests` er kjørt grønn etter opprydding i utdatert test for nettside-filter.
+- 2026-04-20: Full backend-testpakke (`./gradlew test`) er kjørt grønn.
+- 2026-04-20: Normalisert hendelsesmodell er innført i API-et med `CompanyEvent`, brukt i detaljrespons og `/events`, og komprimerte hendelsesbadges er vist i trefflisten.
+- 2026-04-20: Strukturert scoreforklaring er innført i API-et med `ScoreEvidence`, og frontend bruker nå backendens forklaringsfelt direkte.
+- 2026-04-20: Detaljvisningen er delt i `Hurtigsjekk` og `Dyp analyse`, og begrepsbruken i UI er strammet rundt `mulighetssignal`, `registerspor` og `kontaktbarhet`.
 
 ## BRREG-roadmap
 
@@ -116,11 +122,77 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 
 ### Høy produktverdi
 
-- [ ] Bygg tydelig hendelsesprofil per selskap: nyregistrering, vedtektsendring, adresseendring, avvikling, konkurs
+- [x] Bygg tydelig hendelsesprofil per selskap: nyregistrering, vedtektsendring, adresseendring, avvikling, konkurs
 - [ ] Bygg forklarbar aktørkontekst: hvor mange selskaper en rolleholder er knyttet til, og hvor mange av dem som er røde eller avviklet
 - [ ] Vis strukturmønstre rundt nye selskaper: samme personer, nylige konkurser, bo-signaler, omregistreringer
-- [ ] Gjør scoreforklaringen mer konkret i UI med registerspor i stedet for generelle etiketter
-- [ ] Introduser to nivåer i produktet: hurtigsjekk og dyp analyse
+- [x] Gjør scoreforklaringen mer konkret i UI med registerspor i stedet for generelle etiketter
+- [x] Introduser to nivåer i produktet: hurtigsjekk og dyp analyse
+
+### Anbefalt rekkefølge
+
+- [x] Prioriter først hendelsesprofil og konkret scoreforklaring, siden dette kan bygges på eksisterende data og gir raskest produktløft
+- [ ] Bygg deretter forklarbar aktørkontekst i detaljvisning før eventuell utvidelse til trefflisten
+- [x] Introduser hurtigsjekk og dyp analyse når hendelser og forklaringer er på plass i samme datamodell
+- [ ] Utsett avanserte strukturmønstre til grunnlaget for hendelser, historikk og aktørkontekst er stabilt
+
+### Neste arbeidspakke
+
+- [x] Definer en normalisert hendelsesmodell for UI og API: nyregistrering, vedtektsendring, adresseendring, avvikling, konkurs
+- [x] Kartlegg hvilke eksisterende BRREG-kilder og interne snapshots som allerede kan drive hendelsesprofilen
+- [x] Vis hendelser i detaljvisning som tidslinje eller prioritert punktliste
+- [x] Vis korte hendelsesbadges i trefflisten for de mest relevante signalene
+- [x] Bytt generelle scoretekster i UI med konkrete registerspor som faktisk trigget vurderingen
+- [x] Vis eksplisitt hvilke regler og datakilder som ligger bak scoreforklaringen
+- [ ] Bygg første versjon av aktørkontekst per rolleholder: antall selskaper, antall røde, antall avviklede
+- [ ] Presenter aktørkontekst som forklarende tekst i detaljvisning, ikke bare som rå tellerverdier
+- [x] Skill UI tydelig mellom hurtigsjekk og dyp analyse uten å duplisere backendlogikk
+- [x] Definer hva som skal vises i hurtigsjekk: score, viktigste signaler og 2-3 sentrale hendelser
+- [x] Definer hva som skal vises i dyp analyse: hendelsesprofil, aktørkontekst, historikk og nettverk
+
+### Neste steg når du tar dette opp igjen
+
+- [ ] Bygg første versjon av forklarbar aktørkontekst i API-et: totaltilknytninger, røde selskaper, avviklede selskaper per rolleholder
+- [ ] Presenter aktørkontekst tydeligere i detaljvisningen som innsikt, ikke bare rå tall og badge-lister
+- [ ] Innfør strukturmønstre rundt nye selskaper: samme personer, nylige konkurser, bo-signaler og mulige omregistreringer
+- [ ] Vurder å fase ut rå `announcements` i detaljresponsen når `events` dekker UI-behovet fullt ut
+- [ ] Rydd opp videre i domenespråket mellom backend og frontend rundt `mulighetssignal`, `registerspor` og `kontaktbarhet`
+- [ ] Vurder kommersielle CTA-er i hurtigsjekk og treffliste når aktørkontekst er på plass
+
+### Backend-oppgaver
+
+- [x] Definer API-kontrakt for hendelser per selskap i `api/v1`
+- [x] Utvid mapperen til å levere normaliserte hendelser fra BRREG-data og kunngjøringer
+- [x] Normaliser hendelsestyper til et lite, stabilt sett som UI kan stole på
+- [x] Legg inn prioritering eller sortering av hendelser etter alvorlighet og dato
+- [x] Koble scoreforklaring tydelig til konkrete regler og underliggende registerfelt
+- [x] Utvid detaljresponsen med forklaringsfelt som skiller mellom signal, regel og datakilde
+- [ ] Utvid nettverks- eller aktørresponsen med oppsummering per rolleholder: totaltilknytninger, røde selskaper, avviklede selskaper
+- [ ] Vurder om hendelser bør caches eller preberegnes for å unngå dyr detaljlasting
+- [x] Legg inn tester for mapping av hendelser og scoreforklaringer
+- [ ] Legg inn tester for aktørkontekst
+
+### Frontend-oppgaver
+
+- [x] Definer TypeScript-typer for hendelsesprofil og utvidet scoreforklaring
+- [x] Legg til seksjon for hendelsesprofil i detaljvisning
+- [x] Presenter hendelser som tidslinje eller prioritert punktliste med tydelige etiketter
+- [x] Legg til komprimerte hendelsesbadges i trefflisten
+- [x] Bytt generelle forklaringstekster i UI med konkrete registerspor
+- [x] Skill visuelt mellom “hurtigsjekk” og “dyp analyse” i detaljvisningen
+- [x] Lag en kompakt hurtigsjekkvisning med score, viktigste signaler og sentrale hendelser
+- [x] Lag en dyp analyse-visning med hendelser, aktørkontekst, historikk og nettverk
+- [ ] Sørg for at aktørkontekst vises som forklarende innsikt, ikke bare tellerverdier
+- [ ] Legg inn tomtilstander og fallback-visning når hendelser eller aktørdata mangler
+
+### Datamodell og avklaringer
+
+- [x] Bestem endelig liste over hendelsestyper som produktet skal bruke i første versjon
+- [x] Bestem hvilke hendelser som skal vises i treffliste versus kun i detaljvisning
+- [x] Definer hvilke scoreårsaker som alltid skal vises eksplisitt i UI
+- [x] Definer hvilke datakilder som skal navngis i forklaringen, for eksempel BRREG, roller, kunngjøringer og historikksnapshots
+- [ ] Avklar om aktørkontekst i første versjon skal være snapshot-basert eller historikkbasert
+- [ ] Definer terskler for når aktørkontekst skal fremheves som relevant signal
+- [x] Bestem om hurtigsjekk og dyp analyse skal være to faner, to seksjoner eller to ulike innganger
 
 ### Krever mer integrasjon eller videre modellering
 
@@ -153,3 +225,50 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [ ] Vurdere om vurderingsscore skal tones ned til fordel for "mulighetssignal" i kommersiell visning
 - [ ] Skrive kort, konkret salgsbudskap rettet mot nyregistrerte selskaper
 - [ ] Bestemme om løsningen primært er et internt salgsverktøy, en offentlig landingsside eller begge deler
+
+## Arbeidslogg 2026-04-20
+
+### Levert i denne økten
+
+- Fikset dublettreff i søk ved deduplisering på organisasjonsnummer før paginering
+- Ryddet og oppdatert tester rundt `CompanyCheckService`
+- Kjørt full backend-testpakke grønn
+- Innført normalisert hendelsesmodell i API-et med `CompanyEvent`
+- Utvidet detaljrespons og `/events` til å bruke normaliserte hendelser
+- Vist komprimerte hendelsesbadges i trefflisten
+- Innført strukturert scoreforklaring i API-et med `ScoreEvidence`
+- Koblet frontend til backendens scoreforklaring i stedet for lokal utledning
+- Delt detaljvisningen i `Hurtigsjekk` og `Dyp analyse`
+- Strammet begrepsbruk i UI rundt `mulighetssignal`, `registerspor` og `kontaktbarhet`
+
+### Viktigste filer endret
+
+- `src/main/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckService.java`
+- `src/main/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckController.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/CompanyApiV1Mapper.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/CompanyDetails.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/CompanySummary.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/CompanyScoreResponse.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/CompanyEvent.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/ScoreEvidence.java`
+- `frontend/src/lib/company-check.ts`
+- `frontend/src/components/company-check-shell.tsx`
+- `src/test/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckServiceTests.java`
+- `src/test/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckApiIntegrationTests.java`
+- `src/test/java/io/ltj/nyfirmasjekk/api/v1/CompanyApiV1MapperTests.java`
+
+### Verifisert i denne økten
+
+```bash
+./gradlew test
+./gradlew test --tests io.ltj.nyfirmasjekk.companycheck.CompanyCheckServiceTests
+./gradlew test --tests io.ltj.nyfirmasjekk.api.v1.CompanyApiV1MapperTests --tests io.ltj.nyfirmasjekk.companycheck.CompanyCheckApiIntegrationTests
+cd frontend
+npm run build
+```
+
+### Anbefalt startpunkt neste gang
+
+- Start med aktørkontekst i backend og detaljvisning
+- Avklar om aktørkontekst skal være snapshot-basert eller historikkbasert
+- Deretter bygg strukturmønstre rundt nye selskaper

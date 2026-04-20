@@ -130,6 +130,7 @@ public class CompanyCheckService {
 
     private CompanySearchPage sokUtenScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
         List<CompanyCheck> matches = new ArrayList<>();
+        Map<String, CompanyCheck> seenMatches = new LinkedHashMap<>();
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
         int matchedBeforePage = 0;
         int sourcePage = 0;
@@ -139,7 +140,7 @@ public class CompanyCheckService {
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
-            var pageMatches = vurderSide(searchResponse, request, diagnostics);
+            var pageMatches = deduplicateMatches(vurderSide(searchResponse, request, diagnostics), seenMatches);
 
             if (matchedBeforePage + pageMatches.size() > requestedOffset && matches.size() < request.resultSize()) {
                 int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
@@ -164,6 +165,7 @@ public class CompanyCheckService {
 
     private CompanySearchPage sokMedScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
         List<CompanyCheck> matches = new ArrayList<>();
+        Map<String, CompanyCheck> seenMatches = new LinkedHashMap<>();
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
         int matchedBeforePage = 0;
         int sourcePage = 0;
@@ -173,7 +175,7 @@ public class CompanyCheckService {
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
-            var pageMatches = vurderSide(searchResponse, request, diagnostics);
+            var pageMatches = deduplicateMatches(vurderSide(searchResponse, request, diagnostics), seenMatches);
             if (matchedBeforePage + pageMatches.size() > requestedOffset) {
                 int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
                 matches.addAll(pageMatches.subList(fromIndex, pageMatches.size()));
@@ -193,6 +195,16 @@ public class CompanyCheckService {
                 .limit(request.resultSize())
                 .toList();
         return buildSearchPage(items, page, request.resultSize(), matchedBeforePage);
+    }
+
+    private List<CompanyCheck> deduplicateMatches(List<CompanyCheck> candidates, Map<String, CompanyCheck> seenMatches) {
+        List<CompanyCheck> uniqueMatches = new ArrayList<>();
+        for (CompanyCheck candidate : candidates) {
+            if (seenMatches.putIfAbsent(candidate.organisasjonsnummer(), candidate) == null) {
+                uniqueMatches.add(candidate);
+            }
+        }
+        return uniqueMatches;
     }
 
     private CompanySearchPage buildSearchPage(List<CompanyCheck> items, int page, int size, long totalElements) {

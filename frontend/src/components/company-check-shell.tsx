@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 import type {
-  Announcement,
+  CompanyEvent,
   CompanyDetails,
   CompanyHistoryEntry,
   NetworkActor,
@@ -58,27 +58,6 @@ const modelRules = [
   "Gul brukes når flere svakere signaler peker i samme retning, for eksempel nytt selskap kombinert med tynne eller manglende registeropplysninger.",
   "Grønn betyr at selskapet ser ryddig ut i åpne BRREG-data, men er ikke en garanti for økonomi, kredittverdighet eller betalingsvilje.",
   "Vurderingen er laget som en første sjekk av formalia og registreringsspor, ikke som en full kredittvurdering.",
-];
-
-const ruleLabels: Record<string, string> = {
-  ALDER: "Selskapet er nytt",
-  KONTAKTDATA: "Kontaktopplysninger mangler eller er begrensede",
-  TELEFON: "Telefonopplysninger mangler",
-  NAERINGSKODE: "Næringskode mangler eller er utydelig",
-  AKTIVITET: "Aktivitetsbeskrivelse mangler",
-  DATAKVALITET: "Det finnes få grunnopplysninger i registeret",
-  ROLLER: "Ledelse eller roller er ufullstendige",
-  AKTORRISIKO: "Tilknyttede aktører har urovekkende historikk",
-  ALVORLIGE_REGISTRERINGSSIGNALER: "Alvorlige registreringssignaler er funnet",
-  REGISTRERING: "Virksomheten er registrert",
-  ORGANISASJONSNUMMER: "Virksomheten finnes i registeret",
-};
-
-const analysisTitles = [
-  "Vår vurdering",
-  "Verdt å merke seg",
-  "Offentlig signal",
-  "Bak vurderingen",
 ];
 
 const organizationFormHelp: Record<string, { label: string; description: string }> = {
@@ -125,7 +104,7 @@ export function CompanyCheckShell() {
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("AS");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
-  const [selectedCompanyAnnouncements, setSelectedCompanyAnnouncements] = useState<Announcement[]>([]);
+  const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
   const [page, setPage] = useState(0);
@@ -310,7 +289,7 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
-      setSelectedCompanyAnnouncements([]);
+      setSelectedCompanyEvents([]);
       setSelectedCompanyHistory([]);
       setSelectedCompanyNetwork([]);
       return;
@@ -343,7 +322,7 @@ export function CompanyCheckShell() {
           networkResponse.ok ? networkResponse.json() : Promise.resolve([]),
         ]);
 
-        setSelectedCompanyAnnouncements(Array.isArray(eventsPayload) ? (eventsPayload as Announcement[]) : []);
+        setSelectedCompanyEvents(Array.isArray(eventsPayload) ? (eventsPayload as CompanyEvent[]) : []);
         setSelectedCompanyHistory(Array.isArray(historyPayload) ? (historyPayload as CompanyHistoryEntry[]) : []);
         setSelectedCompanyNetwork(Array.isArray(networkPayload) ? (networkPayload as NetworkActor[]) : []);
       } catch (err) {
@@ -567,7 +546,7 @@ export function CompanyCheckShell() {
                     Bruk åpne BRREG-data til å finne nyregistrerte selskaper, vurdere hvor synlige de er digitalt og identifisere hvem som sannsynligvis trenger hjelp med nettside, domene og e-post fra start.
                   </p>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#1F5FA9]">
-                    Dette er et arbeidsverktøy for å finne relevante leads og gå videre med et konkret tilbud om digital etablering.
+                    Dette er et arbeidsverktøy for å finne relevante selskaper med tydelige mulighetssignaler og gå videre med et konkret tilbud om digital etablering.
                   </p>
                 </div>
 
@@ -589,7 +568,7 @@ export function CompanyCheckShell() {
                       disabled={isLoading || !backendReady}
                       type="submit"
                     >
-                      {!backendReady ? "Starter..." : isLoading ? "Søker..." : "Finn leads"}
+                      {!backendReady ? "Starter..." : isLoading ? "Søker..." : "Finn selskaper"}
                     </Button>
                   </div>
                 </form>
@@ -732,7 +711,7 @@ export function CompanyCheckShell() {
           {selectedCompany ? (
             <CompanyDetailView
               company={selectedCompany}
-              announcements={selectedCompanyAnnouncements.length > 0 ? selectedCompanyAnnouncements : selectedCompany.announcements}
+              events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
               history={selectedCompanyHistory}
               network={selectedCompanyNetwork}
               onBack={resetToLanding}
@@ -767,13 +746,13 @@ export function CompanyCheckShell() {
 
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Aktuelle leads</h2>
+                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Aktuelle selskaper</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
                     Viser {filteredCompanies.length} treff på denne siden.
                   </p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#1F5FA9]">
-                    Treffene er sortert etter hvem som bør kontaktes først, basert på prioritet, kontaktbarhet og hvor ferskt selskapet er.
+                    Treffene er sortert etter mulighetssignal, kontaktbarhet og hvor ferskt selskapet er.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -871,7 +850,7 @@ export function CompanyCheckShell() {
                   Virksomhetssøk og registerinformasjon
                 </p>
                 <p className="mt-4 text-[14px] leading-7 text-white/70">
-                  Analyse av åpne registerdata fra Enhetsregisteret og Foretaksregisteret. Vurderingene er veiledende og erstatter ikke manuell kontroll.
+                  Analyse av åpne registerdata fra Enhetsregisteret og Foretaksregisteret. Registersporene er veiledende og erstatter ikke manuell kontroll.
                 </p>
               </div>
 
@@ -1021,7 +1000,7 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
       <div className="mb-4 rounded-[14px] border border-[#E4E7EB] bg-[#F8FBFF] p-3">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Neste steg</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Mulighetssignal</p>
             <p className="mt-1 text-[13px] font-semibold text-[#1F2933]">{bestContactPoint.label}</p>
             <p className="mt-1 text-[12px] text-[#52606D]">{contactability.label}</p>
           </div>
@@ -1092,6 +1071,15 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
           <Badge variant="outline" className="border-[#D9E2EC] bg-white text-[10px] font-semibold text-[#52606D]">
             {company.registeredInBusinessRegistry ? "Foretaksregisteret" : "Ikke i Foretaksregisteret"}
           </Badge>
+          {company.events.slice(0, 3).map((event) => (
+            <Badge
+              key={`${company.orgNumber}-${event.type}-${event.title}`}
+              variant="outline"
+              className={`border-transparent text-[10px] font-semibold ${eventSeverityClassName(event.severity)}`}
+            >
+              {formatEventType(event.type)}
+            </Badge>
+          ))}
         </div>
       </div>
     </div>
@@ -1134,20 +1122,20 @@ function getLeadPriority(company: CompanySummary) {
 
   if (missingWebsite && hasDirectContact && company.scoreColor !== "RED") {
     return {
-      label: "Høy prioritet",
+      label: "Sterkt signal",
       badgeClass: "rounded-full bg-[#1F5FA9] px-2.5 py-1 text-[10px] font-semibold text-white",
     };
   }
 
   if ((missingWebsite || hasDirectContact) && company.scoreColor !== "RED") {
     return {
-      label: "Aktuell",
+      label: "Mulig signal",
       badgeClass: "rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700",
     };
   }
 
   return {
-    label: "Lavere prioritet",
+    label: "Svakt signal",
     badgeClass: "rounded-full bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
   };
 }
@@ -1205,13 +1193,13 @@ function contactabilityRank(company: CompanySummary) {
 
 function CompanyDetailView({
   company,
-  announcements,
+  events,
   history,
   network,
   onBack,
 }: {
   company: CompanyDetails;
-  announcements: Announcement[];
+  events: CompanyEvent[];
   history: CompanyHistoryEntry[];
   network: NetworkActor[];
   onBack: () => void;
@@ -1227,8 +1215,10 @@ function CompanyDetailView({
 
   const scoreLabel = company.score?.label || "Ukjent status";
   const scoreReasons = company.score?.reasons || [];
-  const triggeredRules = company.score?.rulesTriggered || [];
-  const primaryReason = scoreReasons.length > 0 ? scoreReasons[0] : "Ingen begrunnelse oppgitt.";
+  const scoreEvidence = company.score?.evidence || [];
+  const quickEvidence = scoreEvidence.slice(0, 3);
+  const extendedEvidence = scoreEvidence.slice(3);
+  const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const historyPatterns = analyzeHistoryPatterns(history);
 
   return (
@@ -1257,7 +1247,7 @@ function CompanyDetailView({
               </div>
               <div>
                 <p className="mb-2 text-[12px] font-medium text-[#52606D]">
-                  Registerbasert vurdering
+                  Registerspor og mulighetssignal
                 </p>
                 <h2 className="text-2xl font-semibold tracking-tight text-[#1F2933] md:text-[2.5rem]">
                   {company.name}
@@ -1282,12 +1272,37 @@ function CompanyDetailView({
                 {scoreLabel}
               </div>
               <p className="max-w-xs text-[13px] font-medium leading-relaxed text-[#52606D] md:text-right">
-                En rask indikasjon basert på offentlige registerspor, roller og grunnleggende virksomhetsdata.
+                Et raskt mulighetssignal basert på offentlige registerspor, roller og grunnleggende virksomhetsdata.
               </p>
             </div>
           </div>
 
           <Separator className="bg-[#E4E7EB]" />
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            <span className="rounded-full bg-[#1F2933] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
+              Hurtigsjekk
+            </span>
+            <span className="rounded-full border border-[#D9E2EC] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+              Dyp analyse
+            </span>
+          </div>
+
+          <div className="mt-6 rounded-[20px] border border-[#D9E2EC] bg-[#F8FBFF] p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div>
+                <p className="text-[12px] font-medium text-[#52606D]">Nivå 1</p>
+                <h3 className="mt-1 text-[20px] font-semibold text-[#1F2933]">Hurtigsjekk</h3>
+                <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
+                  Dette er det raske beslutningsbildet: mulighetssignal, viktigste registerspor og om selskapet ser kontaktbart ut.
+                </p>
+              </div>
+              <div className="grid min-w-[220px] gap-2 sm:grid-cols-3 md:grid-cols-1">
+                <InfoMetric label="Mulighetssignal" value={scoreLabel} />
+                <InfoMetric label="Hendelser" value={`${events.length}`} />
+                <InfoMetric label="Rollepunkter" value={`${company.roles?.length ?? 0}`} />
+              </div>
+            </div>
 
           {/* Quick Facts Grid */}
           <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -1305,11 +1320,61 @@ function CompanyDetailView({
           {/* Summary Box */}
           <div className={`mt-8 rounded-[18px] border p-5 ${config.text} border-opacity-50`}>
             <p className="mb-2 text-[12px] font-medium opacity-70">
-              Kort oppsummert
+              Kort registerspor
             </p>
             <p className="text-[15px] font-semibold leading-relaxed">
               {primaryReason}
             </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="rounded-[18px] border border-[#D9E2EC] bg-white p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Viktigste registerspor</h4>
+              <div className="space-y-3">
+                {quickEvidence.length > 0 ? (
+                  quickEvidence.map((item) => (
+                    <div key={`${item.label}-${item.source}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                      <p className="text-[13px] font-bold text-[#1F2933]">{item.label}</p>
+                      <p className="mt-1 text-[13px] leading-relaxed text-[#52606D]">{item.detail}</p>
+                      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{item.source}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-[#52606D]">Ingen tydelige registerspor tilgjengelig.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-[18px] border border-[#D9E2EC] bg-white p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Kontakt og synlighet</h4>
+              <div className="space-y-3">
+                <ContactLine
+                  icon={Building2}
+                  label="Kontaktperson"
+                  value={company.contactPersonName}
+                  subvalue={company.contactPersonRole ? formatRoleType(company.contactPersonRole) : null}
+                />
+                <ContactLine
+                  icon={Mail}
+                  label="E-post"
+                  value={company.email}
+                  href={company.email ? `mailto:${company.email}` : undefined}
+                />
+                <ContactLine
+                  icon={Phone}
+                  label="Telefon"
+                  value={company.phone}
+                  href={company.phone ? `tel:${company.phone.replace(/\s+/g, "")}` : undefined}
+                />
+                <ContactLine
+                  icon={Globe}
+                  label="Nettside"
+                  value={company.website}
+                  href={company.website ? normalizeWebsiteUrl(company.website) : undefined}
+                />
+              </div>
+            </div>
+          </div>
           </div>
         </div>
 
@@ -1317,8 +1382,11 @@ function CompanyDetailView({
         <div className="border-t border-[#E4E7EB] bg-[#F0F4F8] p-5 sm:p-6 md:p-8">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
-              <p className="mb-2 text-[12px] font-medium text-[#52606D]">Personer og ansvar</p>
-              <h3 className="text-[18px] font-semibold text-[#1F2933]">Sentrale roller</h3>
+              <p className="mb-2 text-[12px] font-medium text-[#52606D]">Nivå 2</p>
+              <h3 className="text-[18px] font-semibold text-[#1F2933]">Dyp analyse</h3>
+              <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
+                Her går vi dypere i rollebildet, historikken, hendelsene og nettverket rundt selskapet.
+              </p>
             </div>
             <p className="hidden max-w-sm text-right text-[13px] font-medium leading-relaxed text-[#52606D] md:block">
               Roller gir et raskt bilde av hvem som faktisk står synlig bak virksomheten i åpne registerdata.
@@ -1341,50 +1409,23 @@ function CompanyDetailView({
 
       <div className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <div className="grid gap-4 md:grid-cols-2">
-        {scoreReasons.slice(1).map((reason, i) => (
-          <div key={`reason-${i}`} className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+        {extendedEvidence.map((item, i) => (
+          <div key={`evidence-${item.label}-${i}`} className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
             <div className="mb-3 flex items-center gap-2">
               <div className={`size-2 rounded-full ${scoreColors[company.scoreColor] || scoreColors.YELLOW}`} />
-              <h4 className="text-[14px] font-semibold text-[#1F2933]">{analysisTitles[i % analysisTitles.length]}</h4>
+              <h4 className="text-[14px] font-semibold text-[#1F2933]">{item.label}</h4>
             </div>
             <p className="text-[14px] leading-relaxed text-[#52606D] font-medium">
-              {softenReason(reason)}
+              {item.detail}
+            </p>
+            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
+              {item.source}
             </p>
           </div>
         ))}
         </div>
 
         <div className="space-y-4">
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Kontaktmulighet</h4>
-          <div className="space-y-3">
-            <ContactLine
-              icon={Building2}
-              label="Kontaktperson"
-              value={company.contactPersonName}
-              subvalue={company.contactPersonRole ? formatRoleType(company.contactPersonRole) : null}
-            />
-            <ContactLine
-              icon={Mail}
-              label="E-post"
-              value={company.email}
-              href={company.email ? `mailto:${company.email}` : undefined}
-            />
-            <ContactLine
-              icon={Phone}
-              label="Telefon"
-              value={company.phone}
-              href={company.phone ? `tel:${company.phone.replace(/\s+/g, "")}` : undefined}
-            />
-            <ContactLine
-              icon={Globe}
-              label="Nettside"
-              value={company.website}
-              href={company.website ? normalizeWebsiteUrl(company.website) : undefined}
-            />
-          </div>
-        </div>
-
         <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
           <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Utvikling over tid</h4>
           {historyPatterns ? (
@@ -1486,18 +1527,23 @@ function CompanyDetailView({
         <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
           <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registrerte hendelser</h4>
           <div className="space-y-3">
-            {announcements.length > 0 ? (
-              announcements.slice(0, 8).map((announcement, index) => (
-                <div key={`${announcement.type}-${announcement.date}-${index}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+            {events.length > 0 ? (
+              events.slice(0, 8).map((event, index) => (
+                <div key={`${event.type}-${event.date}-${index}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-[13px] font-bold text-[#1F2933]">{announcement.title}</p>
-                      <p className="mt-1 text-[11px] font-medium text-[#52606D]">
-                        {formatAnnouncementType(announcement.type)}
-                      </p>
+                      <p className="text-[13px] font-bold text-[#1F2933]">{event.title}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <p className="text-[11px] font-medium text-[#52606D]">
+                          {formatEventType(event.type)}
+                        </p>
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${eventSeverityClassName(event.severity)}`}>
+                          {formatEventSeverity(event.severity)}
+                        </span>
+                      </div>
                     </div>
                     <p className="whitespace-nowrap text-[12px] font-medium text-[#52606D]">
-                      {announcement.date ?? "Udatert"}
+                      {event.date ?? "Udatert"}
                     </p>
                   </div>
                 </div>
@@ -1509,12 +1555,12 @@ function CompanyDetailView({
         </div>
 
         <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Det som påvirker vurderingen</h4>
+          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registerspor bak vurderingen</h4>
           <div className="flex flex-wrap gap-2">
-            {triggeredRules.length > 0 ? (
-              triggeredRules.map((rule) => (
-                <Badge key={rule} variant="outline" className="rounded-md border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-medium text-[#52606D]">
-                  {formatRuleLabel(rule)}
+            {scoreEvidence.length > 0 ? (
+              scoreEvidence.map((item) => (
+                <Badge key={`${item.label}-${item.source}`} variant="outline" className="rounded-md border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-medium text-[#52606D]">
+                  {item.label}
                 </Badge>
               ))
             ) : (
@@ -1627,11 +1673,7 @@ function formatEmployeeCount(count: number | null, isRegistered: boolean | null)
   return "Ukjent";
 }
 
-function formatRuleLabel(rule: string) {
-  return ruleLabels[rule] ?? rule.replaceAll("_", " ").toLowerCase();
-}
-
-function formatAnnouncementType(type: string) {
+function formatEventType(type: string) {
   switch (type) {
     case "BANKRUPTCY":
       return "Konkurs";
@@ -1649,6 +1691,28 @@ function formatAnnouncementType(type: string) {
       return "Vedtekter";
     default:
       return type.replaceAll("_", " ").toLowerCase();
+  }
+}
+
+function formatEventSeverity(severity: CompanyEvent["severity"]) {
+  switch (severity) {
+    case "HIGH":
+      return "Høy alvorlighet";
+    case "MEDIUM":
+      return "Middels alvorlighet";
+    case "INFO":
+      return "Informasjon";
+  }
+}
+
+function eventSeverityClassName(severity: CompanyEvent["severity"]) {
+  switch (severity) {
+    case "HIGH":
+      return "bg-rose-50 text-rose-700";
+    case "MEDIUM":
+      return "bg-amber-50 text-amber-700";
+    case "INFO":
+      return "bg-slate-100 text-slate-700";
   }
 }
 
@@ -1697,28 +1761,6 @@ function networkRiskTextClass(scoreColor: ScoreColor) {
     case "GREEN":
       return "text-emerald-700";
   }
-}
-
-function softenReason(reason: string) {
-  return reason
-    .replace("Åpne registerdata viser alvorlige forhold som bør sjekkes før samarbeid.", "Det finnes alvorlige registersignaler som bør undersøkes før man går videre.")
-    .replace("Det finnes få kontaktopplysninger i åpne registerdata.", "Det er begrenset med kontaktinformasjon i åpne registerdata.")
-    .replace("Telefonopplysninger mangler i åpne registerdata.", "Telefoninformasjon er ikke synlig i åpne registerdata.")
-    .replace("Bransjeopplysninger mangler eller er uklare.", "Bransjeinformasjonen er mangelfull eller uklar.")
-    .replace("Selskapet mangler en tydelig aktivitetsbeskrivelse i åpne data.", "Det er lite offentlig beskrivelse av hva selskapet faktisk gjør.")
-    .replace("Rolleopplysninger kunne ikke vurderes i denne visningen.", "Rolleinformasjonen er ikke komplett nok til å vurdere fullt ut her.")
-    .replace("Selskapet er helt nytt og har lite historikk.", "Selskapet er helt nytt, så det finnes naturlig nok lite historikk ennå.")
-    .replace("Selskapet er forholdsvis nytt og har begrenset historikk.", "Selskapet er fortsatt ungt og har begrenset historikk.")
-    .replace("Det finnes lite offentlig informasjon å støtte vurderingen på.", "Det finnes foreløpig lite offentlig informasjon å bygge vurderingen på.")
-    .replace("Sentrale rolleopplysninger mangler for en selskapsform som normalt skal ha dem.", "Viktige rolleopplysninger mangler for denne typen selskap.")
-    .replace("Ledelse eller sentrale roller er registrert.", "Sentrale roller ser ut til å være registrert.")
-    .replace("Ingen tydelige rolleavvik er funnet for denne organisasjonsformen.", "Vi ser ingen tydelige rolleavvik for denne selskapsformen.")
-    .replace("Selskapet er registrert i Enhetsregisteret.", "Selskapet finnes i Enhetsregisteret.")
-    .replace("Det finnes synlige kontaktopplysninger i registeret.", "Det finnes kontaktopplysninger i registeret.")
-    .replace("Telefonopplysninger er registrert.", "Telefonopplysninger er registrert.")
-    .replace("Bransje er registrert.", "Bransje er registrert.")
-    .replace("Selskapet har en registrert aktivitetsbeskrivelse.", "Selskapet har en registrert aktivitetsbeskrivelse.")
-    .replace("Det finnes et greit grunnlag i åpne registerdata.", "Det finnes et greit offentlig grunnlag for vurderingen.");
 }
 
 function buildResultsSummary(

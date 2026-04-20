@@ -397,14 +397,14 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100, true));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111110");
         assertThat(client.roleLookups()).isZero();
     }
 
     @Test
-    void filtrererUtTreffMedNettsideNarFilteretErPaa() {
+    void sokBeholderTreffBadeMedOgUtenNettsideNarIngenSliktFilterFinnes() {
         var medNettside = new EnhetResponse(
                 "123123123",
                 "Med Nettside AS",
@@ -464,9 +464,9 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100, true));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
 
-        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123123124");
+        assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123123123", "123123124");
     }
 
     @Test
@@ -676,7 +676,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, 60, true));
+        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, 60));
 
         // Vi bruker nå alltid size=100 for å være effektive mot BRREG-cachen
         assertThat(client.lastSearchFilter()).containsEntry("size", "100");
@@ -756,7 +756,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", 100, true));
+        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("911934558");
     }
@@ -825,7 +825,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", 100, true));
+        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
         assertThat(result.get(0).status()).isEqualTo(TrafficLight.GREEN);
@@ -903,9 +903,171 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100, true));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
+    }
+
+    @Test
+    void sokUtenScoreFilterFjernerDubletterMellomBrregSider() {
+        var ettertid = new EnhetResponse(
+                "123456789",
+                "ETTERTID AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Programvareutvikling"),
+                "ettertid.no",
+                "post@ettertid.no",
+                "12345678",
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                2,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, 1, 10),
+                null,
+                null
+        );
+        var annetSelskap = new EnhetResponse(
+                "987654321",
+                "ANNET AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "annet.no",
+                "post@annet.no",
+                "87654321",
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                1,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, 1, 9),
+                null,
+                null
+        );
+
+        var client = new StubBrregClient(
+                Map.of(
+                        ettertid.organisasjonsnummer(), ettertid,
+                        annetSelskap.organisasjonsnummer(), annetSelskap
+                ),
+                Map.of(
+                        ettertid.organisasjonsnummer(), new RollerResponse(List.of()),
+                        annetSelskap.organisasjonsnummer(), new RollerResponse(List.of())
+                ),
+                Map.of(
+                        0, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(ettertid)),
+                                new EnheterSearchResponse.Page(100, 3, 3, 0)
+                        ),
+                        1, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(ettertid)),
+                                new EnheterSearchResponse.Page(100, 3, 3, 1)
+                        ),
+                        2, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(annetSelskap)),
+                                new EnheterSearchResponse.Page(100, 3, 3, 2)
+                        )
+                )
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, 10), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789", "987654321");
+        assertThat(result.totalElements()).isEqualTo(2);
+    }
+
+    @Test
+    void scorefiltrertSokFjernerDubletterMellomBrregSider() {
+        var ettertid = new EnhetResponse(
+                "123456789",
+                "ETTERTID AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Programvareutvikling"),
+                "ettertid.no",
+                "post@ettertid.no",
+                "12345678",
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                2,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, 1, 10),
+                null,
+                null
+        );
+        var annetSelskap = new EnhetResponse(
+                "987654321",
+                "ANNET AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "annet.no",
+                "post@annet.no",
+                "87654321",
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                1,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, 1, 9),
+                null,
+                null
+        );
+
+        var client = new StubBrregClient(
+                Map.of(
+                        ettertid.organisasjonsnummer(), ettertid,
+                        annetSelskap.organisasjonsnummer(), annetSelskap
+                ),
+                Map.of(
+                        ettertid.organisasjonsnummer(), new RollerResponse(List.of()),
+                        annetSelskap.organisasjonsnummer(), new RollerResponse(List.of())
+                ),
+                Map.of(
+                        0, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(ettertid)),
+                                new EnheterSearchResponse.Page(25, 3, 3, 0)
+                        ),
+                        1, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(ettertid)),
+                                new EnheterSearchResponse.Page(25, 3, 3, 1)
+                        ),
+                        2, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(annetSelskap)),
+                                new EnheterSearchResponse.Page(25, 3, 3, 2)
+                        )
+                )
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 10), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789", "987654321");
+        assertThat(result.totalElements()).isEqualTo(2);
     }
 
     @Test
@@ -973,7 +1135,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, "AS", "RED", 100, true));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, "AS", "RED", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("999111111");
         assertThat(client.lastSearchFilter()).doesNotContainKey("organisasjonsform.kode");

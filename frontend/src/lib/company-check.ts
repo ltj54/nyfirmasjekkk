@@ -19,6 +19,7 @@ export interface CompanySummary {
   registeredInBusinessRegistry: boolean | null;
   scoreColor: ScoreColor;
   scoreReasons: string[];
+  events: CompanyEvent[];
   flags: string[];
 }
 
@@ -53,13 +54,27 @@ export interface CompanyDetails extends CompanySummary {
     label: string;
     reasons: string[];
     rulesTriggered: string[];
+    evidence: Array<{
+      label: string;
+      detail: string;
+      source: string;
+    }>;
   };
   roles: Array<{
     type: string;
     name: string;
     title: string | null;
   }>;
+  events: CompanyEvent[];
   announcements: Announcement[];
+}
+
+export interface CompanyEvent {
+  type: string;
+  title: string;
+  date: string | null;
+  source: string;
+  severity: "HIGH" | "MEDIUM" | "INFO";
 }
 
 export interface Announcement {

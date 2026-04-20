@@ -52,7 +52,11 @@ class CompanyCheckApiIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.orgNumber").value(orgnr))
-                .andExpect(jsonPath("$.name").value("Test AS"));
+                .andExpect(jsonPath("$.name").value("Test AS"))
+                .andExpect(jsonPath("$.events").isArray())
+                .andExpect(jsonPath("$.events[0].type").exists())
+                .andExpect(jsonPath("$.score.evidence").isArray())
+                .andExpect(jsonPath("$.score.evidence[0].label").exists());
     }
 
     @Test
@@ -92,6 +96,8 @@ class CompanyCheckApiIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray())
                 .andExpect(jsonPath("$.items[0].orgNumber").value(orgnr))
+                .andExpect(jsonPath("$.items[0].events").isArray())
+                .andExpect(jsonPath("$.items[0].events[0].type").value("REGISTRATION"))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1));
     }
@@ -120,7 +126,9 @@ class CompanyCheckApiIntegrationTests {
 
         mockMvc.perform(get("/api/company-check/" + orgnr + "/events"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].type").value("REGISTRATION"))
+                .andExpect(jsonPath("$[0].severity").value("INFO"));
     }
 
     @Test

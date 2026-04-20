@@ -1,9 +1,8 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
-import io.ltj.nyfirmasjekk.announcements.AnnouncementService;
-import io.ltj.nyfirmasjekk.api.v1.Announcement;
 import io.ltj.nyfirmasjekk.api.v1.CompanyApiV1Mapper;
 import io.ltj.nyfirmasjekk.api.v1.CompanyDetails;
+import io.ltj.nyfirmasjekk.api.v1.CompanyEvent;
 import io.ltj.nyfirmasjekk.api.v1.CompanyHistoryEntry;
 import io.ltj.nyfirmasjekk.api.v1.MetadataFiltersResponse;
 import io.ltj.nyfirmasjekk.api.v1.MetadataService;
@@ -44,7 +43,6 @@ public class CompanyCheckController {
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
     private final BrregClient brregClient;
-    private final AnnouncementService announcementService;
     private final CompanyHistoryService companyHistoryService;
     private final CompanyNetworkService companyNetworkService;
     private final MetadataService metadataService;
@@ -54,7 +52,6 @@ public class CompanyCheckController {
             CompanyCheckService companyCheckService,
             CompanyApiV1Mapper mapper,
             BrregClient brregClient,
-            AnnouncementService announcementService,
             CompanyHistoryService companyHistoryService,
             CompanyNetworkService companyNetworkService,
             MetadataService metadataService,
@@ -63,7 +60,6 @@ public class CompanyCheckController {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
         this.brregClient = brregClient;
-        this.announcementService = announcementService;
         this.companyHistoryService = companyHistoryService;
         this.companyNetworkService = companyNetworkService;
         this.metadataService = metadataService;
@@ -106,13 +102,13 @@ public class CompanyCheckController {
     }
 
     @GetMapping("/{organisasjonsnummer}/events")
-    public List<Announcement> hendelser(
+    public List<CompanyEvent> hendelser(
             @PathVariable
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer
     ) {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
-        return announcementService.announcementsFor(enhet);
+        return mapper.toEvents(enhet);
     }
 
     @GetMapping("/filters")

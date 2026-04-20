@@ -7,6 +7,7 @@ public record CompanyScoreResponse(
         ScoreColor color,
         String label,
         List<String> reasons,
-        List<String> rulesTriggered
+        List<String> rulesTriggered,
+        List<ScoreEvidence> evidence
 ) {
 }

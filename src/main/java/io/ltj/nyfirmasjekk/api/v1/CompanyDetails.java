@@ -29,6 +29,7 @@ public record CompanyDetails(
         String latestAnnualAccountsYear,
         CompanyScoreResponse score,
         List<Role> roles,
+        List<CompanyEvent> events,
         List<Announcement> announcements,
         List<String> flags
 ) {

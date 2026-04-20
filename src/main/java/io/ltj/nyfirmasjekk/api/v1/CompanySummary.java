@@ -21,6 +21,7 @@ public record CompanySummary(
         Boolean registeredInBusinessRegistry,
         ScoreColor scoreColor,
         List<String> scoreReasons,
+        List<CompanyEvent> events,
         List<String> flags
 ) {
 }
