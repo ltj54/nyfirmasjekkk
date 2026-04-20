@@ -91,7 +91,9 @@ class CompanyCheckApiIntegrationTests {
         mockMvc.perform(get("/api/company-check/search?navn=Test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray())
-                .andExpect(jsonPath("$.items[0].orgNumber").value(orgnr));
+                .andExpect(jsonPath("$.items[0].orgNumber").value(orgnr))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
     }
 
     @Test

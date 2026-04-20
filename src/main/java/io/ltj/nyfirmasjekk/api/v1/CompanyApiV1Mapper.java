@@ -36,6 +36,11 @@ public class CompanyApiV1Mapper {
                 county(enhet),
                 naceCode(enhet),
                 naceDescription(enhet),
+                enhet.hjemmeside(),
+                enhet.epostadresse(),
+                firstNonBlank(enhet.telefon(), enhet.mobil()),
+                preferredSummaryContactName(facts),
+                preferredSummaryContactRole(facts),
                 enhet.registrertIMvaregisteret(),
                 enhet.registrertIForetaksregisteret(),
                 toScoreColor(companyCheck.status()),
@@ -46,6 +51,7 @@ public class CompanyApiV1Mapper {
 
     public CompanyDetails toDetails(CompanyCheck companyCheck, EnhetResponse enhet, RollerResponse roller) {
         CompanyFacts facts = companyCheck.fakta();
+        Role contactPerson = preferredContactRole(roller);
         return new CompanyDetails(
                 companyCheck.organisasjonsnummer(),
                 companyCheck.navn(),
@@ -61,6 +67,10 @@ public class CompanyApiV1Mapper {
                 naceCode(enhet),
                 naceDescription(enhet),
                 enhet.hjemmeside(),
+                enhet.epostadresse(),
+                firstNonBlank(enhet.telefon(), enhet.mobil()),
+                contactPerson == null ? null : contactPerson.name(),
+                contactPerson == null ? null : contactPerson.type(),
                 enhet.registrertIMvaregisteret(),
                 enhet.registrertIForetaksregisteret(),
                 enhet.antallAnsatte(),
@@ -83,20 +93,13 @@ public class CompanyApiV1Mapper {
         );
     }
 
-    public CompanySearchResponse toSearchResponse(List<CompanySummary> companies, int page, int size) {
-        int safeSize = Math.max(size, 1);
-        int safePage = Math.max(page, 0);
-        int totalElements = companies.size();
-        int fromIndex = Math.min(safePage * safeSize, totalElements);
-        int toIndex = Math.min(fromIndex + safeSize, totalElements);
-        int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / safeSize);
-
+    public CompanySearchResponse toSearchResponse(List<CompanySummary> companies, int page, int size, long totalElements, int totalPages) {
         return new CompanySearchResponse(
-                safePage,
-                safeSize,
+                Math.max(page, 0),
+                Math.max(size, 1),
                 totalElements,
                 totalPages,
-                companies.subList(fromIndex, toIndex)
+                companies
         );
     }
 
@@ -197,6 +200,47 @@ public class CompanyApiV1Mapper {
                 .toList();
     }
 
+    private Role preferredContactRole(RollerResponse roller) {
+        List<Role> activeRoles = roles(roller);
+        return activeRoles.stream()
+                .filter(role -> "DAGLIG_LEDER".equals(role.type()))
+                .findFirst()
+                .or(() -> activeRoles.stream().filter(role -> "STYRELEDER".equals(role.type())).findFirst())
+                .or(() -> activeRoles.stream().findFirst())
+                .orElse(null);
+    }
+
+    private String preferredSummaryContactName(CompanyFacts facts) {
+        if (facts == null) {
+            return null;
+        }
+        if (facts.dagligLeder() != null && !facts.dagligLeder().isBlank()) {
+            return facts.dagligLeder();
+        }
+        if (facts.styre() != null) {
+            return facts.styre().stream()
+                    .filter(Objects::nonNull)
+                    .map(String::trim)
+                    .filter(value -> !value.isBlank())
+                    .findFirst()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    private String preferredSummaryContactRole(CompanyFacts facts) {
+        if (facts == null) {
+            return null;
+        }
+        if (facts.dagligLeder() != null && !facts.dagligLeder().isBlank()) {
+            return "DAGLIG_LEDER";
+        }
+        if (facts.styre() != null && facts.styre().stream().anyMatch(Objects::nonNull)) {
+            return "STYREMEDLEM";
+        }
+        return null;
+    }
+
     private Role toRole(RollerResponse.Rolle rolle) {
         String name = roleName(rolle);
         if (name == null || name.isBlank() || rolle.type() == null || rolle.type().beskrivelse() == null) {
@@ -245,6 +289,15 @@ public class CompanyApiV1Mapper {
             return "PROKURA";
         }
         return description.trim().toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]+", "_");
+    }
+
+    private String firstNonBlank(String... values) {
+        return Stream.of(values)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(value -> !value.isBlank())
+                .findFirst()
+                .orElse(null);
     }
 
     private List<Announcement> announcements(EnhetResponse enhet) {

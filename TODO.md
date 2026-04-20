@@ -136,3 +136,20 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [x] Utvid ikke røde regler uten tydelig dokumenterbare registersignaler
 - [x] La BRREG gjøre mest mulig grovsortering før lokal scoring
 - [ ] Bruk nye datakilder bare når de gir tydelig produktverdi i UI eller risikoanalyse
+
+## Kommersiell retning
+
+### Dreie siden mot lead-gen for nye firmaer
+
+- [x] Avklart retning: siden skal ikke bare vurdere selskaper, men brukes til å tilby nettside til nye firmaer
+- [x] Avklart produktvinkel: selg synlighet og troverdighet fra start, ikke bare "hjemmeside"
+- [ ] Spisse verdiforslaget på forsiden mot nye virksomheter uten tydelig digital tilstedeværelse
+- [ ] Legge inn tydelige CTA-er i trefflisten og detaljvisningen for tilbud om nettside
+- [ ] Lage enkel landingsseksjon for tjenesten: nettside, domene, e-post og kontaktpunkt
+- [ ] Definere et lavterskel tilbud med fast pris eller tydelig startpakke
+- [ ] Gjøre søket mer egnet for salgsarbeid: fremhev selskaper uten nettside eller med tynn offentlig profil
+- [ ] Vise hvorfor et selskap er relevant lead, ikke bare hvilken score det har
+- [ ] Lage enkel kontaktflyt fra UI til skjema, e-post eller CRM
+- [ ] Vurdere om vurderingsscore skal tones ned til fordel for "mulighetssignal" i kommersiell visning
+- [ ] Skrive kort, konkret salgsbudskap rettet mot nyregistrerte selskaper
+- [ ] Bestemme om løsningen primært er et internt salgsverktøy, en offentlig landingsside eller begge deler

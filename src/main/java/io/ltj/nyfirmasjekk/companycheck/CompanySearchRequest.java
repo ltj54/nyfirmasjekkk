@@ -8,7 +8,6 @@ public record CompanySearchRequest(
         String naeringskode,
         String organisasjonsform,
         String score,
-        int resultSize,
-        boolean utenNettside
+        int resultSize
 ) {
 }

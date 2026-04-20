@@ -12,7 +12,6 @@ export async function GET(request: Request) {
   const county = searchParams.get("county");
   const organizationForm = searchParams.get("organizationForm");
   const score = searchParams.get("score");
-  const utenNettside = searchParams.get("utenNettside") ?? "true";
   const page = searchParams.get("page") || "0";
 
   const params = new URLSearchParams();
@@ -22,7 +21,6 @@ export async function GET(request: Request) {
   if (county) params.set("fylke", county);
   if (organizationForm) params.set("organisasjonsform", organizationForm);
   if (score) params.set("score", score);
-  params.set("utenNettside", utenNettside);
 
   const url = `${backendBaseUrl}/api/company-check/search?${params.toString()}`;
 
@@ -37,7 +35,7 @@ export async function GET(request: Request) {
     const items = Array.isArray(data) ? data : data.items || [];
     const totalElements = Array.isArray(data) ? items.length : (data.totalElements ?? items.length);
     console.info(
-      `[company-check/search] dager=${dager} page=${page} score=${score ?? "ALL"} q=${q ?? "-"} county=${county ?? "-"} organizationForm=${organizationForm ?? "-"} utenNettside=${utenNettside} items=${items.length} totalElements=${totalElements}`
+      `[company-check/search] dager=${dager} page=${page} score=${score ?? "ALL"} q=${q ?? "-"} county=${county ?? "-"} organizationForm=${organizationForm ?? "-"} items=${items.length} totalElements=${totalElements}`
     );
     return NextResponse.json(data);
   } catch (err) {

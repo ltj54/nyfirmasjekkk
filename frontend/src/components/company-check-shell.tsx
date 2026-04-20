@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Menu,
+  ArrowLeft,
 } from "lucide-react";
 
 import type {
@@ -120,18 +121,20 @@ export function CompanyCheckShell() {
   const [isListLoading, setIsListLoading] = useState(false);
   const [listLoadProgress, setListLoadProgress] = useState(0);
   const [listLoadSeconds, setListLoadSeconds] = useState(0);
-  const [daysFilter, setDaysFilter] = useState("0");
+  const [daysFilter, setDaysFilter] = useState("10");
   const [countyFilter, setCountyFilter] = useState("");
-  const [organizationFormFilter, setOrganizationFormFilter] = useState("");
-  const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
-  const [onlyWithoutWebsite, setOnlyWithoutWebsite] = useState(true);
+  const [organizationFormFilter, setOrganizationFormFilter] = useState("AS");
+  const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
   const [selectedCompanyAnnouncements, setSelectedCompanyAnnouncements] = useState<Announcement[]>([]);
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
   const [page, setPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [, startTransition] = useTransition();
   const latestListRequestId = useRef(0);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const hasDetailHistoryEntryRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -245,7 +248,6 @@ export function CompanyCheckShell() {
       countyFilter?: string;
       organizationFormFilter?: string;
       selectedLegend?: keyof typeof legendDetails | null;
-      onlyWithoutWebsite?: boolean;
     }
   ) {
     if (!backendReady) {
@@ -258,7 +260,6 @@ export function CompanyCheckShell() {
     const effectiveCountyFilter = overrides?.countyFilter ?? countyFilter;
     const effectiveOrganizationFormFilter = overrides?.organizationFormFilter ?? organizationFormFilter;
     const effectiveSelectedLegend = overrides?.selectedLegend === undefined ? selectedLegend : overrides.selectedLegend;
-    const effectiveOnlyWithoutWebsite = overrides?.onlyWithoutWebsite ?? onlyWithoutWebsite;
     const params = new URLSearchParams();
     params.set("dager", effectiveDaysFilter);
     params.set("page", pageNum.toString());
@@ -266,7 +267,6 @@ export function CompanyCheckShell() {
     if (effectiveCountyFilter) params.set("county", effectiveCountyFilter);
     if (effectiveOrganizationFormFilter) params.set("organizationForm", effectiveOrganizationFormFilter);
     if (effectiveSelectedLegend) params.set("score", effectiveSelectedLegend);
-    params.set("utenNettside", String(effectiveOnlyWithoutWebsite));
 
     try {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
@@ -276,8 +276,12 @@ export function CompanyCheckShell() {
           return;
         }
         const items = Array.isArray(data) ? data : data.items || [];
+        const nextTotalElements = Array.isArray(data) ? items.length : (data.totalElements ?? items.length);
+        const nextTotalPages = Array.isArray(data) ? (items.length > 0 ? 1 : 0) : (data.totalPages ?? 0);
         setRecentCompanies(items);
         setPage(pageNum);
+        setTotalElements(nextTotalElements);
+        setTotalPages(nextTotalPages);
         setError(null);
       } else if (response.status === 502) {
         const payload = await response.json().catch(() => null);
@@ -285,6 +289,8 @@ export function CompanyCheckShell() {
           return;
         }
         setRecentCompanies([]);
+        setTotalElements(0);
+        setTotalPages(0);
         setError(payload?.title ?? "Backend starter fortsatt. Prøv igjen om et øyeblikk.");
       }
     } catch (err) {
@@ -300,7 +306,7 @@ export function CompanyCheckShell() {
     if (backendReady && initialResultsReady && !selectedCompany) {
       void fetchRecent(0);
     }
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, onlyWithoutWebsite, selectedCompany, activeQuery]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany, activeQuery]);
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
@@ -352,6 +358,18 @@ export function CompanyCheckShell() {
     };
   }, [selectedCompany]);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      hasDetailHistoryEntryRef.current = false;
+      setSelectedCompany(null);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   async function handleSearch(term: string) {
     if (!backendReady) {
       setError("Backend starter fortsatt. Prøv igjen om et øyeblikk.");
@@ -388,7 +406,6 @@ export function CompanyCheckShell() {
       if (selectedLegend) {
         params.set("score", selectedLegend);
       }
-      params.set("utenNettside", String(onlyWithoutWebsite));
       const endpoint = isOrgNumber 
         ? `/api/company-check/${trimmedTerm}`
         : `/api/company-check/search?${params.toString()}`;
@@ -410,6 +427,10 @@ export function CompanyCheckShell() {
 
       startTransition(() => {
         if (isOrgNumber && payload.score) {
+          if (!hasDetailHistoryEntryRef.current) {
+            window.history.pushState({ view: "company-detail", orgNumber: trimmedTerm }, "", window.location.href);
+            hasDetailHistoryEntryRef.current = true;
+          }
           setSelectedCompany(payload as CompanyDetails);
         } else {
           // It's a search result list
@@ -439,33 +460,40 @@ export function CompanyCheckShell() {
   }
 
   function resetToLanding() {
+    if (selectedCompany && hasDetailHistoryEntryRef.current) {
+      hasDetailHistoryEntryRef.current = false;
+      window.history.back();
+      return;
+    }
     setSelectedCompany(null);
-    setSelectedLegend(null);
-    setOnlyWithoutWebsite(true);
+    setSelectedLegend("GREEN");
     setActiveQuery("");
     setSearchTerm("");
-    scrollToSection("search");
-    searchInputRef.current?.focus();
+    setDaysFilter("10");
+    setCountyFilter("");
+    setOrganizationFormFilter("AS");
+    searchInputRef.current?.focus({ preventScroll: true });
     void fetchRecent(0, "", {
-      selectedLegend: null,
-      onlyWithoutWebsite: true,
+      daysFilter: "10",
+      countyFilter: "",
+      organizationFormFilter: "AS",
+      selectedLegend: "GREEN",
     });
   }
 
   function focusSearch() {
-    scrollToSection("search");
-    searchInputRef.current?.focus();
+    searchInputRef.current?.focus({ preventScroll: true });
   }
 
-  const filteredCompanies = selectedLegend
+  const filteredCompanies = (selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
-    : recentCompanies;
+    : recentCompanies
+  ).sort(compareLeadPriority);
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
     organizationFormFilter,
     metadata.organizationForms,
-    onlyWithoutWebsite,
     selectedLegend,
   );
 
@@ -526,175 +554,159 @@ export function CompanyCheckShell() {
 
       <main id="main-content" className="pb-16">
         {/* Search Area */}
-        <section id="search" className="mx-auto max-w-7xl px-6 pt-6 sm:pt-8">
-          <div className="grid gap-4">
-            <div className="rounded-[22px] border border-[#D9E2EC] bg-white px-5 py-6 sm:px-7 sm:py-7">
-              <p className="text-[12px] font-medium text-[#52606D]">Offentlig virksomhetssøk</p>
-              <div className="mt-3 max-w-2xl">
-                <h1 className="text-3xl font-semibold tracking-tight text-[#1F2933] sm:text-4xl">
-                  Søk i virksomhetsopplysninger
-                </h1>
-                <p className="mt-3 text-[15px] leading-7 text-[#52606D]">
-                  Finn norske virksomheter, se åpne registersignaler og filtrer på organisasjonsform eller fylke når du trenger et raskt førsteinntrykk.
-                </p>
-              </div>
-
-              <form className="mt-6" onSubmit={handleSubmit}>
-                <div className="group flex flex-col gap-3 rounded-[18px] border border-[#D9E2EC] bg-[#F0F4F8] p-3 sm:flex-row sm:items-center">
-                  <div className="flex flex-1 items-center gap-3 rounded-[16px] border border-transparent bg-white px-4 py-3 focus-within:border-[#2F6FB2]">
-                    <Search className="size-5 text-[#7B8794] transition-colors group-focus-within:text-[#1F5FA9]" />
-                    <input
-                      ref={searchInputRef}
-                      className="h-11 w-full bg-transparent text-[16px] font-medium outline-none placeholder:text-[#7B8794]"
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="Organisasjonsnummer eller navn"
-                      type="text"
-                      value={searchTerm}
-                    />
-                  </div>
-                  <Button
-                    className="h-11 rounded-full bg-[#1F5FA9] px-5 text-[14px] font-semibold text-white hover:bg-[#2F6FB2]"
-                    disabled={isLoading || !backendReady}
-                    type="submit"
-                  >
-                    {!backendReady ? "Starter..." : isLoading ? "Søker..." : "Søk"}
-                  </Button>
+        {!selectedCompany && (
+          <section id="search" className="mx-auto max-w-7xl px-6 pt-6 sm:pt-8">
+            <div className="grid gap-4">
+              <div className="rounded-[22px] border border-[#D9E2EC] bg-white px-5 py-6 sm:px-7 sm:py-7">
+                <p className="text-[12px] font-medium text-[#52606D]">Finn nye firmaer som trenger en digital start</p>
+                <div className="mt-3 max-w-3xl">
+                  <h1 className="text-3xl font-semibold tracking-tight text-[#1F2933] sm:text-4xl">
+                    Oppdag nye virksomheter som mangler nettside og digital synlighet
+                  </h1>
+                  <p className="mt-3 text-[15px] leading-7 text-[#52606D]">
+                    Bruk åpne BRREG-data til å finne nyregistrerte selskaper, vurdere hvor synlige de er digitalt og identifisere hvem som sannsynligvis trenger hjelp med nettside, domene og e-post fra start.
+                  </p>
+                  <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#1F5FA9]">
+                    Dette er et arbeidsverktøy for å finne relevante leads og gå videre med et konkret tilbud om digital etablering.
+                  </p>
                 </div>
-              </form>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                {["AS", "ENK", "NUF", "SA", "FLI"].map((code) => (
-                  <div key={code} className="relative inline-flex items-center gap-1.5">
-                    <button
-                      className={`peer rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                        organizationFormFilter === code
-                          ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                          : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                      }`}
-                      onClick={() => {
-                        setOrganizationFormFilter((current) => (current === code ? "" : code));
-                        scrollToSection("results");
-                      }}
-                      type="button"
-                      >
-                        {code}
-                      </button>
-                    <div
-                      className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-80 -translate-x-1/2 translate-y-1 rounded-[18px] border border-[#D9E2EC] bg-white p-4 text-left opacity-0 shadow-[0_20px_50px_-24px_rgba(31,95,169,0.35)] transition-all duration-150 peer-hover:translate-y-0 peer-hover:opacity-100 peer-focus-visible:translate-y-0 peer-focus-visible:opacity-100"
-                      role="tooltip"
-                    >
-                      <p className="text-[12px] font-medium text-[#52606D]">Organisasjonsform</p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">
-                        {code} - {organizationFormHelp[code].label}
-                      </p>
-                      <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
-                        {organizationFormHelp[code].description}
-                      </p>
-                      <p className="mt-3 text-[12px] font-medium text-[#1F5FA9]">
-                        Brukes som filter i søket.
-                      </p>
+                <form className="mt-6" onSubmit={handleSubmit}>
+                  <div className="group flex flex-col gap-3 rounded-[18px] border border-[#D9E2EC] bg-[#F0F4F8] p-3 sm:flex-row sm:items-center">
+                    <div className="flex flex-1 items-center gap-3 rounded-[16px] border border-transparent bg-white px-4 py-3 focus-within:border-[#2F6FB2]">
+                      <Search className="size-5 text-[#7B8794] transition-colors group-focus-within:text-[#1F5FA9]" />
+                      <input
+                        ref={searchInputRef}
+                        className="h-11 w-full bg-transparent text-[16px] font-medium outline-none placeholder:text-[#7B8794]"
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Organisasjonsnummer eller navn"
+                        type="text"
+                        value={searchTerm}
+                      />
                     </div>
+                    <Button
+                      className="h-11 rounded-full bg-[#1F5FA9] px-5 text-[14px] font-semibold text-white hover:bg-[#2F6FB2]"
+                      disabled={isLoading || !backendReady}
+                      type="submit"
+                    >
+                      {!backendReady ? "Starter..." : isLoading ? "Søker..." : "Finn leads"}
+                    </Button>
                   </div>
-                ))}
-              </div>
+                </form>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
-                <span className="text-[#52606D]">Signalnivå:</span>
-                {legend.map((item) => (
-                  <button
-                    key={item.status}
-                    className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                      selectedLegend === item.status
-                        ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                        : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                    }`}
-                    disabled={!initialResultsReady || isListLoading}
-                    onClick={() =>
-                      setSelectedLegend((current) =>
-                        current === item.status ? null : (item.status as keyof typeof legendDetails)
-                      )
-                    }
-                    type="button"
-                  >
-                    {item.label}
-                  </button>
-                ))}
-                <label
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                    onlyWithoutWebsite
-                      ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                      : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                  }`}
-                >
-                  <input
-                    checked={onlyWithoutWebsite}
-                    className="size-4 rounded border-[#D9E2EC] accent-[#1F5FA9]"
-                    onChange={(event) => {
-                      setOnlyWithoutWebsite(event.target.checked);
-                      scrollToSection("results");
-                    }}
-                    type="checkbox"
-                  />
-                  <span>Søkeresultat uten nettside</span>
-                </label>
-              </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {["AS", "ENK", "NUF", "SA", "FLI"].map((code) => (
+                    <div key={code} className="relative inline-flex items-center gap-1.5">
+                      <button
+                        className={`peer rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                          organizationFormFilter === code
+                            ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
+                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                        }`}
+                        onClick={() => {
+                          setOrganizationFormFilter((current) => (current === code ? "" : code));
+                        }}
+                        type="button"
+                        >
+                          {code}
+                        </button>
+                      <div
+                        className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-80 -translate-x-1/2 translate-y-1 rounded-[18px] border border-[#D9E2EC] bg-white p-4 text-left opacity-0 shadow-[0_20px_50px_-24px_rgba(31,95,169,0.35)] transition-all duration-150 peer-hover:translate-y-0 peer-hover:opacity-100 peer-focus-visible:translate-y-0 peer-focus-visible:opacity-100"
+                        role="tooltip"
+                      >
+                        <p className="text-[12px] font-medium text-[#52606D]">Organisasjonsform</p>
+                        <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">
+                          {code} - {organizationFormHelp[code].label}
+                        </p>
+                        <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
+                          {organizationFormHelp[code].description}
+                        </p>
+                        <p className="mt-3 text-[12px] font-medium text-[#1F5FA9]">
+                          Brukes som filter i søket.
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
-                <span className="flex items-center gap-2 text-[#52606D]">
-                  <CalendarDays className="size-4" />
-                  Tidsrom:
-                </span>
-                {dayOptions.map((days) => {
-                  const label = days === "0" ? "Alle data" : `${days} dager`;
-                  const isSelected = daysFilter === days;
-
-                  return (
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
+                  <span className="text-[#52606D]">Signalnivå:</span>
+                  {legend.map((item) => (
                     <button
-                      key={days}
-                      aria-pressed={isSelected}
+                      key={item.status}
                       className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                        isSelected
+                        selectedLegend === item.status
                           ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
                           : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
                       }`}
-                      onClick={() => {
-                        setDaysFilter(days);
-                        scrollToSection("results");
-                      }}
+                      disabled={!initialResultsReady || isListLoading}
+                      onClick={() =>
+                        setSelectedLegend((current) =>
+                          current === item.status ? null : (item.status as keyof typeof legendDetails)
+                        )
+                      }
                       type="button"
                     >
-                      {label}
+                      {item.label}
                     </button>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] font-medium text-[#1F5FA9]">
-                <button className="hover:underline" onClick={() => scrollToSection("results")} type="button">
-                  Åpne treff
-                </button>
-                <button
-                  className="hover:underline"
-                  onClick={() => {
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
+                  <span className="flex items-center gap-2 text-[#52606D]">
+                    <CalendarDays className="size-4" />
+                    Tidsrom:
+                  </span>
+                  {dayOptions.map((days) => {
+                    const label = days === "0" ? "Alle data" : `${days} dager`;
+                    const isSelected = daysFilter === days;
+
+                    return (
+                      <button
+                        key={days}
+                        aria-pressed={isSelected}
+                        className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                          isSelected
+                            ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
+                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                        }`}
+                        onClick={() => {
+                          setDaysFilter(days);
+                        }}
+                        type="button"
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] font-medium text-[#1F5FA9]">
+                  <button
+                    className="hover:underline"
+                    onClick={() => {
+                    setDaysFilter("10");
                     setCountyFilter("");
-                    setOrganizationFormFilter("");
-                    setSelectedLegend(null);
-                    setOnlyWithoutWebsite(true);
+                    setOrganizationFormFilter("AS");
+                    setSelectedLegend("GREEN");
+                    setActiveQuery("");
+                    setSearchTerm("");
                     scrollToSection("search");
                   }}
                   type="button"
                 >
-                  Nullstill filtre
-                </button>
+                    Nullstill filtre
+                  </button>
+                </div>
+
+                <p className="mt-4 text-[12px] leading-6 text-[#52606D]">
+                  Data fra BRREG. Vurderingene brukes som første signal for hvem som kan være aktuelle å kontakte med tilbud om nettside og digital profil.
+                </p>
               </div>
 
-              <p className="mt-4 text-[12px] leading-6 text-[#52606D]">
-                Data fra BRREG. Vurderingene er veiledende og skal brukes som første signal.
-              </p>
             </div>
-
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Dynamic Content */}
         <section id="results" className="mx-auto max-w-7xl px-6 pb-24 pt-10">
@@ -723,6 +735,7 @@ export function CompanyCheckShell() {
               announcements={selectedCompanyAnnouncements.length > 0 ? selectedCompanyAnnouncements : selectedCompany.announcements}
               history={selectedCompanyHistory}
               network={selectedCompanyNetwork}
+              onBack={resetToLanding}
             />
           ) : (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700">
@@ -754,11 +767,17 @@ export function CompanyCheckShell() {
 
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Søkeresultater</h2>
+                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Aktuelle leads</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
+                  <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
+                    Viser {filteredCompanies.length} treff på denne siden.
+                  </p>
+                  <p className="mt-2 text-[12px] font-medium leading-5 text-[#1F5FA9]">
+                    Treffene er sortert etter hvem som bør kontaktes først, basert på prioritet, kontaktbarhet og hvor ferskt selskapet er.
+                  </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 rounded-full border border-[#D9E2EC] bg-white px-2 py-1">
                     <Button
                       variant="outline"
                       size="sm"
@@ -767,24 +786,18 @@ export function CompanyCheckShell() {
                     >
                       Forrige
                     </Button>
-                    <span className="text-sm font-medium">Side {page + 1}</span>
+                    <span className="min-w-24 text-center text-sm font-medium">
+                      Side {totalPages > 0 ? page + 1 : 0} av {Math.max(totalPages, 0)}
+                    </span>
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={recentCompanies.length < 100 || isLoading || isListLoading}
+                      disabled={page + 1 >= totalPages || isLoading || isListLoading}
                       onClick={() => void fetchRecent(page + 1)}
                     >
                       Neste
                     </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-[#D9E2EC] font-bold text-[#1F2933]"
-                    disabled={isListLoading}
-                    onClick={() => void fetchRecent(0)}
-                  >
-                    {isListLoading ? "Laster..." : "Oppdater"}
-                  </Button>
                 </div>
                 </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -827,10 +840,12 @@ export function CompanyCheckShell() {
                         variant="outline"
                         className="rounded-full bg-white font-bold"
                         onClick={() => {
+                          setDaysFilter("10");
                           setSearchTerm("");
+                          setActiveQuery("");
                           setCountyFilter("");
-                          setOrganizationFormFilter("");
-                          setSelectedLegend(null);
+                          setOrganizationFormFilter("AS");
+                          setSelectedLegend("GREEN");
                           void fetchRecent(0);
                         }}
                       >
@@ -977,7 +992,9 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
     YELLOW: "bg-amber-500",
     RED: "bg-rose-500",
   };
-  
+  const leadPriority = getLeadPriority(company);
+  const contactability = getContactability(company);
+  const bestContactPoint = getBestContactPoint(company);
   const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
 
   return (
@@ -985,8 +1002,13 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
       className="group cursor-pointer rounded-[18px] border border-[#D9E2EC] bg-white p-4 transition-colors hover:border-[#2F6FB2]"
       onClick={onClick}
     >
-      <div className="mb-4 flex items-start justify-between">
-        <div className={`size-3 rounded-full ${colorClass} shadow-sm`} />
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <div className={`size-3 rounded-full ${colorClass} shadow-sm`} />
+          <Badge className={leadPriority.badgeClass}>
+            {leadPriority.label}
+          </Badge>
+        </div>
         <Badge variant="outline" className="rounded-md border-[#D9E2EC] bg-[#F0F4F8] px-2 py-0 text-[10px] font-medium text-[#52606D]">
           {company.organizationForm}
         </Badge>
@@ -994,7 +1016,18 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
       <h3 className="mb-1 line-clamp-1 text-[15px] font-semibold text-[#1F2933] transition-colors group-hover:text-[#1F5FA9]">
         {company.name}
       </h3>
-      <p className="mb-4 text-[12px] font-mono font-medium text-[#52606D]">{company.orgNumber}</p>
+      <p className="mb-3 text-[12px] font-mono font-medium text-[#52606D]">{company.orgNumber}</p>
+
+      <div className="mb-4 rounded-[14px] border border-[#E4E7EB] bg-[#F8FBFF] p-3">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Neste steg</p>
+            <p className="mt-1 text-[13px] font-semibold text-[#1F2933]">{bestContactPoint.label}</p>
+            <p className="mt-1 text-[12px] text-[#52606D]">{contactability.label}</p>
+          </div>
+          <Badge className={contactability.badgeClass}>{contactability.shortLabel}</Badge>
+        </div>
+      </div>
 
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
@@ -1003,11 +1036,171 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
         </div>
         <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
           <CalendarDays className="size-3.5" />
-          <span>{company.registrationDate || "Nylig"}</span>
+          <span>{company.registrationDate ? `Registrert: ${company.registrationDate}` : "Registrert: ukjent"}</span>
+        </div>
+        {company.website ? (
+          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
+            <Globe className="size-3.5" />
+            <a
+              className="truncate text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+              href={normalizeWebsiteUrl(company.website)}
+              onClick={(event) => event.stopPropagation()}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {company.website}
+            </a>
+          </div>
+        ) : null}
+        {company.contactPersonName ? (
+          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
+            <Building2 className="size-3.5" />
+            <span className="truncate">
+              {company.contactPersonName}
+              {company.contactPersonRole ? ` · ${formatRoleType(company.contactPersonRole)}` : ""}
+            </span>
+          </div>
+        ) : null}
+        {company.email ? (
+          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
+            <Mail className="size-3.5" />
+            <a
+              className="truncate text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+              href={`mailto:${company.email}`}
+              onClick={(event) => event.stopPropagation()}
+            >
+              {company.email}
+            </a>
+          </div>
+        ) : null}
+        {company.phone ? (
+          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
+            <Phone className="size-3.5" />
+            <a
+              className="truncate text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+              href={`tel:${company.phone.replace(/\s+/g, "")}`}
+              onClick={(event) => event.stopPropagation()}
+            >
+              {company.phone}
+            </a>
+          </div>
+        ) : null}
+        <div className="mt-3 flex flex-wrap gap-2 pt-1">
+          <Badge variant="outline" className="border-[#D9E2EC] bg-white text-[10px] font-semibold text-[#52606D]">
+            {company.vatRegistered ? "MVA registrert" : "Ikke MVA registrert"}
+          </Badge>
+          <Badge variant="outline" className="border-[#D9E2EC] bg-white text-[10px] font-semibold text-[#52606D]">
+            {company.registeredInBusinessRegistry ? "Foretaksregisteret" : "Ikke i Foretaksregisteret"}
+          </Badge>
         </div>
       </div>
     </div>
   );
+}
+
+function normalizeWebsiteUrl(value: string) {
+  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
+
+function getContactability(company: CompanySummary) {
+  const points = [company.email, company.phone, company.website, company.contactPersonName].filter(Boolean).length;
+
+  if (company.email || company.phone) {
+    return {
+      label: "Direkte kontaktpunkt registrert",
+      shortLabel: "Kontaktbar",
+      badgeClass: "rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700",
+    };
+  }
+
+  if (points >= 2) {
+    return {
+      label: "Kontakt mulig, men krever litt manuelt arbeid",
+      shortLabel: "Delvis",
+      badgeClass: "rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700",
+    };
+  }
+
+  return {
+    label: "Svak kontaktflate i åpne data",
+    shortLabel: "Svak",
+    badgeClass: "rounded-full bg-rose-50 px-2.5 py-1 text-[10px] font-semibold text-rose-700",
+  };
+}
+
+function getLeadPriority(company: CompanySummary) {
+  const hasDirectContact = Boolean(company.email || company.phone);
+  const missingWebsite = !company.website;
+
+  if (missingWebsite && hasDirectContact && company.scoreColor !== "RED") {
+    return {
+      label: "Høy prioritet",
+      badgeClass: "rounded-full bg-[#1F5FA9] px-2.5 py-1 text-[10px] font-semibold text-white",
+    };
+  }
+
+  if ((missingWebsite || hasDirectContact) && company.scoreColor !== "RED") {
+    return {
+      label: "Aktuell",
+      badgeClass: "rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700",
+    };
+  }
+
+  return {
+    label: "Lavere prioritet",
+    badgeClass: "rounded-full bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
+  };
+}
+
+function getBestContactPoint(company: CompanySummary) {
+  if (company.email) {
+    return { label: `Start med e-post: ${company.email}` };
+  }
+  if (company.phone) {
+    return { label: `Start med telefon: ${company.phone}` };
+  }
+  if (company.website) {
+    return { label: "Gå via registrert nettside" };
+  }
+  if (company.contactPersonName) {
+    return { label: `Manuell kontakt mot ${company.contactPersonName}` };
+  }
+  return { label: "Krever manuell research" };
+}
+
+
+function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
+  const priorityDifference = leadPriorityRank(left) - leadPriorityRank(right);
+  if (priorityDifference !== 0) {
+    return priorityDifference;
+  }
+
+  const contactabilityDifference = contactabilityRank(left) - contactabilityRank(right);
+  if (contactabilityDifference !== 0) {
+    return contactabilityDifference;
+  }
+
+  const registrationDateLeft = left.registrationDate ? new Date(left.registrationDate).getTime() : 0;
+  const registrationDateRight = right.registrationDate ? new Date(right.registrationDate).getTime() : 0;
+  if (registrationDateLeft !== registrationDateRight) {
+    return registrationDateRight - registrationDateLeft;
+  }
+
+  return left.name.localeCompare(right.name, "nb");
+}
+
+function leadPriorityRank(company: CompanySummary) {
+  const label = getLeadPriority(company).label;
+  if (label === "Høy prioritet") return 0;
+  if (label === "Aktuell") return 1;
+  return 2;
+}
+
+function contactabilityRank(company: CompanySummary) {
+  const label = getContactability(company).shortLabel;
+  if (label === "Kontaktbar") return 0;
+  if (label === "Delvis") return 1;
+  return 2;
 }
 
 function CompanyDetailView({
@@ -1015,11 +1208,13 @@ function CompanyDetailView({
   announcements,
   history,
   network,
+  onBack,
 }: {
   company: CompanyDetails;
   announcements: Announcement[];
   history: CompanyHistoryEntry[];
   network: NetworkActor[];
+  onBack: () => void;
 }) {
   const scoreConfig = {
     GREEN: { icon: CheckCircle2, text: "bg-emerald-50 text-emerald-700 border-emerald-100", wash: "from-emerald-100/80 via-emerald-50/40 to-transparent", iconColor: "text-emerald-500" },
@@ -1038,6 +1233,19 @@ function CompanyDetailView({
 
   return (
     <div className="detail-shell mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-2 rounded-full border border-[#D9E2EC] bg-white text-[#1F2933] hover:bg-[#F0F4F8]"
+          onClick={onBack}
+          type="button"
+        >
+          <ArrowLeft className="size-4" />
+          Tilbake til treff
+        </Button>
+      </div>
+
       <div className="detail-panel overflow-hidden rounded-[24px] border border-[#D9E2EC]">
         <div className={`pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b ${config.wash}`} />
         {/* Header Section */}
@@ -1147,6 +1355,36 @@ function CompanyDetailView({
         </div>
 
         <div className="space-y-4">
+        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Kontaktmulighet</h4>
+          <div className="space-y-3">
+            <ContactLine
+              icon={Building2}
+              label="Kontaktperson"
+              value={company.contactPersonName}
+              subvalue={company.contactPersonRole ? formatRoleType(company.contactPersonRole) : null}
+            />
+            <ContactLine
+              icon={Mail}
+              label="E-post"
+              value={company.email}
+              href={company.email ? `mailto:${company.email}` : undefined}
+            />
+            <ContactLine
+              icon={Phone}
+              label="Telefon"
+              value={company.phone}
+              href={company.phone ? `tel:${company.phone.replace(/\s+/g, "")}` : undefined}
+            />
+            <ContactLine
+              icon={Globe}
+              label="Nettside"
+              value={company.website}
+              href={company.website ? normalizeWebsiteUrl(company.website) : undefined}
+            />
+          </div>
+        </div>
+
         <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
           <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Utvikling over tid</h4>
           {historyPatterns ? (
@@ -1327,6 +1565,52 @@ function DetailDataPoint({ icon: Icon, label, value, isLink }: { icon: any; labe
   );
 }
 
+function ContactLine({
+  icon: Icon,
+  label,
+  value,
+  subvalue,
+  href,
+}: {
+  icon: any;
+  label: string;
+  value: string | null;
+  subvalue?: string | null;
+  href?: string;
+}) {
+  return (
+    <div className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 rounded-lg border border-[#E4E7EB] bg-[#F0F4F8] p-2 text-[#52606D]">
+          <Icon className="size-4" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium text-[#52606D]">{label}</p>
+          {value ? (
+            href ? (
+              <a
+                className="block truncate text-[14px] font-semibold text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+                href={href}
+                rel="noreferrer"
+                target={href.startsWith("http") ? "_blank" : undefined}
+              >
+                {value}
+              </a>
+            ) : (
+              <p className="text-[14px] font-semibold text-[#1F2933]">{value}</p>
+            )
+          ) : (
+            <p className="text-[14px] text-[#7B8794]">Ikke registrert</p>
+          )}
+          {subvalue ? (
+            <p className="mt-1 text-[12px] font-medium text-[#52606D]">{subvalue}</p>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function formatRegistryFlag(value: boolean | null) {
   if (value === true) return "Registrert";
   if (value === false) return "Ikke registrert";
@@ -1442,20 +1726,18 @@ function buildResultsSummary(
   countyFilter: string,
   organizationFormFilter: string,
   organizationForms: string[],
-  onlyWithoutWebsite: boolean,
   selectedLegend: keyof typeof legendDetails | null,
 ) {
   const days = daysFilter || "30";
   const timePart = days === "0" ? "Alle data" : `Siste ${days} dager`;
   const countyPart = countyFilter ? `i ${countyFilter}` : "i hele landet";
-  const websitePart = onlyWithoutWebsite ? "(uten nettside)" : "";
   const organizationFormLabel = organizationForms.find((item) => item.startsWith(`${organizationFormFilter} - `));
   const formPart = organizationFormFilter
     ? `for ${organizationFormLabel ?? organizationFormFilter}`
     : "";
   const signalPart = selectedLegend ? `med ${legendDetails[selectedLegend].title.toLowerCase()}` : "";
 
-  return [timePart, countyPart, websitePart, formPart, signalPart].filter(Boolean).join(" ");
+  return [timePart, countyPart, formPart, signalPart].filter(Boolean).join(" ");
 }
 
 function estimateListProgress(elapsedMs: number) {

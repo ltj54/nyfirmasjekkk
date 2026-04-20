@@ -63,17 +63,21 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
-        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, 25, true));
+        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, 25));
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request) {
-        return sok(request, 0);
+        return sokPage(request, 0).items();
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request, int page) {
+        return sokPage(request, page).items();
+    }
+
+    public CompanySearchPage sokPage(CompanySearchRequest request, int page) {
         long startedAt = System.nanoTime();
         SearchDiagnostics diagnostics = new SearchDiagnostics(request, page);
-        List<CompanyCheck> results = isHardRedSearch(request)
+        CompanySearchPage results = isHardRedSearch(request)
                 ? sokMedRegisterdrevetRedFilter(request, page, diagnostics)
                 : harTekst(request.score())
                 ? sokMedScoreFilter(request, page, diagnostics)
@@ -81,13 +85,13 @@ public class CompanyCheckService {
 
         long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
         log.info("Search completed in {} ms: score={}, page={}, results={}", 
-                durationMs, request.score() == null ? "ALL" : request.score(), page, results.size());
-        diagnostics.logSummary(durationMs, results.size());
+                durationMs, request.score() == null ? "ALL" : request.score(), page, results.items().size());
+        diagnostics.logSummary(durationMs, results.items().size());
         
         return results;
     }
 
-    private List<CompanyCheck> sokMedRegisterdrevetRedFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+    private CompanySearchPage sokMedRegisterdrevetRedFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
         Map<String, CompanyCheck> matches = new LinkedHashMap<>();
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
 
@@ -117,21 +121,48 @@ public class CompanyCheckService {
             }
         }
 
-        return matches.values().stream()
+        List<CompanyCheck> items = matches.values().stream()
                 .skip(requestedOffset)
                 .limit(request.resultSize())
                 .toList();
+        return buildSearchPage(items, page, request.resultSize(), matches.size());
     }
 
-    private List<CompanyCheck> sokUtenScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
-        var filter = byggFilter(request, page);
-        long fetchStartedAt = System.nanoTime();
-        EnheterSearchResponse searchResponse = brregClient.sok(filter);
-        diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
-        return vurderSide(searchResponse, request, diagnostics);
+    private CompanySearchPage sokUtenScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+        List<CompanyCheck> matches = new ArrayList<>();
+        int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
+        int matchedBeforePage = 0;
+        int sourcePage = 0;
+
+        while (true) {
+            var filter = byggFilter(request, sourcePage);
+            long fetchStartedAt = System.nanoTime();
+            EnheterSearchResponse searchResponse = brregClient.sok(filter);
+            diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+            var pageMatches = vurderSide(searchResponse, request, diagnostics);
+
+            if (matchedBeforePage + pageMatches.size() > requestedOffset && matches.size() < request.resultSize()) {
+                int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
+                int toIndex = Math.min(pageMatches.size(), fromIndex + (request.resultSize() - matches.size()));
+                if (fromIndex < toIndex) {
+                    matches.addAll(pageMatches.subList(fromIndex, toIndex));
+                }
+            }
+            matchedBeforePage += pageMatches.size();
+
+            var pageInfo = searchResponse.page();
+            boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
+            if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
+                break;
+            }
+
+            sourcePage += 1;
+        }
+
+        return buildSearchPage(matches, page, request.resultSize(), matchedBeforePage);
     }
 
-    private List<CompanyCheck> sokMedScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+    private CompanySearchPage sokMedScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
         List<CompanyCheck> matches = new ArrayList<>();
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
         int matchedBeforePage = 0;
@@ -158,9 +189,16 @@ public class CompanyCheckService {
             sourcePage += 1;
         }
 
-        return matches.stream()
+        List<CompanyCheck> items = matches.stream()
                 .limit(request.resultSize())
                 .toList();
+        return buildSearchPage(items, page, request.resultSize(), matchedBeforePage);
+    }
+
+    private CompanySearchPage buildSearchPage(List<CompanyCheck> items, int page, int size, long totalElements) {
+        int safeSize = Math.max(size, 1);
+        int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / safeSize);
+        return new CompanySearchPage(items, Math.max(page, 0), safeSize, totalElements, totalPages);
     }
 
     private List<CompanyCheck> vurderSide(EnheterSearchResponse searchResponse, CompanySearchRequest request, SearchDiagnostics diagnostics) {
@@ -576,8 +614,7 @@ public class CompanyCheckService {
     private boolean matcherEnhet(EnhetResponse enhet, CompanySearchRequest request) {
         return matcherOrganisasjonsform(enhet, request.organisasjonsform())
                 && matcherFylke(enhet, request.fylke())
-                && matcherKommune(enhet, request.kommune())
-                && (!request.utenNettside() || !hasText(enhet.hjemmeside()));
+                && matcherKommune(enhet, request.kommune());
     }
 
     private boolean matcherOrganisasjonsform(EnhetResponse enhet, String organisasjonsform) {

@@ -10,6 +10,11 @@ export interface CompanySummary {
   county: string | null;
   naceCode: string | null;
   naceDescription: string | null;
+  website: string | null;
+  email: string | null;
+  phone: string | null;
+  contactPersonName: string | null;
+  contactPersonRole: string | null;
   vatRegistered: boolean | null;
   registeredInBusinessRegistry: boolean | null;
   scoreColor: ScoreColor;
@@ -37,7 +42,6 @@ export interface CompanyDetails extends CompanySummary {
   postalCode: string | null;
   postalPlace: string | null;
   foundationDate: string | null;
-  website: string | null;
   vatRegistered: boolean | null;
   registeredInBusinessRegistry: boolean | null;
   employeeCount: number | null;
