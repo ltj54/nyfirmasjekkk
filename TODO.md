@@ -272,3 +272,4 @@ npm run build
 - Start med aktørkontekst i backend og detaljvisning
 - Avklar om aktørkontekst skal være snapshot-basert eller historikkbasert
 - Deretter bygg strukturmønstre rundt nye selskaper
+- To continue this session, run codex resume 019dab9b-00a0-75e3-a19b-3cd25cb152f6
