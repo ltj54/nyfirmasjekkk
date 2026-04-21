@@ -10,7 +10,9 @@ public record NetworkActor(
         List<String> roleTypesInSelectedCompany,
         TrafficLight riskLevel,
         int totalCompanyCount,
+        int bankruptcyCompanyCount,
         int redCompanyCount,
+        int dissolvedCompanyCount,
         int yellowCompanyCount,
         int greenCompanyCount,
         List<NetworkCompanyLink> relatedCompanies

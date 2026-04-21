@@ -78,8 +78,11 @@ public class CompanyCheckController {
             companyHistoryService.captureSnapshot(check);
             var enhet = brregClient.hentEnhet(organisasjonsnummer);
             var roller = brregClient.hentRoller(organisasjonsnummer);
-            companyNetworkService.captureRoles(organisasjonsnummer, check.navn(), check.status(), roller);
-            return mapper.toDetails(check, enhet, roller);
+            boolean bankruptcySignal = Boolean.TRUE.equals(enhet.konkurs());
+            boolean dissolvedSignal = check.funn().stream()
+                    .anyMatch(finding -> finding != null && "Avvikling".equalsIgnoreCase(finding.label()));
+            companyNetworkService.captureRoles(organisasjonsnummer, check.navn(), check.status(), bankruptcySignal, dissolvedSignal, roller);
+            return mapper.toDetails(check, enhet, roller, companyNetworkService.networkFor(organisasjonsnummer));
         });
     }
 
@@ -132,6 +135,7 @@ public class CompanyCheckController {
             @RequestParam(required = false) String naeringskode,
             @RequestParam(required = false) String organisasjonsform,
             @RequestParam(required = false) String score,
+            @RequestParam(required = false) String structureSignal,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
@@ -145,6 +149,7 @@ public class CompanyCheckController {
                     naeringskode,
                     organisasjonsform,
                     score,
+                    structureSignal,
                     100
             );
 

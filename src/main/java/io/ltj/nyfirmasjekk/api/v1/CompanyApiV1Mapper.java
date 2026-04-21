@@ -8,8 +8,10 @@ import io.ltj.nyfirmasjekk.companycheck.CheckFinding;
 import io.ltj.nyfirmasjekk.companycheck.CompanyCheck;
 import io.ltj.nyfirmasjekk.companycheck.CompanyFacts;
 import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -26,13 +28,21 @@ import java.util.stream.Stream;
 public class CompanyApiV1Mapper {
 
     private final AnnouncementService announcementService;
+    private final Clock clock;
 
+    @Autowired
     public CompanyApiV1Mapper(AnnouncementService announcementService) {
+        this(announcementService, Clock.systemDefaultZone());
+    }
+
+    CompanyApiV1Mapper(AnnouncementService announcementService, Clock clock) {
         this.announcementService = announcementService;
+        this.clock = clock;
     }
 
     public CompanySummary toSummary(CompanyCheck companyCheck, EnhetResponse enhet) {
         CompanyFacts facts = companyCheck.fakta();
+        List<CompanyEvent> events = summaryEvents(enhet);
         return new CompanySummary(
                 companyCheck.organisasjonsnummer(),
                 companyCheck.navn(),
@@ -51,12 +61,13 @@ public class CompanyApiV1Mapper {
                 enhet.registrertIForetaksregisteret(),
                 toScoreColor(companyCheck.status()),
                 scoreReasons(companyCheck),
-                summaryEvents(enhet),
+                events,
+                structureSignals(companyCheck, enhet, events, List.of()),
                 flags(enhet, facts)
         );
     }
 
-    public CompanyDetails toDetails(CompanyCheck companyCheck, EnhetResponse enhet, RollerResponse roller) {
+    public CompanyDetails toDetails(CompanyCheck companyCheck, EnhetResponse enhet, RollerResponse roller, List<NetworkActor> network) {
         CompanyFacts facts = companyCheck.fakta();
         Role contactPerson = preferredContactRole(roller);
         List<CompanyEvent> events = events(enhet);
@@ -87,6 +98,7 @@ public class CompanyApiV1Mapper {
                 toScore(companyCheck, enhet, events),
                 roles(roller),
                 events,
+                structureSignals(companyCheck, enhet, events, network),
                 announcements(enhet),
                 flags(enhet, facts)
         );
@@ -209,6 +221,165 @@ public class CompanyApiV1Mapper {
         return evidence.values().stream().limit(6).toList();
     }
 
+    private List<StructureSignal> structureSignals(
+            CompanyCheck companyCheck,
+            EnhetResponse enhet,
+            List<CompanyEvent> events,
+            List<NetworkActor> network
+    ) {
+        Map<String, StructureSignal> signals = new LinkedHashMap<>();
+        List<NetworkActor> actors = network == null ? List.of() : network;
+        boolean newlyRegistered = isNewlyRegistered(enhet, events);
+
+        if (newlyRegistered) {
+            signals.put("NEW_COMPANY_WINDOW", new StructureSignal(
+                    "NEW_COMPANY_WINDOW",
+                    "Nytt selskap i fersk fase",
+                    "Selskapet er nylig registrert og bør leses sammen med mønstre rundt aktører og relaterte virksomheter.",
+                    "INFO",
+                    "BRREG Enhetsregisteret"
+            ));
+        }
+
+        CompanyFacts facts = companyCheck.fakta();
+        if (isBoSignal(companyCheck, enhet)) {
+            signals.put("BO_SIGNAL", new StructureSignal(
+                    "BO_SIGNAL",
+                    "Bo-signal i registergrunnlaget",
+                    "Navn, organisasjonsform eller registerspor peker mot bo-signal som konkursbo eller lignende avviklingsspor.",
+                    "HIGH",
+                    "BRREG grunndata"
+            ));
+        }
+        if (events.stream().anyMatch(event -> "BANKRUPTCY".equals(event.type()))) {
+            signals.put("BANKRUPTCY_SIGNAL", new StructureSignal(
+                    "BANKRUPTCY_SIGNAL",
+                    "Konkurs registrert",
+                    "Åpne registerspor viser konkursrelatert hendelse for selskapet.",
+                    "HIGH",
+                    "BRREG kunngjøringer"
+            ));
+        }
+        if (events.stream().anyMatch(event -> "DISSOLUTION".equals(event.type()) || "WINDING_UP".equals(event.type()))) {
+            signals.put("DISSOLUTION_SIGNAL", new StructureSignal(
+                    "DISSOLUTION_SIGNAL",
+                    "Avvikling eller oppløsning registrert",
+                    "Åpne registerspor viser avvikling, tvangsoppløsning eller lignende oppløsningssignal for selskapet.",
+                    "HIGH",
+                    "BRREG kunngjøringer"
+            ));
+        }
+        if (facts != null && (!facts.harKontaktdata() || !facts.harRoller())) {
+            signals.put("LIMITED_DATA_PATTERN", new StructureSignal(
+                    "LIMITED_DATA_PATTERN",
+                    "Tynt datagrunnlag i åpne spor",
+                    "Selskapet har begrenset kontakt- eller rollegrunnlag i åpne registerdata, noe som gjør manuell kontroll viktigere.",
+                    "INFO",
+                    "BRREG grunndata / roller"
+            ));
+        }
+
+        if (newlyRegistered && (signals.containsKey("BANKRUPTCY_SIGNAL")
+                || signals.containsKey("DISSOLUTION_SIGNAL")
+                || hasActorRiskPattern(companyCheck)
+                || signals.containsKey("BO_SIGNAL"))) {
+            signals.put("POSSIBLE_REORGANIZATION", new StructureSignal(
+                    "POSSIBLE_REORGANIZATION",
+                    "Mulig omregistrering eller ny struktur",
+                    "Kombinasjonen av nytt selskap og strukturelle eller aktørbaserte varselspor bør vurderes manuelt som mulig omregistrering eller ny struktur rundt eksisterende aktivitet.",
+                    "HIGH",
+                    "Avledet fra registerspor og aktørmønster"
+            ));
+        }
+
+        if (hasActorRiskPattern(companyCheck)) {
+            signals.put("ACTOR_RISK_PATTERN", new StructureSignal(
+                    "ACTOR_RISK_PATTERN",
+                    "Aktørbasert risikomønster",
+                    "Tilknyttede rolleholdere har historikk som påvirker vurderingen og kan peke på mønstre på tvers av selskaper.",
+                    "MEDIUM",
+                    "Aktørrisiko / rolledata"
+            ));
+        }
+
+        List<NetworkActor> bankruptcyActors = actors.stream()
+                .filter(actor -> actor.bankruptcyCompanyCount() > 0)
+                .toList();
+        if (!bankruptcyActors.isEmpty()) {
+            int bankruptcyCompanies = bankruptcyActors.stream().mapToInt(NetworkActor::bankruptcyCompanyCount).sum();
+            signals.put("BANKRUPTCY_RELATION", new StructureSignal(
+                    "BANKRUPTCY_RELATION",
+                    "Rolleholder med konkurshistorikk",
+                    "%s rolleholder%s er knyttet til %s selskap%s med konkursmarkering: %s."
+                            .formatted(
+                                    bankruptcyActors.size(),
+                                    bankruptcyActors.size() == 1 ? "" : "e",
+                                    bankruptcyCompanies,
+                                    bankruptcyCompanies == 1 ? "" : "er",
+                                    joinActorNames(bankruptcyActors)
+                            ),
+                    "HIGH",
+                    "Internt nettverkssnapshot / BRREG"
+            ));
+        }
+
+        List<NetworkActor> dissolvedActors = actors.stream()
+                .filter(actor -> actor.dissolvedCompanyCount() > 0)
+                .toList();
+        if (!dissolvedActors.isEmpty()) {
+            int dissolvedCompanies = dissolvedActors.stream().mapToInt(NetworkActor::dissolvedCompanyCount).sum();
+            signals.put("DISSOLUTION_RELATION", new StructureSignal(
+                    "DISSOLUTION_RELATION",
+                    "Rolleholder med avviklingshistorikk",
+                    "%s rolleholder%s er knyttet til %s selskap%s under avvikling eller oppløsning: %s."
+                            .formatted(
+                                    dissolvedActors.size(),
+                                    dissolvedActors.size() == 1 ? "" : "e",
+                                    dissolvedCompanies,
+                                    dissolvedCompanies == 1 ? "" : "er",
+                                    joinActorNames(dissolvedActors)
+                            ),
+                    "HIGH",
+                    "Internt nettverkssnapshot / BRREG"
+            ));
+        }
+
+        if (newlyRegistered && (!bankruptcyActors.isEmpty() || !dissolvedActors.isEmpty())) {
+            signals.put("POSSIBLE_REORGANIZATION", new StructureSignal(
+                    "POSSIBLE_REORGANIZATION",
+                    "Mulig omregistrering eller ny struktur",
+                    "Kombinasjonen av nytt selskap og rolleholdere med konkurs- eller avviklingshistorikk bør vurderes manuelt som mulig omregistrering eller ny struktur rundt eksisterende aktører.",
+                    "HIGH",
+                    "Avledet fra registerspor og nettverk"
+            ));
+        }
+
+        List<NetworkActor> sharedActors = actors.stream()
+                .filter(actor -> actor.totalCompanyCount() > 1)
+                .toList();
+        if (!sharedActors.isEmpty()) {
+            int relatedCompanies = sharedActors.stream()
+                    .mapToInt(actor -> Math.max(actor.totalCompanyCount() - 1, 0))
+                    .sum();
+            signals.put("SHARED_ACTOR_PATTERN", new StructureSignal(
+                    "SHARED_ACTOR_PATTERN",
+                    "Samme aktører går igjen på tvers av selskaper",
+                    "%s rolleholder%s i dette selskapet går igjen på tvers av minst %s andre selskap%s: %s."
+                            .formatted(
+                                    sharedActors.size(),
+                                    sharedActors.size() == 1 ? "" : "e",
+                                    relatedCompanies,
+                                    relatedCompanies == 1 ? "" : "er",
+                                    joinActorNames(sharedActors)
+                            ),
+                    newlyRegistered ? "MEDIUM" : "INFO",
+                    "Internt nettverkssnapshot"
+            ));
+        }
+
+        return signals.values().stream().limit(4).toList();
+    }
+
     private String sourceForFinding(String label) {
         String normalized = label == null ? "" : label.trim().toUpperCase(Locale.ROOT);
         return switch (normalized) {
@@ -250,6 +421,47 @@ public class CompanyApiV1Mapper {
             return "Det finnes signaler om fisjon eller fusjon i registergrunnlaget.";
         }
         return detail;
+    }
+
+    private boolean isNewlyRegistered(EnhetResponse enhet, List<CompanyEvent> events) {
+        LocalDate registeredAt = enhet != null ? enhet.registreringsdatoEnhetsregisteret() : null;
+        if (registeredAt == null) {
+            registeredAt = events.stream()
+                    .filter(event -> "REGISTRATION".equals(event.type()))
+                    .map(this::parseEventDate)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+        }
+        return registeredAt != null && !registeredAt.isBefore(LocalDate.now(clock).minusDays(120));
+    }
+
+    private boolean isBoSignal(CompanyCheck companyCheck, EnhetResponse enhet) {
+        String name = companyCheck.navn() == null ? "" : companyCheck.navn().toUpperCase(Locale.ROOT);
+        String orgForm = enhet != null && enhet.organisasjonsform() != null && enhet.organisasjonsform().kode() != null
+                ? enhet.organisasjonsform().kode().toUpperCase(Locale.ROOT)
+                : "";
+        return "KBO".equals(orgForm)
+                || name.contains("KONKURSBO")
+                || name.contains("TVANGSAVVIKLINGSBO")
+                || name.contains("TVANGSOPPLOSNINGSBO")
+                || name.contains("AVVIKLINGSBO");
+    }
+
+    private boolean hasActorRiskPattern(CompanyCheck companyCheck) {
+        return companyCheck.funn().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(finding -> "Aktørrisiko".equalsIgnoreCase(finding.label()));
+    }
+
+    private String joinActorNames(List<NetworkActor> actors) {
+        return actors.stream()
+                .map(NetworkActor::actorName)
+                .filter(Objects::nonNull)
+                .distinct()
+                .limit(3)
+                .reduce((left, right) -> left + ", " + right)
+                .orElse("ukjente aktører");
     }
 
     private String toRuleName(String label) {

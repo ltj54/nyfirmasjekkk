@@ -31,6 +31,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const dayOptions = ["10", "30", "60", "180", "365", "0"];
+const structureSignalLabels: Record<string, string> = {
+  NEW_COMPANY_WINDOW: "Nytt selskap",
+  LIMITED_DATA_PATTERN: "Tynt datagrunnlag",
+  BO_SIGNAL: "Bo-signal",
+  BANKRUPTCY_SIGNAL: "Konkursspor",
+  DISSOLUTION_SIGNAL: "Avviklingsspor",
+  ACTOR_RISK_PATTERN: "Aktørrisiko",
+  POSSIBLE_REORGANIZATION: "Mulig omregistrering",
+};
 
 const legend = [
   { status: "GREEN", label: "Ingen varselflagg", color: "bg-emerald-500" },
@@ -94,6 +103,7 @@ export function CompanyCheckShell() {
     organizationForms: [],
     counties: [],
     scores: [],
+    structureSignals: [],
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -104,6 +114,7 @@ export function CompanyCheckShell() {
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("AS");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
+  const [selectedStructureSignal, setSelectedStructureSignal] = useState("");
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
@@ -227,6 +238,7 @@ export function CompanyCheckShell() {
       countyFilter?: string;
       organizationFormFilter?: string;
       selectedLegend?: keyof typeof legendDetails | null;
+      selectedStructureSignal?: string;
     }
   ) {
     if (!backendReady) {
@@ -239,6 +251,7 @@ export function CompanyCheckShell() {
     const effectiveCountyFilter = overrides?.countyFilter ?? countyFilter;
     const effectiveOrganizationFormFilter = overrides?.organizationFormFilter ?? organizationFormFilter;
     const effectiveSelectedLegend = overrides?.selectedLegend === undefined ? selectedLegend : overrides.selectedLegend;
+    const effectiveSelectedStructureSignal = overrides?.selectedStructureSignal ?? selectedStructureSignal;
     const params = new URLSearchParams();
     params.set("dager", effectiveDaysFilter);
     params.set("page", pageNum.toString());
@@ -246,6 +259,7 @@ export function CompanyCheckShell() {
     if (effectiveCountyFilter) params.set("county", effectiveCountyFilter);
     if (effectiveOrganizationFormFilter) params.set("organizationForm", effectiveOrganizationFormFilter);
     if (effectiveSelectedLegend) params.set("score", effectiveSelectedLegend);
+    if (effectiveSelectedStructureSignal) params.set("structureSignal", effectiveSelectedStructureSignal);
 
     try {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
@@ -285,7 +299,7 @@ export function CompanyCheckShell() {
     if (backendReady && initialResultsReady && !selectedCompany) {
       void fetchRecent(0);
     }
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany, activeQuery]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedStructureSignal, selectedCompany, activeQuery]);
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
@@ -385,6 +399,9 @@ export function CompanyCheckShell() {
       if (selectedLegend) {
         params.set("score", selectedLegend);
       }
+      if (selectedStructureSignal) {
+        params.set("structureSignal", selectedStructureSignal);
+      }
       const endpoint = isOrgNumber 
         ? `/api/company-check/${trimmedTerm}`
         : `/api/company-check/search?${params.toString()}`;
@@ -451,12 +468,14 @@ export function CompanyCheckShell() {
     setDaysFilter("10");
     setCountyFilter("");
     setOrganizationFormFilter("AS");
+    setSelectedStructureSignal("");
     searchInputRef.current?.focus({ preventScroll: true });
     void fetchRecent(0, "", {
       daysFilter: "10",
       countyFilter: "",
       organizationFormFilter: "AS",
       selectedLegend: "GREEN",
+      selectedStructureSignal: "",
     });
   }
 
@@ -474,6 +493,7 @@ export function CompanyCheckShell() {
     organizationFormFilter,
     metadata.organizationForms,
     selectedLegend,
+    selectedStructureSignal,
   );
 
   return (
@@ -632,6 +652,37 @@ export function CompanyCheckShell() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
+                  <span className="text-[#52606D]">Strukturspor:</span>
+                  <button
+                    className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                      !selectedStructureSignal
+                        ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
+                        : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                    }`}
+                    disabled={!initialResultsReady || isListLoading}
+                    onClick={() => setSelectedStructureSignal("")}
+                    type="button"
+                  >
+                    Alle
+                  </button>
+                  {metadata.structureSignals.map((signal) => (
+                    <button
+                      key={signal}
+                      className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                        selectedStructureSignal === signal
+                          ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
+                          : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                      }`}
+                      disabled={!initialResultsReady || isListLoading}
+                      onClick={() => setSelectedStructureSignal((current) => current === signal ? "" : signal)}
+                      type="button"
+                    >
+                      {structureSignalLabels[signal] ?? signal}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="flex items-center gap-2 text-[#52606D]">
                     <CalendarDays className="size-4" />
                     Tidsrom:
@@ -668,6 +719,7 @@ export function CompanyCheckShell() {
                     setCountyFilter("");
                     setOrganizationFormFilter("AS");
                     setSelectedLegend("GREEN");
+                    setSelectedStructureSignal("");
                     setActiveQuery("");
                     setSearchTerm("");
                     scrollToSection("search");
@@ -825,6 +877,7 @@ export function CompanyCheckShell() {
                           setCountyFilter("");
                           setOrganizationFormFilter("AS");
                           setSelectedLegend("GREEN");
+                          setSelectedStructureSignal("");
                           void fetchRecent(0);
                         }}
                       >
@@ -974,6 +1027,7 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
   const leadPriority = getLeadPriority(company);
   const contactability = getContactability(company);
   const bestContactPoint = getBestContactPoint(company);
+  const structureSignals = company.structureSignals || [];
   const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
 
   return (
@@ -1081,6 +1135,19 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
             </Badge>
           ))}
         </div>
+        {structureSignals.length > 0 ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {structureSignals.map((signal) => (
+              <Badge
+                key={`${company.orgNumber}-${signal.code}`}
+                variant="outline"
+                className={`border-transparent text-[10px] font-semibold ${listStructureSignalClassName(signal.severity)}`}
+              >
+                {signal.title}
+              </Badge>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -1156,11 +1223,15 @@ function getBestContactPoint(company: CompanySummary) {
   return { label: "Krever manuell research" };
 }
 
-
 function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
   const priorityDifference = leadPriorityRank(left) - leadPriorityRank(right);
   if (priorityDifference !== 0) {
     return priorityDifference;
+  }
+
+  const structureDifference = structureSignalRank(left) - structureSignalRank(right);
+  if (structureDifference !== 0) {
+    return structureDifference;
   }
 
   const contactabilityDifference = contactabilityRank(left) - contactabilityRank(right);
@@ -1182,6 +1253,14 @@ function leadPriorityRank(company: CompanySummary) {
   if (label === "Høy prioritet") return 0;
   if (label === "Aktuell") return 1;
   return 2;
+}
+
+function structureSignalRank(company: CompanySummary) {
+  const severities = (company.structureSignals || []).map((signal) => signal.severity);
+  if (severities.includes("HIGH")) return 0;
+  if (severities.includes("MEDIUM")) return 1;
+  if (severities.includes("INFO")) return 2;
+  return 3;
 }
 
 function contactabilityRank(company: CompanySummary) {
@@ -1216,10 +1295,12 @@ function CompanyDetailView({
   const scoreLabel = company.score?.label || "Ukjent status";
   const scoreReasons = company.score?.reasons || [];
   const scoreEvidence = company.score?.evidence || [];
+  const structureSignals = company.structureSignals || [];
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const historyPatterns = analyzeHistoryPatterns(history);
+  const [detailMode, setDetailMode] = useState<"quick" | "deep">("quick");
 
   return (
     <div className="detail-shell mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -1279,308 +1360,356 @@ function CompanyDetailView({
 
           <Separator className="bg-[#E4E7EB]" />
 
-          <div className="mt-6 flex flex-wrap gap-2">
-            <span className="rounded-full bg-[#1F2933] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
+          <div className="mt-6 inline-flex flex-wrap gap-2 rounded-full border border-[#D9E2EC] bg-[#F8FAFC] p-1">
+            <Button
+              type="button"
+              variant={detailMode === "quick" ? "default" : "outline"}
+              className={detailMode === "quick"
+                ? "rounded-full border border-[#1F2933] bg-[#1F2933] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-white shadow-[0_6px_18px_rgba(31,41,51,0.18)] hover:bg-[#1F2933]"
+                : "rounded-full border border-transparent bg-transparent px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D] hover:bg-white"}
+              onClick={() => setDetailMode("quick")}
+            >
+              <span className={`mr-2 inline-block size-1.5 rounded-full ${detailMode === "quick" ? "bg-white" : "bg-[#9AA5B1]"}`} />
               Hurtigsjekk
-            </span>
-            <span className="rounded-full border border-[#D9E2EC] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+            </Button>
+            <Button
+              type="button"
+              variant={detailMode === "deep" ? "default" : "outline"}
+              className={detailMode === "deep"
+                ? "rounded-full border border-[#1F2933] bg-[#1F2933] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-white shadow-[0_6px_18px_rgba(31,41,51,0.18)] hover:bg-[#1F2933]"
+                : "rounded-full border border-transparent bg-transparent px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D] hover:bg-white"}
+              onClick={() => setDetailMode("deep")}
+            >
+              <span className={`mr-2 inline-block size-1.5 rounded-full ${detailMode === "deep" ? "bg-white" : "bg-[#9AA5B1]"}`} />
               Dyp analyse
-            </span>
+            </Button>
           </div>
 
-          <div className="mt-6 rounded-[20px] border border-[#D9E2EC] bg-[#F8FBFF] p-5">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div>
-                <p className="text-[12px] font-medium text-[#52606D]">Nivå 1</p>
-                <h3 className="mt-1 text-[20px] font-semibold text-[#1F2933]">Hurtigsjekk</h3>
-                <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
-                  Dette er det raske beslutningsbildet: mulighetssignal, viktigste registerspor og om selskapet ser kontaktbart ut.
-                </p>
+          {detailMode === "quick" ? (
+            <div className="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-150 rounded-[20px] border border-[#D9E2EC] bg-[#F8FBFF] p-5">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <p className="text-[12px] font-medium text-[#52606D]">Nivå 1</p>
+                  <h3 className="mt-1 text-[20px] font-semibold text-[#1F2933]">Hurtigsjekk</h3>
+                  <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
+                    Dette er det raske beslutningsbildet: mulighetssignal, viktigste registerspor og om selskapet ser kontaktbart ut.
+                  </p>
+                </div>
+                <div className="grid min-w-[220px] gap-2 sm:grid-cols-3 md:grid-cols-1">
+                  <InfoMetric label="Mulighetssignal" value={scoreLabel} />
+                  <InfoMetric label="Hendelser" value={`${events.length}`} />
+                  <InfoMetric label="Rollepunkter" value={`${company.roles?.length ?? 0}`} />
+                </div>
               </div>
-              <div className="grid min-w-[220px] gap-2 sm:grid-cols-3 md:grid-cols-1">
-                <InfoMetric label="Mulighetssignal" value={scoreLabel} />
-                <InfoMetric label="Hendelser" value={`${events.length}`} />
-                <InfoMetric label="Rollepunkter" value={`${company.roles?.length ?? 0}`} />
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <DetailDataPoint icon={CalendarDays} label="Etablert" value={company.registrationDate || "Ukjent"} />
+                <DetailDataPoint icon={CalendarDays} label="Stiftet" value={company.foundationDate || "Ikke oppgitt"} />
+                <DetailDataPoint icon={Landmark} label="Bransje" value={company.naceDescription || "Ikke oppgitt"} />
+                <DetailDataPoint icon={Globe} label="Nettside" value={company.website || "Ingen registrert"} isLink />
+                <DetailDataPoint icon={Mail} label="MVA" value={formatRegistryFlag(company.vatRegistered)} />
+                <DetailDataPoint icon={Phone} label="Foretaksregister" value={formatRegistryFlag(company.registeredInBusinessRegistry)} />
+                <DetailDataPoint icon={MapPin} label="Fylke" value={company.county || "Ukjent"} />
+                <DetailDataPoint icon={Building2} label="Ansatte" value={formatEmployeeCount(company.employeeCount, company.employeeCountRegistered)} />
+                <DetailDataPoint icon={Landmark} label="Siste årsregnskap" value={company.latestAnnualAccountsYear || "Ikke registrert"} />
+              </div>
+
+              <div className={`mt-8 rounded-[18px] border p-5 ${config.text} border-opacity-50`}>
+                <p className="mb-2 text-[12px] font-medium opacity-70">Kort registerspor</p>
+                <p className="text-[15px] font-semibold leading-relaxed">{primaryReason}</p>
+              </div>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                <div className="rounded-[18px] border border-[#D9E2EC] bg-white p-5">
+                  <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Viktigste registerspor</h4>
+                  <div className="space-y-3">
+                    {quickEvidence.length > 0 ? (
+                      quickEvidence.map((item) => (
+                        <div key={`${item.label}-${item.source}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                          <p className="text-[13px] font-bold text-[#1F2933]">{item.label}</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-[#52606D]">{item.detail}</p>
+                          <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{item.source}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-[14px] text-[#52606D]">Ingen tydelige registerspor tilgjengelig.</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="rounded-[18px] border border-[#D9E2EC] bg-white p-5">
+                  <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Kontakt og synlighet</h4>
+                  <div className="space-y-3">
+                    <ContactLine
+                      icon={Building2}
+                      label="Kontaktperson"
+                      value={company.contactPersonName}
+                      subvalue={company.contactPersonRole ? formatRoleType(company.contactPersonRole) : null}
+                    />
+                    <ContactLine
+                      icon={Mail}
+                      label="E-post"
+                      value={company.email}
+                      href={company.email ? `mailto:${company.email}` : undefined}
+                    />
+                    <ContactLine
+                      icon={Phone}
+                      label="Telefon"
+                      value={company.phone}
+                      href={company.phone ? `tel:${company.phone.replace(/\s+/g, "")}` : undefined}
+                    />
+                    <ContactLine
+                      icon={Globe}
+                      label="Nettside"
+                      value={company.website}
+                      href={company.website ? normalizeWebsiteUrl(company.website) : undefined}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
+          ) : null}
+        </div>
 
-          {/* Quick Facts Grid */}
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            <DetailDataPoint icon={CalendarDays} label="Etablert" value={company.registrationDate || "Ukjent"} />
-            <DetailDataPoint icon={CalendarDays} label="Stiftet" value={company.foundationDate || "Ikke oppgitt"} />
-            <DetailDataPoint icon={Landmark} label="Bransje" value={company.naceDescription || "Ikke oppgitt"} />
-            <DetailDataPoint icon={Globe} label="Nettside" value={company.website || "Ingen registrert"} isLink />
-            <DetailDataPoint icon={Mail} label="MVA" value={formatRegistryFlag(company.vatRegistered)} />
-            <DetailDataPoint icon={Phone} label="Foretaksregister" value={formatRegistryFlag(company.registeredInBusinessRegistry)} />
-            <DetailDataPoint icon={MapPin} label="Fylke" value={company.county || "Ukjent"} />
-            <DetailDataPoint icon={Building2} label="Ansatte" value={formatEmployeeCount(company.employeeCount, company.employeeCountRegistered)} />
-            <DetailDataPoint icon={Landmark} label="Siste årsregnskap" value={company.latestAnnualAccountsYear || "Ikke registrert"} />
-          </div>
-
-          {/* Summary Box */}
-          <div className={`mt-8 rounded-[18px] border p-5 ${config.text} border-opacity-50`}>
-            <p className="mb-2 text-[12px] font-medium opacity-70">
-              Kort registerspor
-            </p>
-            <p className="text-[15px] font-semibold leading-relaxed">
-              {primaryReason}
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-[18px] border border-[#D9E2EC] bg-white p-5">
-              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Viktigste registerspor</h4>
-              <div className="space-y-3">
-                {quickEvidence.length > 0 ? (
-                  quickEvidence.map((item) => (
-                    <div key={`${item.label}-${item.source}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
-                      <p className="text-[13px] font-bold text-[#1F2933]">{item.label}</p>
-                      <p className="mt-1 text-[13px] leading-relaxed text-[#52606D]">{item.detail}</p>
-                      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{item.source}</p>
+        {detailMode === "deep" ? (
+          <>
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-150 border-t border-[#E4E7EB] bg-[#F0F4F8] p-5 sm:p-6 md:p-8">
+              <div className="mb-5 flex items-end justify-between gap-4">
+                <div>
+                  <p className="mb-2 text-[12px] font-medium text-[#52606D]">Nivå 2</p>
+                  <h3 className="text-[18px] font-semibold text-[#1F2933]">Dyp analyse</h3>
+                  <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
+                    Her går vi dypere i rollebildet, historikken, hendelsene og nettverket rundt selskapet.
+                  </p>
+                </div>
+                <p className="hidden max-w-sm text-right text-[13px] font-medium leading-relaxed text-[#52606D] md:block">
+                  Roller gir et raskt bilde av hvem som faktisk står synlig bak virksomheten i åpne registerdata.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {company.roles && company.roles.length > 0 ? (
+                  company.roles.map((role, i) => (
+                    <div key={`${role.type}-${role.name}-${i}`} className="rounded-[16px] border border-[#D9E2EC] bg-white px-4 py-3">
+                      <p className="mb-1 text-[11px] font-medium text-[#52606D]">{role.type}</p>
+                      <p className="text-[14px] font-bold text-[#1F2933]">{role.name}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen tydelige registerspor tilgjengelig.</p>
+                  <p className="text-sm italic text-[#7B8794]">Ingen roller funnet i åpne data.</p>
                 )}
               </div>
             </div>
-
-            <div className="rounded-[18px] border border-[#D9E2EC] bg-white p-5">
-              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Kontakt og synlighet</h4>
-              <div className="space-y-3">
-                <ContactLine
-                  icon={Building2}
-                  label="Kontaktperson"
-                  value={company.contactPersonName}
-                  subvalue={company.contactPersonRole ? formatRoleType(company.contactPersonRole) : null}
-                />
-                <ContactLine
-                  icon={Mail}
-                  label="E-post"
-                  value={company.email}
-                  href={company.email ? `mailto:${company.email}` : undefined}
-                />
-                <ContactLine
-                  icon={Phone}
-                  label="Telefon"
-                  value={company.phone}
-                  href={company.phone ? `tel:${company.phone.replace(/\s+/g, "")}` : undefined}
-                />
-                <ContactLine
-                  icon={Globe}
-                  label="Nettside"
-                  value={company.website}
-                  href={company.website ? normalizeWebsiteUrl(company.website) : undefined}
-                />
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-
-        {/* Roles Section */}
-        <div className="border-t border-[#E4E7EB] bg-[#F0F4F8] p-5 sm:p-6 md:p-8">
-          <div className="mb-5 flex items-end justify-between gap-4">
-            <div>
-              <p className="mb-2 text-[12px] font-medium text-[#52606D]">Nivå 2</p>
-              <h3 className="text-[18px] font-semibold text-[#1F2933]">Dyp analyse</h3>
-              <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
-                Her går vi dypere i rollebildet, historikken, hendelsene og nettverket rundt selskapet.
-              </p>
-            </div>
-            <p className="hidden max-w-sm text-right text-[13px] font-medium leading-relaxed text-[#52606D] md:block">
-              Roller gir et raskt bilde av hvem som faktisk står synlig bak virksomheten i åpne registerdata.
-            </p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {company.roles && company.roles.length > 0 ? (
-              company.roles.map((role, i) => (
-                <div key={`${role.type}-${role.name}-${i}`} className="rounded-[16px] border border-[#D9E2EC] bg-white px-4 py-3">
-                  <p className="mb-1 text-[11px] font-medium text-[#52606D]">{role.type}</p>
-                  <p className="text-[14px] font-bold text-[#1F2933]">{role.name}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm italic text-[#7B8794]">Ingen roller funnet i åpne data.</p>
-            )}
-          </div>
-        </div>
+          </>
+        ) : null}
       </div>
 
-      <div className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="grid gap-4 md:grid-cols-2">
-        {extendedEvidence.map((item, i) => (
-          <div key={`evidence-${item.label}-${i}`} className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-            <div className="mb-3 flex items-center gap-2">
-              <div className={`size-2 rounded-full ${scoreColors[company.scoreColor] || scoreColors.YELLOW}`} />
-              <h4 className="text-[14px] font-semibold text-[#1F2933]">{item.label}</h4>
-            </div>
-            <p className="text-[14px] leading-relaxed text-[#52606D] font-medium">
-              {item.detail}
-            </p>
-            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
-              {item.source}
-            </p>
-          </div>
-        ))}
-        </div>
-
-        <div className="space-y-4">
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Utvikling over tid</h4>
-          {historyPatterns ? (
-            <div className="space-y-3">
-              <p className="text-[14px] font-medium leading-relaxed text-[#52606D]">
-                {historyPatterns.scoreTrend}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {historyPatterns.changeSignals.map((signal) => (
-                  <Badge
-                    key={signal}
-                    variant="outline"
-                    className="border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-bold text-[#52606D]"
-                  >
-                    {signal}
-                  </Badge>
-                ))}
+      {detailMode === "deep" ? (
+        <div className="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-200 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid gap-4 md:grid-cols-2">
+            {extendedEvidence.map((item, i) => (
+              <div key={`evidence-${item.label}-${i}`} className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+                <div className="mb-3 flex items-center gap-2">
+                  <div className={`size-2 rounded-full ${scoreColors[company.scoreColor] || scoreColors.YELLOW}`} />
+                  <h4 className="text-[14px] font-semibold text-[#1F2933]">{item.label}</h4>
+                </div>
+                <p className="text-[14px] font-medium leading-relaxed text-[#52606D]">{item.detail}</p>
+                <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{item.source}</p>
               </div>
-            </div>
-          ) : (
-            <p className="text-[14px] text-[#52606D]">
-              Det finnes foreløpig for lite historikk til å vise tydelige endringsmønstre.
-            </p>
-          )}
-        </div>
+            ))}
+          </div>
 
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Nettverk</h4>
-          <div className="space-y-3">
-            {network.length > 0 ? (
-              network.slice(0, 5).map((actor) => (
-                <div key={actor.actorKey} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[13px] font-bold text-[#1F2933]">{actor.actorName}</p>
-                      <p className="mt-1 text-[11px] font-medium text-[#52606D]">
-                        {actor.roleTypesInSelectedCompany.map(formatRoleType).join(" · ")}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-[11px] font-semibold ${networkRiskTextClass(actor.riskLevel)}`}>
-                        {formatRiskLabel(actor.riskLevel)}
-                      </p>
-                      <p className="mt-1 whitespace-nowrap text-[12px] font-medium text-[#52606D]">
-                        {actor.totalCompanyCount} selskaper
-                      </p>
-                    </div>
-                  </div>
-                  <p className="mt-3 text-[12px] font-medium text-[#52606D]">
-                    {actor.redCompanyCount} røde · {actor.yellowCompanyCount} gule · {actor.greenCompanyCount} grønne
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {actor.relatedCompanies.slice(0, 4).map((link) => (
+          <div className="space-y-4">
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Utvikling over tid</h4>
+              {historyPatterns ? (
+                <div className="space-y-3">
+                  <p className="text-[14px] font-medium leading-relaxed text-[#52606D]">{historyPatterns.scoreTrend}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {historyPatterns.changeSignals.map((signal) => (
                       <Badge
-                        key={`${actor.actorKey}-${link.orgNumber}`}
+                        key={signal}
                         variant="outline"
-                        className={`border-[#D9E2EC] bg-white text-[11px] font-bold ${networkRiskTextClass(link.scoreColor)}`}
+                        className="border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-bold text-[#52606D]"
                       >
-                        {link.companyName}
+                        {signal}
                       </Badge>
                     ))}
                   </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-[14px] text-[#52606D]">Ingen nettverksdata bygget opp ennå.</p>
-            )}
-          </div>
-        </div>
+              ) : (
+                <p className="text-[14px] text-[#52606D]">
+                  Det finnes foreløpig for lite historikk til å vise tydelige endringsmønstre.
+                </p>
+              )}
+            </div>
 
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Historikk</h4>
-          <div className="space-y-3">
-            {history.length > 0 ? (
-              history.slice(0, 6).map((entry, index) => (
-                <div key={`${entry.capturedAt}-${index}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[13px] font-bold text-[#1F2933]">{entry.summary}</p>
-                      <p className="mt-1 text-[12px] font-medium text-[#52606D]">
-                        {entry.organizationForm ?? "Ukjent org.form"}{entry.naceCode ? ` · ${entry.naceCode}` : ""}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[12px] font-bold text-[#52606D]">{formatDateTime(entry.capturedAt)}</p>
-                      <p className="mt-1 text-[11px] font-medium text-[#52606D]">
-                        {entry.scoreColor === "GREEN" ? "Ingen varselflagg" : entry.scoreColor === "YELLOW" ? "Begrenset info" : "Alvorlige signaler"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-[14px] text-[#52606D]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid.</p>
-            )}
-          </div>
-        </div>
-
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registrerte hendelser</h4>
-          <div className="space-y-3">
-            {events.length > 0 ? (
-              events.slice(0, 8).map((event, index) => (
-                <div key={`${event.type}-${event.date}-${index}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[13px] font-bold text-[#1F2933]">{event.title}</p>
-                      <div className="mt-1 flex flex-wrap items-center gap-2">
-                        <p className="text-[11px] font-medium text-[#52606D]">
-                          {formatEventType(event.type)}
-                        </p>
-                        <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${eventSeverityClassName(event.severity)}`}>
-                          {formatEventSeverity(event.severity)}
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Strukturmønstre</h4>
+              <div className="space-y-3">
+                {structureSignals.length > 0 ? (
+                  structureSignals.map((signal) => (
+                    <div key={signal.code} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-[13px] font-bold text-[#1F2933]">{signal.title}</p>
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
+                          {formatStructureSignalSeverity(signal.severity)}
                         </span>
                       </div>
+                      <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">{signal.detail}</p>
+                      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{signal.source}</p>
                     </div>
-                    <p className="whitespace-nowrap text-[12px] font-medium text-[#52606D]">
-                      {event.date ?? "Udatert"}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-[14px] text-[#52606D]">Ingen registrerte hendelser funnet.</p>
-            )}
-          </div>
-        </div>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-[#52606D]">Ingen tydelige strukturmønstre er bygget ut ennå.</p>
+                )}
+              </div>
+            </div>
 
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registerspor bak vurderingen</h4>
-          <div className="flex flex-wrap gap-2">
-            {scoreEvidence.length > 0 ? (
-              scoreEvidence.map((item) => (
-                <Badge key={`${item.label}-${item.source}`} variant="outline" className="rounded-md border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-medium text-[#52606D]">
-                  {item.label}
-                </Badge>
-              ))
-            ) : (
-              <p className="text-[14px] text-[#52606D]">Ingen tydelige signaler trekker vurderingen i en bestemt retning.</p>
-            )}
-          </div>
-        </div>
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Nettverk</h4>
+              <div className="space-y-3">
+                {network.length > 0 ? (
+                  network.slice(0, 5).map((actor) => (
+                    <div key={actor.actorKey} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[13px] font-bold text-[#1F2933]">{actor.actorName}</p>
+                          <p className="mt-1 text-[11px] font-medium text-[#52606D]">
+                            {actor.roleTypesInSelectedCompany.map(formatRoleType).join(" · ")}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className={`text-[11px] font-semibold ${networkRiskTextClass(actor.riskLevel)}`}>
+                            {formatRiskLabel(actor.riskLevel)}
+                          </p>
+                          <p className="mt-1 whitespace-nowrap text-[12px] font-medium text-[#52606D]">
+                            {actor.totalCompanyCount} selskaper
+                          </p>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-[12px] font-medium text-[#52606D]">
+                        Knyttet til {actor.totalCompanyCount} selskaper, hvorav {actor.redCompanyCount} røde og {actor.dissolvedCompanyCount} avviklede.
+                      </p>
+                      <p className="mt-1 text-[12px] font-medium text-[#52606D]">
+                        {actor.yellowCompanyCount} gule · {actor.greenCompanyCount} grønne
+                      </p>
+                      <p className="mt-2 text-[12px] leading-relaxed text-[#52606D]">{describeActorContext(actor)}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {actor.relatedCompanies.slice(0, 4).map((link) => (
+                          <div
+                            key={`${actor.actorKey}-${link.orgNumber}`}
+                            className="flex items-center gap-2 rounded-full border border-[#D9E2EC] bg-white px-3 py-1.5"
+                          >
+                            <span className={`size-2 rounded-full ${scoreDotClass(link.scoreColor)}`} />
+                            <span className={`text-[11px] font-bold ${networkRiskTextClass(link.scoreColor)}`}>
+                              {link.companyName}
+                            </span>
+                            <span className="rounded-full bg-[#F0F4F8] px-2 py-0.5 text-[10px] font-semibold text-[#52606D]">
+                              {compactRiskLabel(link.scoreColor)}
+                            </span>
+                            {link.bankruptcySignal ? (
+                              <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
+                                Konkurs
+                              </span>
+                            ) : null}
+                            {link.dissolvedSignal ? (
+                              <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                                Avviklet
+                              </span>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-[#52606D]">Ingen nettverksdata bygget opp ennå.</p>
+                )}
+              </div>
+            </div>
 
-        <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
-          <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Hvordan vi vurderer</h4>
-          <div className="space-y-3">
-            {modelRules.map((rule) => (
-              <p key={rule} className="text-[14px] leading-relaxed text-[#52606D] font-medium">
-                {rule}
-              </p>
-            ))}
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Historikk</h4>
+              <div className="space-y-3">
+                {history.length > 0 ? (
+                  history.slice(0, 6).map((entry, index) => (
+                    <div key={`${entry.capturedAt}-${index}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[13px] font-bold text-[#1F2933]">{entry.summary}</p>
+                          <p className="mt-1 text-[12px] font-medium text-[#52606D]">
+                            {entry.organizationForm ?? "Ukjent org.form"}{entry.naceCode ? ` · ${entry.naceCode}` : ""}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[12px] font-bold text-[#52606D]">{formatDateTime(entry.capturedAt)}</p>
+                          <p className="mt-1 text-[11px] font-medium text-[#52606D]">
+                            {entry.scoreColor === "GREEN" ? "Ingen varselflagg" : entry.scoreColor === "YELLOW" ? "Begrenset info" : "Alvorlige signaler"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-[#52606D]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registrerte hendelser</h4>
+              <div className="space-y-3">
+                {events.length > 0 ? (
+                  events.slice(0, 8).map((event, index) => (
+                    <div key={`${event.type}-${event.date}-${index}`} className="rounded-[14px] border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[13px] font-bold text-[#1F2933]">{event.title}</p>
+                          <div className="mt-1 flex flex-wrap items-center gap-2">
+                            <p className="text-[11px] font-medium text-[#52606D]">{formatEventType(event.type)}</p>
+                            <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${eventSeverityClassName(event.severity)}`}>
+                              {formatEventSeverity(event.severity)}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="whitespace-nowrap text-[12px] font-medium text-[#52606D]">{event.date ?? "Udatert"}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-[#52606D]">Ingen registrerte hendelser funnet.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registerspor bak vurderingen</h4>
+              <div className="flex flex-wrap gap-2">
+                {scoreEvidence.length > 0 ? (
+                  scoreEvidence.map((item) => (
+                    <Badge key={`${item.label}-${item.source}`} variant="outline" className="rounded-md border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-medium text-[#52606D]">
+                      {item.label}
+                    </Badge>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-[#52606D]">Ingen tydelige signaler trekker vurderingen i en bestemt retning.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="insight-card rounded-[18px] border border-[#D9E2EC] p-5">
+              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Hvordan vi vurderer</h4>
+              <div className="space-y-3">
+                {modelRules.map((rule) => (
+                  <p key={rule} className="text-[14px] font-medium leading-relaxed text-[#52606D]">
+                    {rule}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-        </div>
-      </div>
+      ) : null}
     </div>
   );
 }
@@ -1763,12 +1892,57 @@ function networkRiskTextClass(scoreColor: ScoreColor) {
   }
 }
 
+function scoreDotClass(scoreColor: ScoreColor) {
+  switch (scoreColor) {
+    case "RED":
+      return "bg-rose-500";
+    case "YELLOW":
+      return "bg-amber-500";
+    case "GREEN":
+      return "bg-emerald-500";
+  }
+}
+
+function compactRiskLabel(scoreColor: ScoreColor) {
+  switch (scoreColor) {
+    case "RED":
+      return "Rød";
+    case "YELLOW":
+      return "Gul";
+    case "GREEN":
+      return "Grønn";
+  }
+}
+
+function describeActorContext(actor: NetworkActor) {
+  if (actor.bankruptcyCompanyCount > 0 && actor.dissolvedCompanyCount > 0) {
+    return "Denne rolleholderen er knyttet til virksomheter med både konkurs- og avviklingsspor, noe som gjør aktørkonteksten særlig relevant.";
+  }
+  if (actor.bankruptcyCompanyCount > 0) {
+    return "Denne rolleholderen er knyttet til virksomheter med konkursmarkering, noe som gir et tydelig historisk faresignal.";
+  }
+  if (actor.redCompanyCount > 0 && actor.dissolvedCompanyCount > 0) {
+    return "Denne rolleholderen er knyttet til flere virksomheter med både røde signaler og avvikling, noe som gjør aktørkonteksten særlig relevant.";
+  }
+  if (actor.redCompanyCount > 0) {
+    return "Denne rolleholderen er knyttet til virksomheter med røde signaler, noe som trekker opp aktørrisikoen.";
+  }
+  if (actor.dissolvedCompanyCount > 0) {
+    return "Denne rolleholderen er knyttet til avviklede virksomheter, noe som gir et svakere historisk signal.";
+  }
+  if (actor.yellowCompanyCount > 0) {
+    return "Denne rolleholderen er knyttet til flere virksomheter med begrenset datagrunnlag eller svakere signaler.";
+  }
+  return "Aktørkonteksten ser foreløpig rolig ut basert på selskapene som er lagret i nettverksgrunnlaget.";
+}
+
 function buildResultsSummary(
   daysFilter: string,
   countyFilter: string,
   organizationFormFilter: string,
   organizationForms: string[],
   selectedLegend: keyof typeof legendDetails | null,
+  selectedStructureSignal: string,
 ) {
   const days = daysFilter || "30";
   const timePart = days === "0" ? "Alle data" : `Siste ${days} dager`;
@@ -1778,8 +1952,11 @@ function buildResultsSummary(
     ? `for ${organizationFormLabel ?? organizationFormFilter}`
     : "";
   const signalPart = selectedLegend ? `med ${legendDetails[selectedLegend].title.toLowerCase()}` : "";
+  const structurePart = selectedStructureSignal
+    ? `med ${structureSignalLabels[selectedStructureSignal]?.toLowerCase() ?? selectedStructureSignal.toLowerCase()}`
+    : "";
 
-  return [timePart, countyPart, formPart, signalPart].filter(Boolean).join(" ");
+  return [timePart, countyPart, formPart, signalPart, structurePart].filter(Boolean).join(" ");
 }
 
 function estimateListProgress(elapsedMs: number) {
@@ -1858,6 +2035,36 @@ function analyzeHistoryPatterns(history: CompanyHistoryEntry[]) {
     scoreTrend: buildScoreTrendText(first.scoreColor as ScoreColor, latest.scoreColor as ScoreColor, scoreChanges),
     changeSignals,
   };
+}
+
+function structureSignalSeverityClassName(severity: "HIGH" | "MEDIUM" | "INFO") {
+  if (severity === "HIGH") {
+    return "bg-rose-50 text-rose-700";
+  }
+  if (severity === "MEDIUM") {
+    return "bg-amber-50 text-amber-700";
+  }
+  return "bg-slate-100 text-slate-700";
+}
+
+function formatStructureSignalSeverity(severity: "HIGH" | "MEDIUM" | "INFO") {
+  if (severity === "HIGH") {
+    return "Høy relevans";
+  }
+  if (severity === "MEDIUM") {
+    return "Middels relevans";
+  }
+  return "Til orientering";
+}
+
+function listStructureSignalClassName(severity: "HIGH" | "MEDIUM" | "INFO") {
+  if (severity === "HIGH") {
+    return "bg-rose-50 text-rose-700";
+  }
+  if (severity === "MEDIUM") {
+    return "bg-amber-50 text-amber-700";
+  }
+  return "bg-sky-50 text-sky-700";
 }
 
 function buildScoreTrendText(from: ScoreColor, to: ScoreColor, scoreChanges: number) {

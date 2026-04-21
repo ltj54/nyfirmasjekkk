@@ -109,6 +109,14 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - 2026-04-20: Normalisert hendelsesmodell er innført i API-et med `CompanyEvent`, brukt i detaljrespons og `/events`, og komprimerte hendelsesbadges er vist i trefflisten.
 - 2026-04-20: Strukturert scoreforklaring er innført i API-et med `ScoreEvidence`, og frontend bruker nå backendens forklaringsfelt direkte.
 - 2026-04-20: Detaljvisningen er delt i `Hurtigsjekk` og `Dyp analyse`, og begrepsbruken i UI er strammet rundt `mulighetssignal`, `registerspor` og `kontaktbarhet`.
+- 2026-04-21: Status re-verifisert. `./gradlew test` og `frontend/npm run build` er fortsatt grønne etter siste UI- og API-opprydding.
+- 2026-04-21: Frontend-skripter er gjort tryggere i dev. `.next` slettes ikke lenger automatisk før `dev`/`build`, og standard `npm run dev` bruker webpack i stedet for Turbopack.
+- 2026-04-21: Første versjon av forklarbar aktørkontekst er levert i API og UI, inkludert telling av røde og avviklede selskaper per rolleholder og mer forklarende nettverksvisning.
+- 2026-04-21: Første versjon av strukturmønstre er levert i detaljvisning med `structureSignals`, inkludert signaler for nytt selskap, konkurshistorikk, avviklingshistorikk, delte aktører og mulig omregistrering.
+- 2026-04-21: Trefflisten bruker nå normaliserte `structureSignals` fra API-et i `CompanySummary`, i stedet for lokal frontend-utledning.
+- 2026-04-21: Søket har fått eget filter for strukturspor (`Nytt selskap`, `Tynt datagrunnlag`, `Konkursspor`, `Avviklingsspor`).
+- 2026-04-21: Trefflisten sorterer nå også på strukturspor, slik at selskaper med høyere relevante strukturmønstre løftes opp før kontaktbarhet og dato.
+- 2026-04-21: Strukturspor i søk er utvidet videre med `Bo-signal`, `Aktørrisiko` og `Mulig omregistrering` i summary- og filterlaget.
 
 ## BRREG-roadmap
 
@@ -123,17 +131,18 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 ### Høy produktverdi
 
 - [x] Bygg tydelig hendelsesprofil per selskap: nyregistrering, vedtektsendring, adresseendring, avvikling, konkurs
-- [ ] Bygg forklarbar aktørkontekst: hvor mange selskaper en rolleholder er knyttet til, og hvor mange av dem som er røde eller avviklet
-- [ ] Vis strukturmønstre rundt nye selskaper: samme personer, nylige konkurser, bo-signaler, omregistreringer
+- [x] Bygg første versjon av forklarbar aktørkontekst: hvor mange selskaper en rolleholder er knyttet til, og hvor mange av dem som er røde eller avviklet
+- [~] Vis strukturmønstre rundt nye selskaper: samme personer, nylige konkurser, bo-signaler, omregistreringer
 - [x] Gjør scoreforklaringen mer konkret i UI med registerspor i stedet for generelle etiketter
 - [x] Introduser to nivåer i produktet: hurtigsjekk og dyp analyse
 
 ### Anbefalt rekkefølge
 
 - [x] Prioriter først hendelsesprofil og konkret scoreforklaring, siden dette kan bygges på eksisterende data og gir raskest produktløft
-- [ ] Bygg deretter forklarbar aktørkontekst i detaljvisning før eventuell utvidelse til trefflisten
+- [x] Bygg deretter forklarbar aktørkontekst i detaljvisning før eventuell utvidelse til trefflisten
 - [x] Introduser hurtigsjekk og dyp analyse når hendelser og forklaringer er på plass i samme datamodell
 - [ ] Utsett avanserte strukturmønstre til grunnlaget for hendelser, historikk og aktørkontekst er stabilt
+- [ ] Utvid strukturmønstre videre fra første versjon til mer avansert historikk, bo-signaler og omregistreringsindikatorer på tvers av flere selskaper
 
 ### Neste arbeidspakke
 
@@ -143,17 +152,18 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [x] Vis korte hendelsesbadges i trefflisten for de mest relevante signalene
 - [x] Bytt generelle scoretekster i UI med konkrete registerspor som faktisk trigget vurderingen
 - [x] Vis eksplisitt hvilke regler og datakilder som ligger bak scoreforklaringen
-- [ ] Bygg første versjon av aktørkontekst per rolleholder: antall selskaper, antall røde, antall avviklede
-- [ ] Presenter aktørkontekst som forklarende tekst i detaljvisning, ikke bare som rå tellerverdier
+- [x] Bygg første versjon av aktørkontekst per rolleholder: antall selskaper, antall røde, antall avviklede
+- [x] Presenter aktørkontekst som forklarende tekst i detaljvisning, ikke bare som rå tellerverdier
 - [x] Skill UI tydelig mellom hurtigsjekk og dyp analyse uten å duplisere backendlogikk
 - [x] Definer hva som skal vises i hurtigsjekk: score, viktigste signaler og 2-3 sentrale hendelser
 - [x] Definer hva som skal vises i dyp analyse: hendelsesprofil, aktørkontekst, historikk og nettverk
 
 ### Neste steg når du tar dette opp igjen
 
-- [ ] Bygg første versjon av forklarbar aktørkontekst i API-et: totaltilknytninger, røde selskaper, avviklede selskaper per rolleholder
-- [ ] Presenter aktørkontekst tydeligere i detaljvisningen som innsikt, ikke bare rå tall og badge-lister
-- [ ] Innfør strukturmønstre rundt nye selskaper: samme personer, nylige konkurser, bo-signaler og mulige omregistreringer
+- [~] Innfør strukturmønstre rundt nye selskaper: første versjon levert i detaljvisning, treffliste, API-summary og søkefilter; gjenstår videre modellering på tvers av selskaper og tidslinjer
+- [ ] Utvid aktørkonteksten videre med mer presis historikk, for eksempel når de røde eller avviklede selskapene ble sist sett
+- [ ] Vurder å vise relaterte selskaper med mer eksplisitt strukturstatus enn bare farge og avviklingsmarkør
+- [ ] Legg til mer presise strukturspor i søk, som bo-signal, mulig omregistrering og aktørbaserte mønstre på tvers av flere selskaper
 - [ ] Vurder å fase ut rå `announcements` i detaljresponsen når `events` dekker UI-behovet fullt ut
 - [ ] Rydd opp videre i domenespråket mellom backend og frontend rundt `mulighetssignal`, `registerspor` og `kontaktbarhet`
 - [ ] Vurder kommersielle CTA-er i hurtigsjekk og treffliste når aktørkontekst er på plass
@@ -166,10 +176,10 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [x] Legg inn prioritering eller sortering av hendelser etter alvorlighet og dato
 - [x] Koble scoreforklaring tydelig til konkrete regler og underliggende registerfelt
 - [x] Utvid detaljresponsen med forklaringsfelt som skiller mellom signal, regel og datakilde
-- [ ] Utvid nettverks- eller aktørresponsen med oppsummering per rolleholder: totaltilknytninger, røde selskaper, avviklede selskaper
+- [x] Utvid nettverks- eller aktørresponsen med oppsummering per rolleholder: totaltilknytninger, røde selskaper, avviklede selskaper
 - [ ] Vurder om hendelser bør caches eller preberegnes for å unngå dyr detaljlasting
 - [x] Legg inn tester for mapping av hendelser og scoreforklaringer
-- [ ] Legg inn tester for aktørkontekst
+- [x] Legg inn første tester for aktørkontekst
 
 ### Frontend-oppgaver
 
@@ -181,7 +191,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [x] Skill visuelt mellom “hurtigsjekk” og “dyp analyse” i detaljvisningen
 - [x] Lag en kompakt hurtigsjekkvisning med score, viktigste signaler og sentrale hendelser
 - [x] Lag en dyp analyse-visning med hendelser, aktørkontekst, historikk og nettverk
-- [ ] Sørg for at aktørkontekst vises som forklarende innsikt, ikke bare tellerverdier
+- [x] Sørg for at aktørkontekst vises som forklarende innsikt, ikke bare tellerverdier
 - [ ] Legg inn tomtilstander og fallback-visning når hendelser eller aktørdata mangler
 
 ### Datamodell og avklaringer
@@ -190,7 +200,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [x] Bestem hvilke hendelser som skal vises i treffliste versus kun i detaljvisning
 - [x] Definer hvilke scoreårsaker som alltid skal vises eksplisitt i UI
 - [x] Definer hvilke datakilder som skal navngis i forklaringen, for eksempel BRREG, roller, kunngjøringer og historikksnapshots
-- [ ] Avklar om aktørkontekst i første versjon skal være snapshot-basert eller historikkbasert
+- [x] Avklar om aktørkontekst i første versjon skal være snapshot-basert
 - [ ] Definer terskler for når aktørkontekst skal fremheves som relevant signal
 - [x] Bestem om hurtigsjekk og dyp analyse skal være to faner, to seksjoner eller to ulike innganger
 
@@ -198,7 +208,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 
 - [ ] Rollehistorikk og endring over tid
 - [ ] Bedre tidslinje for strukturelle hendelser på tvers av kunngjøringer og snapshots
-- [ ] Mønstre på tvers av selskaper og personer, ikke bare enkeltoppslag
+- [~] Mønstre på tvers av selskaper og personer, ikke bare enkeltoppslag
 - [ ] Vurdere precomputede signaler eller batch-oppdaterte risikofelter for raskere søk
 - [ ] Vurdere materialiserte felter eller egen indeks for hurtigfiltrering
 
@@ -270,6 +280,72 @@ npm run build
 ### Anbefalt startpunkt neste gang
 
 - Start med aktørkontekst i backend og detaljvisning
-- Avklar om aktørkontekst skal være snapshot-basert eller historikkbasert
-- Deretter bygg strukturmønstre rundt nye selskaper
+- Første konkrete steg: utvid nettverks- eller aktørresponsen med `totalCompanyCount`, `redCompanyCount` og `dissolvedCompanyCount` som eksplisitt forklaringsgrunnlag per rolleholder
+- Avklar deretter om aktørkontekst skal være snapshot-basert eller historikkbasert
+- Når aktørkontekst er på plass: bygg strukturmønstre rundt nye selskaper
 - To continue this session, run codex resume 019dab9b-00a0-75e3-a19b-3cd25cb152f6
+- To continue this session, run codex resume 019dab9b-00a0-75e3-a19b-3cd25cb152f6
+
+## Arbeidslogg 2026-04-21
+
+### Levert i denne økten
+
+- Re-verifisert backend-testpakke grønn
+- Re-verifisert frontend-build grønn
+- Ryddet frontend-skripter for å unngå at `.next` slettes mens dev-server kjører
+- Byttet standard `npm run dev` til webpack-modus og beholdt Turbopack som eksplisitt opt-in via `npm run dev:turbo`
+- Levert første versjon av forklarbar aktørkontekst i API-et med telling av røde og avviklede selskaper per rolleholder
+- Gjort nettverksdelen i detaljvisningen mer forklarende med tekstlig aktørkontekst og tydeligere markering av relaterte selskaper
+- Levert første versjon av `structureSignals` i detaljrespons og treffliste
+- Levert eget strukturfilter i søket og sortering på strukturspor i trefflisten
+
+### Viktigste filer endret
+
+- `frontend/package.json`
+- `frontend/src/components/company-check-shell.tsx`
+- `frontend/src/lib/company-check.ts`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/NetworkActor.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/NetworkCompanyLink.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/StructureSignal.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/MetadataFiltersResponse.java`
+- `src/main/java/io/ltj/nyfirmasjekk/api/v1/MetadataService.java`
+- `src/main/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckController.java`
+- `src/main/java/io/ltj/nyfirmasjekk/companycheck/CompanySearchRequest.java`
+- `src/main/java/io/ltj/nyfirmasjekk/network/CompanyNetworkService.java`
+- `src/main/java/io/ltj/nyfirmasjekk/network/CompanyRoleSnapshotEntity.java`
+- `src/main/resources/db/migration/V3__Add_company_dissolved_signal_to_role_snapshot.sql`
+- `src/main/resources/db/migration/V4__Add_company_bankruptcy_signal_to_role_snapshot.sql`
+- `src/test/java/io/ltj/nyfirmasjekk/network/CompanyNetworkServiceTests.java`
+- `src/test/java/io/ltj/nyfirmasjekk/api/v1/CompanyApiV1MapperTests.java`
+- `src/test/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckApiIntegrationTests.java`
+- `src/test/java/io/ltj/nyfirmasjekk/companycheck/CompanyCheckServiceTests.java`
+- `TODO.md`
+
+### Verifisert i denne økten
+
+```bash
+./gradlew test
+./gradlew test --tests io.ltj.nyfirmasjekk.network.CompanyNetworkServiceTests --tests io.ltj.nyfirmasjekk.companycheck.CompanyCheckApiIntegrationTests
+cd frontend
+npm run build
+npm run dev
+```
+
+### Viktig dev-merknad
+
+- Hvis en gammel `next dev`-prosess fortsatt kjører, stopp den før du starter en ny:
+
+```bash
+taskkill /PID <pid> /F
+```
+
+### Codex status - hvor starte nå?
+
+• Jeg har oppdatert /C:/Prosjekt/nyfirmasjekk/TODO.md med at søket nå også dekker:
+
+- Bo-signal
+- Aktørrisiko
+- Mulig omregistrering
+
+Jeg ryddet samtidig opp i noen duplikate punkter rundt strukturmønstre, så statusen er mer presis: første versjon er levert i detaljvisning, treffliste, API-summary og søkefilter, mens det som
+gjenstår er dypere modellering på tvers av selskaper og tidslinjer.

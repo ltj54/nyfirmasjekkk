@@ -55,6 +55,7 @@ class CompanyCheckApiIntegrationTests {
                 .andExpect(jsonPath("$.name").value("Test AS"))
                 .andExpect(jsonPath("$.events").isArray())
                 .andExpect(jsonPath("$.events[0].type").exists())
+                .andExpect(jsonPath("$.structureSignals").isArray())
                 .andExpect(jsonPath("$.score.evidence").isArray())
                 .andExpect(jsonPath("$.score.evidence[0].label").exists());
     }

@@ -63,7 +63,7 @@ public class CompanyCheckService {
     }
 
     public List<CompanyCheck> hentNyeAs(int dagerSiden) {
-        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, 25));
+        return sok(new CompanySearchRequest(null, dagerSiden, null, null, null, "AS", null, null, 25));
     }
 
     public List<CompanyCheck> sok(CompanySearchRequest request) {
@@ -619,7 +619,47 @@ public class CompanyCheckService {
     }
 
     private boolean matcherRequest(CompanyCheck check, CompanySearchRequest request) {
-        return matcherScore(check, request.score());
+        return matcherScore(check, request.score()) && matcherStructureSignal(check, request.structureSignal());
+    }
+
+    private boolean matcherStructureSignal(CompanyCheck check, String structureSignal) {
+        if (!hasText(structureSignal)) {
+            return true;
+        }
+        String signal = structureSignal.trim().toUpperCase(Locale.ROOT);
+        CompanyFacts facts = check.fakta();
+        return switch (signal) {
+            case "NEW_COMPANY_WINDOW" -> facts != null && "Nytt selskap".equalsIgnoreCase(facts.modenhet());
+            case "LIMITED_DATA_PATTERN" -> facts != null && (!facts.harKontaktdata() || !facts.harRoller());
+            case "BO_SIGNAL" -> check.navn() != null && (
+                    check.navn().toUpperCase(Locale.ROOT).contains("KONKURSBO")
+                            || check.navn().toUpperCase(Locale.ROOT).contains("TVANGSAVVIKLINGSBO")
+                            || check.navn().toUpperCase(Locale.ROOT).contains("TVANGSOPPLOSNINGSBO")
+                            || check.navn().toUpperCase(Locale.ROOT).contains("AVVIKLINGSBO")
+            );
+            case "BANKRUPTCY_SIGNAL" -> check.funn().stream()
+                    .filter(Objects::nonNull)
+                    .map(CheckFinding::detail)
+                    .filter(Objects::nonNull)
+                    .anyMatch(detail -> detail.toLowerCase(Locale.ROOT).contains("konkurs"));
+            case "DISSOLUTION_SIGNAL" -> check.funn().stream()
+                    .filter(Objects::nonNull)
+                    .anyMatch(finding ->
+                            "Avvikling".equalsIgnoreCase(finding.label())
+                                    || (finding.detail() != null && (
+                                    finding.detail().toLowerCase(Locale.ROOT).contains("tvangsoppløsning")
+                                            || finding.detail().toLowerCase(Locale.ROOT).contains("oppløsning")
+                            )));
+            case "ACTOR_RISK_PATTERN" -> check.funn().stream()
+                    .filter(Objects::nonNull)
+                    .anyMatch(finding -> "Aktørrisiko".equalsIgnoreCase(finding.label()));
+            case "POSSIBLE_REORGANIZATION" -> matcherStructureSignal(check, "NEW_COMPANY_WINDOW")
+                    && (matcherStructureSignal(check, "BANKRUPTCY_SIGNAL")
+                    || matcherStructureSignal(check, "DISSOLUTION_SIGNAL")
+                    || matcherStructureSignal(check, "ACTOR_RISK_PATTERN")
+                    || matcherStructureSignal(check, "BO_SIGNAL"));
+            default -> true;
+        };
     }
 
     private boolean matcherScore(CompanyCheck c, String s) { return !hasText(s) || c.status().name().equalsIgnoreCase(s); }

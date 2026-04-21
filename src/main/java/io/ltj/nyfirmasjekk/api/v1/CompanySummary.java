@@ -22,6 +22,7 @@ public record CompanySummary(
         ScoreColor scoreColor,
         List<String> scoreReasons,
         List<CompanyEvent> events,
+        List<StructureSignal> structureSignals,
         List<String> flags
 ) {
 }

@@ -34,7 +34,14 @@ public class CompanyNetworkService {
         this.clock = clock;
     }
 
-    public void captureRoles(String orgNumber, String companyName, TrafficLight companyScoreColor, RollerResponse rollerResponse) {
+    public void captureRoles(
+            String orgNumber,
+            String companyName,
+            TrafficLight companyScoreColor,
+            boolean companyBankruptcySignal,
+            boolean companyDissolvedSignal,
+            RollerResponse rollerResponse
+    ) {
         if (rollerResponse == null || rollerResponse.rollegrupper() == null) {
             return;
         }
@@ -46,7 +53,7 @@ public class CompanyNetworkService {
                 .flatMap(group -> group.roller() == null ? Stream.empty() : group.roller().stream())
                 .filter(Objects::nonNull)
                 .filter(this::isActiveRole)
-                .map(role -> toEntity(orgNumber, companyName, companyScoreColor, role, now))
+                .map(role -> toEntity(orgNumber, companyName, companyScoreColor, companyBankruptcySignal, companyDissolvedSignal, role, now))
                 .filter(Objects::nonNull)
                 .forEach(repository::save);
     }
@@ -89,13 +96,17 @@ public class CompanyNetworkService {
                                                 .sorted()
                                                 .toList(),
                                         latestCompanyEntry.getCompanyScoreColor(),
+                                        Boolean.TRUE.equals(latestCompanyEntry.getCompanyBankruptcySignal()),
+                                        Boolean.TRUE.equals(latestCompanyEntry.getCompanyDissolvedSignal()),
                                         latestCompanyEntry.getCapturedAt()
                                 );
                             })
                             .sorted(Comparator.comparing(NetworkCompanyLink::lastSeenAt).reversed())
                             .toList();
 
+                    int bankruptcyCompanyCount = (int) relatedCompanies.stream().filter(NetworkCompanyLink::bankruptcySignal).count();
                     int redCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.RED).count();
+                    int dissolvedCompanyCount = (int) relatedCompanies.stream().filter(NetworkCompanyLink::dissolvedSignal).count();
                     int yellowCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.YELLOW).count();
                     int greenCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.GREEN).count();
 
@@ -105,7 +116,9 @@ public class CompanyNetworkService {
                             roleTypesInSelectedCompany,
                             actorRiskLevel(redCompanyCount, yellowCompanyCount, greenCompanyCount),
                             relatedCompanies.size(),
+                            bankruptcyCompanyCount,
                             redCompanyCount,
+                            dissolvedCompanyCount,
                             yellowCompanyCount,
                             greenCompanyCount,
                             relatedCompanies
@@ -119,6 +132,8 @@ public class CompanyNetworkService {
             String orgNumber,
             String companyName,
             TrafficLight companyScoreColor,
+            boolean companyBankruptcySignal,
+            boolean companyDissolvedSignal,
             RollerResponse.Rolle role,
             LocalDateTime capturedAt
     ) {
@@ -137,6 +152,8 @@ public class CompanyNetworkService {
         entity.setActorName(actorName);
         entity.setRoleType(roleType);
         entity.setCompanyScoreColor(companyScoreColor);
+        entity.setCompanyBankruptcySignal(companyBankruptcySignal);
+        entity.setCompanyDissolvedSignal(companyDissolvedSignal);
         entity.setActive(true);
         entity.setCapturedAt(capturedAt);
         return entity;

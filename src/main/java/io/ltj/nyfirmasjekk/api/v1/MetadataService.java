@@ -23,6 +23,15 @@ public class MetadataService {
     );
 
     private static final List<String> SCORES = List.of("GREEN", "YELLOW", "RED");
+    private static final List<String> STRUCTURE_SIGNALS = List.of(
+            "NEW_COMPANY_WINDOW",
+            "LIMITED_DATA_PATTERN",
+            "BO_SIGNAL",
+            "BANKRUPTCY_SIGNAL",
+            "DISSOLUTION_SIGNAL",
+            "ACTOR_RISK_PATTERN",
+            "POSSIBLE_REORGANIZATION"
+    );
 
     public MetadataService(CompanyHistorySnapshotRepository repository) {
         this.repository = repository;
@@ -42,6 +51,6 @@ public class MetadataService {
         List<String> sortedOrgForms = new ArrayList<>(orgForms);
         Collections.sort(sortedOrgForms);
 
-        return new MetadataFiltersResponse(sortedOrgForms, sortedCounties, SCORES);
+        return new MetadataFiltersResponse(sortedOrgForms, sortedCounties, SCORES, STRUCTURE_SIGNALS);
     }
 }

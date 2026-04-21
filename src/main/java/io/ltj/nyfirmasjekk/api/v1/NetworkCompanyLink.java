@@ -10,6 +10,8 @@ public record NetworkCompanyLink(
         String companyName,
         List<String> roleTypes,
         TrafficLight scoreColor,
+        boolean bankruptcySignal,
+        boolean dissolvedSignal,
         LocalDateTime lastSeenAt
 ) {
 }

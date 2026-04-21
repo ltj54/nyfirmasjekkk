@@ -38,8 +38,8 @@ class CompanyNetworkServiceTests {
                 )
         ));
 
-        service.captureRoles("111111111", "Alpha AS", TrafficLight.GREEN, roller);
-        service.captureRoles("222222222", "Beta AS", TrafficLight.RED, roller);
+        service.captureRoles("111111111", "Alpha AS", TrafficLight.GREEN, false, false, roller);
+        service.captureRoles("222222222", "Beta AS", TrafficLight.RED, true, true, roller);
 
         var network = service.networkFor("111111111");
 
@@ -47,7 +47,9 @@ class CompanyNetworkServiceTests {
         assertThat(network.getFirst().actorName()).isEqualTo("Ada Lovelace");
         assertThat(network.getFirst().roleTypesInSelectedCompany()).containsExactly("DAGLIG_LEDER");
         assertThat(network.getFirst().riskLevel()).isEqualTo(TrafficLight.RED);
+        assertThat(network.getFirst().bankruptcyCompanyCount()).isEqualTo(1);
         assertThat(network.getFirst().redCompanyCount()).isEqualTo(1);
+        assertThat(network.getFirst().dissolvedCompanyCount()).isEqualTo(1);
         assertThat(network.getFirst().greenCompanyCount()).isEqualTo(1);
         assertThat(network.getFirst().relatedCompanies())
                 .extracting(link -> link.orgNumber() + ":" + link.companyName())

@@ -9,7 +9,10 @@ import io.ltj.nyfirmasjekk.companycheck.CompanyMetrics;
 import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +21,10 @@ class CompanyApiV1MapperTests {
 
     @Test
     void brukerKanoniskKodeNarFactsBareHarBeskrivelse() {
-        var mapper = new CompanyApiV1Mapper(null);
+        var mapper = new CompanyApiV1Mapper(
+                null,
+                Clock.fixed(Instant.parse("2025-01-15T10:15:30Z"), ZoneId.of("Europe/Oslo"))
+        );
         var facts = new CompanyFacts(
                 "Aksjeselskap",
                 LocalDate.of(2025, 1, 1),
@@ -81,6 +87,8 @@ class CompanyApiV1MapperTests {
 
         assertThat(summary.flags()).containsExactly("NOT_REGISTERED_IN_FORETAKSREGISTERET");
         assertThat(summary.events()).extracting(CompanyEvent::type).containsExactly("REGISTRATION");
+        assertThat(summary.structureSignals()).extracting(StructureSignal::code)
+                .containsExactly("NEW_COMPANY_WINDOW");
     }
 
     @Test
@@ -187,12 +195,176 @@ class CompanyApiV1MapperTests {
                 null
         );
 
-        var details = mapper.toDetails(check, enhet, new RollerResponse(List.of()));
+        var details = mapper.toDetails(check, enhet, new RollerResponse(List.of()), List.of());
 
         assertThat(details.events()).extracting(CompanyEvent::type).containsExactly("WINDING_UP", "REGISTRATION");
         assertThat(details.announcements()).extracting(Announcement::type).containsExactly("WINDING_UP");
         assertThat(details.score().evidence()).extracting(ScoreEvidence::label)
                 .contains("Avvikling registrert", "Nyregistrert selskap");
+    }
+
+    @Test
+    void detaljresponsInneholderStrukturmønstreFraNyeSelskaperOgNettverk() {
+        var mapper = new CompanyApiV1Mapper(
+                new StubAnnouncementService(List.of()),
+                Clock.fixed(Instant.parse("2026-04-21T10:15:30Z"), ZoneId.of("Europe/Oslo"))
+        );
+        var facts = new CompanyFacts(
+                "AS",
+                LocalDate.of(2026, 3, 15),
+                "Nytt selskap",
+                "62.010",
+                "Utvikling",
+                "Ada Lovelace",
+                List.of("Ada Lovelace"),
+                "example.no",
+                "post@example.no",
+                "12345678",
+                true,
+                true,
+                1,
+                true,
+                "2025",
+                LocalDate.of(2026, 3, 1),
+                true,
+                true,
+                false,
+                "Oslo (Oslo)"
+        );
+        var check = new CompanyCheck(
+                "123456789",
+                "Test AS",
+                "AS",
+                TrafficLight.YELLOW,
+                "Ryddig førsteinntrykk.",
+                facts,
+                new CompanyMetrics(0, 0, 0),
+                List.of(),
+                List.of(),
+                List.of()
+        );
+        var enhet = new EnhetResponse(
+                "123456789",
+                "Test AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                null,
+                List.of(),
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                1,
+                true,
+                "2025",
+                LocalDate.of(2026, 3, 15),
+                LocalDate.of(2026, 3, 1),
+                null,
+                null
+        );
+        var network = List.of(
+                new NetworkActor(
+                        "PERSON:ADA LOVELACE",
+                        "Ada Lovelace",
+                        List.of("DAGLIG_LEDER"),
+                        TrafficLight.RED,
+                        3,
+                        1,
+                        1,
+                        1,
+                        1,
+                        0,
+                        List.of(
+                                new NetworkCompanyLink("123456789", "Test AS", List.of("DAGLIG_LEDER"), TrafficLight.YELLOW, false, false, null),
+                                new NetworkCompanyLink("987654321", "Old Beta AS", List.of("STYREMEDLEM"), TrafficLight.RED, true, false, null),
+                                new NetworkCompanyLink("111111111", "Closed Gamma AS", List.of("STYREMEDLEM"), TrafficLight.YELLOW, false, true, null)
+                        )
+                )
+        );
+
+        var details = mapper.toDetails(check, enhet, new RollerResponse(List.of()), network);
+
+        assertThat(details.structureSignals()).extracting(StructureSignal::code)
+                .contains("NEW_COMPANY_WINDOW", "BANKRUPTCY_RELATION", "DISSOLUTION_RELATION", "POSSIBLE_REORGANIZATION");
+    }
+
+    @Test
+    void summaryKanByggeBoSignalAktorrisikoOgMuligOmregistrering() {
+        var mapper = new CompanyApiV1Mapper(
+                new StubAnnouncementService(List.of(
+                        new Announcement("BANKRUPTCY", "Konkurs", "20.04.2026", "BRREG kunngjøringer")
+                )),
+                Clock.fixed(Instant.parse("2026-04-21T10:15:30Z"), ZoneId.of("Europe/Oslo"))
+        );
+        var facts = new CompanyFacts(
+                "AS",
+                LocalDate.of(2026, 4, 1),
+                "Nytt selskap",
+                "62.010",
+                "Utvikling",
+                "Ada Lovelace",
+                List.of("Ada Lovelace"),
+                "example.no",
+                "post@example.no",
+                "12345678",
+                true,
+                true,
+                1,
+                true,
+                "2025",
+                LocalDate.of(2026, 4, 1),
+                true,
+                true,
+                false,
+                "Oslo (Oslo)"
+        );
+        var check = new CompanyCheck(
+                "123456789",
+                "Eksempel AS Konkursbo",
+                "KBO",
+                TrafficLight.RED,
+                "Forhold som kan påvirke drift eller betalingsevne. Undersøk!",
+                facts,
+                new CompanyMetrics(0, 1, 1),
+                List.of(
+                        new io.ltj.nyfirmasjekk.companycheck.CheckFinding(TrafficLight.RED, "Aktørrisiko", "Historikk hos tilknyttede personer."),
+                        new io.ltj.nyfirmasjekk.companycheck.CheckFinding(TrafficLight.RED, "Alvorlige signaler", "Konkurs eller tvangsoppløsning.")
+                ),
+                List.of(),
+                List.of()
+        );
+        var enhet = new EnhetResponse(
+                "123456789",
+                "Eksempel AS Konkursbo",
+                new EnhetResponse.Organisasjonsform("KBO", "Konkursbo"),
+                null,
+                List.of(),
+                null,
+                null,
+                null,
+                null,
+                true,
+                false,
+                false,
+                true,
+                false,
+                0,
+                false,
+                null,
+                LocalDate.of(2026, 4, 1),
+                LocalDate.of(2026, 4, 1),
+                null,
+                null
+        );
+
+        var summary = mapper.toSummary(check, enhet);
+
+        assertThat(summary.structureSignals()).extracting(StructureSignal::code)
+                .containsExactly("NEW_COMPANY_WINDOW", "BO_SIGNAL", "BANKRUPTCY_SIGNAL", "POSSIBLE_REORGANIZATION");
     }
 
     private static final class StubAnnouncementService extends AnnouncementService {

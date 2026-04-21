@@ -20,6 +20,7 @@ export interface CompanySummary {
   scoreColor: ScoreColor;
   scoreReasons: string[];
   events: CompanyEvent[];
+  structureSignals: StructureSignal[];
   flags: string[];
 }
 
@@ -35,6 +36,7 @@ export interface MetadataFiltersResponse {
   organizationForms: string[];
   counties: string[];
   scores: ScoreColor[];
+  structureSignals: string[];
 }
 
 export interface CompanyDetails extends CompanySummary {
@@ -66,6 +68,7 @@ export interface CompanyDetails extends CompanySummary {
     title: string | null;
   }>;
   events: CompanyEvent[];
+  structureSignals: StructureSignal[];
   announcements: Announcement[];
 }
 
@@ -108,6 +111,8 @@ export interface NetworkCompanyLink {
   companyName: string;
   roleTypes: string[];
   scoreColor: ScoreColor;
+  bankruptcySignal: boolean;
+  dissolvedSignal: boolean;
   lastSeenAt: string;
 }
 
@@ -117,8 +122,18 @@ export interface NetworkActor {
   roleTypesInSelectedCompany: string[];
   riskLevel: ScoreColor;
   totalCompanyCount: number;
+  bankruptcyCompanyCount: number;
   redCompanyCount: number;
+  dissolvedCompanyCount: number;
   yellowCompanyCount: number;
   greenCompanyCount: number;
   relatedCompanies: NetworkCompanyLink[];
+}
+
+export interface StructureSignal {
+  code: string;
+  title: string;
+  detail: string;
+  severity: "HIGH" | "MEDIUM" | "INFO";
+  source: string;
 }

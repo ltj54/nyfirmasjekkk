@@ -40,6 +40,12 @@ public class CompanyRoleSnapshotEntity {
     private TrafficLight companyScoreColor;
 
     @Column(nullable = false)
+    private Boolean companyBankruptcySignal;
+
+    @Column(nullable = false)
+    private Boolean companyDissolvedSignal;
+
+    @Column(nullable = false)
     private Boolean active;
 
     @Column(nullable = false)
@@ -95,6 +101,22 @@ public class CompanyRoleSnapshotEntity {
 
     public void setCompanyScoreColor(TrafficLight companyScoreColor) {
         this.companyScoreColor = companyScoreColor;
+    }
+
+    public Boolean getCompanyDissolvedSignal() {
+        return companyDissolvedSignal;
+    }
+
+    public Boolean getCompanyBankruptcySignal() {
+        return companyBankruptcySignal;
+    }
+
+    public void setCompanyBankruptcySignal(Boolean companyBankruptcySignal) {
+        this.companyBankruptcySignal = companyBankruptcySignal;
+    }
+
+    public void setCompanyDissolvedSignal(Boolean companyDissolvedSignal) {
+        this.companyDissolvedSignal = companyDissolvedSignal;
     }
 
     public Boolean getActive() {
