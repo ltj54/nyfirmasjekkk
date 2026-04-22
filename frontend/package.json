@@ -8,7 +8,7 @@
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
@@ -25,7 +25,7 @@
     "@types/node": "^25.6.0",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
-    "eslint": "^10.2.0",
+    "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.3",
     "postcss": "^8.4.49",
     "tailwindcss": "^4.0.0",

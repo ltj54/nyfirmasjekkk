@@ -189,15 +189,15 @@ public class CompanyApiV1Mapper {
                             "Virksomheten ble registrert %s.".formatted(enhet.registreringsdatoEnhetsregisteret()),
                             "BRREG Enhetsregisteret"));
         }
-        if (enhet != null && !hasText(enhet.hjemmeside())) {
+        if (enhet != null && isBlank(enhet.hjemmeside())) {
             evidence.putIfAbsent("Ingen registrert nettside",
                     new ScoreEvidence("Ingen registrert nettside", "Det finnes ingen registrert nettside i åpne BRREG-data.", "BRREG grunndata"));
         }
-        if (enhet != null && !hasText(enhet.epostadresse())) {
+        if (enhet != null && isBlank(enhet.epostadresse())) {
             evidence.putIfAbsent("Ingen registrert e-post",
                     new ScoreEvidence("Ingen registrert e-post", "Det finnes ingen registrert e-postadresse i åpne BRREG-data.", "BRREG grunndata"));
         }
-        if (enhet != null && !hasText(firstNonBlank(enhet.telefon(), enhet.mobil()))) {
+        if (enhet != null && isBlank(firstNonBlank(enhet.telefon(), enhet.mobil()))) {
             evidence.putIfAbsent("Ingen registrert telefon",
                     new ScoreEvidence("Ingen registrert telefon", "Det finnes ingen registrert telefon i åpne BRREG-data.", "BRREG grunndata"));
         }
@@ -390,10 +390,11 @@ public class CompanyApiV1Mapper {
 
     private String normalizeFindingDetail(String label, String detail) {
         if ("OK".equalsIgnoreCase(detail)) {
-            return switch (label == null ? "" : label.trim().toUpperCase(Locale.ROOT)) {
-                case "ORGANISASJONSNUMMER" -> "Virksomheten finnes i Enhetsregisteret.";
-                default -> "Registersporet ser ryddig ut.";
-            };
+            String normalizedLabel = label == null ? "" : label.trim().toUpperCase(Locale.ROOT);
+            if ("ORGANISASJONSNUMMER".equals(normalizedLabel)) {
+                return "Virksomheten finnes i Enhetsregisteret.";
+            }
+            return "Registersporet ser ryddig ut.";
         }
         if ("Registrert.".equalsIgnoreCase(detail)) {
             return "Sentrale roller er registrert i åpne rolledata.";
@@ -625,8 +626,8 @@ public class CompanyApiV1Mapper {
                 .orElse(null);
     }
 
-    private boolean hasText(String value) {
-        return value != null && !value.isBlank();
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private List<Announcement> announcements(EnhetResponse enhet) {

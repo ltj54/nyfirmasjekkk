@@ -18,6 +18,7 @@ public class CompanyRoleSnapshotEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SuppressWarnings("unused")
     private Long id;
 
     @Column(nullable = false, length = 9)
@@ -115,6 +116,7 @@ public class CompanyRoleSnapshotEntity {
         this.companyDissolvedSignal = companyDissolvedSignal;
     }
 
+    @SuppressWarnings("unused")
     public Boolean getActive() {
         return active;
     }

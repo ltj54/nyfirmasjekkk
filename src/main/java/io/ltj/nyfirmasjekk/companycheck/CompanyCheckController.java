@@ -177,6 +177,7 @@ public class CompanyCheckController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
+    @SuppressWarnings("unused")
     public ProblemDetail handleConstraintViolation(ConstraintViolationException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
         detail.setTitle("Ugyldig forespørsel");
@@ -184,6 +185,7 @@ public class CompanyCheckController {
     }
 
     @ExceptionHandler(EnhetFinnesIkkeException.class)
+    @SuppressWarnings("unused")
     public ProblemDetail handleNotFound(EnhetFinnesIkkeException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
         detail.setTitle("Virksomhet ikke funnet");
@@ -191,6 +193,7 @@ public class CompanyCheckController {
     }
 
     @ExceptionHandler(BrregClientException.class)
+    @SuppressWarnings("unused")
     public ProblemDetail handleBrregFailure(BrregClientException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, exception.getMessage());
         detail.setTitle("Feil mot BRREG");

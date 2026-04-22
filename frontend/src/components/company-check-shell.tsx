@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useEffectEvent, useRef, useState, useTransition } from "react";
 import {
   Search,
   Building2,
@@ -16,6 +16,7 @@ import {
   Menu,
   ArrowLeft,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import type {
   CompanyEvent,
@@ -168,7 +169,7 @@ export function CompanyCheckShell() {
       return;
     }
 
-    void hydrateLandingData();
+    runHydrateLandingData();
   }, [backendReady]);
 
   useEffect(() => {
@@ -291,10 +292,18 @@ export function CompanyCheckShell() {
     }
   }
 
-  useEffect(() => {
+  const runHydrateLandingData = useEffectEvent(() => {
+    void hydrateLandingData();
+  });
+
+  const runRefreshRecent = useEffectEvent(() => {
     if (backendReady && initialResultsReady && !selectedCompany) {
       void fetchRecent(0);
     }
+  });
+
+  useEffect(() => {
+    runRefreshRecent();
   }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedStructureSignal, selectedCompany, activeQuery]);
 
   useEffect(() => {
@@ -345,7 +354,7 @@ export function CompanyCheckShell() {
     return () => {
       active = false;
     };
-  }, [selectedCompany]);
+  }, [backendReady, selectedCompany]);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -494,12 +503,13 @@ export function CompanyCheckShell() {
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-[#1F5FA9]/10">
-      <a
+      <button
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#1F5FA9] focus:shadow-lg"
-        href="#main-content"
+        onClick={() => scrollToSection("main-content")}
+        type="button"
       >
         Hopp til innhold
-      </a>
+      </button>
 
       <header className="sticky top-0 z-30 border-b border-[#D9E2EC] bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
@@ -964,27 +974,7 @@ function FooterColumn({
           <li key={link}>
             <button
               className="text-left transition-colors hover:text-white"
-              onClick={() => {
-                const idMap: Record<string, string> = {
-                  "Søk": "search",
-                  "Søkeresultater": "results",
-                  Metode: "results",
-                  Organisasjonsformer: "search",
-                  BRREG: "search",
-                  Historikk: "results",
-                  Nettverk: "results",
-                  API: "results",
-                  Kontakt: "footer",
-                  Tilgjengelighet: "footer",
-                  Personvern: "footer",
-                  Kilder: "results",
-                  "Om vurderingen": "results",
-                  Datakilder: "results",
-                  Forklaringer: "results",
-                  "Min side": "search",
-                };
-                onNavigate(idMap[link] ?? "main-content");
-              }}
+              onClick={() => onNavigate(resolveFooterTarget(link))}
               type="button"
             >
               {link}
@@ -994,6 +984,32 @@ function FooterColumn({
       </ul>
     </div>
   );
+}
+
+function resolveFooterTarget(link: string) {
+  switch (link) {
+    case "Søk":
+    case "Organisasjonsformer":
+    case "BRREG":
+    case "Min side":
+      return "search";
+    case "Søkeresultater":
+    case "Metode":
+    case "Historikk":
+    case "Nettverk":
+    case "API":
+    case "Kilder":
+    case "Om vurderingen":
+    case "Datakilder":
+    case "Forklaringer":
+      return "results";
+    case "Kontakt":
+    case "Tilgjengelighet":
+    case "Personvern":
+      return "footer";
+    default:
+      return "main-content";
+  }
 }
 
 function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: () => void }) {
@@ -1698,7 +1714,7 @@ const scoreColors = {
   RED: "bg-rose-500",
 };
 
-function DetailDataPoint({ icon: Icon, label, value, isLink }: { icon: any; label: string; value: string; isLink?: boolean }) {
+function DetailDataPoint({ icon: Icon, label, value, isLink }: { icon: LucideIcon; label: string; value: string; isLink?: boolean }) {
   return (
     <div className="rounded-[16px] border border-[#D9E2EC] bg-white p-4">
       <div className="flex items-start gap-3.5">
@@ -1725,7 +1741,7 @@ function ContactLine({
   subvalue,
   href,
 }: {
-  icon: any;
+  icon: LucideIcon;
   label: string;
   value: string | null;
   subvalue?: string | null;
