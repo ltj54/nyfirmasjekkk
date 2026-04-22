@@ -284,7 +284,6 @@ npm run build
 - Avklar deretter om aktørkontekst skal være snapshot-basert eller historikkbasert
 - Når aktørkontekst er på plass: bygg strukturmønstre rundt nye selskaper
 - To continue this session, run codex resume 019dab9b-00a0-75e3-a19b-3cd25cb152f6
-- To continue this session, run codex resume 019dab9b-00a0-75e3-a19b-3cd25cb152f6
 
 ## Arbeidslogg 2026-04-21
 
@@ -338,14 +337,3 @@ npm run dev
 ```bash
 taskkill /PID <pid> /F
 ```
-
-### Codex status - hvor starte nå?
-
-• Jeg har oppdatert /C:/Prosjekt/nyfirmasjekk/TODO.md med at søket nå også dekker:
-
-- Bo-signal
-- Aktørrisiko
-- Mulig omregistrering
-
-Jeg ryddet samtidig opp i noen duplikate punkter rundt strukturmønstre, så statusen er mer presis: første versjon er levert i detaljvisning, treffliste, API-summary og søkefilter, mens det som
-gjenstår er dypere modellering på tvers av selskaper og tidslinjer.

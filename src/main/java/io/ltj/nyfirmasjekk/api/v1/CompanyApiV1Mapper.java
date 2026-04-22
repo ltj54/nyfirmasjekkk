@@ -104,10 +104,6 @@ public class CompanyApiV1Mapper {
         );
     }
 
-    public CompanyScoreResponse toScore(CompanyCheck companyCheck) {
-        return toScore(companyCheck, null, List.of());
-    }
-
     private CompanyScoreResponse toScore(CompanyCheck companyCheck, EnhetResponse enhet, List<CompanyEvent> events) {
         return new CompanyScoreResponse(
                 companyCheck.organisasjonsnummer(),

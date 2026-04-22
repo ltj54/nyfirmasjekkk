@@ -15,7 +15,6 @@ import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
 import io.ltj.nyfirmasjekk.history.CompanyHistoryService;
 import io.ltj.nyfirmasjekk.network.CompanyNetworkService;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -178,21 +177,21 @@ public class CompanyCheckController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    ProblemDetail handleConstraintViolation(ConstraintViolationException exception) {
+    public ProblemDetail handleConstraintViolation(ConstraintViolationException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
         detail.setTitle("Ugyldig forespørsel");
         return detail;
     }
 
     @ExceptionHandler(EnhetFinnesIkkeException.class)
-    ProblemDetail handleNotFound(EnhetFinnesIkkeException exception) {
+    public ProblemDetail handleNotFound(EnhetFinnesIkkeException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
         detail.setTitle("Virksomhet ikke funnet");
         return detail;
     }
 
     @ExceptionHandler(BrregClientException.class)
-    ProblemDetail handleBrregFailure(BrregClientException exception) {
+    public ProblemDetail handleBrregFailure(BrregClientException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, exception.getMessage());
         detail.setTitle("Feil mot BRREG");
         return detail;

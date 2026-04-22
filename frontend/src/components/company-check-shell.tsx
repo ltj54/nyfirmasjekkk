@@ -119,7 +119,6 @@ export function CompanyCheckShell() {
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
   const [page, setPage] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [, startTransition] = useTransition();
   const latestListRequestId = useRef(0);
@@ -269,11 +268,9 @@ export function CompanyCheckShell() {
           return;
         }
         const items = Array.isArray(data) ? data : data.items || [];
-        const nextTotalElements = Array.isArray(data) ? items.length : (data.totalElements ?? items.length);
         const nextTotalPages = Array.isArray(data) ? (items.length > 0 ? 1 : 0) : (data.totalPages ?? 0);
         setRecentCompanies(items);
         setPage(pageNum);
-        setTotalElements(nextTotalElements);
         setTotalPages(nextTotalPages);
         setError(null);
       } else if (response.status === 502) {
@@ -282,7 +279,6 @@ export function CompanyCheckShell() {
           return;
         }
         setRecentCompanies([]);
-        setTotalElements(0);
         setTotalPages(0);
         setError(payload?.title ?? "Backend starter fortsatt. Prøv igjen om et øyeblikk.");
       }
@@ -942,24 +938,6 @@ export function CompanyCheckShell() {
   );
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  description,
-}: {
-  eyebrow: string;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="max-w-3xl">
-      <p className="text-[12px] font-medium text-[#52606D]">{eyebrow}</p>
-      <h2 className="mt-2 text-[22px] font-semibold tracking-tight text-[#1F2933] sm:text-[28px]">{title}</h2>
-      <p className="mt-2 text-[14px] leading-7 text-[#52606D]">{description}</p>
-    </div>
-  );
-}
-
 function InfoMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[16px] border border-[#D9E2EC] bg-[#F0F4F8] px-4 py-3">
@@ -988,7 +966,7 @@ function FooterColumn({
               className="text-left transition-colors hover:text-white"
               onClick={() => {
                 const idMap: Record<string, string> = {
-                  Søk: "search",
+                  "Søk": "search",
                   "Søkeresultater": "results",
                   Metode: "results",
                   Organisasjonsformer: "search",

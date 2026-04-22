@@ -828,7 +828,7 @@ class CompanyCheckServiceTests {
         var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", null, 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
-        assertThat(result.get(0).status()).isEqualTo(TrafficLight.GREEN);
+        assertThat(result.getFirst().status()).isEqualTo(TrafficLight.GREEN);
         assertThat(client.roleLookups()).isZero();
     }
 

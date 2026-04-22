@@ -204,7 +204,7 @@ class CompanyApiV1MapperTests {
     }
 
     @Test
-    void detaljresponsInneholderStrukturmønstreFraNyeSelskaperOgNettverk() {
+    void detaljresponsInneholderStrukturmonstreFraNyeSelskaperOgNettverk() {
         var mapper = new CompanyApiV1Mapper(
                 new StubAnnouncementService(List.of()),
                 Clock.fixed(Instant.parse("2026-04-21T10:15:30Z"), ZoneId.of("Europe/Oslo"))

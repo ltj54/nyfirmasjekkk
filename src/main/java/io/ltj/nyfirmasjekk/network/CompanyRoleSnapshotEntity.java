@@ -51,10 +51,6 @@ public class CompanyRoleSnapshotEntity {
     @Column(nullable = false)
     private LocalDateTime capturedAt;
 
-    public Long getId() {
-        return id;
-    }
-
     public String getOrgNumber() {
         return orgNumber;
     }
@@ -103,16 +99,16 @@ public class CompanyRoleSnapshotEntity {
         this.companyScoreColor = companyScoreColor;
     }
 
-    public Boolean getCompanyDissolvedSignal() {
-        return companyDissolvedSignal;
-    }
-
     public Boolean getCompanyBankruptcySignal() {
         return companyBankruptcySignal;
     }
 
     public void setCompanyBankruptcySignal(Boolean companyBankruptcySignal) {
         this.companyBankruptcySignal = companyBankruptcySignal;
+    }
+
+    public Boolean getCompanyDissolvedSignal() {
+        return companyDissolvedSignal;
     }
 
     public void setCompanyDissolvedSignal(Boolean companyDissolvedSignal) {

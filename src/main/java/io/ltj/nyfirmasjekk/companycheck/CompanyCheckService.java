@@ -38,7 +38,6 @@ public class CompanyCheckService {
 
     private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA", "STIFT");
     private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA");
-    private static final List<String> ANNUAL_ACCOUNTS_EXPECTED_FORMS = List.of("AS", "ASA", "SA", "STIFT");
 
     private static final int NEW_COMPANY_DAYS = 180;
     private static final String ROLE_LABEL = "Roller";
@@ -68,10 +67,6 @@ public class CompanyCheckService {
 
     public List<CompanyCheck> sok(CompanySearchRequest request) {
         return sokPage(request, 0).items();
-    }
-
-    public List<CompanyCheck> sok(CompanySearchRequest request, int page) {
-        return sokPage(request, page).items();
     }
 
     public CompanySearchPage sokPage(CompanySearchRequest request, int page) {
@@ -223,7 +218,7 @@ public class CompanyCheckService {
         List<EnhetResponse> filteredEnheter = enheter.stream()
                 .filter(enhet -> matcherEnhet(enhet, request))
                 .toList();
-        diagnostics.recordPrefilter(enheter.size(), filteredEnheter.size(), preFilterStartedAt);
+        diagnostics.recordPrefilter(filteredEnheter.size(), preFilterStartedAt);
 
         if (isHardRedSearch(request)) {
             long scoringStartedAt = System.nanoTime();
@@ -317,7 +312,7 @@ public class CompanyCheckService {
                 enhet.navn(),
                 hentOrganisasjonsformKode(enhet),
                 status,
-                lagSammendrag(status, funn),
+                lagSammendrag(status),
                 byggCompanyFacts(enhet, roller, hasRoles, isBankruptcy || isForcedDissolution || isVoluntaryDissolution),
                 new CompanyMetrics(greenCount, yellowCount, redCount),
                 List.copyOf(funn),
@@ -454,7 +449,7 @@ public class CompanyCheckService {
         return adjustment > 0 ? "+" + adjustment : String.valueOf(adjustment);
     }
 
-    private String lagSammendrag(TrafficLight status, List<CheckFinding> funn) {
+    private String lagSammendrag(TrafficLight status) {
         return switch (status) {
             case GREEN -> "Ryddig førsteinntrykk.";
             case YELLOW -> "Selskapet er nytt eller har begrenset info. Sjekk nærmere.";
@@ -483,7 +478,7 @@ public class CompanyCheckService {
         if (modenhetsAlder >= NEW_COMPANY_DAYS && !hasText(en.sisteInnsendteAarsregnskap())) s -= 10;
         if (hasFM) s -= 5; if (isV && !isB && !isF) s -= 10;
         if (isN && !isB && !isF && !(erSentralOrganisasjonsform(en) && !hr) && s < 55) s = 55;
-        return Math.max(0, Math.min(100, s));
+        return Math.clamp(s, 0, 100);
     }
 
     private boolean erSentralOrganisasjonsform(EnhetResponse en) {
@@ -559,10 +554,6 @@ public class CompanyCheckService {
         return (r.enhet() != null && r.enhet().navn() != null && !r.enhet().navn().isEmpty()) ? r.enhet().navn().getFirst() : null;
     }
 
-    private long alderDager(EnhetResponse en) {
-        return en.registreringsdatoEnhetsregisteret() == null ? 9999 : ChronoUnit.DAYS.between(en.registreringsdatoEnhetsregisteret(), LocalDate.now(clock));
-    }
-
     private long modenhetsAlderDager(EnhetResponse enhet) {
         LocalDate registreringsdato = enhet.registreringsdatoEnhetsregisteret();
         LocalDate stiftelsesdato = enhet.stiftelsesdato();
@@ -609,7 +600,7 @@ public class CompanyCheckService {
         f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
         if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
         if (hasText(r.navn())) f.put("navn", r.navn().trim());
-        extraParams.forEach(f::put);
+        f.putAll(extraParams);
         f.put("sort", "registreringsdatoEnhetsregisteret,desc");
         return f;
     }
@@ -699,7 +690,7 @@ public class CompanyCheckService {
     private boolean harTekst(String value) { return hasText(value); }
     private boolean isBankruptcy(EnhetResponse enhet) {
         return isTrue(enhet.konkurs())
-                || hasOrgForm(enhet, "KBO")
+                || (enhet.organisasjonsform() != null && "KBO".equalsIgnoreCase(enhet.organisasjonsform().kode()))
                 || containsInName(enhet, "KONKURSBO");
     }
 
@@ -712,10 +703,6 @@ public class CompanyCheckService {
     private boolean isVoluntaryDissolution(EnhetResponse enhet) {
         return isTrue(enhet.underAvvikling())
                 || containsInName(enhet, "AVVIKLINGSBO");
-    }
-
-    private boolean hasOrgForm(EnhetResponse enhet, String code) {
-        return enhet.organisasjonsform() != null && code.equalsIgnoreCase(enhet.organisasjonsform().kode());
     }
 
     private boolean containsInName(EnhetResponse enhet, String token) {
@@ -781,7 +768,7 @@ public class CompanyCheckService {
             fetchMs += elapsedMs(startedAt);
         }
 
-        private void recordPrefilter(int inputCount, int filteredCount, long startedAt) {
+        private void recordPrefilter(int filteredCount, long startedAt) {
             prefilteredCandidates += filteredCount;
             prefilterMs += elapsedMs(startedAt);
         }
