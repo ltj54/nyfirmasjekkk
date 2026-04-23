@@ -198,7 +198,6 @@ class CompanyApiV1MapperTests {
         var details = mapper.toDetails(check, enhet, new RollerResponse(List.of()), List.of());
 
         assertThat(details.events()).extracting(CompanyEvent::type).containsExactly("WINDING_UP", "REGISTRATION");
-        assertThat(details.announcements()).extracting(Announcement::type).containsExactly("WINDING_UP");
         assertThat(details.score().evidence()).extracting(ScoreEvidence::label)
                 .contains("Avvikling registrert", "Nyregistrert selskap");
     }
@@ -278,10 +277,14 @@ class CompanyApiV1MapperTests {
                         1,
                         1,
                         0,
+                        null,
+                        null,
+                        null,
                         List.of(
-                                new NetworkCompanyLink("123456789", "Test AS", List.of("DAGLIG_LEDER"), TrafficLight.YELLOW, false, false, null),
-                                new NetworkCompanyLink("987654321", "Old Beta AS", List.of("STYREMEDLEM"), TrafficLight.RED, true, false, null),
-                                new NetworkCompanyLink("111111111", "Closed Gamma AS", List.of("STYREMEDLEM"), TrafficLight.YELLOW, false, true, null)
+                                new NetworkCompanyLink("123456789", "Test AS", List.of("DAGLIG_LEDER"), TrafficLight.YELLOW, false, false, LocalDate.of(2026, 3, 15), null),
+                                new NetworkCompanyLink("987654321", "Old Beta AS", List.of("STYREMEDLEM"), TrafficLight.RED, true, false, LocalDate.of(2025, 12, 20), null),
+                                new NetworkCompanyLink("111111111", "Closed Gamma AS", List.of("STYREMEDLEM"), TrafficLight.YELLOW, false, true, LocalDate.of(2026, 1, 10), null),
+                                new NetworkCompanyLink("222222222", "Fresh Delta AS", List.of("STYREMEDLEM"), TrafficLight.GREEN, false, false, LocalDate.of(2026, 4, 1), null)
                         )
                 )
         );
@@ -289,7 +292,14 @@ class CompanyApiV1MapperTests {
         var details = mapper.toDetails(check, enhet, new RollerResponse(List.of()), network);
 
         assertThat(details.structureSignals()).extracting(StructureSignal::code)
-                .contains("NEW_COMPANY_WINDOW", "BANKRUPTCY_RELATION", "DISSOLUTION_RELATION", "POSSIBLE_REORGANIZATION");
+                .contains(
+                        "ACTOR_CONTEXT_ELEVATED",
+                        "NEW_COMPANY_WINDOW",
+                        "RECENT_BANKRUPTCY_RELATION",
+                        "RECENT_DISSOLUTION_RELATION",
+                        "CLUSTERED_NEW_COMPANY_PATTERN",
+                        "POSSIBLE_REORGANIZATION"
+                );
     }
 
     @Test

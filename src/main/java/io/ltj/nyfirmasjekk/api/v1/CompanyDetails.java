@@ -31,7 +31,6 @@ public record CompanyDetails(
         List<Role> roles,
         List<CompanyEvent> events,
         List<StructureSignal> structureSignals,
-        List<Announcement> announcements,
         List<String> flags
 ) {
 }

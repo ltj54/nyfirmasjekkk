@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.api.v1;
 
 import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +13,7 @@ public record NetworkCompanyLink(
         TrafficLight scoreColor,
         boolean bankruptcySignal,
         boolean dissolvedSignal,
+        LocalDate registrationDate,
         LocalDateTime lastSeenAt
 ) {
 }

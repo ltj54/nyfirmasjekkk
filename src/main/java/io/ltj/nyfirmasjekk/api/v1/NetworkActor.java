@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.api.v1;
 
 import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record NetworkActor(
@@ -15,6 +16,9 @@ public record NetworkActor(
         int dissolvedCompanyCount,
         int yellowCompanyCount,
         int greenCompanyCount,
+        LocalDateTime lastRedSeenAt,
+        LocalDateTime lastBankruptcySeenAt,
+        LocalDateTime lastDissolvedSeenAt,
         List<NetworkCompanyLink> relatedCompanies
 ) {
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -40,6 +41,7 @@ public class CompanyNetworkService {
             TrafficLight companyScoreColor,
             boolean companyBankruptcySignal,
             boolean companyDissolvedSignal,
+            LocalDate companyRegistrationDate,
             RollerResponse rollerResponse
     ) {
         if (rollerResponse == null || rollerResponse.rollegrupper() == null) {
@@ -53,7 +55,7 @@ public class CompanyNetworkService {
                 .flatMap(group -> group.roller() == null ? Stream.empty() : group.roller().stream())
                 .filter(Objects::nonNull)
                 .filter(this::isActiveRole)
-                .map(role -> toEntity(orgNumber, companyName, companyScoreColor, companyBankruptcySignal, companyDissolvedSignal, role, now))
+                .map(role -> toEntity(orgNumber, companyName, companyScoreColor, companyBankruptcySignal, companyDissolvedSignal, companyRegistrationDate, role, now))
                 .filter(Objects::nonNull)
                 .forEach(repository::save);
     }
@@ -98,6 +100,7 @@ public class CompanyNetworkService {
                                         latestCompanyEntry.getCompanyScoreColor(),
                                         Boolean.TRUE.equals(latestCompanyEntry.getCompanyBankruptcySignal()),
                                         Boolean.TRUE.equals(latestCompanyEntry.getCompanyDissolvedSignal()),
+                                        latestCompanyEntry.getCompanyRegistrationDate(),
                                         latestCompanyEntry.getCapturedAt()
                                 );
                             })
@@ -109,6 +112,15 @@ public class CompanyNetworkService {
                     int dissolvedCompanyCount = (int) relatedCompanies.stream().filter(NetworkCompanyLink::dissolvedSignal).count();
                     int yellowCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.YELLOW).count();
                     int greenCompanyCount = (int) relatedCompanies.stream().filter(link -> link.scoreColor() == TrafficLight.GREEN).count();
+                    LocalDateTime lastRedSeenAt = latestSeenAt(relatedCompanies.stream()
+                            .filter(link -> link.scoreColor() == TrafficLight.RED)
+                            .toList());
+                    LocalDateTime lastBankruptcySeenAt = latestSeenAt(relatedCompanies.stream()
+                            .filter(NetworkCompanyLink::bankruptcySignal)
+                            .toList());
+                    LocalDateTime lastDissolvedSeenAt = latestSeenAt(relatedCompanies.stream()
+                            .filter(NetworkCompanyLink::dissolvedSignal)
+                            .toList());
 
                     return new NetworkActor(
                             actorKey,
@@ -121,6 +133,9 @@ public class CompanyNetworkService {
                             dissolvedCompanyCount,
                             yellowCompanyCount,
                             greenCompanyCount,
+                            lastRedSeenAt,
+                            lastBankruptcySeenAt,
+                            lastDissolvedSeenAt,
                             relatedCompanies
                     );
                 })
@@ -134,6 +149,7 @@ public class CompanyNetworkService {
             TrafficLight companyScoreColor,
             boolean companyBankruptcySignal,
             boolean companyDissolvedSignal,
+            LocalDate companyRegistrationDate,
             RollerResponse.Rolle role,
             LocalDateTime capturedAt
     ) {
@@ -155,6 +171,7 @@ public class CompanyNetworkService {
         entity.setCompanyBankruptcySignal(companyBankruptcySignal);
         entity.setCompanyDissolvedSignal(companyDissolvedSignal);
         entity.setActive(true);
+        entity.setCompanyRegistrationDate(companyRegistrationDate);
         entity.setCapturedAt(capturedAt);
         return entity;
     }
@@ -224,5 +241,13 @@ public class CompanyNetworkService {
             return TrafficLight.GREEN;
         }
         return TrafficLight.YELLOW;
+    }
+
+    private LocalDateTime latestSeenAt(List<NetworkCompanyLink> links) {
+        return links.stream()
+                .map(NetworkCompanyLink::lastSeenAt)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
     }
 }

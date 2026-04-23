@@ -69,7 +69,6 @@ export interface CompanyDetails extends CompanySummary {
   }>;
   events: CompanyEvent[];
   structureSignals: StructureSignal[];
-  announcements: Announcement[];
 }
 
 export interface CompanyEvent {
@@ -78,13 +77,6 @@ export interface CompanyEvent {
   date: string | null;
   source: string;
   severity: "HIGH" | "MEDIUM" | "INFO";
-}
-
-export interface Announcement {
-  type: string;
-  title: string;
-  date: string | null;
-  source: string;
 }
 
 export interface CompanyHistoryEntry {
@@ -113,6 +105,7 @@ export interface NetworkCompanyLink {
   scoreColor: ScoreColor;
   bankruptcySignal: boolean;
   dissolvedSignal: boolean;
+  registrationDate: string | null;
   lastSeenAt: string;
 }
 
@@ -127,6 +120,9 @@ export interface NetworkActor {
   dissolvedCompanyCount: number;
   yellowCompanyCount: number;
   greenCompanyCount: number;
+  lastRedSeenAt: string | null;
+  lastBankruptcySeenAt: string | null;
+  lastDissolvedSeenAt: string | null;
   relatedCompanies: NetworkCompanyLink[];
 }
 

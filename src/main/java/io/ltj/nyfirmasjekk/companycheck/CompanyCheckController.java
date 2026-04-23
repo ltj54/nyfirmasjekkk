@@ -80,7 +80,15 @@ public class CompanyCheckController {
             boolean bankruptcySignal = Boolean.TRUE.equals(enhet.konkurs());
             boolean dissolvedSignal = check.funn().stream()
                     .anyMatch(finding -> finding != null && "Avvikling".equalsIgnoreCase(finding.label()));
-            companyNetworkService.captureRoles(organisasjonsnummer, check.navn(), check.status(), bankruptcySignal, dissolvedSignal, roller);
+            companyNetworkService.captureRoles(
+                    organisasjonsnummer,
+                    check.navn(),
+                    check.status(),
+                    bankruptcySignal,
+                    dissolvedSignal,
+                    enhet.registreringsdatoEnhetsregisteret(),
+                    roller
+            );
             return mapper.toDetails(check, enhet, roller, companyNetworkService.networkFor(organisasjonsnummer));
         });
     }

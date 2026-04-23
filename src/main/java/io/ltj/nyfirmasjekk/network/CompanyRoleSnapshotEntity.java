@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "company_role_snapshot")
@@ -48,6 +49,9 @@ public class CompanyRoleSnapshotEntity {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @Column
+    private LocalDate companyRegistrationDate;
 
     @Column(nullable = false)
     private LocalDateTime capturedAt;
@@ -123,6 +127,14 @@ public class CompanyRoleSnapshotEntity {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public LocalDate getCompanyRegistrationDate() {
+        return companyRegistrationDate;
+    }
+
+    public void setCompanyRegistrationDate(LocalDate companyRegistrationDate) {
+        this.companyRegistrationDate = companyRegistrationDate;
     }
 
     public LocalDateTime getCapturedAt() {

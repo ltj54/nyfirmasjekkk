@@ -26,6 +26,7 @@ import type {
   CompanySummary,
   MetadataFiltersResponse,
   ScoreColor,
+  StructureSignal,
 } from "@/lib/company-check";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,10 @@ const structureSignalLabels: Record<string, string> = {
   BANKRUPTCY_SIGNAL: "Konkursspor",
   DISSOLUTION_SIGNAL: "Avviklingsspor",
   ACTOR_RISK_PATTERN: "Aktørrisiko",
+  ACTOR_CONTEXT_ELEVATED: "Viktig aktørkontekst",
+  RECENT_BANKRUPTCY_RELATION: "Nylig konkursspor",
+  RECENT_DISSOLUTION_RELATION: "Nylig avviklingsspor",
+  CLUSTERED_NEW_COMPANY_PATTERN: "Flere nye selskaper",
   POSSIBLE_REORGANIZATION: "Mulig omregistrering",
 };
 
@@ -90,6 +95,41 @@ const organizationFormHelp: Record<string, { label: string; description: string 
   FLI: {
     label: "Forening/lag/innretning",
     description: "Brukes ofte av foreninger og andre medlemsbaserte eller ideelle organisasjoner uten eiere.",
+  },
+};
+
+const structureSignalHelp: Record<string, { label: string; description: string }> = {
+  ALL: {
+    label: "Alle strukturspor",
+    description: "Viser alle treff uavhengig av hvilket strukturspor som er funnet. Bruk dette når du vil se hele utvalget før du snevrer inn.",
+  },
+  NEW_COMPANY_WINDOW: {
+    label: "Nytt selskap",
+    description: "Selskapet er nylig registrert. Dette er ofte interessant kommersielt, men gir mindre historikk å vurdere.",
+  },
+  LIMITED_DATA_PATTERN: {
+    label: "Tynt datagrunnlag",
+    description: "Flere sentrale opplysninger mangler eller er svake, for eksempel kontaktdata, næringskode, roller eller aktivitetsbeskrivelse.",
+  },
+  BO_SIGNAL: {
+    label: "Bo-signal",
+    description: "Navn eller registreringsspor peker mot konkursbo, tvangsavviklingsbo eller tilsvarende bo-relatert struktur.",
+  },
+  BANKRUPTCY_SIGNAL: {
+    label: "Konkursspor",
+    description: "Selskapet eller relaterte registerspor har indikasjoner på konkurs. Dette bør vurderes før kommersiell kontakt.",
+  },
+  DISSOLUTION_SIGNAL: {
+    label: "Avviklingsspor",
+    description: "Selskapet har signaler om avvikling, tvangsavvikling eller oppløsning. Det kan gjøre treffet mindre egnet som lead.",
+  },
+  ACTOR_RISK_PATTERN: {
+    label: "Aktørrisiko",
+    description: "Rolleholderne bak selskapet har historikk eller tilknytninger som gjør aktørbildet relevant for vurderingen.",
+  },
+  POSSIBLE_REORGANIZATION: {
+    label: "Mulig omregistrering",
+    description: "Mønstre i aktører, tidspunkt og selskapsstruktur kan peke mot ny organisering rundt eksisterende aktivitet.",
   },
 };
 
@@ -500,6 +540,7 @@ export function CompanyCheckShell() {
     selectedLegend,
     selectedStructureSignal,
   );
+  const activeStructureSignalHelp = getStructureSignalHelp(selectedStructureSignal || "ALL");
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-[#1F5FA9]/10">
@@ -659,33 +700,58 @@ export function CompanyCheckShell() {
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="text-[#52606D]">Strukturspor:</span>
-                  <button
-                    className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                      !selectedStructureSignal
-                        ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                        : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                    }`}
-                    disabled={!initialResultsReady || isListLoading}
-                    onClick={() => setSelectedStructureSignal("")}
-                    type="button"
-                  >
-                    Alle
-                  </button>
-                  {metadata.structureSignals.map((signal) => (
+                  <div className="relative inline-flex items-center gap-1.5">
                     <button
-                      key={signal}
-                      className={`rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                        selectedStructureSignal === signal
-                          ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
+                      className={`peer rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                        !selectedStructureSignal
+                          ? "border-[#1F2933] bg-[#1F2933] text-white shadow-[0_6px_18px_rgba(31,41,51,0.16)]"
                           : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
                       }`}
                       disabled={!initialResultsReady || isListLoading}
-                      onClick={() => setSelectedStructureSignal((current) => current === signal ? "" : signal)}
+                      onClick={() => setSelectedStructureSignal("")}
                       type="button"
                     >
-                      {structureSignalLabels[signal] ?? signal}
+                      Alle
                     </button>
+                    <StructureSignalTooltip code="ALL" />
+                  </div>
+                  {metadata.structureSignals.map((signal) => (
+                    <div key={signal} className="relative inline-flex items-center gap-1.5">
+                      <button
+                        className={`peer rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                          selectedStructureSignal === signal
+                            ? "border-[#1F2933] bg-[#1F2933] text-white shadow-[0_6px_18px_rgba(31,41,51,0.16)]"
+                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                        }`}
+                        disabled={!initialResultsReady || isListLoading}
+                        onClick={() => setSelectedStructureSignal((current) => current === signal ? "" : signal)}
+                        type="button"
+                      >
+                        {structureSignalLabels[signal] ?? signal}
+                      </button>
+                      <StructureSignalTooltip code={signal} />
+                    </div>
                   ))}
+                </div>
+                <div className="mt-3 rounded-[16px] border border-[#D9E2EC] bg-white px-4 py-3 shadow-[0_12px_30px_-28px_rgba(31,95,169,0.45)]">
+                  <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+                        Aktivt strukturfilter
+                      </p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">
+                        {activeStructureSignalHelp.label}
+                      </p>
+                      <p className="mt-1 max-w-3xl text-[13px] leading-6 text-[#52606D]">
+                        {activeStructureSignalHelp.description}
+                      </p>
+                    </div>
+                    <p className="rounded-full border border-[#E4E7EB] bg-[#F8FAFC] px-3 py-1.5 text-[12px] font-medium text-[#52606D]">
+                      {selectedStructureSignal
+                        ? "Trefflisten snevres inn på dette sporet"
+                        : "Ingen ekstra strukturavgrensing"}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
@@ -1022,6 +1088,9 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
   const contactability = getContactability(company);
   const bestContactPoint = getBestContactPoint(company);
   const structureSignals = company.structureSignals || [];
+  const highlightedStructureSignals = prioritizedListStructureSignals(structureSignals);
+  const structureSummary = describeListStructureSummary(highlightedStructureSignals);
+  const commercialOpportunity = getCommercialOpportunity(company);
   const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
 
   return (
@@ -1129,9 +1198,10 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
             </Badge>
           ))}
         </div>
-        {structureSignals.length > 0 ? (
-          <div className="mt-3 flex flex-wrap gap-2">
-            {structureSignals.map((signal) => (
+        {highlightedStructureSignals.length > 0 ? (
+          <div className="mt-3 space-y-2">
+            <div className="flex flex-wrap gap-2">
+            {highlightedStructureSignals.map((signal) => (
               <Badge
                 key={`${company.orgNumber}-${signal.code}`}
                 variant="outline"
@@ -1140,11 +1210,63 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
                 {signal.title}
               </Badge>
             ))}
+            </div>
+            {structureSummary ? (
+              <p className="text-[12px] font-medium leading-relaxed text-[#52606D]">{structureSummary}</p>
+            ) : null}
           </div>
         ) : null}
       </div>
+      <div className={`mt-4 rounded-[14px] border p-3 ${commercialOpportunity.cardClass}`}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">Kommersiell mulighet</p>
+            <p className="mt-1 text-[13px] font-bold text-[#1F2933]">{commercialOpportunity.title}</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-[#52606D]">{commercialOpportunity.summary}</p>
+          </div>
+          <button
+            type="button"
+            className="shrink-0 rounded-full border border-[#1F2933] bg-[#1F2933] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#2F6FB2]"
+            onClick={(event) => {
+              event.stopPropagation();
+              onClick();
+            }}
+          >
+            {commercialOpportunity.actionLabel}
+          </button>
+        </div>
+      </div>
     </div>
   );
+}
+
+function StructureSignalTooltip({ code }: { code: string }) {
+  const help = getStructureSignalHelp(code);
+
+  return (
+    <div
+      className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-80 -translate-x-1/2 translate-y-1 rounded-[18px] border border-[#D9E2EC] bg-white p-4 text-left opacity-0 shadow-[0_20px_50px_-24px_rgba(31,95,169,0.35)] transition-all duration-150 peer-hover:translate-y-0 peer-hover:opacity-100 peer-focus-visible:translate-y-0 peer-focus-visible:opacity-100"
+      role="tooltip"
+    >
+      <p className="text-[12px] font-medium text-[#52606D]">Strukturspor</p>
+      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">
+        {help.label}
+      </p>
+      <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
+        {help.description}
+      </p>
+      <p className="mt-3 text-[12px] font-medium text-[#1F5FA9]">
+        Brukes som filter i søket.
+      </p>
+    </div>
+  );
+}
+
+function getStructureSignalHelp(code: string) {
+  return structureSignalHelp[code] ?? {
+    label: structureSignalLabels[code] ?? code,
+    description: "Filtrerer trefflisten på dette struktursporet når backend har funnet signalet i registerdataene.",
+  };
 }
 
 function normalizeWebsiteUrl(value: string) {
@@ -1201,6 +1323,29 @@ function getLeadPriority(company: CompanySummary) {
   };
 }
 
+function detailLeadSignalConfig(label: string) {
+  switch (label) {
+    case "Sterkt signal":
+      return {
+        icon: CheckCircle2,
+        text: "bg-[#E6F0FA] text-[#1F5FA9] border-[#C7DFF8]",
+        wash: "from-[#C7DFF8]/80 via-[#E6F0FA]/55 to-transparent",
+      };
+    case "Mulig signal":
+      return {
+        icon: AlertTriangle,
+        text: "bg-amber-50 text-amber-700 border-amber-100",
+        wash: "from-amber-100/80 via-amber-50/40 to-transparent",
+      };
+    default:
+      return {
+        icon: AlertCircle,
+        text: "bg-slate-100 text-slate-700 border-slate-200",
+        wash: "from-slate-200/80 via-slate-100/45 to-transparent",
+      };
+  }
+}
+
 function getBestContactPoint(company: CompanySummary) {
   if (company.email) {
     return { label: `Start med e-post: ${company.email}` };
@@ -1215,6 +1360,86 @@ function getBestContactPoint(company: CompanySummary) {
     return { label: `Manuell kontakt mot ${company.contactPersonName}` };
   }
   return { label: "Krever manuell research" };
+}
+
+function getCommercialOpportunity(company: CompanySummary) {
+  const hasDirectContact = Boolean(company.email || company.phone);
+  const missingWebsite = !company.website;
+
+  if (company.scoreColor === "RED") {
+    return {
+      title: "Avklar risiko før salgsarbeid",
+      summary: "Røde registerspor gjør dette mindre egnet som ordinært lead før dyp analyse er vurdert.",
+      actionLabel: "Åpne analyse",
+      cardClass: "border-rose-100 bg-rose-50/60",
+    };
+  }
+
+  if (missingWebsite && hasDirectContact) {
+    return {
+      title: "Nettside-startpakke aktuell",
+      summary: "Mangler registrert nettside, men har direkte kontaktpunkt i åpne data.",
+      actionLabel: "Åpne lead",
+      cardClass: "border-[#C7DFF8] bg-[#F1F7FE]",
+    };
+  }
+
+  if (missingWebsite) {
+    return {
+      title: "Digital tilstedeværelse mangler",
+      summary: "Ingen nettside registrert. Krever litt mer research før kontakt.",
+      actionLabel: "Vurder lead",
+      cardClass: "border-amber-100 bg-amber-50/70",
+    };
+  }
+
+  if (hasDirectContact) {
+    return {
+      title: "Kontaktbar virksomhet",
+      summary: "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate.",
+      actionLabel: "Se kontakt",
+      cardClass: "border-emerald-100 bg-emerald-50/60",
+    };
+  }
+
+  return {
+    title: "Lavere lead-klarhet",
+    summary: "Har registrert nettside, men svak direkte kontaktflate i åpne data.",
+    actionLabel: "Se detaljer",
+    cardClass: "border-[#E4E7EB] bg-[#F8FAFC]",
+  };
+}
+
+function commercialContactHref(company: CompanySummary) {
+  if (company.scoreColor === "RED") {
+    return null;
+  }
+  if (company.email) {
+    return `mailto:${company.email}`;
+  }
+  if (company.phone) {
+    return `tel:${company.phone.replace(/\s+/g, "")}`;
+  }
+  if (company.website) {
+    return normalizeWebsiteUrl(company.website);
+  }
+  return null;
+}
+
+function commercialContactLabel(company: CompanySummary) {
+  if (company.scoreColor === "RED") {
+    return "Ikke kontakt før risiko er vurdert";
+  }
+  if (company.email) {
+    return "Kontakt via e-post";
+  }
+  if (company.phone) {
+    return "Kontakt via telefon";
+  }
+  if (company.website) {
+    return "Åpne nettside";
+  }
+  return "Krever manuell research";
 }
 
 function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
@@ -1244,17 +1469,77 @@ function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
 
 function leadPriorityRank(company: CompanySummary) {
   const label = getLeadPriority(company).label;
-  if (label === "Høy prioritet") return 0;
-  if (label === "Aktuell") return 1;
+  if (label === "Sterkt signal") return 0;
+  if (label === "Mulig signal") return 1;
   return 2;
 }
 
 function structureSignalRank(company: CompanySummary) {
-  const severities = (company.structureSignals || []).map((signal) => signal.severity);
+  const severities = prioritizedListStructureSignals(company.structureSignals || []).map((signal) => signal.severity);
   if (severities.includes("HIGH")) return 0;
   if (severities.includes("MEDIUM")) return 1;
   if (severities.includes("INFO")) return 2;
   return 3;
+}
+
+function prioritizedListStructureSignals(signals: StructureSignal[]) {
+  return [...signals]
+    .sort((left, right) => listStructureSignalPriority(left.code) - listStructureSignalPriority(right.code))
+    .slice(0, 3);
+}
+
+function listStructureSignalPriority(code: string) {
+  switch (code) {
+    case "POSSIBLE_REORGANIZATION":
+      return 0;
+    case "ACTOR_CONTEXT_ELEVATED":
+      return 1;
+    case "RECENT_BANKRUPTCY_RELATION":
+      return 2;
+    case "RECENT_DISSOLUTION_RELATION":
+      return 3;
+    case "BANKRUPTCY_RELATION":
+      return 4;
+    case "DISSOLUTION_RELATION":
+      return 5;
+    case "CLUSTERED_NEW_COMPANY_PATTERN":
+      return 6;
+    case "BO_SIGNAL":
+      return 7;
+    case "BANKRUPTCY_SIGNAL":
+      return 8;
+    case "DISSOLUTION_SIGNAL":
+      return 9;
+    case "ACTOR_RISK_PATTERN":
+      return 10;
+    case "SHARED_ACTOR_PATTERN":
+      return 11;
+    case "NEW_COMPANY_WINDOW":
+      return 12;
+    case "LIMITED_DATA_PATTERN":
+      return 13;
+    default:
+      return 20;
+  }
+}
+
+function describeListStructureSummary(signals: StructureSignal[]) {
+  if (signals.some((signal) => signal.code === "POSSIBLE_REORGANIZATION")) {
+    return "Tidsnære og delte aktørspor peker mot mulig ny struktur rundt eksisterende aktivitet.";
+  }
+  if (signals.some((signal) => signal.code === "ACTOR_CONTEXT_ELEVATED")) {
+    return "Aktørkonteksten er sterk nok til å løftes som eget signal i vurderingen.";
+  }
+  if (signals.some((signal) => signal.code === "RECENT_BANKRUPTCY_RELATION")) {
+    return "Deler aktører med nylige konkursspor i andre selskaper.";
+  }
+  if (signals.some((signal) => signal.code === "RECENT_DISSOLUTION_RELATION")) {
+    return "Deler aktører med nylige avviklingsspor i andre selskaper.";
+  }
+  if (signals.some((signal) => signal.code === "CLUSTERED_NEW_COMPANY_PATTERN")) {
+    return "Ligger tett i tid med andre nye selskaper med samme aktører.";
+  }
+  return null;
 }
 
 function contactabilityRank(company: CompanySummary) {
@@ -1277,19 +1562,17 @@ function CompanyDetailView({
   network: NetworkActor[];
   onBack: () => void;
 }) {
-  const scoreConfig = {
-    GREEN: { icon: CheckCircle2, text: "bg-emerald-50 text-emerald-700 border-emerald-100", wash: "from-emerald-100/80 via-emerald-50/40 to-transparent", iconColor: "text-emerald-500" },
-    YELLOW: { icon: AlertTriangle, text: "bg-amber-50 text-amber-700 border-amber-100", wash: "from-amber-100/80 via-amber-50/40 to-transparent", iconColor: "text-amber-500" },
-    RED: { icon: AlertCircle, text: "bg-rose-50 text-rose-700 border-rose-100", wash: "from-rose-100/80 via-rose-50/40 to-transparent", iconColor: "text-rose-500" },
-  };
-
-  const config = scoreConfig[company.scoreColor] || scoreConfig.YELLOW;
+  const leadPriority = getLeadPriority(company);
+  const config = detailLeadSignalConfig(leadPriority.label);
   const StatusIcon = config.icon;
 
-  const scoreLabel = company.score?.label || "Ukjent status";
+  const scoreLabel = leadPriority.label;
   const scoreReasons = company.score?.reasons || [];
   const scoreEvidence = company.score?.evidence || [];
   const structureSignals = company.structureSignals || [];
+  const elevatedActorContextSignal = structureSignals.find((signal) => signal.code === "ACTOR_CONTEXT_ELEVATED") ?? null;
+  const commercialOpportunity = getCommercialOpportunity(company);
+  const commercialHref = commercialContactHref(company);
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
@@ -1411,6 +1694,39 @@ function CompanyDetailView({
               <div className={`mt-8 rounded-[18px] border p-5 ${config.text} border-opacity-50`}>
                 <p className="mb-2 text-[12px] font-medium opacity-70">Kort registerspor</p>
                 <p className="text-[15px] font-semibold leading-relaxed">{primaryReason}</p>
+              </div>
+
+              {elevatedActorContextSignal ? (
+                <div className="mt-4 rounded-[18px] border border-[#D9E2EC] bg-white p-5">
+                  <p className="mb-2 text-[12px] font-medium text-[#52606D]">Løftet aktørkontekst</p>
+                  <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">{elevatedActorContextSignal.title}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">{elevatedActorContextSignal.detail}</p>
+                  <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{elevatedActorContextSignal.source}</p>
+                </div>
+              ) : null}
+
+              <div className={`mt-4 rounded-[18px] border p-5 ${commercialOpportunity.cardClass}`}>
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <p className="text-[12px] font-medium text-[#52606D]">Kommersiell mulighet</p>
+                    <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{commercialOpportunity.title}</h4>
+                    <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">{commercialOpportunity.summary}</p>
+                  </div>
+                  {commercialHref ? (
+                    <a
+                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#1F2933] bg-[#1F2933] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#2F6FB2]"
+                      href={commercialHref}
+                      rel={commercialHref.startsWith("http") ? "noreferrer" : undefined}
+                      target={commercialHref.startsWith("http") ? "_blank" : undefined}
+                    >
+                      {commercialContactLabel(company)}
+                    </a>
+                  ) : (
+                    <span className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#D9E2EC] bg-white px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+                      {commercialContactLabel(company)}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
@@ -1550,11 +1866,16 @@ function CompanyDetailView({
                         </span>
                       </div>
                       <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">{signal.detail}</p>
+                      {describeStructureSignal(signal) ? (
+                        <p className="mt-2 text-[12px] font-medium leading-relaxed text-[#1F5FA9]">
+                          {describeStructureSignal(signal)}
+                        </p>
+                      ) : null}
                       <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{signal.source}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen tydelige strukturmønstre er bygget ut ennå.</p>
+                  <p className="text-[14px] text-[#52606D]">Ingen tydelige strukturmønstre er slått ut for dette selskapet ennå. Det betyr ikke nødvendigvis fravær av risiko, bare at dagens mønstermotor ikke har funnet et klart kryssselskapsmønster.</p>
                 )}
               </div>
             </div>
@@ -1587,6 +1908,11 @@ function CompanyDetailView({
                       <p className="mt-1 text-[12px] font-medium text-[#52606D]">
                         {actor.yellowCompanyCount} gule · {actor.greenCompanyCount} grønne
                       </p>
+                      {formatActorSeenSummary(actor) ? (
+                        <p className="mt-1 text-[12px] font-medium text-[#52606D]">
+                          {formatActorSeenSummary(actor)}
+                        </p>
+                      ) : null}
                       <p className="mt-2 text-[12px] leading-relaxed text-[#52606D]">{describeActorContext(actor)}</p>
                       <div className="mt-3 flex flex-wrap gap-2">
                         {actor.relatedCompanies.slice(0, 4).map((link) => (
@@ -1611,13 +1937,18 @@ function CompanyDetailView({
                                 Avviklet
                               </span>
                             ) : null}
+                            {link.registrationDate ? (
+                              <span className="rounded-full bg-[#F0F4F8] px-2 py-0.5 text-[10px] font-semibold text-[#52606D]">
+                                Reg. {formatShortDate(link.registrationDate)}
+                              </span>
+                            ) : null}
                           </div>
                         ))}
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen nettverksdata bygget opp ennå.</p>
+                  <p className="text-[14px] text-[#52606D]">Ingen nettverksdata bygget opp ennå. Her kommer det først mer innsikt når rolledata er hentet og snapshottene har fått bygge historikk rundt aktørene.</p>
                 )}
               </div>
             </div>
@@ -1645,7 +1976,7 @@ function CompanyDetailView({
                     </div>
                   ))
                 ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid.</p>
+                  <p className="text-[14px] text-[#52606D]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid, så dette er forventet for nye eller lite brukte oppslag.</p>
                 )}
               </div>
             </div>
@@ -1671,7 +2002,7 @@ function CompanyDetailView({
                     </div>
                   ))
                 ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen registrerte hendelser funnet.</p>
+                  <p className="text-[14px] text-[#52606D]">Ingen registrerte hendelser å vise ennå. Det betyr vanligvis at vi foreløpig bare har grunndata, uten synlige kunngjøringer eller normaliserte hendelser for selskapet.</p>
                 )}
               </div>
             </div>
@@ -1864,6 +2195,17 @@ function formatDateTime(value: string) {
   }).format(date);
 }
 
+function formatShortDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("nb-NO", {
+    dateStyle: "short",
+  }).format(date);
+}
+
 function formatRiskLabel(scoreColor: ScoreColor) {
   switch (scoreColor) {
     case "RED":
@@ -1910,13 +2252,13 @@ function compactRiskLabel(scoreColor: ScoreColor) {
 
 function describeActorContext(actor: NetworkActor) {
   if (actor.bankruptcyCompanyCount > 0 && actor.dissolvedCompanyCount > 0) {
-    return "Denne rolleholderen er knyttet til virksomheter med både konkurs- og avviklingsspor, noe som gjør aktørkonteksten særlig relevant.";
+    return `Denne rolleholderen er knyttet til virksomheter med både konkurs- og avviklingsspor${formatActorRecencySuffix(actor)}, noe som gjør aktørkonteksten særlig relevant.`;
   }
   if (actor.bankruptcyCompanyCount > 0) {
-    return "Denne rolleholderen er knyttet til virksomheter med konkursmarkering, noe som gir et tydelig historisk faresignal.";
+    return `Denne rolleholderen er knyttet til virksomheter med konkursmarkering${formatActorRecencySuffix(actor)}, noe som gir et tydelig historisk faresignal.`;
   }
   if (actor.redCompanyCount > 0 && actor.dissolvedCompanyCount > 0) {
-    return "Denne rolleholderen er knyttet til flere virksomheter med både røde signaler og avvikling, noe som gjør aktørkonteksten særlig relevant.";
+    return `Denne rolleholderen er knyttet til flere virksomheter med både røde signaler og avvikling${formatActorRecencySuffix(actor)}, noe som gjør aktørkonteksten særlig relevant.`;
   }
   if (actor.redCompanyCount > 0) {
     return "Denne rolleholderen er knyttet til virksomheter med røde signaler, noe som trekker opp aktørrisikoen.";
@@ -1928,6 +2270,38 @@ function describeActorContext(actor: NetworkActor) {
     return "Denne rolleholderen er knyttet til flere virksomheter med begrenset datagrunnlag eller svakere signaler.";
   }
   return "Aktørkonteksten ser foreløpig rolig ut basert på selskapene som er lagret i nettverksgrunnlaget.";
+}
+
+function formatActorSeenSummary(actor: NetworkActor) {
+  const parts = [
+    actor.lastBankruptcySeenAt ? `konkurs sist sett ${formatShortDate(actor.lastBankruptcySeenAt)}` : null,
+    actor.lastDissolvedSeenAt ? `avvikling sist sett ${formatShortDate(actor.lastDissolvedSeenAt)}` : null,
+    actor.lastRedSeenAt ? `rødt signal sist sett ${formatShortDate(actor.lastRedSeenAt)}` : null,
+  ].filter(Boolean);
+
+  return parts.length > 0 ? parts.join(" · ") : null;
+}
+
+function formatActorRecencySuffix(actor: NetworkActor) {
+  const mostRelevantDate = actor.lastBankruptcySeenAt ?? actor.lastDissolvedSeenAt ?? actor.lastRedSeenAt;
+  return mostRelevantDate ? `, sist sett ${formatShortDate(mostRelevantDate)}` : "";
+}
+
+function describeStructureSignal(signal: StructureSignal) {
+  switch (signal.code) {
+    case "ACTOR_CONTEXT_ELEVATED":
+      return "Dette brukes når aktørhistorikken er sterk nok til å være et eget signal, ikke bare bakgrunnsstøy i nettverksdelen.";
+    case "RECENT_BANKRUPTCY_RELATION":
+      return "Dette er et tidsnært kryssselskapsmønster, ikke bare et generelt historisk faresignal.";
+    case "RECENT_DISSOLUTION_RELATION":
+      return "Dette peker på nærhet i tid mellom nytt selskap og tidligere avviklingsspor hos de samme aktørene.";
+    case "CLUSTERED_NEW_COMPANY_PATTERN":
+      return "Flere nye selskaper på kort tid med samme aktører bør leses som strukturmønster, ikke som enkeltstående oppslag.";
+    case "POSSIBLE_REORGANIZATION":
+      return "Dette er en heuristisk vurdering som bør undersøkes sammen med nettverk, hendelser og registreringsdatoer.";
+    default:
+      return null;
+  }
 }
 
 function buildResultsSummary(

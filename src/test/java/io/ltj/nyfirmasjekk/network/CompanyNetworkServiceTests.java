@@ -1,5 +1,6 @@
 package io.ltj.nyfirmasjekk.network;
 
+import io.ltj.nyfirmasjekk.api.v1.NetworkCompanyLink;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
 import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -38,8 +40,8 @@ class CompanyNetworkServiceTests {
                 )
         ));
 
-        service.captureRoles("111111111", "Alpha AS", TrafficLight.GREEN, false, false, roller);
-        service.captureRoles("222222222", "Beta AS", TrafficLight.RED, true, true, roller);
+        service.captureRoles("111111111", "Alpha AS", TrafficLight.GREEN, false, false, LocalDate.of(2026, 4, 1), roller);
+        service.captureRoles("222222222", "Beta AS", TrafficLight.RED, true, true, LocalDate.of(2025, 12, 1), roller);
 
         var network = service.networkFor("111111111");
 
@@ -51,9 +53,15 @@ class CompanyNetworkServiceTests {
         assertThat(network.getFirst().redCompanyCount()).isEqualTo(1);
         assertThat(network.getFirst().dissolvedCompanyCount()).isEqualTo(1);
         assertThat(network.getFirst().greenCompanyCount()).isEqualTo(1);
+        assertThat(network.getFirst().lastRedSeenAt()).isNotNull();
+        assertThat(network.getFirst().lastBankruptcySeenAt()).isNotNull();
+        assertThat(network.getFirst().lastDissolvedSeenAt()).isNotNull();
         assertThat(network.getFirst().relatedCompanies())
                 .extracting(link -> link.orgNumber() + ":" + link.companyName())
                 .containsExactly("222222222:Beta AS", "111111111:Alpha AS");
+        assertThat(network.getFirst().relatedCompanies())
+                .extracting(NetworkCompanyLink::registrationDate)
+                .containsExactly(LocalDate.of(2025, 12, 1), LocalDate.of(2026, 4, 1));
     }
 
     @org.springframework.boot.test.context.TestConfiguration
