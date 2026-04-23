@@ -13,12 +13,13 @@
 
 ### Produkt
 
+- [ ] Legg inn utsendelseslogg for nettsidetilbud slik at samme selskap ikke kontaktes flere ganger
 - [~] Utvid strukturmønstre fra første versjon til faktisk kryssselskapsanalyse på tvers av selskaper og tidslinjer
 - [x] Definer første terskler for når aktørkontekst skal fremheves som relevant signal
 - [x] Legg inn tomtilstander og fallback-visning når hendelser eller aktørdata mangler
 - [x] Fas ut rå `announcements` fra detaljresponsen når `events` dekker UI-behovet fullt ut
 - [x] Utvid aktørkontekst med første presise historikkfelt for sist sett rødt, konkurs og avvikling
-- [~] Spisse verdiforslaget og CTA-er for kommersiell bruk mot nye virksomheter
+- [x] Spisse verdiforslaget og CTA-er for kommersiell bruk mot nye virksomheter
 
 ## Gjeldende scoringsregler
 
@@ -145,6 +146,8 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - 2026-04-23: Rå `announcements` er fjernet fra detaljresponsen og frontend-kontrakten. Kunngjøringer brukes fortsatt internt til scoring og normaliserte `events`.
 - 2026-04-23: Aktørkontekst er utvidet med `lastRedSeenAt`, `lastBankruptcySeenAt` og `lastDissolvedSeenAt`, og UI viser sist sett-datoer i nettverksdelen.
 - 2026-04-23: Første kommersielle lead-visning er lagt inn i treffliste og hurtigsjekk, med CTA-er, nettside-/kontaktforklaring og demping av røde selskaper før salgsarbeid.
+- 2026-04-23: Forsiden er spisset mot nettside-startpakke for nye virksomheter, med egen startpakke-seksjon og CTA som filtrerer til nye AS.
+- 2026-04-23: Startpakke-seksjonen er utvidet med tre pakkenivåer og enkel leadflyt fra filter til hurtigsjekk og kontakt/oppfølging.
 
 ## Produktutvikling
 
@@ -221,16 +224,32 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 
 - [x] Avklart retning: siden skal ikke bare vurdere selskaper, men brukes til å tilby nettside til nye firmaer
 - [x] Avklart produktvinkel: selg synlighet og troverdighet fra start, ikke bare "hjemmeside"
-- [ ] Spisse verdiforslaget på forsiden mot nye virksomheter uten tydelig digital tilstedeværelse
+- [x] Spisse verdiforslaget på forsiden mot nye virksomheter uten tydelig digital tilstedeværelse
 - [x] Legge inn tydelige CTA-er i trefflisten og detaljvisningen for tilbud om nettside
-- [ ] Lage enkel landingsseksjon for tjenesten: nettside, domene, e-post og kontaktpunkt
-- [ ] Definere et lavterskel tilbud med fast pris eller tydelig startpakke
+- [x] Lage enkel landingsseksjon for tjenesten: nettside, domene, e-post og kontaktpunkt
+- [~] Definere et lavterskel tilbud med fast pris eller tydelig startpakke
 - [~] Gjøre søket mer egnet for salgsarbeid: fremhev selskaper uten nettside eller med tynn offentlig profil
 - [x] Vise hvorfor et selskap er relevant lead, ikke bare hvilken score det har
 - [~] Lage enkel kontaktflyt fra UI til skjema, e-post eller CRM
+- [ ] Legg inn avkrysningsboks i treffkort og selskapsside: `E-post sendt om nettside til kr 4500`
+- [ ] Lag filbasert utsendelseslogg uten betalt database, slik at utsendelser huskes fra dag til dag
+- [ ] Vis tydelig status på selskaper som allerede er kontaktet, og hindre dobbel utsendelse uten eksplisitt overstyring
 - [ ] Vurdere om vurderingsscore skal tones ned til fordel for "mulighetssignal" i kommersiell visning
-- [ ] Skrive kort, konkret salgsbudskap rettet mot nyregistrerte selskaper
+- [x] Skrive kort, konkret salgsbudskap rettet mot nyregistrerte selskaper
 - [ ] Bestemme om løsningen primært er et internt salgsverktøy, en offentlig landingsside eller begge deler
+
+### Utsendelseslogg uten database
+
+- [ ] Bruk en append-only `data/outreach-log.jsonl` som autoritativ maskinlesbar logg
+- [ ] Én linje per hendelse: dato/tid, organisasjonsnummer, selskapsnavn, tilbudstype, pris, kanal, status og eventuell notattekst
+- [ ] Lag valgfri rullerende Markdown-rapport, for eksempel `data/outreach-log-YYYY-MM.md`, generert fra JSONL eller oppdatert samtidig
+- [ ] Legg inn backend-endepunkt for å lese status per organisasjonsnummer
+- [ ] Legg inn backend-endepunkt for å markere `sent` og eventuelt `reverted`
+- [ ] Sørg for at frontend henter utsendelsesstatus for trefflisten og detaljvisningen
+- [ ] Legg inn avkrysningsboks som skriver til loggen når tilbudsmail er sendt
+- [ ] Roter eller arkiver loggen per måned slik at filen ikke vokser uoversiktlig
+- [ ] Dokumenter at filbasert lagring bare er trygg hvis Render-instansen har persistent disk; ellers forsvinner data ved deploy/restart
+- [ ] Hvis persistent disk ikke brukes på Render, vurder Git-basert manuell eksport/import eller billig ekstern lagring før produksjon
 
 ## Komprimert arbeidslogg
 
@@ -244,6 +263,8 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - Fjernet rå `announcements` fra detaljrespons og frontend-kontrakt til fordel for normaliserte `events`
 - Lagt til sist sett-historikk for røde, konkurs- og avviklingsspor i aktørkontekst
 - Lagt inn første kommersielle lead-CTA i treffkort og hurtigsjekk, inkludert forklaring av nettside-/kontaktmulighet
+- Spisset forsiden med startpakke for nettside, domene, e-post og kontaktpunkt for nye virksomheter
+- Lagt inn første pakkestruktur og operativ leadflyt i UI uten å låse pris før prisnivå er avklart
 - Ryddet frontend-devoppsett, IDE-varsler, lint og typecheck
 
 ### Stabil verifisering
@@ -265,6 +286,7 @@ taskkill /PID <pid> /F
 
 ### Operativt neste steg
 
+- Bygg utsendelseslogg for tilbudsmail på kr 4500 med filbasert lagring og UI-avkryssing
 - Vurder om tidsnære kryssselskapsmønstre også bør integreres i søk/summary, eller om de bør holdes til dyp analyse
-- Spiss forsiden og eventuelt egen landingsseksjon for nettside-startpakke til nye virksomheter
+- Avklar konkret pris/pakkestruktur og om leadflyten skal gå til skjema, CRM eller manuell kontaktliste
 - Vurder materialiserte felter eller egen indeks hvis strukturfiltrering på tidsnære mønstre skal brukes i søk
