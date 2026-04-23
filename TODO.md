@@ -242,6 +242,7 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 
 - [ ] Bruk en append-only `data/outreach-log.jsonl` som autoritativ maskinlesbar logg
 - [ ] Én linje per hendelse: dato/tid, organisasjonsnummer, selskapsnavn, tilbudstype, pris, kanal, status og eventuell notattekst
+- [ ] Ta høyde for senere `userId`/`userEmail` i loggformatet selv om første versjon brukes uten innlogging
 - [ ] Lag valgfri rullerende Markdown-rapport, for eksempel `data/outreach-log-YYYY-MM.md`, generert fra JSONL eller oppdatert samtidig
 - [ ] Legg inn backend-endepunkt for å lese status per organisasjonsnummer
 - [ ] Legg inn backend-endepunkt for å markere `sent` og eventuelt `reverted`
@@ -250,6 +251,16 @@ Dette dokumentet oppsummerer status for fase 5 i `nyfirmasjekk` og samler gjenst
 - [ ] Roter eller arkiver loggen per måned slik at filen ikke vokser uoversiktlig
 - [ ] Dokumenter at filbasert lagring bare er trygg hvis Render-instansen har persistent disk; ellers forsvinner data ved deploy/restart
 - [ ] Hvis persistent disk ikke brukes på Render, vurder Git-basert manuell eksport/import eller billig ekstern lagring før produksjon
+
+### Flerbruker og innlogging
+
+- [ ] Avklar om løsningen skal brukes av bare én person eller flere brukere
+- [ ] Énbruker/intern bruk: innlogging er ikke nødvendig i første versjon, og filbasert utsendelseslogg kan være nok
+- [ ] Flere brukere: innlogging bør inn før utsendelsesloggen brukes operativt
+- [ ] Flere brukere: bruk delt database for utsendelsesstatus, ikke GitHub-fil eller lokal fil
+- [ ] Flere brukere: lagre hvem som markerte utsendelsen, tidspunkt, organisasjonsnummer, status, kanal og tilbudspris
+- [ ] Vurder enkel auth-løsning hvis flerbruker blir aktuelt, for eksempel Supabase Auth + Supabase Postgres eller NextAuth + Postgres
+- [ ] Ikke bygg full innlogging før behovet er bekreftet, men design loggformatet slik at `userId` kan legges til senere
 
 ## Komprimert arbeidslogg
 
@@ -287,6 +298,7 @@ taskkill /PID <pid> /F
 ### Operativt neste steg
 
 - Bygg utsendelseslogg for tilbudsmail på kr 4500 med filbasert lagring og UI-avkryssing
+- Avklar om utsendelseslogg skal være énbruker først eller flerbruker med innlogging og delt database
 - Vurder om tidsnære kryssselskapsmønstre også bør integreres i søk/summary, eller om de bør holdes til dyp analyse
 - Avklar konkret pris/pakkestruktur og om leadflyten skal gå til skjema, CRM eller manuell kontaktliste
 - Vurder materialiserte felter eller egen indeks hvis strukturfiltrering på tidsnære mønstre skal brukes i søk
