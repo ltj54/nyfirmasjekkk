@@ -41,8 +41,8 @@ public class WebsiteReachabilityService {
             if (headResponse.statusCode() != 405 && headResponse.statusCode() != 403) {
                 return false;
             }
-        } catch (IOException | InterruptedException | IllegalArgumentException ignored) {
-            if (ignored instanceof InterruptedException) {
+        } catch (IOException | InterruptedException | IllegalArgumentException exception) {
+            if (exception instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
             return false;
@@ -58,8 +58,8 @@ public class WebsiteReachabilityService {
                     HttpResponse.BodyHandlers.discarding()
             );
             return isSuccessful(getResponse.statusCode());
-        } catch (IOException | InterruptedException | IllegalArgumentException ignored) {
-            if (ignored instanceof InterruptedException) {
+        } catch (IOException | InterruptedException | IllegalArgumentException exception) {
+            if (exception instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
             return false;

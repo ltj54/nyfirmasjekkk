@@ -198,7 +198,7 @@ public class CompanyApiV1Mapper {
                     : new WebsiteContentMatch(false, "Ingen av kandidatene svarte ved sjekk.", null);
             return new WebsiteDiscovery(
                     "POSSIBLE_MATCH",
-                    reachable && contentMatch.matched() ? "MEDIUM" : reachable ? "LOW" : "LOW",
+                    reachable && contentMatch.matched() ? "MEDIUM" : "LOW",
                     nameCandidates,
                     reachableCandidate,
                     reachable,

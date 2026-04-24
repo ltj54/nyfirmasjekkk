@@ -175,7 +175,8 @@ export function CompanyCheckShell() {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to update outreach status for ${company.orgNumber}`);
+        console.error(`Failed to update outreach status for ${company.orgNumber}`);
+        return;
       }
 
       const payload = (await response.json()) as OutreachStatus;
@@ -205,7 +206,8 @@ export function CompanyCheckShell() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to load outreach email template");
+        console.error("Failed to load outreach email template");
+        return;
       }
 
       const payload = (await response.json()) as { content?: string };

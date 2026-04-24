@@ -61,7 +61,7 @@ public class WebsiteContentInspectionService {
                     .get();
 
             String title = document.title();
-            String bodyText = document.body() == null ? "" : document.body().text();
+            String bodyText = document.body().text();
             if (bodyText.length() > 4000) {
                 bodyText = bodyText.substring(0, 4000);
             }
