@@ -11,6 +11,7 @@ export interface CompanySummary {
   naceCode: string | null;
   naceDescription: string | null;
   website: string | null;
+  websiteDiscovery: WebsiteDiscovery | null;
   email: string | null;
   phone: string | null;
   contactPersonName: string | null;
@@ -34,9 +35,6 @@ export interface CompanySearchResponse {
 
 export interface MetadataFiltersResponse {
   organizationForms: string[];
-  counties: string[];
-  scores: ScoreColor[];
-  structureSignals: string[];
 }
 
 export interface CompanyDetails extends CompanySummary {
@@ -131,6 +129,19 @@ export interface StructureSignal {
   title: string;
   detail: string;
   severity: "HIGH" | "MEDIUM" | "INFO";
+  source: string;
+}
+
+export interface WebsiteDiscovery {
+  status: "REGISTERED" | "POSSIBLE_MATCH" | "NONE";
+  confidence: "HIGH" | "LOW" | "MEDIUM";
+  candidates: string[];
+  verifiedCandidate: string | null;
+  verifiedReachable: boolean | null;
+  contentMatched: boolean | null;
+  contentMatchReason: string | null;
+  pageTitle: string | null;
+  reason: string;
   source: string;
 }
 

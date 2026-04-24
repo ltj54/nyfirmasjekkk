@@ -34,20 +34,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const dayOptions = ["5", "10", "30", "60", "180", "365", "0"];
-const structureSignalLabels: Record<string, string> = {
-  NEW_COMPANY_WINDOW: "Nytt selskap",
-  LIMITED_DATA_PATTERN: "Tynt datagrunnlag",
-  BO_SIGNAL: "Bo-signal",
-  BANKRUPTCY_SIGNAL: "Konkursspor",
-  DISSOLUTION_SIGNAL: "Avviklingsspor",
-  ACTOR_RISK_PATTERN: "Aktørrisiko",
-  ACTOR_CONTEXT_ELEVATED: "Viktig aktørkontekst",
-  RECENT_BANKRUPTCY_RELATION: "Nylig konkursspor",
-  RECENT_DISSOLUTION_RELATION: "Nylig avviklingsspor",
-  CLUSTERED_NEW_COMPANY_PATTERN: "Flere nye selskaper",
-  POSSIBLE_REORGANIZATION: "Mulig omregistrering",
-};
-
 const legend = [
   { status: "GREEN", label: "Ingen varselflagg", color: "bg-emerald-500" },
   { status: "YELLOW", label: "Begrenset info", color: "bg-amber-500" },
@@ -99,41 +85,6 @@ const organizationFormHelp: Record<string, { label: string; description: string 
   },
 };
 
-const structureSignalHelp: Record<string, { label: string; description: string }> = {
-  ALL: {
-    label: "Alle strukturspor",
-    description: "Viser hele utvalget før du snevrer inn.",
-  },
-  NEW_COMPANY_WINDOW: {
-    label: "Nytt selskap",
-    description: "Nylig registrert selskap med kort historikk.",
-  },
-  LIMITED_DATA_PATTERN: {
-    label: "Tynt datagrunnlag",
-    description: "Sentrale opplysninger mangler eller er svake.",
-  },
-  BO_SIGNAL: {
-    label: "Bo-signal",
-    description: "Navn eller registerspor peker mot bo-relatert struktur.",
-  },
-  BANKRUPTCY_SIGNAL: {
-    label: "Konkursspor",
-    description: "Indikasjoner på konkurs i selskapet eller relaterte spor.",
-  },
-  DISSOLUTION_SIGNAL: {
-    label: "Avviklingsspor",
-    description: "Signaler om avvikling, tvangsavvikling eller oppløsning.",
-  },
-  ACTOR_RISK_PATTERN: {
-    label: "Aktørrisiko",
-    description: "Rolleholderne har historikk eller tilknytninger som bør vurderes.",
-  },
-  POSSIBLE_REORGANIZATION: {
-    label: "Mulig omregistrering",
-    description: "Aktører og tidspunkt kan peke mot ny organisering.",
-  },
-};
-
 export function CompanyCheckShell() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
@@ -143,9 +94,6 @@ export function CompanyCheckShell() {
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
   const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
     organizationForms: [],
-    counties: [],
-    scores: [],
-    structureSignals: [],
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -156,7 +104,6 @@ export function CompanyCheckShell() {
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("AS");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
-  const [selectedStructureSignal, setSelectedStructureSignal] = useState("");
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
@@ -396,7 +343,6 @@ export function CompanyCheckShell() {
       countyFilter?: string;
       organizationFormFilter?: string;
       selectedLegend?: keyof typeof legendDetails | null;
-      selectedStructureSignal?: string;
     }
   ) {
     if (!backendReady) {
@@ -409,7 +355,6 @@ export function CompanyCheckShell() {
     const effectiveCountyFilter = overrides?.countyFilter ?? countyFilter;
     const effectiveOrganizationFormFilter = overrides?.organizationFormFilter ?? organizationFormFilter;
     const effectiveSelectedLegend = overrides?.selectedLegend === undefined ? selectedLegend : overrides.selectedLegend;
-    const effectiveSelectedStructureSignal = overrides?.selectedStructureSignal ?? selectedStructureSignal;
     const params = new URLSearchParams();
     params.set("dager", effectiveDaysFilter);
     params.set("page", pageNum.toString());
@@ -417,7 +362,6 @@ export function CompanyCheckShell() {
     if (effectiveCountyFilter) params.set("county", effectiveCountyFilter);
     if (effectiveOrganizationFormFilter) params.set("organizationForm", effectiveOrganizationFormFilter);
     if (effectiveSelectedLegend) params.set("score", effectiveSelectedLegend);
-    if (effectiveSelectedStructureSignal) params.set("structureSignal", effectiveSelectedStructureSignal);
 
     try {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
@@ -462,7 +406,7 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     runRefreshRecent();
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedStructureSignal, selectedCompany, activeQuery]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany, activeQuery]);
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
@@ -599,9 +543,6 @@ export function CompanyCheckShell() {
       if (selectedLegend) {
         params.set("score", selectedLegend);
       }
-      if (selectedStructureSignal) {
-        params.set("structureSignal", selectedStructureSignal);
-      }
       const endpoint = isOrgNumber 
         ? `/api/company-check/${trimmedTerm}`
         : `/api/company-check/search?${params.toString()}`;
@@ -668,14 +609,12 @@ export function CompanyCheckShell() {
     setDaysFilter("5");
     setCountyFilter("");
     setOrganizationFormFilter("AS");
-    setSelectedStructureSignal("");
     searchInputRef.current?.focus({ preventScroll: true });
     void fetchRecent(0, "", {
       daysFilter: "5",
       countyFilter: "",
       organizationFormFilter: "AS",
       selectedLegend: "GREEN",
-      selectedStructureSignal: "",
     });
   }
 
@@ -693,7 +632,6 @@ export function CompanyCheckShell() {
     organizationFormFilter,
     metadata.organizationForms,
     selectedLegend,
-    selectedStructureSignal,
   );
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-[#1F5FA9]/10">
@@ -852,41 +790,6 @@ export function CompanyCheckShell() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
-                  <span className="text-[#52606D]">Strukturspor:</span>
-                  <div className="relative inline-flex items-center gap-1.5">
-                    <button
-                      className={`peer rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                        !selectedStructureSignal
-                          ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                          : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                      }`}
-                      disabled={!initialResultsReady || isListLoading}
-                      onClick={() => setSelectedStructureSignal("")}
-                      type="button"
-                    >
-                      Alle
-                    </button>
-                    <StructureSignalTooltip code="ALL" />
-                  </div>
-                  {metadata.structureSignals.map((signal) => (
-                    <div key={signal} className="relative inline-flex items-center gap-1.5">
-                      <button
-                        className={`peer rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                          selectedStructureSignal === signal
-                            ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                        }`}
-                        disabled={!initialResultsReady || isListLoading}
-                        onClick={() => setSelectedStructureSignal((current) => current === signal ? "" : signal)}
-                        type="button"
-                      >
-                        {structureSignalLabels[signal] ?? signal}
-                      </button>
-                      <StructureSignalTooltip code={signal} />
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="flex items-center gap-2 text-[#52606D]">
                     <CalendarDays className="size-4" />
                     Tidsrom:
@@ -923,7 +826,6 @@ export function CompanyCheckShell() {
                     setCountyFilter("");
                     setOrganizationFormFilter("AS");
                     setSelectedLegend("GREEN");
-                    setSelectedStructureSignal("");
                     setActiveQuery("");
                     setSearchTerm("");
                     scrollToSection("search");
@@ -1136,7 +1038,6 @@ export function CompanyCheckShell() {
                           setCountyFilter("");
                           setOrganizationFormFilter("AS");
                           setSelectedLegend("GREEN");
-                          setSelectedStructureSignal("");
                           void fetchRecent(0);
                         }}
                       >
@@ -1382,6 +1283,18 @@ function CompanyCard({
           <CalendarDays className="size-3.5" />
           <span>{company.registrationDate ? `Registrert: ${company.registrationDate}` : "Registrert: ukjent"}</span>
         </div>
+        {company.email ? (
+          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
+            <Mail className="size-3.5" />
+            <a
+              className="truncate font-semibold text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+              href={`mailto:${company.email}`}
+              onClick={(event) => event.stopPropagation()}
+            >
+              {company.email}
+            </a>
+          </div>
+        ) : null}
         {company.website ? (
           <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
             <Globe className="size-3.5" />
@@ -1396,6 +1309,22 @@ function CompanyCard({
             </a>
           </div>
         ) : null}
+        {!company.website && company.websiteDiscovery?.status === "POSSIBLE_MATCH" && company.websiteDiscovery.candidates.length > 0 ? (
+          <div className="flex items-start gap-2 text-[12px] font-medium text-[#52606D]">
+            <Globe className="mt-0.5 size-3.5" />
+            <div>
+              <p className="text-[#1F2933]">
+                {company.websiteDiscovery.contentMatched ? "Sannsynlig nettside funnet" : company.websiteDiscovery.verifiedReachable ? "Mulig nettside må vurderes" : "Mulig nettside funnet"}
+              </p>
+              <p className="mt-1 text-[#1F5FA9]">
+                {stripWebsiteProtocol(company.websiteDiscovery.verifiedCandidate ?? company.websiteDiscovery.candidates[0])}
+              </p>
+              <p className="mt-1 text-[11px] text-[#52606D]">
+                {formatWebsiteVerification(company.websiteDiscovery)} · {formatWebsiteContentMatch(company.websiteDiscovery)} · sikkerhet: {formatWebsiteConfidence(company.websiteDiscovery.confidence).toLowerCase()} · må bekreftes manuelt
+              </p>
+            </div>
+          </div>
+        ) : null}
         {company.contactPersonName ? (
           <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
             <Building2 className="size-3.5" />
@@ -1403,18 +1332,6 @@ function CompanyCard({
               {company.contactPersonName}
               {company.contactPersonRole ? ` · ${formatRoleType(company.contactPersonRole)}` : ""}
             </span>
-          </div>
-        ) : null}
-        {company.email ? (
-          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-            <Mail className="size-3.5" />
-            <a
-              className="truncate text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
-              href={`mailto:${company.email}`}
-              onClick={(event) => event.stopPropagation()}
-            >
-              {company.email}
-            </a>
           </div>
         ) : null}
         {company.phone ? (
@@ -1531,7 +1448,7 @@ function OutreachCheckbox({
         />
         <span className="min-w-0">
           <span className="block text-[12px] font-semibold text-[#1F2933]">
-            E-post sendt om nettside til kr {sentPrice}
+            E-post sendt om nettside til kr {formatNokPrice(sentPrice)}
           </span>
           <span className="mt-1 block text-[12px] text-[#52606D]">{helpText}</span>
           {status?.sent && status.sentAt ? (
@@ -1565,35 +1482,6 @@ function OutreachCheckbox({
   );
 }
 
-function StructureSignalTooltip({ code }: { code: string }) {
-  const help = getStructureSignalHelp(code);
-
-  return (
-    <div
-      className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-80 -translate-x-1/2 translate-y-1 rounded-[18px] border border-[#D9E2EC] bg-white p-4 text-left opacity-0 shadow-[0_20px_50px_-24px_rgba(31,95,169,0.35)] transition-all duration-150 peer-hover:translate-y-0 peer-hover:opacity-100 peer-focus-visible:translate-y-0 peer-focus-visible:opacity-100"
-      role="tooltip"
-    >
-      <p className="text-[12px] font-medium text-[#52606D]">Strukturspor</p>
-      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">
-        {help.label}
-      </p>
-      <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
-        {help.description}
-      </p>
-      <p className="mt-3 text-[12px] font-medium text-[#1F5FA9]">
-        Brukes som filter i søket.
-      </p>
-    </div>
-  );
-}
-
-function getStructureSignalHelp(code: string) {
-  return structureSignalHelp[code] ?? {
-    label: structureSignalLabels[code] ?? code,
-    description: "Filtrerer trefflisten på dette struktursporet når backend har funnet signalet i registerdataene.",
-  };
-}
-
 function normalizeWebsiteUrl(value: string) {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
@@ -1601,11 +1489,19 @@ function normalizeWebsiteUrl(value: string) {
 function getContactability(company: CompanySummary) {
   const points = [company.email, company.phone, company.website, company.contactPersonName].filter(Boolean).length;
 
-  if (company.email || company.phone) {
+  if (company.email) {
     return {
-      label: "Direkte kontaktpunkt registrert",
+      label: "E-post registrert",
       shortLabel: "Kontaktbar",
       badgeClass: "rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700",
+    };
+  }
+
+  if (company.phone) {
+    return {
+      label: "Telefon registrert, men mangler e-post",
+      shortLabel: "Delvis",
+      badgeClass: "rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700",
     };
   }
 
@@ -1625,17 +1521,27 @@ function getContactability(company: CompanySummary) {
 }
 
 function getLeadPriority(company: CompanySummary) {
-  const hasDirectContact = Boolean(company.email || company.phone);
-  const missingWebsite = !company.website;
+  const hasEmail = Boolean(company.email);
+  const hasPhone = Boolean(company.phone);
+  const hasPossibleWebsite = company.websiteDiscovery?.status === "POSSIBLE_MATCH";
+  const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
+  const missingWebsite = !company.website && !hasPossibleWebsite;
 
-  if (missingWebsite && hasDirectContact && company.scoreColor !== "RED") {
+  if (missingWebsite && hasEmail && company.scoreColor !== "RED") {
     return {
       label: "Sterkt signal",
         badgeClass: "rounded-sm bg-[#E6F0FA] px-2.5 py-1 text-[10px] font-semibold text-[#1F5FA9]",
     };
   }
 
-  if ((missingWebsite || hasDirectContact) && company.scoreColor !== "RED") {
+  if (hasLikelyWebsite && company.scoreColor !== "RED") {
+    return {
+      label: "Svakt signal",
+      badgeClass: "rounded-sm bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
+    };
+  }
+
+  if ((missingWebsite || hasEmail || hasPhone) && company.scoreColor !== "RED") {
     return {
       label: "Mulig signal",
       badgeClass: "rounded-sm bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
@@ -1654,19 +1560,16 @@ function detailLeadSignalConfig(label: string) {
       return {
         icon: CheckCircle2,
         text: "bg-[#E6F0FA] text-[#1F5FA9] border-[#C7DFF8]",
-        wash: "from-[#C7DFF8]/80 via-[#E6F0FA]/55 to-transparent",
       };
     case "Mulig signal":
       return {
         icon: AlertTriangle,
         text: "bg-amber-50 text-amber-700 border-amber-100",
-        wash: "from-amber-100/80 via-amber-50/40 to-transparent",
       };
     default:
       return {
         icon: AlertCircle,
         text: "bg-slate-100 text-slate-700 border-slate-200",
-        wash: "from-slate-200/80 via-slate-100/45 to-transparent",
       };
   }
 }
@@ -1681,6 +1584,15 @@ function getBestContactPoint(company: CompanySummary) {
   if (company.website) {
     return { label: "Gå via registrert nettside" };
   }
+  if (company.websiteDiscovery?.contentMatched === true) {
+    return { label: "Sannsynlig nettside funnet, sjekk før kontakt" };
+  }
+  if (company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false) {
+    return { label: "Domene svarer, men kan være feiltreff" };
+  }
+  if (company.websiteDiscovery?.status === "POSSIBLE_MATCH") {
+    return { label: "Mulig nettside funnet, må bekreftes manuelt" };
+  }
   if (company.contactPersonName) {
     return { label: `Manuell kontakt mot ${company.contactPersonName}` };
   }
@@ -1688,8 +1600,12 @@ function getBestContactPoint(company: CompanySummary) {
 }
 
 function getCommercialOpportunity(company: CompanySummary) {
-  const hasDirectContact = Boolean(company.email || company.phone);
-  const missingWebsite = !company.website;
+  const hasEmail = Boolean(company.email);
+  const hasPhone = Boolean(company.phone);
+  const hasPossibleWebsite = company.websiteDiscovery?.status === "POSSIBLE_MATCH";
+  const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
+  const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
+  const missingWebsite = !company.website && !hasPossibleWebsite;
 
   if (company.scoreColor === "RED") {
     return {
@@ -1700,28 +1616,66 @@ function getCommercialOpportunity(company: CompanySummary) {
     };
   }
 
-  if (missingWebsite && hasDirectContact) {
+  if (missingWebsite && hasEmail) {
     return {
       title: "Nettside-startpakke aktuell",
-      summary: "Mangler registrert nettside, men har direkte kontaktpunkt i åpne data.",
+      summary: "Mangler registrert nettside og har e-post registrert i åpne data.",
       actionLabel: "Åpne lead",
       cardClass: "border-[#C7DFF8] bg-[#F1F7FE]",
+    };
+  }
+
+  if (missingWebsite && hasPhone) {
+    return {
+      title: "Mulig lead, men svakere kontaktgrunnlag",
+      summary: "Mangler registrert nettside, men har bare telefon. Fravær av e-post gjør dette mindre egnet for rask utsendelse.",
+      actionLabel: "Se detaljer",
+      cardClass: "border-amber-100 bg-amber-50/70",
+    };
+  }
+
+  if (hasLikelyWebsite) {
+    return {
+      title: "Sannsynlig nettside funnet",
+      summary: "Kandidatdomenet svarer, og innholdet ligner på selskapet. Dette bør normalt ikke prioriteres som nettsideløst lead.",
+      actionLabel: "Se detaljer",
+      cardClass: "border-[#D9E2EC] bg-[#F8FAFC]",
+    };
+  }
+
+  if (hasMismatchWebsite) {
+    return {
+      title: "Mulig feiltreff på nettside",
+      summary: "Domenet svarer, men innholdet ser ikke ut til å matche selskapet. Krever manuell kontroll før det brukes i vurderingen.",
+      actionLabel: "Se detaljer",
+      cardClass: "border-amber-100 bg-amber-50/70",
+    };
+  }
+
+  if (hasPossibleWebsite) {
+    return {
+      title: "Mulig nettside må bekreftes",
+      summary: "Ingen nettside er registrert i BRREG, men vi har funnet en mulig kandidat. Bekreft før dette behandles som sterkt lead.",
+      actionLabel: "Se detaljer",
+      cardClass: "border-amber-100 bg-amber-50/70",
     };
   }
 
   if (missingWebsite) {
     return {
       title: "Digital tilstedeværelse mangler",
-      summary: "Ingen nettside registrert. Krever litt mer research før kontakt.",
+      summary: "Ingen nettside registrert, men uten e-post blir dette mer manuelt å følge opp.",
       actionLabel: "Vurder lead",
       cardClass: "border-amber-100 bg-amber-50/70",
     };
   }
 
-  if (hasDirectContact) {
+  if (hasEmail || hasPhone) {
     return {
       title: "Kontaktbar virksomhet",
-      summary: "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate.",
+      summary: hasEmail
+        ? "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate."
+        : "Har telefon, men mangler e-post. Det gjør oppfølgingen mindre effektiv.",
       actionLabel: "Se kontakt",
       cardClass: "border-emerald-100 bg-emerald-50/60",
     };
@@ -1735,39 +1689,17 @@ function getCommercialOpportunity(company: CompanySummary) {
   };
 }
 
-function commercialContactHref(company: CompanySummary) {
-  if (company.scoreColor === "RED") {
-    return null;
-  }
-  if (company.email) {
-    return `mailto:${company.email}`;
-  }
-  if (company.phone) {
-    return `tel:${company.phone.replace(/\s+/g, "")}`;
-  }
-  if (company.website) {
-    return normalizeWebsiteUrl(company.website);
-  }
-  return null;
-}
-
-function commercialContactLabel(company: CompanySummary) {
-  if (company.scoreColor === "RED") {
-    return "Ikke kontakt før risiko er vurdert";
-  }
-  if (company.email) {
-    return "Kontakt via e-post";
-  }
-  if (company.phone) {
-    return "Kontakt via telefon";
-  }
-  if (company.website) {
-    return "Åpne nettside";
-  }
-  return "Krever manuell research";
-}
-
 function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
+  const yellowEmailDifference = yellowEmailRank(left) - yellowEmailRank(right);
+  if (yellowEmailDifference !== 0) {
+    return yellowEmailDifference;
+  }
+
+  const emailDifference = emailRank(left) - emailRank(right);
+  if (emailDifference !== 0) {
+    return emailDifference;
+  }
+
   const priorityDifference = leadPriorityRank(left) - leadPriorityRank(right);
   if (priorityDifference !== 0) {
     return priorityDifference;
@@ -1797,6 +1729,14 @@ function leadPriorityRank(company: CompanySummary) {
   if (label === "Sterkt signal") return 0;
   if (label === "Mulig signal") return 1;
   return 2;
+}
+
+function yellowEmailRank(company: CompanySummary) {
+  return company.scoreColor === "YELLOW" && Boolean(company.email) ? 0 : 1;
+}
+
+function emailRank(company: CompanySummary) {
+  return company.email ? 0 : 1;
 }
 
 function structureSignalRank(company: CompanySummary) {
@@ -1910,11 +1850,11 @@ function CompanyDetailView({
   const structureSignals = company.structureSignals || [];
   const elevatedActorContextSignal = structureSignals.find((signal) => signal.code === "ACTOR_CONTEXT_ELEVATED") ?? null;
   const commercialOpportunity = getCommercialOpportunity(company);
-  const commercialHref = commercialContactHref(company);
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const historyPatterns = analyzeHistoryPatterns(history);
+  const historyInsight = buildHistoryInsight(history);
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
   const generatedEmailHref = generatedEmail && company.email
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
@@ -2026,6 +1966,49 @@ function CompanyDetailView({
                 <p className="text-[15px] font-semibold leading-relaxed">{primaryReason}</p>
               </div>
 
+              {!company.website && company.websiteDiscovery?.status === "POSSIBLE_MATCH" && company.websiteDiscovery.candidates.length > 0 ? (
+                <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
+                  <p className="mb-2 text-[12px] font-medium text-[#52606D]">
+                    {company.websiteDiscovery.contentMatched ? "Sannsynlig nettside" : "Mulig nettside"}
+                  </p>
+                  <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">
+                    {company.websiteDiscovery.contentMatched
+                      ? "Ingen registrert nettside i BRREG, men kandidaten ser ut til å høre til selskapet."
+                      : "Ingen registrert nettside i BRREG, men vi fant en mulig kandidat."}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {company.websiteDiscovery.candidates.map((candidate) => (
+                      <a
+                        key={candidate}
+                        className="inline-flex rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-1.5 text-[12px] font-semibold text-[#1F5FA9] hover:bg-white"
+                        href={candidate}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {stripWebsiteProtocol(candidate)}
+                      </a>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{company.websiteDiscovery.reason}</p>
+                  {company.websiteDiscovery.pageTitle ? (
+                    <p className="mt-2 text-[12px] font-medium text-[#52606D]">
+                      Sidetittel: {company.websiteDiscovery.pageTitle}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 text-[12px] font-medium text-[#52606D]">
+                    {formatWebsiteVerification(company.websiteDiscovery)}
+                  </p>
+                  {company.websiteDiscovery.contentMatchReason ? (
+                    <p className="mt-2 text-[12px] font-medium text-[#52606D]">
+                      {company.websiteDiscovery.contentMatchReason}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
+                    {formatWebsiteConfidence(company.websiteDiscovery.confidence)} sikkerhet · {company.websiteDiscovery.source}
+                  </p>
+                </div>
+              ) : null}
+
               {elevatedActorContextSignal ? (
                 <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
                   <p className="mb-2 text-[12px] font-medium text-[#52606D]">Løftet aktørkontekst</p>
@@ -2036,26 +2019,12 @@ function CompanyDetailView({
               ) : null}
 
               <div className={`mt-4 border p-5 ${commercialOpportunity.cardClass}`}>
-                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
                   <div>
                     <p className="text-[12px] font-medium text-[#52606D]">Kommersiell mulighet</p>
                     <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{commercialOpportunity.title}</h4>
                     <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">{commercialOpportunity.summary}</p>
                   </div>
-                  {commercialHref ? (
-                    <a
-                      className="inline-flex shrink-0 items-center justify-center rounded-sm border border-[#1F5FA9] bg-[#1F5FA9] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#2F6FB2]"
-                      href={commercialHref}
-                      rel={commercialHref.startsWith("http") ? "noreferrer" : undefined}
-                      target={commercialHref.startsWith("http") ? "_blank" : undefined}
-                    >
-                      {commercialContactLabel(company)}
-                    </a>
-                  ) : (
-                    <span className="inline-flex shrink-0 items-center justify-center rounded-sm border border-[#D9E2EC] bg-white px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
-                      {commercialContactLabel(company)}
-                    </span>
-                  )}
                 </div>
               </div>
 
@@ -2100,12 +2069,15 @@ function CompanyDetailView({
                         {copiedEmail ? "Kopiert" : "Kopier mailtekst"}
                       </Button>
                       {generatedEmailHref ? (
-                        <a
+                        <button
                           className="inline-flex items-center justify-center rounded-sm border border-[#D9E2EC] bg-white px-4 py-2 text-[12px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
-                          href={generatedEmailHref}
+                          onClick={() => {
+                            window.open(generatedEmailHref, "_blank", "noopener,noreferrer");
+                          }}
+                          type="button"
                         >
                           Åpne i e-post
-                        </a>
+                        </button>
                       ) : (
                         <span className="inline-flex items-center justify-center rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2 text-[12px] font-medium text-[#7B8794]">
                           Mangler e-postadresse
@@ -2345,25 +2317,50 @@ function CompanyDetailView({
             <div className="insight-card border border-[#D9E2EC] bg-white p-5">
               <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Historikk</h4>
               <div className="space-y-3">
-                {history.length > 0 ? (
-                  history.slice(0, 6).map((entry, index) => (
-                    <div key={`${entry.capturedAt}-${index}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                {historyInsight.kind === "changes" ? (
+                  historyInsight.groups.map((group, index) => (
+                    <div key={`${group.latest.capturedAt}-${index}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[13px] font-bold text-[#1F2933]">{entry.summary}</p>
+                          <p className="text-[13px] font-bold text-[#1F2933]">{group.latest.summary}</p>
                           <p className="mt-1 text-[12px] font-medium text-[#52606D]">
-                            {entry.organizationForm ?? "Ukjent org.form"}{entry.naceCode ? ` · ${entry.naceCode}` : ""}
+                            {group.latest.organizationForm ?? "Ukjent org.form"}{group.latest.naceCode ? ` · ${group.latest.naceCode}` : ""}
                           </p>
+                          {group.count > 1 ? (
+                            <p className="mt-2 text-[12px] font-medium text-[#1F5FA9]">
+                              Samme vurdering observert {group.count} ganger fra {formatDateTime(group.oldest.capturedAt)} til {formatDateTime(group.latest.capturedAt)}.
+                            </p>
+                          ) : null}
                         </div>
                         <div className="text-right">
-                          <p className="text-[12px] font-bold text-[#52606D]">{formatDateTime(entry.capturedAt)}</p>
+                          <p className="text-[12px] font-bold text-[#52606D]">{formatDateTime(group.latest.capturedAt)}</p>
                           <p className="mt-1 text-[11px] font-medium text-[#52606D]">
-                            {entry.scoreColor === "GREEN" ? "Ingen varselflagg" : entry.scoreColor === "YELLOW" ? "Begrenset info" : "Alvorlige signaler"}
+                            {formatLegendLabel(group.latest.scoreColor)}
                           </p>
                         </div>
                       </div>
                     </div>
                   ))
+                ) : historyInsight.kind === "stable" ? (
+                  <div className="border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-4">
+                    <p className="text-[13px] font-bold text-[#1F2933]">Uendret over tid</p>
+                    <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">
+                      Samme vurdering er observert {historyInsight.group.count} ganger fra{" "}
+                      {formatDateTime(historyInsight.group.oldest.capturedAt)} til{" "}
+                      {formatDateTime(historyInsight.group.latest.capturedAt)}.
+                    </p>
+                    <p className="mt-2 text-[12px] font-medium text-[#52606D]">
+                      {historyInsight.group.latest.summary} · {historyInsight.group.latest.organizationForm ?? "Ukjent org.form"}
+                      {historyInsight.group.latest.naceCode ? ` · ${historyInsight.group.latest.naceCode}` : ""}
+                    </p>
+                    <p className="mt-2 text-[11px] font-medium text-[#52606D]">
+                      {formatLegendLabel(historyInsight.group.latest.scoreColor)}
+                    </p>
+                  </div>
+                ) : history.length > 0 ? (
+                  <p className="text-[14px] text-[#52606D]">
+                    Historikken tilfører foreløpig lite, fordi vi bare har ett lagret punkt uten endringer over tid.
+                  </p>
                 ) : (
                   <p className="text-[14px] text-[#52606D]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid, så dette er forventet for nye eller lite brukte oppslag.</p>
                 )}
@@ -2386,7 +2383,7 @@ function CompanyDetailView({
                             </span>
                           </div>
                         </div>
-                        <p className="whitespace-nowrap text-[12px] font-medium text-[#52606D]">{event.date ?? "Udatert"}</p>
+                        <p className="whitespace-nowrap text-[12px] font-medium text-[#52606D]">{event.date ? formatEventDate(event.date) : "Udatert"}</p>
                       </div>
                     </div>
                   ))
@@ -2547,6 +2544,25 @@ function formatEventSeverity(severity: CompanyEvent["severity"]) {
   }
 }
 
+function formatEventDate(value: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+
+  const norwegianDateMatch = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if (norwegianDateMatch) {
+    const [, day, month, year] = norwegianDateMatch;
+    return `${year}-${month}-${day}`;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toISOString().slice(0, 10);
+}
+
 function eventSeverityClassName(severity: CompanyEvent["severity"]) {
   switch (severity) {
     case "HIGH":
@@ -2638,7 +2654,7 @@ function applyOutreachTemplate(
     "{{companyPhone}}": company.phone?.trim() || "",
     "{{location}}": location,
     "{{greeting}}": greeting,
-    "{{price}}": "4500",
+    "{{price}}": "4.500",
     "{{senderName}}": "[DITT NAVN]",
     "{{senderCompany}}": "[FIRMANAVN]",
     "{{senderPhone}}": "[DITT TELEFONNUMMER]",
@@ -2671,6 +2687,45 @@ Mvh
 {{senderCompany}}
 {{senderPhone}}
 {{senderEmail}}`;
+}
+
+function formatNokPrice(value: number) {
+  return new Intl.NumberFormat("nb-NO").format(value);
+}
+
+function stripWebsiteProtocol(value: string) {
+  return value.replace(/^https?:\/\//, "").replace(/\/$/, "");
+}
+
+function formatWebsiteConfidence(confidence: "HIGH" | "MEDIUM" | "LOW") {
+  switch (confidence) {
+    case "HIGH":
+      return "Høy";
+    case "MEDIUM":
+      return "Middels";
+    case "LOW":
+      return "Lav";
+  }
+}
+
+function formatWebsiteVerification(websiteDiscovery: NonNullable<CompanySummary["websiteDiscovery"]>) {
+  if (websiteDiscovery.verifiedReachable === true) {
+    return "Kandidaten svarte ved sjekk";
+  }
+  if (websiteDiscovery.verifiedReachable === false) {
+    return "Kandidaten svarte ikke ved sjekk";
+  }
+  return "Kandidaten er ikke verifisert";
+}
+
+function formatWebsiteContentMatch(websiteDiscovery: NonNullable<CompanySummary["websiteDiscovery"]>) {
+  if (websiteDiscovery.contentMatched === true) {
+    return "innholdet ligner på selskapet";
+  }
+  if (websiteDiscovery.verifiedReachable === true) {
+    return "ingen tydelig kobling funnet i innholdet";
+  }
+  return "innhold ikke sjekket";
 }
 
 function formatShortDate(value: string) {
@@ -2788,7 +2843,6 @@ function buildResultsSummary(
   organizationFormFilter: string,
   organizationForms: string[],
   selectedLegend: keyof typeof legendDetails | null,
-  selectedStructureSignal: string,
 ) {
   const days = daysFilter || "5";
   const timePart = days === "0" ? "Alle data" : `Siste ${days} dager`;
@@ -2798,11 +2852,8 @@ function buildResultsSummary(
     ? `for ${organizationFormLabel ?? organizationFormFilter}`
     : "";
   const signalPart = selectedLegend ? `med ${legendDetails[selectedLegend].title.toLowerCase()}` : "";
-  const structurePart = selectedStructureSignal
-    ? `med ${structureSignalLabels[selectedStructureSignal]?.toLowerCase() ?? selectedStructureSignal.toLowerCase()}`
-    : "";
 
-  return [timePart, countyPart, formPart, signalPart, structurePart].filter(Boolean).join(" ");
+  return [timePart, countyPart, formPart, signalPart].filter(Boolean).join(" ");
 }
 
 function estimateListProgress(elapsedMs: number) {
@@ -2881,6 +2932,74 @@ function analyzeHistoryPatterns(history: CompanyHistoryEntry[]) {
     scoreTrend: buildScoreTrendText(first.scoreColor as ScoreColor, latest.scoreColor as ScoreColor, scoreChanges),
     changeSignals,
   };
+}
+
+type HistoryGroup = {
+  count: number;
+  latest: CompanyHistoryEntry;
+  oldest: CompanyHistoryEntry;
+};
+
+type HistoryInsight =
+  | { kind: "empty" }
+  | { kind: "single" }
+  | { kind: "stable"; group: HistoryGroup }
+  | { kind: "changes"; groups: HistoryGroup[] };
+
+function buildHistoryInsight(history: CompanyHistoryEntry[]): HistoryInsight {
+  if (history.length === 0) {
+    return { kind: "empty" };
+  }
+
+  const sortedHistory = [...history].sort(
+    (left, right) => new Date(right.capturedAt).getTime() - new Date(left.capturedAt).getTime()
+  );
+  const groups: HistoryGroup[] = [];
+
+  for (const entry of sortedHistory) {
+    const previousGroup = groups.at(-1);
+    if (previousGroup && historyEntrySignature(previousGroup.latest) === historyEntrySignature(entry)) {
+      previousGroup.count += 1;
+      previousGroup.oldest = entry;
+      continue;
+    }
+
+    groups.push({
+      count: 1,
+      latest: entry,
+      oldest: entry,
+    });
+  }
+
+  if (groups.length === 1) {
+    if (groups[0].count === 1) {
+      return { kind: "single" };
+    }
+    return { kind: "stable", group: groups[0] };
+  }
+
+  return {
+    kind: "changes",
+    groups: groups.slice(0, 6),
+  };
+}
+
+function historyEntrySignature(entry: CompanyHistoryEntry) {
+  return JSON.stringify({
+    summary: entry.summary,
+    organizationForm: entry.organizationForm,
+    scoreColor: entry.scoreColor,
+    municipality: entry.municipality,
+    county: entry.county,
+    naceCode: entry.naceCode,
+    latestAnnualAccountsYear: entry.latestAnnualAccountsYear,
+    vatRegistered: entry.vatRegistered,
+    registeredInBusinessRegistry: entry.registeredInBusinessRegistry,
+    hasContactData: entry.hasContactData,
+    hasRoles: entry.hasRoles,
+    hasSeriousSignals: entry.hasSeriousSignals,
+    registrationDate: entry.registrationDate,
+  });
 }
 
 function structureSignalSeverityClassName(severity: "HIGH" | "MEDIUM" | "INFO") {

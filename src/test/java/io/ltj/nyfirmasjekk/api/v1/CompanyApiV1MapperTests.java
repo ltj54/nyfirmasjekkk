@@ -23,6 +23,8 @@ class CompanyApiV1MapperTests {
     void brukerKanoniskKodeNarFactsBareHarBeskrivelse() {
         var mapper = new CompanyApiV1Mapper(
                 null,
+                new StubWebsiteReachabilityService(),
+                new StubWebsiteContentInspectionService(),
                 Clock.fixed(Instant.parse("2025-01-15T10:15:30Z"), ZoneId.of("Europe/Oslo"))
         );
         var facts = new CompanyFacts(
@@ -97,7 +99,7 @@ class CompanyApiV1MapperTests {
                 new Announcement("ADDRESS_CHANGE", "Endring av forretningsadresse", "20.06.2025", "BRREG kunngjøringer"),
                 new Announcement("BANKRUPTCY", "Konkurs", "21.06.2025", "BRREG kunngjøringer"),
                 new Announcement("GENERAL", "Generell melding", "22.06.2025", "BRREG kunngjøringer")
-        )));
+        )), new StubWebsiteReachabilityService(), new StubWebsiteContentInspectionService());
 
         var events = mapper.toEvents(new EnhetResponse(
                 "123456789",
@@ -136,7 +138,7 @@ class CompanyApiV1MapperTests {
     void detaljresponsInneholderNormaliserteHendelser() {
         var mapper = new CompanyApiV1Mapper(new StubAnnouncementService(List.of(
                 new Announcement("WINDING_UP", "Avvikling", "20.06.2025", "BRREG kunngjøringer")
-        )));
+        )), new StubWebsiteReachabilityService(), new StubWebsiteContentInspectionService());
         var facts = new CompanyFacts(
                 "AS",
                 LocalDate.of(2025, 1, 1),
@@ -206,6 +208,8 @@ class CompanyApiV1MapperTests {
     void detaljresponsInneholderStrukturmonstreFraNyeSelskaperOgNettverk() {
         var mapper = new CompanyApiV1Mapper(
                 new StubAnnouncementService(List.of()),
+                new StubWebsiteReachabilityService(),
+                new StubWebsiteContentInspectionService(),
                 Clock.fixed(Instant.parse("2026-04-21T10:15:30Z"), ZoneId.of("Europe/Oslo"))
         );
         var facts = new CompanyFacts(
@@ -308,6 +312,8 @@ class CompanyApiV1MapperTests {
                 new StubAnnouncementService(List.of(
                         new Announcement("BANKRUPTCY", "Konkurs", "20.04.2026", "BRREG kunngjøringer")
                 )),
+                new StubWebsiteReachabilityService(),
+                new StubWebsiteContentInspectionService(),
                 Clock.fixed(Instant.parse("2026-04-21T10:15:30Z"), ZoneId.of("Europe/Oslo"))
         );
         var facts = new CompanyFacts(
@@ -388,6 +394,20 @@ class CompanyApiV1MapperTests {
         @Override
         public List<Announcement> announcementsFor(EnhetResponse enhet) {
             return announcements;
+        }
+    }
+
+    private static final class StubWebsiteReachabilityService extends WebsiteReachabilityService {
+        @Override
+        public boolean isReachable(String url) {
+            return false;
+        }
+    }
+
+    private static final class StubWebsiteContentInspectionService extends WebsiteContentInspectionService {
+        @Override
+        public WebsiteContentMatch inspect(String url, String companyName, String emailDomain) {
+            return new WebsiteContentMatch(false, "Ingen innholdsmatch i test.", null);
         }
     }
 }

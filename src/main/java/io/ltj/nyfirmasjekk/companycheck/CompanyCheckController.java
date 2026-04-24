@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 @Validated
@@ -175,7 +176,6 @@ public class CompanyCheckController {
             @RequestParam(required = false) String naeringskode,
             @RequestParam(required = false) String organisasjonsform,
             @RequestParam(required = false) String score,
-            @RequestParam(required = false) String structureSignal,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
@@ -189,7 +189,6 @@ public class CompanyCheckController {
                     naeringskode,
                     organisasjonsform,
                     score,
-                    structureSignal,
                     100
             );
 
@@ -201,20 +200,51 @@ public class CompanyCheckController {
                     .collect(Collectors.groupingBy(result -> result.scoreColor().name(), Collectors.counting()));
 
             long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
-            log.info(
-                    "company-check search completed in {} ms: score={}, dager={}, page={}, navn={}, fylke={}, organisasjonsform={}, results={}, scoreCounts={}",
-                    durationMs,
-                    score == null ? "ALL" : score,
+            log.info("company-check search completed in {} ms: {}", durationMs, buildSearchLogLine(
                     dager,
                     page,
-                    navn == null || navn.isBlank() ? "-" : navn,
-                    fylke == null || fylke.isBlank() ? "-" : fylke,
-                    organisasjonsform == null || organisasjonsform.isBlank() ? "-" : organisasjonsform,
+                    score,
+                    navn,
+                    fylke,
+                    organisasjonsform,
                     results.size(),
+                    searchPage.totalElements(),
                     scoreCounts
-            );
+            ));
             return mapper.toSearchResponse(results, searchPage.page(), searchPage.size(), searchPage.totalElements(), searchPage.totalPages());
         });
+    }
+
+    private String buildSearchLogLine(
+            int dager,
+            int page,
+            String score,
+            String navn,
+            String fylke,
+            String organisasjonsform,
+            int results,
+            long totalElements,
+            Map<String, Long> scoreCounts
+    ) {
+        var joiner = new StringJoiner(", ");
+        joiner.add("dager=" + dager);
+        joiner.add("page=" + page);
+        if (score != null && !score.isBlank()) {
+            joiner.add("score=" + score);
+        }
+        if (navn != null && !navn.isBlank()) {
+            joiner.add("navn=" + navn);
+        }
+        if (fylke != null && !fylke.isBlank()) {
+            joiner.add("fylke=" + fylke);
+        }
+        if (organisasjonsform != null && !organisasjonsform.isBlank()) {
+            joiner.add("organisasjonsform=" + organisasjonsform);
+        }
+        joiner.add("results=" + results);
+        joiner.add("totalElements=" + totalElements);
+        joiner.add("scoreCounts=" + scoreCounts);
+        return joiner.toString();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

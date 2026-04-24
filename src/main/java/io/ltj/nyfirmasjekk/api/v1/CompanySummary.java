@@ -13,6 +13,7 @@ public record CompanySummary(
         String naceCode,
         String naceDescription,
         String website,
+        WebsiteDiscovery websiteDiscovery,
         String email,
         String phone,
         String contactPersonName,

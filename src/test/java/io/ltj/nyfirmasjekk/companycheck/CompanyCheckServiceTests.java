@@ -397,7 +397,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", null, 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111110");
         assertThat(client.roleLookups()).isZero();
@@ -464,7 +464,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", null, 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123123123", "123123124");
     }
@@ -676,7 +676,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, null, 60));
+        service.sok(new CompanySearchRequest(null, 30, null, null, null, "AS", null, 60));
 
         // Vi bruker nå alltid size=100 for å være effektive mot BRREG-cachen
         assertThat(client.lastSearchFilter()).containsEntry("size", "100");
@@ -756,7 +756,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", null, 100));
+        var result = service.sok(new CompanySearchRequest("tryg forsikring", 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("911934558");
     }
@@ -825,7 +825,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", null, 100));
+        var result = service.sok(new CompanySearchRequest(null, 10, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
         assertThat(result.getFirst().status()).isEqualTo(TrafficLight.GREEN);
@@ -903,7 +903,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", null, 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("111111111");
     }
@@ -983,7 +983,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, null, 10), 0);
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, 10), 0);
 
         assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789", "987654321");
         assertThat(result.totalElements()).isEqualTo(2);
@@ -1064,7 +1064,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", null, 10), 0);
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, "GREEN", 10), 0);
 
         assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789", "987654321");
         assertThat(result.totalElements()).isEqualTo(2);
@@ -1135,7 +1135,7 @@ class CompanyCheckServiceTests {
         );
         var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
 
-        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, "AS", "RED", null, 100));
+        var result = service.sok(new CompanySearchRequest(null, 0, null, null, null, "AS", "RED", 100));
 
         assertThat(result).extracting(CompanyCheck::organisasjonsnummer).containsExactly("999111111");
         assertThat(client.lastSearchFilter()).doesNotContainKey("organisasjonsform.kode");

@@ -17,29 +17,46 @@ import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
 public class CompanyApiV1Mapper {
 
     private final AnnouncementService announcementService;
+    private final WebsiteReachabilityService websiteReachabilityService;
+    private final WebsiteContentInspectionService websiteContentInspectionService;
     private final Clock clock;
     private static final int NEW_COMPANY_WINDOW_DAYS = 120;
     private static final int RELATION_TIMELINE_WINDOW_DAYS = 365;
 
     @Autowired
-    public CompanyApiV1Mapper(AnnouncementService announcementService) {
-        this(announcementService, Clock.systemDefaultZone());
+    public CompanyApiV1Mapper(
+            AnnouncementService announcementService,
+            WebsiteReachabilityService websiteReachabilityService,
+            WebsiteContentInspectionService websiteContentInspectionService
+    ) {
+        this(announcementService, websiteReachabilityService, websiteContentInspectionService, Clock.systemDefaultZone());
     }
 
-    CompanyApiV1Mapper(AnnouncementService announcementService, Clock clock) {
+    CompanyApiV1Mapper(
+            AnnouncementService announcementService,
+            WebsiteReachabilityService websiteReachabilityService,
+            WebsiteContentInspectionService websiteContentInspectionService,
+            Clock clock
+    ) {
         this.announcementService = announcementService;
+        this.websiteReachabilityService = websiteReachabilityService;
+        this.websiteContentInspectionService = websiteContentInspectionService;
         this.clock = clock;
     }
 
@@ -56,6 +73,7 @@ public class CompanyApiV1Mapper {
                 naceCode(enhet),
                 naceDescription(enhet),
                 enhet.hjemmeside(),
+                websiteDiscovery(companyCheck, enhet),
                 enhet.epostadresse(),
                 firstNonBlank(enhet.telefon(), enhet.mobil()),
                 preferredSummaryContactName(facts),
@@ -89,6 +107,7 @@ public class CompanyApiV1Mapper {
                 naceCode(enhet),
                 naceDescription(enhet),
                 enhet.hjemmeside(),
+                websiteDiscovery(companyCheck, enhet),
                 enhet.epostadresse(),
                 firstNonBlank(enhet.telefon(), enhet.mobil()),
                 contactPerson == null ? null : contactPerson.name(),
@@ -131,6 +150,82 @@ public class CompanyApiV1Mapper {
         return ScoreColor.valueOf(light.name());
     }
 
+    private WebsiteDiscovery websiteDiscovery(CompanyCheck companyCheck, EnhetResponse enhet) {
+        if (hasText(enhet.hjemmeside())) {
+            return new WebsiteDiscovery(
+                    "REGISTERED",
+                    "HIGH",
+                    List.of(normalizeWebsiteCandidate(enhet.hjemmeside())),
+                    normalizeWebsiteCandidate(enhet.hjemmeside()),
+                    true,
+                    true,
+                    "Nettsiden er registrert i BRREG.",
+                    null,
+                    "Nettsiden er registrert i BRREG.",
+                    "BRREG"
+            );
+        }
+
+        String emailDomain = extractEmailDomain(enhet.epostadresse());
+        if (hasText(emailDomain) && !isGenericEmailDomain(emailDomain)) {
+            String candidate = "https://" + emailDomain;
+            boolean reachable = websiteReachabilityService.isReachable(candidate);
+            WebsiteContentMatch contentMatch = reachable
+                    ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), emailDomain)
+                    : new WebsiteContentMatch(false, "Domene svarte ikke ved sjekk.", null);
+            return new WebsiteDiscovery(
+                    "POSSIBLE_MATCH",
+                    reachable && contentMatch.matched() ? "HIGH" : reachable ? "MEDIUM" : "LOW",
+                    List.of(candidate),
+                    reachable ? candidate : null,
+                    reachable,
+                    contentMatch.matched(),
+                    contentMatch.reason(),
+                    contentMatch.pageTitle(),
+                    reachable
+                            ? "Domene er utledet fra registrert e-postadresse og svarte ved sjekk. Må fortsatt bekreftes manuelt."
+                            : "Domene er utledet fra registrert e-postadresse, men svarte ikke ved sjekk. Må bekreftes manuelt.",
+                    "EMAIL_DOMAIN"
+            );
+        }
+
+        List<String> nameCandidates = nameBasedWebsiteCandidates(companyCheck.navn());
+        if (!nameCandidates.isEmpty()) {
+            String reachableCandidate = firstReachableCandidate(nameCandidates);
+            boolean reachable = reachableCandidate != null;
+            WebsiteContentMatch contentMatch = reachable
+                    ? websiteContentInspectionService.inspect(reachableCandidate, companyCheck.navn(), emailDomain)
+                    : new WebsiteContentMatch(false, "Ingen av kandidatene svarte ved sjekk.", null);
+            return new WebsiteDiscovery(
+                    "POSSIBLE_MATCH",
+                    reachable && contentMatch.matched() ? "MEDIUM" : reachable ? "LOW" : "LOW",
+                    nameCandidates,
+                    reachableCandidate,
+                    reachable,
+                    contentMatch.matched(),
+                    contentMatch.reason(),
+                    contentMatch.pageTitle(),
+                    reachable
+                            ? "Navnebasert domene-forslag svarte ved sjekk, men uten bekreftet kobling til selskapet. Må bekreftes manuelt."
+                            : "Navnebasert domene-forslag uten bekreftet kobling. Må bekreftes manuelt.",
+                    "NAME_HEURISTIC"
+            );
+        }
+
+        return new WebsiteDiscovery(
+                "NONE",
+                "LOW",
+                List.of(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                "Ingen registrert nettside og ingen tydelig kandidat funnet.",
+                "NONE"
+        );
+    }
+
     private String scoreLabel(TrafficLight light) {
         return switch (light) {
             case GREEN -> "Ser grei ut";
@@ -157,6 +252,94 @@ public class CompanyApiV1Mapper {
                 .map(this::toRuleName)
                 .distinct()
                 .toList();
+    }
+
+    private List<String> nameBasedWebsiteCandidates(String companyName) {
+        String normalized = normalizeCompanyNameForDomain(companyName);
+        if (!hasText(normalized) || normalized.length() < 4) {
+            return List.of();
+        }
+
+        var candidates = new LinkedHashSet<String>();
+        candidates.add("https://" + normalized + ".no");
+        if (shouldSuggestPluralVariant(normalized)) {
+            candidates.add("https://" + normalized + "er.no");
+        }
+        if (normalized.endsWith("er")) {
+            candidates.add("https://" + normalized.substring(0, normalized.length() - 2) + ".no");
+        }
+
+        return candidates.stream().limit(3).toList();
+    }
+
+    private boolean shouldSuggestPluralVariant(String normalized) {
+        return !normalized.endsWith("er")
+                && !normalized.endsWith("ene")
+                && Character.isLetter(normalized.charAt(normalized.length() - 1));
+    }
+
+    private String normalizeCompanyNameForDomain(String companyName) {
+        if (!hasText(companyName)) {
+            return null;
+        }
+
+        String cleaned = companyName
+                .toLowerCase(Locale.ROOT)
+                .replace('æ', 'a')
+                .replace('ø', 'o')
+                .replace('å', 'a');
+
+        cleaned = cleaned.replaceAll("\\b(as|enk|nuf|sa|fli|da|ans)\\b", " ");
+        cleaned = cleaned.replaceAll("[^a-z0-9 ]", " ");
+        cleaned = Arrays.stream(cleaned.trim().split("\\s+"))
+                .filter(part -> !part.isBlank())
+                .limit(3)
+                .collect(Collectors.joining());
+
+        return cleaned.isBlank() ? null : cleaned;
+    }
+
+    private String extractEmailDomain(String email) {
+        if (!hasText(email) || !email.contains("@")) {
+            return null;
+        }
+        return email.substring(email.indexOf('@') + 1).trim().toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isGenericEmailDomain(String emailDomain) {
+        return Set.of(
+                "gmail.com",
+                "outlook.com",
+                "hotmail.com",
+                "live.no",
+                "icloud.com",
+                "me.com",
+                "online.no",
+                "yahoo.com",
+                "proton.me",
+                "protonmail.com"
+        ).contains(emailDomain);
+    }
+
+    private String normalizeWebsiteCandidate(String website) {
+        if (!hasText(website)) {
+            return website;
+        }
+        if (website.startsWith("http://") || website.startsWith("https://")) {
+            return website;
+        }
+        return "https://" + website;
+    }
+
+    private String firstReachableCandidate(List<String> candidates) {
+        return candidates.stream()
+                .filter(websiteReachabilityService::isReachable)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     private List<ScoreEvidence> scoreEvidence(CompanyCheck companyCheck, EnhetResponse enhet, List<CompanyEvent> events) {

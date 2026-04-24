@@ -138,7 +138,7 @@ class CompanyCheckApiIntegrationTests {
     void filtersReturnerer200() throws Exception {
         mockMvc.perform(get("/api/company-check/filters"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.counties").isArray());
+                .andExpect(jsonPath("$.organizationForms").isArray());
     }
 
     @Test

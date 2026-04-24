@@ -4,6 +4,38 @@ import { fetchBackendJson } from "../_lib/backend-fetch";
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
 
+function buildSearchLogLine({
+  dager,
+  page,
+  score,
+  q,
+  county,
+  organizationForm,
+  items,
+  totalElements,
+}: {
+  dager: string;
+  page: string;
+  score: string | null;
+  q: string | null;
+  county: string | null;
+  organizationForm: string | null;
+  items: number;
+  totalElements: number;
+}) {
+  const parts = [`dager=${dager}`, `page=${page}`];
+
+  if (score) parts.push(`score=${score}`);
+  if (q) parts.push(`q=${q}`);
+  if (county) parts.push(`county=${county}`);
+  if (organizationForm) parts.push(`organizationForm=${organizationForm}`);
+
+  parts.push(`items=${items}`);
+  parts.push(`totalElements=${totalElements}`);
+
+  return parts.join(" ");
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
@@ -34,9 +66,16 @@ export async function GET(request: Request) {
     const data = await response.json();
     const items = Array.isArray(data) ? data : data.items || [];
     const totalElements = Array.isArray(data) ? items.length : (data.totalElements ?? items.length);
-    console.info(
-      `[company-check/search] dager=${dager} page=${page} score=${score ?? "ALL"} q=${q ?? "-"} county=${county ?? "-"} organizationForm=${organizationForm ?? "-"} items=${items.length} totalElements=${totalElements}`
-    );
+    console.info(`[company-check/search] ${buildSearchLogLine({
+      dager,
+      page,
+      score,
+      q,
+      county,
+      organizationForm,
+      items: items.length,
+      totalElements,
+    })}`);
     return NextResponse.json(data);
   } catch (err) {
     console.error("Fetch error:", err);
