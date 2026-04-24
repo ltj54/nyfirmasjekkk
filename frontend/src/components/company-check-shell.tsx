@@ -153,7 +153,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function updateOutreachStatus(company: Pick<CompanySummary, "orgNumber" | "name">, sent: boolean) {
+  async function updateOutreachStatus(company: Pick<CompanySummary, "orgNumber" | "name">, sent: boolean, note?: string) {
     setSavingOutreachByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,
@@ -171,6 +171,7 @@ export function CompanyCheckShell() {
           price: 4500,
           channel: "email",
           offerType: "website-offer",
+          note: note?.trim() ? note.trim() : null,
         }),
       });
 
@@ -1015,7 +1016,7 @@ export function CompanyCheckShell() {
                     onClick={() => handleSearch(company.orgNumber)}
                     outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    onToggleOutreach={(sent) => void updateOutreachStatus(company, sent)}
+                    onToggleOutreach={(sent, note) => void updateOutreachStatus(company, sent, note)}
                   />
                 ))
               ) : (
@@ -1074,7 +1075,7 @@ export function CompanyCheckShell() {
                   outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
                   onBack={resetToLanding}
                   onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
-                  onToggleOutreach={(sent) => void updateOutreachStatus(selectedCompany, sent)}
+                  onToggleOutreach={(sent, note) => void updateOutreachStatus(selectedCompany, sent, note)}
                 />
               </div>
             </div>
@@ -1228,7 +1229,7 @@ function CompanyCard({
   onClick: () => void;
   outreachStatus: OutreachStatus | null;
   outreachSaving: boolean;
-  onToggleOutreach: (sent: boolean) => void;
+  onToggleOutreach: (sent: boolean, note?: string) => void;
 }) {
   const scoreColors = {
     GREEN: "bg-emerald-500",
@@ -1404,6 +1405,7 @@ function CompanyCard({
         </div>
       </div>
       <OutreachCheckbox
+        key={`${company.orgNumber}-${outreachStatus?.sentAt ?? "draft"}-${outreachStatus?.note ?? ""}`}
         compact
         saving={outreachSaving}
         status={outreachStatus}
@@ -1422,12 +1424,19 @@ function OutreachCheckbox({
 }: {
   status: OutreachStatus | null;
   saving: boolean;
-  onToggle: (sent: boolean) => void;
+  onToggle: (sent: boolean, note?: string) => void;
   className?: string;
   compact?: boolean;
 }) {
   const sentPrice = status?.price ?? 4500;
   const sentAlready = status?.sent ?? false;
+  const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
+  const noteSuggestions = [
+    "Sendt til firmapost",
+    "Må følges opp",
+    "Ingen svar ennå",
+    "Ring senere",
+  ];
   const helpText = saving
     ? "Oppdaterer utsendelsesstatus ..."
     : sentAlready
@@ -1445,7 +1454,7 @@ function OutreachCheckbox({
           checked={sentAlready}
           className="mt-0.5 size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
           disabled={saving || sentAlready}
-          onChange={(event) => onToggle(event.target.checked)}
+          onChange={(event) => onToggle(event.target.checked, noteDraft)}
           type="checkbox"
         />
         <span className="min-w-0">
@@ -1459,12 +1468,40 @@ function OutreachCheckbox({
             </span>
           ) : null}
           {sentAlready ? (
+            status?.note ? (
+              <span className="mt-2 block text-[12px] text-[#52606D]">
+                Notat: {status.note}
+              </span>
+            ) : null
+          ) : (
+            <span className="mt-3 block">
+              <span className="mb-2 flex flex-wrap gap-2">
+                {noteSuggestions.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    className="rounded-sm border border-[#D9E2EC] bg-white px-2.5 py-1 text-[11px] font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
+                    onClick={() => setNoteDraft(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </span>
+              <textarea
+                className="min-h-[72px] w-full rounded-none border border-[#BCCCDC] bg-white px-3 py-2 text-[12px] text-[#1F2933] outline-none transition-colors placeholder:text-[#7B8794] focus:border-[#1F5FA9]"
+                onChange={(event) => setNoteDraft(event.target.value)}
+                placeholder="Kort notat, f.eks. sendt til firmapost eller må følges opp senere"
+                value={noteDraft}
+              />
+            </span>
+          )}
+          {sentAlready ? (
             <span className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
                 className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={saving}
-                onClick={() => onToggle(false)}
+                onClick={() => onToggle(false, status?.note ?? noteDraft)}
               >
                 Angre
               </button>
@@ -1472,7 +1509,7 @@ function OutreachCheckbox({
                 type="button"
                 className="rounded-sm border border-[#1F5FA9] bg-[#1F5FA9] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-[#2F6FB2] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={saving}
-                onClick={() => onToggle(true)}
+                onClick={() => onToggle(true, status?.note ?? noteDraft)}
               >
                 Send på nytt likevel
               </button>
@@ -1839,7 +1876,7 @@ function CompanyDetailView({
   outreachSaving: boolean;
   onBack: () => void;
   onGenerateEmail: () => void;
-  onToggleOutreach: (sent: boolean) => void;
+  onToggleOutreach: (sent: boolean, note?: string) => void;
 }) {
   const leadPriority = getLeadPriority(company);
   const config = detailLeadSignalConfig(leadPriority.label);
@@ -2031,6 +2068,7 @@ function CompanyDetailView({
               </div>
 
               <OutreachCheckbox
+                key={`${company.orgNumber}-${outreachStatus?.sentAt ?? "draft"}-${outreachStatus?.note ?? ""}`}
                 className="mt-4"
                 saving={outreachSaving}
                 status={outreachStatus}

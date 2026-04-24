@@ -7,6 +7,7 @@ public record OutreachStatusResponse(
         Integer price,
         String channel,
         String offerType,
-        String sentAt
+        String sentAt,
+        String note
 ) {
 }

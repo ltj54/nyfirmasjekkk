@@ -153,4 +153,5 @@ export interface OutreachStatus {
   channel: string | null;
   offerType: string | null;
   sentAt: string | null;
+  note: string | null;
 }

@@ -17,10 +17,14 @@
 - Strukturspor brukes fortsatt i summary, sortering og detaljvisning
 - Strukturspor er fjernet som eget toppnivåfilter i hovedsøket
 - Filbasert utsendelseslogg er på plass med `data/outreach-log.jsonl`
+- Eldre måneder arkiveres automatisk til `data/archive/outreach-log-YYYY-MM.jsonl`
+- Månedlig Markdown-rapport genereres automatisk som `data/outreach-log-YYYY-MM.md`
 - Treffkort og selskapsvisning kan markeres med `E-post sendt om nettside til kr 4.500`
+- Utsendelsesnotat kan lagres fra UI, med faste hurtigvalg for vanlige oppfølgingsnotater
 - Dobbel utsendelse krever eksplisitt overstyring
 - Mailtekst genereres fra [outreach-email-template.md](data/outreach-email-template.md)
 - `Kopier mailtekst` og `Åpne i e-post` er koblet til selskapsvisningen
+- Énbruker-flyt er dokumentert i [outreach-workflow.md](docs/outreach-workflow.md)
 
 ## Neste steg
 
@@ -34,15 +38,15 @@
 
 ### Utsendelseslogg
 
-- [ ] Utvid loggformatet slik at hver hendelse tydelig lagrer dato/tid, orgnr, navn, pris, kanal, status og notat
-- [ ] Lag rullerende Markdown-rapport, for eksempel `data/outreach-log-YYYY-MM.md`
-- [ ] Roter eller arkiver loggen per måned så den ikke vokser uoversiktlig
+- [x] Utvid loggformatet slik at hver hendelse tydelig lagrer dato/tid, orgnr, navn, pris, kanal, status og notat
+- [x] Lag rullerende Markdown-rapport, for eksempel `data/outreach-log-YYYY-MM.md`
+- [x] Roter eller arkiver loggen per måned så den ikke vokser uoversiktlig
 - [ ] Dokumenter tydelig at filbasert lagring krever persistent disk på Render for å være trygg ved restart/deploy
 - [ ] Hvis persistent disk ikke brukes: avklar manuell Git-basert eksport/import eller annen billig lagring
 
 ### Flerbruker
 
-- [ ] Avklar om løsningen bare skal brukes av én person eller flere
+- [x] Avklar om løsningen bare skal brukes av én person eller flere
 - [ ] Hvis flere skal bruke den: innfør innlogging før utsendelsesloggen brukes operativt
 - [ ] Hvis flere skal bruke den: bytt fra fil/GitHub-modell til delt database
 - [ ] Design loggformatet slik at `userId` og `userEmail` kan legges til uten omskriving
