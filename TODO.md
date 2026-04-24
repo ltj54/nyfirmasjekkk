@@ -19,7 +19,7 @@
 - Filbasert utsendelseslogg er på plass med `data/outreach-log.jsonl`
 - Treffkort og selskapsvisning kan markeres med `E-post sendt om nettside til kr 4.500`
 - Dobbel utsendelse krever eksplisitt overstyring
-- Mailtekst genereres fra [outreach-email-template.md](/C:/Prosjekt/nyfirmasjekk/data/outreach-email-template.md)
+- Mailtekst genereres fra [outreach-email-template.md](data/outreach-email-template.md)
 - `Kopier mailtekst` og `Åpne i e-post` er koblet til selskapsvisningen
 
 ## Neste steg
