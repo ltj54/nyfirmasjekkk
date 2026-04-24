@@ -16,9 +16,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -27,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = "company-check.outreach-log-path=./build/test-outreach-log.jsonl")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class CompanyCheckApiIntegrationTests {
@@ -136,6 +139,38 @@ class CompanyCheckApiIntegrationTests {
         mockMvc.perform(get("/api/company-check/filters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.counties").isArray());
+    }
+
+    @Test
+    void outreachStatusKanLesesOgOppdateres() throws Exception {
+        String orgnr = "123456789";
+        Files.deleteIfExists(Path.of("./build/test-outreach-log.jsonl"));
+
+        mockMvc.perform(get("/api/company-check/" + orgnr + "/outreach-status"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orgNumber").value(orgnr))
+                .andExpect(jsonPath("$.sent").value(false));
+
+        mockMvc.perform(post("/api/company-check/" + orgnr + "/outreach-status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "companyName": "Test AS",
+                                  "sent": true,
+                                  "price": 4500,
+                                  "channel": "email",
+                                  "offerType": "website-offer"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orgNumber").value(orgnr))
+                .andExpect(jsonPath("$.sent").value(true))
+                .andExpect(jsonPath("$.price").value(4500));
+
+        mockMvc.perform(get("/api/company-check/" + orgnr + "/outreach-status"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.sent").value(true))
+                .andExpect(jsonPath("$.channel").value("email"));
     }
 
     private EnhetResponse stubEnhet(String orgnr) {

@@ -21,10 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +47,7 @@ public class CompanyCheckController {
     private final CompanyHistoryService companyHistoryService;
     private final CompanyNetworkService companyNetworkService;
     private final MetadataService metadataService;
+    private final OutreachLogService outreachLogService;
     private final MeterRegistry meterRegistry;
 
     public CompanyCheckController(
@@ -54,6 +57,7 @@ public class CompanyCheckController {
             CompanyHistoryService companyHistoryService,
             CompanyNetworkService companyNetworkService,
             MetadataService metadataService,
+            OutreachLogService outreachLogService,
             MeterRegistry meterRegistry
     ) {
         this.companyCheckService = companyCheckService;
@@ -62,6 +66,7 @@ public class CompanyCheckController {
         this.companyHistoryService = companyHistoryService;
         this.companyNetworkService = companyNetworkService;
         this.metadataService = metadataService;
+        this.outreachLogService = outreachLogService;
         this.meterRegistry = meterRegistry;
     }
 
@@ -119,6 +124,34 @@ public class CompanyCheckController {
     ) {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         return mapper.toEvents(enhet);
+    }
+
+    @GetMapping("/{organisasjonsnummer}/outreach-status")
+    public OutreachStatusResponse outreachStatus(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        return outreachLogService.statusFor(organisasjonsnummer);
+    }
+
+    @PostMapping("/{organisasjonsnummer}/outreach-status")
+    public OutreachStatusResponse registerOutreachStatus(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer,
+            @RequestBody OutreachStatusRequest request
+    ) {
+        var payload = new OutreachStatusRequest(
+                organisasjonsnummer,
+                request.companyName(),
+                request.sent(),
+                request.price(),
+                request.channel(),
+                request.offerType(),
+                request.note()
+        );
+        return outreachLogService.register(payload);
     }
 
     @GetMapping("/filters")
@@ -205,6 +238,22 @@ public class CompanyCheckController {
     public ProblemDetail handleBrregFailure(BrregClientException exception) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, exception.getMessage());
         detail.setTitle("Feil mot BRREG");
+        return detail;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @SuppressWarnings("unused")
+    public ProblemDetail handleIllegalArgument(IllegalArgumentException exception) {
+        var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+        detail.setTitle("Ugyldig forespørsel");
+        return detail;
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @SuppressWarnings("unused")
+    public ProblemDetail handleIllegalState(IllegalStateException exception) {
+        var detail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+        detail.setTitle("Klarte ikke lagre utsendelsesstatus");
         return detail;
     }
 }

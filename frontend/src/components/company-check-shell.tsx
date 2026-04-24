@@ -25,6 +25,7 @@ import type {
   NetworkActor,
   CompanySummary,
   MetadataFiltersResponse,
+  OutreachStatus,
   ScoreColor,
   StructureSignal,
 } from "@/lib/company-check";
@@ -159,12 +160,129 @@ export function CompanyCheckShell() {
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
+  const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
+  const [savingOutreachByOrg, setSavingOutreachByOrg] = useState<Record<string, boolean>>({});
+  const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
+  const [generatingEmailByOrg, setGeneratingEmailByOrg] = useState<Record<string, boolean>>({});
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [, startTransition] = useTransition();
   const latestListRequestId = useRef(0);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const hasDetailHistoryEntryRef = useRef(false);
+
+  async function fetchOutreachStatuses(orgNumbers: string[]) {
+    const uniqueOrgNumbers = Array.from(new Set(orgNumbers.filter(Boolean)));
+    if (uniqueOrgNumbers.length === 0) {
+      return;
+    }
+
+    try {
+      const responses = await Promise.all(
+        uniqueOrgNumbers.map(async (orgNumber) => {
+          const response = await fetch(`/api/company-check/${orgNumber}/outreach-status`, {
+            cache: "no-store",
+          });
+          if (!response.ok) {
+            return null;
+          }
+
+          const payload = (await response.json()) as OutreachStatus;
+          return [orgNumber, payload] as const;
+        })
+      );
+
+      const nextEntries = responses.filter((entry): entry is readonly [string, OutreachStatus] => entry !== null);
+      if (nextEntries.length === 0) {
+        return;
+      }
+
+      setOutreachStatusByOrg((current) => ({
+        ...current,
+        ...Object.fromEntries(nextEntries),
+      }));
+    } catch (error) {
+      console.error("Failed to fetch outreach statuses", error);
+    }
+  }
+
+  async function updateOutreachStatus(company: Pick<CompanySummary, "orgNumber" | "name">, sent: boolean) {
+    setSavingOutreachByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: true,
+    }));
+
+    try {
+      const response = await fetch(`/api/company-check/${company.orgNumber}/outreach-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyName: company.name,
+          sent,
+          price: 4500,
+          channel: "email",
+          offerType: "website-offer",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update outreach status for ${company.orgNumber}`);
+      }
+
+      const payload = (await response.json()) as OutreachStatus;
+      setOutreachStatusByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: payload,
+      }));
+    } catch (error) {
+      console.error("Failed to update outreach status", error);
+    } finally {
+      setSavingOutreachByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: false,
+      }));
+    }
+  }
+
+  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county">) {
+    setGeneratingEmailByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: true,
+    }));
+
+    try {
+      const response = await fetch("/api/outreach-email-template", {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to load outreach email template");
+      }
+
+      const payload = (await response.json()) as { content?: string };
+      const templateContent = payload.content ?? "";
+      const subject = buildOutreachEmailSubject(templateContent, company);
+      const body = buildOutreachEmailBody(templateContent, company);
+
+      setGeneratedEmailByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: { subject, body },
+      }));
+    } catch (error) {
+      console.error("Failed to generate outreach email", error);
+    } finally {
+      setGeneratingEmailByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: false,
+      }));
+    }
+  }
+
+  const handleCloseDetail = useEffectEvent(() => {
+    resetToLanding();
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -397,6 +515,43 @@ export function CompanyCheckShell() {
   }, [backendReady, selectedCompany]);
 
   useEffect(() => {
+    if (!backendReady || recentCompanies.length === 0) {
+      return;
+    }
+
+    void fetchOutreachStatuses(recentCompanies.map((company) => company.orgNumber));
+  }, [backendReady, recentCompanies]);
+
+  useEffect(() => {
+    if (!backendReady || !selectedCompany) {
+      return;
+    }
+
+    void fetchOutreachStatuses([selectedCompany.orgNumber]);
+  }, [backendReady, selectedCompany]);
+
+  useEffect(() => {
+    if (!selectedCompany) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleCloseDetail();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedCompany]);
+
+  useEffect(() => {
     const handlePopState = () => {
       hasDetailHistoryEntryRef.current = false;
       setSelectedCompany(null);
@@ -600,8 +755,8 @@ export function CompanyCheckShell() {
       </header>
 
       <main id="main-content" className="pb-16">
-        {/* Search Area */}
-        {!selectedCompany && (
+        <div className={selectedCompany ? "pointer-events-none select-none blur-[3px] transition-all duration-200" : "transition-all duration-200"}>
+          {/* Search Area */}
           <section id="search" className="mx-auto max-w-7xl px-6 pt-6 sm:pt-8">
             <div className="grid gap-4">
               <div className="border border-[#D9E2EC] bg-white px-5 py-6 sm:px-7 sm:py-7">
@@ -848,10 +1003,9 @@ export function CompanyCheckShell() {
 
             </div>
           </section>
-        )}
 
-        {/* Dynamic Content */}
-        <section id="results" className="mx-auto max-w-7xl px-6 pb-24 pt-10">
+          {/* Dynamic Content */}
+          <section id="results" className="mx-auto max-w-7xl px-6 pb-24 pt-10">
           {error && (
             <div className="mx-auto mb-12 max-w-2xl border border-rose-100/60 bg-rose-50/50 p-7 text-center animate-in zoom-in duration-300">
               <div className="mx-auto mb-4 flex size-12 items-center justify-center bg-rose-100 text-rose-600">
@@ -871,15 +1025,6 @@ export function CompanyCheckShell() {
             </div>
           )}
 
-          {selectedCompany ? (
-            <CompanyDetailView
-              company={selectedCompany}
-              events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
-              history={selectedCompanyHistory}
-              network={selectedCompanyNetwork}
-              onBack={resetToLanding}
-            />
-          ) : (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700">
               {isListLoading && (
                 <div className="border border-[#D9E2EC] bg-white px-5 py-4">
@@ -964,6 +1109,9 @@ export function CompanyCheckShell() {
                     key={`${company.orgNumber}-${i}`}
                     company={company}
                     onClick={() => handleSearch(company.orgNumber)}
+                    outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
+                    outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
+                    onToggleOutreach={(sent) => void updateOutreachStatus(company, sent)}
                   />
                 ))
               ) : (
@@ -999,13 +1147,43 @@ export function CompanyCheckShell() {
                 )}
               </div>
             </div>
-          )}
-        </section>
+          </section>
+        </div>
+
+        {selectedCompany ? (
+          <div
+            className="fixed inset-0 z-50 bg-[#102A4314] backdrop-blur-sm"
+            onClick={resetToLanding}
+          >
+            <div className="flex min-h-full items-start justify-center px-4 py-4 sm:px-6 sm:py-8">
+              <div
+                className="max-h-[94vh] w-full max-w-7xl overflow-y-auto border border-[#BCCCDC] bg-white shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)]"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <CompanyDetailView
+                  company={selectedCompany}
+                  events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
+                  generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
+                  generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
+                  history={selectedCompanyHistory}
+                  network={selectedCompanyNetwork}
+                  outreachSaving={Boolean(savingOutreachByOrg[selectedCompany.orgNumber])}
+                  outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
+                  onBack={resetToLanding}
+                  onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
+                  onToggleOutreach={(sent) => void updateOutreachStatus(selectedCompany, sent)}
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
       </main>
 
       {/* Footer */}
-      {!selectedCompany && (
-        <footer id="footer" className="border-t border-[#D9E2EC] bg-white text-[#1F2933]">
+      <footer
+        id="footer"
+        className={selectedCompany ? "border-t border-[#D9E2EC] bg-white text-[#1F2933] blur-[3px] transition-all duration-200" : "border-t border-[#D9E2EC] bg-white text-[#1F2933] transition-all duration-200"}
+      >
           <div className="mx-auto max-w-7xl px-6 py-14">
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
               <div className="max-w-md">
@@ -1047,8 +1225,7 @@ export function CompanyCheckShell() {
               <span>Universell utforming, tydelig forklaring og en nøktern offentlig portalstil.</span>
             </div>
           </div>
-        </footer>
-      )}
+      </footer>
     </div>
   );
 }
@@ -1137,7 +1314,19 @@ function resolveFooterTarget(link: string) {
   }
 }
 
-function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: () => void }) {
+function CompanyCard({
+  company,
+  onClick,
+  outreachStatus,
+  outreachSaving,
+  onToggleOutreach,
+}: {
+  company: CompanySummary;
+  onClick: () => void;
+  outreachStatus: OutreachStatus | null;
+  outreachSaving: boolean;
+  onToggleOutreach: (sent: boolean) => void;
+}) {
   const scoreColors = {
     GREEN: "bg-emerald-500",
     YELLOW: "bg-amber-500",
@@ -1295,6 +1484,83 @@ function CompanyCard({ company, onClick }: { company: CompanySummary; onClick: (
           </button>
         </div>
       </div>
+      <OutreachCheckbox
+        compact
+        saving={outreachSaving}
+        status={outreachStatus}
+        onToggle={onToggleOutreach}
+      />
+    </div>
+  );
+}
+
+function OutreachCheckbox({
+  status,
+  saving,
+  onToggle,
+  className,
+  compact = false,
+}: {
+  status: OutreachStatus | null;
+  saving: boolean;
+  onToggle: (sent: boolean) => void;
+  className?: string;
+  compact?: boolean;
+}) {
+  const sentPrice = status?.price ?? 4500;
+  const sentAlready = status?.sent ?? false;
+  const helpText = saving
+    ? "Oppdaterer utsendelsesstatus ..."
+    : sentAlready
+      ? "Registrert som sendt. Ny utsendelse krever eksplisitt overstyring."
+      : "Marker når tilbudsmail er sendt, så unngår du dobbelt utsendelse.";
+  const wrapperClassName = `${className ? `${className} ` : ""}${compact ? "mt-4 " : ""}border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3`;
+
+  return (
+    <div
+      className={wrapperClassName}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <label className="flex items-start gap-3">
+        <input
+          checked={sentAlready}
+          className="mt-0.5 size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
+          disabled={saving || sentAlready}
+          onChange={(event) => onToggle(event.target.checked)}
+          type="checkbox"
+        />
+        <span className="min-w-0">
+          <span className="block text-[12px] font-semibold text-[#1F2933]">
+            E-post sendt om nettside til kr {sentPrice}
+          </span>
+          <span className="mt-1 block text-[12px] text-[#52606D]">{helpText}</span>
+          {status?.sent && status.sentAt ? (
+            <span className="mt-1 block text-[11px] font-medium text-[#52606D]">
+              Sendt {formatDateTime(status.sentAt)}
+            </span>
+          ) : null}
+          {sentAlready ? (
+            <span className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={saving}
+                onClick={() => onToggle(false)}
+              >
+                Angre
+              </button>
+              <button
+                type="button"
+                className="rounded-sm border border-[#1F5FA9] bg-[#1F5FA9] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-[#2F6FB2] disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={saving}
+                onClick={() => onToggle(true)}
+              >
+                Send på nytt likevel
+              </button>
+            </span>
+          ) : null}
+        </span>
+      </label>
     </div>
   );
 }
@@ -1611,19 +1877,32 @@ function contactabilityRank(company: CompanySummary) {
 function CompanyDetailView({
   company,
   events,
+  generatedEmail,
+  generatingEmail,
   history,
   network,
+  outreachStatus,
+  outreachSaving,
   onBack,
+  onGenerateEmail,
+  onToggleOutreach,
 }: {
   company: CompanyDetails;
   events: CompanyEvent[];
+  generatedEmail: { subject: string; body: string } | null;
+  generatingEmail: boolean;
   history: CompanyHistoryEntry[];
   network: NetworkActor[];
+  outreachStatus: OutreachStatus | null;
+  outreachSaving: boolean;
   onBack: () => void;
+  onGenerateEmail: () => void;
+  onToggleOutreach: (sent: boolean) => void;
 }) {
   const leadPriority = getLeadPriority(company);
   const config = detailLeadSignalConfig(leadPriority.label);
   const StatusIcon = config.icon;
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   const scoreLabel = leadPriority.label;
   const scoreReasons = company.score?.reasons || [];
@@ -1636,6 +1915,26 @@ function CompanyDetailView({
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const historyPatterns = analyzeHistoryPatterns(history);
+  const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
+  const generatedEmailHref = generatedEmail && company.email
+    ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
+    : null;
+
+  async function handleCopyGeneratedEmail() {
+    if (!generatedEmailText) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(generatedEmailText);
+      setCopiedEmail(true);
+      window.setTimeout(() => {
+        setCopiedEmail(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy generated email", error);
+    }
+  }
 
   return (
     <div className="detail-shell mx-auto max-w-6xl">
@@ -1758,6 +2057,71 @@ function CompanyDetailView({
                     </span>
                   )}
                 </div>
+              </div>
+
+              <OutreachCheckbox
+                className="mt-4"
+                saving={outreachSaving}
+                status={outreachStatus}
+                onToggle={onToggleOutreach}
+              />
+
+              <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
+                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <p className="text-[12px] font-medium text-[#52606D]">Tilbudsmail</p>
+                    <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">Generer e-posttekst fra mal</h4>
+                    <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
+                      Bruk Markdown-malen i `data/outreach-email-template.md` og fyll inn selskapsdata automatisk.
+                    </p>
+                  </div>
+                  <Button
+                    className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
+                    disabled={generatingEmail}
+                    onClick={onGenerateEmail}
+                    type="button"
+                  >
+                    {generatingEmail ? "Genererer..." : "Generer mailtekst"}
+                  </Button>
+                </div>
+
+                {generatedEmail ? (
+                  <div className="mt-5 space-y-3">
+                    <div className="border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Emne</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">{generatedEmail.subject}</p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
+                        onClick={() => void handleCopyGeneratedEmail()}
+                        type="button"
+                      >
+                        {copiedEmail ? "Kopiert" : "Kopier mailtekst"}
+                      </Button>
+                      {generatedEmailHref ? (
+                        <a
+                          className="inline-flex items-center justify-center rounded-sm border border-[#D9E2EC] bg-white px-4 py-2 text-[12px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
+                          href={generatedEmailHref}
+                        >
+                          Åpne i e-post
+                        </a>
+                      ) : (
+                        <span className="inline-flex items-center justify-center rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2 text-[12px] font-medium text-[#7B8794]">
+                          Mangler e-postadresse
+                        </span>
+                      )}
+                    </div>
+                    <div className="border border-[#D9E2EC] bg-[#F8FBFF] p-3">
+                      <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Mailtekst</p>
+                      <textarea
+                        className="min-h-[260px] w-full resize-y border border-[#D9E2EC] bg-white p-3 text-[13px] leading-6 text-[#1F2933] outline-none focus:border-[#2F6FB2]"
+                        readOnly
+                        value={generatedEmailText}
+                      />
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
@@ -2217,6 +2581,96 @@ function formatDateTime(value: string) {
     dateStyle: "short",
     timeStyle: "short",
   }).format(date);
+}
+
+function buildOutreachEmailSubject(
+  markdown: string,
+  company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
+) {
+  const template = extractMailSubject(markdown) ?? "Tilbud om enkel nettside til {{companyName}}";
+  return applyOutreachTemplate(template, company);
+}
+
+function buildOutreachEmailBody(
+  markdown: string,
+  company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
+) {
+  const template = extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
+  const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
+  return applyOutreachTemplate(cleanedTemplate, company);
+}
+
+function extractMailSubject(markdown: string) {
+  const section = extractMarkdownSection(markdown, "E-postmal");
+  if (!section) {
+    return null;
+  }
+
+  const match = section.match(/Emne:\s*`?([^\n`]+)`?/);
+  return match?.[1]?.trim() ?? null;
+}
+
+function extractMarkdownSection(markdown: string, heading: string) {
+  const marker = `## ${heading}`;
+  const startIndex = markdown.indexOf(marker);
+  if (startIndex < 0) {
+    return null;
+  }
+
+  const contentStart = startIndex + marker.length;
+  const remaining = markdown.slice(contentStart).trimStart();
+  const nextHeadingIndex = remaining.search(/\n##\s+/);
+  return (nextHeadingIndex >= 0 ? remaining.slice(0, nextHeadingIndex) : remaining).trim();
+}
+
+function applyOutreachTemplate(
+  template: string,
+  company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
+) {
+  const greeting = company.contactPersonName?.trim() || `dere i ${company.name}`;
+  const location = [company.municipality, company.county].filter(Boolean).join(", ");
+
+  const replacements: Record<string, string> = {
+    "{{companyName}}": company.name,
+    "{{orgNumber}}": company.orgNumber,
+    "{{contactPerson}}": company.contactPersonName?.trim() || "",
+    "{{companyEmail}}": company.email?.trim() || "",
+    "{{companyPhone}}": company.phone?.trim() || "",
+    "{{location}}": location,
+    "{{greeting}}": greeting,
+    "{{price}}": "4500",
+    "{{senderName}}": "[DITT NAVN]",
+    "{{senderCompany}}": "[FIRMANAVN]",
+    "{{senderPhone}}": "[DITT TELEFONNUMMER]",
+    "{{senderEmail}}": "[DIN E-POST]",
+  };
+
+  let nextText = template;
+  for (const [key, value] of Object.entries(replacements)) {
+    nextText = nextText.replaceAll(key, value);
+  }
+
+  return nextText
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function defaultOutreachEmailTemplate() {
+  return `Hei {{greeting}},
+
+Jeg så at {{companyName}} er et nytt selskap, og ville derfor sende en kort henvendelse.
+
+Jeg hjelper nye virksomheter med en enkel digital startpakke, slik at dere raskt får på plass en ryddig nettside med kontaktinformasjon, samt hjelp med domene og e-post ved behov.
+
+Jeg kan levere dette som en enkel pakke til kr {{price}}.
+
+Hvis dette er aktuelt, kan jeg sende et helt konkret forslag til oppsett og hva som kan være på siden.
+
+Mvh
+{{senderName}}
+{{senderCompany}}
+{{senderPhone}}
+{{senderEmail}}`;
 }
 
 function formatShortDate(value: string) {

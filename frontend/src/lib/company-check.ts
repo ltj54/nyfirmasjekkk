@@ -133,3 +133,13 @@ export interface StructureSignal {
   severity: "HIGH" | "MEDIUM" | "INFO";
   source: string;
 }
+
+export interface OutreachStatus {
+  orgNumber: string;
+  sent: boolean;
+  companyName: string | null;
+  price: number | null;
+  channel: string | null;
+  offerType: string | null;
+  sentAt: string | null;
+}
