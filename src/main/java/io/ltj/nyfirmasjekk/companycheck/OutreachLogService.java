@@ -65,7 +65,7 @@ public class OutreachLogService {
                 .orElse(null);
 
         if (latestEntry == null || !"sent".equalsIgnoreCase(latestEntry.status())) {
-            return new OutreachStatusResponse(orgNumber, false, latestEntry == null ? null : latestEntry.companyName(),
+            return new OutreachStatusResponse(orgNumber, false, latestEntry == null ? null : latestEntry.status(), latestEntry == null ? null : latestEntry.companyName(),
                     latestEntry == null ? null : latestEntry.price(),
                     latestEntry == null ? null : latestEntry.channel(),
                     latestEntry == null ? null : latestEntry.offerType(),
@@ -76,6 +76,7 @@ public class OutreachLogService {
         return new OutreachStatusResponse(
                 orgNumber,
                 true,
+                latestEntry.status(),
                 latestEntry.companyName(),
                 latestEntry.price(),
                 latestEntry.channel(),
@@ -85,13 +86,26 @@ public class OutreachLogService {
         );
     }
 
+    public synchronized List<OutreachStatusResponse> statuses() {
+        Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
+        readAllEntries().stream()
+                .filter(entry -> "sent".equalsIgnoreCase(entry.status()))
+                .sorted(Comparator.comparing(this::sortTimestamp))
+                .forEach(entry -> latestByOrgNumber.put(entry.orgNumber(), entry));
+
+        return latestByOrgNumber.values().stream()
+                .sorted(Comparator.comparing(this::sortTimestamp).reversed())
+                .map(this::toStatusResponse)
+                .toList();
+    }
+
     public synchronized OutreachStatusResponse register(OutreachStatusRequest request) {
         validateRequest(request);
         OutreachLogEntry entry = new OutreachLogEntry(
                 Instant.now(clock).toString(),
                 request.orgNumber(),
                 blankToNull(request.companyName()),
-                request.sent() ? "sent" : "reverted",
+                normalizeStatus(request),
                 request.price() == null ? 4500 : request.price(),
                 blankToNull(request.channel()) == null ? "email" : request.channel().trim(),
                 blankToNull(request.offerType()) == null ? "website-offer" : request.offerType().trim(),
@@ -103,10 +117,38 @@ public class OutreachLogService {
         return statusFor(request.orgNumber());
     }
 
+    private OutreachStatusResponse toStatusResponse(OutreachLogEntry entry) {
+        boolean sent = "sent".equalsIgnoreCase(entry.status());
+        return new OutreachStatusResponse(
+                entry.orgNumber(),
+                sent,
+                entry.status(),
+                entry.companyName(),
+                entry.price(),
+                entry.channel(),
+                entry.offerType(),
+                sent ? entry.timestamp() : null,
+                entry.note()
+        );
+    }
+
     private void validateRequest(OutreachStatusRequest request) {
         if (request == null || request.orgNumber() == null || !request.orgNumber().matches("\\d{9}")) {
             throw new IllegalArgumentException("Organisasjonsnummer må være ni siffer");
         }
+    }
+
+    private String normalizeStatus(OutreachStatusRequest request) {
+        String requestedStatus = blankToNull(request.status());
+        if (requestedStatus == null) {
+            return request.sent() ? "sent" : "reverted";
+        }
+        return switch (requestedStatus.toLowerCase(Locale.ROOT)) {
+            case "sent" -> "sent";
+            case "reverted" -> "reverted";
+            case "not_relevant" -> "not_relevant";
+            default -> throw new IllegalArgumentException("Ugyldig outreach-status");
+        };
     }
 
     private void appendEntry(OutreachLogEntry entry) {

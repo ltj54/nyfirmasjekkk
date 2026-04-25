@@ -148,6 +148,7 @@ export interface WebsiteDiscovery {
 export interface OutreachStatus {
   orgNumber: string;
   sent: boolean;
+  status: "sent" | "reverted" | "not_relevant" | null;
   companyName: string | null;
   price: number | null;
   channel: string | null;

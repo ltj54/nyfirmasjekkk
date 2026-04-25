@@ -31,6 +31,7 @@ class OutreachLogServiceTests {
                 "123456789",
                 "Test AS",
                 true,
+                null,
                 4500,
                 "email",
                 "website-offer",
@@ -38,6 +39,7 @@ class OutreachLogServiceTests {
         ));
 
         assertThat(response.sent()).isTrue();
+        assertThat(response.status()).isEqualTo("sent");
         assertThat(response.orgNumber()).isEqualTo("123456789");
         assertThat(response.companyName()).isEqualTo("Test AS");
         assertThat(response.price()).isEqualTo(4500);
@@ -57,10 +59,11 @@ class OutreachLogServiceTests {
                 new ObjectMapper()
         );
 
-        service.register(new OutreachStatusRequest("123456789", "Test AS", true, 4500, "email", "website-offer", null));
-        OutreachStatusResponse response = service.register(new OutreachStatusRequest("123456789", "Test AS", false, 4500, "email", "website-offer", null));
+        service.register(new OutreachStatusRequest("123456789", "Test AS", true, null, 4500, "email", "website-offer", null));
+        OutreachStatusResponse response = service.register(new OutreachStatusRequest("123456789", "Test AS", false, null, 4500, "email", "website-offer", null));
 
         assertThat(response.sent()).isFalse();
+        assertThat(response.status()).isEqualTo("reverted");
         assertThat(response.sentAt()).isNull();
         assertThat(response.note()).isNull();
     }
@@ -75,7 +78,7 @@ class OutreachLogServiceTests {
                 new ObjectMapper()
         );
 
-        service.register(new OutreachStatusRequest("123456789", "Test AS", true, 4500, "email", "website-offer", "Ferdig utkast sendt"));
+        service.register(new OutreachStatusRequest("123456789", "Test AS", true, null, 4500, "email", "website-offer", "Ferdig utkast sendt"));
 
         Path reportPath = tempDir.resolve("outreach-log-2026-04.md");
         assertThat(Files.exists(reportPath)).isTrue();
@@ -109,7 +112,7 @@ class OutreachLogServiceTests {
                 new ObjectMapper()
         );
 
-        service.register(new OutreachStatusRequest("987654321", "Mai AS", true, 4500, "email", "website-offer", null));
+        service.register(new OutreachStatusRequest("987654321", "Mai AS", true, null, 4500, "email", "website-offer", null));
 
         Path archivePath = tempDir.resolve("archive").resolve("outreach-log-2026-04.jsonl");
         assertThat(Files.exists(archivePath)).isTrue();
@@ -117,5 +120,54 @@ class OutreachLogServiceTests {
         assertThat(Files.readString(archivePath)).contains("123456789");
         assertThat(service.statusFor("123456789").sent()).isTrue();
         assertThat(service.statusFor("987654321").sent()).isTrue();
+    }
+
+    @Test
+    void registerNotRelevantStoresInactiveStatus() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        OutreachStatusResponse response = service.register(new OutreachStatusRequest(
+                "123456789",
+                "Test AS",
+                false,
+                "not_relevant",
+                4500,
+                "email",
+                "website-offer",
+                "Ikke relevant for tilbud"
+        ));
+
+        assertThat(response.sent()).isFalse();
+        assertThat(response.status()).isEqualTo("not_relevant");
+        assertThat(response.note()).isEqualTo("Ikke relevant for tilbud");
+    }
+
+    @Test
+    void statusesReturnsLatestSentMailPerCompany() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        service.register(new OutreachStatusRequest("123456789", "Sendt AS", true, null, 4500, "email", "website-offer", "Sendt"));
+        service.register(new OutreachStatusRequest("987654321", "Ikke AS", false, "not_relevant", 4500, "email", "website-offer", "Ikke aktuell"));
+        service.register(new OutreachStatusRequest("123456789", "Sendt AS", false, null, 4500, "email", "website-offer", "Angret etter sendt"));
+
+        var statuses = service.statuses();
+
+        assertThat(statuses).hasSize(1);
+        assertThat(statuses).extracting(OutreachStatusResponse::orgNumber)
+                .containsExactly("123456789");
+        assertThat(statuses.stream().filter(OutreachStatusResponse::sent).toList()).hasSize(1);
+        assertThat(statuses.getFirst().note()).isEqualTo("Sendt");
     }
 }

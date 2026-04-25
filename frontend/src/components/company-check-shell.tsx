@@ -108,6 +108,9 @@ export function CompanyCheckShell() {
   const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
   const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
+  const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
+  const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
+  const [outreachListError, setOutreachListError] = useState<string | null>(null);
   const [savingOutreachByOrg, setSavingOutreachByOrg] = useState<Record<string, boolean>>({});
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingEmailByOrg, setGeneratingEmailByOrg] = useState<Record<string, boolean>>({});
@@ -153,7 +156,40 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function updateOutreachStatus(company: Pick<CompanySummary, "orgNumber" | "name">, sent: boolean, note?: string) {
+  async function fetchOutreachEntries() {
+    setIsOutreachListLoading(true);
+    setOutreachListError(null);
+
+    try {
+      const response = await fetch("/api/company-check/outreach", {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        setOutreachListError("Klarte ikke hente utsendelseslisten.");
+        return;
+      }
+
+      const payload = (await response.json()) as OutreachStatus[];
+      setOutreachEntries(payload);
+      setOutreachStatusByOrg((current) => ({
+        ...current,
+        ...Object.fromEntries(payload.map((entry) => [entry.orgNumber, entry])),
+      }));
+    } catch (error) {
+      console.error("Failed to fetch outreach list", error);
+      setOutreachListError("Klarte ikke hente utsendelseslisten.");
+    } finally {
+      setIsOutreachListLoading(false);
+    }
+  }
+
+  async function updateOutreachStatus(
+    company: Pick<CompanySummary, "orgNumber" | "name">,
+    sent: boolean,
+    note?: string,
+    statusOverride?: "sent" | "reverted" | "not_relevant"
+  ) {
     setSavingOutreachByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,
@@ -168,6 +204,7 @@ export function CompanyCheckShell() {
         body: JSON.stringify({
           companyName: company.name,
           sent,
+          status: statusOverride ?? (sent ? "sent" : "reverted"),
           price: 4500,
           channel: "email",
           offerType: "website-offer",
@@ -185,6 +222,10 @@ export function CompanyCheckShell() {
         ...current,
         [company.orgNumber]: payload,
       }));
+      setOutreachEntries((current) => {
+        const withoutCompany = current.filter((entry) => entry.orgNumber !== payload.orgNumber);
+        return [payload, ...withoutCompany];
+      });
     } catch (error) {
       console.error("Failed to update outreach status", error);
     } finally {
@@ -307,7 +348,7 @@ export function CompanyCheckShell() {
     setIsListLoading(true);
 
     try {
-      await Promise.all([fetchFilters(), fetchRecent(0)]);
+      await Promise.all([fetchFilters(), fetchRecent(0), fetchOutreachEntries()]);
       setInitialResultsReady(true);
     } finally {
       setIsListLoading(false);
@@ -533,7 +574,7 @@ export function CompanyCheckShell() {
       const requestId = ++latestListRequestId.current;
       const isOrgNumber = /^\d{9}$/.test(trimmedTerm);
       const params = new URLSearchParams();
-      params.set("dager", daysFilter);
+      params.set("dager", isOrgNumber ? daysFilter : "0");
       if (trimmedTerm) {
         params.set("q", trimmedTerm);
       }
@@ -543,7 +584,7 @@ export function CompanyCheckShell() {
       if (organizationFormFilter) {
         params.set("organizationForm", organizationFormFilter);
       }
-      if (selectedLegend) {
+      if (selectedLegend && isOrgNumber) {
         params.set("score", selectedLegend);
       }
       const endpoint = isOrgNumber 
@@ -576,6 +617,8 @@ export function CompanyCheckShell() {
           // It's a search result list
           const items = Array.isArray(payload) ? payload : payload.items || [];
           setActiveQuery(trimmedTerm);
+          setSelectedLegend(null);
+          setDaysFilter("0");
           setRecentCompanies(items);
           setSelectedCompany(null);
           if (items.length === 0) {
@@ -636,6 +679,8 @@ export function CompanyCheckShell() {
     metadata.organizationForms,
     selectedLegend,
   );
+  const hasSearchText = searchTerm.trim().length > 0 || activeQuery.trim().length > 0;
+  const filterButtonDisabled = hasSearchText || !initialResultsReady || isListLoading;
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-[#1F5FA9]/10">
       <button
@@ -669,6 +714,16 @@ export function CompanyCheckShell() {
           <nav className="hidden items-center gap-7 text-[13px] font-semibold text-[#52606D] md:flex">
             <button className="transition-colors hover:text-[#1F2933]" onClick={() => scrollToSection("results")} type="button">
               Søkeresultater
+            </button>
+            <button
+              className="transition-colors hover:text-[#1F2933]"
+              onClick={() => {
+                void fetchOutreachEntries();
+                scrollToSection("outreach");
+              }}
+              type="button"
+            >
+              Utsendelser
             </button>
             <button className="transition-colors hover:text-[#1F2933]" onClick={() => scrollToSection("offer")} type="button">
               Startpakke
@@ -706,9 +761,6 @@ export function CompanyCheckShell() {
                   <h1 className="text-2xl font-semibold tracking-tight text-[#1F2933] sm:text-3xl">
                     Finn nye virksomheter
                   </h1>
-                  <p className="mt-3 text-[15px] leading-7 text-[#52606D]">
-                    Bruk åpne registerdata til å finne nyregistrerte selskaper og vurdere om de mangler nettside, e-post eller tydelig kontaktpunkt.
-                  </p>
                 </div>
 
                 <form className="mt-6" onSubmit={handleSubmit}>
@@ -734,7 +786,8 @@ export function CompanyCheckShell() {
                   </div>
                 </form>
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
+                  <span className="text-[#52606D]">Selskapsform:</span>
                   {["AS", "ENK", "NUF", "SA", "FLI"].map((code) => (
                     <div key={code} className="relative inline-flex items-center gap-1.5">
                       <button
@@ -742,7 +795,8 @@ export function CompanyCheckShell() {
                           organizationFormFilter === code
                             ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
                             : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                        }`}
+                        } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:border-[#D9E2EC]`}
+                        disabled={filterButtonDisabled}
                         onClick={() => {
                           setOrganizationFormFilter((current) => (current === code ? "" : code));
                         }}
@@ -778,8 +832,8 @@ export function CompanyCheckShell() {
                         selectedLegend === item.status
                           ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
                           : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                      }`}
-                      disabled={!initialResultsReady || isListLoading}
+                      } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:border-[#D9E2EC]`}
+                      disabled={filterButtonDisabled}
                       onClick={() =>
                         setSelectedLegend((current) =>
                           current === item.status ? null : (item.status as keyof typeof legendDetails)
@@ -793,10 +847,7 @@ export function CompanyCheckShell() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
-                  <span className="flex items-center gap-2 text-[#52606D]">
-                    <CalendarDays className="size-4" />
-                    Tidsrom:
-                  </span>
+                  <span className="text-[#52606D]">Tidsrom:</span>
                   {dayOptions.map((days) => {
                     const label = days === "0" ? "Alle data" : `${days} dager`;
                     const isSelected = daysFilter === days;
@@ -809,7 +860,8 @@ export function CompanyCheckShell() {
                           isSelected
                             ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
                             : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
-                        }`}
+                        } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:border-[#D9E2EC]`}
+                        disabled={filterButtonDisabled}
                         onClick={() => {
                           setDaysFilter(days);
                         }}
@@ -839,9 +891,6 @@ export function CompanyCheckShell() {
                   </button>
                 </div>
 
-                <p className="mt-4 text-[12px] leading-6 text-[#52606D]">
-                  Data fra BRREG. Brukes som første signal, ikke som endelig vurdering.
-                </p>
               </div>
 
               <div id="offer" className="overflow-hidden border border-[#D9E2EC] bg-[#F8FBFF] text-[#1F2933]">
@@ -909,6 +958,14 @@ export function CompanyCheckShell() {
             </div>
           </section>
 
+          <OutreachOverview
+            entries={outreachEntries}
+            error={outreachListError}
+            isLoading={isOutreachListLoading}
+            onOpenCompany={(orgNumber) => handleSearch(orgNumber)}
+            onRefresh={() => void fetchOutreachEntries()}
+          />
+
           {/* Dynamic Content */}
           <section id="results" className="mx-auto max-w-7xl px-6 pb-24 pt-10">
           {error && (
@@ -964,9 +1021,6 @@ export function CompanyCheckShell() {
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
                     Viser {filteredCompanies.length} treff på denne siden.
                   </p>
-                  <p className="mt-2 text-[12px] font-medium leading-5 text-[#1F5FA9]">
-                    Treffene er sortert etter mulighetssignal, kontaktbarhet og hvor ferskt selskapet er.
-                  </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex items-center gap-2 border border-[#D9E2EC] bg-white px-2 py-1">
@@ -1016,7 +1070,7 @@ export function CompanyCheckShell() {
                     onClick={() => handleSearch(company.orgNumber)}
                     outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    onToggleOutreach={(sent, note) => void updateOutreachStatus(company, sent, note)}
+                    onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(company, sent, note, statusOverride)}
                   />
                 ))
               ) : (
@@ -1059,9 +1113,9 @@ export function CompanyCheckShell() {
             className="fixed inset-0 z-50 bg-[#102A4314] backdrop-blur-sm"
             onClick={resetToLanding}
           >
-            <div className="flex min-h-full items-start justify-center px-4 py-4 sm:px-6 sm:py-8">
+            <div className="flex min-h-full items-start justify-center px-4 py-8 sm:px-6 sm:py-12">
               <div
-                className="max-h-[94vh] w-full max-w-7xl overflow-y-auto border border-[#BCCCDC] bg-white shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)]"
+                className="max-h-[88vh] w-full max-w-7xl overflow-y-auto border border-[#BCCCDC] bg-white shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)]"
                 onClick={(event) => event.stopPropagation()}
               >
                 <CompanyDetailView
@@ -1075,7 +1129,7 @@ export function CompanyCheckShell() {
                   outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
                   onBack={resetToLanding}
                   onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
-                  onToggleOutreach={(sent, note) => void updateOutreachStatus(selectedCompany, sent, note)}
+                  onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(selectedCompany, sent, note, statusOverride)}
                 />
               </div>
             </div>
@@ -1229,7 +1283,7 @@ function CompanyCard({
   onClick: () => void;
   outreachStatus: OutreachStatus | null;
   outreachSaving: boolean;
-  onToggleOutreach: (sent: boolean, note?: string) => void;
+  onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
   const scoreColors = {
     GREEN: "bg-emerald-500",
@@ -1244,10 +1298,15 @@ function CompanyCard({
   const structureSummary = describeListStructureSummary(highlightedStructureSignals);
   const commercialOpportunity = getCommercialOpportunity(company);
   const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
+  const cardToneClass = outreachStatus?.status === "not_relevant"
+    ? "border-[#BCCCDC] bg-[#EAF1F7] hover:border-[#9FB3C8]"
+    : outreachStatus?.sent
+      ? "border-[#C7D7EA] bg-[#F4F8FC] hover:border-[#9FB3C8]"
+      : "border-[#D9E2EC] bg-white hover:border-[#2F6FB2]";
 
   return (
     <div
-      className="group cursor-pointer border border-[#D9E2EC] bg-white p-4 transition-colors hover:border-[#2F6FB2]"
+      className={`group cursor-pointer border p-4 transition-colors ${cardToneClass}`}
       onClick={onClick}
     >
       <div className="mb-4 flex items-start justify-between gap-3">
@@ -1424,12 +1483,13 @@ function OutreachCheckbox({
 }: {
   status: OutreachStatus | null;
   saving: boolean;
-  onToggle: (sent: boolean, note?: string) => void;
+  onToggle: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
   className?: string;
   compact?: boolean;
 }) {
   const sentPrice = status?.price ?? 4500;
   const sentAlready = status?.sent ?? false;
+  const markedNotRelevant = status?.status === "not_relevant";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
   const noteSuggestions = [
     "Sendt til firmapost",
@@ -1439,6 +1499,8 @@ function OutreachCheckbox({
   ];
   const helpText = saving
     ? "Oppdaterer utsendelsesstatus ..."
+    : markedNotRelevant
+      ? "Markert som ikke aktuell. Du kan angre eller sende likevel senere."
     : sentAlready
       ? "Registrert som sendt. Ny utsendelse krever eksplisitt overstyring."
       : "Marker når tilbudsmail er sendt, så unngår du dobbelt utsendelse.";
@@ -1453,7 +1515,7 @@ function OutreachCheckbox({
         <input
           checked={sentAlready}
           className="mt-0.5 size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
-          disabled={saving || sentAlready}
+          disabled={compact || saving || sentAlready || markedNotRelevant}
           onChange={(event) => onToggle(event.target.checked, noteDraft)}
           type="checkbox"
         />
@@ -1461,13 +1523,18 @@ function OutreachCheckbox({
           <span className="block text-[12px] font-semibold text-[#1F2933]">
             E-post sendt om nettside til kr {formatNokPrice(sentPrice)}
           </span>
-          <span className="mt-1 block text-[12px] text-[#52606D]">{helpText}</span>
+          {!compact ? <span className="mt-1 block text-[12px] text-[#52606D]">{helpText}</span> : null}
           {status?.sent && status.sentAt ? (
             <span className="mt-1 block text-[11px] font-medium text-[#52606D]">
               Sendt {formatDateTime(status.sentAt)}
             </span>
           ) : null}
-          {sentAlready ? (
+          {markedNotRelevant ? (
+            <span className="mt-1 block text-[11px] font-medium text-[#52606D]">
+              Markert som ikke aktuell
+            </span>
+          ) : null}
+          {sentAlready || markedNotRelevant || compact ? (
             status?.note ? (
               <span className="mt-2 block text-[12px] text-[#52606D]">
                 Notat: {status.note}
@@ -1486,6 +1553,13 @@ function OutreachCheckbox({
                     {suggestion}
                   </button>
                 ))}
+                <button
+                  type="button"
+                  className="rounded-sm border border-[#BCCCDC] bg-[#F8FBFF] px-2.5 py-1 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#EAF1F7]"
+                  onClick={() => setNoteDraft("")}
+                >
+                  Fjern kommentar
+                </button>
               </span>
               <textarea
                 className="min-h-[72px] w-full rounded-none border border-[#BCCCDC] bg-white px-3 py-2 text-[12px] text-[#1F2933] outline-none transition-colors placeholder:text-[#7B8794] focus:border-[#1F5FA9]"
@@ -1495,13 +1569,25 @@ function OutreachCheckbox({
               />
             </span>
           )}
-          {sentAlready ? (
+          {!sentAlready && !markedNotRelevant && !compact ? (
+            <span className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="rounded-sm border border-[#7B8794] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={saving}
+                onClick={() => onToggle(false, noteDraft, "not_relevant")}
+              >
+                Ikke aktuell
+              </button>
+            </span>
+          ) : null}
+          {(sentAlready || markedNotRelevant) && !compact ? (
             <span className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
                 className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={saving}
-                onClick={() => onToggle(false, status?.note ?? noteDraft)}
+                onClick={() => onToggle(false, status?.note ?? noteDraft, "reverted")}
               >
                 Angre
               </button>
@@ -1509,15 +1595,105 @@ function OutreachCheckbox({
                 type="button"
                 className="rounded-sm border border-[#1F5FA9] bg-[#1F5FA9] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-[#2F6FB2] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={saving}
-                onClick={() => onToggle(true, status?.note ?? noteDraft)}
+                onClick={() => onToggle(true, status?.note ?? noteDraft, "sent")}
               >
-                Send på nytt likevel
+                {markedNotRelevant ? "Send likevel" : "Send på nytt likevel"}
               </button>
             </span>
           ) : null}
         </span>
       </label>
     </div>
+  );
+}
+
+function OutreachOverview({
+  entries,
+  error,
+  isLoading,
+  onOpenCompany,
+  onRefresh,
+}: {
+  entries: OutreachStatus[];
+  error: string | null;
+  isLoading: boolean;
+  onOpenCompany: (orgNumber: string) => void;
+  onRefresh: () => void;
+}) {
+  const sentEntries = entries
+    .filter((entry) => entry.sent)
+    .sort((left, right) => (right.sentAt ?? "").localeCompare(left.sentAt ?? ""));
+
+  return (
+    <section id="outreach" className="mx-auto max-w-7xl px-6 pt-10">
+      <div className="border border-[#D9E2EC] bg-white">
+        <div className="flex flex-col gap-4 border-b border-[#D9E2EC] px-5 py-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-[12px] font-medium text-[#52606D]">Utsendelseslogg</p>
+            <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-[#1F2933]">
+              Alle som har fått tilbudsmail
+            </h2>
+            <p className="mt-2 text-[13px] font-medium text-[#52606D]">
+              {sentEntries.length} selskaper med registrert utsendelse
+            </p>
+          </div>
+          <Button
+            className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
+            disabled={isLoading}
+            onClick={onRefresh}
+            type="button"
+            variant="outline"
+          >
+            {isLoading ? "Oppdaterer..." : "Oppdater liste"}
+          </Button>
+        </div>
+
+        {error ? (
+          <div className="border-b border-[#D9E2EC] bg-rose-50 px-5 py-4 text-[13px] font-medium text-rose-700">
+            {error}
+          </div>
+        ) : null}
+
+        {sentEntries.length === 0 ? (
+          <div className="px-5 py-10 text-[14px] font-medium text-[#52606D]">
+            Ingen selskaper er markert som sendt ennå.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[760px] border-collapse text-left text-[13px]">
+              <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+                <tr>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Selskap</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Org.nr</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Sendt</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Pris</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Notat</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sentEntries.map((entry) => (
+                  <tr key={entry.orgNumber} className="border-b border-[#E4E7EB] last:border-b-0">
+                    <td className="px-4 py-3">
+                      <button
+                        className="font-semibold text-[#1F5FA9] underline-offset-4 hover:underline"
+                        onClick={() => onOpenCompany(entry.orgNumber)}
+                        type="button"
+                      >
+                        {entry.companyName || "Ukjent selskap"}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
+                    <td className="px-4 py-3 text-[#52606D]">{entry.sentAt ? formatDateTime(entry.sentAt) : "-"}</td>
+                    <td className="px-4 py-3 text-[#52606D]">{formatNokPrice(entry.price ?? 4500)}</td>
+                    <td className="max-w-sm px-4 py-3 text-[#52606D]">{entry.note || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -1876,7 +2052,7 @@ function CompanyDetailView({
   outreachSaving: boolean;
   onBack: () => void;
   onGenerateEmail: () => void;
-  onToggleOutreach: (sent: boolean, note?: string) => void;
+  onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
   const leadPriority = getLeadPriority(company);
   const config = detailLeadSignalConfig(leadPriority.label);
@@ -1916,7 +2092,7 @@ function CompanyDetailView({
   }
 
   return (
-    <div className="detail-shell mx-auto max-w-6xl">
+    <div className="detail-shell mx-auto max-w-6xl pt-4 sm:pt-6">
       <div className="mb-4">
         <Button
           variant="ghost"
@@ -2102,7 +2278,7 @@ function CompanyDetailView({
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <Button
-                        className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
+                        className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
                         onClick={() => void handleCopyGeneratedEmail()}
                         type="button"
                       >

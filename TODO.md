@@ -21,6 +21,8 @@
 - Månedlig Markdown-rapport genereres automatisk som `data/outreach-log-YYYY-MM.md`
 - Treffkort og selskapsvisning kan markeres med `E-post sendt om nettside til kr 4.500`
 - Utsendelsesnotat kan lagres fra UI, med faste hurtigvalg for vanlige oppfølgingsnotater
+- Selskaper kan markeres som `Ikke aktuell`, og dette huskes i samme utsendelseslogg
+- Hovedsiden har egen `Utsendelser`-oversikt som viser alle selskaper som har fått tilbudsmail
 - Dobbel utsendelse krever eksplisitt overstyring
 - Mailtekst genereres fra [outreach-email-template.md](data/outreach-email-template.md)
 - `Kopier mailtekst` og `Åpne i e-post` er koblet til selskapsvisningen

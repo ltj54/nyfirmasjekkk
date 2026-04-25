@@ -136,6 +136,11 @@ public class CompanyCheckController {
         return outreachLogService.statusFor(organisasjonsnummer);
     }
 
+    @GetMapping("/outreach")
+    public List<OutreachStatusResponse> outreachStatuses() {
+        return outreachLogService.statuses();
+    }
+
     @PostMapping("/{organisasjonsnummer}/outreach-status")
     public OutreachStatusResponse registerOutreachStatus(
             @PathVariable
@@ -147,6 +152,7 @@ public class CompanyCheckController {
                 organisasjonsnummer,
                 request.companyName(),
                 request.sent(),
+                request.status(),
                 request.price(),
                 request.channel(),
                 request.offerType(),

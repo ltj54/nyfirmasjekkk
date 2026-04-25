@@ -157,6 +157,7 @@ class CompanyCheckApiIntegrationTests {
                                 {
                                   "companyName": "Test AS",
                                   "sent": true,
+                                  "status": "sent",
                                   "price": 4500,
                                   "channel": "email",
                                   "offerType": "website-offer"
@@ -165,12 +166,19 @@ class CompanyCheckApiIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orgNumber").value(orgnr))
                 .andExpect(jsonPath("$.sent").value(true))
+                .andExpect(jsonPath("$.status").value("sent"))
                 .andExpect(jsonPath("$.price").value(4500));
 
         mockMvc.perform(get("/api/company-check/" + orgnr + "/outreach-status"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.sent").value(true))
                 .andExpect(jsonPath("$.channel").value("email"));
+
+        mockMvc.perform(get("/api/company-check/outreach"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].orgNumber").value(orgnr))
+                .andExpect(jsonPath("$[0].status").value("sent"));
     }
 
     private EnhetResponse stubEnhet(String orgnr) {
