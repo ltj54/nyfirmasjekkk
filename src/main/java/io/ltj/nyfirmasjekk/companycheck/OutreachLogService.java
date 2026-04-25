@@ -208,14 +208,15 @@ public class OutreachLogService {
 
         YearMonth currentMonth = YearMonth.now(clock);
         Map<YearMonth, List<OutreachLogEntry>> archiveCandidates = activeEntries.stream()
-                .filter(entry -> {
-                    YearMonth month = parseYearMonth(entry.timestamp());
-                    return month != null && !currentMonth.equals(month);
-                })
+                .map(entry -> new MonthlyOutreachLogEntry(parseYearMonth(entry.timestamp()), entry))
+                .filter(entry -> entry.month() != null && !currentMonth.equals(entry.month()))
                 .collect(java.util.stream.Collectors.groupingBy(
-                        entry -> parseYearMonth(entry.timestamp()),
+                        MonthlyOutreachLogEntry::month,
                         LinkedHashMap::new,
-                        java.util.stream.Collectors.toList()
+                        java.util.stream.Collectors.mapping(
+                                MonthlyOutreachLogEntry::entry,
+                                java.util.stream.Collectors.toList()
+                        )
                 ));
 
         if (archiveCandidates.isEmpty()) {
@@ -475,5 +476,8 @@ public class OutreachLogService {
             String offerType,
             String note
     ) {
+    }
+
+    private record MonthlyOutreachLogEntry(YearMonth month, OutreachLogEntry entry) {
     }
 }
