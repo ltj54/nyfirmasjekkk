@@ -88,7 +88,7 @@ Jeg så at Eksempel AS er et nytt selskap, og ville derfor sende en kort henvend
 
 Jeg hjelper nye virksomheter med å få på plass en enkel nettside med tydelig kontaktinformasjon, samt hjelp med domene og e-post ved behov.
 
-Jeg kan levere dette som en enkel pakke til `kr 4.500`.
+Jeg kan levere dette som en enkel pakke til kr 4.500.
 
 Hvis dette er aktuelt, kan jeg sende et kort og konkret forslag til oppsett.
 

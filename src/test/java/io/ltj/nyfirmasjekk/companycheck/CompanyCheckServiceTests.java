@@ -12,6 +12,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -990,6 +991,100 @@ class CompanyCheckServiceTests {
     }
 
     @Test
+    void sokUtenScoreFilterStopperForBrregSinMaksimaleSidegrense() {
+        var enk = new EnhetResponse(
+                "123456789",
+                "TRYG FORSIKRING ENK",
+                new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
+                new EnhetResponse.Naeringskode("66.220", "Forsikringsformidling"),
+                List.of("Forsikring"),
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                0,
+                false,
+                "2024",
+                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, 1, 10),
+                null,
+                null
+        );
+        Map<Integer, EnheterSearchResponse> pages = new HashMap<>();
+        for (int page = 0; page < 100; page++) {
+            pages.put(page, new EnheterSearchResponse(
+                    new EnheterSearchResponse.Embedded(List.of(enk)),
+                    new EnheterSearchResponse.Page(100, 10_100, 101, page)
+            ));
+        }
+        var client = new StubBrregClient(
+                Map.of(enk.organisasjonsnummer(), enk),
+                Map.of(enk.organisasjonsnummer(), new RollerResponse(List.of())),
+                pages
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, "AS", null, 10), 0);
+
+        assertThat(result.items()).isEmpty();
+        assertThat(client.requestedSearchPages()).contains(99);
+        assertThat(client.requestedSearchPages()).doesNotContain(100);
+    }
+
+    @Test
+    void navnesokUtenScoreFilterStopperNarResultatsidenErFylt() {
+        var tryg = new EnhetResponse(
+                "989563521",
+                "TRYG FORSIKRING",
+                new EnhetResponse.Organisasjonsform("NUF", "Norskregistrert utenlandsk foretak"),
+                new EnhetResponse.Naeringskode("65.120", "Skadeforsikring"),
+                List.of("Forsikring"),
+                "tryg.no",
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                10,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, 1, 10),
+                null,
+                null
+        );
+        var client = new StubBrregClient(
+                Map.of(tryg.organisasjonsnummer(), tryg),
+                Map.of(tryg.organisasjonsnummer(), new RollerResponse(List.of())),
+                Map.of(
+                        0, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(tryg)),
+                                new EnheterSearchResponse.Page(100, 250, 3, 0)
+                        ),
+                        1, new EnheterSearchResponse(
+                                new EnheterSearchResponse.Embedded(List.of(tryg)),
+                                new EnheterSearchResponse.Page(100, 250, 3, 1)
+                        )
+                )
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest("tryg forsikring as", 0, null, null, null, null, null, 1), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("989563521");
+        assertThat(client.lastSearchFilter()).containsEntry("navn", "tryg forsikring");
+        assertThat(client.requestedSearchPages()).containsExactly(0);
+    }
+
+    @Test
     void scorefiltrertSokFjernerDubletterMellomBrregSider() {
         var ettertid = new EnhetResponse(
                 "123456789",
@@ -1301,6 +1396,7 @@ class CompanyCheckServiceTests {
         private final Map<String, EnhetResponse> enheterByOrgNumber;
         private final Map<String, RollerResponse> rollerByOrgNumber;
         private final AtomicInteger roleLookups = new AtomicInteger(0);
+        private final List<Integer> requestedSearchPages = new ArrayList<>();
         private Map<String, String> lastSearchFilter;
 
         private StubBrregClient(EnhetResponse enhet, RollerResponse roller) {
@@ -1361,11 +1457,13 @@ class CompanyCheckServiceTests {
             lastSearchFilter = Map.copyOf(filter);
             if (!searchResponsesByPage.isEmpty()) {
                 int page = Integer.parseInt(filter.getOrDefault("page", "0"));
+                requestedSearchPages.add(page);
                 return searchResponsesByPage.getOrDefault(
                         page,
                         new EnheterSearchResponse(new EnheterSearchResponse.Embedded(List.of()), new EnheterSearchResponse.Page(0, 0, page, page))
                 );
             }
+            requestedSearchPages.add(Integer.parseInt(filter.getOrDefault("page", "0")));
             return searchResponse;
         }
 
@@ -1375,6 +1473,10 @@ class CompanyCheckServiceTests {
 
         private int roleLookups() {
             return roleLookups.get();
+        }
+
+        private List<Integer> requestedSearchPages() {
+            return List.copyOf(requestedSearchPages);
         }
     }
 

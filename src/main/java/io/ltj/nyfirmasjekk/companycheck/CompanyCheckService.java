@@ -33,6 +33,9 @@ public class CompanyCheckService {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckService.class);
     private static final int SOURCE_PAGE_SIZE = 100;
     private static final int FILTERED_SOURCE_PAGE_SIZE = 25;
+    private static final int BRREG_MAX_PAGE_WINDOW = 10_000;
+    private static final int MAX_SOURCE_PAGES_WITH_TEXT_SEARCH = 10;
+    private static final int MAX_SOURCE_PAGES_PER_NAME_VARIANT = 3;
     private static final int MAX_SOURCE_PAGES_WITH_SCORE_FILTER = 400;
     private static final int MAX_RED_SOURCE_PAGES_PER_VARIANT = 40;
 
@@ -72,7 +75,9 @@ public class CompanyCheckService {
     public CompanySearchPage sokPage(CompanySearchRequest request, int page) {
         long startedAt = System.nanoTime();
         SearchDiagnostics diagnostics = new SearchDiagnostics(request, page);
-        CompanySearchPage results = isHardRedSearch(request)
+        CompanySearchPage results = hasText(request.navn()) && !harTekst(request.score())
+                ? sokMedNavnefilter(request, page, diagnostics)
+                : isHardRedSearch(request)
                 ? sokMedRegisterdrevetRedFilter(request, page, diagnostics)
                 : harTekst(request.score())
                 ? sokMedScoreFilter(request, page, diagnostics)
@@ -123,6 +128,48 @@ public class CompanyCheckService {
         return buildSearchPage(items, page, request.resultSize(), matches.size());
     }
 
+    private CompanySearchPage sokMedNavnefilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+        Map<String, CompanyCheck> matches = new LinkedHashMap<>();
+        int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
+        int targetCount = requestedOffset + request.resultSize();
+        List<String> nameTokens = nameSearchTokens(request.navn());
+
+        for (String nameVariant : nameSearchVariants(request.navn())) {
+            for (int sourcePage = 0; sourcePage < MAX_SOURCE_PAGES_PER_NAME_VARIANT && matches.size() < targetCount; sourcePage++) {
+                var filter = byggFilterMedNavn(request, sourcePage, SOURCE_PAGE_SIZE, nameVariant);
+                long fetchStartedAt = System.nanoTime();
+                EnheterSearchResponse searchResponse = brregClient.sok(filter);
+                diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+
+                List<EnhetResponse> filteredEnheter = hentEnheter(searchResponse).stream()
+                        .filter(enhet -> matcherEnhet(enhet, request))
+                        .filter(enhet -> matcherNavneTokens(enhet, nameTokens))
+                        .toList();
+                diagnostics.recordPrefilter(filteredEnheter.size(), fetchStartedAt);
+
+                filteredEnheter.stream()
+                        .limit(Math.max(targetCount - matches.size(), 0))
+                        .map(this::vurderFraSok)
+                        .forEach(match -> matches.putIfAbsent(match.organisasjonsnummer(), match));
+
+                var pageInfo = searchResponse.page();
+                boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1 || hentEnheter(searchResponse).isEmpty();
+                if (noMorePages) {
+                    break;
+                }
+            }
+            if (matches.size() >= targetCount) {
+                break;
+            }
+        }
+
+        List<CompanyCheck> items = matches.values().stream()
+                .skip(requestedOffset)
+                .limit(request.resultSize())
+                .toList();
+        return buildSearchPage(items, page, request.resultSize(), matches.size());
+    }
+
     private CompanySearchPage sokUtenScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
         List<CompanyCheck> matches = new ArrayList<>();
         Map<String, CompanyCheck> seenMatches = new LinkedHashMap<>();
@@ -147,7 +194,11 @@ public class CompanyCheckService {
             matchedBeforePage += pageMatches.size();
 
             var pageInfo = searchResponse.page();
-            boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
+            boolean textSearchHasMatchesForRequestedPage = hasText(request.navn()) && !matches.isEmpty();
+            boolean noMorePages = pageInfo == null
+                    || sourcePage >= pageInfo.totalPages() - 1
+                    || sourcePage >= maxSourcePageForUnscoredSearch(request)
+                    || textSearchHasMatchesForRequestedPage;
             if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
                 break;
             }
@@ -206,6 +257,61 @@ public class CompanyCheckService {
         int safeSize = Math.max(size, 1);
         int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / safeSize);
         return new CompanySearchPage(items, Math.max(page, 0), safeSize, totalElements, totalPages);
+    }
+
+    private int maxBrregSourcePage(int size) {
+        return Math.max(0, BRREG_MAX_PAGE_WINDOW / Math.max(size, 1) - 1);
+    }
+
+    private int maxSourcePageForUnscoredSearch(CompanySearchRequest request) {
+        int maxBrregPage = maxBrregSourcePage(SOURCE_PAGE_SIZE);
+        if (hasText(request.navn())) {
+            return Math.min(maxBrregPage, MAX_SOURCE_PAGES_WITH_TEXT_SEARCH - 1);
+        }
+        return maxBrregPage;
+    }
+
+    private String navnForBrregSearch(String navn) {
+        return navn.trim().replaceFirst("(?i)\\s+(AS|ASA|ENK|NUF|SA|FLI)\\s*$", "");
+    }
+
+    private List<String> nameSearchVariants(String navn) {
+        List<String> tokens = nameSearchTokens(navn);
+        if (tokens.isEmpty()) {
+            return List.of();
+        }
+
+        List<String> variants = new ArrayList<>();
+        String normalizedName = navnForBrregSearch(navn);
+        if (hasText(normalizedName)) {
+            variants.add(normalizedName);
+        }
+        variants.add(tokens.getFirst());
+        return variants.stream()
+                .filter(this::hasText)
+                .map(String::trim)
+                .distinct()
+                .toList();
+    }
+
+    private List<String> nameSearchTokens(String navn) {
+        if (!hasText(navn)) {
+            return List.of();
+        }
+        return Stream.of(navnForBrregSearch(navn).split("\\s+"))
+                .map(token -> token.replaceAll("[^\\p{L}\\p{N}]", ""))
+                .filter(this::hasText)
+                .map(token -> token.toUpperCase(Locale.ROOT))
+                .filter(token -> !List.of("AS", "ASA", "ENK", "NUF", "SA", "FLI").contains(token))
+                .toList();
+    }
+
+    private boolean matcherNavneTokens(EnhetResponse enhet, List<String> tokens) {
+        if (tokens.isEmpty()) {
+            return true;
+        }
+        String navn = hasText(enhet.navn()) ? enhet.navn().toUpperCase(Locale.ROOT) : "";
+        return tokens.stream().allMatch(navn::contains);
     }
 
     private List<CompanyCheck> vurderSide(EnheterSearchResponse searchResponse, CompanySearchRequest request, SearchDiagnostics diagnostics) {
@@ -596,10 +702,18 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size, Map<String, String> extraParams) {
+        return byggFilterMedNavn(r, p, size, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams);
+    }
+
+    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn) {
+        return byggFilterMedNavn(r, p, size, navn, Map.of());
+    }
+
+    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams) {
         Map<String, String> f = new HashMap<>();
         f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
         if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
-        if (hasText(r.navn())) f.put("navn", r.navn().trim());
+        if (hasText(navn)) f.put("navn", navn.trim());
         f.putAll(extraParams);
         f.put("sort", "registreringsdatoEnhetsregisteret,desc");
         return f;

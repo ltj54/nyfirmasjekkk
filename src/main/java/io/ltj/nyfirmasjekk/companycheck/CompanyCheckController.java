@@ -3,7 +3,6 @@ package io.ltj.nyfirmasjekk.companycheck;
 import io.ltj.nyfirmasjekk.api.v1.CompanyApiV1Mapper;
 import io.ltj.nyfirmasjekk.api.v1.CompanyDetails;
 import io.ltj.nyfirmasjekk.api.v1.CompanyEvent;
-import io.ltj.nyfirmasjekk.api.v1.CompanyHistoryEntry;
 import io.ltj.nyfirmasjekk.api.v1.MetadataFiltersResponse;
 import io.ltj.nyfirmasjekk.api.v1.MetadataService;
 import io.ltj.nyfirmasjekk.api.v1.NetworkActor;
@@ -12,8 +11,6 @@ import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
-import io.ltj.nyfirmasjekk.history.CompanyHistoryService;
-import io.ltj.nyfirmasjekk.network.CompanyNetworkService;
 import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.ConstraintViolationException;
@@ -45,8 +42,6 @@ public class CompanyCheckController {
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
     private final BrregClient brregClient;
-    private final CompanyHistoryService companyHistoryService;
-    private final CompanyNetworkService companyNetworkService;
     private final MetadataService metadataService;
     private final OutreachLogService outreachLogService;
     private final MeterRegistry meterRegistry;
@@ -55,8 +50,6 @@ public class CompanyCheckController {
             CompanyCheckService companyCheckService,
             CompanyApiV1Mapper mapper,
             BrregClient brregClient,
-            CompanyHistoryService companyHistoryService,
-            CompanyNetworkService companyNetworkService,
             MetadataService metadataService,
             OutreachLogService outreachLogService,
             MeterRegistry meterRegistry
@@ -64,8 +57,6 @@ public class CompanyCheckController {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
         this.brregClient = brregClient;
-        this.companyHistoryService = companyHistoryService;
-        this.companyNetworkService = companyNetworkService;
         this.metadataService = metadataService;
         this.outreachLogService = outreachLogService;
         this.meterRegistry = meterRegistry;
@@ -80,32 +71,19 @@ public class CompanyCheckController {
         meterRegistry.counter("company_check_details_requests_total").increment();
         return meterRegistry.timer("company_check_details_timer", "org", organisasjonsnummer).record(() -> {
             CompanyCheck check = companyCheckService.vurder(organisasjonsnummer);
-            companyHistoryService.captureSnapshot(check);
             var enhet = brregClient.hentEnhet(organisasjonsnummer);
             var roller = brregClient.hentRoller(organisasjonsnummer);
-            boolean bankruptcySignal = Boolean.TRUE.equals(enhet.konkurs());
-            boolean dissolvedSignal = check.funn().stream()
-                    .anyMatch(finding -> finding != null && "Avvikling".equalsIgnoreCase(finding.label()));
-            companyNetworkService.captureRoles(
-                    organisasjonsnummer,
-                    check.navn(),
-                    check.status(),
-                    bankruptcySignal,
-                    dissolvedSignal,
-                    enhet.registreringsdatoEnhetsregisteret(),
-                    roller
-            );
-            return mapper.toDetails(check, enhet, roller, companyNetworkService.networkFor(organisasjonsnummer));
+            return mapper.toDetails(check, enhet, roller, List.of());
         });
     }
 
     @GetMapping("/{organisasjonsnummer}/history")
-    public List<CompanyHistoryEntry> history(
+    public List<Object> history(
             @PathVariable
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer
     ) {
-        return companyHistoryService.historyFor(organisasjonsnummer);
+        return List.of();
     }
 
     @GetMapping("/{organisasjonsnummer}/network")
@@ -114,7 +92,7 @@ public class CompanyCheckController {
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer
     ) {
-        return companyNetworkService.networkFor(organisasjonsnummer);
+        return List.of();
     }
 
     @GetMapping("/{organisasjonsnummer}/events")
