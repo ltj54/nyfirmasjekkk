@@ -122,21 +122,20 @@ export function CompanyCheckShell() {
     }
 
     try {
-      const responses = await Promise.all(
-        uniqueOrgNumbers.map(async (orgNumber) => {
-          const response = await fetch(`/api/company-check/${orgNumber}/outreach-status`, {
-            cache: "no-store",
-          });
-          if (!response.ok) {
-            return null;
-          }
+      const response = await fetch("/api/company-check/outreach-statuses", {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(uniqueOrgNumbers),
+      });
+      if (!response.ok) {
+        return;
+      }
 
-          const payload = (await response.json()) as OutreachStatus;
-          return [orgNumber, payload] as const;
-        })
-      );
-
-      const nextEntries = responses.filter((entry): entry is readonly [string, OutreachStatus] => entry !== null);
+      const payload = (await response.json()) as OutreachStatus[];
+      const nextEntries = payload.map((entry) => [entry.orgNumber, entry] as const);
       if (nextEntries.length === 0) {
         return;
       }
@@ -179,7 +178,7 @@ export function CompanyCheckShell() {
   }
 
   async function updateOutreachStatus(
-    company: Pick<CompanySummary, "orgNumber" | "name">,
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm">,
     sent: boolean,
     note?: string,
     statusOverride?: "sent" | "reverted" | "not_relevant"
@@ -197,6 +196,7 @@ export function CompanyCheckShell() {
         },
         body: JSON.stringify({
           companyName: company.name,
+          organizationForm: company.organizationForm,
           sent,
           status: statusOverride ?? (sent ? "sent" : "reverted"),
           price: 4500,
@@ -1946,6 +1946,17 @@ function CompanyDetailView({
                       {company.websiteDiscovery.contentMatchReason}
                     </p>
                   ) : null}
+                  <div className="mt-4 border border-[#D9E2EC] bg-[#F8FBFF] p-4">
+                    <p className="text-[12px] font-semibold text-[#1F2933]">Slik ble kandidaten vurdert</p>
+                    <ul className="mt-3 space-y-2 text-[12px] leading-5 text-[#52606D]">
+                      {websiteDiscoveryExplanationItems(company.websiteDiscovery, company.name).map((item) => (
+                        <li key={item} className="flex gap-2">
+                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#9FB3C8]" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
                     {formatWebsiteConfidence(company.websiteDiscovery.confidence)} sikkerhet · {company.websiteDiscovery.source}
                   </p>
@@ -2670,6 +2681,52 @@ function formatWebsiteContentMatch(websiteDiscovery: NonNullable<CompanySummary[
     return "ingen tydelig kobling funnet i innholdet";
   }
   return "innhold ikke sjekket";
+}
+
+function websiteDiscoveryExplanationItems(
+  websiteDiscovery: NonNullable<CompanySummary["websiteDiscovery"]>,
+  companyName: string,
+) {
+  const items: string[] = [];
+  const candidate = websiteDiscovery.verifiedCandidate ?? websiteDiscovery.candidates[0];
+
+  if (websiteDiscovery.source === "EMAIL_DOMAIN") {
+    items.push(`Kandidaten ${stripWebsiteProtocol(candidate)} er laget fra domenet i registrert e-postadresse.`);
+  } else if (websiteDiscovery.source === "NAME_HEURISTIC") {
+    items.push(`Kandidatene er laget fra selskapsnavnet "${companyName}" etter at selskapsform og spesialtegn er fjernet.`);
+  } else {
+    items.push("Kandidaten kommer fra registrerte eller avledede selskapsdata.");
+  }
+
+  if (websiteDiscovery.candidates.length > 1) {
+    items.push(`Systemet vurderte ${websiteDiscovery.candidates.length} mulige domener og viser dem i prioritert rekkefølge.`);
+  }
+
+  if (websiteDiscovery.verifiedReachable === true) {
+    items.push("Domenet svarte på teknisk sjekk med HTTP HEAD eller GET.");
+  } else if (websiteDiscovery.verifiedReachable === false) {
+    items.push("Domenet svarte ikke på teknisk sjekk innen tidsfristen.");
+  }
+
+  if (websiteDiscovery.pageTitle) {
+    items.push(`Sidetittelen som ble lest var: "${websiteDiscovery.pageTitle}".`);
+  }
+
+  if (websiteDiscovery.contentMatched === true) {
+    items.push("Innholdet på siden hadde tydelig kobling til selskapsnavnet eller domenet.");
+  } else if (websiteDiscovery.verifiedReachable === true) {
+    items.push("Siden svarte, men innholdssjekken fant ikke tydelig kobling til selskapsnavnet eller e-postdomenet.");
+  }
+
+  if (websiteDiscovery.confidence === "HIGH") {
+    items.push("Sikkerheten er høy fordi både kilde og innhold gir tydelige positive signaler.");
+  } else if (websiteDiscovery.confidence === "MEDIUM") {
+    items.push("Sikkerheten er middels fordi domenet svarer, men koblingen må fortsatt bekreftes manuelt.");
+  } else {
+    items.push("Sikkerheten er lav fordi koblingen ikke er bekreftet godt nok.");
+  }
+
+  return items;
 }
 
 function formatShortDate(value: string) {

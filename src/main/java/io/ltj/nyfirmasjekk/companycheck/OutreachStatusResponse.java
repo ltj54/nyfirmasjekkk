@@ -5,6 +5,7 @@ public record OutreachStatusResponse(
         boolean sent,
         String status,
         String companyName,
+        String organizationForm,
         Integer price,
         String channel,
         String offerType,

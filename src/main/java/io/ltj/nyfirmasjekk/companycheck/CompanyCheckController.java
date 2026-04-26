@@ -119,6 +119,19 @@ public class CompanyCheckController {
         return outreachLogService.statuses();
     }
 
+    @PostMapping("/outreach-statuses")
+    public List<OutreachStatusResponse> outreachStatusesFor(@RequestBody List<String> orgNumbers) {
+        if (orgNumbers == null || orgNumbers.isEmpty()) {
+            return List.of();
+        }
+        return orgNumbers.stream()
+                .filter(orgNumber -> orgNumber != null && orgNumber.matches("\\d{9}"))
+                .distinct()
+                .limit(250)
+                .map(outreachLogService::statusFor)
+                .toList();
+    }
+
     @PostMapping("/{organisasjonsnummer}/outreach-status")
     public OutreachStatusResponse registerOutreachStatus(
             @PathVariable
@@ -129,6 +142,7 @@ public class CompanyCheckController {
         var payload = new OutreachStatusRequest(
                 organisasjonsnummer,
                 request.companyName(),
+                request.organizationForm(),
                 request.sent(),
                 request.status(),
                 request.price(),

@@ -346,6 +346,16 @@ public class CompanyCheckService {
             return results;
         }
 
+        if (isFastYellowSearch(request)) {
+            long scoringStartedAt = System.nanoTime();
+            List<CompanyCheck> results = filteredEnheter.stream()
+                    .filter(this::canBeFastYellow)
+                    .map(this::byggFastYellowSearchCheck)
+                    .toList();
+            diagnostics.recordScoring(filteredEnheter.size(), results.size(), scoringStartedAt);
+            return results;
+        }
+
         long scoringStartedAt = System.nanoTime();
         List<Future<CompanyCheck>> futures = filteredEnheter.stream()
                 .map(enhet -> executor.submit(() -> vurderFraSok(enhet)))
@@ -366,6 +376,10 @@ public class CompanyCheckService {
 
     private boolean isFastGreenSearch(CompanySearchRequest request) {
         return request != null && "GREEN".equalsIgnoreCase(request.score());
+    }
+
+    private boolean isFastYellowSearch(CompanySearchRequest request) {
+        return request != null && "YELLOW".equalsIgnoreCase(request.score());
     }
 
     public CompanyCheck vurder(String organisasjonsnummer) {
@@ -459,6 +473,25 @@ public class CompanyCheckService {
                 "Ryddig førsteinntrykk.",
                 byggCompanyFacts(enhet, EMPTY_ROLLER, false, false),
                 new CompanyMetrics(2, 0, 0),
+                funn,
+                List.of("BRREG API"),
+                List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
+        );
+    }
+
+    private CompanyCheck byggFastYellowSearchCheck(EnhetResponse enhet) {
+        List<CheckFinding> funn = List.of(
+                new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"),
+                new CheckFinding(TrafficLight.YELLOW, "Begrenset info", "Nytt selskap eller svakt datagrunnlag.")
+        );
+        return new CompanyCheck(
+                enhet.organisasjonsnummer(),
+                enhet.navn(),
+                hentOrganisasjonsformKode(enhet),
+                TrafficLight.YELLOW,
+                "Selskapet er nytt eller har begrenset info. Sjekk nærmere.",
+                byggCompanyFacts(enhet, EMPTY_ROLLER, false, false),
+                new CompanyMetrics(1, 1, 0),
                 funn,
                 List.of("BRREG API"),
                 List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
@@ -810,6 +843,26 @@ public class CompanyCheckService {
             return false;
         }
         return hasEnhetOnlyPositiveStructure(enhet);
+    }
+
+    private boolean canBeFastYellow(EnhetResponse enhet) {
+        if (hasHardRedSignal(enhet)) {
+            return false;
+        }
+        boolean isVoluntaryDissolution = isVoluntaryDissolution(enhet);
+        boolean isVeryNew = modenhetsAlderDager(enhet) < NEW_COMPANY_DAYS;
+        TrafficLight approximateStatus = bestemStatus(
+                enhet,
+                hentOrganisasjonsformKode(enhet),
+                false,
+                false,
+                false,
+                isVoluntaryDissolution,
+                false,
+                isVeryNew,
+                ActorRiskSummary.none()
+        );
+        return approximateStatus == TrafficLight.YELLOW;
     }
 
     private boolean hasEnhetOnlyPositiveStructure(EnhetResponse enhet) {

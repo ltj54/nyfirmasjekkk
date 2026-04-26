@@ -66,6 +66,7 @@ public class OutreachLogService {
 
         if (latestEntry == null || !"sent".equalsIgnoreCase(latestEntry.status())) {
             return new OutreachStatusResponse(orgNumber, false, latestEntry == null ? null : latestEntry.status(), latestEntry == null ? null : latestEntry.companyName(),
+                    latestEntry == null ? null : latestEntry.organizationForm(),
                     latestEntry == null ? null : latestEntry.price(),
                     latestEntry == null ? null : latestEntry.channel(),
                     latestEntry == null ? null : latestEntry.offerType(),
@@ -78,6 +79,7 @@ public class OutreachLogService {
                 true,
                 latestEntry.status(),
                 latestEntry.companyName(),
+                latestEntry.organizationForm(),
                 latestEntry.price(),
                 latestEntry.channel(),
                 latestEntry.offerType(),
@@ -105,6 +107,7 @@ public class OutreachLogService {
                 Instant.now(clock).toString(),
                 request.orgNumber(),
                 blankToNull(request.companyName()),
+                blankToNull(request.organizationForm()),
                 normalizeStatus(request),
                 request.price() == null ? 4500 : request.price(),
                 blankToNull(request.channel()) == null ? "email" : request.channel().trim(),
@@ -124,6 +127,7 @@ public class OutreachLogService {
                 sent,
                 entry.status(),
                 entry.companyName(),
+                entry.organizationForm(),
                 entry.price(),
                 entry.channel(),
                 entry.offerType(),
@@ -388,8 +392,8 @@ public class OutreachLogService {
         if (activeCompanies.isEmpty()) {
             markdown.append("Ingen aktive utsendelser i denne måneden.").append(System.lineSeparator()).append(System.lineSeparator());
         } else {
-            markdown.append("| Dato | Org.nr | Selskap | Kanal | Pris | Tilbud |").append(System.lineSeparator());
-            markdown.append("| --- | --- | --- | --- | --- | --- |").append(System.lineSeparator());
+            markdown.append("| Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |").append(System.lineSeparator());
+            markdown.append("| --- | --- | --- | --- | --- | --- | --- |").append(System.lineSeparator());
             for (OutreachLogEntry entry : activeCompanies) {
                 markdown.append("| ")
                         .append(formatDate(entry.timestamp()))
@@ -397,6 +401,8 @@ public class OutreachLogService {
                         .append(entry.orgNumber())
                         .append(" | ")
                         .append(markdownValue(entry.companyName()))
+                        .append(" | ")
+                        .append(markdownValue(entry.organizationForm()))
                         .append(" | ")
                         .append(markdownValue(entry.channel()))
                         .append(" | ")
@@ -410,8 +416,8 @@ public class OutreachLogService {
         }
 
         markdown.append("## Hendelser").append(System.lineSeparator()).append(System.lineSeparator());
-        markdown.append("| Tidspunkt | Status | Org.nr | Selskap | Kanal | Pris | Notat |").append(System.lineSeparator());
-        markdown.append("| --- | --- | --- | --- | --- | --- | --- |").append(System.lineSeparator());
+        markdown.append("| Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |").append(System.lineSeparator());
+        markdown.append("| --- | --- | --- | --- | --- | --- | --- | --- |").append(System.lineSeparator());
         for (OutreachLogEntry entry : entries.stream().sorted(Comparator.comparing(OutreachLogEntry::timestamp).reversed()).toList()) {
             markdown.append("| ")
                     .append(formatTimestamp(entry.timestamp()))
@@ -421,6 +427,8 @@ public class OutreachLogService {
                     .append(entry.orgNumber())
                     .append(" | ")
                     .append(markdownValue(entry.companyName()))
+                    .append(" | ")
+                    .append(markdownValue(entry.organizationForm()))
                     .append(" | ")
                     .append(markdownValue(entry.channel()))
                     .append(" | ")
@@ -470,6 +478,7 @@ public class OutreachLogService {
             String timestamp,
             String orgNumber,
             String companyName,
+            String organizationForm,
             String status,
             Integer price,
             String channel,

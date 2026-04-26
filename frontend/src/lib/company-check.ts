@@ -150,6 +150,7 @@ export interface OutreachStatus {
   sent: boolean;
   status: "sent" | "reverted" | "not_relevant" | null;
   companyName: string | null;
+  organizationForm: string | null;
   price: number | null;
   channel: string | null;
   offerType: string | null;
