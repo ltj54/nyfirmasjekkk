@@ -136,7 +136,7 @@ public class CompanyCheckService {
 
         for (String nameVariant : nameSearchVariants(request.navn())) {
             for (int sourcePage = 0; sourcePage < MAX_SOURCE_PAGES_PER_NAME_VARIANT && matches.size() < targetCount; sourcePage++) {
-                var filter = byggFilterMedNavn(request, sourcePage, SOURCE_PAGE_SIZE, nameVariant);
+                var filter = byggFilterMedNavn(request, sourcePage, nameVariant);
                 long fetchStartedAt = System.nanoTime();
                 EnheterSearchResponse searchResponse = brregClient.sok(filter);
                 diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
@@ -259,12 +259,12 @@ public class CompanyCheckService {
         return new CompanySearchPage(items, Math.max(page, 0), safeSize, totalElements, totalPages);
     }
 
-    private int maxBrregSourcePage(int size) {
-        return Math.max(0, BRREG_MAX_PAGE_WINDOW / Math.max(size, 1) - 1);
+    private int maxBrregSourcePage() {
+        return Math.max(0, BRREG_MAX_PAGE_WINDOW / SOURCE_PAGE_SIZE - 1);
     }
 
     private int maxSourcePageForUnscoredSearch(CompanySearchRequest request) {
-        int maxBrregPage = maxBrregSourcePage(SOURCE_PAGE_SIZE);
+        int maxBrregPage = maxBrregSourcePage();
         if (hasText(request.navn())) {
             return Math.min(maxBrregPage, MAX_SOURCE_PAGES_WITH_TEXT_SEARCH - 1);
         }
@@ -738,8 +738,8 @@ public class CompanyCheckService {
         return byggFilterMedNavn(r, p, size, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams);
     }
 
-    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn) {
-        return byggFilterMedNavn(r, p, size, navn, Map.of());
+    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn) {
+        return byggFilterMedNavn(r, p, SOURCE_PAGE_SIZE, navn, Map.of());
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams) {

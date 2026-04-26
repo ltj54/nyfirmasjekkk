@@ -5,7 +5,6 @@ import io.ltj.nyfirmasjekk.api.v1.CompanyDetails;
 import io.ltj.nyfirmasjekk.api.v1.CompanyEvent;
 import io.ltj.nyfirmasjekk.api.v1.MetadataFiltersResponse;
 import io.ltj.nyfirmasjekk.api.v1.MetadataService;
-import io.ltj.nyfirmasjekk.api.v1.NetworkActor;
 import io.ltj.nyfirmasjekk.api.v1.CompanySearchResponse;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
@@ -75,24 +74,6 @@ public class CompanyCheckController {
             var roller = brregClient.hentRoller(organisasjonsnummer);
             return mapper.toDetails(check, enhet, roller, List.of());
         });
-    }
-
-    @GetMapping("/{organisasjonsnummer}/history")
-    public List<Object> history(
-            @PathVariable
-            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
-            String organisasjonsnummer
-    ) {
-        return List.of();
-    }
-
-    @GetMapping("/{organisasjonsnummer}/network")
-    public List<NetworkActor> network(
-            @PathVariable
-            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
-            String organisasjonsnummer
-    ) {
-        return List.of();
     }
 
     @GetMapping("/{organisasjonsnummer}/events")
