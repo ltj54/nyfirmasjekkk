@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -177,6 +178,31 @@ class CompanyCheckApiIntegrationTests {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].orgNumber").value(orgnr))
                 .andExpect(jsonPath("$[0].status").value("sent"));
+
+        mockMvc.perform(get("/api/company-check/outreach/export"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "attachment; filename=\"outreach-log-export.jsonl\""))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("\"orgNumber\":\"" + orgnr + "\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("\"status\":\"sent\"")));
+    }
+
+    @Test
+    void outreachLogKanImporteresFraJsonl() throws Exception {
+        Files.deleteIfExists(Path.of("./build/test-outreach-log.jsonl"));
+
+        mockMvc.perform(post("/api/company-check/outreach/import")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("""
+                                {"timestamp":"2026-04-20T08:00:00Z","orgNumber":"987654321","companyName":"Import AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":"Importert"}
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imported").value(1))
+                .andExpect(jsonPath("$.skipped").value(0));
+
+        mockMvc.perform(get("/api/company-check/outreach"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].orgNumber").value("987654321"))
+                .andExpect(jsonPath("$[0].companyName").value("Import AS"));
     }
 
     private EnhetResponse stubEnhet(String orgnr) {

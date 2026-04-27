@@ -13,6 +13,23 @@ import java.util.Set;
 
 @Service
 public class WebsiteContentInspectionService {
+    private static final Set<String> COMPANY_FORM_STOP_WORDS = Set.of("as", "enk", "nuf", "sa", "fli", "da", "ans");
+    private static final Set<String> TRAILING_QUALIFIERS = Set.of(
+            "ny",
+            "drift",
+            "holding",
+            "holdings",
+            "eiendom",
+            "eiendommer",
+            "invest",
+            "investment",
+            "investments",
+            "norge",
+            "norway",
+            "group",
+            "gruppen"
+    );
+    private static final Set<String> SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
 
     public WebsiteContentMatch inspect(String url, String companyName, String emailDomain) {
         var snapshot = fetchSnapshot(url);
@@ -77,13 +94,14 @@ public class WebsiteContentInspectionService {
         if (normalizedCompanyName.isBlank()) {
             return false;
         }
+        String compactHaystack = haystack.replace(" ", "");
 
-        if (haystack.contains(normalizedCompanyName)) {
+        if (haystack.contains(normalizedCompanyName) || compactHaystack.contains(normalizedCompanyName)) {
             return true;
         }
 
         for (String variant : companyNameVariants(companyName)) {
-            if (!variant.isBlank() && haystack.contains(variant)) {
+            if (!variant.isBlank() && (haystack.contains(variant) || compactHaystack.contains(variant))) {
                 return true;
             }
         }
@@ -96,7 +114,15 @@ public class WebsiteContentInspectionService {
         var variants = new LinkedHashSet<String>();
         if (!normalized.isBlank()) {
             variants.add(normalized);
-            if (!normalized.endsWith("er")) {
+            String withoutTrailingSequence = normalizeCompanyNameWithoutTrailingSequence(companyName);
+            if (!withoutTrailingSequence.isBlank()) {
+                variants.add(withoutTrailingSequence);
+            }
+            String withoutGlueWords = normalizeCompanyNameWithoutGlueWords(companyName);
+            if (!withoutGlueWords.isBlank()) {
+                variants.add(withoutGlueWords);
+            }
+            if (shouldSuggestPluralVariant(normalized)) {
                 variants.add(normalized + "er");
             }
             if (normalized.endsWith("er") && normalized.length() > 4) {
@@ -107,11 +133,53 @@ public class WebsiteContentInspectionService {
     }
 
     private String normalizeCompanyName(String companyName) {
-        return Arrays.stream(normalize(companyName).split("\\s+"))
-                .filter(part -> !part.isBlank())
-                .filter(part -> !Set.of("as", "enk", "nuf", "sa", "fli", "da", "ans").contains(part))
+        return normalizeCompanyNameTokens(companyName).stream()
                 .limit(3)
                 .reduce("", String::concat);
+    }
+
+    private String normalizeCompanyNameWithoutTrailingSequence(String companyName) {
+        var tokens = new java.util.ArrayList<>(normalizeCompanyNameTokens(companyName));
+        while (tokens.size() > 1 && isDroppableTrailingToken(tokens.getLast())) {
+            tokens.removeLast();
+        }
+        return tokens.stream()
+                .limit(3)
+                .reduce("", String::concat);
+    }
+
+    private String normalizeCompanyNameWithoutGlueWords(String companyName) {
+        return normalizeCompanyNameTokens(companyName).stream()
+                .filter(token -> !"og".equals(token))
+                .limit(3)
+                .reduce("", String::concat);
+    }
+
+    private boolean shouldSuggestPluralVariant(String normalized) {
+        return !normalized.endsWith("er")
+                && !normalized.endsWith("ene")
+                && !normalized.endsWith("e")
+                && !normalized.endsWith("i")
+                && Character.isLetter(normalized.charAt(normalized.length() - 1));
+    }
+
+    private boolean isSequenceToken(String token) {
+        if (token == null || token.isBlank()) {
+            return false;
+        }
+        return token.matches("\\d+")
+                || SEQUENCE_TOKENS.contains(token);
+    }
+
+    private boolean isDroppableTrailingToken(String token) {
+        return isSequenceToken(token) || TRAILING_QUALIFIERS.contains(token);
+    }
+
+    private java.util.List<String> normalizeCompanyNameTokens(String companyName) {
+        return Arrays.stream(normalize(companyName).split("\\s+"))
+                .filter(part -> !part.isBlank())
+                .filter(part -> !COMPANY_FORM_STOP_WORDS.contains(part))
+                .toList();
     }
 
     private String normalize(String value) {
@@ -123,6 +191,8 @@ public class WebsiteContentInspectionService {
                 .replace('æ', 'a')
                 .replace('ø', 'o')
                 .replace('å', 'a')
+                .replace("&", " og ")
+                .replace("+", " og ")
                 .replaceAll("[^a-z0-9@. ]", " ")
                 .replaceAll("\\s+", " ")
                 .trim();

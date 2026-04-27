@@ -94,6 +94,37 @@ class CompanyApiV1MapperTests {
     }
 
     @Test
+    void nettsideforslagFjernerRomertallOgSelskapsformFraNavn() {
+        var summary = summaryForName("FONNES BÅTSERVICE II AS");
+
+        assertThat(summary.websiteDiscovery()).isNotNull();
+        assertThat(summary.websiteDiscovery().candidates())
+                .contains("https://fonnesbatservice.no")
+                .contains("https://fonnes-batservice.no")
+                .contains("https://fonnesbatserviceii.no")
+                .doesNotContain("https://fonnesbatserviceiier.no");
+        assertThat(summary.websiteDiscovery().candidates().getFirst())
+                .isEqualTo("https://fonnesbatservice.no");
+    }
+
+    @Test
+    void nettsideforslagFjernerTypiskeStruktursuffiksOgOgVariant() {
+        var holding = summaryForName("ABC BYGG HOLDING AS");
+        var ogNavn = summaryForName("OLSEN & SØNN AS");
+
+        assertThat(holding.websiteDiscovery()).isNotNull();
+        assertThat(holding.websiteDiscovery().candidates())
+                .contains("https://abcbygg.no")
+                .contains("https://abc-bygg.no")
+                .contains("https://abcbyggholding.no");
+
+        assertThat(ogNavn.websiteDiscovery()).isNotNull();
+        assertThat(ogNavn.websiteDiscovery().candidates())
+                .contains("https://olsenogsonn.no")
+                .contains("https://olsensonn.no");
+    }
+
+    @Test
     void byggerNormaliserteHendelserFraRegistreringOgKunngjoringer() {
         var mapper = new CompanyApiV1Mapper(new StubAnnouncementService(List.of(
                 new Announcement("ADDRESS_CHANGE", "Endring av forretningsadresse", "20.06.2025", "BRREG kunngjøringer"),
@@ -395,6 +426,72 @@ class CompanyApiV1MapperTests {
         public List<Announcement> announcementsFor(EnhetResponse enhet) {
             return announcements;
         }
+    }
+
+    private static CompanySummary summaryForName(String companyName) {
+        var mapper = new CompanyApiV1Mapper(
+                new StubAnnouncementService(List.of()),
+                new StubWebsiteReachabilityService(),
+                new StubWebsiteContentInspectionService()
+        );
+        var facts = new CompanyFacts(
+                "AS",
+                LocalDate.of(2026, 4, 20),
+                "Begrenset info.",
+                "50.000",
+                "Sjøtransport",
+                null,
+                List.of(),
+                null,
+                null,
+                null,
+                false,
+                true,
+                0,
+                false,
+                null,
+                null,
+                false,
+                false,
+                false,
+                "Vestland"
+        );
+        var check = new CompanyCheck(
+                "987654321",
+                companyName,
+                "AS",
+                TrafficLight.YELLOW,
+                "Begrenset info.",
+                facts,
+                new CompanyMetrics(0, 0, 0),
+                List.of(),
+                List.of(),
+                List.of()
+        );
+        var enhet = new EnhetResponse(
+                "987654321",
+                companyName,
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                null,
+                List.of(),
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                0,
+                false,
+                null,
+                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, 4, 20),
+                null,
+                null
+        );
+        return mapper.toSummary(check, enhet);
     }
 
     private static final class StubWebsiteReachabilityService extends WebsiteReachabilityService {

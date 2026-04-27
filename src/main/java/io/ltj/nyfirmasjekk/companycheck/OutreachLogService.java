@@ -101,6 +101,65 @@ public class OutreachLogService {
                 .toList();
     }
 
+    public synchronized String exportJsonl() {
+        StringBuilder export = new StringBuilder();
+        readAllEntries().stream()
+                .sorted(Comparator.comparing(this::sortTimestamp))
+                .map(this::serializeEntry)
+                .forEach(export::append);
+        return export.toString();
+    }
+
+    public synchronized OutreachImportResponse importJsonl(String jsonl) {
+        List<OutreachLogEntry> importedEntries = parseImportedEntries(jsonl);
+        if (importedEntries.isEmpty()) {
+            return new OutreachImportResponse(0, 0, readAllEntries().size());
+        }
+
+        Map<String, OutreachLogEntry> existingByKey = readAllEntries().stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        this::entryKey,
+                        entry -> entry,
+                        (first, second) -> second,
+                        LinkedHashMap::new
+                ));
+
+        List<OutreachLogEntry> newEntries = importedEntries.stream()
+                .filter(entry -> !existingByKey.containsKey(entryKey(entry)))
+                .collect(java.util.stream.Collectors.toMap(
+                        this::entryKey,
+                        entry -> entry,
+                        (first, second) -> second,
+                        LinkedHashMap::new
+                ))
+                .values()
+                .stream()
+                .toList();
+
+        if (!newEntries.isEmpty()) {
+            List<OutreachLogEntry> activeEntries = Stream.concat(
+                            readEntriesFromPath(logPath).stream(),
+                            newEntries.stream()
+                    )
+                    .sorted(Comparator.comparing(this::sortTimestamp))
+                    .toList();
+            writeEntries(logPath, activeEntries);
+            rotateArchivedEntries();
+
+            newEntries.stream()
+                    .map(entry -> parseYearMonth(entry.timestamp()))
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .forEach(month -> refreshMonthlyReport(month, readEntriesForMonth(month)));
+        }
+
+        return new OutreachImportResponse(
+                newEntries.size(),
+                importedEntries.size() - newEntries.size(),
+                readAllEntries().size()
+        );
+    }
+
     public synchronized OutreachStatusResponse register(OutreachStatusRequest request) {
         validateRequest(request);
         OutreachLogEntry entry = new OutreachLogEntry(
@@ -228,8 +287,22 @@ public class OutreachLogService {
         }
 
         archiveCandidates.forEach((month, entries) -> {
-            writeEntries(archivePathFor(month), entries);
-            refreshMonthlyReport(month, entries);
+            List<OutreachLogEntry> mergedArchiveEntries = Stream.concat(
+                            readEntriesFromPath(archivePathFor(month)).stream(),
+                            entries.stream()
+                    )
+                    .collect(java.util.stream.Collectors.toMap(
+                            this::entryKey,
+                            entry -> entry,
+                            (first, second) -> second,
+                            LinkedHashMap::new
+                    ))
+                    .values()
+                    .stream()
+                    .sorted(Comparator.comparing(this::sortTimestamp))
+                    .toList();
+            writeEntries(archivePathFor(month), mergedArchiveEntries);
+            refreshMonthlyReport(month, mergedArchiveEntries);
         });
 
         List<OutreachLogEntry> retainedEntries = activeEntries.stream()
@@ -247,6 +320,13 @@ public class OutreachLogService {
                         readArchiveEntries().stream()
                 )
                 .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private List<OutreachLogEntry> readEntriesForMonth(YearMonth month) {
+        return readAllEntries().stream()
+                .filter(entry -> month.equals(parseYearMonth(entry.timestamp())))
+                .sorted(Comparator.comparing(this::sortTimestamp))
                 .toList();
     }
 
@@ -289,6 +369,52 @@ public class OutreachLogService {
             log.warn("Ignorerer ugyldig linje i utsendelseslogg: {}", line);
             return null;
         }
+    }
+
+    private List<OutreachLogEntry> parseImportedEntries(String jsonl) {
+        if (jsonl == null || jsonl.isBlank()) {
+            return List.of();
+        }
+
+        return jsonl.lines()
+                .map(String::trim)
+                .filter(line -> !line.isEmpty())
+                .map(this::parseImportedEntry)
+                .toList();
+    }
+
+    private OutreachLogEntry parseImportedEntry(String line) {
+        try {
+            OutreachLogEntry entry = objectMapper.readValue(line, OutreachLogEntry.class);
+            validateImportedEntry(entry);
+            return entry;
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Importfilen inneholder ugyldig JSONL", exception);
+        }
+    }
+
+    private void validateImportedEntry(OutreachLogEntry entry) {
+        if (entry == null || entry.orgNumber() == null || !entry.orgNumber().matches("\\d{9}")) {
+            throw new IllegalArgumentException("Importfilen inneholder ugyldig organisasjonsnummer");
+        }
+        if (blankToNull(entry.status()) == null) {
+            throw new IllegalArgumentException("Importfilen mangler status");
+        }
+        normalizeImportedStatus(entry.status());
+        try {
+            Instant.parse(entry.timestamp());
+        } catch (DateTimeParseException | NullPointerException exception) {
+            throw new IllegalArgumentException("Importfilen inneholder ugyldig tidspunkt", exception);
+        }
+    }
+
+    private String normalizeImportedStatus(String status) {
+        return switch (status.trim().toLowerCase(Locale.ROOT)) {
+            case "sent" -> "sent";
+            case "reverted" -> "reverted";
+            case "not_relevant" -> "not_relevant";
+            default -> throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
+        };
     }
 
     private String blankToNull(String value) {
@@ -339,6 +465,20 @@ public class OutreachLogService {
         } catch (DateTimeParseException exception) {
             return Instant.EPOCH;
         }
+    }
+
+    private String entryKey(OutreachLogEntry entry) {
+        return String.join("|",
+                entry.timestamp() == null ? "" : entry.timestamp(),
+                entry.orgNumber() == null ? "" : entry.orgNumber(),
+                entry.status() == null ? "" : entry.status(),
+                entry.companyName() == null ? "" : entry.companyName(),
+                entry.organizationForm() == null ? "" : entry.organizationForm(),
+                entry.price() == null ? "" : entry.price().toString(),
+                entry.channel() == null ? "" : entry.channel(),
+                entry.offerType() == null ? "" : entry.offerType(),
+                entry.note() == null ? "" : entry.note()
+        );
     }
 
     private Path archivePathFor(YearMonth month) {

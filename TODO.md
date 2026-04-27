@@ -1,6 +1,6 @@
 # TODO
 
-## Status 2026-04-25
+## Status 2026-04-27
 
 ### Beslutning
 
@@ -26,6 +26,10 @@
 - Gule treff med registrert e-post prioriteres høyere i sortering.
 - Treff uten registrert e-post tones ned kommersielt.
 - Mulig nettside oppdages med navnheuristikk, reachability-sjekk og enkel innholdsmatch.
+- Nettsideforslag håndterer nå romertall/tall i selskapsnavn, f.eks. `FONNES BÅTSERVICE II AS` -> `fonnesbatservice.no`.
+- Nettsideforslag håndterer typiske struktursuffiks (`HOLDING`, `EIENDOM`, `INVEST`, `Norge/Norway`) og `og`/`&`-varianter.
+- Nettsideforslag tar med bindestrekvarianter som sekundære forslag, f.eks. `fonnes-batservice.no`.
+- Innholdsmatch for mulig nettside tåler mellomrom og romertall/tall bedre.
 - Sannsynlig nettside demper lead-signal.
 - Registrerte hendelser bruker konsekvent datoformat `YYYY-MM-DD`.
 - Filbasert utsendelseslogg er på plass med `data/outreach-log.jsonl`.
@@ -36,6 +40,8 @@
 - Utsendelsesnotat kan lagres fra detaljvisningen.
 - Selskaper kan markeres som `Ikke aktuell`.
 - Hovedsiden har egen `Utsendelser`-oversikt som viser selskaper som har fått tilbudsmail.
+- `Utsendelser` har nedlasting av autoritativ JSONL-logg for backup/eksport.
+- `Utsendelser` kan importere autoritativ JSONL-logg ved flytting til ny maskin.
 - Dobbel utsendelse krever eksplisitt overstyring i detaljvisningen.
 - Mailtekst genereres fra [outreach-email-template.md](data/outreach-email-template.md).
 - `Kopier mailtekst` og `Åpne i e-post` har nøytral knappestil.
@@ -50,18 +56,24 @@
 - H2-startvakt er fjernet.
 - Snapshot-services, repositories, entities og tester for historikk/nettverk er fjernet.
 - Aktørrisiko er no-op i denne øyeblikksbildeversjonen.
-- `/history` og `/network` returnerer tomme lister.
+- `/history` og `/network` er fjernet fra API-et.
+- Historikk- og nettverksseksjoner er fjernet fra detaljvisningen.
 - Metadata for organisasjonsformer kommer fra statisk katalog, ikke historikk.
+- Leadlisten har hurtigfiltre for `Har e-post`, `Mangler nettside`, `Ikke sendt` og `Ikke aktuell`.
+- `data/`-strategien er dokumentert i [outreach-workflow.md](docs/outreach-workflow.md).
+- Frontend production build er gjort uavhengig av Google Fonts/nettverk.
+- Appen er verifisert uten databaseavhengigheter gjennom backend-tester og Spring Boot-startforsøk.
 
 ## Neste steg
 
 ### Viktigst
 
 - [ ] Test hele brukerflyten manuelt etter oppryddingen: filtrer treff, åpne detaljmodal, generer mailtekst, kopier, åpne i e-post, marker sendt, marker ikke aktuell, se `Utsendelser`.
-- [ ] Sjekk at appen starter rent uten databasekonfigurasjon lokalt og på Render.
-- [ ] Avklar om `history` og `network`-endepunktene skal beholdes som tomme kompatibilitetsendepunkter eller fjernes helt fra API/frontend.
-- [ ] Rydd UI for historikk/nettverk dersom tomme seksjoner fortsatt vises i detaljmodalen.
-- [ ] Bekreft at outreach-loggene er eneste ønskede persistente data i drift.
+- [x] Sjekk at appen starter rent uten databasekonfigurasjon lokalt.
+- [ ] Sjekk Render-start etter deploy, spesielt at `data/` peker til ønsket persistent plassering.
+- [x] Fjern `history` og `network` fra API/frontend i øyeblikksbildeversjonen.
+- [x] Rydd UI for historikk/nettverk i detaljmodalen.
+- [x] Bekreft at outreach-loggene er eneste ønskede persistente data i drift.
 
 ### Utsendelseslogg
 
@@ -71,23 +83,23 @@
 - [x] Lag `Utsendelser`-oversikt.
 - [x] Lag `Ikke aktuell`.
 - [x] Lag notatfelt og hurtigvalg i detaljvisning.
-- [ ] Dokumenter tydelig at `data/` må være persistent hvis Render brukes.
-- [ ] Bestem om `data/outreach-log.jsonl` og månedsrapportene skal committes til Git eller holdes utenfor Git og eksporteres manuelt.
-- [ ] Vurder enkel backup-knapp eller eksportlenke for outreach-loggen.
-- [ ] Vurder import fra loggfil hvis appen flyttes til ny maskin.
+- [x] Dokumenter tydelig at `data/` må være persistent hvis Render brukes.
+- [ ] Bestem endelig rutine: commit `data/outreach-log.jsonl` og månedsrapportene til privat Git, eller hold dem lokalt og eksporter manuelt.
+- [x] Lag enkel eksportlenke for outreach-loggen.
+- [x] Lag import fra JSONL-loggfil hvis appen flyttes til ny maskin.
 
 ### Produkt
 
 - [ ] Bestem om løsningen bare skal være intern arbeidsflate eller også ha en offentlig landingsside.
 - [ ] Stram teksten videre rundt `Sterkt signal`, `Mulig signal` og `Svakt signal`.
 - [ ] Gjør detaljvisningen enda mer operativ: tydelig kontaktpunkt, mulig nettside, mailtekst og status øverst.
-- [ ] Vurder om leadlisten bør ha egne hurtigfiltre for `Har e-post`, `Mangler nettside`, `Ikke sendt` og `Ikke aktuell`.
+- [x] Vurder om leadlisten bør ha egne hurtigfiltre for `Har e-post`, `Mangler nettside`, `Ikke sendt` og `Ikke aktuell`.
 - [ ] Vurder om `Alvorlige signaler` skal skjules som standard i en salgslead-flyt.
 
 ### Produksjon
 
 - [ ] Test end-to-end mot BRREG fra produksjonsnært miljø.
-- [ ] Dokumenter nødvendige miljøvariabler for backend og frontend.
+- [ ] Dokumenter nødvendige miljøvariabler for backend og frontend, inkludert `company-check.outreach-log-path` ved drift.
 - [ ] Verifiser logging, CORS, health endpoints og proxy-oppsett.
 - [ ] Avklar hvordan `data/` håndteres på Render uten database.
 - [ ] Hvis persistent disk ikke brukes: lag tydelig manuell rutine for nedlasting/backup av loggfilene.
@@ -106,4 +118,8 @@
 cd frontend
 npm run lint
 npx tsc --noEmit
+npm run build
 ```
+
+Sist kjørt 2026-04-27: `./gradlew test`, `npm run lint`, `npx tsc --noEmit`, `npm run build`.
+Merk: `bootRun` på standardport feilet fordi `8080` allerede var i bruk, ikke på grunn av databasekonfigurasjon. Start på tilfeldig port ble holdt i gang til timeout.

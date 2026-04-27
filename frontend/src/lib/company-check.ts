@@ -77,53 +77,6 @@ export interface CompanyEvent {
   severity: "HIGH" | "MEDIUM" | "INFO";
 }
 
-export interface CompanyHistoryEntry {
-  capturedAt: string;
-  orgNumber: string;
-  name: string;
-  organizationForm: string | null;
-  scoreColor: ScoreColor;
-  summary: string;
-  municipality: string | null;
-  county: string | null;
-  naceCode: string | null;
-  latestAnnualAccountsYear: string | null;
-  vatRegistered: boolean | null;
-  registeredInBusinessRegistry: boolean | null;
-  hasContactData: boolean | null;
-  hasRoles: boolean | null;
-  hasSeriousSignals: boolean | null;
-  registrationDate: string | null;
-}
-
-export interface NetworkCompanyLink {
-  orgNumber: string;
-  companyName: string;
-  roleTypes: string[];
-  scoreColor: ScoreColor;
-  bankruptcySignal: boolean;
-  dissolvedSignal: boolean;
-  registrationDate: string | null;
-  lastSeenAt: string;
-}
-
-export interface NetworkActor {
-  actorKey: string;
-  actorName: string;
-  roleTypesInSelectedCompany: string[];
-  riskLevel: ScoreColor;
-  totalCompanyCount: number;
-  bankruptcyCompanyCount: number;
-  redCompanyCount: number;
-  dissolvedCompanyCount: number;
-  yellowCompanyCount: number;
-  greenCompanyCount: number;
-  lastRedSeenAt: string | null;
-  lastBankruptcySeenAt: string | null;
-  lastDissolvedSeenAt: string | null;
-  relatedCompanies: NetworkCompanyLink[];
-}
-
 export interface StructureSignal {
   code: string;
   title: string;
@@ -156,4 +109,10 @@ export interface OutreachStatus {
   offerType: string | null;
   sentAt: string | null;
   note: string | null;
+}
+
+export interface OutreachImportResponse {
+  imported: number;
+  skipped: number;
+  totalEntries: number;
 }

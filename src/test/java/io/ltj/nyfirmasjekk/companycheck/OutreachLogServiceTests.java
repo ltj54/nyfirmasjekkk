@@ -175,4 +175,50 @@ class OutreachLogServiceTests {
         assertThat(statuses.stream().filter(OutreachStatusResponse::sent).toList()).hasSize(1);
         assertThat(statuses.getFirst().note()).isEqualTo("Sendt");
     }
+
+    @Test
+    void exportJsonlReturnsAllEntriesInTimestampOrder() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        service.register(new OutreachStatusRequest("123456789", "Sendt AS", "AS", true, null, 4500, "email", "website-offer", "Sendt"));
+        service.register(new OutreachStatusRequest("123456789", "Sendt AS", "AS", false, null, 4500, "email", "website-offer", "Angret"));
+
+        String export = service.exportJsonl();
+
+        assertThat(export).contains("\"orgNumber\":\"123456789\"");
+        assertThat(export).contains("\"status\":\"sent\"");
+        assertThat(export).contains("\"status\":\"reverted\"");
+        assertThat(export.lines()).hasSize(2);
+    }
+
+    @Test
+    void importJsonlAddsMissingEntriesAndSkipsDuplicates() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+        String jsonl = """
+                {"timestamp":"2026-04-20T08:00:00Z","orgNumber":"123456789","companyName":"Import AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":"Importert"}
+                {"timestamp":"2026-04-20T08:00:00Z","orgNumber":"123456789","companyName":"Import AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":"Importert"}
+                """;
+
+        OutreachImportResponse firstImport = service.importJsonl(jsonl);
+        OutreachImportResponse secondImport = service.importJsonl(jsonl);
+
+        assertThat(firstImport.imported()).isEqualTo(1);
+        assertThat(firstImport.skipped()).isEqualTo(1);
+        assertThat(secondImport.imported()).isZero();
+        assertThat(secondImport.skipped()).isEqualTo(2);
+        assertThat(service.statusFor("123456789").sent()).isTrue();
+        assertThat(service.exportJsonl().lines()).hasSize(1);
+    }
 }

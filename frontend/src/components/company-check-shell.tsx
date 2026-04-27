@@ -20,12 +20,10 @@ import type { LucideIcon } from "lucide-react";
 import type {
   CompanyEvent,
   CompanyDetails,
-  CompanyHistoryEntry,
-  NetworkActor,
   CompanySummary,
   MetadataFiltersResponse,
+  OutreachImportResponse,
   OutreachStatus,
-  ScoreColor,
   StructureSignal,
 } from "@/lib/company-check";
 import { Badge } from "@/components/ui/badge";
@@ -84,6 +82,15 @@ const organizationFormHelp: Record<string, { label: string; description: string 
   },
 };
 
+type LeadQuickFilter = "HAS_EMAIL" | "MISSING_WEBSITE" | "NOT_SENT" | "NOT_RELEVANT";
+
+const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
+  { value: "HAS_EMAIL", label: "Har e-post" },
+  { value: "MISSING_WEBSITE", label: "Mangler nettside" },
+  { value: "NOT_SENT", label: "Ikke sendt" },
+  { value: "NOT_RELEVANT", label: "Ikke aktuell" },
+];
+
 export function CompanyCheckShell() {
   const [backendReady, setBackendReady] = useState(false);
   const [initialResultsReady, setInitialResultsReady] = useState(false);
@@ -100,13 +107,14 @@ export function CompanyCheckShell() {
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("AS");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
+  const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([]);
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
-  const [selectedCompanyHistory, setSelectedCompanyHistory] = useState<CompanyHistoryEntry[]>([]);
-  const [selectedCompanyNetwork, setSelectedCompanyNetwork] = useState<NetworkActor[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
   const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
   const [outreachListError, setOutreachListError] = useState<string | null>(null);
+  const [isOutreachImporting, setIsOutreachImporting] = useState(false);
+  const [outreachImportMessage, setOutreachImportMessage] = useState<string | null>(null);
   const [savingOutreachByOrg, setSavingOutreachByOrg] = useState<Record<string, boolean>>({});
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingEmailByOrg, setGeneratingEmailByOrg] = useState<Record<string, boolean>>({});
@@ -174,6 +182,39 @@ export function CompanyCheckShell() {
       setOutreachListError("Klarte ikke hente utsendelseslisten.");
     } finally {
       setIsOutreachListLoading(false);
+    }
+  }
+
+  async function importOutreachLog(file: File) {
+    setIsOutreachImporting(true);
+    setOutreachListError(null);
+    setOutreachImportMessage(null);
+
+    try {
+      const content = await file.text();
+      const response = await fetch("/api/company-check/outreach/import", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+        },
+        body: content,
+      });
+
+      if (!response.ok) {
+        setOutreachListError("Klarte ikke importere loggfilen. Sjekk at filen er JSONL-eksport fra appen.");
+        return;
+      }
+
+      const payload = (await response.json()) as OutreachImportResponse;
+      setOutreachImportMessage(
+        `Importert ${payload.imported} nye linjer. Hoppet over ${payload.skipped} som allerede fantes.`
+      );
+      await fetchOutreachEntries();
+    } catch (error) {
+      console.error("Failed to import outreach log", error);
+      setOutreachListError("Klarte ikke importere loggfilen.");
+    } finally {
+      setIsOutreachImporting(false);
     }
   }
 
@@ -447,8 +488,6 @@ export function CompanyCheckShell() {
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
       setSelectedCompanyEvents([]);
-      setSelectedCompanyHistory([]);
-      setSelectedCompanyNetwork([]);
       return;
     }
 
@@ -457,31 +496,17 @@ export function CompanyCheckShell() {
 
     async function fetchSelectedCompanyData() {
       try {
-        const [eventsResponse, historyResponse, networkResponse] = await Promise.all([
-          fetch(`/api/company-check/${orgNumber}/events`, {
-            cache: "no-store",
-          }),
-          fetch(`/api/company-check/${orgNumber}/history`, {
-            cache: "no-store",
-          }),
-          fetch(`/api/company-check/${orgNumber}/network`, {
-            cache: "no-store",
-          }),
-        ]);
+        const eventsResponse = await fetch(`/api/company-check/${orgNumber}/events`, {
+          cache: "no-store",
+        });
 
         if (!active) {
           return;
         }
 
-        const [eventsPayload, historyPayload, networkPayload] = await Promise.all([
-          eventsResponse.ok ? eventsResponse.json() : Promise.resolve([]),
-          historyResponse.ok ? historyResponse.json() : Promise.resolve([]),
-          networkResponse.ok ? networkResponse.json() : Promise.resolve([]),
-        ]);
+        const eventsPayload = eventsResponse.ok ? await eventsResponse.json() : [];
 
         setSelectedCompanyEvents(Array.isArray(eventsPayload) ? (eventsPayload as CompanyEvent[]) : []);
-        setSelectedCompanyHistory(Array.isArray(historyPayload) ? (historyPayload as CompanyHistoryEntry[]) : []);
-        setSelectedCompanyNetwork(Array.isArray(networkPayload) ? (networkPayload as NetworkActor[]) : []);
       } catch (err) {
         console.error("Failed to fetch company detail extras", err);
       }
@@ -589,6 +614,7 @@ export function CompanyCheckShell() {
     setDaysFilter("5");
     setCountyFilter("");
     setOrganizationFormFilter("AS");
+    setLeadQuickFilters([]);
     void fetchRecent(0, {
       daysFilter: "5",
       countyFilter: "",
@@ -597,10 +623,18 @@ export function CompanyCheckShell() {
     });
   }
 
-  const filteredCompanies = (selectedLegend
+  function toggleLeadQuickFilter(filter: LeadQuickFilter) {
+    setLeadQuickFilters((current) =>
+      current.includes(filter)
+        ? current.filter((item) => item !== filter)
+        : [...current, filter]
+    );
+  }
+
+  const filteredCompanies = applyLeadQuickFilters((selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
     : recentCompanies
-  ).sort(compareLeadPriority);
+  ), outreachStatusByOrg, leadQuickFilters).sort(compareLeadPriority);
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
@@ -780,6 +814,7 @@ export function CompanyCheckShell() {
                     setCountyFilter("");
                     setOrganizationFormFilter("AS");
                     setSelectedLegend("GREEN");
+                    setLeadQuickFilters([]);
                     scrollToSection("search");
                   }}
                   type="button"
@@ -822,7 +857,10 @@ export function CompanyCheckShell() {
           <OutreachOverview
             entries={outreachEntries}
             error={outreachListError}
+            importMessage={outreachImportMessage}
+            isImporting={isOutreachImporting}
             isLoading={isOutreachListLoading}
+            onImport={(file) => void importOutreachLog(file)}
             onOpenCompany={(orgNumber) => void openCompanyDetails(orgNumber)}
             onRefresh={() => void fetchOutreachEntries()}
           />
@@ -907,6 +945,37 @@ export function CompanyCheckShell() {
                   </div>
                 </div>
                 </div>
+              <div className="border border-[#D9E2EC] bg-white px-4 py-3">
+                <div className="flex flex-wrap items-center gap-2 text-[13px]">
+                  <span className="mr-1 text-[#52606D]">Hurtigfilter:</span>
+                  {leadQuickFilterOptions.map((option) => {
+                    const active = leadQuickFilters.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        className={`rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                          active
+                            ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
+                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                        }`}
+                        onClick={() => toggleLeadQuickFilter(option.value)}
+                        type="button"
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                  {leadQuickFilters.length > 0 ? (
+                    <button
+                      className="ml-1 text-[12px] font-semibold text-[#1F5FA9] hover:underline"
+                      onClick={() => setLeadQuickFilters([])}
+                      type="button"
+                    >
+                      Nullstill hurtigfilter
+                    </button>
+                  ) : null}
+                </div>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {isListLoading && recentCompanies.length === 0 ? (
                 Array.from({ length: 8 }).map((_, i) => (
@@ -951,6 +1020,7 @@ export function CompanyCheckShell() {
                           setCountyFilter("");
                           setOrganizationFormFilter("AS");
                           setSelectedLegend("GREEN");
+                          setLeadQuickFilters([]);
                           void fetchRecent(0);
                         }}
                       >
@@ -979,8 +1049,6 @@ export function CompanyCheckShell() {
                   events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
                   generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
                   generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
-                  history={selectedCompanyHistory}
-                  network={selectedCompanyNetwork}
                   outreachSaving={Boolean(savingOutreachByOrg[selectedCompany.orgNumber])}
                   outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
                   onBack={resetToLanding}
@@ -1338,16 +1406,23 @@ function OutreachCheckbox({
 function OutreachOverview({
   entries,
   error,
+  importMessage,
+  isImporting,
   isLoading,
+  onImport,
   onOpenCompany,
   onRefresh,
 }: {
   entries: OutreachStatus[];
   error: string | null;
+  importMessage: string | null;
+  isImporting: boolean;
   isLoading: boolean;
+  onImport: (file: File) => void;
   onOpenCompany: (orgNumber: string) => void;
   onRefresh: () => void;
 }) {
+  const importInputRef = useRef<HTMLInputElement | null>(null);
   const sentEntries = entries
     .filter((entry) => entry.sent)
     .sort((left, right) => (right.sentAt ?? "").localeCompare(left.sentAt ?? ""));
@@ -1365,16 +1440,54 @@ function OutreachOverview({
               {sentEntries.length} selskaper med registrert utsendelse
             </p>
           </div>
-          <Button
-            className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
-            disabled={isLoading}
-            onClick={onRefresh}
-            type="button"
-            variant="outline"
-          >
-            {isLoading ? "Oppdaterer..." : "Oppdater liste"}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
+              disabled={isLoading}
+              onClick={onRefresh}
+              type="button"
+              variant="outline"
+            >
+              {isLoading ? "Oppdaterer..." : "Oppdater liste"}
+            </Button>
+            <button
+              className="inline-flex h-8 items-center rounded-sm border border-[#D9E2EC] bg-white px-4 text-sm font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
+              onClick={() => {
+                window.location.href = "/api/company-check/outreach/export";
+              }}
+              type="button"
+            >
+              Last ned logg
+            </button>
+            <input
+              ref={importInputRef}
+              accept=".jsonl,application/x-ndjson,text/plain"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                event.target.value = "";
+                if (file) {
+                  onImport(file);
+                }
+              }}
+              type="file"
+            />
+            <button
+              className="inline-flex h-8 items-center rounded-sm border border-[#D9E2EC] bg-white px-4 text-sm font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:opacity-50"
+              disabled={isImporting}
+              onClick={() => importInputRef.current?.click()}
+              type="button"
+            >
+              {isImporting ? "Importerer..." : "Importer logg"}
+            </button>
+          </div>
         </div>
+
+        {importMessage ? (
+          <div className="border-b border-[#D9E2EC] bg-[#F8FBFF] px-5 py-4 text-[13px] font-medium text-[#1F5FA9]">
+            {importMessage}
+          </div>
+        ) : null}
 
         {error ? (
           <div className="border-b border-[#D9E2EC] bg-rose-50 px-5 py-4 text-[13px] font-medium text-rose-700">
@@ -1667,6 +1780,32 @@ function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
   return left.name.localeCompare(right.name, "nb");
 }
 
+function applyLeadQuickFilters(
+  companies: CompanySummary[],
+  outreachStatusByOrg: Record<string, OutreachStatus>,
+  filters: LeadQuickFilter[],
+) {
+  if (filters.length === 0) {
+    return companies;
+  }
+
+  return companies.filter((company) => {
+    const status = outreachStatusByOrg[company.orgNumber];
+    return filters.every((filter) => {
+      switch (filter) {
+        case "HAS_EMAIL":
+          return Boolean(company.email);
+        case "MISSING_WEBSITE":
+          return !company.website && company.websiteDiscovery?.contentMatched !== true;
+        case "NOT_SENT":
+          return status?.sent !== true;
+        case "NOT_RELEVANT":
+          return status?.status === "not_relevant";
+      }
+    });
+  });
+}
+
 function leadPriorityRank(company: CompanySummary) {
   const label = getLeadPriority(company).label;
   if (label === "Sterkt signal") return 0;
@@ -1762,8 +1901,6 @@ function CompanyDetailView({
   events,
   generatedEmail,
   generatingEmail,
-  history,
-  network,
   outreachStatus,
   outreachSaving,
   onBack,
@@ -1774,8 +1911,6 @@ function CompanyDetailView({
   events: CompanyEvent[];
   generatedEmail: { subject: string; body: string } | null;
   generatingEmail: boolean;
-  history: CompanyHistoryEntry[];
-  network: NetworkActor[];
   outreachStatus: OutreachStatus | null;
   outreachSaving: boolean;
   onBack: () => void;
@@ -1796,8 +1931,6 @@ function CompanyDetailView({
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
-  const historyPatterns = analyzeHistoryPatterns(history);
-  const historyInsight = buildHistoryInsight(history);
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
   const generatedEmailHref = generatedEmail && company.email
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
@@ -2106,9 +2239,9 @@ function CompanyDetailView({
               <div className="mb-5 flex items-end justify-between gap-4">
                 <div>
                   <p className="mb-2 text-[12px] font-medium text-[#52606D]">Analysegrunnlag</p>
-                  <h3 className="text-[18px] font-semibold text-[#1F2933]">Roller, historikk og nettverk</h3>
+                  <h3 className="text-[18px] font-semibold text-[#1F2933]">Roller og registerspor</h3>
                   <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
-                    Her går vi dypere i rollebildet, historikken, hendelsene og nettverket rundt selskapet.
+                    Dette er et øyeblikksbilde fra åpne registerdata, uten lagret historikk eller nettverksanalyse.
                   </p>
                 </div>
                 <p className="hidden max-w-sm text-right text-[13px] font-medium leading-relaxed text-[#52606D] md:block">
@@ -2146,30 +2279,6 @@ function CompanyDetailView({
 
           <div className="space-y-4">
             <div className="insight-card border border-[#D9E2EC] bg-white p-5">
-              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Utvikling over tid</h4>
-              {historyPatterns ? (
-                <div className="space-y-3">
-                  <p className="text-[14px] font-medium leading-relaxed text-[#52606D]">{historyPatterns.scoreTrend}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {historyPatterns.changeSignals.map((signal) => (
-                      <Badge
-                        key={signal}
-                        variant="outline"
-                        className="border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-bold text-[#52606D]"
-                      >
-                        {signal}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <p className="text-[14px] text-[#52606D]">
-                  Det finnes foreløpig for lite historikk til å vise tydelige endringsmønstre.
-                </p>
-              )}
-            </div>
-
-            <div className="insight-card border border-[#D9E2EC] bg-white p-5">
               <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Strukturmønstre</h4>
               <div className="space-y-3">
                 {structureSignals.length > 0 ? (
@@ -2192,132 +2301,6 @@ function CompanyDetailView({
                   ))
                 ) : (
                   <p className="text-[14px] text-[#52606D]">Ingen tydelige strukturmønstre er slått ut for dette selskapet ennå. Det betyr ikke nødvendigvis fravær av risiko, bare at dagens mønstermotor ikke har funnet et klart kryssselskapsmønster.</p>
-                )}
-              </div>
-            </div>
-
-            <div className="insight-card border border-[#D9E2EC] bg-white p-5">
-              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Nettverk</h4>
-              <div className="space-y-3">
-                {network.length > 0 ? (
-                  network.slice(0, 5).map((actor) => (
-                    <div key={actor.actorKey} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-[13px] font-bold text-[#1F2933]">{actor.actorName}</p>
-                          <p className="mt-1 text-[11px] font-medium text-[#52606D]">
-                            {actor.roleTypesInSelectedCompany.map(formatRoleType).join(" · ")}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className={`text-[11px] font-semibold ${networkRiskTextClass(actor.riskLevel)}`}>
-                            {formatRiskLabel(actor.riskLevel)}
-                          </p>
-                          <p className="mt-1 whitespace-nowrap text-[12px] font-medium text-[#52606D]">
-                            {actor.totalCompanyCount} selskaper
-                          </p>
-                        </div>
-                      </div>
-                      <p className="mt-3 text-[12px] font-medium text-[#52606D]">
-                        Knyttet til {actor.totalCompanyCount} selskaper, hvorav {actor.redCompanyCount} røde og {actor.dissolvedCompanyCount} avviklede.
-                      </p>
-                      <p className="mt-1 text-[12px] font-medium text-[#52606D]">
-                        {actor.yellowCompanyCount} gule · {actor.greenCompanyCount} grønne
-                      </p>
-                      {formatActorSeenSummary(actor) ? (
-                        <p className="mt-1 text-[12px] font-medium text-[#52606D]">
-                          {formatActorSeenSummary(actor)}
-                        </p>
-                      ) : null}
-                      <p className="mt-2 text-[12px] leading-relaxed text-[#52606D]">{describeActorContext(actor)}</p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {actor.relatedCompanies.slice(0, 4).map((link) => (
-                          <div
-                            key={`${actor.actorKey}-${link.orgNumber}`}
-                            className="flex items-center gap-2 rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5"
-                          >
-                            <span className={`size-2 rounded-full ${scoreDotClass(link.scoreColor)}`} />
-                            <span className={`text-[11px] font-bold ${networkRiskTextClass(link.scoreColor)}`}>
-                              {link.companyName}
-                            </span>
-                            <span className="rounded-sm bg-[#F0F4F8] px-2 py-0.5 text-[10px] font-semibold text-[#52606D]">
-                              {compactRiskLabel(link.scoreColor)}
-                            </span>
-                            {link.bankruptcySignal ? (
-                              <span className="rounded-sm bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
-                                Konkurs
-                              </span>
-                            ) : null}
-                            {link.dissolvedSignal ? (
-                              <span className="rounded-sm bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
-                                Avviklet
-                              </span>
-                            ) : null}
-                            {link.registrationDate ? (
-                              <span className="rounded-sm bg-[#F0F4F8] px-2 py-0.5 text-[10px] font-semibold text-[#52606D]">
-                                Reg. {formatShortDate(link.registrationDate)}
-                              </span>
-                            ) : null}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen nettverksdata bygget opp ennå. Her kommer det først mer innsikt når rolledata er hentet og snapshottene har fått bygge historikk rundt aktørene.</p>
-                )}
-              </div>
-            </div>
-
-            <div className="insight-card border border-[#D9E2EC] bg-white p-5">
-              <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Historikk</h4>
-              <div className="space-y-3">
-                {historyInsight.kind === "changes" ? (
-                  historyInsight.groups.map((group, index) => (
-                    <div key={`${group.latest.capturedAt}-${index}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-[13px] font-bold text-[#1F2933]">{group.latest.summary}</p>
-                          <p className="mt-1 text-[12px] font-medium text-[#52606D]">
-                            {group.latest.organizationForm ?? "Ukjent org.form"}{group.latest.naceCode ? ` · ${group.latest.naceCode}` : ""}
-                          </p>
-                          {group.count > 1 ? (
-                            <p className="mt-2 text-[12px] font-medium text-[#1F5FA9]">
-                              Samme vurdering observert {group.count} ganger fra {formatDateTime(group.oldest.capturedAt)} til {formatDateTime(group.latest.capturedAt)}.
-                            </p>
-                          ) : null}
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[12px] font-bold text-[#52606D]">{formatDateTime(group.latest.capturedAt)}</p>
-                          <p className="mt-1 text-[11px] font-medium text-[#52606D]">
-                            {formatLegendLabel(group.latest.scoreColor)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : historyInsight.kind === "stable" ? (
-                  <div className="border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-4">
-                    <p className="text-[13px] font-bold text-[#1F2933]">Uendret over tid</p>
-                    <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">
-                      Samme vurdering er observert {historyInsight.group.count} ganger fra{" "}
-                      {formatDateTime(historyInsight.group.oldest.capturedAt)} til{" "}
-                      {formatDateTime(historyInsight.group.latest.capturedAt)}.
-                    </p>
-                    <p className="mt-2 text-[12px] font-medium text-[#52606D]">
-                      {historyInsight.group.latest.summary} · {historyInsight.group.latest.organizationForm ?? "Ukjent org.form"}
-                      {historyInsight.group.latest.naceCode ? ` · ${historyInsight.group.latest.naceCode}` : ""}
-                    </p>
-                    <p className="mt-2 text-[11px] font-medium text-[#52606D]">
-                      {formatLegendLabel(historyInsight.group.latest.scoreColor)}
-                    </p>
-                  </div>
-                ) : history.length > 0 ? (
-                  <p className="text-[14px] text-[#52606D]">
-                    Historikken tilfører foreløpig lite, fordi vi bare har ett lagret punkt uten endringer over tid.
-                  </p>
-                ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen lagret historikk ennå. Historikk bygges opp når selskapet åpnes over tid, så dette er forventet for nye eller lite brukte oppslag.</p>
                 )}
               </div>
             </div>
@@ -2729,98 +2712,6 @@ function websiteDiscoveryExplanationItems(
   return items;
 }
 
-function formatShortDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat("nb-NO", {
-    dateStyle: "short",
-  }).format(date);
-}
-
-function formatRiskLabel(scoreColor: ScoreColor) {
-  switch (scoreColor) {
-    case "RED":
-      return "Høy aktørrisiko";
-    case "YELLOW":
-      return "Noe aktørrisiko";
-    case "GREEN":
-      return "Lav aktørrisiko";
-  }
-}
-
-function networkRiskTextClass(scoreColor: ScoreColor) {
-  switch (scoreColor) {
-    case "RED":
-      return "text-rose-700";
-    case "YELLOW":
-      return "text-amber-700";
-    case "GREEN":
-      return "text-emerald-700";
-  }
-}
-
-function scoreDotClass(scoreColor: ScoreColor) {
-  switch (scoreColor) {
-    case "RED":
-      return "bg-rose-500";
-    case "YELLOW":
-      return "bg-amber-500";
-    case "GREEN":
-      return "bg-emerald-500";
-  }
-}
-
-function compactRiskLabel(scoreColor: ScoreColor) {
-  switch (scoreColor) {
-    case "RED":
-      return "Rød";
-    case "YELLOW":
-      return "Gul";
-    case "GREEN":
-      return "Grønn";
-  }
-}
-
-function describeActorContext(actor: NetworkActor) {
-  if (actor.bankruptcyCompanyCount > 0 && actor.dissolvedCompanyCount > 0) {
-    return `Denne rolleholderen er knyttet til virksomheter med både konkurs- og avviklingsspor${formatActorRecencySuffix(actor)}, noe som gjør aktørkonteksten særlig relevant.`;
-  }
-  if (actor.bankruptcyCompanyCount > 0) {
-    return `Denne rolleholderen er knyttet til virksomheter med konkursmarkering${formatActorRecencySuffix(actor)}, noe som gir et tydelig historisk faresignal.`;
-  }
-  if (actor.redCompanyCount > 0 && actor.dissolvedCompanyCount > 0) {
-    return `Denne rolleholderen er knyttet til flere virksomheter med både røde signaler og avvikling${formatActorRecencySuffix(actor)}, noe som gjør aktørkonteksten særlig relevant.`;
-  }
-  if (actor.redCompanyCount > 0) {
-    return "Denne rolleholderen er knyttet til virksomheter med røde signaler, noe som trekker opp aktørrisikoen.";
-  }
-  if (actor.dissolvedCompanyCount > 0) {
-    return "Denne rolleholderen er knyttet til avviklede virksomheter, noe som gir et svakere historisk signal.";
-  }
-  if (actor.yellowCompanyCount > 0) {
-    return "Denne rolleholderen er knyttet til flere virksomheter med begrenset datagrunnlag eller svakere signaler.";
-  }
-  return "Aktørkonteksten ser foreløpig rolig ut basert på selskapene som er lagret i nettverksgrunnlaget.";
-}
-
-function formatActorSeenSummary(actor: NetworkActor) {
-  const parts = [
-    actor.lastBankruptcySeenAt ? `konkurs sist sett ${formatShortDate(actor.lastBankruptcySeenAt)}` : null,
-    actor.lastDissolvedSeenAt ? `avvikling sist sett ${formatShortDate(actor.lastDissolvedSeenAt)}` : null,
-    actor.lastRedSeenAt ? `rødt signal sist sett ${formatShortDate(actor.lastRedSeenAt)}` : null,
-  ].filter(Boolean);
-
-  return parts.length > 0 ? parts.join(" · ") : null;
-}
-
-function formatActorRecencySuffix(actor: NetworkActor) {
-  const mostRelevantDate = actor.lastBankruptcySeenAt ?? actor.lastDissolvedSeenAt ?? actor.lastRedSeenAt;
-  return mostRelevantDate ? `, sist sett ${formatShortDate(mostRelevantDate)}` : "";
-}
-
 function describeStructureSignal(signal: StructureSignal) {
   switch (signal.code) {
     case "ACTOR_CONTEXT_ELEVATED":
@@ -2870,139 +2761,6 @@ function estimateListProgress(elapsedMs: number) {
   return 90;
 }
 
-function analyzeHistoryPatterns(history: CompanyHistoryEntry[]) {
-  if (history.length < 2) {
-    return null;
-  }
-
-  const ordered = [...history].sort(
-    (left, right) => new Date(left.capturedAt).getTime() - new Date(right.capturedAt).getTime()
-  );
-
-  let scoreChanges = 0;
-  let organizationFormChanges = 0;
-  let naceChanges = 0;
-  let contactChanges = 0;
-  let roleChanges = 0;
-
-  for (let index = 1; index < ordered.length; index += 1) {
-    const previous = ordered[index - 1];
-    const current = ordered[index];
-
-    if (previous.scoreColor !== current.scoreColor) {
-      scoreChanges += 1;
-    }
-    if ((previous.organizationForm ?? "") !== (current.organizationForm ?? "")) {
-      organizationFormChanges += 1;
-    }
-    if ((previous.naceCode ?? "") !== (current.naceCode ?? "")) {
-      naceChanges += 1;
-    }
-    if (previous.hasContactData !== current.hasContactData) {
-      contactChanges += 1;
-    }
-    if (previous.hasRoles !== current.hasRoles) {
-      roleChanges += 1;
-    }
-  }
-
-  const first = ordered[0];
-  const latest = ordered[ordered.length - 1];
-  const changeSignals: string[] = [];
-
-  if (scoreChanges > 0) {
-    changeSignals.push(`${scoreChanges} scoreendringer`);
-  }
-  if (organizationFormChanges > 0) {
-    changeSignals.push(`${organizationFormChanges} endringer i org.form`);
-  }
-  if (naceChanges > 0) {
-    changeSignals.push(`${naceChanges} bransjeendringer`);
-  }
-  if (contactChanges > 0) {
-    changeSignals.push(`${contactChanges} endringer i kontaktdata`);
-  }
-  if (roleChanges > 0) {
-    changeSignals.push(`${roleChanges} endringer i roller`);
-  }
-  if (changeSignals.length === 0) {
-    changeSignals.push("Stabil historikk så langt");
-  }
-
-  return {
-    scoreTrend: buildScoreTrendText(first.scoreColor as ScoreColor, latest.scoreColor as ScoreColor, scoreChanges),
-    changeSignals,
-  };
-}
-
-type HistoryGroup = {
-  count: number;
-  latest: CompanyHistoryEntry;
-  oldest: CompanyHistoryEntry;
-};
-
-type HistoryInsight =
-  | { kind: "empty" }
-  | { kind: "single" }
-  | { kind: "stable"; group: HistoryGroup }
-  | { kind: "changes"; groups: HistoryGroup[] };
-
-function buildHistoryInsight(history: CompanyHistoryEntry[]): HistoryInsight {
-  if (history.length === 0) {
-    return { kind: "empty" };
-  }
-
-  const sortedHistory = [...history].sort(
-    (left, right) => new Date(right.capturedAt).getTime() - new Date(left.capturedAt).getTime()
-  );
-  const groups: HistoryGroup[] = [];
-
-  for (const entry of sortedHistory) {
-    const previousGroup = groups.at(-1);
-    if (previousGroup && historyEntrySignature(previousGroup.latest) === historyEntrySignature(entry)) {
-      previousGroup.count += 1;
-      previousGroup.oldest = entry;
-      continue;
-    }
-
-    groups.push({
-      count: 1,
-      latest: entry,
-      oldest: entry,
-    });
-  }
-
-  if (groups.length === 1) {
-    if (groups[0].count === 1) {
-      return { kind: "single" };
-    }
-    return { kind: "stable", group: groups[0] };
-  }
-
-  return {
-    kind: "changes",
-    groups: groups.slice(0, 6),
-  };
-}
-
-function historyEntrySignature(entry: CompanyHistoryEntry) {
-  return JSON.stringify({
-    summary: entry.summary,
-    organizationForm: entry.organizationForm,
-    scoreColor: entry.scoreColor,
-    municipality: entry.municipality,
-    county: entry.county,
-    naceCode: entry.naceCode,
-    latestAnnualAccountsYear: entry.latestAnnualAccountsYear,
-    vatRegistered: entry.vatRegistered,
-    registeredInBusinessRegistry: entry.registeredInBusinessRegistry,
-    hasContactData: entry.hasContactData,
-    hasRoles: entry.hasRoles,
-    hasSeriousSignals: entry.hasSeriousSignals,
-    registrationDate: entry.registrationDate,
-  });
-}
-
 function structureSignalSeverityClassName(severity: "HIGH" | "MEDIUM" | "INFO") {
   if (severity === "HIGH") {
     return "bg-rose-50 text-rose-700";
@@ -3031,25 +2789,4 @@ function listStructureSignalClassName(severity: "HIGH" | "MEDIUM" | "INFO") {
     return "bg-amber-50 text-amber-700";
   }
   return "bg-sky-50 text-sky-700";
-}
-
-function buildScoreTrendText(from: ScoreColor, to: ScoreColor, scoreChanges: number) {
-  if (from === to && scoreChanges === 0) {
-    return `Vurderingen har vært stabil på ${formatLegendLabel(to).toLowerCase()} i den lagrede historikken.`;
-  }
-  if (from === to) {
-    return `Vurderingen har beveget seg underveis, men står nå igjen på ${formatLegendLabel(to).toLowerCase()}.`;
-  }
-  return `Vurderingen har beveget seg fra ${formatLegendLabel(from).toLowerCase()} til ${formatLegendLabel(to).toLowerCase()}.`;
-}
-
-function formatLegendLabel(scoreColor: ScoreColor) {
-  switch (scoreColor) {
-    case "GREEN":
-      return "Ingen varselflagg";
-    case "YELLOW":
-      return "Begrenset info";
-    case "RED":
-      return "Alvorlige signaler";
-  }
 }

@@ -15,8 +15,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -98,6 +101,19 @@ public class CompanyCheckController {
     @GetMapping("/outreach")
     public List<OutreachStatusResponse> outreachStatuses() {
         return outreachLogService.statuses();
+    }
+
+    @GetMapping(value = "/outreach/export", produces = "application/x-ndjson")
+    public ResponseEntity<String> exportOutreachLog() {
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/x-ndjson"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"outreach-log-export.jsonl\"")
+                .body(outreachLogService.exportJsonl());
+    }
+
+    @PostMapping(value = "/outreach/import", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public OutreachImportResponse importOutreachLog(@RequestBody String jsonl) {
+        return outreachLogService.importJsonl(jsonl);
     }
 
     @PostMapping("/outreach-statuses")

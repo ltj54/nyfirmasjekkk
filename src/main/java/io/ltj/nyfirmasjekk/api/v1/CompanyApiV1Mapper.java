@@ -31,6 +31,23 @@ import java.util.stream.Stream;
 
 @Component
 public class CompanyApiV1Mapper {
+    private static final Set<String> DOMAIN_STOP_WORDS = Set.of("as", "enk", "nuf", "sa", "fli", "da", "ans");
+    private static final Set<String> DOMAIN_TRAILING_QUALIFIERS = Set.of(
+            "ny",
+            "drift",
+            "holding",
+            "holdings",
+            "eiendom",
+            "eiendommer",
+            "invest",
+            "investment",
+            "investments",
+            "norge",
+            "norway",
+            "group",
+            "gruppen"
+    );
+    private static final Set<String> DOMAIN_SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
 
     private final AnnouncementService announcementService;
     private final WebsiteReachabilityService websiteReachabilityService;
@@ -255,32 +272,46 @@ public class CompanyApiV1Mapper {
     }
 
     private List<String> nameBasedWebsiteCandidates(String companyName) {
-        String normalized = normalizeCompanyNameForDomain(companyName);
-        if (!hasText(normalized) || normalized.length() < 4) {
+        List<String> normalizedVariants = normalizeCompanyNameVariantsForDomain(companyName);
+        if (normalizedVariants.isEmpty()) {
             return List.of();
         }
 
         var candidates = new LinkedHashSet<String>();
-        candidates.add("https://" + normalized + ".no");
-        if (shouldSuggestPluralVariant(normalized)) {
-            candidates.add("https://" + normalized + "er.no");
-        }
-        if (normalized.endsWith("er")) {
-            candidates.add("https://" + normalized.substring(0, normalized.length() - 2) + ".no");
+        for (String normalized : normalizedVariants) {
+            String compact = normalized.replace("-", "");
+            if (!hasText(compact) || compact.length() < 4) {
+                continue;
+            }
+            candidates.add("https://" + normalized + ".no");
+            if (!normalized.contains("-")) {
+                String dashed = dashedDomainVariant(normalized, companyName);
+                if (hasText(dashed) && !dashed.equals(normalized)) {
+                    candidates.add("https://" + dashed + ".no");
+                }
+            }
+            if (shouldSuggestPluralVariant(compact)) {
+                candidates.add("https://" + compact + "er.no");
+            }
+            if (compact.endsWith("er")) {
+                candidates.add("https://" + compact.substring(0, compact.length() - 2) + ".no");
+            }
         }
 
-        return candidates.stream().limit(3).toList();
+        return candidates.stream().limit(5).toList();
     }
 
     private boolean shouldSuggestPluralVariant(String normalized) {
         return !normalized.endsWith("er")
                 && !normalized.endsWith("ene")
+                && !normalized.endsWith("e")
+                && !normalized.endsWith("i")
                 && Character.isLetter(normalized.charAt(normalized.length() - 1));
     }
 
-    private String normalizeCompanyNameForDomain(String companyName) {
+    private List<String> normalizeCompanyNameVariantsForDomain(String companyName) {
         if (!hasText(companyName)) {
-            return null;
+            return List.of();
         }
 
         String cleaned = companyName
@@ -289,14 +320,100 @@ public class CompanyApiV1Mapper {
                 .replace('ø', 'o')
                 .replace('å', 'a');
 
-        cleaned = cleaned.replaceAll("\\b(as|enk|nuf|sa|fli|da|ans)\\b", " ");
+        cleaned = cleaned.replace("&", " og ").replace("+", " og ");
         cleaned = cleaned.replaceAll("[^a-z0-9 ]", " ");
-        cleaned = Arrays.stream(cleaned.trim().split("\\s+"))
+        List<String> tokens = Arrays.stream(cleaned.trim().split("\\s+"))
+                .filter(part -> !part.isBlank())
+                .filter(part -> !DOMAIN_STOP_WORDS.contains(part))
+                .toList();
+
+        if (tokens.isEmpty()) {
+            return List.of();
+        }
+
+        var variants = new LinkedHashSet<String>();
+        List<String> withoutTrailingNoise = stripTrailingNoiseTokens(tokens);
+        if (!withoutTrailingNoise.equals(tokens)) {
+            addDomainVariant(variants, withoutTrailingNoise);
+            addDomainVariant(variants, removeGlueWords(withoutTrailingNoise));
+        }
+        addDomainVariant(variants, tokens);
+        addDomainVariant(variants, removeGlueWords(tokens));
+        if (tokens.size() > 2) {
+            addDomainVariant(variants, tokens.subList(0, 2));
+            addDomainVariant(variants, removeGlueWords(tokens.subList(0, 2)));
+        }
+
+        return variants.stream().toList();
+    }
+
+    private void addDomainVariant(LinkedHashSet<String> variants, List<String> tokens) {
+        String normalized = tokens.stream()
                 .filter(part -> !part.isBlank())
                 .limit(3)
                 .collect(Collectors.joining());
+        if (hasText(normalized)) {
+            variants.add(normalized);
+        }
+    }
 
-        return cleaned.isBlank() ? null : cleaned;
+    private List<String> removeGlueWords(List<String> tokens) {
+        return tokens.stream()
+                .filter(token -> !"og".equals(token))
+                .toList();
+    }
+
+    private List<String> stripTrailingNoiseTokens(List<String> tokens) {
+        List<String> stripped = new ArrayList<>(tokens);
+        while (stripped.size() > 1 && isDroppableTrailingToken(stripped.getLast())) {
+            stripped.removeLast();
+        }
+        return stripped;
+    }
+
+    private boolean isDroppableTrailingToken(String token) {
+        return isSequenceToken(token) || DOMAIN_TRAILING_QUALIFIERS.contains(token.trim().toLowerCase(Locale.ROOT));
+    }
+
+    private boolean isSequenceToken(String token) {
+        if (!hasText(token)) {
+            return false;
+        }
+        String normalized = token.trim().toLowerCase(Locale.ROOT);
+        return normalized.matches("\\d+")
+                || DOMAIN_SEQUENCE_TOKENS.contains(normalized);
+    }
+
+    private String dashedDomainVariant(String normalized, String companyName) {
+        List<String> tokens = normalizeCompanyNameTokensForDomain(companyName);
+        List<String> withoutTrailingNoise = stripTrailingNoiseTokens(tokens);
+        List<String> selectedTokens = withoutTrailingNoise.isEmpty() ? tokens : withoutTrailingNoise;
+        String compact = selectedTokens.stream().limit(3).collect(Collectors.joining());
+        if (!compact.equals(normalized) || selectedTokens.size() < 2) {
+            return null;
+        }
+        return selectedTokens.stream()
+                .limit(3)
+                .collect(Collectors.joining("-"));
+    }
+
+    private List<String> normalizeCompanyNameTokensForDomain(String companyName) {
+        if (!hasText(companyName)) {
+            return List.of();
+        }
+        String cleaned = companyName
+                .toLowerCase(Locale.ROOT)
+                .replace('æ', 'a')
+                .replace('ø', 'o')
+                .replace('å', 'a')
+                .replace("&", " og ")
+                .replace("+", " og ")
+                .replaceAll("[^a-z0-9 ]", " ");
+
+        return Arrays.stream(cleaned.trim().split("\\s+"))
+                .filter(part -> !part.isBlank())
+                .filter(part -> !DOMAIN_STOP_WORDS.contains(part))
+                .toList();
     }
 
     private String extractEmailDomain(String email) {
