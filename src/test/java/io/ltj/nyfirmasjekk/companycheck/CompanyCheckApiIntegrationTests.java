@@ -107,14 +107,14 @@ class CompanyCheckApiIntegrationTests {
     }
 
     @Test
-    void historyFinnesIkkeIØyeblikksbildeVersjon() throws Exception {
+    void historyFinnesIkkeIOyeblikksbildeVersjon() throws Exception {
         String orgnr = "123456789";
         mockMvc.perform(get("/api/company-check/" + orgnr + "/history"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void networkFinnesIkkeIØyeblikksbildeVersjon() throws Exception {
+    void networkFinnesIkkeIOyeblikksbildeVersjon() throws Exception {
         String orgnr = "123456789";
         mockMvc.perform(get("/api/company-check/" + orgnr + "/network"))
                 .andExpect(status().isNotFound());

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/*noinspection CssUnknownAtRule*/
 @theme {
   --font-sans: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "Cascadia Mono", "Consolas", "SFMono-Regular", monospace;
@@ -33,9 +34,11 @@
 
 @layer base {
   * {
+    /*noinspection CssUnknownAtRule*/
     @apply border-border outline-ring/50;
   }
   body {
+    /*noinspection CssUnknownAtRule*/
     @apply bg-background text-foreground font-sans;
     background-image: linear-gradient(180deg, #fafbfd 0%, #f5f7fa 100%);
   }

@@ -400,7 +400,7 @@ public class OutreachLogService {
         if (blankToNull(entry.status()) == null) {
             throw new IllegalArgumentException("Importfilen mangler status");
         }
-        normalizeImportedStatus(entry.status());
+        validateImportedStatus(entry.status());
         try {
             Instant.parse(entry.timestamp());
         } catch (DateTimeParseException | NullPointerException exception) {
@@ -408,13 +408,12 @@ public class OutreachLogService {
         }
     }
 
-    private String normalizeImportedStatus(String status) {
-        return switch (status.trim().toLowerCase(Locale.ROOT)) {
-            case "sent" -> "sent";
-            case "reverted" -> "reverted";
-            case "not_relevant" -> "not_relevant";
+    private void validateImportedStatus(String status) {
+        switch (status.trim().toLowerCase(Locale.ROOT)) {
+            case "sent", "reverted", "not_relevant" -> {
+            }
             default -> throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
-        };
+        }
     }
 
     private String blankToNull(String value) {

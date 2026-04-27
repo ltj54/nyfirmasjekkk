@@ -1798,7 +1798,7 @@ function applyLeadQuickFilters(
         case "MISSING_WEBSITE":
           return !company.website && company.websiteDiscovery?.contentMatched !== true;
         case "NOT_SENT":
-          return status?.sent !== true;
+          return !status?.sent;
         case "NOT_RELEVANT":
           return status?.status === "not_relevant";
       }
