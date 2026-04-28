@@ -32,22 +32,22 @@ import { Separator } from "@/components/ui/separator";
 
 const dayOptions = ["5", "10", "30", "60", "180", "365", "0"];
 const legend = [
-  { status: "GREEN", label: "Ingen varselflagg", color: "bg-emerald-500" },
-  { status: "YELLOW", label: "Begrenset info", color: "bg-amber-500" },
-  { status: "RED", label: "Alvorlige signaler", color: "bg-rose-500" },
+  { status: "GREEN", label: "Ryddig registerstatus", color: "bg-emerald-500" },
+  { status: "YELLOW", label: "Begrenset registerinfo", color: "bg-amber-500" },
+  { status: "RED", label: "Alvorlige registerspor", color: "bg-rose-500" },
 ];
 
 const legendDetails: Record<string, { title: string; text: string }> = {
   GREEN: {
-    title: "Ingen varselflagg",
+    title: "Ryddig registerstatus",
     text: "Åpne registerdata gir et ryddig førsteinntrykk. Det betyr ikke at alt er risikofritt, men vi ser ingen tydelige negative signaler i BRREG-dataene.",
   },
   YELLOW: {
-    title: "Begrenset info",
+    title: "Begrenset registerinfo",
     text: "Det finnes noen forhold som gjør bildet mindre tydelig, for eksempel kort historikk eller mangelfulle opplysninger. Dette er et signal om å sjekke litt nærmere.",
   },
   RED: {
-    title: "Alvorlige signaler",
+    title: "Alvorlige registerspor",
     text: "Åpne registerdata viser forhold som konkurs, avvikling, tvangsoppløsning eller andre tydelige avvik. Slike treff bør undersøkes før man går videre.",
   },
 };
@@ -757,7 +757,7 @@ export function CompanyCheckShell() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
-                  <span className="text-[#52606D]">Signalnivå:</span>
+                  <span className="text-[#52606D]">Registerstatus:</span>
                   {legend.map((item) => (
                     <button
                       key={item.status}
@@ -831,15 +831,15 @@ export function CompanyCheckShell() {
                 </p>
                 <div className="mt-5 grid gap-5 md:grid-cols-3">
                   <CommercialOfferPoint
-                    label="Sterkt signal"
+                    label="Sterkt lead"
                     text="Mangler nettside og har e-post eller telefon registrert."
                   />
                   <CommercialOfferPoint
-                    label="Mulig signal"
+                    label="Mulig lead"
                     text="Mangler digital flate, men krever litt mer manuell research."
                   />
                   <CommercialOfferPoint
-                    label="Svakt signal"
+                    label="Svakt lead"
                     text="Har eksisterende flate, røde registerspor eller svak kontaktbarhet."
                   />
                 </div>
@@ -1138,7 +1138,7 @@ function CompanyCard({
       <div className="mb-4 border border-[#E4E7EB] bg-[#F8FBFF] p-3">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Mulighetssignal</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Leadvurdering</p>
             <p className="mt-1 text-[13px] font-semibold text-[#1F2933]">{bestContactPoint.label}</p>
             <p className="mt-1 text-[12px] text-[#52606D]">{contactability.label}</p>
           </div>
@@ -1577,47 +1577,174 @@ function getContactability(company: CompanySummary) {
 }
 
 function getLeadPriority(company: CompanySummary) {
+  return evaluateLeadSignal(company).priority;
+}
+
+function getBestContactPoint(company: CompanySummary) {
+  return { label: evaluateLeadSignal(company).contactLabel };
+}
+
+function getCommercialOpportunity(company: CompanySummary) {
+  return evaluateLeadSignal(company).commercial;
+}
+
+function evaluateLeadSignal(company: CompanySummary) {
   const hasEmail = Boolean(company.email);
   const hasPhone = Boolean(company.phone);
   const hasPossibleWebsite = company.websiteDiscovery?.status === "POSSIBLE_MATCH";
   const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
+  const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
   const missingWebsite = !company.website && !hasPossibleWebsite;
 
-  if (missingWebsite && hasEmail && company.scoreColor !== "RED") {
-    return {
-      label: "Sterkt signal",
-        badgeClass: "rounded-sm bg-[#E6F0FA] px-2.5 py-1 text-[10px] font-semibold text-[#1F5FA9]",
-    };
+  if (company.scoreColor === "RED") {
+    return leadSignalResult(
+      "Svakt lead",
+      "Avklar risiko før salgsarbeid",
+      "Avklar risiko før salgsarbeid",
+      "Røde registerspor gjør dette mindre egnet som ordinært lead før dyp analyse er vurdert.",
+      "Åpne analyse",
+      "border-rose-100 bg-rose-50/60"
+    );
   }
 
-  if (hasLikelyWebsite && company.scoreColor !== "RED") {
-    return {
-      label: "Svakt signal",
-      badgeClass: "rounded-sm bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
-    };
+  if (company.website || hasLikelyWebsite) {
+    if (company.website) {
+      return leadSignalResult(
+        "Svakt lead",
+        "Gå via registrert nettside",
+        "Har registrert nettside",
+        "Selskapet har nettside registrert i BRREG. Det gjør nettsidebehovet svakere og bør sjekkes manuelt før eventuell kontakt.",
+        "Se detaljer",
+        "border-[#D9E2EC] bg-[#F8FAFC]"
+      );
+    }
+
+    return leadSignalResult(
+      "Svakt lead",
+      "Sannsynlig nettside funnet, sjekk før kontakt",
+      "Sannsynlig nettside funnet",
+      "Kandidatdomenet svarer, og innholdet ligner på selskapet. Dette bør normalt ikke prioriteres som nettsideløst lead.",
+      "Se detaljer",
+      "border-[#D9E2EC] bg-[#F8FAFC]"
+    );
   }
 
-  if ((missingWebsite || hasEmail || hasPhone) && company.scoreColor !== "RED") {
-    return {
-      label: "Mulig signal",
-      badgeClass: "rounded-sm bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
-    };
+  if (missingWebsite && hasEmail) {
+    return leadSignalResult(
+      "Sterkt lead",
+      `Start med e-post: ${company.email}`,
+      "Nettside-startpakke aktuell",
+      "Mangler registrert nettside og har e-post registrert i åpne data.",
+      "Åpne lead",
+      "border-[#C7DFF8] bg-[#F1F7FE]"
+    );
   }
 
+  if (missingWebsite && hasPhone) {
+    return leadSignalResult(
+      "Mulig lead",
+      `Start med telefon: ${company.phone}`,
+      "Mulig lead, men svakere kontaktgrunnlag",
+      "Mangler registrert nettside, men har bare telefon. Fravær av e-post gjør dette mindre egnet for rask utsendelse.",
+      "Se detaljer",
+      "border-amber-100 bg-amber-50/70"
+    );
+  }
+
+  if (hasMismatchWebsite) {
+    return leadSignalResult(
+      "Mulig lead",
+      "Domene svarer, men kan være feiltreff",
+      "Mulig feiltreff på nettside",
+      "Domenet svarer, men innholdet ser ikke ut til å matche selskapet. Krever manuell kontroll før det brukes i vurderingen.",
+      "Se detaljer",
+      "border-amber-100 bg-amber-50/70"
+    );
+  }
+
+  if (hasPossibleWebsite) {
+    return leadSignalResult(
+      "Mulig lead",
+      "Mulig nettside funnet, må bekreftes manuelt",
+      "Mulig nettside må bekreftes",
+      "Ingen nettside er registrert i BRREG, men vi har funnet en mulig kandidat. Bekreft før dette behandles som sterkt lead.",
+      "Se detaljer",
+      "border-amber-100 bg-amber-50/70"
+    );
+  }
+
+  if (missingWebsite) {
+    return leadSignalResult(
+      "Mulig lead",
+      company.contactPersonName ? `Manuell kontakt mot ${company.contactPersonName}` : "Krever manuell research",
+      "Digital tilstedeværelse mangler",
+      "Ingen nettside registrert, men uten e-post blir dette mer manuelt å følge opp.",
+      "Vurder lead",
+      "border-amber-100 bg-amber-50/70"
+    );
+  }
+
+  if (hasEmail || hasPhone) {
+    return leadSignalResult(
+      "Mulig lead",
+      hasEmail ? `Start med e-post: ${company.email}` : `Start med telefon: ${company.phone}`,
+      "Kontaktbar virksomhet",
+      hasEmail
+        ? "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate."
+        : "Har telefon, men mangler e-post. Det gjør oppfølgingen mindre effektiv.",
+      "Se kontakt",
+      "border-emerald-100 bg-emerald-50/60"
+    );
+  }
+
+  return leadSignalResult(
+    "Svakt lead",
+    "Krever manuell research",
+    "Lavere lead-klarhet",
+    "Svak direkte kontaktflate i åpne data.",
+    "Se detaljer",
+    "border-[#E4E7EB] bg-[#F8FAFC]"
+  );
+}
+
+function leadSignalResult(
+  label: "Sterkt lead" | "Mulig lead" | "Svakt lead",
+  contactLabel: string,
+  title: string,
+  summary: string,
+  actionLabel: string,
+  cardClass: string,
+) {
   return {
-    label: "Svakt signal",
-    badgeClass: "rounded-sm bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]",
+    priority: {
+      label,
+      badgeClass: leadPriorityBadgeClass(label),
+    },
+    contactLabel,
+    commercial: {
+      title,
+      summary,
+      actionLabel,
+      cardClass,
+    },
   };
+}
+
+function leadPriorityBadgeClass(label: "Sterkt lead" | "Mulig lead" | "Svakt lead") {
+  if (label === "Sterkt lead") {
+    return "rounded-sm bg-[#E6F0FA] px-2.5 py-1 text-[10px] font-semibold text-[#1F5FA9]";
+  }
+  return "rounded-sm bg-[#F0F4F8] px-2.5 py-1 text-[10px] font-semibold text-[#52606D]";
 }
 
 function detailLeadSignalConfig(label: string) {
   switch (label) {
-    case "Sterkt signal":
+    case "Sterkt lead":
       return {
         icon: CheckCircle2,
         text: "bg-[#E6F0FA] text-[#1F5FA9] border-[#C7DFF8]",
       };
-    case "Mulig signal":
+    case "Mulig lead":
       return {
         icon: AlertTriangle,
         text: "bg-amber-50 text-amber-700 border-amber-100",
@@ -1628,121 +1755,6 @@ function detailLeadSignalConfig(label: string) {
         text: "bg-slate-100 text-slate-700 border-slate-200",
       };
   }
-}
-
-function getBestContactPoint(company: CompanySummary) {
-  if (company.email) {
-    return { label: `Start med e-post: ${company.email}` };
-  }
-  if (company.phone) {
-    return { label: `Start med telefon: ${company.phone}` };
-  }
-  if (company.website) {
-    return { label: "Gå via registrert nettside" };
-  }
-  if (company.websiteDiscovery?.contentMatched === true) {
-    return { label: "Sannsynlig nettside funnet, sjekk før kontakt" };
-  }
-  if (company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false) {
-    return { label: "Domene svarer, men kan være feiltreff" };
-  }
-  if (company.websiteDiscovery?.status === "POSSIBLE_MATCH") {
-    return { label: "Mulig nettside funnet, må bekreftes manuelt" };
-  }
-  if (company.contactPersonName) {
-    return { label: `Manuell kontakt mot ${company.contactPersonName}` };
-  }
-  return { label: "Krever manuell research" };
-}
-
-function getCommercialOpportunity(company: CompanySummary) {
-  const hasEmail = Boolean(company.email);
-  const hasPhone = Boolean(company.phone);
-  const hasPossibleWebsite = company.websiteDiscovery?.status === "POSSIBLE_MATCH";
-  const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
-  const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
-  const missingWebsite = !company.website && !hasPossibleWebsite;
-
-  if (company.scoreColor === "RED") {
-    return {
-      title: "Avklar risiko før salgsarbeid",
-      summary: "Røde registerspor gjør dette mindre egnet som ordinært lead før dyp analyse er vurdert.",
-      actionLabel: "Åpne analyse",
-      cardClass: "border-rose-100 bg-rose-50/60",
-    };
-  }
-
-  if (missingWebsite && hasEmail) {
-    return {
-      title: "Nettside-startpakke aktuell",
-      summary: "Mangler registrert nettside og har e-post registrert i åpne data.",
-      actionLabel: "Åpne lead",
-      cardClass: "border-[#C7DFF8] bg-[#F1F7FE]",
-    };
-  }
-
-  if (missingWebsite && hasPhone) {
-    return {
-      title: "Mulig lead, men svakere kontaktgrunnlag",
-      summary: "Mangler registrert nettside, men har bare telefon. Fravær av e-post gjør dette mindre egnet for rask utsendelse.",
-      actionLabel: "Se detaljer",
-      cardClass: "border-amber-100 bg-amber-50/70",
-    };
-  }
-
-  if (hasLikelyWebsite) {
-    return {
-      title: "Sannsynlig nettside funnet",
-      summary: "Kandidatdomenet svarer, og innholdet ligner på selskapet. Dette bør normalt ikke prioriteres som nettsideløst lead.",
-      actionLabel: "Se detaljer",
-      cardClass: "border-[#D9E2EC] bg-[#F8FAFC]",
-    };
-  }
-
-  if (hasMismatchWebsite) {
-    return {
-      title: "Mulig feiltreff på nettside",
-      summary: "Domenet svarer, men innholdet ser ikke ut til å matche selskapet. Krever manuell kontroll før det brukes i vurderingen.",
-      actionLabel: "Se detaljer",
-      cardClass: "border-amber-100 bg-amber-50/70",
-    };
-  }
-
-  if (hasPossibleWebsite) {
-    return {
-      title: "Mulig nettside må bekreftes",
-      summary: "Ingen nettside er registrert i BRREG, men vi har funnet en mulig kandidat. Bekreft før dette behandles som sterkt lead.",
-      actionLabel: "Se detaljer",
-      cardClass: "border-amber-100 bg-amber-50/70",
-    };
-  }
-
-  if (missingWebsite) {
-    return {
-      title: "Digital tilstedeværelse mangler",
-      summary: "Ingen nettside registrert, men uten e-post blir dette mer manuelt å følge opp.",
-      actionLabel: "Vurder lead",
-      cardClass: "border-amber-100 bg-amber-50/70",
-    };
-  }
-
-  if (hasEmail || hasPhone) {
-    return {
-      title: "Kontaktbar virksomhet",
-      summary: hasEmail
-        ? "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate."
-        : "Har telefon, men mangler e-post. Det gjør oppfølgingen mindre effektiv.",
-      actionLabel: "Se kontakt",
-      cardClass: "border-emerald-100 bg-emerald-50/60",
-    };
-  }
-
-  return {
-    title: "Lavere lead-klarhet",
-    summary: "Har registrert nettside, men svak direkte kontaktflate i åpne data.",
-    actionLabel: "Se detaljer",
-    cardClass: "border-[#E4E7EB] bg-[#F8FAFC]",
-  };
 }
 
 function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
@@ -1808,8 +1820,8 @@ function applyLeadQuickFilters(
 
 function leadPriorityRank(company: CompanySummary) {
   const label = getLeadPriority(company).label;
-  if (label === "Sterkt signal") return 0;
-  if (label === "Mulig signal") return 1;
+  if (label === "Sterkt lead") return 0;
+  if (label === "Mulig lead") return 1;
   return 2;
 }
 
@@ -1977,7 +1989,7 @@ function CompanyDetailView({
               </div>
               <div>
                 <p className="mb-2 text-[12px] font-medium text-[#52606D]">
-                  Registerspor og mulighetssignal
+                  Registerstatus og leadvurdering
                 </p>
                 <h2 className="text-2xl font-semibold tracking-tight text-[#1F2933] md:text-[2.5rem]">
                   {company.name}
@@ -2002,7 +2014,7 @@ function CompanyDetailView({
                 {scoreLabel}
               </div>
               <p className="max-w-xs text-[13px] font-medium leading-relaxed text-[#52606D] md:text-right">
-                Et raskt mulighetssignal basert på offentlige registerspor, roller og grunnleggende virksomhetsdata.
+                En rask leadvurdering basert på offentlige registerspor, kontaktpunkter og digital synlighet.
               </p>
             </div>
           </div>
@@ -2015,11 +2027,11 @@ function CompanyDetailView({
                   <p className="text-[12px] font-medium text-[#52606D]">Oppsummering</p>
                   <h3 className="mt-1 text-[20px] font-semibold text-[#1F2933]">Rask vurdering</h3>
                   <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
-                    Dette er det raske beslutningsbildet: mulighetssignal, viktigste registerspor og om selskapet ser kontaktbart ut.
+                    Dette er det raske beslutningsbildet: leadvurdering, viktigste registerspor og om selskapet ser kontaktbart ut.
                   </p>
                 </div>
                 <div className="grid min-w-[220px] gap-2 sm:grid-cols-3 md:grid-cols-1">
-                  <InfoMetric label="Mulighetssignal" value={scoreLabel} />
+                  <InfoMetric label="Leadvurdering" value={scoreLabel} />
                   <InfoMetric label="Hendelser" value={`${events.length}`} />
                   <InfoMetric label="Rollepunkter" value={`${company.roles?.length ?? 0}`} />
                 </div>
@@ -2029,7 +2041,12 @@ function CompanyDetailView({
                 <DetailDataPoint icon={CalendarDays} label="Etablert" value={company.registrationDate || "Ukjent"} />
                 <DetailDataPoint icon={CalendarDays} label="Stiftet" value={company.foundationDate || "Ikke oppgitt"} />
                 <DetailDataPoint icon={Landmark} label="Bransje" value={company.naceDescription || "Ikke oppgitt"} />
-                <DetailDataPoint icon={Globe} label="Nettside" value={company.website || "Ingen registrert"} isLink />
+                <DetailDataPoint
+                  icon={Globe}
+                  label="Nettside"
+                  value={company.website || "Ingen registrert"}
+                  href={company.website ? normalizeWebsiteUrl(company.website) : undefined}
+                />
                 <DetailDataPoint icon={Mail} label="MVA" value={formatRegistryFlag(company.vatRegistered)} />
                 <DetailDataPoint icon={Phone} label="Foretaksregister" value={formatRegistryFlag(company.registeredInBusinessRegistry)} />
                 <DetailDataPoint icon={MapPin} label="Fylke" value={company.county || "Ukjent"} />
@@ -2368,7 +2385,17 @@ const scoreColors = {
   RED: "bg-rose-500",
 };
 
-function DetailDataPoint({ icon: Icon, label, value, isLink }: { icon: LucideIcon; label: string; value: string; isLink?: boolean }) {
+function DetailDataPoint({
+  icon: Icon,
+  label,
+  value,
+  href,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href?: string;
+}) {
   return (
     <div className="border border-[#D9E2EC] bg-white p-4">
       <div className="flex items-start gap-3.5">
@@ -2379,9 +2406,18 @@ function DetailDataPoint({ icon: Icon, label, value, isLink }: { icon: LucideIco
           <p className="text-[11px] font-medium text-[#52606D]">
             {label}
           </p>
-          <p className={`text-[14px] font-semibold text-[#1F2933] ${isLink && value.includes('.') ? 'text-[#1F5FA9] underline underline-offset-4' : ''}`}>
-            {value}
-          </p>
+          {href ? (
+            <a
+              className="block truncate text-[14px] font-semibold text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+              href={href}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {value}
+            </a>
+          ) : (
+            <p className="text-[14px] font-semibold text-[#1F2933]">{value}</p>
+          )}
         </div>
       </div>
     </div>

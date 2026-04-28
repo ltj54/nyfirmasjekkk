@@ -48,6 +48,13 @@ public class CompanyApiV1Mapper {
             "gruppen"
     );
     private static final Set<String> DOMAIN_SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
+    private static final Map<String, String> DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS = Map.of(
+            "vedlikeholdsservice", "service",
+            "renholdsservice", "service",
+            "batservice", "service",
+            "byggservice", "service",
+            "vaktmesterservice", "service"
+    );
 
     private final AnnouncementService announcementService;
     private final WebsiteReachabilityService websiteReachabilityService;
@@ -306,6 +313,7 @@ public class CompanyApiV1Mapper {
                 && !normalized.endsWith("ene")
                 && !normalized.endsWith("e")
                 && !normalized.endsWith("i")
+                && !normalized.endsWith("og")
                 && Character.isLetter(normalized.charAt(normalized.length() - 1));
     }
 
@@ -337,12 +345,18 @@ public class CompanyApiV1Mapper {
             addDomainVariant(variants, withoutTrailingNoise);
             addDomainVariant(variants, removeGlueWords(withoutTrailingNoise));
         }
-        addDomainVariant(variants, tokens);
-        addDomainVariant(variants, removeGlueWords(tokens));
+        if (tokens.size() == 3 && "og".equals(tokens.get(1))) {
+            addDomainVariant(variants, tokens);
+            addDomainVariant(variants, removeGlueWords(tokens));
+        }
         if (tokens.size() > 2) {
             addDomainVariant(variants, tokens.subList(0, 2));
             addDomainVariant(variants, removeGlueWords(tokens.subList(0, 2)));
+            addFirstTwoAndLastBusinessWordVariant(variants, tokens);
         }
+        addDomainVariant(variants, removeGlueWords(tokens));
+        addDomainVariant(variants, tokens);
+        addFirstAndLastBusinessWordVariant(variants, tokens);
 
         return variants.stream().toList();
     }
@@ -361,6 +375,33 @@ public class CompanyApiV1Mapper {
         return tokens.stream()
                 .filter(token -> !"og".equals(token))
                 .toList();
+    }
+
+    private void addFirstAndLastBusinessWordVariant(LinkedHashSet<String> variants, List<String> tokens) {
+        List<String> withoutGlueWords = removeGlueWords(stripTrailingNoiseTokens(tokens));
+        if (withoutGlueWords.size() < 3) {
+            return;
+        }
+
+        String first = withoutGlueWords.getFirst();
+        String last = DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS.getOrDefault(withoutGlueWords.getLast(), withoutGlueWords.getLast());
+        if (hasText(first) && hasText(last) && !first.equals(last)) {
+            addDomainVariant(variants, List.of(first, last));
+        }
+    }
+
+    private void addFirstTwoAndLastBusinessWordVariant(LinkedHashSet<String> variants, List<String> tokens) {
+        List<String> withoutGlueWords = removeGlueWords(stripTrailingNoiseTokens(tokens));
+        if (withoutGlueWords.size() < 3) {
+            return;
+        }
+
+        String first = withoutGlueWords.get(0);
+        String second = withoutGlueWords.get(1);
+        String last = DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS.getOrDefault(withoutGlueWords.getLast(), withoutGlueWords.getLast());
+        if (hasText(first) && hasText(second) && hasText(last) && !second.equals(last)) {
+            addDomainVariant(variants, List.of(first, second, last));
+        }
     }
 
     private List<String> stripTrailingNoiseTokens(List<String> tokens) {
@@ -426,13 +467,18 @@ public class CompanyApiV1Mapper {
     private boolean isGenericEmailDomain(String emailDomain) {
         return Set.of(
                 "gmail.com",
+                "gmail.no",
                 "outlook.com",
+                "outlook.no",
                 "hotmail.com",
+                "hotmail.no",
+                "live.com",
                 "live.no",
                 "icloud.com",
                 "me.com",
                 "online.no",
                 "yahoo.com",
+                "yahoo.no",
                 "proton.me",
                 "protonmail.com"
         ).contains(emailDomain);

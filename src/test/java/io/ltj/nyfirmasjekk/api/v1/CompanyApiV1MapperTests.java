@@ -111,6 +111,8 @@ class CompanyApiV1MapperTests {
     void nettsideforslagFjernerTypiskeStruktursuffiksOgOgVariant() {
         var holding = summaryForName("ABC BYGG HOLDING AS");
         var ogNavn = summaryForName("OLSEN & SØNN AS");
+        var langBransje = summaryForName("ROMERIKE RENHOLD OG VEDLIKEHOLDSSERVICE AS");
+        var langBransjeMedPrivatEpost = summaryForName("ROMERIKE RENHOLD OG VEDLIKEHOLDSSERVICE AS", "kontakt@yahoo.no");
 
         assertThat(holding.websiteDiscovery()).isNotNull();
         assertThat(holding.websiteDiscovery().candidates())
@@ -122,6 +124,17 @@ class CompanyApiV1MapperTests {
         assertThat(ogNavn.websiteDiscovery().candidates())
                 .contains("https://olsenogsonn.no")
                 .contains("https://olsensonn.no");
+
+        assertThat(langBransje.websiteDiscovery()).isNotNull();
+        assertThat(langBransje.websiteDiscovery().candidates())
+                .contains("https://romerikerenhold.no")
+                .contains("https://romerikerenholdservice.no");
+        assertThat(langBransjeMedPrivatEpost.websiteDiscovery()).isNotNull();
+        assertThat(langBransjeMedPrivatEpost.websiteDiscovery().source()).isEqualTo("NAME_HEURISTIC");
+        assertThat(langBransjeMedPrivatEpost.websiteDiscovery().candidates())
+                .contains("https://romerikerenhold.no")
+                .contains("https://romerikerenholdservice.no")
+                .doesNotContain("https://yahoo.no");
     }
 
     @Test
@@ -429,6 +442,10 @@ class CompanyApiV1MapperTests {
     }
 
     private static CompanySummary summaryForName(String companyName) {
+        return summaryForName(companyName, null);
+    }
+
+    private static CompanySummary summaryForName(String companyName, String email) {
         var mapper = new CompanyApiV1Mapper(
                 new StubAnnouncementService(List.of()),
                 new StubWebsiteReachabilityService(),
@@ -443,7 +460,7 @@ class CompanyApiV1MapperTests {
                 null,
                 List.of(),
                 null,
-                null,
+                email,
                 null,
                 false,
                 true,

@@ -29,7 +29,11 @@
 - Nettsideforslag håndterer nå romertall/tall i selskapsnavn, f.eks. `FONNES BÅTSERVICE II AS` -> `fonnesbatservice.no`.
 - Nettsideforslag håndterer typiske struktursuffiks (`HOLDING`, `EIENDOM`, `INVEST`, `Norge/Norway`) og `og`/`&`-varianter.
 - Nettsideforslag tar med bindestrekvarianter som sekundære forslag, f.eks. `fonnes-batservice.no`.
+- Nettsideforslag håndterer lange bransjenavn bedre, f.eks. `ROMERIKE RENHOLD OG VEDLIKEHOLDSSERVICE AS` -> `romerikerenhold.no` og `romerikerenholdservice.no`.
+- Generiske e-postdomener som `yahoo.no`, `hotmail.no`, `outlook.no` og lignende blokkerer ikke lenger navnebaserte nettsideforslag.
 - Innholdsmatch for mulig nettside tåler mellomrom og romertall/tall bedre.
+- Lead-klassifisering er samlet i én felles vurdering slik at badge, sortering og kommersiell tekst ikke viser motstridende leadvurderinger.
+- UI skiller nå tydelig mellom `Registerstatus` (`Ryddig registerstatus`, `Begrenset registerinfo`, `Alvorlige registerspor`) og `Leadvurdering` (`Sterkt lead`, `Mulig lead`, `Svakt lead`).
 - Sannsynlig nettside demper lead-signal.
 - Registrerte hendelser bruker konsekvent datoformat `YYYY-MM-DD`.
 - Filbasert utsendelseslogg er på plass med `data/outreach-log.jsonl`.
@@ -91,10 +95,10 @@
 ### Produkt
 
 - [ ] Bestem om løsningen bare skal være intern arbeidsflate eller også ha en offentlig landingsside.
-- [ ] Stram teksten videre rundt `Sterkt signal`, `Mulig signal` og `Svakt signal`.
+- [x] Stram teksten videre rundt `Sterkt lead`, `Mulig lead` og `Svakt lead`.
 - [ ] Gjør detaljvisningen enda mer operativ: tydelig kontaktpunkt, mulig nettside, mailtekst og status øverst.
 - [x] Vurder om leadlisten bør ha egne hurtigfiltre for `Har e-post`, `Mangler nettside`, `Ikke sendt` og `Ikke aktuell`.
-- [ ] Vurder om `Alvorlige signaler` skal skjules som standard i en salgslead-flyt.
+- [ ] Vurder om `Alvorlige registerspor` skal skjules som standard i en salgslead-flyt.
 
 ### Produksjon
 
