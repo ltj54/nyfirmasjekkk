@@ -1109,7 +1109,7 @@ function CompanyCard({
   const commercialOpportunity = getCommercialOpportunity(company);
   const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
   const cardToneClass = outreachStatus?.status === "not_relevant"
-    ? "border-[#BCCCDC] bg-[#EAF1F7] hover:border-[#9FB3C8]"
+    ? "border-[#1F2933] bg-[#F5F5F5] grayscale hover:border-[#111827]"
     : outreachStatus?.sent
       ? "border-[#C7D7EA] bg-[#F4F8FC] hover:border-[#9FB3C8]"
       : "border-[#D9E2EC] bg-white hover:border-[#2F6FB2]";
@@ -2616,7 +2616,7 @@ Jeg så at {{companyName}} er et nytt selskap, og ville derfor sende en kort hen
 
 Jeg hjelper nye virksomheter med en enkel digital startpakke, slik at dere raskt får på plass en ryddig nettside med kontaktinformasjon, samt hjelp med domene og e-post ved behov.
 
-Jeg kan levere dette som en enkel pakke til kr {{price}}.
+Vi kan levere dette som en enkel pakke til kr {{price}},-
 
 Hvis dette er aktuelt, kan jeg sende et helt konkret forslag til oppsett og hva som kan være på siden.
 

@@ -55,7 +55,7 @@ Jeg så at {{companyName}} er et nytt selskap, og ville derfor sende en kort hen
 
 Jeg hjelper nye virksomheter med en enkel digital startpakke, slik at dere raskt får på plass en ryddig nettside med kontaktinformasjon, samt hjelp med domene og e-post ved behov.
 
-Jeg kan levere dette som en enkel pakke til `kr {{price}}`.
+Vi kan levere dette som en enkel pakke til kr {{price}},-
 
 Hvis dette er aktuelt, kan jeg sende et helt konkret forslag til oppsett og hva som kan være på siden.
 
@@ -71,7 +71,7 @@ Hei {{greeting}},
 
 Jeg så at {{companyName}} er nyregistrert og ville høre om dere trenger en enkel nettside med kontaktinformasjon, domene og e-posthjelp fra start.
 
-Jeg tilbyr dette som en enkel pakke til `kr {{price}}`.
+Vi kan levere dette som en enkel pakke til kr {{price}},-
 
 Gi gjerne beskjed hvis du vil at jeg skal sende et konkret forslag.
 
@@ -88,7 +88,7 @@ Jeg så at Eksempel AS er et nytt selskap, og ville derfor sende en kort henvend
 
 Jeg hjelper nye virksomheter med å få på plass en enkel nettside med tydelig kontaktinformasjon, samt hjelp med domene og e-post ved behov.
 
-Jeg kan levere dette som en enkel pakke til kr 4.500.
+Vi kan levere dette som en enkel pakke til kr 4.500,-
 
 Hvis dette er aktuelt, kan jeg sende et kort og konkret forslag til oppsett.
 
