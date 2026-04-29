@@ -1542,6 +1542,10 @@ function normalizeWebsiteUrl(value: string) {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
 
+function buildGoogleSearchUrl(query: string) {
+  return `https://www.google.com/search?q=${encodeURIComponent(`"${query}"`)}`;
+}
+
 function getContactability(company: CompanySummary) {
   const points = [company.email, company.phone, company.website, company.contactPersonName].filter(Boolean).length;
 
@@ -1933,6 +1937,7 @@ function CompanyDetailView({
   const config = detailLeadSignalConfig(leadPriority.label);
   const StatusIcon = config.icon;
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedHtmlEmail, setCopiedHtmlEmail] = useState(false);
 
   const scoreLabel = leadPriority.label;
   const scoreReasons = company.score?.reasons || [];
@@ -1944,6 +1949,7 @@ function CompanyDetailView({
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
+  const generatedEmailHtml = generatedEmail ? buildOutreachEmailHtml(generatedEmail.body) : "";
   const generatedEmailHref = generatedEmail && company.email
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
@@ -1961,6 +1967,32 @@ function CompanyDetailView({
       }, 2000);
     } catch (error) {
       console.error("Failed to copy generated email", error);
+    }
+  }
+
+  async function handleCopyGeneratedHtmlEmail() {
+    if (!generatedEmail || !generatedEmailHtml) {
+      return;
+    }
+
+    try {
+      if (typeof ClipboardItem !== "undefined" && navigator.clipboard.write) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": new Blob([generatedEmailHtml], { type: "text/html" }),
+            "text/plain": new Blob([generatedEmail.body], { type: "text/plain" }),
+          }),
+        ]);
+      } else {
+        await navigator.clipboard.writeText(generatedEmail.body);
+      }
+
+      setCopiedHtmlEmail(true);
+      window.setTimeout(() => {
+        setCopiedHtmlEmail(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy generated HTML email", error);
     }
   }
 
@@ -2061,9 +2093,19 @@ function CompanyDetailView({
 
               {!company.website && company.websiteDiscovery?.status === "POSSIBLE_MATCH" && company.websiteDiscovery.candidates.length > 0 ? (
                 <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
-                  <p className="mb-2 text-[12px] font-medium text-[#52606D]">
-                    {company.websiteDiscovery.contentMatched ? "Sannsynlig nettside" : "Mulig nettside"}
-                  </p>
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-[12px] font-medium text-[#52606D]">
+                      {company.websiteDiscovery.contentMatched ? "Sannsynlig nettside" : "Mulig nettside"}
+                    </p>
+                    <a
+                      className="inline-flex items-center rounded-sm border border-[#BCCCDC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#1F2933] hover:border-[#829AB1] hover:bg-[#F8FBFF]"
+                      href={buildGoogleSearchUrl(company.name)}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Google-søk
+                    </a>
+                  </div>
                   <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">
                     {company.websiteDiscovery.contentMatched
                       ? "Ingen registrert nettside i BRREG, men kandidaten ser ut til å høre til selskapet."
@@ -2172,6 +2214,13 @@ function CompanyDetailView({
                         type="button"
                       >
                         {copiedEmail ? "Kopiert" : "Kopier mailtekst"}
+                      </Button>
+                      <Button
+                        className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
+                        onClick={() => void handleCopyGeneratedHtmlEmail()}
+                        type="button"
+                      >
+                        {copiedHtmlEmail ? "HTML kopiert" : "Kopier HTML-mail"}
                       </Button>
                       {generatedEmailHref ? (
                         <button
@@ -2590,6 +2639,85 @@ function buildOutreachEmailBody(
   return applyOutreachTemplate(cleanedTemplate, company);
 }
 
+function buildOutreachEmailHtml(body: string) {
+  const lines = body.split(/\r?\n/);
+  const parts: string[] = [];
+  let listOpen = false;
+
+  function closeList() {
+    if (!listOpen) {
+      return;
+    }
+    parts.push("</ul>");
+    listOpen = false;
+  }
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index].trim();
+
+    if (!line) {
+      closeList();
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      if (!listOpen) {
+        parts.push('<ul style="margin: 8px 0 14px 20px; padding: 0;">');
+        listOpen = true;
+      }
+      parts.push(`<li style="margin: 4px 0;">${escapeHtml(line.slice(2))}</li>`);
+      continue;
+    }
+
+    closeList();
+
+    const nextLine = lines[index + 1]?.trim() ?? "";
+    if (line === "Se eksempel her:" && isHttpUrl(nextLine)) {
+      parts.push(
+        `<p style="margin: 0 0 14px;">Se eksempel her: <a href="${escapeHtml(nextLine)}" style="color: #1F5FA9;">Se eksempel her</a></p>`
+      );
+      index += 1;
+      continue;
+    }
+
+    if (isEmailAddress(line)) {
+      parts.push(
+        `<p style="margin: 0 0 14px;"><a href="mailto:${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a></p>`
+      );
+      continue;
+    }
+
+    if (isHttpUrl(line)) {
+      parts.push(
+        `<p style="margin: 0 0 14px;"><a href="${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a></p>`
+      );
+      continue;
+    }
+
+    parts.push(`<p style="margin: 0 0 14px;">${escapeHtml(line)}</p>`);
+  }
+
+  closeList();
+
+  return `<div style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.55; color: #1F2933;">${parts.join("")}</div>`;
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function isHttpUrl(value: string) {
+  return /^https?:\/\/\S+$/i.test(value);
+}
+
+function isEmailAddress(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 function extractMailSubject(markdown: string) {
   const section = extractMarkdownSection(markdown, "E-postmal");
   if (!section) {
@@ -2629,10 +2757,11 @@ function applyOutreachTemplate(
     "{{location}}": location,
     "{{greeting}}": greeting,
     "{{price}}": "4.500",
-    "{{senderName}}": "[DITT NAVN]",
-    "{{senderCompany}}": "[FIRMANAVN]",
-    "{{senderPhone}}": "[DITT TELEFONNUMMER]",
-    "{{senderEmail}}": "[DIN E-POST]",
+    "{{senderName}}": "Lars Tangen Johannessen",
+    "{{senderCompany}}": "ltj-prod",
+    "{{senderPhone}}": "977 24 209",
+    "{{senderEmail}}": "kontakt@bruddguide.no",
+    "{{senderWebsite}}": "https://ltj54.github.io/ltj-production/",
   };
 
   let nextText = template;
@@ -2648,13 +2777,22 @@ function applyOutreachTemplate(
 function defaultOutreachEmailTemplate() {
   return `Hei {{greeting}},
 
-Jeg så at {{companyName}} er et nytt selskap, og ville derfor sende en kort henvendelse.
+Jeg så at {{companyName}} nylig er registrert - gratulerer med oppstart!
 
-Jeg hjelper nye virksomheter med en enkel digital startpakke, slik at dere raskt får på plass en ryddig nettside med kontaktinformasjon, samt hjelp med domene og e-post ved behov.
+Vi hjelper små og nystartede firmaer med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
 
-Vi kan levere dette som en enkel pakke til kr {{price}},-
+Typisk oppsett er:
+- Forside med hva dere tilbyr
+- Kontaktinfo med telefon og e-post
+- Enkel presentasjon av tjenester
 
-Hvis dette er aktuelt, kan jeg sende et helt konkret forslag til oppsett og hva som kan være på siden.
+Vi kan sette opp dette ferdig for dere til en fast pris på kr {{price}},-
+inkludert hjelp med domene og e-post hvis dere trenger det.
+
+Se eksempel her:
+{{senderWebsite}}
+
+Si ifra hvis du vil at jeg skal sende et konkret forslag og et eksempel på hvordan siden kan se ut for dere. Det er helt uforpliktende.
 
 Mvh
 {{senderName}}
