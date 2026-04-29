@@ -2953,7 +2953,7 @@ function defaultOutreachEmailTemplate() {
 
 Jeg så at {{companyName}} nylig er registrert - gratulerer med oppstart!
 
-Vi hjelper små og nystartede firmaer med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
+Vi hjelper små og nystartede foretak med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
 
 Typisk oppsett er:
 - Forside med hva dere tilbyr

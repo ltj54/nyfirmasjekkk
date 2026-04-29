@@ -54,7 +54,7 @@ Hei {{greeting}},
 
 Jeg så at {{companyName}} nylig er registrert - gratulerer med oppstart!
 
-Vi hjelper små og nystartede firmaer med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
+Vi hjelper små og nystartede foretak med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
 
 Typisk oppsett er:
 - Forside med hva dere tilbyr
@@ -81,14 +81,14 @@ Hei {{greeting}},
 
 Ser dere er nystartet - trenger dere en enkel nettside så folk finner dere?
 
-Vi lager enkle, ryddige sider for små firmaer med kontaktinfo, tjenester og oppsett klart til bruk.
+Vi lager enkle, ryddige sider for små foretak med kontaktinfo, tjenester og oppsett klart til bruk.
 
 Fast pris: kr {{price}},-
 
 Eksempel:
 {{senderWebsite}}
 
-Gi en lyd hvis du vil se et konkret forslag og et eksempel for deres firma.
+Gi en lyd hvis du vil se et konkret forslag og et eksempel for deres foretak.
 
 Mvh  
 {{senderName}}
@@ -101,7 +101,7 @@ Hei dere i Eksempel AS,
 
 Jeg så at Eksempel AS nylig er registrert - gratulerer med oppstart!
 
-Vi hjelper små og nystartede firmaer med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
+Vi hjelper små og nystartede foretak med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
 
 Typisk oppsett er:
 - Forside med hva dere tilbyr
