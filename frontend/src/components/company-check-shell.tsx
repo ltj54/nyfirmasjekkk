@@ -162,7 +162,7 @@ export function CompanyCheckShell() {
     setOutreachListError(null);
 
     try {
-      const response = await fetch("/api/company-check/outreach", {
+      const response = await fetch("/api/company-check/outreach/export", {
         cache: "no-store",
       });
 
@@ -171,11 +171,11 @@ export function CompanyCheckShell() {
         return;
       }
 
-      const payload = (await response.json()) as OutreachStatus[];
+      const payload = parseOutreachJsonl(await response.text());
       setOutreachEntries(payload);
       setOutreachStatusByOrg((current) => ({
         ...current,
-        ...Object.fromEntries(payload.map((entry) => [entry.orgNumber, entry])),
+        ...Object.fromEntries(getLatestOutreachEntriesByOrg(payload).map((entry) => [entry.orgNumber, entry])),
       }));
     } catch (error) {
       console.error("Failed to fetch outreach list", error);
@@ -258,8 +258,7 @@ export function CompanyCheckShell() {
         [company.orgNumber]: payload,
       }));
       setOutreachEntries((current) => {
-        const withoutCompany = current.filter((entry) => entry.orgNumber !== payload.orgNumber);
-        return [payload, ...withoutCompany];
+        return [payload, ...current];
       });
     } catch (error) {
       console.error("Failed to update outreach status", error);
@@ -1302,6 +1301,20 @@ function OutreachCheckbox({
       : "Marker når tilbudsmail er sendt, så unngår du dobbelt utsendelse.";
   const wrapperClassName = `${className ? `${className} ` : ""}${compact ? "mt-4 " : ""}border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3`;
 
+  function persistNote(nextNote: string) {
+    setNoteDraft(nextNote);
+    if (compact || saving) {
+      return;
+    }
+
+    if (markedNotRelevant) {
+      onToggle(false, nextNote, "not_relevant");
+      return;
+    }
+
+    onToggle(sentAlready, nextNote, sentAlready ? "sent" : "reverted");
+  }
+
   return (
     <div
       className={wrapperClassName}
@@ -1344,7 +1357,8 @@ function OutreachCheckbox({
                     key={suggestion}
                     type="button"
                     className="rounded-sm border border-[#D9E2EC] bg-white px-2.5 py-1 text-[11px] font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
-                    onClick={() => setNoteDraft(suggestion)}
+                    disabled={saving}
+                    onClick={() => persistNote(suggestion)}
                   >
                     {suggestion}
                   </button>
@@ -1352,7 +1366,8 @@ function OutreachCheckbox({
                 <button
                   type="button"
                   className="rounded-sm border border-[#BCCCDC] bg-[#F8FBFF] px-2.5 py-1 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#EAF1F7]"
-                  onClick={() => setNoteDraft("")}
+                  disabled={saving}
+                  onClick={() => persistNote("")}
                 >
                   Fjern kommentar
                 </button>
@@ -1423,9 +1438,12 @@ function OutreachOverview({
   onRefresh: () => void;
 }) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
-  const sentEntries = entries
-    .filter((entry) => entry.sent)
-    .sort((left, right) => (right.sentAt ?? "").localeCompare(left.sentAt ?? ""));
+  const logEntries = entries
+    .sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
+  const activeContactedEntries = getActiveContactedOutreachEntries(logEntries);
+  const noteEntries = logEntries.filter((entry) => Boolean(entry.note?.trim()));
+  const revertedCount = logEntries.filter((entry) => entry.status === "reverted").length;
+  const sentCount = logEntries.filter((entry) => entry.status === "sent").length;
 
   return (
     <section id="outreach" className="mx-auto max-w-7xl px-6 pt-10">
@@ -1434,10 +1452,10 @@ function OutreachOverview({
           <div>
             <p className="text-[12px] font-medium text-[#52606D]">Utsendelseslogg</p>
             <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-[#1F2933]">
-              Alle som har fått tilbudsmail
+              Komplett logg
             </h2>
             <p className="mt-2 text-[13px] font-medium text-[#52606D]">
-              {sentEntries.length} selskaper med registrert utsendelse
+              {logEntries.length} hendelser med status eller notat
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -1495,25 +1513,91 @@ function OutreachOverview({
           </div>
         ) : null}
 
-        {sentEntries.length === 0 ? (
+        {logEntries.length === 0 ? (
           <div className="px-5 py-10 text-[14px] font-medium text-[#52606D]">
-            Ingen selskaper er markert som sendt ennå.
+            Ingen selskaper har registrert status eller notat ennå.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] border-collapse text-left text-[13px]">
+          <div className="space-y-8 px-5 py-5">
+            <div>
+              <h3 className="text-[16px] font-semibold text-[#1F2933]">Oppsummering</h3>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <InfoMetric label="Antall hendelser" value={`${logEntries.length}`} />
+                <InfoMetric label="Sendt" value={`${sentCount}`} />
+                <InfoMetric label="Angret" value={`${revertedCount}`} />
+                <InfoMetric label="Aktive kontaktede selskaper" value={`${activeContactedEntries.length}`} />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-[16px] font-semibold text-[#1F2933]">Aktive kontaktede selskaper</h3>
+              {activeContactedEntries.length === 0 ? (
+                <p className="mt-3 text-[13px] font-medium text-[#52606D]">Ingen aktive kontaktede selskaper.</p>
+              ) : (
+                <div className="mt-3 overflow-x-auto border border-[#D9E2EC]">
+                  <table className="w-full min-w-[760px] border-collapse text-left text-[13px]">
+                    <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+                      <tr>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Dato</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Org.nr</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Selskap</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Selskapsform</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Kanal</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Pris</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Tilbud</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activeContactedEntries.map((entry) => (
+                        <tr key={entry.orgNumber} className="border-b border-[#E4E7EB] last:border-b-0">
+                          <td className="px-4 py-3 text-[#52606D]">{formatLogDate(entry.sentAt ?? entry.timestamp)}</td>
+                          <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
+                          <td className="px-4 py-3">
+                            <button
+                              className="font-semibold text-[#1F5FA9] underline-offset-4 hover:underline"
+                              onClick={() => onOpenCompany(entry.orgNumber)}
+                              type="button"
+                            >
+                              {entry.companyName || "Ukjent selskap"}
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
+                          <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
+                          <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? 4500)}</td>
+                          <td className="px-4 py-3 text-[#52606D]">{entry.offerType || "-"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-[16px] font-semibold text-[#1F2933]">Hendelser</h3>
+              {noteEntries.length === 0 ? (
+                <p className="mt-3 text-[13px] font-medium text-[#52606D]">Ingen notater registrert ennå.</p>
+              ) : (
+                <div className="mt-3 overflow-x-auto border border-[#D9E2EC]">
+                <table className="w-full min-w-[900px] border-collapse text-left text-[13px]">
               <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
                 <tr>
-                  <th className="border-b border-[#D9E2EC] px-4 py-3">Selskap</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Tidspunkt</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Status</th>
                   <th className="border-b border-[#D9E2EC] px-4 py-3">Org.nr</th>
-                  <th className="border-b border-[#D9E2EC] px-4 py-3">Sendt</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Selskap</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Selskapsform</th>
+                  <th className="border-b border-[#D9E2EC] px-4 py-3">Kanal</th>
                   <th className="border-b border-[#D9E2EC] px-4 py-3">Pris</th>
                   <th className="border-b border-[#D9E2EC] px-4 py-3">Notat</th>
                 </tr>
               </thead>
               <tbody>
-                {sentEntries.map((entry) => (
-                  <tr key={entry.orgNumber} className="border-b border-[#E4E7EB] last:border-b-0">
+                {noteEntries.map((entry) => (
+                  <tr key={`${entry.orgNumber}-${entry.timestamp ?? entry.sentAt ?? entry.status ?? "event"}`} className="border-b border-[#E4E7EB] last:border-b-0">
+                    <td className="px-4 py-3 text-[#52606D]">{formatLogDateTime(entry.timestamp ?? entry.sentAt)}</td>
+                    <td className="px-4 py-3 text-[#52606D]">{entry.status || "-"}</td>
+                    <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
                     <td className="px-4 py-3">
                       <button
                         className="font-semibold text-[#1F5FA9] underline-offset-4 hover:underline"
@@ -1523,14 +1607,17 @@ function OutreachOverview({
                         {entry.companyName || "Ukjent selskap"}
                       </button>
                     </td>
-                    <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
-                    <td className="px-4 py-3 text-[#52606D]">{entry.sentAt ? formatDateTime(entry.sentAt) : "-"}</td>
-                    <td className="px-4 py-3 text-[#52606D]">{formatNokPrice(entry.price ?? 4500)}</td>
+                    <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
+                    <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
+                    <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? 4500)}</td>
                     <td className="max-w-sm px-4 py-3 text-[#52606D]">{entry.note || "-"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -1540,6 +1627,93 @@ function OutreachOverview({
 
 function normalizeWebsiteUrl(value: string) {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
+
+function getOutreachSortValue(entry: OutreachStatus) {
+  return entry.timestamp ?? entry.sentAt ?? entry.orgNumber;
+}
+
+function getActiveContactedOutreachEntries(entries: OutreachStatus[]) {
+  return getLatestOutreachEntriesByOrg(entries)
+    .filter((entry) => entry.status === "sent")
+    .sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
+}
+
+function getLatestOutreachEntriesByOrg(entries: OutreachStatus[]) {
+  const latestByOrgNumber = new Map<string, OutreachStatus>();
+  const sortedEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
+
+  for (const entry of sortedEntries) {
+    if (!latestByOrgNumber.has(entry.orgNumber)) {
+      latestByOrgNumber.set(entry.orgNumber, entry);
+    }
+  }
+
+  return Array.from(latestByOrgNumber.values());
+}
+
+function parseOutreachJsonl(jsonl: string): OutreachStatus[] {
+  return jsonl
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const entry = JSON.parse(line) as Partial<OutreachStatus>;
+      return {
+        orgNumber: entry.orgNumber ?? "",
+        sent: entry.status === "sent",
+        status: entry.status ?? null,
+        companyName: entry.companyName ?? null,
+        organizationForm: entry.organizationForm ?? null,
+        price: entry.price ?? null,
+        channel: entry.channel ?? null,
+        offerType: entry.offerType ?? null,
+        timestamp: entry.timestamp ?? null,
+        sentAt: entry.status === "sent" ? entry.timestamp ?? entry.sentAt ?? null : entry.sentAt ?? null,
+        note: entry.note ?? null,
+      };
+    })
+    .filter((entry) => /^\d{9}$/.test(entry.orgNumber));
+}
+
+function formatLogDate(value: string | null | undefined) {
+  const parts = getNorwegianDateTimeParts(value);
+  return parts ? `${parts.year}-${parts.month}-${parts.day}` : "-";
+}
+
+function formatLogDateTime(value: string | null | undefined) {
+  const parts = getNorwegianDateTimeParts(value);
+  return parts ? `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}` : "-";
+}
+
+function getNorwegianDateTimeParts(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  const parts = new Intl.DateTimeFormat("nb-NO", {
+    timeZone: "Europe/Oslo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const getPart = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+
+  return {
+    year: getPart("year"),
+    month: getPart("month"),
+    day: getPart("day"),
+    hour: getPart("hour"),
+    minute: getPart("minute"),
+  };
 }
 
 function buildGoogleSearchUrl(query: string) {

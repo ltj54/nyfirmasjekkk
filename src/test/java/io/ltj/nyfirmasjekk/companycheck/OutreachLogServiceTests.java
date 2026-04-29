@@ -154,7 +154,7 @@ class OutreachLogServiceTests {
     }
 
     @Test
-    void statusesReturnsLatestSentMailPerCompany() {
+    void statusesReturnsAllOutreachEventsInReverseTimestampOrder() {
         OutreachLogService service = new OutreachLogService(
                 tempDir.resolve("outreach-log.jsonl"),
                 tempDir,
@@ -169,11 +169,13 @@ class OutreachLogServiceTests {
 
         var statuses = service.statuses();
 
-        assertThat(statuses).hasSize(1);
+        assertThat(statuses).hasSize(3);
         assertThat(statuses).extracting(OutreachStatusResponse::orgNumber)
-                .containsExactly("123456789");
+                .containsExactly("123456789", "987654321", "123456789");
+        assertThat(statuses).extracting(OutreachStatusResponse::note)
+                .containsExactly("Sendt", "Ikke aktuell", "Angret etter sendt");
         assertThat(statuses.stream().filter(OutreachStatusResponse::sent).toList()).hasSize(1);
-        assertThat(statuses.getFirst().note()).isEqualTo("Sendt");
+        assertThat(statuses.getFirst().timestamp()).isEqualTo("2026-04-23T10:15:30Z");
     }
 
     @Test

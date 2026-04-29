@@ -107,6 +107,7 @@ export interface OutreachStatus {
   price: number | null;
   channel: string | null;
   offerType: string | null;
+  timestamp: string | null;
   sentAt: string | null;
   note: string | null;
 }

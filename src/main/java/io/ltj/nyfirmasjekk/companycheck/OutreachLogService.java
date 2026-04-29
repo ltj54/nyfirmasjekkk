@@ -70,6 +70,7 @@ public class OutreachLogService {
                     latestEntry == null ? null : latestEntry.price(),
                     latestEntry == null ? null : latestEntry.channel(),
                     latestEntry == null ? null : latestEntry.offerType(),
+                    latestEntry == null ? null : latestEntry.timestamp(),
                     null,
                     latestEntry == null ? null : latestEntry.note());
         }
@@ -84,18 +85,13 @@ public class OutreachLogService {
                 latestEntry.channel(),
                 latestEntry.offerType(),
                 latestEntry.timestamp(),
+                latestEntry.timestamp(),
                 latestEntry.note()
         );
     }
 
     public synchronized List<OutreachStatusResponse> statuses() {
-        Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
-        readAllEntries().stream()
-                .filter(entry -> "sent".equalsIgnoreCase(entry.status()))
-                .sorted(Comparator.comparing(this::sortTimestamp))
-                .forEach(entry -> latestByOrgNumber.put(entry.orgNumber(), entry));
-
-        return latestByOrgNumber.values().stream()
+        return readAllEntries().stream()
                 .sorted(Comparator.comparing(this::sortTimestamp).reversed())
                 .map(this::toStatusResponse)
                 .toList();
@@ -190,6 +186,7 @@ public class OutreachLogService {
                 entry.price(),
                 entry.channel(),
                 entry.offerType(),
+                entry.timestamp(),
                 sent ? entry.timestamp() : null,
                 entry.note()
         );
