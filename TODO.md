@@ -8,7 +8,10 @@
 - Appen skal ikke ha database, Flyway, H2, JPA eller intern snapshot-lagring.
 - Historikk, nettverk og aktørrisiko skal ikke akkumuleres i appen nå.
 - Det eneste som skal lagres mellom dager er outreach/loggfilene for utsendelser og notater.
+- Outreach-loggfiler er append-only historikk og skal ikke redigeres eller slettes manuelt; feil korrigeres med nye hendelser.
 - Løsningen er først og fremst énbruker og filbasert.
+- Løsningen skal være en intern arbeidsflate, ikke en offentlig landingsside.
+- Dagens oppsett uten database, aktørrisiko, historikk og CRM-integrasjon fungerer som ønsket nå.
 
 ### Levert
 
@@ -72,9 +75,9 @@
 
 ### Viktigst
 
-- [ ] Test hele brukerflyten manuelt etter oppryddingen: filtrer treff, åpne detaljmodal, generer mailtekst, kopier, åpne i e-post, marker sendt, marker ikke aktuell, se `Utsendelser`.
+- [x] Test hele brukerflyten manuelt etter oppryddingen: filtrer treff, åpne detaljmodal, generer mailtekst, kopier, åpne i e-post, marker sendt, marker ikke aktuell, se `Utsendelser`.
 - [x] Sjekk at appen starter rent uten databasekonfigurasjon lokalt.
-- [ ] Sjekk Render-start etter deploy, spesielt at `data/` peker til ønsket persistent plassering.
+- [x] Sjekk Render-start etter deploy, spesielt at `data/` peker til ønsket persistent plassering.
 - [x] Fjern `history` og `network` fra API/frontend i øyeblikksbildeversjonen.
 - [x] Rydd UI for historikk/nettverk i detaljmodalen.
 - [x] Bekreft at outreach-loggene er eneste ønskede persistente data i drift.
@@ -88,32 +91,33 @@
 - [x] Lag `Ikke aktuell`.
 - [x] Lag notatfelt og hurtigvalg i detaljvisning.
 - [x] Dokumenter tydelig at `data/` må være persistent hvis Render brukes.
-- [ ] Bestem endelig rutine: commit `data/outreach-log.jsonl` og månedsrapportene til privat Git, eller hold dem lokalt og eksporter manuelt.
+- [x] Beslutt at outreach-loggene er append-only og ikke skal endres manuelt.
+- [x] Bestem endelig rutine: commit `data/outreach-log.jsonl` og månedsrapportene til privat Git, eller hold dem lokalt og eksporter manuelt.
 - [x] Lag enkel eksportlenke for outreach-loggen.
 - [x] Lag import fra JSONL-loggfil hvis appen flyttes til ny maskin.
 
 ### Produkt
 
-- [ ] Bestem om løsningen bare skal være intern arbeidsflate eller også ha en offentlig landingsside.
+- [x] Bestem om løsningen bare skal være intern arbeidsflate eller også ha en offentlig landingsside: bare intern arbeidsflate.
 - [x] Stram teksten videre rundt `Sterkt lead`, `Mulig lead` og `Svakt lead`.
-- [ ] Gjør detaljvisningen enda mer operativ: tydelig kontaktpunkt, mulig nettside, mailtekst og status øverst.
+- [x] Gjør detaljvisningen enda mer operativ: tydelig kontaktpunkt, mulig nettside, mailtekst og status øverst.
 - [x] Vurder om leadlisten bør ha egne hurtigfiltre for `Har e-post`, `Mangler nettside`, `Ikke sendt` og `Ikke aktuell`.
-- [ ] Vurder om `Alvorlige registerspor` skal skjules som standard i en salgslead-flyt.
+- [x] Vurder om `Alvorlige registerspor` skal skjules som standard i en salgslead-flyt.
 
 ### Produksjon
 
-- [ ] Test end-to-end mot BRREG fra produksjonsnært miljø.
-- [ ] Dokumenter nødvendige miljøvariabler for backend og frontend, inkludert `company-check.outreach-log-path` ved drift.
-- [ ] Verifiser logging, CORS, health endpoints og proxy-oppsett.
-- [ ] Avklar hvordan `data/` håndteres på Render uten database.
-- [ ] Hvis persistent disk ikke brukes: lag tydelig manuell rutine for nedlasting/backup av loggfilene.
+- [x] Test end-to-end mot BRREG fra produksjonsnært miljø.
+- [x] Dokumenter nødvendige miljøvariabler for backend og frontend, inkludert `company-check.outreach-log-path` ved drift.
+- [x] Verifiser logging, CORS, health endpoints og proxy-oppsett.
+- [x] Avklar hvordan `data/` håndteres på Render uten database.
+- [x] Hvis persistent disk ikke brukes: lag tydelig manuell rutine for nedlasting/backup av loggfilene.
 
 ### Ikke nå
 
-- [ ] Ikke innfør database før flerbruker eller ekte historikk blir et krav.
-- [ ] Ikke bygg videre på aktørrisiko eller kryssselskapsanalyse før produktet faktisk trenger historikk.
-- [ ] Ikke reintroduser Flyway/JPA/H2 uten en konkret lagringsbeslutning.
-- [ ] Ikke bygg CRM-integrasjon før den manuelle outreach-flyten er testet.
+- [x] Ikke innfør database før flerbruker eller ekte historikk blir et krav.
+- [x] Ikke bygg videre på aktørrisiko eller kryssselskapsanalyse før produktet faktisk trenger historikk.
+- [x] Ikke reintroduser Flyway/JPA/H2 uten en konkret lagringsbeslutning.
+- [x] Ikke bygg CRM-integrasjon før den manuelle outreach-flyten er testet.
 
 ## Verifisering
 
