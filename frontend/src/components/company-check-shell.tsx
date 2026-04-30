@@ -2800,7 +2800,7 @@ function buildOutreachEmailSubject(
   markdown: string,
   company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
 ) {
-  const template = extractMailSubject(markdown) ?? "Tilbud om enkel nettside til {{companyName}}";
+  const template = extractMailSubject(markdown) ?? "Nettside for {{companyName}}?";
   return applyOutreachTemplate(template, company);
 }
 
@@ -2919,22 +2919,26 @@ function applyOutreachTemplate(
   template: string,
   company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
 ) {
-  const greeting = company.contactPersonName?.trim() || `dere i ${company.name}`;
+  const contactName = company.contactPersonName?.trim() || "";
+  const greeting = contactName ? firstNameFromContactName(contactName) : `dere i ${company.name}`;
   const location = [company.municipality, company.county].filter(Boolean).join(", ");
+  const recipientSubject = contactName ? "du" : "dere";
+  const recipientPossessive = contactName ? "ditt" : "deres";
 
   const replacements: Record<string, string> = {
     "{{companyName}}": company.name,
     "{{orgNumber}}": company.orgNumber,
-    "{{contactPerson}}": company.contactPersonName?.trim() || "",
+    "{{contactPerson}}": contactName,
     "{{companyEmail}}": company.email?.trim() || "",
     "{{companyPhone}}": company.phone?.trim() || "",
     "{{location}}": location,
     "{{greeting}}": greeting,
+    "{{recipientSubject}}": recipientSubject,
+    "{{recipientPossessive}}": recipientPossessive,
     "{{price}}": "4.500",
     "{{senderName}}": "Lars Tangen Johannessen",
-    "{{senderCompany}}": "ltj-prod",
     "{{senderPhone}}": "977 24 209",
-    "{{senderEmail}}": "kontakt@bruddguide.no",
+    "{{senderEmail}}": "latajo@gmail.no",
     "{{senderWebsite}}": "https://ltj54.github.io/ltj-production/",
   };
 
@@ -2948,29 +2952,32 @@ function applyOutreachTemplate(
     .trim();
 }
 
+function firstNameFromContactName(value: string) {
+  return value.split(/\s+/)[0] ?? value;
+}
+
 function defaultOutreachEmailTemplate() {
   return `Hei {{greeting}},
 
-Jeg så at {{companyName}} nylig er registrert - gratulerer med oppstart!
+Jeg så at {{companyName}} nylig er registrert, og ville bare høre om {{recipientSubject}} trenger en enkel nettside.
 
-Vi hjelper små og nystartede foretak med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
+Jeg lager enkle, ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
 
 Typisk oppsett er:
-- Forside med hva dere tilbyr
+- Forside med hva {{recipientSubject}} tilbyr
 - Kontaktinfo med telefon og e-post
 - Enkel presentasjon av tjenester
 
-Vi kan sette opp dette ferdig for dere til en fast pris på kr {{price}},-
-inkludert hjelp med domene og e-post hvis dere trenger det.
+Jeg kan sette opp dette ferdig til en fast pris på kr {{price}},-
+inkludert hjelp med domene og e-post hvis {{recipientSubject}} trenger det.
 
 Se eksempel her:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg skal sende et konkret forslag og et eksempel på hvordan siden kan se ut for dere. Det er helt uforpliktende.
+Hvis dette er aktuelt, kan jeg sende et konkret forslag til tekst og oppsett for {{recipientPossessive}} foretak.
 
 Mvh
 {{senderName}}
-{{senderCompany}}
 {{senderPhone}}
 {{senderEmail}}`;
 }

@@ -11,6 +11,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - E-post: `{{companyEmail}}`
 - Telefon: `{{companyPhone}}`
 - Kommune/fylke: `{{location}}`
+- Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
   - `[For eksempel: nylig registrert]`
@@ -43,35 +44,34 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 ## Emneforslag
 
 - `Nettside for {{companyName}}?`
-- `Tilbud om enkel nettside til {{companyName}}`
+- `Enkel nettside for {{companyName}}?`
 - `Forslag til digital start for {{companyName}}`
 
 ## E-postmal
 
-Emne: `Tilbud om enkel nettside til {{companyName}}`
+Emne: `Nettside for {{companyName}}?`
 
 Hei {{greeting}},
 
-Jeg så at {{companyName}} nylig er registrert - gratulerer med oppstart!
+Jeg så at {{companyName}} nylig er registrert, og ville bare høre om {{recipientSubject}} trenger en enkel nettside.
 
-Vi hjelper små og nystartede foretak med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
+Jeg lager enkle, ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
 
 Typisk oppsett er:
-- Forside med hva dere tilbyr
+- Forside med hva {{recipientSubject}} tilbyr
 - Kontaktinfo med telefon og e-post
 - Enkel presentasjon av tjenester
 
-Vi kan sette opp dette ferdig for dere til en fast pris på kr {{price}},-
-inkludert hjelp med domene og e-post hvis dere trenger det.
+Jeg kan sette opp dette ferdig til en fast pris på kr {{price}},-
+inkludert hjelp med domene og e-post hvis {{recipientSubject}} trenger det.
 
 Se eksempel her:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg skal sende et konkret forslag og et eksempel på hvordan siden kan se ut for dere. Det er helt uforpliktende.
+Hvis dette er aktuelt, kan jeg sende et konkret forslag til tekst og oppsett for {{recipientPossessive}} foretak.
 
 Mvh  
 {{senderName}}  
-{{senderCompany}}  
 {{senderPhone}}  
 {{senderEmail}}
 
@@ -79,42 +79,44 @@ Mvh
 
 Hei {{greeting}},
 
-Ser dere er nystartet - trenger dere en enkel nettside så folk finner dere?
+Ser at {{companyName}} er nystartet - trenger {{recipientSubject}} en enkel nettside så folk finner fram?
 
-Vi lager enkle, ryddige sider for små foretak med kontaktinfo, tjenester og oppsett klart til bruk.
+Jeg lager enkle, ryddige sider for nye foretak med kontaktinfo, tjenester og oppsett klart til bruk.
 
 Fast pris: kr {{price}},-
 
 Eksempel:
 {{senderWebsite}}
 
-Gi en lyd hvis du vil se et konkret forslag og et eksempel for deres foretak.
+Gi en lyd hvis du vil se et konkret forslag og et eksempel for {{recipientPossessive}} foretak.
 
 Mvh  
 {{senderName}}
 
 ## Generert eksempel
 
-Emne: `Tilbud om enkel nettside til Eksempel AS`
+Emne: `Nettside for Eksempel AS?`
 
 Hei dere i Eksempel AS,
 
-Jeg så at Eksempel AS nylig er registrert - gratulerer med oppstart!
+Jeg så at Eksempel AS nylig er registrert, og ville bare høre om dere trenger en enkel nettside.
 
-Vi hjelper små og nystartede foretak med å få på plass en enkel og ryddig nettside, slik at kunder finner dere og kan ta kontakt med en gang.
+Jeg lager enkle, ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva dere tilbyr og hvordan de kan ta kontakt.
 
 Typisk oppsett er:
 - Forside med hva dere tilbyr
 - Kontaktinfo med telefon og e-post
 - Enkel presentasjon av tjenester
 
-Vi kan sette opp dette ferdig for dere til en fast pris på kr 4.500,-
+Jeg kan sette opp dette ferdig til en fast pris på kr 4.500,-
 inkludert hjelp med domene og e-post hvis dere trenger det.
 
 Se eksempel her:
 https://ltj54.github.io/ltj-production/
 
-Si ifra hvis du vil at jeg skal sende et konkret forslag og et eksempel på hvordan siden kan se ut for dere. Det er helt uforpliktende.
+Hvis dette er aktuelt, kan jeg sende et konkret forslag til tekst og oppsett for deres foretak.
 
 Mvh  
-Lars Tangen Johannessen
+Lars Tangen Johannessen  
+977 24 209  
+latajo@gmail.no
