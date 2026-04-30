@@ -4,15 +4,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 17
-- Sendt: 7
-- Angret: 4
-- Aktive kontaktede selskaper: 7
+- Antall hendelser: 30
+- Sendt: 17
+- Angret: 5
+- Aktive kontaktede selskaper: 16
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-30 | 937569335 | LORDS BROWN FASHION COMPANY SIJE | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937624425 | HELLESNES FRIKSJON | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937625243 | BERIT NORDGARDEN | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937622120 | ABRAHAMSEN MEKDESIGN | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937633769 | HAFSÅS PETERSEN OSTEOPATI | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937635575 | VERSTO SERVICE | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937636865 | SVARE SOUNDS | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937587260 | S&HP PUBLISHER PROMILA DEVI SUTHARSAN HUIDROM | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937560982 | ERDEN AS | AS | email | kr 4.500 | website-offer |
 | 2026-04-29 | 837591392 | RESILIENS RÅDGIVNING AS | AS | email | kr 4.500 | website-offer |
 | 2026-04-29 | 937634315 | GURO NYGÅRD | ENK | email | kr 4.500 | website-offer |
 | 2026-04-29 | 937631839 | RL UTVIKLING AS | AS | email | kr 4.500 | website-offer |
@@ -25,6 +34,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-30 11:22 | sent | 937569335 | LORDS BROWN FASHION COMPANY SIJE | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:20 | sent | 937624425 | HELLESNES FRIKSJON | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:18 | sent | 937625243 | BERIT NORDGARDEN | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:15 | sent | 937622120 | ABRAHAMSEN MEKDESIGN | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:13 | not_relevant | 937626517 | RAASTAD AKTIV | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:11 | sent | 937633769 | HAFSÅS PETERSEN OSTEOPATI | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:06 | sent | 937635575 | VERSTO SERVICE | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:04 | sent | 937636865 | SVARE SOUNDS | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:00 | sent | 937587260 | S&HP PUBLISHER PROMILA DEVI SUTHARSAN HUIDROM | ENK | email | kr 4.500 | - |
+| 2026-04-30 10:59 | reverted | 937587260 | S&HP PUBLISHER PROMILA DEVI SUTHARSAN HUIDROM | ENK | email | kr 4.500 | - |
+| 2026-04-30 10:59 | sent | 937587260 | S&HP PUBLISHER PROMILA DEVI SUTHARSAN HUIDROM | ENK | email | kr 4.500 | - |
+| 2026-04-30 10:58 | sent | 937560982 | ERDEN AS | AS | email | kr 4.500 | - |
+| 2026-04-30 10:47 | not_relevant | 937626622 | C BACKER-GRØNDAHL | ENK | email | kr 4.500 | - |
 | 2026-04-29 16:03 | sent | 837591392 | RESILIENS RÅDGIVNING AS | AS | email | kr 4.500 | - |
 | 2026-04-29 15:58 | not_relevant | 937627610 | UNBUILT AS | AS | email | kr 4.500 | - |
 | 2026-04-29 15:57 | reverted | 937167695 | GAMLE BIEVEI AS | AS | email | kr 4.500 | Må følges opp |

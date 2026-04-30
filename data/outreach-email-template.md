@@ -55,7 +55,7 @@ Hei {{greeting}},
 
 Jeg så at {{companyName}} nylig er registrert, og ville bare høre om {{recipientSubject}} trenger en enkel nettside.
 
-Jeg lager enkle, ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
+Jeg lager ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
 
 Typisk oppsett er:
 - Forside med hva {{recipientSubject}} tilbyr
@@ -101,7 +101,7 @@ Hei dere i Eksempel AS,
 
 Jeg så at Eksempel AS nylig er registrert, og ville bare høre om dere trenger en enkel nettside.
 
-Jeg lager enkle, ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva dere tilbyr og hvordan de kan ta kontakt.
+Jeg lager ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva dere tilbyr og hvordan de kan ta kontakt.
 
 Typisk oppsett er:
 - Forside med hva dere tilbyr

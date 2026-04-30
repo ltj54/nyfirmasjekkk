@@ -2961,7 +2961,7 @@ function defaultOutreachEmailTemplate() {
 
 Jeg så at {{companyName}} nylig er registrert, og ville bare høre om {{recipientSubject}} trenger en enkel nettside.
 
-Jeg lager enkle, ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
+Jeg lager ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
 
 Typisk oppsett er:
 - Forside med hva {{recipientSubject}} tilbyr
