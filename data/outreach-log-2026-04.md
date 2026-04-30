@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 30
-- Sendt: 17
+- Antall hendelser: 34
+- Sendt: 21
 - Angret: 5
-- Aktive kontaktede selskaper: 16
+- Aktive kontaktede selskaper: 20
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-30 | 937617852 | N.P.K. DOLVE FLEIRDRIFT | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937615566 | CB-SERVICE BØE | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937618409 | ELIASSEN RØR & SERVICE | ENK | email | kr 4.500 | website-offer |
+| 2026-04-30 | 937633548 | VETERINÆR SILJE DANIELSEN | ENK | email | kr 4.500 | website-offer |
 | 2026-04-30 | 937569335 | LORDS BROWN FASHION COMPANY SIJE | ENK | email | kr 4.500 | website-offer |
 | 2026-04-30 | 937624425 | HELLESNES FRIKSJON | ENK | email | kr 4.500 | website-offer |
 | 2026-04-30 | 937625243 | BERIT NORDGARDEN | ENK | email | kr 4.500 | website-offer |
@@ -34,6 +38,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-30 11:52 | sent | 937617852 | N.P.K. DOLVE FLEIRDRIFT | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:50 | sent | 937615566 | CB-SERVICE BØE | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:44 | sent | 937618409 | ELIASSEN RØR & SERVICE | ENK | email | kr 4.500 | - |
+| 2026-04-30 11:42 | sent | 937633548 | VETERINÆR SILJE DANIELSEN | ENK | email | kr 4.500 | - |
 | 2026-04-30 11:22 | sent | 937569335 | LORDS BROWN FASHION COMPANY SIJE | ENK | email | kr 4.500 | - |
 | 2026-04-30 11:20 | sent | 937624425 | HELLESNES FRIKSJON | ENK | email | kr 4.500 | - |
 | 2026-04-30 11:18 | sent | 937625243 | BERIT NORDGARDEN | ENK | email | kr 4.500 | - |

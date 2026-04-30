@@ -1438,10 +1438,14 @@ function OutreachOverview({
   onRefresh: () => void;
 }) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
+  const [showAllActiveContacted, setShowAllActiveContacted] = useState(false);
+  const [showAllNotes, setShowAllNotes] = useState(false);
   const logEntries = entries
     .sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
   const activeContactedEntries = getActiveContactedOutreachEntries(logEntries);
   const noteEntries = logEntries.filter((entry) => Boolean(entry.note?.trim()));
+  const visibleActiveContactedEntries = showAllActiveContacted ? activeContactedEntries : activeContactedEntries.slice(0, 15);
+  const visibleNoteEntries = showAllNotes ? noteEntries : noteEntries.slice(0, 15);
   const revertedCount = logEntries.filter((entry) => entry.status === "reverted").length;
   const sentCount = logEntries.filter((entry) => entry.status === "sent").length;
 
@@ -1548,7 +1552,7 @@ function OutreachOverview({
                       </tr>
                     </thead>
                     <tbody>
-                      {activeContactedEntries.map((entry) => (
+                      {visibleActiveContactedEntries.map((entry) => (
                         <tr key={entry.orgNumber} className="border-b border-[#E4E7EB] last:border-b-0">
                           <td className="px-4 py-3 text-[#52606D]">{formatLogDate(entry.sentAt ?? entry.timestamp)}</td>
                           <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
@@ -1571,6 +1575,17 @@ function OutreachOverview({
                   </table>
                 </div>
               )}
+              {activeContactedEntries.length > 15 ? (
+                <button
+                  className="mt-3 rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
+                  onClick={() => setShowAllActiveContacted((current) => !current)}
+                  type="button"
+                >
+                  {showAllActiveContacted
+                    ? "Vis færre"
+                    : `Vis mer (${activeContactedEntries.length - visibleActiveContactedEntries.length} til)`}
+                </button>
+              ) : null}
             </div>
 
             <div>
@@ -1593,7 +1608,7 @@ function OutreachOverview({
                 </tr>
               </thead>
               <tbody>
-                {noteEntries.map((entry) => (
+                {visibleNoteEntries.map((entry) => (
                   <tr key={`${entry.orgNumber}-${entry.timestamp ?? entry.sentAt ?? entry.status ?? "event"}`} className="border-b border-[#E4E7EB] last:border-b-0">
                     <td className="px-4 py-3 text-[#52606D]">{formatLogDateTime(entry.timestamp ?? entry.sentAt)}</td>
                     <td className="px-4 py-3 text-[#52606D]">{entry.status || "-"}</td>
@@ -1617,6 +1632,15 @@ function OutreachOverview({
             </table>
                 </div>
               )}
+              {noteEntries.length > 15 ? (
+                <button
+                  className="mt-3 rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
+                  onClick={() => setShowAllNotes((current) => !current)}
+                  type="button"
+                >
+                  {showAllNotes ? "Vis færre" : `Vis mer (${noteEntries.length - visibleNoteEntries.length} til)`}
+                </button>
+              ) : null}
             </div>
           </div>
         )}
