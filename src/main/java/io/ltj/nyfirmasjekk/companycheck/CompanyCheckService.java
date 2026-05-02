@@ -38,6 +38,9 @@ public class CompanyCheckService {
     private static final int MAX_SOURCE_PAGES_PER_NAME_VARIANT = 3;
     private static final int MAX_SOURCE_PAGES_WITH_SCORE_FILTER = 400;
     private static final int MAX_RED_SOURCE_PAGES_PER_VARIANT = 40;
+    private static final String SOURCE_BRREG_API = "BRREG API";
+    private static final String FINDING_ORG_NUMBER = "Organisasjonsnummer";
+    private static final String QUICK_LIST_ASSESSMENT = "Basert på åpne registerdata. Hurtigvurdering for listevisning.";
 
     private static final List<String> CENTRAL_ORG_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA", "STIFT");
     private static final List<String> BUSINESS_REGISTRY_EXPECTED_FORMS = List.of("AS", "ASA", "NUF", "ANS", "DA", "SA");
@@ -436,14 +439,14 @@ public class CompanyCheckService {
                 byggCompanyFacts(enhet, roller, hasRoles, isBankruptcy || isForcedDissolution || isVoluntaryDissolution),
                 new CompanyMetrics(greenCount, yellowCount, redCount),
                 List.copyOf(funn),
-                List.of("BRREG API"),
+                List.of(SOURCE_BRREG_API),
                 List.of("Basert på åpne registerdata.")
         );
     }
 
     private CompanyCheck byggHardRedSearchCheck(EnhetResponse enhet) {
         List<CheckFinding> funn = List.of(
-                new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"),
+                new CheckFinding(TrafficLight.GREEN, FINDING_ORG_NUMBER, "OK"),
                 new CheckFinding(TrafficLight.RED, "Alvorlige signaler", "Konkurs eller tvangsoppløsning.")
         );
         return new CompanyCheck(
@@ -455,14 +458,14 @@ public class CompanyCheckService {
                 byggCompanyFacts(enhet, EMPTY_ROLLER, false, true),
                 new CompanyMetrics(1, 0, 1),
                 funn,
-                List.of("BRREG API"),
-                List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
+                List.of(SOURCE_BRREG_API),
+                List.of(QUICK_LIST_ASSESSMENT)
         );
     }
 
     private CompanyCheck byggFastGreenSearchCheck(EnhetResponse enhet) {
         List<CheckFinding> funn = List.of(
-                new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"),
+                new CheckFinding(TrafficLight.GREEN, FINDING_ORG_NUMBER, "OK"),
                 new CheckFinding(TrafficLight.GREEN, "Struktur", "Ryddige grunnsignaler.")
         );
         return new CompanyCheck(
@@ -474,14 +477,14 @@ public class CompanyCheckService {
                 byggCompanyFacts(enhet, EMPTY_ROLLER, false, false),
                 new CompanyMetrics(2, 0, 0),
                 funn,
-                List.of("BRREG API"),
-                List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
+                List.of(SOURCE_BRREG_API),
+                List.of(QUICK_LIST_ASSESSMENT)
         );
     }
 
     private CompanyCheck byggFastYellowSearchCheck(EnhetResponse enhet) {
         List<CheckFinding> funn = List.of(
-                new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"),
+                new CheckFinding(TrafficLight.GREEN, FINDING_ORG_NUMBER, "OK"),
                 new CheckFinding(TrafficLight.YELLOW, "Begrenset info", "Nytt selskap eller svakt datagrunnlag.")
         );
         return new CompanyCheck(
@@ -493,8 +496,8 @@ public class CompanyCheckService {
                 byggCompanyFacts(enhet, EMPTY_ROLLER, false, false),
                 new CompanyMetrics(1, 1, 0),
                 funn,
-                List.of("BRREG API"),
-                List.of("Basert på åpne registerdata. Hurtigvurdering for listevisning.")
+                List.of(SOURCE_BRREG_API),
+                List.of(QUICK_LIST_ASSESSMENT)
         );
     }
 
@@ -525,7 +528,7 @@ public class CompanyCheckService {
     }
 
     private void byggFunn(EnhetResponse enhet, String organisasjonsformKode, RollerResponse roller, boolean hasRoles, boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, ActorRiskSummary ar, List<CheckFinding> funn) {
-        funn.add(new CheckFinding(TrafficLight.GREEN, "Organisasjonsnummer", "OK"));
+        funn.add(new CheckFinding(TrafficLight.GREEN, FINDING_ORG_NUMBER, "OK"));
         leggTilOrganisasjonsformFunn(organisasjonsformKode, funn);
         leggTilStrukturelleFunn(isB, isF, isV, hasFM, isN, funn);
         leggTilAldersfunn(enhet, funn);
@@ -598,25 +601,61 @@ public class CompanyCheckService {
 
     private TrafficLight bestemStatus(EnhetResponse en, String organisasjonsformKode, boolean hr, boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, ActorRiskSummary ar) {
         int score = beregnPoengsum(en, organisasjonsformKode, hr, isB, isF, isV, hasFM, ar, isN);
-        if (isB || isF || ar.riskLevel() == TrafficLight.RED) return TrafficLight.RED;
-        if (isV && !hasFM && !isN) return TrafficLight.RED;
-        if (erSentralOrganisasjonsform(en) && !hr && !isN) return TrafficLight.RED;
-        if (isN && harTyntDatagrunnlag(en, hr)) return TrafficLight.YELLOW;
-        if (!harMinimumPositivStruktur(en, hr)) return TrafficLight.YELLOW;
-        if (score < 80 || ar.riskLevel() == TrafficLight.YELLOW) return TrafficLight.YELLOW;
+        if (isB || isF || ar.riskLevel() == TrafficLight.RED) {
+            return TrafficLight.RED;
+        }
+        if (isV && !hasFM && !isN) {
+            return TrafficLight.RED;
+        }
+        if (erSentralOrganisasjonsform(en) && !hr && !isN) {
+            return TrafficLight.RED;
+        }
+        if (isN && harTyntDatagrunnlag(en, hr)) {
+            return TrafficLight.YELLOW;
+        }
+        if (!harMinimumPositivStruktur(en, hr)) {
+            return TrafficLight.YELLOW;
+        }
+        if (score < 80 || ar.riskLevel() == TrafficLight.YELLOW) {
+            return TrafficLight.YELLOW;
+        }
         return TrafficLight.GREEN;
     }
 
     private int beregnPoengsum(EnhetResponse en, String organisasjonsformKode, boolean hr, boolean isB, boolean isF, boolean isV, boolean hasFM, ActorRiskSummary ar, boolean isN) {
         int s = 100;
         s += OrganizationFormCatalog.scoreAdjustment(organisasjonsformKode);
-        if (isB) s -= 70; if (isF) s -= 60; if (erSentralOrganisasjonsform(en) && !hr) s -= 50;
-        if (ar.riskLevel() == TrafficLight.RED) s -= 40; if (ar.riskLevel() == TrafficLight.YELLOW) s -= 15;
+        if (isB) {
+            s -= 70;
+        }
+        if (isF) {
+            s -= 60;
+        }
+        if (erSentralOrganisasjonsform(en) && !hr) {
+            s -= 50;
+        }
+        if (ar.riskLevel() == TrafficLight.RED) {
+            s -= 40;
+        }
+        if (ar.riskLevel() == TrafficLight.YELLOW) {
+            s -= 15;
+        }
         long modenhetsAlder = modenhetsAlderDager(en);
-        if (modenhetsAlder < NEW_COMPANY_DAYS) s -= 15;
-        if (modenhetsAlder >= NEW_COMPANY_DAYS && !hasText(en.sisteInnsendteAarsregnskap())) s -= 10;
-        if (hasFM) s -= 5; if (isV && !isB && !isF) s -= 10;
-        if (isN && !isB && !isF && !(erSentralOrganisasjonsform(en) && !hr) && s < 55) s = 55;
+        if (modenhetsAlder < NEW_COMPANY_DAYS) {
+            s -= 15;
+        }
+        if (modenhetsAlder >= NEW_COMPANY_DAYS && !hasText(en.sisteInnsendteAarsregnskap())) {
+            s -= 10;
+        }
+        if (hasFM) {
+            s -= 5;
+        }
+        if (isV && !isB && !isF) {
+            s -= 10;
+        }
+        if (isN && !isB && !isF && !(erSentralOrganisasjonsform(en) && !hr) && s < 55) {
+            s = 55;
+        }
         return Math.clamp(s, 0, 100);
     }
 
@@ -677,7 +716,9 @@ public class CompanyCheckService {
     }
 
     private List<String> hentRoller(RollerResponse r, String needle) {
-        if (r == null || r.rollegrupper() == null) return List.of();
+        if (r == null || r.rollegrupper() == null) {
+            return List.of();
+        }
         return r.rollegrupper().stream().filter(Objects::nonNull)
                 .flatMap(g -> g.roller() == null ? Stream.empty() : g.roller().stream())
                 .filter(rolle -> !Boolean.TRUE.equals(rolle.fratraadt()) && !Boolean.TRUE.equals(rolle.avregistrert()))
@@ -713,7 +754,9 @@ public class CompanyCheckService {
 
     private String utledLokasjon(EnhetResponse en) {
         var adr = preferredAddress(en);
-        if (adr == null) return "Ukjent";
+        if (adr == null) {
+            return "Ukjent";
+        }
         return hasText(adr.poststed()) && hasText(adr.kommune()) ? adr.poststed() + " (" + adr.kommune() + ")" : Objects.requireNonNullElse(adr.poststed(), "Ukjent");
     }
 
@@ -724,7 +767,14 @@ public class CompanyCheckService {
     private boolean harKontaktdata(EnhetResponse en) { return hasText(en.hjemmeside()) || hasText(en.epostadresse()); }
     private boolean isTrue(Boolean b) { return Boolean.TRUE.equals(b); }
     private boolean hasText(String s) { return s != null && !s.isBlank(); }
-    private String forsteIkkeTom(String... v) { for (String s : v) if (hasText(s)) return s; return null; }
+    private String forsteIkkeTom(String... v) {
+        for (String s : v) {
+            if (hasText(s)) {
+                return s;
+            }
+        }
+        return null;
+    }
 
     private Map<String, String> byggFilter(CompanySearchRequest r, int p) {
         return byggFilter(r, p, SOURCE_PAGE_SIZE);

@@ -31,6 +31,10 @@ public class OutreachLogService {
     private static final Logger log = LoggerFactory.getLogger(OutreachLogService.class);
     private static final DateTimeFormatter REPORT_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter REPORT_TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ROOT);
+    private static final String STATUS_SENT = "sent";
+    private static final String STATUS_REVERTED = "reverted";
+    private static final String STATUS_NOT_RELEVANT = "not_relevant";
+    private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
     private final Path logPath;
     private final Path reportDirectory;
@@ -64,7 +68,7 @@ public class OutreachLogService {
                 .reduce((first, second) -> second)
                 .orElse(null);
 
-        if (latestEntry == null || !"sent".equalsIgnoreCase(latestEntry.status())) {
+        if (latestEntry == null || !STATUS_SENT.equalsIgnoreCase(latestEntry.status())) {
             return new OutreachStatusResponse(orgNumber, false, latestEntry == null ? null : latestEntry.status(), latestEntry == null ? null : latestEntry.companyName(),
                     latestEntry == null ? null : latestEntry.organizationForm(),
                     latestEntry == null ? null : latestEntry.price(),
@@ -176,7 +180,7 @@ public class OutreachLogService {
     }
 
     private OutreachStatusResponse toStatusResponse(OutreachLogEntry entry) {
-        boolean sent = "sent".equalsIgnoreCase(entry.status());
+        boolean sent = STATUS_SENT.equalsIgnoreCase(entry.status());
         return new OutreachStatusResponse(
                 entry.orgNumber(),
                 sent,
@@ -201,12 +205,12 @@ public class OutreachLogService {
     private String normalizeStatus(OutreachStatusRequest request) {
         String requestedStatus = blankToNull(request.status());
         if (requestedStatus == null) {
-            return request.sent() ? "sent" : "reverted";
+            return request.sent() ? STATUS_SENT : STATUS_REVERTED;
         }
         return switch (requestedStatus.toLowerCase(Locale.ROOT)) {
-            case "sent" -> "sent";
-            case "reverted" -> "reverted";
-            case "not_relevant" -> "not_relevant";
+            case STATUS_SENT -> STATUS_SENT;
+            case STATUS_REVERTED -> STATUS_REVERTED;
+            case STATUS_NOT_RELEVANT -> STATUS_NOT_RELEVANT;
             default -> throw new IllegalArgumentException("Ugyldig outreach-status");
         };
     }
@@ -333,7 +337,7 @@ public class OutreachLogService {
         }
         try (Stream<Path> paths = Files.list(archiveDirectory)) {
             return paths
-                    .filter(path -> path.getFileName().toString().startsWith("outreach-log-"))
+                    .filter(path -> path.getFileName().toString().startsWith(OUTREACH_LOG_PREFIX + "-"))
                     .filter(path -> path.getFileName().toString().endsWith(".jsonl"))
                     .sorted()
                     .flatMap(path -> readEntriesFromPath(path).stream())
@@ -407,7 +411,7 @@ public class OutreachLogService {
 
     private void validateImportedStatus(String status) {
         switch (status.trim().toLowerCase(Locale.ROOT)) {
-            case "sent", "reverted", "not_relevant" -> {
+            case STATUS_SENT, STATUS_REVERTED, STATUS_NOT_RELEVANT -> {
             }
             default -> throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
         }
@@ -478,7 +482,7 @@ public class OutreachLogService {
     }
 
     private Path archivePathFor(YearMonth month) {
-        return archiveDirectory.resolve("outreach-log-" + month + ".jsonl");
+        return archiveDirectory.resolve(OUTREACH_LOG_PREFIX + "-" + month + ".jsonl");
     }
 
     private void refreshMonthlyReport(YearMonth month, List<OutreachLogEntry> entries) {
@@ -486,7 +490,7 @@ public class OutreachLogService {
             return;
         }
 
-        Path reportPath = reportDirectory.resolve("outreach-log-" + month + ".md");
+        Path reportPath = reportDirectory.resolve(OUTREACH_LOG_PREFIX + "-" + month + ".md");
         try {
             Files.createDirectories(reportDirectory);
             Files.writeString(
@@ -508,12 +512,12 @@ public class OutreachLogService {
         }
 
         List<OutreachLogEntry> activeCompanies = latestByOrgNumber.values().stream()
-                .filter(entry -> "sent".equalsIgnoreCase(entry.status()))
+                .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
                 .sorted(Comparator.comparing(OutreachLogEntry::timestamp).reversed())
                 .toList();
 
-        long sentCount = entries.stream().filter(entry -> "sent".equalsIgnoreCase(entry.status())).count();
-        long revertedCount = entries.stream().filter(entry -> "reverted".equalsIgnoreCase(entry.status())).count();
+        long sentCount = entries.stream().filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status())).count();
+        long revertedCount = entries.stream().filter(entry -> STATUS_REVERTED.equalsIgnoreCase(entry.status())).count();
 
         StringBuilder markdown = new StringBuilder();
         markdown.append("# Outreach-logg ").append(month).append(System.lineSeparator()).append(System.lineSeparator());

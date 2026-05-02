@@ -1,13 +1,13 @@
 # Outreach-logg 2026-04
 
-Automatisk generert fra `outreach-log.jsonl`.
+Automatisk generert fra `test-outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 34
-- Sendt: 21
+- Antall hendelser: 35
+- Sendt: 22
 - Angret: 5
-- Aktive kontaktede selskaper: 20
+- Aktive kontaktede selskaper: 21
 
 ## Aktive kontaktede selskaper
 
@@ -33,6 +33,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-04-29 | 937498314 | KOSAH AS | AS | email | kr 4.500 | website-offer |
 | 2026-04-29 | 837632382 | RINA MYRVANG HOLDING AS | AS | email | kr 4.500 | website-offer |
 | 2026-04-29 | 837627192 | FORUS MALERSERVICE AS | AS | email | kr 4.500 | website-offer |
+| 2026-04-20 | 987654321 | Import AS | AS | email | kr 4.500 | website-offer |
 
 ## Hendelser
 
@@ -72,3 +73,4 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-04-29 11:41 | sent | 837632382 | RINA MYRVANG HOLDING AS | AS | email | kr 4.500 | - |
 | 2026-04-29 11:37 | sent | 837627192 | FORUS MALERSERVICE AS | AS | email | kr 4.500 | - |
 | 2026-04-29 11:32 | not_relevant | 937533829 | CHRONIC LABS AS | AS | email | kr 4.500 | - |
+| 2026-04-20 10:00 | sent | 987654321 | Import AS | AS | email | kr 4.500 | Importert |

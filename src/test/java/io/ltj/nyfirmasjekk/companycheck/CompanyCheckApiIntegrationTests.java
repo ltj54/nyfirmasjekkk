@@ -7,6 +7,7 @@ import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.EnheterSearchResponse;
 import io.ltj.nyfirmasjekk.brreg.RollerResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,9 +17,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,7 +35,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = "company-check.outreach-log-path=./build/test-outreach-log.jsonl")
+@SpringBootTest(properties = {
+        "company-check.outreach-log-path=./build/test-outreach-log.jsonl",
+        "company-check.outreach-report-dir=./build/test-outreach-reports",
+        "company-check.outreach-archive-dir=./build/test-outreach-archive"
+})
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class CompanyCheckApiIntegrationTests {
@@ -44,6 +52,13 @@ class CompanyCheckApiIntegrationTests {
 
     @MockitoBean
     private BrregAnnouncementsClient announcementsClient;
+
+    @BeforeEach
+    void ryddTestOutreachFiler() throws Exception {
+        deleteRecursively(Path.of("./build/test-outreach-log.jsonl"));
+        deleteRecursively(Path.of("./build/test-outreach-reports"));
+        deleteRecursively(Path.of("./build/test-outreach-archive"));
+    }
 
     @Test
     void hentDetaljerReturnerer200() throws Exception {
@@ -143,7 +158,6 @@ class CompanyCheckApiIntegrationTests {
     @Test
     void outreachStatusKanLesesOgOppdateres() throws Exception {
         String orgnr = "123456789";
-        Files.deleteIfExists(Path.of("./build/test-outreach-log.jsonl"));
 
         mockMvc.perform(get("/api/company-check/" + orgnr + "/outreach-status"))
                 .andExpect(status().isOk())
@@ -188,8 +202,6 @@ class CompanyCheckApiIntegrationTests {
 
     @Test
     void outreachLogKanImporteresFraJsonl() throws Exception {
-        Files.deleteIfExists(Path.of("./build/test-outreach-log.jsonl"));
-
         mockMvc.perform(post("/api/company-check/outreach/import")
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("""
@@ -201,8 +213,9 @@ class CompanyCheckApiIntegrationTests {
 
         mockMvc.perform(get("/api/company-check/outreach"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].orgNumber").value("987654321"))
-                .andExpect(jsonPath("$[0].companyName").value("Import AS"));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("\"orgNumber\":\"987654321\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("\"companyName\":\"Import AS\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("\"status\":\"sent\"")));
     }
 
     private EnhetResponse stubEnhet(String orgnr) {
@@ -229,5 +242,24 @@ class CompanyCheckApiIntegrationTests {
                 null,
                 null
         );
+    }
+
+    private void deleteRecursively(Path path) throws IOException {
+        if (Files.notExists(path)) {
+            return;
+        }
+
+        try (var paths = Files.walk(path)) {
+            paths.sorted(Comparator.reverseOrder())
+                    .forEach(file -> {
+                        try {
+                            Files.deleteIfExists(file);
+                        } catch (IOException exception) {
+                            throw new UncheckedIOException(exception);
+                        }
+                    });
+        } catch (UncheckedIOException exception) {
+            throw exception.getCause();
+        }
     }
 }

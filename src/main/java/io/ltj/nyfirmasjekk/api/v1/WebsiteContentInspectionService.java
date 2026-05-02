@@ -1,15 +1,13 @@
 package io.ltj.nyfirmasjekk.api.v1;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Function;
 
 @Service
 public class WebsiteContentInspectionService {
@@ -30,9 +28,19 @@ public class WebsiteContentInspectionService {
             "gruppen"
     );
     private static final Set<String> SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
+    private final Function<String, WebsiteContentSnapshot> snapshotFetcher;
+
+    protected WebsiteContentInspectionService() {
+        this.snapshotFetcher = this::fetchSnapshot;
+    }
+
+    @Autowired
+    public WebsiteContentInspectionService(WebsiteContentSnapshotFetcher snapshotFetcher) {
+        this.snapshotFetcher = snapshotFetcher::fetchSnapshot;
+    }
 
     public WebsiteContentMatch inspect(String url, String companyName, String emailDomain) {
-        var snapshot = fetchSnapshot(url);
+        var snapshot = snapshotFetcher.apply(url);
         if (snapshot == null) {
             return new WebsiteContentMatch(false, "Klarte ikke lese innhold fra nettsiden.", null);
         }
@@ -64,29 +72,8 @@ public class WebsiteContentInspectionService {
         );
     }
 
-    @Cacheable(value = "websiteContent", key = "#url")
     public WebsiteContentSnapshot fetchSnapshot(String url) {
-        if (url == null || url.isBlank()) {
-            return null;
-        }
-
-        try {
-            Document document = Jsoup.connect(url)
-                    .userAgent("Nyfirmasjekk-App")
-                    .timeout(4000)
-                    .followRedirects(true)
-                    .get();
-
-            String title = document.title();
-            String bodyText = document.body().text();
-            if (bodyText.length() > 4000) {
-                bodyText = bodyText.substring(0, 4000);
-            }
-
-            return new WebsiteContentSnapshot(title, bodyText);
-        } catch (IOException | IllegalArgumentException exception) {
-            return null;
-        }
+        return WebsiteContentSnapshotFetcher.fetch(url);
     }
 
     private boolean containsCompanyName(String haystack, String companyName) {

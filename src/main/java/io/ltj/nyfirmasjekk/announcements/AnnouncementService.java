@@ -14,6 +14,7 @@ import java.util.Locale;
 
 @Service
 public class AnnouncementService {
+    private static final String SOURCE_BRREG = "BRREG";
 
     private final BrregAnnouncementsClient brregAnnouncementsClient;
 
@@ -90,7 +91,7 @@ public class AnnouncementService {
                     "BANKRUPTCY",
                     "Konkursrelatert signal registrert i åpne data",
                     null,
-                    "BRREG"
+                    SOURCE_BRREG
             ));
         }
         if (Boolean.TRUE.equals(enhet.underTvangsavviklingEllerTvangsopplosning())) {
@@ -98,7 +99,7 @@ public class AnnouncementService {
                     "DISSOLUTION",
                     "Tvangsoppløsning eller tvangsavvikling registrert i åpne data",
                     null,
-                    "BRREG"
+                    SOURCE_BRREG
             ));
         }
         if (Boolean.TRUE.equals(enhet.underAvvikling())) {
@@ -106,7 +107,7 @@ public class AnnouncementService {
                     "WINDING_UP",
                     "Avvikling registrert i åpne data",
                     null,
-                    "BRREG"
+                    SOURCE_BRREG
             ));
         }
 

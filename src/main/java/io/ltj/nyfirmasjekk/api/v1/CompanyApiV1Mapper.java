@@ -31,6 +31,26 @@ import java.util.stream.Stream;
 
 @Component
 public class CompanyApiV1Mapper {
+    private static final String SERVICE_SUFFIX = "service";
+    private static final String HTTPS_PREFIX = "https://";
+    private static final String SOURCE_BRREG = "BRREG";
+    private static final String SOURCE_BRREG_ANNOUNCEMENTS = "BRREG kunngjøringer";
+    private static final String SOURCE_BRREG_UNIT_REGISTER = "BRREG Enhetsregisteret";
+    private static final String SOURCE_BRREG_BASE_DATA = "BRREG grunndata";
+    private static final String SOURCE_INTERNAL_NETWORK_SNAPSHOT = "Intern nettverkssnapshot / BRREG";
+    private static final String CONFIDENCE_MEDIUM = "MEDIUM";
+    private static final String EVENT_REGISTRATION = "REGISTRATION";
+    private static final String EVENT_BANKRUPTCY = "BANKRUPTCY";
+    private static final String EVENT_DISSOLUTION = "DISSOLUTION";
+    private static final String EVENT_WINDING_UP = "WINDING_UP";
+    private static final String SIGNAL_BO = "BO_SIGNAL";
+    private static final String SIGNAL_BANKRUPTCY = "BANKRUPTCY_SIGNAL";
+    private static final String SIGNAL_DISSOLUTION = "DISSOLUTION_SIGNAL";
+    private static final String SIGNAL_RECENT_BANKRUPTCY_RELATION = "RECENT_BANKRUPTCY_RELATION";
+    private static final String SIGNAL_RECENT_DISSOLUTION_RELATION = "RECENT_DISSOLUTION_RELATION";
+    private static final String SIGNAL_CLUSTERED_NEW_COMPANY_PATTERN = "CLUSTERED_NEW_COMPANY_PATTERN";
+    private static final String ROLE_DAGLIG_LEDER = "DAGLIG_LEDER";
+    private static final String ROLE_STYRELEDER = "STYRELEDER";
     private static final Set<String> DOMAIN_STOP_WORDS = Set.of("as", "enk", "nuf", "sa", "fli", "da", "ans");
     private static final Set<String> DOMAIN_TRAILING_QUALIFIERS = Set.of(
             "ny",
@@ -49,11 +69,11 @@ public class CompanyApiV1Mapper {
     );
     private static final Set<String> DOMAIN_SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
     private static final Map<String, String> DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS = Map.of(
-            "vedlikeholdsservice", "service",
-            "renholdsservice", "service",
-            "batservice", "service",
-            "byggservice", "service",
-            "vaktmesterservice", "service"
+            "vedlikeholdsservice", SERVICE_SUFFIX,
+            "renholdsservice", SERVICE_SUFFIX,
+            "batservice", SERVICE_SUFFIX,
+            "byggservice", SERVICE_SUFFIX,
+            "vaktmesterservice", SERVICE_SUFFIX
     );
 
     private final AnnouncementService announcementService;
@@ -186,20 +206,20 @@ public class CompanyApiV1Mapper {
                     "Nettsiden er registrert i BRREG.",
                     null,
                     "Nettsiden er registrert i BRREG.",
-                    "BRREG"
+                    SOURCE_BRREG
             );
         }
 
         String emailDomain = extractEmailDomain(enhet.epostadresse());
         if (hasText(emailDomain) && !isGenericEmailDomain(emailDomain)) {
-            String candidate = "https://" + emailDomain;
+            String candidate = HTTPS_PREFIX + emailDomain;
             boolean reachable = websiteReachabilityService.isReachable(candidate);
             WebsiteContentMatch contentMatch = reachable
                     ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), emailDomain)
                     : new WebsiteContentMatch(false, "Domene svarte ikke ved sjekk.", null);
             return new WebsiteDiscovery(
                     "POSSIBLE_MATCH",
-                    reachable && contentMatch.matched() ? "HIGH" : reachable ? "MEDIUM" : "LOW",
+                    reachable && contentMatch.matched() ? "HIGH" : reachable ? CONFIDENCE_MEDIUM : "LOW",
                     List.of(candidate),
                     reachable ? candidate : null,
                     reachable,
@@ -222,7 +242,7 @@ public class CompanyApiV1Mapper {
                     : new WebsiteContentMatch(false, "Ingen av kandidatene svarte ved sjekk.", null);
             return new WebsiteDiscovery(
                     "POSSIBLE_MATCH",
-                    reachable && contentMatch.matched() ? "MEDIUM" : "LOW",
+                    reachable && contentMatch.matched() ? CONFIDENCE_MEDIUM : "LOW",
                     nameCandidates,
                     reachableCandidate,
                     reachable,
@@ -290,18 +310,18 @@ public class CompanyApiV1Mapper {
             if (!hasText(compact) || compact.length() < 4) {
                 continue;
             }
-            candidates.add("https://" + normalized + ".no");
+            candidates.add(HTTPS_PREFIX + normalized + ".no");
             if (!normalized.contains("-")) {
                 String dashed = dashedDomainVariant(normalized, companyName);
                 if (hasText(dashed) && !dashed.equals(normalized)) {
-                    candidates.add("https://" + dashed + ".no");
+                    candidates.add(HTTPS_PREFIX + dashed + ".no");
                 }
             }
             if (shouldSuggestPluralVariant(compact)) {
-                candidates.add("https://" + compact + "er.no");
+                candidates.add(HTTPS_PREFIX + compact + "er.no");
             }
             if (compact.endsWith("er")) {
-                candidates.add("https://" + compact.substring(0, compact.length() - 2) + ".no");
+                candidates.add(HTTPS_PREFIX + compact.substring(0, compact.length() - 2) + ".no");
             }
         }
 
@@ -488,10 +508,10 @@ public class CompanyApiV1Mapper {
         if (!hasText(website)) {
             return website;
         }
-        if (website.startsWith("http://") || website.startsWith("https://")) {
+        if (website.startsWith("http://") || website.startsWith(HTTPS_PREFIX)) {
             return website;
         }
-        return "https://" + website;
+        return HTTPS_PREFIX + website;
     }
 
     private String firstReachableCandidate(List<String> candidates) {
@@ -519,15 +539,15 @@ public class CompanyApiV1Mapper {
                     evidence.putIfAbsent(label, new ScoreEvidence(label, normalizeFindingDetail(label, detail), sourceForFinding(label)));
                 });
 
-        if (events.stream().anyMatch(event -> "BANKRUPTCY".equals(event.type()))) {
+        if (events.stream().anyMatch(event -> EVENT_BANKRUPTCY.equals(event.type()))) {
             evidence.putIfAbsent("Konkurs registrert",
-                    new ScoreEvidence("Konkurs registrert", "Åpne registerdata viser konkursrelatert hendelse for virksomheten.", "BRREG kunngjøringer"));
+                    new ScoreEvidence("Konkurs registrert", "Åpne registerdata viser konkursrelatert hendelse for virksomheten.", SOURCE_BRREG_ANNOUNCEMENTS));
         }
-        if (events.stream().anyMatch(event -> "DISSOLUTION".equals(event.type()))) {
+        if (events.stream().anyMatch(event -> EVENT_DISSOLUTION.equals(event.type()))) {
             evidence.putIfAbsent("Tvangsoppløsning registrert",
-                    new ScoreEvidence("Tvangsoppløsning registrert", "Åpne registerdata viser tvangsoppløsning eller tvangsavvikling.", "BRREG kunngjøringer"));
+                    new ScoreEvidence("Tvangsoppløsning registrert", "Åpne registerdata viser tvangsoppløsning eller tvangsavvikling.", SOURCE_BRREG_ANNOUNCEMENTS));
         }
-        if (events.stream().anyMatch(event -> "WINDING_UP".equals(event.type()))) {
+        if (events.stream().anyMatch(event -> EVENT_WINDING_UP.equals(event.type()))) {
             evidence.putIfAbsent("Avvikling registrert",
                     new ScoreEvidence("Avvikling registrert", "Virksomheten står som under avvikling i åpne registerspor.", "BRREG / kunngjøringer"));
         }
@@ -535,19 +555,19 @@ public class CompanyApiV1Mapper {
             evidence.putIfAbsent("Nyregistrert selskap",
                     new ScoreEvidence("Nyregistrert selskap",
                             "Virksomheten ble registrert %s.".formatted(enhet.registreringsdatoEnhetsregisteret()),
-                            "BRREG Enhetsregisteret"));
+                            SOURCE_BRREG_UNIT_REGISTER));
         }
         if (enhet != null && isBlank(enhet.hjemmeside())) {
             evidence.putIfAbsent("Ingen registrert nettside",
-                    new ScoreEvidence("Ingen registrert nettside", "Det finnes ingen registrert nettside i åpne BRREG-data.", "BRREG grunndata"));
+                    new ScoreEvidence("Ingen registrert nettside", "Det finnes ingen registrert nettside i åpne BRREG-data.", SOURCE_BRREG_BASE_DATA));
         }
         if (enhet != null && isBlank(enhet.epostadresse())) {
             evidence.putIfAbsent("Ingen registrert e-post",
-                    new ScoreEvidence("Ingen registrert e-post", "Det finnes ingen registrert e-postadresse i åpne BRREG-data.", "BRREG grunndata"));
+                    new ScoreEvidence("Ingen registrert e-post", "Det finnes ingen registrert e-postadresse i åpne BRREG-data.", SOURCE_BRREG_BASE_DATA));
         }
         if (enhet != null && isBlank(firstNonBlank(enhet.telefon(), enhet.mobil()))) {
             evidence.putIfAbsent("Ingen registrert telefon",
-                    new ScoreEvidence("Ingen registrert telefon", "Det finnes ingen registrert telefon i åpne BRREG-data.", "BRREG grunndata"));
+                    new ScoreEvidence("Ingen registrert telefon", "Det finnes ingen registrert telefon i åpne BRREG-data.", SOURCE_BRREG_BASE_DATA));
         }
         if (enhet != null && Boolean.FALSE.equals(enhet.registrertIForetaksregisteret())) {
             evidence.putIfAbsent("Ikke i Foretaksregisteret",
@@ -559,7 +579,7 @@ public class CompanyApiV1Mapper {
         }
         if (enhet != null && enhet.naeringskode1() == null) {
             evidence.putIfAbsent("Manglende næringskode",
-                    new ScoreEvidence("Manglende næringskode", "Åpne data viser ikke en tydelig næringskode for virksomheten.", "BRREG grunndata"));
+                    new ScoreEvidence("Manglende næringskode", "Åpne data viser ikke en tydelig næringskode for virksomheten.", SOURCE_BRREG_BASE_DATA));
         }
 
         return evidence.values().stream().limit(6).toList();
@@ -582,36 +602,36 @@ public class CompanyApiV1Mapper {
                     "Nytt selskap i fersk fase",
                     "Selskapet er nylig registrert og bør leses sammen med mønstre rundt aktører og relaterte virksomheter.",
                     "INFO",
-                    "BRREG Enhetsregisteret"
+                    SOURCE_BRREG_UNIT_REGISTER
             ));
         }
 
         CompanyFacts facts = companyCheck.fakta();
         if (isBoSignal(companyCheck, enhet)) {
-            signals.put("BO_SIGNAL", new StructureSignal(
-                    "BO_SIGNAL",
+            signals.put(SIGNAL_BO, new StructureSignal(
+                    SIGNAL_BO,
                     "Bo-signal i registergrunnlaget",
                     "Navn, organisasjonsform eller registerspor peker mot bo-signal som konkursbo eller lignende avviklingsspor.",
                     "HIGH",
-                    "BRREG grunndata"
+                    SOURCE_BRREG_BASE_DATA
             ));
         }
-        if (events.stream().anyMatch(event -> "BANKRUPTCY".equals(event.type()))) {
-            signals.put("BANKRUPTCY_SIGNAL", new StructureSignal(
-                    "BANKRUPTCY_SIGNAL",
+        if (events.stream().anyMatch(event -> EVENT_BANKRUPTCY.equals(event.type()))) {
+            signals.put(SIGNAL_BANKRUPTCY, new StructureSignal(
+                    SIGNAL_BANKRUPTCY,
                     "Konkurs registrert",
                     "Åpne registerspor viser konkursrelatert hendelse for selskapet.",
                     "HIGH",
-                    "BRREG kunngjøringer"
+                    SOURCE_BRREG_ANNOUNCEMENTS
             ));
         }
-        if (events.stream().anyMatch(event -> "DISSOLUTION".equals(event.type()) || "WINDING_UP".equals(event.type()))) {
-            signals.put("DISSOLUTION_SIGNAL", new StructureSignal(
-                    "DISSOLUTION_SIGNAL",
+        if (events.stream().anyMatch(event -> EVENT_DISSOLUTION.equals(event.type()) || EVENT_WINDING_UP.equals(event.type()))) {
+            signals.put(SIGNAL_DISSOLUTION, new StructureSignal(
+                    SIGNAL_DISSOLUTION,
                     "Avvikling eller oppløsning registrert",
                     "Åpne registerspor viser avvikling, tvangsoppløsning eller lignende oppløsningssignal for selskapet.",
                     "HIGH",
-                    "BRREG kunngjøringer"
+                    SOURCE_BRREG_ANNOUNCEMENTS
             ));
         }
         if (facts != null && (!facts.harKontaktdata() || !facts.harRoller())) {
@@ -648,8 +668,8 @@ public class CompanyApiV1Mapper {
         List<NetworkCompanyLink> recentBankruptcyRelations = relatedCompaniesWithinWindow(actors, companyCheck.organisasjonsnummer(), selectedRegistrationDate,
                 link -> link.bankruptcySignal() && !link.dissolvedSignal());
         if (newlyRegistered && !recentBankruptcyRelations.isEmpty()) {
-            signals.put("RECENT_BANKRUPTCY_RELATION", new StructureSignal(
-                    "RECENT_BANKRUPTCY_RELATION",
+            signals.put(SIGNAL_RECENT_BANKRUPTCY_RELATION, new StructureSignal(
+                    SIGNAL_RECENT_BANKRUPTCY_RELATION,
                     "Nylig konkursspor rundt samme aktører",
                     "Dette nye selskapet deler aktører med %s nylig registrert eller tidsnært selskap%s med konkursspor: %s."
                             .formatted(
@@ -658,7 +678,7 @@ public class CompanyApiV1Mapper {
                                     joinCompanyNames(recentBankruptcyRelations)
                             ),
                     "HIGH",
-                    "Internt nettverkssnapshot / BRREG"
+                    SOURCE_INTERNAL_NETWORK_SNAPSHOT
             ));
         }
 
@@ -686,8 +706,8 @@ public class CompanyApiV1Mapper {
         List<NetworkCompanyLink> recentDissolutionRelations = relatedCompaniesWithinWindow(actors, companyCheck.organisasjonsnummer(), selectedRegistrationDate,
                 NetworkCompanyLink::dissolvedSignal);
         if (newlyRegistered && !recentDissolutionRelations.isEmpty()) {
-            signals.put("RECENT_DISSOLUTION_RELATION", new StructureSignal(
-                    "RECENT_DISSOLUTION_RELATION",
+            signals.put(SIGNAL_RECENT_DISSOLUTION_RELATION, new StructureSignal(
+                    SIGNAL_RECENT_DISSOLUTION_RELATION,
                     "Nylig avviklingsspor rundt samme aktører",
                     "Dette nye selskapet deler aktører med %s nylig registrert eller tidsnært selskap%s med avviklings- eller oppløsningsspor: %s."
                             .formatted(
@@ -696,7 +716,7 @@ public class CompanyApiV1Mapper {
                                     joinCompanyNames(recentDissolutionRelations)
                             ),
                     "HIGH",
-                    "Internt nettverkssnapshot / BRREG"
+                    SOURCE_INTERNAL_NETWORK_SNAPSHOT
             ));
         }
 
@@ -718,7 +738,7 @@ public class CompanyApiV1Mapper {
                                     relatedCompanies == 1 ? "" : "er",
                                     joinActorNames(sharedActors)
                             ),
-                    newlyRegistered ? "MEDIUM" : "INFO",
+                    newlyRegistered ? CONFIDENCE_MEDIUM : "INFO",
                     "Internt nettverkssnapshot"
             ));
         }
@@ -726,8 +746,8 @@ public class CompanyApiV1Mapper {
         List<NetworkCompanyLink> clusteredNewCompanies = relatedCompaniesWithinWindow(actors, companyCheck.organisasjonsnummer(), selectedRegistrationDate,
                 link -> link.registrationDate() != null && withinDays(selectedRegistrationDate, link.registrationDate(), NEW_COMPANY_WINDOW_DAYS));
         if (newlyRegistered && !clusteredNewCompanies.isEmpty()) {
-            signals.put("CLUSTERED_NEW_COMPANY_PATTERN", new StructureSignal(
-                    "CLUSTERED_NEW_COMPANY_PATTERN",
+            signals.put(SIGNAL_CLUSTERED_NEW_COMPANY_PATTERN, new StructureSignal(
+                    SIGNAL_CLUSTERED_NEW_COMPANY_PATTERN,
                     "Flere nye selskaper med samme aktører",
                     "Dette nye selskapet ligger tett i tid med %s annet selskap%s med samme aktører: %s."
                             .formatted(
@@ -735,18 +755,18 @@ public class CompanyApiV1Mapper {
                                     clusteredNewCompanies.size() == 1 ? "" : "er",
                                     joinCompanyNames(clusteredNewCompanies)
                             ),
-                    "MEDIUM",
-                    "Internt nettverkssnapshot / BRREG"
+                    CONFIDENCE_MEDIUM,
+                    SOURCE_INTERNAL_NETWORK_SNAPSHOT
             ));
         }
 
-        if (newlyRegistered && (signals.containsKey("RECENT_BANKRUPTCY_RELATION")
-                || signals.containsKey("RECENT_DISSOLUTION_RELATION")
-                || signals.containsKey("CLUSTERED_NEW_COMPANY_PATTERN")
-                || signals.containsKey("BO_SIGNAL")
+        if (newlyRegistered && (signals.containsKey(SIGNAL_RECENT_BANKRUPTCY_RELATION)
+                || signals.containsKey(SIGNAL_RECENT_DISSOLUTION_RELATION)
+                || signals.containsKey(SIGNAL_CLUSTERED_NEW_COMPANY_PATTERN)
+                || signals.containsKey(SIGNAL_BO)
                 || hasActorRiskPattern(companyCheck)
-                || signals.containsKey("BANKRUPTCY_SIGNAL")
-                || signals.containsKey("DISSOLUTION_SIGNAL"))) {
+                || signals.containsKey(SIGNAL_BANKRUPTCY)
+                || signals.containsKey(SIGNAL_DISSOLUTION))) {
             signals.put("POSSIBLE_REORGANIZATION", new StructureSignal(
                     "POSSIBLE_REORGANIZATION",
                     "Mulig omregistrering eller ny struktur",
@@ -770,7 +790,7 @@ public class CompanyApiV1Mapper {
                                     elevatedActorContext.size() == 1 ? "" : "e",
                                     joinActorNames(elevatedActorContext)
                             ),
-                    highSeverity ? "HIGH" : "MEDIUM",
+                    highSeverity ? "HIGH" : CONFIDENCE_MEDIUM,
                     "Internt nettverkssnapshot"
             ));
         }
@@ -780,7 +800,7 @@ public class CompanyApiV1Mapper {
                     "ACTOR_RISK_PATTERN",
                     "Aktørbasert risikomønster",
                     "Tilknyttede rolleholdere har historikk som påvirker vurderingen og kan peke på mønstre på tvers av selskaper.",
-                    "MEDIUM",
+                    CONFIDENCE_MEDIUM,
                     "Aktørrisiko / rolledata"
             ));
         }
@@ -795,8 +815,8 @@ public class CompanyApiV1Mapper {
             case "ALVORLIGE SIGNALER", "AVVIKLING" -> "BRREG / kunngjøringer";
             case "ROLLER" -> "BRREG roller";
             case "AKTØRRISIKO", "AKTORRISIKO" -> "Intern nettverksvurdering";
-            case "ALDER" -> "BRREG Enhetsregisteret";
-            case "STRUKTUR", "ORGANISASJONSNUMMER" -> "BRREG grunndata";
+            case "ALDER" -> SOURCE_BRREG_UNIT_REGISTER;
+            case "STRUKTUR", "ORGANISASJONSNUMMER" -> SOURCE_BRREG_BASE_DATA;
             default -> "Scoremodell";
         };
     }
@@ -889,7 +909,7 @@ public class CompanyApiV1Mapper {
             return registeredAt;
         }
         return events.stream()
-                .filter(event -> "REGISTRATION".equals(event.type()))
+                .filter(event -> EVENT_REGISTRATION.equals(event.type()))
                 .map(this::parseEventDate)
                 .filter(Objects::nonNull)
                 .findFirst()
@@ -973,7 +993,7 @@ public class CompanyApiV1Mapper {
             flags.add("DISSOLUTION_ANNOUNCEMENT");
         }
         if (Boolean.TRUE.equals(enhet.underAvvikling())) {
-            flags.add("WINDING_UP");
+            flags.add(EVENT_WINDING_UP);
         }
         return List.copyOf(flags);
     }
@@ -1007,9 +1027,9 @@ public class CompanyApiV1Mapper {
     private Role preferredContactRole(RollerResponse roller) {
         List<Role> activeRoles = roles(roller);
         return activeRoles.stream()
-                .filter(role -> "DAGLIG_LEDER".equals(role.type()))
+                .filter(role -> ROLE_DAGLIG_LEDER.equals(role.type()))
                 .findFirst()
-                .or(() -> activeRoles.stream().filter(role -> "STYRELEDER".equals(role.type())).findFirst())
+                .or(() -> activeRoles.stream().filter(role -> ROLE_STYRELEDER.equals(role.type())).findFirst())
                 .or(() -> activeRoles.stream().findFirst())
                 .orElse(null);
     }
@@ -1037,7 +1057,7 @@ public class CompanyApiV1Mapper {
             return null;
         }
         if (facts.dagligLeder() != null && !facts.dagligLeder().isBlank()) {
-            return "DAGLIG_LEDER";
+            return ROLE_DAGLIG_LEDER;
         }
         if (facts.styre() != null && facts.styre().stream().anyMatch(Objects::nonNull)) {
             return "STYREMEDLEM";
@@ -1078,10 +1098,10 @@ public class CompanyApiV1Mapper {
     private String normalizeRoleType(String description) {
         String normalized = description.toUpperCase(Locale.ROOT);
         if (normalized.contains("DAGLIG")) {
-            return "DAGLIG_LEDER";
+            return ROLE_DAGLIG_LEDER;
         }
         if (normalized.contains("STYRELEDER")) {
-            return "STYRELEDER";
+            return ROLE_STYRELEDER;
         }
         if (normalized.contains("STYRE")) {
             return "STYREMEDLEM";
@@ -1144,38 +1164,38 @@ public class CompanyApiV1Mapper {
         List<CompanyEvent> events = new ArrayList<>();
         if (enhet.registreringsdatoEnhetsregisteret() != null) {
             events.add(new CompanyEvent(
-                    "REGISTRATION",
+                    EVENT_REGISTRATION,
                     "Nyregistrert",
                     enhet.registreringsdatoEnhetsregisteret().toString(),
-                    "BRREG Enhetsregisteret",
+                    SOURCE_BRREG_UNIT_REGISTER,
                     "INFO"
             ));
         }
         if (Boolean.TRUE.equals(enhet.konkurs())) {
             events.add(new CompanyEvent(
-                    "BANKRUPTCY",
+                    EVENT_BANKRUPTCY,
                     "Konkurs",
                     null,
-                    "BRREG",
+                    SOURCE_BRREG,
                     "HIGH"
             ));
         }
         if (Boolean.TRUE.equals(enhet.underTvangsavviklingEllerTvangsopplosning())) {
             events.add(new CompanyEvent(
-                    "DISSOLUTION",
+                    EVENT_DISSOLUTION,
                     "Tvangsoppløsning",
                     null,
-                    "BRREG",
+                    SOURCE_BRREG,
                     "HIGH"
             ));
         }
         if (Boolean.TRUE.equals(enhet.underAvvikling())) {
             events.add(new CompanyEvent(
-                    "WINDING_UP",
+                    EVENT_WINDING_UP,
                     "Avvikling",
                     null,
-                    "BRREG",
-                    "MEDIUM"
+                    SOURCE_BRREG,
+                    CONFIDENCE_MEDIUM
             ));
         }
 
@@ -1193,10 +1213,10 @@ public class CompanyApiV1Mapper {
             return;
         }
         CompanyEvent event = new CompanyEvent(
-                "REGISTRATION",
+                EVENT_REGISTRATION,
                 "Nyregistrering i Enhetsregisteret",
                 enhet.registreringsdatoEnhetsregisteret().toString(),
-                "BRREG Enhetsregisteret",
+                SOURCE_BRREG_UNIT_REGISTER,
                 "INFO"
         );
         events.putIfAbsent(eventKey(event), event);
@@ -1204,12 +1224,12 @@ public class CompanyApiV1Mapper {
 
     private CompanyEvent toEvent(Announcement announcement) {
         return switch (announcement.type()) {
-            case "BANKRUPTCY" -> new CompanyEvent("BANKRUPTCY", announcement.title(), announcement.date(), announcement.source(), "HIGH");
-            case "DISSOLUTION" -> new CompanyEvent("DISSOLUTION", announcement.title(), announcement.date(), announcement.source(), "HIGH");
-            case "WINDING_UP" -> new CompanyEvent("WINDING_UP", announcement.title(), announcement.date(), announcement.source(), "MEDIUM");
+            case EVENT_BANKRUPTCY -> new CompanyEvent(EVENT_BANKRUPTCY, announcement.title(), announcement.date(), announcement.source(), "HIGH");
+            case EVENT_DISSOLUTION -> new CompanyEvent(EVENT_DISSOLUTION, announcement.title(), announcement.date(), announcement.source(), "HIGH");
+            case EVENT_WINDING_UP -> new CompanyEvent(EVENT_WINDING_UP, announcement.title(), announcement.date(), announcement.source(), CONFIDENCE_MEDIUM);
             case "ADDRESS_CHANGE" -> new CompanyEvent("ADDRESS_CHANGE", announcement.title(), announcement.date(), announcement.source(), "INFO");
             case "ARTICLES_OF_ASSOCIATION" -> new CompanyEvent("ARTICLES_OF_ASSOCIATION", announcement.title(), announcement.date(), announcement.source(), "INFO");
-            case "REGISTRATION" -> new CompanyEvent("REGISTRATION", announcement.title(), announcement.date(), announcement.source(), "INFO");
+            case EVENT_REGISTRATION -> new CompanyEvent(EVENT_REGISTRATION, announcement.title(), announcement.date(), announcement.source(), "INFO");
             default -> null;
         };
     }
@@ -1236,7 +1256,7 @@ public class CompanyApiV1Mapper {
     private int severityRank(CompanyEvent event) {
         return switch (event.severity()) {
             case "HIGH" -> 0;
-            case "MEDIUM" -> 1;
+            case CONFIDENCE_MEDIUM -> 1;
             default -> 2;
         };
     }
@@ -1286,13 +1306,13 @@ public class CompanyApiV1Mapper {
 
     private String status(EnhetResponse enhet) {
         if (Boolean.TRUE.equals(enhet.konkurs())) {
-            return "BANKRUPTCY";
+            return EVENT_BANKRUPTCY;
         }
         if (Boolean.TRUE.equals(enhet.underTvangsavviklingEllerTvangsopplosning())) {
             return "FORCED_DISSOLUTION";
         }
         if (Boolean.TRUE.equals(enhet.underAvvikling())) {
-            return "WINDING_UP";
+            return EVENT_WINDING_UP;
         }
         return "ACTIVE";
     }
