@@ -11,6 +11,7 @@ public record WebsiteDiscovery(
         Boolean contentMatched,
         String contentMatchReason,
         String pageTitle,
+        List<WebsiteCandidateCheck> candidateChecks,
         String reason,
         String source
 ) {

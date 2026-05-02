@@ -117,7 +117,7 @@ public class CompanyApiV1Mapper {
                 naceCode(enhet),
                 naceDescription(enhet),
                 enhet.hjemmeside(),
-                websiteDiscovery(companyCheck, enhet),
+                websiteDiscovery(companyCheck, enhet, false),
                 enhet.epostadresse(),
                 firstNonBlank(enhet.telefon(), enhet.mobil()),
                 preferredSummaryContactName(facts),
@@ -151,7 +151,7 @@ public class CompanyApiV1Mapper {
                 naceCode(enhet),
                 naceDescription(enhet),
                 enhet.hjemmeside(),
-                websiteDiscovery(companyCheck, enhet),
+                websiteDiscovery(companyCheck, enhet, true),
                 enhet.epostadresse(),
                 firstNonBlank(enhet.telefon(), enhet.mobil()),
                 contactPerson == null ? null : contactPerson.name(),
@@ -194,17 +194,25 @@ public class CompanyApiV1Mapper {
         return ScoreColor.valueOf(light.name());
     }
 
-    private WebsiteDiscovery websiteDiscovery(CompanyCheck companyCheck, EnhetResponse enhet) {
+    private WebsiteDiscovery websiteDiscovery(CompanyCheck companyCheck, EnhetResponse enhet, boolean inspectAllCandidates) {
         if (hasText(enhet.hjemmeside())) {
+            String website = normalizeWebsiteCandidate(enhet.hjemmeside());
             return new WebsiteDiscovery(
                     "REGISTERED",
                     "HIGH",
-                    List.of(normalizeWebsiteCandidate(enhet.hjemmeside())),
-                    normalizeWebsiteCandidate(enhet.hjemmeside()),
+                    List.of(website),
+                    website,
                     true,
                     true,
                     "Nettsiden er registrert i BRREG.",
                     null,
+                    List.of(new WebsiteCandidateCheck(
+                            website,
+                            true,
+                            true,
+                            null,
+                            "Nettsiden er registrert i BRREG."
+                    )),
                     "Nettsiden er registrert i BRREG.",
                     SOURCE_BRREG
             );
@@ -217,6 +225,7 @@ public class CompanyApiV1Mapper {
             WebsiteContentMatch contentMatch = reachable
                     ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), emailDomain)
                     : new WebsiteContentMatch(false, "Domene svarte ikke ved sjekk.", null);
+            List<WebsiteCandidateCheck> candidateChecks = List.of(toWebsiteCandidateCheck(candidate, reachable, contentMatch));
             return new WebsiteDiscovery(
                     "POSSIBLE_MATCH",
                     reachable && contentMatch.matched() ? "HIGH" : reachable ? CONFIDENCE_MEDIUM : "LOW",
@@ -226,6 +235,7 @@ public class CompanyApiV1Mapper {
                     contentMatch.matched(),
                     contentMatch.reason(),
                     contentMatch.pageTitle(),
+                    candidateChecks,
                     reachable
                             ? "Domene er utledet fra registrert e-postadresse og svarte ved sjekk. Må fortsatt bekreftes manuelt."
                             : "Domene er utledet fra registrert e-postadresse, men svarte ikke ved sjekk. Må bekreftes manuelt.",
@@ -235,9 +245,26 @@ public class CompanyApiV1Mapper {
 
         List<String> nameCandidates = nameBasedWebsiteCandidates(companyCheck.navn());
         if (!nameCandidates.isEmpty()) {
-            String reachableCandidate = firstReachableCandidate(nameCandidates);
+            List<WebsiteCandidateCheck> candidateChecks = inspectAllCandidates
+                    ? checkWebsiteCandidates(nameCandidates, companyCheck.navn(), emailDomain)
+                    : List.of();
+            String reachableCandidate = inspectAllCandidates
+                    ? preferredWebsiteCandidate(candidateChecks)
+                    : firstReachableCandidate(nameCandidates);
+            WebsiteCandidateCheck preferredCheck = inspectAllCandidates
+                    ? candidateChecks.stream()
+                    .filter(check -> Objects.equals(check.url(), reachableCandidate))
+                    .findFirst()
+                    .orElse(null)
+                    : null;
             boolean reachable = reachableCandidate != null;
-            WebsiteContentMatch contentMatch = reachable
+            WebsiteContentMatch contentMatch = preferredCheck != null
+                    ? new WebsiteContentMatch(
+                    Boolean.TRUE.equals(preferredCheck.contentMatched()),
+                    preferredCheck.reason(),
+                    preferredCheck.pageTitle()
+            )
+                    : reachable
                     ? websiteContentInspectionService.inspect(reachableCandidate, companyCheck.navn(), emailDomain)
                     : new WebsiteContentMatch(false, "Ingen av kandidatene svarte ved sjekk.", null);
             return new WebsiteDiscovery(
@@ -249,6 +276,7 @@ public class CompanyApiV1Mapper {
                     contentMatch.matched(),
                     contentMatch.reason(),
                     contentMatch.pageTitle(),
+                    candidateChecks,
                     reachable
                             ? "Navnebasert domene-forslag svarte ved sjekk, men uten bekreftet kobling til selskapet. Må bekreftes manuelt."
                             : "Navnebasert domene-forslag uten bekreftet kobling. Må bekreftes manuelt.",
@@ -265,9 +293,44 @@ public class CompanyApiV1Mapper {
                 null,
                 null,
                 null,
+                List.of(),
                 "Ingen registrert nettside og ingen tydelig kandidat funnet.",
                 "NONE"
         );
+    }
+
+    private List<WebsiteCandidateCheck> checkWebsiteCandidates(List<String> candidates, String companyName, String emailDomain) {
+        return candidates.stream()
+                .map(candidate -> {
+                    boolean reachable = websiteReachabilityService.isReachable(candidate);
+                    WebsiteContentMatch contentMatch = reachable
+                            ? websiteContentInspectionService.inspect(candidate, companyName, emailDomain)
+                            : new WebsiteContentMatch(false, "Kandidaten svarte ikke ved sjekk.", null);
+                    return toWebsiteCandidateCheck(candidate, reachable, contentMatch);
+                })
+                .toList();
+    }
+
+    private WebsiteCandidateCheck toWebsiteCandidateCheck(String candidate, boolean reachable, WebsiteContentMatch contentMatch) {
+        return new WebsiteCandidateCheck(
+                candidate,
+                reachable,
+                contentMatch.matched(),
+                contentMatch.pageTitle(),
+                contentMatch.reason()
+        );
+    }
+
+    private String preferredWebsiteCandidate(List<WebsiteCandidateCheck> candidateChecks) {
+        return candidateChecks.stream()
+                .filter(check -> Boolean.TRUE.equals(check.contentMatched()))
+                .map(WebsiteCandidateCheck::url)
+                .findFirst()
+                .or(() -> candidateChecks.stream()
+                        .filter(check -> Boolean.TRUE.equals(check.reachable()))
+                        .map(WebsiteCandidateCheck::url)
+                        .findFirst())
+                .orElse(null);
     }
 
     private String scoreLabel(TrafficLight light) {

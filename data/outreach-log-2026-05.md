@@ -4,15 +4,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 19
-- Sendt: 15
-- Angret: 0
-- Aktive kontaktede selskaper: 15
+- Antall hendelser: 33
+- Sendt: 27
+- Angret: 1
+- Aktive kontaktede selskaper: 26
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-02 | 937631111 | SVANELVMO KIRKEFORENING | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937636199 | BIH KULTUR FORENING BISERI ØSTFOLD | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937586183 | SAGABAKKEN LOKALSAMFUNN | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937581327 | MOSBY GUTTEFORENING MISJONSGLIMT | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937113145 | BLUEGRASSAFTEN | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937478194 | BAK MÅL PODKAST | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937561660 | LILLEBYS VENNER | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937602219 | RUOKSAT GUOVDAGEAIDNU/RØDT KAUTOKEINO | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937514182 | CHILD AND WOMEN INTERNATIONAL DEVELOPMENT (CHWID) | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 837606942 | MAHBER MERAGUZ | FLI | email | kr 4.500 | website-offer |
+| 2026-05-02 | 937606214 | LIAM KENTNER F1 PROJECT FORENING | FLI | email | kr 4.500 | website-offer |
 | 2026-05-02 | 937609639 | SENTRUMSVENNER I GRONG | FLI | email | kr 4.500 | website-offer |
 | 2026-05-02 | 837612292 | JADARVEGEN 21 BOLIGFORENING | FLI | email | kr 4.500 | website-offer |
 | 2026-05-02 | 837615232 | BANGREVYEN | FLI | email | kr 4.500 | website-offer |
@@ -33,6 +44,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-02 15:38 | not_relevant | 937600720 | ELEKTRO 4 BIL | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:36 | sent | 937631111 | SVANELVMO KIRKEFORENING | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:36 | sent | 937636199 | BIH KULTUR FORENING BISERI ØSTFOLD | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:33 | sent | 937586183 | SAGABAKKEN LOKALSAMFUNN | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:19 | sent | 937581327 | MOSBY GUTTEFORENING MISJONSGLIMT | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:17 | sent | 937113145 | BLUEGRASSAFTEN | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:16 | sent | 937478194 | BAK MÅL PODKAST | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:15 | reverted | 937596006 | TEATERKOMPANI TASKENSPILLERNE | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:15 | sent | 937596006 | TEATERKOMPANI TASKENSPILLERNE | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:13 | sent | 937561660 | LILLEBYS VENNER | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:12 | sent | 937602219 | RUOKSAT GUOVDAGEAIDNU/RØDT KAUTOKEINO | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:11 | sent | 937514182 | CHILD AND WOMEN INTERNATIONAL DEVELOPMENT (CHWID) | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:10 | sent | 837606942 | MAHBER MERAGUZ | FLI | email | kr 4.500 | - |
+| 2026-05-02 15:09 | sent | 937606214 | LIAM KENTNER F1 PROJECT FORENING | FLI | email | kr 4.500 | - |
 | 2026-05-02 10:25 | sent | 937609639 | SENTRUMSVENNER I GRONG | FLI | email | kr 4.500 | - |
 | 2026-05-02 10:23 | sent | 837612292 | JADARVEGEN 21 BOLIGFORENING | FLI | email | kr 4.500 | - |
 | 2026-05-02 10:23 | sent | 837615232 | BANGREVYEN | FLI | email | kr 4.500 | - |

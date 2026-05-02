@@ -94,8 +94,17 @@ export interface WebsiteDiscovery {
   contentMatched: boolean | null;
   contentMatchReason: string | null;
   pageTitle: string | null;
+  candidateChecks: WebsiteCandidateCheck[];
   reason: string;
   source: string;
+}
+
+export interface WebsiteCandidateCheck {
+  url: string;
+  reachable: boolean | null;
+  contentMatched: boolean | null;
+  pageTitle: string | null;
+  reason: string | null;
 }
 
 export interface OutreachStatus {

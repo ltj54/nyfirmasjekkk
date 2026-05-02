@@ -2406,16 +2406,19 @@ function CompanyDetailView({
                       ? "Ingen registrert nettside i BRREG, men kandidaten ser ut til å høre til selskapet."
                       : "Ingen registrert nettside i BRREG, men vi fant en mulig kandidat."}
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {company.websiteDiscovery.candidates.map((candidate) => (
+                  <div className="mt-3 grid gap-2">
+                    {websiteCandidateRows(company.websiteDiscovery).map((candidate) => (
                       <a
-                        key={candidate}
-                        className="inline-flex rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-1.5 text-[12px] font-semibold text-[#1F5FA9] hover:bg-white"
-                        href={candidate}
+                        key={candidate.url}
+                        className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-white"
+                        href={candidate.url}
                         rel="noreferrer"
                         target="_blank"
                       >
-                        {stripWebsiteProtocol(candidate)}
+                        <span>{stripWebsiteProtocol(candidate.url)}</span>
+                        <span className="text-[11px] font-medium text-[#52606D]">
+                          {formatWebsiteCandidateStatus(candidate)}
+                        </span>
                       </a>
                     ))}
                   </div>
@@ -3151,6 +3154,33 @@ function formatWebsiteContentMatch(websiteDiscovery: NonNullable<CompanySummary[
   return "innhold ikke sjekket";
 }
 
+function websiteCandidateRows(websiteDiscovery: NonNullable<CompanySummary["websiteDiscovery"]>) {
+  if (websiteDiscovery.candidateChecks?.length) {
+    return websiteDiscovery.candidateChecks;
+  }
+
+  return websiteDiscovery.candidates.map((url) => ({
+    url,
+    reachable: null,
+    contentMatched: null,
+    pageTitle: null,
+    reason: null,
+  }));
+}
+
+function formatWebsiteCandidateStatus(candidate: ReturnType<typeof websiteCandidateRows>[number]) {
+  if (candidate.contentMatched === true) {
+    return "Svarte, innhold ligner";
+  }
+  if (candidate.reachable === true) {
+    return "Svarte, må vurderes";
+  }
+  if (candidate.reachable === false) {
+    return "Svarte ikke";
+  }
+  return "Ikke sjekket i listevisning";
+}
+
 function websiteDiscoveryExplanationItems(
   websiteDiscovery: NonNullable<CompanySummary["websiteDiscovery"]>,
   companyName: string,
@@ -3168,6 +3198,11 @@ function websiteDiscoveryExplanationItems(
 
   if (websiteDiscovery.candidates.length > 1) {
     items.push(`Systemet vurderte ${websiteDiscovery.candidates.length} mulige domener og viser dem i prioritert rekkefølge.`);
+  }
+
+  if (websiteDiscovery.candidateChecks?.length) {
+    const reachableCount = websiteDiscovery.candidateChecks.filter((candidate) => candidate.reachable === true).length;
+    items.push(`På detaljsiden ble alle ${websiteDiscovery.candidateChecks.length} kandidatene teknisk sjekket. ${reachableCount} svarte.`);
   }
 
   if (websiteDiscovery.verifiedReachable === true) {
