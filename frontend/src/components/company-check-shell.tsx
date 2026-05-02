@@ -634,6 +634,10 @@ export function CompanyCheckShell() {
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
     : recentCompanies
   ), outreachStatusByOrg, leadQuickFilters).sort(compareLeadPriority);
+  const visibleSearchCompanies = filteredCompanies.filter((company) => {
+    const outreachStatus = outreachStatusByOrg[company.orgNumber];
+    return !outreachStatus?.sent && outreachStatus?.status !== "not_relevant";
+  });
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
@@ -917,7 +921,7 @@ export function CompanyCheckShell() {
                   <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Aktuelle selskaper</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
-                    Viser {filteredCompanies.length} treff på denne siden.
+                    Viser {visibleSearchCompanies.length} treff på denne siden.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -991,8 +995,8 @@ export function CompanyCheckShell() {
                     </div>
                   </div>
                 ))
-              ) : filteredCompanies.length > 0 ? (
-                filteredCompanies.map((company, i) => (
+              ) : visibleSearchCompanies.length > 0 ? (
+                visibleSearchCompanies.map((company, i) => (
                   <CompanyCard
                     key={`${company.orgNumber}-${i}`}
                     company={company}
@@ -1438,14 +1442,17 @@ function OutreachOverview({
   onRefresh: () => void;
 }) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
-  const [showAllActiveContacted, setShowAllActiveContacted] = useState(false);
-  const [showAllNotes, setShowAllNotes] = useState(false);
+  const [activeContactedLimit, setActiveContactedLimit] = useState(10);
+  const [notRelevantLimit, setNotRelevantLimit] = useState(10);
+  const [noteLimit, setNoteLimit] = useState(10);
   const logEntries = entries
     .sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
   const activeContactedEntries = getActiveContactedOutreachEntries(logEntries);
+  const notRelevantEntries = getNotRelevantOutreachEntries(logEntries);
   const noteEntries = logEntries.filter((entry) => Boolean(entry.note?.trim()));
-  const visibleActiveContactedEntries = showAllActiveContacted ? activeContactedEntries : activeContactedEntries.slice(0, 15);
-  const visibleNoteEntries = showAllNotes ? noteEntries : noteEntries.slice(0, 15);
+  const visibleActiveContactedEntries = activeContactedEntries.slice(0, activeContactedLimit);
+  const visibleNotRelevantEntries = notRelevantEntries.slice(0, notRelevantLimit);
+  const visibleNoteEntries = noteEntries.slice(0, noteLimit);
   const revertedCount = logEntries.filter((entry) => entry.status === "reverted").length;
   const sentCount = logEntries.filter((entry) => entry.status === "sent").length;
 
@@ -1530,6 +1537,7 @@ function OutreachOverview({
                 <InfoMetric label="Sendt" value={`${sentCount}`} />
                 <InfoMetric label="Angret" value={`${revertedCount}`} />
                 <InfoMetric label="Aktive kontaktede selskaper" value={`${activeContactedEntries.length}`} />
+                <InfoMetric label="Ikke aktuell" value={`${notRelevantEntries.length}`} />
               </div>
             </div>
 
@@ -1575,17 +1583,62 @@ function OutreachOverview({
                   </table>
                 </div>
               )}
-              {activeContactedEntries.length > 15 ? (
-                <button
-                  className="mt-3 rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
-                  onClick={() => setShowAllActiveContacted((current) => !current)}
-                  type="button"
-                >
-                  {showAllActiveContacted
-                    ? "Vis færre"
-                    : `Vis mer (${activeContactedEntries.length - visibleActiveContactedEntries.length} til)`}
-                </button>
-              ) : null}
+              <LogListActions
+                currentCount={visibleActiveContactedEntries.length}
+                totalCount={activeContactedEntries.length}
+                onShowMore={() => setActiveContactedLimit((current) => current + 10)}
+                onCollapse={() => setActiveContactedLimit(10)}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-[16px] font-semibold text-[#1F2933]">Ikke aktuell</h3>
+              {notRelevantEntries.length === 0 ? (
+                <p className="mt-3 text-[13px] font-medium text-[#52606D]">Ingen selskaper er markert som ikke aktuell.</p>
+              ) : (
+                <div className="mt-3 overflow-x-auto border border-[#D9E2EC]">
+                  <table className="w-full min-w-[760px] border-collapse text-left text-[13px]">
+                    <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
+                      <tr>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Dato</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Org.nr</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Selskap</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Selskapsform</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Kanal</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Pris</th>
+                        <th className="border-b border-[#D9E2EC] px-4 py-3">Tilbud</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {visibleNotRelevantEntries.map((entry) => (
+                        <tr key={entry.orgNumber} className="border-b border-[#E4E7EB] last:border-b-0">
+                          <td className="px-4 py-3 text-[#52606D]">{formatLogDate(entry.timestamp ?? entry.sentAt)}</td>
+                          <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
+                          <td className="px-4 py-3">
+                            <button
+                              className="font-semibold text-[#1F5FA9] underline-offset-4 hover:underline"
+                              onClick={() => onOpenCompany(entry.orgNumber)}
+                              type="button"
+                            >
+                              {entry.companyName || "Ukjent selskap"}
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
+                          <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
+                          <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? 4500)}</td>
+                          <td className="px-4 py-3 text-[#52606D]">{entry.offerType || "-"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <LogListActions
+                currentCount={visibleNotRelevantEntries.length}
+                totalCount={notRelevantEntries.length}
+                onShowMore={() => setNotRelevantLimit((current) => current + 10)}
+                onCollapse={() => setNotRelevantLimit(10)}
+              />
             </div>
 
             <div>
@@ -1632,20 +1685,58 @@ function OutreachOverview({
             </table>
                 </div>
               )}
-              {noteEntries.length > 15 ? (
-                <button
-                  className="mt-3 rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
-                  onClick={() => setShowAllNotes((current) => !current)}
-                  type="button"
-                >
-                  {showAllNotes ? "Vis færre" : `Vis mer (${noteEntries.length - visibleNoteEntries.length} til)`}
-                </button>
-              ) : null}
+              <LogListActions
+                currentCount={visibleNoteEntries.length}
+                totalCount={noteEntries.length}
+                onShowMore={() => setNoteLimit((current) => current + 10)}
+                onCollapse={() => setNoteLimit(10)}
+              />
             </div>
           </div>
         )}
       </div>
     </section>
+  );
+}
+
+function LogListActions({
+  currentCount,
+  totalCount,
+  onShowMore,
+  onCollapse,
+}: {
+  currentCount: number;
+  totalCount: number;
+  onShowMore: () => void;
+  onCollapse: () => void;
+}) {
+  if (totalCount <= 10) {
+    return null;
+  }
+
+  const remainingCount = totalCount - currentCount;
+
+  return (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {remainingCount > 0 ? (
+        <button
+          className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
+          onClick={onShowMore}
+          type="button"
+        >
+          Vis mer ({Math.min(10, remainingCount)} til)
+        </button>
+      ) : null}
+      {currentCount > 10 ? (
+        <button
+          className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
+          onClick={onCollapse}
+          type="button"
+        >
+          Skjul
+        </button>
+      ) : null}
+    </div>
   );
 }
 
@@ -1660,6 +1751,12 @@ function getOutreachSortValue(entry: OutreachStatus) {
 function getActiveContactedOutreachEntries(entries: OutreachStatus[]) {
   return getLatestOutreachEntriesByOrg(entries)
     .filter((entry) => entry.status === "sent")
+    .sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
+}
+
+function getNotRelevantOutreachEntries(entries: OutreachStatus[]) {
+  return getLatestOutreachEntriesByOrg(entries)
+    .filter((entry) => entry.status === "not_relevant")
     .sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
 }
 
@@ -2698,7 +2795,7 @@ function ContactLine({
                 className="block truncate text-[14px] font-semibold text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
                 href={href}
                 rel="noreferrer"
-                target={href.startsWith("http") ? "_blank" : undefined}
+                target="_blank"
               >
                 {value}
               </a>
@@ -2948,6 +3045,8 @@ function applyOutreachTemplate(
   const location = [company.municipality, company.county].filter(Boolean).join(", ");
   const recipientSubject = contactName ? "du" : "dere";
   const recipientPossessive = contactName ? "ditt" : "deres";
+  const recipientObject = contactName ? "deg" : "dere";
+  const recipientPagePossessive = contactName ? "din" : "deres";
 
   const replacements: Record<string, string> = {
     "{{companyName}}": company.name,
@@ -2959,6 +3058,8 @@ function applyOutreachTemplate(
     "{{greeting}}": greeting,
     "{{recipientSubject}}": recipientSubject,
     "{{recipientPossessive}}": recipientPossessive,
+    "{{recipientObject}}": recipientObject,
+    "{{recipientPagePossessive}}": recipientPagePossessive,
     "{{price}}": "4.500",
     "{{senderName}}": "Lars Tangen Johannessen",
     "{{senderPhone}}": "977 24 209",
@@ -2983,22 +3084,27 @@ function firstNameFromContactName(value: string) {
 function defaultOutreachEmailTemplate() {
   return `Hei {{greeting}},
 
-Jeg så at {{companyName}} nylig er registrert, og ville bare høre om {{recipientSubject}} trenger en enkel nettside.
+Gratulerer med {{companyName}}.
 
-Jeg lager ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
+De fleste nye foretak trenger raskt:
+- en nettadresse
+- en enkel nettside
+- et sted kunder kan ta kontakt
 
-Typisk oppsett er:
-- Forside med hva {{recipientSubject}} tilbyr
-- Kontaktinfo med telefon og e-post
-- Enkel presentasjon av tjenester
+Jeg setter opp dette ferdig for {{recipientObject}}.
 
-Jeg kan sette opp dette ferdig til en fast pris på kr {{price}},-
-inkludert hjelp med domene og e-post hvis {{recipientSubject}} trenger det.
+Du får:
+- En ryddig nettside
+- Egen nettadresse, for eksempel firmanavn.no
+- Kontaktinfo og enkel presentasjon av hva {{recipientSubject}} tilbyr
+- Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Se eksempel her:
+Fast pris: {{price}} kr - ferdig satt opp.
+
+Eksempel:
 {{senderWebsite}}
 
-Hvis dette er aktuelt, kan jeg sende et konkret forslag til tekst og oppsett for {{recipientPossessive}} foretak.
+Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side - helt uforpliktende.
 
 Mvh
 {{senderName}}

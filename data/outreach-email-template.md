@@ -11,7 +11,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - E-post: `{{companyEmail}}`
 - Telefon: `{{companyPhone}}`
 - Kommune/fylke: `{{location}}`
-- Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`
+- Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
   - `[For eksempel: nylig registrert]`
@@ -53,22 +53,27 @@ Emne: `Nettside for {{companyName}}?`
 
 Hei {{greeting}},
 
-Jeg så at {{companyName}} nylig er registrert, og ville bare høre om {{recipientSubject}} trenger en enkel nettside.
+Gratulerer med {{companyName}}.
 
-Jeg lager ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva {{recipientSubject}} tilbyr og hvordan de kan ta kontakt.
+De fleste nye foretak trenger raskt:
+- en nettadresse
+- en enkel nettside
+- et sted kunder kan ta kontakt
 
-Typisk oppsett er:
-- Forside med hva {{recipientSubject}} tilbyr
-- Kontaktinfo med telefon og e-post
-- Enkel presentasjon av tjenester
+Jeg setter opp dette ferdig for {{recipientObject}}.
 
-Jeg kan sette opp dette ferdig til en fast pris på kr {{price}},-
-inkludert hjelp med domene og e-post hvis {{recipientSubject}} trenger det.
+Du får:
+- En ryddig nettside
+- Egen nettadresse, for eksempel firmanavn.no
+- Kontaktinfo og enkel presentasjon av hva {{recipientSubject}} tilbyr
+- Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Se eksempel her:
+Fast pris: {{price}} kr - ferdig satt opp.
+
+Eksempel:
 {{senderWebsite}}
 
-Hvis dette er aktuelt, kan jeg sende et konkret forslag til tekst og oppsett for {{recipientPossessive}} foretak.
+Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side - helt uforpliktende.
 
 Mvh  
 {{senderName}}  
@@ -79,16 +84,16 @@ Mvh
 
 Hei {{greeting}},
 
-Ser at {{companyName}} er nystartet - trenger {{recipientSubject}} en enkel nettside så folk finner fram?
+Gratulerer med {{companyName}}.
 
-Jeg lager enkle, ryddige sider for nye foretak med kontaktinfo, tjenester og oppsett klart til bruk.
+Jeg setter opp nettadresse, enkel nettside og kontaktpunkt ferdig for {{recipientObject}}.
 
-Fast pris: kr {{price}},-
+Fast pris: {{price}} kr - ferdig satt opp.
 
 Eksempel:
 {{senderWebsite}}
 
-Gi en lyd hvis du vil se et konkret forslag og et eksempel for {{recipientPossessive}} foretak.
+Gi en lyd hvis du vil se et konkret forslag til {{recipientPagePossessive}} side.
 
 Mvh  
 {{senderName}}
@@ -99,22 +104,27 @@ Emne: `Nettside for Eksempel AS?`
 
 Hei dere i Eksempel AS,
 
-Jeg så at Eksempel AS nylig er registrert, og ville bare høre om dere trenger en enkel nettside.
+Gratulerer med Eksempel AS.
 
-Jeg lager ryddige nettsider for nye foretak, med fokus på at kunder raskt finner hva dere tilbyr og hvordan de kan ta kontakt.
+De fleste nye foretak trenger raskt:
+- en nettadresse
+- en enkel nettside
+- et sted kunder kan ta kontakt
 
-Typisk oppsett er:
-- Forside med hva dere tilbyr
-- Kontaktinfo med telefon og e-post
-- Enkel presentasjon av tjenester
+Jeg setter opp dette ferdig for dere.
 
-Jeg kan sette opp dette ferdig til en fast pris på kr 4.500,-
-inkludert hjelp med domene og e-post hvis dere trenger det.
+Du får:
+- En ryddig nettside
+- Egen nettadresse, for eksempel firmanavn.no
+- Kontaktinfo og enkel presentasjon av hva dere tilbyr
+- Klar løsning dere kan bruke med en gang
 
-Se eksempel her:
+Fast pris: 4.500 kr - ferdig satt opp.
+
+Eksempel:
 https://ltj54.github.io/ltj-production/
 
-Hvis dette er aktuelt, kan jeg sende et konkret forslag til tekst og oppsett for deres foretak.
+Si ifra hvis du vil at jeg lager et konkret forslag til deres side - helt uforpliktende.
 
 Mvh  
 Lars Tangen Johannessen  
