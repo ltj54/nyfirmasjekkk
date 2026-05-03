@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 33
-- Sendt: 27
+- Antall hendelser: 44
+- Sendt: 37
 - Angret: 1
-- Aktive kontaktede selskaper: 26
+- Aktive kontaktede selskaper: 36
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-03 | 937345097 | AKTITO AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937493630 | WIIK ING. ELEKTRO AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937511302 | FAU BARNAS RETT BARNEHAGE | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 936403905 | FAUSKAN BÅTKLUBB | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937554060 | LEVANGER VOLLEYBALLKLUBB | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 935155665 | TRONDHEIM HARDCORE | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937572921 | DUSTY BOOTS LINEDANCERS | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937587872 | TEAM MØLL VILLMARK OG MESTRING | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937540515 | MYRASKOGEN BALL- OG LEIKEPLASS | FLI | email | kr 4.500 | website-offer |
+| 2026-05-03 | 937596006 | TEATERKOMPANI TASKENSPILLERNE | FLI | email | kr 4.500 | website-offer |
 | 2026-05-02 | 937631111 | SVANELVMO KIRKEFORENING | FLI | email | kr 4.500 | website-offer |
 | 2026-05-02 | 937636199 | BIH KULTUR FORENING BISERI ØSTFOLD | FLI | email | kr 4.500 | website-offer |
 | 2026-05-02 | 937586183 | SAGABAKKEN LOKALSAMFUNN | FLI | email | kr 4.500 | website-offer |
@@ -44,6 +54,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-03 23:02 | sent | 937345097 | AKTITO AS | AS | email | kr 4.500 | - |
+| 2026-05-03 23:01 | sent | 937493630 | WIIK ING. ELEKTRO AS | AS | email | kr 4.500 | - |
+| 2026-05-03 23:00 | sent | 937511302 | FAU BARNAS RETT BARNEHAGE | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:59 | not_relevant | 837538262 | RÅ DAMER MUSIKKOLLEKTIV | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:58 | sent | 936403905 | FAUSKAN BÅTKLUBB | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:57 | sent | 937554060 | LEVANGER VOLLEYBALLKLUBB | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:56 | sent | 935155665 | TRONDHEIM HARDCORE | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:55 | sent | 937572921 | DUSTY BOOTS LINEDANCERS | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:54 | sent | 937587872 | TEAM MØLL VILLMARK OG MESTRING | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:53 | sent | 937540515 | MYRASKOGEN BALL- OG LEIKEPLASS | FLI | email | kr 4.500 | - |
+| 2026-05-03 22:52 | sent | 937596006 | TEATERKOMPANI TASKENSPILLERNE | FLI | email | kr 4.500 | - |
 | 2026-05-02 15:38 | not_relevant | 937600720 | ELEKTRO 4 BIL | FLI | email | kr 4.500 | - |
 | 2026-05-02 15:36 | sent | 937631111 | SVANELVMO KIRKEFORENING | FLI | email | kr 4.500 | - |
 | 2026-05-02 15:36 | sent | 937636199 | BIH KULTUR FORENING BISERI ØSTFOLD | FLI | email | kr 4.500 | - |
