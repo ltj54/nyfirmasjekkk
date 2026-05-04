@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 70
-- Sendt: 60
+- Antall hendelser: 74
+- Sendt: 63
 - Angret: 4
-- Aktive kontaktede selskaper: 58
+- Aktive kontaktede selskaper: 61
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 | 937651716 | GEOOSLO | FLI | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937541015 | OSLO DETAILING CHAUDHRY | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937654391 | K. NORDVIK | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 837653762 | KALRUD BJØRN | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937473117 | J. BALEVIK INTERACTIVE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 837585252 | ASPEN MULTISERVICE | ENK | email | kr 4.500 | website-offer |
@@ -76,6 +79,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 15:22 | not_relevant | 937519052 | ET LEVD LIV | FLI | email | kr 4.500 | - |
+| 2026-05-04 15:19 | sent | 937651716 | GEOOSLO | FLI | email | kr 4.500 | - |
+| 2026-05-04 15:16 | sent | 937541015 | OSLO DETAILING CHAUDHRY | ENK | email | kr 4.500 | - |
+| 2026-05-04 15:15 | sent | 937654391 | K. NORDVIK | ENK | email | kr 4.500 | - |
 | 2026-05-04 12:17 | sent | 837653762 | KALRUD BJØRN | ENK | email | kr 4.500 | - |
 | 2026-05-04 11:05 | sent | 937473117 | J. BALEVIK INTERACTIVE | ENK | email | kr 4.500 | - |
 | 2026-05-04 11:04 | sent | 837585252 | ASPEN MULTISERVICE | ENK | email | kr 4.500 | - |
