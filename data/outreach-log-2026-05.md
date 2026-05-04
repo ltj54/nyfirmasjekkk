@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 69
-- Sendt: 59
+- Antall hendelser: 70
+- Sendt: 60
 - Angret: 4
-- Aktive kontaktede selskaper: 57
+- Aktive kontaktede selskaper: 58
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 | 837653762 | KALRUD BJØRN | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937473117 | J. BALEVIK INTERACTIVE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 837585252 | ASPEN MULTISERVICE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937335075 | ØVRE STUGGUVOLLBEKKVEGEN HYTTEFORENING | FLI | email | kr 4.500 | website-offer |
@@ -75,6 +76,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 12:17 | sent | 837653762 | KALRUD BJØRN | ENK | email | kr 4.500 | - |
 | 2026-05-04 11:05 | sent | 937473117 | J. BALEVIK INTERACTIVE | ENK | email | kr 4.500 | - |
 | 2026-05-04 11:04 | sent | 837585252 | ASPEN MULTISERVICE | ENK | email | kr 4.500 | - |
 | 2026-05-04 11:03 | sent | 937335075 | ØVRE STUGGUVOLLBEKKVEGEN HYTTEFORENING | FLI | email | kr 4.500 | - |

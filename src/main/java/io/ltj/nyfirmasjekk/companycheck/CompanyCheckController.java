@@ -72,7 +72,7 @@ public class CompanyCheckController {
             String organisasjonsnummer
     ) {
         meterRegistry.counter("company_check_details_requests_total").increment();
-        return meterRegistry.timer("company_check_details_timer", "org", organisasjonsnummer).record(() -> {
+        return meterRegistry.timer("company_check_details_timer").record(() -> {
             CompanyCheck check = companyCheckService.vurder(organisasjonsnummer);
             var enhet = brregClient.hentEnhet(organisasjonsnummer);
             var roller = brregClient.hentRoller(organisasjonsnummer);

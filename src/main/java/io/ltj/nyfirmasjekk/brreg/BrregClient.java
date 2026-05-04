@@ -6,17 +6,24 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Configuration
 class BrregClientConfiguration {
     @Bean
     RestClient brregRestClient() {
+        var requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(Duration.ofSeconds(3));
+        requestFactory.setReadTimeout(Duration.ofSeconds(8));
+
         return RestClient.builder()
                 .baseUrl("https://data.brreg.no/enhetsregisteret/api")
+                .requestFactory(requestFactory)
                 .defaultHeader("User-Agent", "Nyfirmasjekk-App")
                 .build();
     }
