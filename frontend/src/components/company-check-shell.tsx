@@ -64,6 +64,14 @@ const organizationFormHelp: Record<string, { label: string; description: string 
     label: "Aksjeselskap",
     description: "Vanlig selskapsform med begrenset ansvar.",
   },
+  DA: {
+    label: "Selskap med delt ansvar",
+    description: "Personlig eid selskap der deltakerne har delt ansvar. Kan være relevant for små virksomheter.",
+  },
+  ANS: {
+    label: "Ansvarlig selskap",
+    description: "Personlig eid selskap der deltakerne har ansvar. Kan være relevant for partnerskap og mindre drift.",
+  },
   ENK: {
     label: "Enkeltpersonforetak",
     description: "Eies og drives av én person.",
@@ -76,11 +84,25 @@ const organizationFormHelp: Record<string, { label: string; description: string 
     label: "Samvirkeforetak",
     description: "Medlemsstyrt foretak.",
   },
+  STIFT: {
+    label: "Stiftelse",
+    description: "Selveiende virksomhet med vedtektsfestet formål. Kan være relevant, men ofte mindre salgsrettet.",
+  },
   FLI: {
     label: "Forening/lag/innretning",
     description: "Forening, lag eller ideell innretning.",
   },
+  ASA: {
+    label: "Allmennaksjeselskap",
+    description: "Større aksjeselskapsform. Vanligvis mindre relevant for enkel startside, men kan brukes som filter.",
+  },
+  BA: {
+    label: "Selskap med begrenset ansvar",
+    description: "Eldre selskapsform som fortsatt finnes historisk. Relevansen varierer.",
+  },
 };
+
+const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "STIFT", "SA", "FLI", "ASA", "BA"];
 
 type LeadQuickFilter = "HAS_EMAIL" | "MISSING_WEBSITE" | "NOT_SENT" | "NOT_RELEVANT";
 
@@ -105,7 +127,7 @@ export function CompanyCheckShell() {
   const [listLoadSeconds, setListLoadSeconds] = useState(0);
   const [daysFilter, setDaysFilter] = useState("5");
   const [countyFilter, setCountyFilter] = useState("");
-  const [organizationFormFilter, setOrganizationFormFilter] = useState("AS");
+  const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
   const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([]);
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
@@ -270,7 +292,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county">) {
+  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment">) {
     setGeneratingEmailByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,
@@ -609,16 +631,16 @@ export function CompanyCheckShell() {
       return;
     }
     setSelectedCompany(null);
-    setSelectedLegend("GREEN");
+    setSelectedLegend(null);
     setDaysFilter("5");
     setCountyFilter("");
-    setOrganizationFormFilter("AS");
+    setOrganizationFormFilter("");
     setLeadQuickFilters([]);
     void fetchRecent(0, {
       daysFilter: "5",
       countyFilter: "",
-      organizationFormFilter: "AS",
-      selectedLegend: "GREEN",
+      organizationFormFilter: "",
+      selectedLegend: null,
     });
   }
 
@@ -724,7 +746,7 @@ export function CompanyCheckShell() {
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="text-[#52606D]">Selskapsform:</span>
-                  {["AS", "ENK", "NUF", "SA", "FLI"].map((code) => (
+                  {visibleOrganizationForms.map((code) => (
                     <div key={code} className="relative inline-flex items-center gap-1.5">
                       <button
                         className={`peer rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
@@ -815,8 +837,8 @@ export function CompanyCheckShell() {
                     onClick={() => {
                     setDaysFilter("5");
                     setCountyFilter("");
-                    setOrganizationFormFilter("AS");
-                    setSelectedLegend("GREEN");
+                    setOrganizationFormFilter("");
+                    setSelectedLegend(null);
                     setLeadQuickFilters([]);
                     scrollToSection("search");
                   }}
@@ -1021,8 +1043,8 @@ export function CompanyCheckShell() {
                         onClick={() => {
                           setDaysFilter("5");
                           setCountyFilter("");
-                          setOrganizationFormFilter("AS");
-                          setSelectedLegend("GREEN");
+                          setOrganizationFormFilter("");
+                          setSelectedLegend(null);
                           setLeadQuickFilters([]);
                           void fetchRecent(0);
                         }}
@@ -1129,9 +1151,16 @@ function CompanyCard({
             {leadPriority.label}
           </Badge>
         </div>
-        <Badge variant="outline" className="rounded-sm border-[#D9E2EC] bg-[#F0F4F8] px-2 py-0 text-[10px] font-medium text-[#52606D]">
-          {company.organizationForm}
-        </Badge>
+        <div className="flex flex-wrap justify-end gap-2">
+          {company.salesSegment ? (
+            <Badge variant="outline" className="rounded-sm border-[#C7DFF8] bg-[#F8FBFF] px-2 py-0 text-[10px] font-semibold text-[#1F5FA9]">
+              {company.salesSegment.label}
+            </Badge>
+          ) : null}
+          <Badge variant="outline" className="rounded-sm border-[#D9E2EC] bg-[#F0F4F8] px-2 py-0 text-[10px] font-medium text-[#52606D]">
+            {company.organizationForm}
+          </Badge>
+        </div>
       </div>
       <h3 className="mb-1 line-clamp-1 text-[15px] font-semibold text-[#1F2933] transition-colors group-hover:text-[#1F5FA9]">
         {company.name}
@@ -1158,6 +1187,14 @@ function CompanyCard({
           <CalendarDays className="size-3.5" />
           <span>{company.registrationDate ? `Registrert: ${company.registrationDate}` : "Registrert: ukjent"}</span>
         </div>
+        {company.naceCode || company.naceDescription ? (
+          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
+            <Landmark className="size-3.5" />
+            <span className="truncate">
+              {[company.naceCode, company.naceDescription].filter(Boolean).join(" · ")}
+            </span>
+          </div>
+        ) : null}
         {company.email ? (
           <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
             <Mail className="size-3.5" />
@@ -2067,6 +2104,11 @@ function compareLeadPriority(left: CompanySummary, right: CompanySummary) {
     return emailDifference;
   }
 
+  const salesSegmentDifference = salesSegmentRank(left) - salesSegmentRank(right);
+  if (salesSegmentDifference !== 0) {
+    return salesSegmentDifference;
+  }
+
   const priorityDifference = leadPriorityRank(left) - leadPriorityRank(right);
   if (priorityDifference !== 0) {
     return priorityDifference;
@@ -2130,6 +2172,10 @@ function yellowEmailRank(company: CompanySummary) {
 
 function emailRank(company: CompanySummary) {
   return company.email ? 0 : 1;
+}
+
+function salesSegmentRank(company: CompanySummary) {
+  return -(company.salesSegment?.score ?? 50);
 }
 
 function structureSignalRank(company: CompanySummary) {
@@ -2368,6 +2414,7 @@ function CompanyDetailView({
                 <DetailDataPoint icon={CalendarDays} label="Etablert" value={company.registrationDate || "Ukjent"} />
                 <DetailDataPoint icon={CalendarDays} label="Stiftet" value={company.foundationDate || "Ikke oppgitt"} />
                 <DetailDataPoint icon={Landmark} label="Bransje" value={company.naceDescription || "Ikke oppgitt"} />
+                <DetailDataPoint icon={Landmark} label="Salgsgruppe" value={company.salesSegment ? `${company.salesSegment.label} (${company.salesSegment.score})` : "Ikke klassifisert"} />
                 <DetailDataPoint
                   icon={Globe}
                   label="Nettside"
@@ -2920,9 +2967,11 @@ function formatDateTime(value: string) {
   }).format(date);
 }
 
+type OutreachEmailCompany = Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment">;
+
 function buildOutreachEmailSubject(
   markdown: string,
-  company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
+  company: OutreachEmailCompany
 ) {
   const template = extractMailSubject(markdown) ?? "Nettside for {{companyName}}?";
   return applyOutreachTemplate(template, company);
@@ -2930,7 +2979,7 @@ function buildOutreachEmailSubject(
 
 function buildOutreachEmailBody(
   markdown: string,
-  company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
+  company: OutreachEmailCompany
 ) {
   const template = extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
   const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
@@ -3041,7 +3090,7 @@ function extractMarkdownSection(markdown: string, heading: string) {
 
 function applyOutreachTemplate(
   template: string,
-  company: Pick<CompanySummary, "name" | "orgNumber" | "contactPersonName" | "email" | "phone" | "municipality" | "county">
+  company: OutreachEmailCompany
 ) {
   const contactName = company.contactPersonName?.trim() || "";
   const greeting = contactName ? firstNameFromContactName(contactName) : `dere i ${company.name}`;
@@ -3058,6 +3107,11 @@ function applyOutreachTemplate(
     "{{companyEmail}}": company.email?.trim() || "",
     "{{companyPhone}}": company.phone?.trim() || "",
     "{{location}}": location,
+    "{{naceCode}}": company.naceCode?.trim() || "",
+    "{{naceDescription}}": company.naceDescription?.trim() || "",
+    "{{salesSegment}}": company.salesSegment?.label ?? "Annet",
+    "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "Jeg lager ryddige nettsider for nye virksomheter med tydelig presentasjon og kontaktinfo.",
+    "{{salesSegmentExplanation}}": company.salesSegment?.explanation ?? "",
     "{{greeting}}": greeting,
     "{{recipientSubject}}": recipientSubject,
     "{{recipientPossessive}}": recipientPossessive,
@@ -3089,17 +3143,14 @@ function defaultOutreachEmailTemplate() {
 
 Gratulerer med {{companyName}}.
 
-De fleste nye foretak trenger raskt:
-- en nettadresse
-- en enkel nettside
-- et sted kunder kan ta kontakt
+{{salesSegmentPitch}}
 
 Jeg setter opp dette ferdig for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
 - Egen nettadresse, for eksempel firmanavn.no
-- Kontaktinfo og enkel presentasjon av hva {{recipientSubject}} tilbyr
+- Kontaktinfo og enkel presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.

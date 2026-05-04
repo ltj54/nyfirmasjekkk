@@ -12,6 +12,7 @@ public record CompanySummary(
         String county,
         String naceCode,
         String naceDescription,
+        SalesSegment salesSegment,
         String website,
         WebsiteDiscovery websiteDiscovery,
         String email,

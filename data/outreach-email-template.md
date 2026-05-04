@@ -11,6 +11,9 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - E-post: `{{companyEmail}}`
 - Telefon: `{{companyPhone}}`
 - Kommune/fylke: `{{location}}`
+- NACE: `{{naceCode}}` / `{{naceDescription}}`
+- Salgsgruppe: `{{salesSegment}}`
+- Tilpasset bransjetekst: `{{salesSegmentPitch}}`
 - Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
@@ -55,17 +58,14 @@ Hei {{greeting}},
 
 Gratulerer med {{companyName}}.
 
-De fleste nye foretak trenger raskt:
-- en nettadresse
-- en enkel nettside
-- et sted kunder kan ta kontakt
+{{salesSegmentPitch}}
 
 Jeg setter opp dette ferdig for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
 - Egen nettadresse, for eksempel firmanavn.no
-- Kontaktinfo og enkel presentasjon av hva {{recipientSubject}} tilbyr
+- Kontaktinfo og enkel presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
@@ -106,17 +106,14 @@ Hei dere i Eksempel AS,
 
 Gratulerer med Eksempel AS.
 
-De fleste nye foretak trenger raskt:
-- en nettadresse
-- en enkel nettside
-- et sted kunder kan ta kontakt
+Jeg lager en enkel nettside for håndverksbedrifter med tjenester, kontaktinfo, område dere dekker og en ryddig profil som gjør det lettere å bli funnet på Google.
 
 Jeg setter opp dette ferdig for dere.
 
 Du får:
 - En ryddig nettside
 - Egen nettadresse, for eksempel firmanavn.no
-- Kontaktinfo og enkel presentasjon av hva dere tilbyr
+- Kontaktinfo og enkel presentasjon av tjenestene
 - Klar løsning dere kan bruke med en gang
 
 Fast pris: 4.500 kr - ferdig satt opp.

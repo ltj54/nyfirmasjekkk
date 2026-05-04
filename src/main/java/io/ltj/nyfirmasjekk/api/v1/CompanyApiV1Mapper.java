@@ -116,6 +116,7 @@ public class CompanyApiV1Mapper {
                 county(enhet),
                 naceCode(enhet),
                 naceDescription(enhet),
+                salesSegment(enhet),
                 enhet.hjemmeside(),
                 websiteDiscovery(companyCheck, enhet, false),
                 enhet.epostadresse(),
@@ -150,6 +151,7 @@ public class CompanyApiV1Mapper {
                 county(enhet),
                 naceCode(enhet),
                 naceDescription(enhet),
+                salesSegment(enhet),
                 enhet.hjemmeside(),
                 websiteDiscovery(companyCheck, enhet, true),
                 enhet.epostadresse(),
@@ -1337,6 +1339,10 @@ public class CompanyApiV1Mapper {
 
     private String naceDescription(EnhetResponse enhet) {
         return enhet.naeringskode1() == null ? null : enhet.naeringskode1().beskrivelse();
+    }
+
+    private SalesSegment salesSegment(EnhetResponse enhet) {
+        return SalesSegmentCatalog.fromNaceCode(naceCode(enhet));
     }
 
     private String municipality(EnhetResponse enhet) {

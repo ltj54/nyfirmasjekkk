@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/company-check")
 public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
+    private static final int SEARCH_RESULT_SIZE = 150;
 
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
@@ -170,21 +171,23 @@ public class CompanyCheckController {
             @RequestParam(required = false) String fylke,
             @RequestParam(required = false) String naeringskode,
             @RequestParam(required = false) String organisasjonsform,
+            @RequestParam(required = false) String organizationForm,
             @RequestParam(required = false) String score,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
         return meterRegistry.timer("company_check_search_timer", "score", score == null ? "ALL" : score).record(() -> {
             long startedAt = System.nanoTime();
+            String effectiveOrganisasjonsform = firstNonBlank(organisasjonsform, organizationForm);
             var request = new CompanySearchRequest(
                     navn,
                     dager,
                     kommune,
                     fylke,
                     naeringskode,
-                    organisasjonsform,
+                    effectiveOrganisasjonsform,
                     score,
-                    100
+                    SEARCH_RESULT_SIZE
             );
 
             var searchPage = companyCheckService.sokPage(request, page);
@@ -201,7 +204,7 @@ public class CompanyCheckController {
                     score,
                     navn,
                     fylke,
-                    organisasjonsform,
+                    effectiveOrganisasjonsform,
                     results.size(),
                     searchPage.totalElements(),
                     scoreCounts
@@ -240,6 +243,15 @@ public class CompanyCheckController {
         joiner.add("totalElements=" + totalElements);
         joiner.add("scoreCounts=" + scoreCounts);
         return joiner.toString();
+    }
+
+    private String firstNonBlank(String... values) {
+        for (String value : values) {
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

@@ -4,15 +4,36 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 44
-- Sendt: 37
-- Angret: 1
-- Aktive kontaktede selskaper: 36
+- Antall hendelser: 69
+- Sendt: 59
+- Angret: 4
+- Aktive kontaktede selskaper: 57
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 | 937473117 | J. BALEVIK INTERACTIVE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 837585252 | ASPEN MULTISERVICE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937335075 | ØVRE STUGGUVOLLBEKKVEGEN HYTTEFORENING | FLI | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937596529 | TOR KRISTIANSEN | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937652623 | CRUSSELL & CO AB | UTLA | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937511434 | NAGLA ØSTFOLD LATVISKE AMATØRTEATER | FLI | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937500874 | LASSE KVISBERG | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937532253 | MAGNUS MYHRA | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937590202 | MAREN MATHIASSEN | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937523033 | FRISØR ØVERLAND | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937502257 | MOLCHANSKYI RENGJØRING | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937593015 | ANNE HAGEN | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937522924 | LÅSESENTER 24/7 DEMETER | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937605641 | ROSANNE MUSIC V/ LINDA JØRGENSEN | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 837605512 | SINDRE SUND ARKITEKT | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937605684 | BYGGMESTER ARESVIK | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937649045 | SVEN AUNE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937648383 | LØKÅS VEDLIKEHOLD & SERVICE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937649568 | HALVARD SVEUM | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937620497 | OMNIRETAIL CONSULTING AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937528140 | TALBERG & AARVÅG BYGG AS | AS | email | kr 4.500 | website-offer |
 | 2026-05-03 | 937345097 | AKTITO AS | AS | email | kr 4.500 | website-offer |
 | 2026-05-03 | 937493630 | WIIK ING. ELEKTRO AS | AS | email | kr 4.500 | website-offer |
 | 2026-05-03 | 937511302 | FAU BARNAS RETT BARNEHAGE | FLI | email | kr 4.500 | website-offer |
@@ -54,6 +75,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 11:05 | sent | 937473117 | J. BALEVIK INTERACTIVE | ENK | email | kr 4.500 | - |
+| 2026-05-04 11:04 | sent | 837585252 | ASPEN MULTISERVICE | ENK | email | kr 4.500 | - |
+| 2026-05-04 11:03 | sent | 937335075 | ØVRE STUGGUVOLLBEKKVEGEN HYTTEFORENING | FLI | email | kr 4.500 | - |
+| 2026-05-04 11:00 | sent | 937596529 | TOR KRISTIANSEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:37 | sent | 937652623 | CRUSSELL & CO AB | UTLA | email | kr 4.500 | - |
+| 2026-05-04 10:27 | sent | 937511434 | NAGLA ØSTFOLD LATVISKE AMATØRTEATER | FLI | email | kr 4.500 | - |
+| 2026-05-04 10:25 | sent | 937500874 | LASSE KVISBERG | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:23 | sent | 937532253 | MAGNUS MYHRA | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:22 | sent | 937590202 | MAREN MATHIASSEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:20 | sent | 937523033 | FRISØR ØVERLAND | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:19 | sent | 937502257 | MOLCHANSKYI RENGJØRING | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:18 | sent | 937593015 | ANNE HAGEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:17 | sent | 937522924 | LÅSESENTER 24/7 DEMETER | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:15 | sent | 937605641 | ROSANNE MUSIC V/ LINDA JØRGENSEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:13 | sent | 837605512 | SINDRE SUND ARKITEKT | ENK | email | kr 4.500 | - |
+| 2026-05-04 10:01 | sent | 937605684 | BYGGMESTER ARESVIK | ENK | email | kr 4.500 | - |
+| 2026-05-04 09:55 | sent | 937649045 | SVEN AUNE | ENK | email | kr 4.500 | - |
+| 2026-05-04 09:54 | sent | 937648383 | LØKÅS VEDLIKEHOLD & SERVICE | ENK | email | kr 4.500 | - |
+| 2026-05-04 09:52 | sent | 937649568 | HALVARD SVEUM | ENK | email | kr 4.500 | - |
+| 2026-05-04 09:41 | sent | 937620497 | OMNIRETAIL CONSULTING AS | AS | email | kr 4.500 | - |
+| 2026-05-04 09:40 | reverted | 937620497 | OMNIRETAIL CONSULTING AS | AS | email | kr 4.500 | - |
+| 2026-05-04 09:39 | sent | 937528140 | TALBERG & AARVÅG BYGG AS | AS | email | kr 4.500 | - |
+| 2026-05-04 09:39 | reverted | 937528140 | TALBERG & AARVÅG BYGG AS | AS | email | kr 4.500 | - |
+| 2026-05-04 09:39 | reverted | 937528140 | TALBERG & AARVÅG BYGG AS | AS | email | kr 4.500 | Må følges opp |
+| 2026-05-04 09:38 | sent | 937528140 | TALBERG & AARVÅG BYGG AS | AS | email | kr 4.500 | Må følges opp |
 | 2026-05-03 23:02 | sent | 937345097 | AKTITO AS | AS | email | kr 4.500 | - |
 | 2026-05-03 23:01 | sent | 937493630 | WIIK ING. ELEKTRO AS | AS | email | kr 4.500 | - |
 | 2026-05-03 23:00 | sent | 937511302 | FAU BARNAS RETT BARNEHAGE | FLI | email | kr 4.500 | - |

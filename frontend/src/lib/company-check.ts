@@ -10,6 +10,7 @@ export interface CompanySummary {
   county: string | null;
   naceCode: string | null;
   naceDescription: string | null;
+  salesSegment: SalesSegment | null;
   website: string | null;
   websiteDiscovery: WebsiteDiscovery | null;
   email: string | null;
@@ -83,6 +84,14 @@ export interface StructureSignal {
   detail: string;
   severity: "HIGH" | "MEDIUM" | "INFO";
   source: string;
+}
+
+export interface SalesSegment {
+  code: string;
+  label: string;
+  score: number;
+  explanation: string;
+  emailPitch: string;
 }
 
 export interface WebsiteDiscovery {
