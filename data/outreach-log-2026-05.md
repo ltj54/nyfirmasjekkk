@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 74
-- Sendt: 63
-- Angret: 4
-- Aktive kontaktede selskaper: 61
+- Antall hendelser: 83
+- Sendt: 68
+- Angret: 5
+- Aktive kontaktede selskaper: 65
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 | 937367465 | B-BLESSED AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937646186 | ASLAK HELLEVIK | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937640412 | AKTIVAREA LINBERG | ENK | email | kr 4.500 | website-offer |
+| 2026-05-04 | 937656726 | LYNGVÆR FOTO | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937651716 | GEOOSLO | FLI | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937541015 | OSLO DETAILING CHAUDHRY | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937654391 | K. NORDVIK | ENK | email | kr 4.500 | website-offer |
@@ -79,6 +83,15 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-04 23:06 | not_relevant | 937609140 | VASKERIET | FLI | email | kr 4.500 | - |
+| 2026-05-04 23:05 | not_relevant | 937606362 | DDB KULTUR OG UTVIKLING | FLI | email | kr 4.500 | - |
+| 2026-05-04 23:01 | sent | 937367465 | B-BLESSED AS | AS | email | kr 4.500 | - |
+| 2026-05-04 22:59 | sent | 937646186 | ASLAK HELLEVIK | ENK | email | kr 4.500 | - |
+| 2026-05-04 22:58 | sent | 937640412 | AKTIVAREA LINBERG | ENK | email | kr 4.500 | - |
+| 2026-05-04 22:54 | not_relevant | 937647654 | SVARET MEDIA MORTENSEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 22:54 | reverted | 937647654 | SVARET MEDIA MORTENSEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 22:54 | sent | 937647654 | SVARET MEDIA MORTENSEN | ENK | email | kr 4.500 | - |
+| 2026-05-04 22:11 | sent | 937656726 | LYNGVÆR FOTO | ENK | email | kr 4.500 | - |
 | 2026-05-04 15:22 | not_relevant | 937519052 | ET LEVD LIV | FLI | email | kr 4.500 | - |
 | 2026-05-04 15:19 | sent | 937651716 | GEOOSLO | FLI | email | kr 4.500 | - |
 | 2026-05-04 15:16 | sent | 937541015 | OSLO DETAILING CHAUDHRY | ENK | email | kr 4.500 | - |

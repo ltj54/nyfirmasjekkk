@@ -149,6 +149,7 @@ const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "STIFT", "SA"
 
 const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
   { value: "HAS_EMAIL", label: "Har e-post" },
+  { value: "HAS_WEBSITE", label: "Har nettside" },
   { value: "MISSING_WEBSITE", label: "Mangler nettside" },
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
@@ -333,7 +334,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment">) {
+  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery">) {
     setGeneratingEmailByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,
@@ -1764,6 +1765,31 @@ function CompanyDetailView({
                   <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
                     {formatWebsiteConfidence(company.websiteDiscovery.confidence)} sikkerhet · {company.websiteDiscovery.source}
                   </p>
+                </div>
+              ) : null}
+
+              {company.website && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false ? (
+                <div className="mt-4 border border-amber-200 bg-amber-50/70 p-5">
+                  <p className="mb-2 text-[12px] font-medium text-amber-800">Registrert nettside svarer ikke</p>
+                  <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">
+                    Nettsiden er registrert i BRREG, men svarte ikke ved teknisk sjekk på detaljsiden.
+                  </p>
+                  <a
+                    className="mt-3 inline-flex rounded-sm border border-amber-200 bg-white px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-[#F8FBFF]"
+                    href={normalizeWebsiteUrl(company.website)}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Åpne registrert nettside
+                  </a>
+                  <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">
+                    Dette kan være DNS-feil, timeout, 404/5xx, SSL-feil eller midlertidig nedetid. Sjekk manuelt før du bruker det i kontakt.
+                  </p>
+                  {company.websiteDiscovery.contentMatchReason ? (
+                    <p className="mt-2 text-[12px] font-medium text-[#52606D]">
+                      {company.websiteDiscovery.contentMatchReason}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
 

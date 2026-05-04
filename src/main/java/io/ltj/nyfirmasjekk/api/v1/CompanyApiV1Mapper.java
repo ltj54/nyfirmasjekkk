@@ -199,6 +199,27 @@ public class CompanyApiV1Mapper {
     private WebsiteDiscovery websiteDiscovery(CompanyCheck companyCheck, EnhetResponse enhet, boolean inspectAllCandidates) {
         if (hasText(enhet.hjemmeside())) {
             String website = normalizeWebsiteCandidate(enhet.hjemmeside());
+            if (inspectAllCandidates) {
+                boolean reachable = websiteReachabilityService.isReachable(website);
+                WebsiteContentMatch contentMatch = reachable
+                        ? websiteContentInspectionService.inspect(website, companyCheck.navn(), extractEmailDomain(enhet.epostadresse()))
+                        : new WebsiteContentMatch(false, "Registrert nettside i BRREG svarte ikke ved teknisk sjekk.", null);
+                return new WebsiteDiscovery(
+                        "REGISTERED",
+                        reachable ? "HIGH" : "LOW",
+                        List.of(website),
+                        reachable ? website : null,
+                        reachable,
+                        reachable,
+                        contentMatch.reason(),
+                        contentMatch.pageTitle(),
+                        List.of(toWebsiteCandidateCheck(website, reachable, contentMatch)),
+                        reachable
+                                ? "Nettsiden er registrert i BRREG og svarte ved teknisk sjekk."
+                                : "Nettsiden er registrert i BRREG, men svarte ikke ved teknisk sjekk.",
+                        SOURCE_BRREG
+                );
+            }
             return new WebsiteDiscovery(
                     "REGISTERED",
                     "HIGH",

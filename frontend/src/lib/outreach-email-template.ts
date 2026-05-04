@@ -12,15 +12,21 @@ type OutreachEmailCompany = Pick<
   | "naceCode"
   | "naceDescription"
   | "salesSegment"
+  | "website"
+  | "websiteDiscovery"
 >;
 
 export function buildOutreachEmailSubject(markdown: string, company: OutreachEmailCompany) {
-  const template = extractMailSubject(markdown) ?? "Nettside for {{companyName}}?";
+  const template = isRegisteredWebsiteUnavailable(company)
+    ? extractMailSubject(markdown, "E-postmal - registrert nettside svarer ikke") ?? "Nettsiden til {{companyName}}?"
+    : extractMailSubject(markdown) ?? "Nettside for {{companyName}}?";
   return applyOutreachTemplate(template, company);
 }
 
 export function buildOutreachEmailBody(markdown: string, company: OutreachEmailCompany) {
-  const template = extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
+  const template = isRegisteredWebsiteUnavailable(company)
+    ? extractMarkdownSection(markdown, "E-postmal - registrert nettside svarer ikke") ?? defaultRegisteredWebsiteUnavailableEmailTemplate()
+    : extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
   const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
   return applyOutreachTemplate(cleanedTemplate, company);
 }
@@ -88,8 +94,8 @@ export function buildOutreachEmailHtml(body: string) {
   return `<div style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.55; color: #1F2933;">${parts.join("")}</div>`;
 }
 
-function extractMailSubject(markdown: string) {
-  const section = extractMarkdownSection(markdown, "E-postmal");
+function extractMailSubject(markdown: string, heading = "E-postmal") {
+  const section = extractMarkdownSection(markdown, heading);
   if (!section) {
     return null;
   }
@@ -142,6 +148,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{senderPhone}}": "977 24 209",
     "{{senderEmail}}": "latajo@gmail.no",
     "{{senderWebsite}}": "https://ltj54.github.io/ltj-production/",
+    "{{registeredWebsite}}": company.website?.trim() || "",
   };
 
   let nextText = template;
@@ -152,6 +159,39 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
   return nextText
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+function defaultRegisteredWebsiteUnavailableEmailTemplate() {
+  return `Hei {{greeting}},
+
+Gratulerer med {{companyName}}.
+
+Jeg så at dere har registrert nettsiden {{registeredWebsite}}, men den ser ikke ut til å svare akkurat nå.
+
+Jeg kan hjelpe med å få på plass en enkel og ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+
+Du får:
+- En ryddig nettside
+- Kontaktinfo og enkel presentasjon av tjenestene
+- Klar løsning {{recipientSubject}} kan bruke med en gang
+
+Fast pris: {{price}} kr - ferdig satt opp.
+
+Eksempel:
+{{senderWebsite}}
+
+Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag - helt uforpliktende.
+
+Mvh
+{{senderName}}
+{{senderPhone}}
+{{senderEmail}}`;
+}
+
+function isRegisteredWebsiteUnavailable(company: OutreachEmailCompany) {
+  return Boolean(company.website)
+    && company.websiteDiscovery?.status === "REGISTERED"
+    && company.websiteDiscovery.verifiedReachable === false;
 }
 
 function defaultOutreachEmailTemplate() {

@@ -80,6 +80,35 @@ Mvh
 {{senderPhone}}  
 {{senderEmail}}
 
+## E-postmal - registrert nettside svarer ikke
+
+Emne: `Nettsiden til {{companyName}}?`
+
+Hei {{greeting}},
+
+Gratulerer med {{companyName}}.
+
+Jeg så at dere har registrert nettsiden {{registeredWebsite}}, men den ser ikke ut til å svare akkurat nå.
+
+Jeg kan hjelpe med å få på plass en enkel og ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+
+Du får:
+- En ryddig nettside
+- Kontaktinfo og enkel presentasjon av tjenestene
+- Klar løsning {{recipientSubject}} kan bruke med en gang
+
+Fast pris: {{price}} kr - ferdig satt opp.
+
+Eksempel:
+{{senderWebsite}}
+
+Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag - helt uforpliktende.
+
+Mvh  
+{{senderName}}  
+{{senderPhone}}  
+{{senderEmail}}
+
 ## Kort variant
 
 Hei {{greeting}},

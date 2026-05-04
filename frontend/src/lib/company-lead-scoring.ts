@@ -1,6 +1,6 @@
 import type { CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
 
-export type LeadQuickFilter = "HAS_EMAIL" | "MISSING_WEBSITE" | "NOT_SENT" | "NOT_RELEVANT";
+export type LeadQuickFilter = "HAS_EMAIL" | "HAS_WEBSITE" | "MISSING_WEBSITE" | "NOT_SENT" | "NOT_RELEVANT";
 
 export function getContactability(company: CompanySummary) {
   const points = [company.email, company.phone, company.website, company.contactPersonName].filter(Boolean).length;
@@ -103,8 +103,10 @@ export function applyLeadQuickFilters(
       switch (filter) {
         case "HAS_EMAIL":
           return Boolean(company.email);
+        case "HAS_WEBSITE":
+          return hasWebsiteSignal(company);
         case "MISSING_WEBSITE":
-          return !company.website && company.websiteDiscovery?.contentMatched !== true;
+          return !hasWebsiteSignal(company);
         case "NOT_SENT":
           return !status?.sent;
         case "NOT_RELEVANT":
@@ -112,6 +114,10 @@ export function applyLeadQuickFilters(
       }
     });
   });
+}
+
+function hasWebsiteSignal(company: CompanySummary) {
+  return Boolean(company.website);
 }
 
 export function prioritizedListStructureSignals(signals: StructureSignal[]) {
@@ -145,6 +151,7 @@ function evaluateLeadSignal(company: CompanySummary) {
   const hasPossibleWebsite = company.websiteDiscovery?.status === "POSSIBLE_MATCH";
   const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
   const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
+  const hasRegisteredUnreachableWebsite = Boolean(company.website) && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false;
   const missingWebsite = !company.website && !hasPossibleWebsite;
 
   if (company.scoreColor === "RED") {
@@ -155,6 +162,17 @@ function evaluateLeadSignal(company: CompanySummary) {
       "Røde registerspor gjør dette mindre egnet som ordinært lead før dyp analyse er vurdert.",
       "Åpne analyse",
       "border-rose-100 bg-rose-50/60"
+    );
+  }
+
+  if (hasRegisteredUnreachableWebsite) {
+    return leadSignalResult(
+      "Mulig lead",
+      hasEmail ? `Start med e-post: ${company.email}` : "Registrert nettside svarer ikke",
+      "Registrert nettside svarer ikke",
+      "Selskapet har nettside registrert i BRREG, men den svarte ikke ved teknisk sjekk. Dette er en egen mulighet: hjelp til å få en fungerende side på plass.",
+      "Se detaljer",
+      "border-amber-100 bg-amber-50/70"
     );
   }
 
