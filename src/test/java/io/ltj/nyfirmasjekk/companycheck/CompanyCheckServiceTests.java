@@ -1383,6 +1383,102 @@ class CompanyCheckServiceTests {
         assertThat(result.status()).isEqualTo(TrafficLight.YELLOW);
     }
 
+    @Test
+    void kontaktfiltreBrukesForTotalOgSideinndeling() {
+        var medEpostOgNettside = new EnhetResponse(
+                "123456789",
+                "KONTAKTBAR AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "kontaktbar.no",
+                "post@kontaktbar.no",
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                1,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, 1, 9),
+                null,
+                null
+        );
+        var bareEpost = new EnhetResponse(
+                "223456789",
+                "BARE EPOST AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                null,
+                "post@bareepost.no",
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                1,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, 1, 9),
+                null,
+                null
+        );
+        var bareNettside = new EnhetResponse(
+                "323456789",
+                "BARE NETTSIDE AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"),
+                List.of("Konsulenttjenester"),
+                "barenettside.no",
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                1,
+                true,
+                "2024",
+                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, 1, 9),
+                null,
+                null
+        );
+        var client = new StubBrregClient(
+                Map.of(
+                        medEpostOgNettside.organisasjonsnummer(), medEpostOgNettside,
+                        bareEpost.organisasjonsnummer(), bareEpost,
+                        bareNettside.organisasjonsnummer(), bareNettside
+                ),
+                Map.of(
+                        medEpostOgNettside.organisasjonsnummer(), new RollerResponse(List.of()),
+                        bareEpost.organisasjonsnummer(), new RollerResponse(List.of()),
+                        bareNettside.organisasjonsnummer(), new RollerResponse(List.of())
+                ),
+                new EnheterSearchResponse(
+                        new EnheterSearchResponse.Embedded(List.of(medEpostOgNettside, bareEpost, bareNettside)),
+                        new EnheterSearchResponse.Page(100, 3, 1, 0)
+                )
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, 10, true, true, false), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789");
+        assertThat(result.totalElements()).isEqualTo(1);
+        assertThat(result.totalPages()).isEqualTo(1);
+    }
+
     private Clock fixedClock() {
         return Clock.fixed(Instant.parse("2026-04-13T10:15:30Z"), ZoneId.of("Europe/Oslo"));
     }

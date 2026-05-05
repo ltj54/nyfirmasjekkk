@@ -505,6 +505,9 @@ export function CompanyCheckShell() {
     if (effectiveCountyFilter) params.set("county", effectiveCountyFilter);
     if (effectiveOrganizationFormFilter) params.set("organizationForm", effectiveOrganizationFormFilter);
     if (effectiveSelectedLegend) params.set("score", effectiveSelectedLegend);
+    if (leadQuickFilters.includes("HAS_EMAIL")) params.set("hasEmail", "true");
+    if (leadQuickFilters.includes("HAS_WEBSITE")) params.set("hasWebsite", "true");
+    if (leadQuickFilters.includes("MISSING_WEBSITE")) params.set("missingWebsite", "true");
 
     try {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
@@ -549,7 +552,7 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     runRefreshRecent();
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, selectedCompany]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, selectedCompany]);
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {

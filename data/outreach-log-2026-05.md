@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 119
-- Sendt: 91
+- Antall hendelser: 136
+- Sendt: 98
 - Angret: 5
-- Aktive kontaktede selskaper: 88
+- Aktive kontaktede selskaper: 95
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 | 937505205 | SOLSKJERMING PAA STEDET AV PREBEN AANONSEN | ENK | email | kr 4.500 | website-improvement-offer |
+| 2026-05-05 | 937600542 | SVENSKT KOSTTILLSKOTT AB | UTLA | email | kr 4.500 | website-improvement-offer |
+| 2026-05-05 | 837510112 | GLEDITSCH-PROSJEKTET | FLI | email | kr 4.500 | website-improvement-offer |
+| 2026-05-05 | 937658958 | ALVASAR OÜ | UTLA | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937657218 | KOSTENKO HUS OG BILPLEIE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937568967 | KHAN LOGISTICS | ENK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937568800 | INGE RØNNING FISHING | ENK | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937591039 | INNLANDET LASSKJØRERLAG | FLI | email | kr 4.500 | website-unavailable-offer |
 | 2026-05-05 | 937587074 | HEDDALRØTAR | FLI | email | kr 4.500 | website-unavailable-offer |
 | 2026-05-05 | 937583036 | HAUGE LIVE | FLI | email | kr 4.500 | website-improvement-offer |
@@ -106,6 +113,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 12:40 | sent | 937505205 | SOLSKJERMING PAA STEDET AV PREBEN AANONSEN | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:39 | sent | 937600542 | SVENSKT KOSTTILLSKOTT AB | UTLA | email | kr 4.500 | - |
+| 2026-05-05 12:37 | not_relevant | 837520762 | SISSEL GRINDHEIM | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:36 | not_relevant | 937627831 | POWER4U2 OÜ | UTLA | email | kr 4.500 | - |
+| 2026-05-05 12:35 | not_relevant | 937543034 | OLIN TECH | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:34 | not_relevant | 937627718 | KA-CHING APS | UTLA | email | kr 4.500 | - |
+| 2026-05-05 12:34 | not_relevant | 937555849 | SPIKKEKONEN NIELSEN | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:33 | not_relevant | 937554826 | GRAN KUNST OG FORMIDLING | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:32 | sent | 837510112 | GLEDITSCH-PROSJEKTET | FLI | email | kr 4.500 | - |
+| 2026-05-05 12:31 | not_relevant | 937655355 | DUR MEDIEHUS | FLI | email | kr 4.500 | - |
+| 2026-05-05 12:30 | not_relevant | 937653506 | BYGGMESTERFORBUNDET VOSS & HARDANGER | FLI | email | kr 4.500 | - |
+| 2026-05-05 12:15 | not_relevant | 937600046 | NATURAL CHOICE AS | AS | email | kr 4.500 | - |
+| 2026-05-05 12:15 | sent | 937658958 | ALVASAR OÜ | UTLA | email | kr 4.500 | - |
+| 2026-05-05 12:12 | sent | 937657218 | KOSTENKO HUS OG BILPLEIE | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:11 | sent | 937568967 | KHAN LOGISTICS | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:09 | sent | 937568800 | INGE RØNNING FISHING | ENK | email | kr 4.500 | - |
+| 2026-05-05 12:05 | not_relevant | 837658292 | MODERN BY-PRODUCTS A/S | UTLA | email | kr 4.500 | - |
 | 2026-05-05 11:14 | not_relevant | 937605625 | PERFORMANCE BILPLEIE YOUNAS | ENK | email | kr 4.500 | - |
 | 2026-05-05 11:13 | sent | 937591039 | INNLANDET LASSKJØRERLAG | FLI | email | kr 4.500 | - |
 | 2026-05-05 11:12 | sent | 937587074 | HEDDALRØTAR | FLI | email | kr 4.500 | - |

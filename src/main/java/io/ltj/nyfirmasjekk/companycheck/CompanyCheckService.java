@@ -701,7 +701,18 @@ public class CompanyCheckService {
     private boolean matcherEnhet(EnhetResponse enhet, CompanySearchRequest request) {
         return matcherOrganisasjonsform(enhet, request.organisasjonsform())
                 && matcherFylke(enhet, request.fylke())
-                && matcherKommune(enhet, request.kommune());
+                && matcherKommune(enhet, request.kommune())
+                && matcherKontaktfilter(enhet, request);
+    }
+
+    private boolean matcherKontaktfilter(EnhetResponse enhet, CompanySearchRequest request) {
+        if (request.hasEmail() && !hasText(enhet.epostadresse())) {
+            return false;
+        }
+        if (request.hasWebsite() && !hasText(enhet.hjemmeside())) {
+            return false;
+        }
+        return !request.missingWebsite() || !hasText(enhet.hjemmeside());
     }
 
     private boolean matcherOrganisasjonsform(EnhetResponse enhet, String organisasjonsform) {

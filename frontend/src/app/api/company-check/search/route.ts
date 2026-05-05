@@ -11,6 +11,9 @@ function buildSearchLogLine({
   q,
   county,
   organizationForm,
+  hasEmail,
+  hasWebsite,
+  missingWebsite,
   items,
   totalElements,
 }: {
@@ -20,6 +23,9 @@ function buildSearchLogLine({
   q: string | null;
   county: string | null;
   organizationForm: string | null;
+  hasEmail: string | null;
+  hasWebsite: string | null;
+  missingWebsite: string | null;
   items: number;
   totalElements: number;
 }) {
@@ -29,6 +35,9 @@ function buildSearchLogLine({
   if (q) parts.push(`q=${q}`);
   if (county) parts.push(`county=${county}`);
   if (organizationForm) parts.push(`organizationForm=${organizationForm}`);
+  if (hasEmail === "true") parts.push("hasEmail=true");
+  if (hasWebsite === "true") parts.push("hasWebsite=true");
+  if (missingWebsite === "true") parts.push("missingWebsite=true");
 
   parts.push(`items=${items}`);
   parts.push(`totalElements=${totalElements}`);
@@ -44,6 +53,9 @@ export async function GET(request: Request) {
   const county = searchParams.get("county");
   const organizationForm = searchParams.get("organizationForm");
   const score = searchParams.get("score");
+  const hasEmail = searchParams.get("hasEmail");
+  const hasWebsite = searchParams.get("hasWebsite");
+  const missingWebsite = searchParams.get("missingWebsite");
   const page = searchParams.get("page") || "0";
 
   const params = new URLSearchParams();
@@ -53,6 +65,9 @@ export async function GET(request: Request) {
   if (county) params.set("fylke", county);
   if (organizationForm) params.set("organisasjonsform", organizationForm);
   if (score) params.set("score", score);
+  if (hasEmail === "true") params.set("hasEmail", "true");
+  if (hasWebsite === "true") params.set("hasWebsite", "true");
+  if (missingWebsite === "true") params.set("missingWebsite", "true");
 
   const url = `${backendBaseUrl}/api/company-check/search?${params.toString()}`;
 
@@ -73,6 +88,9 @@ export async function GET(request: Request) {
       q,
       county,
       organizationForm,
+      hasEmail,
+      hasWebsite,
+      missingWebsite,
       items: items.length,
       totalElements,
     })}`);

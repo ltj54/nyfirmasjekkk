@@ -173,6 +173,9 @@ public class CompanyCheckController {
             @RequestParam(required = false) String organisasjonsform,
             @RequestParam(required = false) String organizationForm,
             @RequestParam(required = false) String score,
+            @RequestParam(defaultValue = "false") boolean hasEmail,
+            @RequestParam(defaultValue = "false") boolean hasWebsite,
+            @RequestParam(defaultValue = "false") boolean missingWebsite,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
@@ -187,7 +190,10 @@ public class CompanyCheckController {
                     naeringskode,
                     effectiveOrganisasjonsform,
                     score,
-                    SEARCH_RESULT_SIZE
+                    SEARCH_RESULT_SIZE,
+                    hasEmail,
+                    hasWebsite,
+                    missingWebsite
             );
 
             var searchPage = companyCheckService.sokPage(request, page);
@@ -205,6 +211,9 @@ public class CompanyCheckController {
                     navn,
                     fylke,
                     effectiveOrganisasjonsform,
+                    hasEmail,
+                    hasWebsite,
+                    missingWebsite,
                     results.size(),
                     searchPage.totalElements(),
                     scoreCounts
@@ -220,6 +229,9 @@ public class CompanyCheckController {
             String navn,
             String fylke,
             String organisasjonsform,
+            boolean hasEmail,
+            boolean hasWebsite,
+            boolean missingWebsite,
             int results,
             long totalElements,
             Map<String, Long> scoreCounts
@@ -238,6 +250,15 @@ public class CompanyCheckController {
         }
         if (organisasjonsform != null && !organisasjonsform.isBlank()) {
             joiner.add("organisasjonsform=" + organisasjonsform);
+        }
+        if (hasEmail) {
+            joiner.add("hasEmail=true");
+        }
+        if (hasWebsite) {
+            joiner.add("hasWebsite=true");
+        }
+        if (missingWebsite) {
+            joiner.add("missingWebsite=true");
         }
         joiner.add("results=" + results);
         joiner.add("totalElements=" + totalElements);
