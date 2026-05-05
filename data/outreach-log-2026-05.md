@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 136
-- Sendt: 98
+- Antall hendelser: 139
+- Sendt: 100
 - Angret: 5
-- Aktive kontaktede selskaper: 95
+- Aktive kontaktede selskaper: 97
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 | 937574177 | SCHEI MARKETING | ENK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937661614 | MYSKO MULTISERVICE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937505205 | SOLSKJERMING PAA STEDET AV PREBEN AANONSEN | ENK | email | kr 4.500 | website-improvement-offer |
 | 2026-05-05 | 937600542 | SVENSKT KOSTTILLSKOTT AB | UTLA | email | kr 4.500 | website-improvement-offer |
 | 2026-05-05 | 837510112 | GLEDITSCH-PROSJEKTET | FLI | email | kr 4.500 | website-improvement-offer |
@@ -113,6 +115,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 15:25 | not_relevant | 937395647 | NORSK-UKRAINSK LITTERATURFORMIDLING | FLI | email | kr 4.500 | - |
+| 2026-05-05 15:20 | sent | 937574177 | SCHEI MARKETING | ENK | email | kr 4.500 | - |
+| 2026-05-05 15:19 | sent | 937661614 | MYSKO MULTISERVICE | ENK | email | kr 4.500 | - |
 | 2026-05-05 12:40 | sent | 937505205 | SOLSKJERMING PAA STEDET AV PREBEN AANONSEN | ENK | email | kr 4.500 | - |
 | 2026-05-05 12:39 | sent | 937600542 | SVENSKT KOSTTILLSKOTT AB | UTLA | email | kr 4.500 | - |
 | 2026-05-05 12:37 | not_relevant | 837520762 | SISSEL GRINDHEIM | ENK | email | kr 4.500 | - |
