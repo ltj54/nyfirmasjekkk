@@ -47,7 +47,7 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
     points.push("gjøre kontaktinfo tydeligere");
   }
   if (signalCodes.has("WEAK_CALL_TO_ACTION")) {
-    points.push("gjøre det enklere å ta kontakt eller be om tilbud");
+    points.push("gjøre det lettere å ta kontakt eller be om tilbud");
   }
   if (signalCodes.has("MISSING_LOCAL_RELEVANCE")) {
     points.push("vise tydeligere hvilket område dere dekker");
@@ -214,11 +214,11 @@ Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
 Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 
-Hvis dere ønsker det, kan jeg sette opp en enklere og mer ryddig side for {{recipientObject}}.
+Hvis dere ønsker det, kan jeg sette opp en mer ryddig side for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
@@ -241,11 +241,11 @@ Gratulerer med {{companyName}}.
 
 Jeg så at dere har registrert nettsiden {{registeredWebsite}}, men den ser ikke ut til å svare akkurat nå.
 
-Jeg kan hjelpe med å få på plass en enkel og ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+Jeg kan hjelpe med å få på plass en ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
 
 Du får:
 - En ryddig nettside
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
@@ -286,7 +286,7 @@ Jeg setter opp dette ferdig for {{recipientObject}}.
 Du får:
 - En ryddig nettside
 - Egen nettadresse, for eksempel firmanavn.no
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.

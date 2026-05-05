@@ -21,10 +21,10 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
   - `[For eksempel: mangler nettside]`
   - `[For eksempel: har e-post eller telefon registrert]`
 - Tilbud:
-  - Produkt: `Enkel nettside`
+  - Produkt: `Nettside`
   - Pris: kr 4.500,-
   - Innhold:
-    - `Enkel nettside`
+    - `Nettside`
     - `Hjelp med domene`
     - `Hjelp med e-post`
     - `Tydelig kontaktpunkt`
@@ -47,7 +47,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 ## Emneforslag
 
 - `Nettside for {{companyName}}?`
-- `Enkel nettside for {{companyName}}?`
+- `Nettside for {{companyName}}?`
 - `Forslag til digital start for {{companyName}}`
 
 ## E-postmal
@@ -65,7 +65,7 @@ Jeg setter opp dette ferdig for {{recipientObject}}.
 Du får:
 - En ryddig nettside
 - Egen nettadresse, for eksempel firmanavn.no
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
@@ -90,11 +90,11 @@ Gratulerer med {{companyName}}.
 
 Jeg så at dere har registrert nettsiden {{registeredWebsite}}, men den ser ikke ut til å svare akkurat nå.
 
-Jeg kan hjelpe med å få på plass en enkel og ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+Jeg kan hjelpe med å få på plass en ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
 
 Du får:
 - En ryddig nettside
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
@@ -122,11 +122,11 @@ Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
 Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 
-Hvis dere ønsker det, kan jeg sette opp en enklere og mer ryddig side for {{recipientObject}}.
+Hvis dere ønsker det, kan jeg sette opp en mer ryddig side for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
@@ -147,7 +147,7 @@ Hei {{greeting}},
 
 Gratulerer med {{companyName}}.
 
-Jeg setter opp nettadresse, enkel nettside og kontaktpunkt ferdig for {{recipientObject}}.
+Jeg setter opp nettadresse, nettside og kontaktpunkt ferdig for {{recipientObject}}.
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
@@ -167,14 +167,14 @@ Hei dere i Eksempel AS,
 
 Gratulerer med Eksempel AS.
 
-Jeg lager en enkel nettside for håndverksbedrifter med tjenester, kontaktinfo, område dere dekker og en ryddig profil som gjør det lettere å bli funnet på Google.
+Jeg lager nettsider for håndverksbedrifter med tjenester, kontaktinfo, område dere dekker og en ryddig profil som gjør det lettere å bli funnet på Google.
 
 Jeg setter opp dette ferdig for dere.
 
 Du får:
 - En ryddig nettside
 - Egen nettadresse, for eksempel firmanavn.no
-- Kontaktinfo og enkel presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning dere kan bruke med en gang
 
 Fast pris: 4.500 kr - ferdig satt opp.

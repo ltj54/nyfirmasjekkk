@@ -12,6 +12,9 @@ class SalesSegmentCatalogTests {
         assertThat(SalesSegmentCatalog.fromNaceCode("43.21").code()).isEqualTo("HANDVERK");
         assertThat(SalesSegmentCatalog.fromNaceCode("43.341").label()).isEqualTo("Bygg og håndverk");
         assertThat(SalesSegmentCatalog.fromNaceCode("81.210").code()).isEqualTo("RENHOLD_OG_DRIFT");
+        assertThat(SalesSegmentCatalog.fromNaceCode("81.300").code()).isEqualTo("HAGE_OG_GRONTANLEGG");
+        assertThat(SalesSegmentCatalog.fromNaceCode("8130").code()).isEqualTo("HAGE_OG_GRONTANLEGG");
+        assertThat(SalesSegmentCatalog.fromNaceCode("81.300").emailPitch()).contains("gartner- og hagebedrifter");
         assertThat(SalesSegmentCatalog.fromNaceCode("96010").code()).isEqualTo("PERSONLIG_TJENESTE");
         assertThat(SalesSegmentCatalog.fromNaceCode("96.020").code()).isEqualTo("PERSONLIG_TJENESTE");
         assertThat(SalesSegmentCatalog.fromNaceCode("70.220").code()).isEqualTo("KONSULENT");

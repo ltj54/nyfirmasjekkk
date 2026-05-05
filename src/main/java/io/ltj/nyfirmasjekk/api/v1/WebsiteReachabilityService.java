@@ -12,9 +12,12 @@ import java.time.Duration;
 
 @Service
 public class WebsiteReachabilityService {
+    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(4);
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(8);
+    private static final String USER_AGENT = "Mozilla/5.0 (compatible; Nyfirmasjekk/1.0; +https://ltj54.github.io/ltj-production/)";
 
     private final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(3))
+            .connectTimeout(CONNECT_TIMEOUT)
             .followRedirects(HttpClient.Redirect.NORMAL)
             .build();
 
@@ -27,37 +30,35 @@ public class WebsiteReachabilityService {
         try {
             var headResponse = httpClient.send(
                     HttpRequest.newBuilder(URI.create(url))
-                            .timeout(Duration.ofSeconds(4))
-                            .header("User-Agent", "Nyfirmasjekk-App")
+                            .timeout(REQUEST_TIMEOUT)
+                            .header("User-Agent", USER_AGENT)
+                            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
                             .method("HEAD", HttpRequest.BodyPublishers.noBody())
                             .build(),
                     HttpResponse.BodyHandlers.discarding()
             );
 
-            if (isSuccessful(headResponse.statusCode())) {
+            if (isReachableStatus(headResponse.statusCode())) {
                 return true;
-            }
-
-            if (headResponse.statusCode() != 405 && headResponse.statusCode() != 403) {
-                return false;
             }
         } catch (IOException | InterruptedException | IllegalArgumentException exception) {
             if (exception instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
+                return false;
             }
-            return false;
         }
 
         try {
             var getResponse = httpClient.send(
                     HttpRequest.newBuilder(URI.create(url))
-                            .timeout(Duration.ofSeconds(4))
-                            .header("User-Agent", "Nyfirmasjekk-App")
+                            .timeout(REQUEST_TIMEOUT)
+                            .header("User-Agent", USER_AGENT)
+                            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
                             .GET()
                             .build(),
                     HttpResponse.BodyHandlers.discarding()
             );
-            return isSuccessful(getResponse.statusCode());
+            return isReachableStatus(getResponse.statusCode());
         } catch (IOException | InterruptedException | IllegalArgumentException exception) {
             if (exception instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
@@ -66,7 +67,7 @@ public class WebsiteReachabilityService {
         }
     }
 
-    private boolean isSuccessful(int statusCode) {
-        return statusCode >= 200 && statusCode < 400;
+    private boolean isReachableStatus(int statusCode) {
+        return (statusCode >= 200 && statusCode < 400) || statusCode == 401 || statusCode == 403 || statusCode == 429;
     }
 }

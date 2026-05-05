@@ -4,15 +4,29 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 95
-- Sendt: 77
+- Antall hendelser: 119
+- Sendt: 91
 - Angret: 5
-- Aktive kontaktede selskaper: 74
+- Aktive kontaktede selskaper: 88
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 | 937591039 | INNLANDET LASSKJØRERLAG | FLI | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 937587074 | HEDDALRØTAR | FLI | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 937583036 | HAUGE LIVE | FLI | email | kr 4.500 | website-improvement-offer |
+| 2026-05-05 | 937581424 | RJUKAN LAN | FLI | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 937583060 | KNOTSKÆLLER | FLI | email | kr 4.500 | website-improvement-offer |
+| 2026-05-05 | 937167695 | GAMLE BIEVEI AS | AS | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 937474377 | RIKHEIM RECEPTION | ENK | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 937589425 | 9TEK VED TERJE KVANTE NILSEN | ENK | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 837626862 | HK INVEST GROUP AS | AS | email | kr 4.500 | website-unavailable-offer |
+| 2026-05-05 | 937590938 | KARI RUUD EIENDOM AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937603177 | SALONATUR AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937530196 | NORDLI GARTNERSERVICE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937647212 | OLSEN FRIGSTAD BILVERKSTED | ENK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937657501 | FRISK PUST RENHOLD OG EIENDOM AS | AS | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937656718 | SUSANNE GALTUNG DØSVIG | ENK | email | kr 4.500 | website-improvement-offer |
 | 2026-05-05 | 837632102 | DIN BOLIGFORNYER HANSEN | ENK | email | kr 4.500 | website-improvement-offer |
 | 2026-05-05 | 937657536 | AMRANI ENGINEERING & PROJECT MANAGEMENT AS | AS | email | kr 4.500 | website-offer |
@@ -92,6 +106,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 11:14 | not_relevant | 937605625 | PERFORMANCE BILPLEIE YOUNAS | ENK | email | kr 4.500 | - |
+| 2026-05-05 11:13 | sent | 937591039 | INNLANDET LASSKJØRERLAG | FLI | email | kr 4.500 | - |
+| 2026-05-05 11:12 | sent | 937587074 | HEDDALRØTAR | FLI | email | kr 4.500 | - |
+| 2026-05-05 11:09 | not_relevant | 937660006 | RIDEMOVI S.P.A. | UTLA | email | kr 4.500 | - |
+| 2026-05-05 10:58 | sent | 937583036 | HAUGE LIVE | FLI | email | kr 4.500 | - |
+| 2026-05-05 10:55 | sent | 937581424 | RJUKAN LAN | FLI | email | kr 4.500 | - |
+| 2026-05-05 10:54 | sent | 937583060 | KNOTSKÆLLER | FLI | email | kr 4.500 | - |
+| 2026-05-05 10:51 | sent | 937167695 | GAMLE BIEVEI AS | AS | email | kr 4.500 | Må følges opp |
+| 2026-05-05 10:50 | not_relevant | 937507577 | HOEL PRODUCTIONS | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:50 | sent | 937474377 | RIKHEIM RECEPTION | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:48 | sent | 937589425 | 9TEK VED TERJE KVANTE NILSEN | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:47 | not_relevant | 837602262 | ULEKLEIV FOTO | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:45 | not_relevant | 937626592 | OCEANVIEWKARMOY TANGJERD | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:45 | not_relevant | 837630312 | GULIZIRE YASEN | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:44 | not_relevant | 937633343 | SAPUCAHY SILVEIRA BRAATHEN VERKSTUDIO | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:43 | not_relevant | 937606303 | NDF VESTFOLD TELEMARK LOKALLAG | FLI | email | kr 4.500 | - |
+| 2026-05-05 10:41 | not_relevant | 936686117 | HK KLUBBEN HOS MICROSOFT NORGE | FLI | email | kr 4.500 | - |
+| 2026-05-05 10:39 | sent | 837626862 | HK INVEST GROUP AS | AS | email | kr 4.500 | Må følges opp |
+| 2026-05-05 10:37 | sent | 937590938 | KARI RUUD EIENDOM AS | AS | email | kr 4.500 | - |
+| 2026-05-05 10:36 | sent | 937603177 | SALONATUR AS | AS | email | kr 4.500 | - |
+| 2026-05-05 10:35 | sent | 937530196 | NORDLI GARTNERSERVICE | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:23 | not_relevant | 937642997 | GRANHOLM TALENT AS | AS | email | kr 4.500 | - |
+| 2026-05-05 10:19 | sent | 937647212 | OLSEN FRIGSTAD BILVERKSTED | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:18 | sent | 937657501 | FRISK PUST RENHOLD OG EIENDOM AS | AS | email | kr 4.500 | - |
 | 2026-05-05 10:10 | not_relevant | 937617607 | MINDSET - OLLE INDSETH | ENK | email | kr 4.500 | - |
 | 2026-05-05 10:09 | sent | 937656718 | SUSANNE GALTUNG DØSVIG | ENK | email | kr 4.500 | - |
 | 2026-05-05 10:07 | sent | 837632102 | DIN BOLIGFORNYER HANSEN | ENK | email | kr 4.500 | - |
