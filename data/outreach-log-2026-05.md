@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 92
-- Sendt: 75
+- Antall hendelser: 95
+- Sendt: 77
 - Angret: 5
-- Aktive kontaktede selskaper: 72
+- Aktive kontaktede selskaper: 74
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 | 937656718 | SUSANNE GALTUNG DØSVIG | ENK | email | kr 4.500 | website-improvement-offer |
+| 2026-05-05 | 837632102 | DIN BOLIGFORNYER HANSEN | ENK | email | kr 4.500 | website-improvement-offer |
 | 2026-05-05 | 937657536 | AMRANI ENGINEERING & PROJECT MANAGEMENT AS | AS | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937657242 | ALENTIEV DINBILPLEIE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937434685 | MUNKAJORDTUNET 9A-D | ESEK | email | kr 4.500 | website-offer |
@@ -90,6 +92,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 10:10 | not_relevant | 937617607 | MINDSET - OLLE INDSETH | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:09 | sent | 937656718 | SUSANNE GALTUNG DØSVIG | ENK | email | kr 4.500 | - |
+| 2026-05-05 10:07 | sent | 837632102 | DIN BOLIGFORNYER HANSEN | ENK | email | kr 4.500 | - |
 | 2026-05-05 09:10 | not_relevant | 937649053 | ESPENÆS MUSIQUE | ENK | email | kr 4.500 | - |
 | 2026-05-05 09:09 | sent | 937657536 | AMRANI ENGINEERING & PROJECT MANAGEMENT AS | AS | email | kr 4.500 | - |
 | 2026-05-05 09:08 | sent | 937657242 | ALENTIEV DINBILPLEIE | ENK | email | kr 4.500 | - |

@@ -40,6 +40,7 @@ import {
   buildOutreachEmailBody,
   buildOutreachEmailHtml,
   buildOutreachEmailSubject,
+  websiteQualityMailLine,
 } from "@/lib/outreach-email-template";
 import {
   buildGoogleSearchUrl,
@@ -1558,6 +1559,7 @@ function CompanyDetailView({
   const commercialOpportunity = getCommercialOpportunity(company);
   const offerType = outreachOfferTypeForCompany(company);
   const requiresManualWebsiteCheck = offerType === "website-unavailable-offer" || offerType === "website-improvement-offer";
+  const mailQualityLine = offerType === "website-improvement-offer" ? websiteQualityMailLine(company) : "";
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
@@ -1875,6 +1877,12 @@ function CompanyDetailView({
                       <p className="mt-3 max-w-2xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] font-medium leading-5 text-amber-800">
                         Sjekk nettsiden manuelt før du sender. Denne mailtypen bygger på teknisk nettsidesjekk og enkle kvalitetssignaler.
                       </p>
+                    ) : null}
+                    {mailQualityLine ? (
+                      <div className="mt-3 max-w-2xl border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2">
+                        <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Linje som brukes i mail</p>
+                        <p className="mt-1 text-[12px] font-semibold leading-5 text-[#1F2933]">{mailQualityLine}</p>
+                      </div>
                     ) : null}
                   </div>
                   <Button
