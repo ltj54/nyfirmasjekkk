@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 83
-- Sendt: 68
+- Antall hendelser: 92
+- Sendt: 75
 - Angret: 5
-- Aktive kontaktede selskaper: 65
+- Aktive kontaktede selskaper: 72
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 | 937657536 | AMRANI ENGINEERING & PROJECT MANAGEMENT AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937657242 | ALENTIEV DINBILPLEIE | ENK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937434685 | MUNKAJORDTUNET 9A-D | ESEK | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937060629 | SENIORNETT KONGSVINGER | FLI | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937654782 | TD NORWAY AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-05 | 937655746 | TROMSØ KING CRAB CULINARY CIRKUS AS | AS | email | kr 4.500 | website-offer |
+| 2026-05-05 | 837568862 | KASPER JOHANSEN TØMRERSERVICE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937367465 | B-BLESSED AS | AS | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937646186 | ASLAK HELLEVIK | ENK | email | kr 4.500 | website-offer |
 | 2026-05-04 | 937640412 | AKTIVAREA LINBERG | ENK | email | kr 4.500 | website-offer |
@@ -83,6 +90,15 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-05 09:10 | not_relevant | 937649053 | ESPENÆS MUSIQUE | ENK | email | kr 4.500 | - |
+| 2026-05-05 09:09 | sent | 937657536 | AMRANI ENGINEERING & PROJECT MANAGEMENT AS | AS | email | kr 4.500 | - |
+| 2026-05-05 09:08 | sent | 937657242 | ALENTIEV DINBILPLEIE | ENK | email | kr 4.500 | - |
+| 2026-05-05 09:03 | not_relevant | 937657420 | KUNSTFOTOGRAF EILI SKAAR | ENK | email | kr 4.500 | - |
+| 2026-05-05 09:01 | sent | 937434685 | MUNKAJORDTUNET 9A-D | ESEK | email | kr 4.500 | - |
+| 2026-05-05 09:00 | sent | 937060629 | SENIORNETT KONGSVINGER | FLI | email | kr 4.500 | - |
+| 2026-05-05 08:59 | sent | 937654782 | TD NORWAY AS | AS | email | kr 4.500 | - |
+| 2026-05-05 08:56 | sent | 937655746 | TROMSØ KING CRAB CULINARY CIRKUS AS | AS | email | kr 4.500 | - |
+| 2026-05-05 08:54 | sent | 837568862 | KASPER JOHANSEN TØMRERSERVICE | ENK | email | kr 4.500 | - |
 | 2026-05-04 23:06 | not_relevant | 937609140 | VASKERIET | FLI | email | kr 4.500 | - |
 | 2026-05-04 23:05 | not_relevant | 937606362 | DDB KULTUR OG UTVIKLING | FLI | email | kr 4.500 | - |
 | 2026-05-04 23:01 | sent | 937367465 | B-BLESSED AS | AS | email | kr 4.500 | - |

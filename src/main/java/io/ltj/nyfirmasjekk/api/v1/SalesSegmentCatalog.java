@@ -44,7 +44,7 @@ public final class SalesSegmentCatalog {
             "Mat og servering",
             80,
             "Servering og matrelaterte virksomheter der meny, åpningstider, sted og kontakt raskt bør være synlig.",
-            "Jeg lager en enkel nettside med hva dere tilbyr, åpningstider, sted, kontaktinfo og en ryddig profil som gjør det lett å finne dere. Da får dere en fast nettside å vise til i sosiale medier, e-post og annen kundekontakt."
+            "Jeg lager en nettside med hva dere tilbyr, åpningstider, sted, kontaktinfo og en ryddig profil som gjør det lett å finne dere. Da får dere en fast nettside å vise til i sosiale medier, e-post og annen kundekontakt."
     );
     private static final SalesSegment BUTIKK_LOKALHANDEL = new SalesSegment(
             "BUTIKK_LOKALHANDEL",
