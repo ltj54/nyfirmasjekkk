@@ -62,6 +62,8 @@ import {
   getLatestOutreachEntriesByOrg,
   listStructureSignalClassName,
   normalizeWebsiteUrl,
+  outreachOfferTypeForCompany,
+  formatOutreachOfferType,
   parseOutreachJsonl,
   stripWebsiteProtocol,
   structureSignalSeverityClassName,
@@ -283,7 +285,7 @@ export function CompanyCheckShell() {
   }
 
   async function updateOutreachStatus(
-    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm">,
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "website" | "websiteDiscovery" | "websiteQuality">,
     sent: boolean,
     note?: string,
     statusOverride?: "sent" | "reverted" | "not_relevant"
@@ -306,7 +308,7 @@ export function CompanyCheckShell() {
           status: statusOverride ?? (sent ? "sent" : "reverted"),
           price: 4500,
           channel: "email",
-          offerType: "website-offer",
+          offerType: outreachOfferTypeForCompany(company),
           note: note?.trim() ? note.trim() : null,
         }),
       });
@@ -334,7 +336,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery">) {
+  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">) {
     setGeneratingEmailByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,
@@ -1554,6 +1556,8 @@ function CompanyDetailView({
   const structureSignals = company.structureSignals || [];
   const elevatedActorContextSignal = structureSignals.find((signal) => signal.code === "ACTOR_CONTEXT_ELEVATED") ?? null;
   const commercialOpportunity = getCommercialOpportunity(company);
+  const offerType = outreachOfferTypeForCompany(company);
+  const requiresManualWebsiteCheck = offerType === "website-unavailable-offer" || offerType === "website-improvement-offer";
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
@@ -1793,6 +1797,42 @@ function CompanyDetailView({
                 </div>
               ) : null}
 
+              {company.website && company.websiteQuality ? (
+                <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="text-[12px] font-medium text-[#52606D]">Nettsidekvalitet</p>
+                      <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{company.websiteQuality.label}</h4>
+                    </div>
+                    <span className={`inline-flex w-fit rounded-sm px-2 py-1 text-[10px] font-semibold ${
+                      company.websiteQuality.status === "WEAK"
+                        ? "bg-rose-50 text-rose-700"
+                        : company.websiteQuality.status === "NEEDS_REVIEW"
+                          ? "bg-amber-50 text-amber-700"
+                          : "bg-slate-100 text-slate-700"
+                    }`}>
+                      {company.websiteQuality.status === "OK" ? "OK" : "Bør sjekkes"}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{company.websiteQuality.summary}</p>
+                  {company.websiteQuality.signals.length > 0 ? (
+                    <div className="mt-4 grid gap-2">
+                      {company.websiteQuality.signals.map((signal) => (
+                        <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
+                            <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
+                              {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+
               {elevatedActorContextSignal ? (
                 <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
                   <p className="mb-2 text-[12px] font-medium text-[#52606D]">Løftet aktørkontekst</p>
@@ -1828,6 +1868,14 @@ function CompanyDetailView({
                     <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
                       Bruk Markdown-malen i `data/outreach-email-template.md` og fyll inn selskapsdata automatisk.
                     </p>
+                    <div className="mt-3 inline-flex rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F2933]">
+                      Tilbudstype: {formatOutreachOfferType(offerType)}
+                    </div>
+                    {requiresManualWebsiteCheck ? (
+                      <p className="mt-3 max-w-2xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] font-medium leading-5 text-amber-800">
+                        Sjekk nettsiden manuelt før du sender. Denne mailtypen bygger på teknisk nettsidesjekk og enkle kvalitetssignaler.
+                      </p>
+                    ) : null}
                   </div>
                   <Button
                     className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"

@@ -152,6 +152,7 @@ function evaluateLeadSignal(company: CompanySummary) {
   const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
   const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
   const hasRegisteredUnreachableWebsite = Boolean(company.website) && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false;
+  const hasWeakWebsiteQuality = company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW";
   const missingWebsite = !company.website && !hasPossibleWebsite;
 
   if (company.scoreColor === "RED") {
@@ -171,6 +172,17 @@ function evaluateLeadSignal(company: CompanySummary) {
       hasEmail ? `Start med e-post: ${company.email}` : "Registrert nettside svarer ikke",
       "Registrert nettside svarer ikke",
       "Selskapet har nettside registrert i BRREG, men den svarte ikke ved teknisk sjekk. Dette er en egen mulighet: hjelp til å få en fungerende side på plass.",
+      "Se detaljer",
+      "border-amber-100 bg-amber-50/70"
+    );
+  }
+
+  if (company.website && hasWeakWebsiteQuality) {
+    return leadSignalResult(
+      "Mulig lead",
+      hasEmail ? `Start med e-post: ${company.email}` : "Nettside bør vurderes",
+      "Nettside kan forbedres",
+      "Selskapet har nettside registrert i BRREG, men detaljsjekken fant tekniske eller innholdsmessige signaler som bør vurderes manuelt.",
       "Se detaljer",
       "border-amber-100 bg-amber-50/70"
     );

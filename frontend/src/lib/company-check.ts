@@ -13,6 +13,7 @@ export interface CompanySummary {
   salesSegment: SalesSegment | null;
   website: string | null;
   websiteDiscovery: WebsiteDiscovery | null;
+  websiteQuality?: WebsiteQualityAssessment | null;
   email: string | null;
   phone: string | null;
   contactPersonName: string | null;
@@ -114,6 +115,20 @@ export interface WebsiteCandidateCheck {
   contentMatched: boolean | null;
   pageTitle: string | null;
   reason: string | null;
+}
+
+export interface WebsiteQualityAssessment {
+  status: "OK" | "NEEDS_REVIEW" | "WEAK";
+  label: string;
+  summary: string;
+  signals: WebsiteQualitySignal[];
+}
+
+export interface WebsiteQualitySignal {
+  code: string;
+  title: string;
+  detail: string;
+  severity: "HIGH" | "MEDIUM" | "INFO";
 }
 
 export interface OutreachStatus {

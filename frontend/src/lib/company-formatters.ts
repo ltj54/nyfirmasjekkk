@@ -1,5 +1,33 @@
 import type { CompanyEvent, CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
 
+export function outreachOfferTypeForCompany(company: Pick<CompanySummary, "website" | "websiteDiscovery" | "websiteQuality">) {
+  if (company.website && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false) {
+    return "website-unavailable-offer";
+  }
+  if (
+    company.website
+    && company.websiteDiscovery?.status === "REGISTERED"
+    && company.websiteDiscovery.verifiedReachable !== false
+    && (company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW")
+  ) {
+    return "website-improvement-offer";
+  }
+  return "website-offer";
+}
+
+export function formatOutreachOfferType(value: string | null | undefined) {
+  switch (value) {
+    case "website-unavailable-offer":
+      return "Nettside svarer ikke";
+    case "website-improvement-offer":
+      return "Nettside kan forbedres";
+    case "website-offer":
+      return "Ny nettside";
+    default:
+      return value || "-";
+  }
+}
+
 export function normalizeWebsiteUrl(value: string) {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }

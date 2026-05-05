@@ -20,6 +20,7 @@ public record CompanyDetails(
         SalesSegment salesSegment,
         String website,
         WebsiteDiscovery websiteDiscovery,
+        WebsiteQualityAssessment websiteQuality,
         String email,
         String phone,
         String contactPersonName,

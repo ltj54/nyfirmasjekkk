@@ -14,11 +14,14 @@ type OutreachEmailCompany = Pick<
   | "salesSegment"
   | "website"
   | "websiteDiscovery"
+  | "websiteQuality"
 >;
 
 export function buildOutreachEmailSubject(markdown: string, company: OutreachEmailCompany) {
   const template = isRegisteredWebsiteUnavailable(company)
     ? extractMailSubject(markdown, "E-postmal - registrert nettside svarer ikke") ?? "Nettsiden til {{companyName}}?"
+    : hasWebsiteQualityOpportunity(company)
+      ? extractMailSubject(markdown, "E-postmal - nettside kan forbedres") ?? "Nettsiden til {{companyName}}?"
     : extractMailSubject(markdown) ?? "Nettside for {{companyName}}?";
   return applyOutreachTemplate(template, company);
 }
@@ -26,6 +29,8 @@ export function buildOutreachEmailSubject(markdown: string, company: OutreachEma
 export function buildOutreachEmailBody(markdown: string, company: OutreachEmailCompany) {
   const template = isRegisteredWebsiteUnavailable(company)
     ? extractMarkdownSection(markdown, "E-postmal - registrert nettside svarer ikke") ?? defaultRegisteredWebsiteUnavailableEmailTemplate()
+    : hasWebsiteQualityOpportunity(company)
+      ? extractMarkdownSection(markdown, "E-postmal - nettside kan forbedres") ?? defaultWebsiteQualityOpportunityEmailTemplate()
     : extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
   const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
   return applyOutreachTemplate(cleanedTemplate, company);
@@ -149,6 +154,8 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{senderEmail}}": "latajo@gmail.no",
     "{{senderWebsite}}": "https://ltj54.github.io/ltj-production/",
     "{{registeredWebsite}}": company.website?.trim() || "",
+    "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
+    "{{websiteQualityMailLine}}": websiteQualityMailLine(company),
   };
 
   let nextText = template;
@@ -159,6 +166,36 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
   return nextText
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+function defaultWebsiteQualityOpportunityEmailTemplate() {
+  return `Hei {{greeting}},
+
+Gratulerer med {{companyName}}.
+
+Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
+
+Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
+{{websiteQualityMailLine}}
+
+Hvis dere ønsker det, kan jeg sette opp en enklere og mer ryddig side for {{recipientObject}}.
+
+Du får:
+- En ryddig nettside
+- Kontaktinfo og enkel presentasjon av tjenestene
+- Klar løsning {{recipientSubject}} kan bruke med en gang
+
+Fast pris: {{price}} kr - ferdig satt opp.
+
+Eksempel:
+{{senderWebsite}}
+
+Si ifra hvis du vil at jeg lager et konkret forslag - helt uforpliktende.
+
+Mvh
+{{senderName}}
+{{senderPhone}}
+{{senderEmail}}`;
 }
 
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
@@ -192,6 +229,49 @@ function isRegisteredWebsiteUnavailable(company: OutreachEmailCompany) {
   return Boolean(company.website)
     && company.websiteDiscovery?.status === "REGISTERED"
     && company.websiteDiscovery.verifiedReachable === false;
+}
+
+function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
+  return Boolean(company.website)
+    && company.websiteDiscovery?.status === "REGISTERED"
+    && company.websiteDiscovery.verifiedReachable !== false
+    && (company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW");
+}
+
+function websiteQualityMailLine(company: OutreachEmailCompany) {
+  const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
+  const points: string[] = [];
+
+  if (signalCodes.has("MISSING_VIEWPORT")) {
+    points.push("fungere bedre på mobil");
+  }
+  if (signalCodes.has("WEAK_CONTACT_POINT")) {
+    points.push("gjøre kontaktinfo tydeligere");
+  }
+  if (signalCodes.has("WEAK_CALL_TO_ACTION")) {
+    points.push("gjøre det enklere å ta kontakt eller be om tilbud");
+  }
+  if (signalCodes.has("MISSING_LOCAL_RELEVANCE")) {
+    points.push("vise tydeligere hvilket område dere dekker");
+  }
+  if (signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT")) {
+    points.push("gjøre det tydeligere hva dere tilbyr");
+  }
+  if (signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE")) {
+    points.push("presenteres ryddigere i Google og ved deling");
+  }
+  if (signalCodes.has("NON_NO_DOMAIN")) {
+    points.push("vurdere en tydeligere norsk nettadresse");
+  }
+  if (signalCodes.has("THIRD_PARTY_SURFACE")) {
+    points.push("samle informasjonen på en egen nettside");
+  }
+
+  if (points.length === 0) {
+    return "";
+  }
+
+  return `\nJeg kan særlig hjelpe med å ${points.slice(0, 2).join(" og ")}.`;
 }
 
 function defaultOutreachEmailTemplate() {

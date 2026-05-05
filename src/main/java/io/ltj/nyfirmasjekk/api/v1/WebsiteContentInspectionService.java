@@ -185,6 +185,17 @@ public class WebsiteContentInspectionService {
                 .trim();
     }
 
-    public record WebsiteContentSnapshot(String title, String bodyText) {
+    public record WebsiteContentSnapshot(
+            String title,
+            String bodyText,
+            String html,
+            String metaDescription,
+            String viewport,
+            String language,
+            String h1
+    ) {
+        public WebsiteContentSnapshot(String title, String bodyText) {
+            this(title, bodyText, "", null, null, null, null);
+        }
     }
 }

@@ -109,6 +109,38 @@ Mvh
 {{senderPhone}}  
 {{senderEmail}}
 
+## E-postmal - nettside kan forbedres
+
+Emne: `Nettsiden til {{companyName}}?`
+
+Hei {{greeting}},
+
+Gratulerer med {{companyName}}.
+
+Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
+
+Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
+{{websiteQualityMailLine}}
+
+Hvis dere ønsker det, kan jeg sette opp en enklere og mer ryddig side for {{recipientObject}}.
+
+Du får:
+- En ryddig nettside
+- Kontaktinfo og enkel presentasjon av tjenestene
+- Klar løsning {{recipientSubject}} kan bruke med en gang
+
+Fast pris: {{price}} kr - ferdig satt opp.
+
+Eksempel:
+{{senderWebsite}}
+
+Si ifra hvis du vil at jeg lager et konkret forslag - helt uforpliktende.
+
+Mvh  
+{{senderName}}  
+{{senderPhone}}  
+{{senderEmail}}
+
 ## Kort variant
 
 Hei {{greeting}},

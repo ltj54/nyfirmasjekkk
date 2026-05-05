@@ -138,6 +138,88 @@ class CompanyApiV1MapperTests {
     }
 
     @Test
+    void detaljresponsVurdererKvalitetPaRegistrertNettside() {
+        var mapper = new CompanyApiV1Mapper(
+                new StubAnnouncementService(List.of()),
+                new StubWebsiteReachabilityService(true),
+                new StubWebsiteContentInspectionService(new WebsiteContentInspectionService.WebsiteContentSnapshot(
+                        "Home",
+                        "Hei",
+                        "<html><head><title>Home</title></head><body><img src=\"logo.png\" alt=\"\"></body></html>",
+                        null,
+                        null,
+                        null,
+                        null
+                )),
+                Clock.fixed(Instant.parse("2026-04-21T10:15:30Z"), ZoneId.of("Europe/Oslo"))
+        );
+        var facts = new CompanyFacts(
+                "AS",
+                LocalDate.of(2026, 4, 20),
+                "Nytt selskap",
+                "62.010",
+                "Utvikling",
+                null,
+                List.of(),
+                "https://instagram.com/testfirma",
+                "post@testfirma.no",
+                null,
+                true,
+                true,
+                0,
+                false,
+                null,
+                LocalDate.of(2026, 4, 20),
+                true,
+                true,
+                false,
+                "Oslo"
+        );
+        var check = new CompanyCheck(
+                "123456789",
+                "Testfirma AS",
+                "AS",
+                TrafficLight.GREEN,
+                "Ryddig førsteinntrykk.",
+                facts,
+                new CompanyMetrics(0, 0, 0),
+                List.of(),
+                List.of(),
+                List.of()
+        );
+        var enhet = new EnhetResponse(
+                "123456789",
+                "Testfirma AS",
+                new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                null,
+                List.of(),
+                "https://instagram.com/testfirma",
+                "post@testfirma.no",
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                0,
+                false,
+                null,
+                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, 4, 20),
+                null,
+                null
+        );
+
+        var details = mapper.toDetails(check, enhet, new RollerResponse(List.of()), List.of());
+
+        assertThat(details.websiteQuality()).isNotNull();
+        assertThat(details.websiteQuality().status()).isEqualTo("NEEDS_REVIEW");
+        assertThat(details.websiteQuality().signals()).extracting(WebsiteQualitySignal::code)
+                .contains("THIRD_PARTY_SURFACE", "NON_NO_DOMAIN", "WEAK_TITLE", "MISSING_VIEWPORT", "MISSING_LANGUAGE", "EMPTY_IMAGE_ALT");
+    }
+
+    @Test
     void byggerNormaliserteHendelserFraRegistreringOgKunngjoringer() {
         var mapper = new CompanyApiV1Mapper(new StubAnnouncementService(List.of(
                 new Announcement("ADDRESS_CHANGE", "Endring av forretningsadresse", "20.06.2025", "BRREG kunngjøringer"),
@@ -512,16 +594,49 @@ class CompanyApiV1MapperTests {
     }
 
     private static final class StubWebsiteReachabilityService extends WebsiteReachabilityService {
+        private final boolean reachable;
+
+        private StubWebsiteReachabilityService() {
+            this(false);
+        }
+
+        private StubWebsiteReachabilityService(boolean reachable) {
+            this.reachable = reachable;
+        }
+
         @Override
         public boolean isReachable(String url) {
-            return false;
+            return reachable;
         }
     }
 
     private static final class StubWebsiteContentInspectionService extends WebsiteContentInspectionService {
+        private final WebsiteContentSnapshot snapshot;
+
+        private StubWebsiteContentInspectionService() {
+            this(new WebsiteContentSnapshot(
+                    "Testside",
+                    "Dette er en testside med kontaktinformasjon, tjenester og nok tekst til at kvalitetssjekken ikke regner siden som tynn.",
+                    "<html lang=\"nb\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"description\" content=\"Testside\"></head><body>Kontakt oss på post@example.no</body></html>",
+                    "Testside",
+                    "width=device-width, initial-scale=1",
+                    "nb",
+                    "Kontakt oss"
+            ));
+        }
+
+        private StubWebsiteContentInspectionService(WebsiteContentSnapshot snapshot) {
+            this.snapshot = snapshot;
+        }
+
         @Override
         public WebsiteContentMatch inspect(String url, String companyName, String emailDomain) {
             return new WebsiteContentMatch(false, "Ingen innholdsmatch i test.", null);
+        }
+
+        @Override
+        public WebsiteContentSnapshot fetchSnapshot(String url) {
+            return snapshot;
         }
     }
 }

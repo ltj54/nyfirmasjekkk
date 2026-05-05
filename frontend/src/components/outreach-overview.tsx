@@ -7,6 +7,7 @@ import {
   formatLogDate,
   formatLogDateTime,
   formatNokPrice,
+  formatOutreachOfferType,
   getActiveContactedOutreachEntries,
   getNotRelevantOutreachEntries,
   getOutreachSortValue,
@@ -220,7 +221,7 @@ function OutreachTable({
                   <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
                   <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? 4500)}</td>
-                  <td className="px-4 py-3 text-[#52606D]">{entry.offerType || "-"}</td>
+                  <td className="px-4 py-3 text-[#52606D]">{formatOutreachOfferType(entry.offerType)}</td>
                 </tr>
               ))}
             </tbody>

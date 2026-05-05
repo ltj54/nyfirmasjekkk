@@ -11,6 +11,7 @@ import io.ltj.nyfirmasjekk.companycheck.TrafficLight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -28,6 +29,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.regex.Pattern;
 
 @Component
 public class CompanyApiV1Mapper {
@@ -74,6 +76,25 @@ public class CompanyApiV1Mapper {
             "batservice", SERVICE_SUFFIX,
             "byggservice", SERVICE_SUFFIX,
             "vaktmesterservice", SERVICE_SUFFIX
+    );
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PHONE_PATTERN = Pattern.compile("(\\+47\\s*)?(\\d\\s*){8}");
+    private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
+    private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
+            "kontakt", "contact", "ring", "bestill", "booking", "book", "send forespørsel", "be om tilbud", "få tilbud", "ta kontakt"
+    );
+    private static final Map<String, String> THIRD_PARTY_WEBSITE_HOSTS = Map.ofEntries(
+            Map.entry("instagram.com", "Instagram"),
+            Map.entry("facebook.com", "Facebook"),
+            Map.entry("linktr.ee", "Linktree"),
+            Map.entry("wordpress.com", "WordPress.com"),
+            Map.entry("wixsite.com", "Wix"),
+            Map.entry("wix.com", "Wix"),
+            Map.entry("squarespace.com", "Squarespace"),
+            Map.entry("webnode.page", "Webnode"),
+            Map.entry("webnode.no", "Webnode"),
+            Map.entry("myshopify.com", "Shopify"),
+            Map.entry("business.site", "Google Business Profile")
     );
 
     private final AnnouncementService announcementService;
@@ -154,6 +175,7 @@ public class CompanyApiV1Mapper {
                 salesSegment(enhet),
                 enhet.hjemmeside(),
                 websiteDiscovery(companyCheck, enhet, true),
+                websiteQuality(companyCheck, enhet),
                 enhet.epostadresse(),
                 firstNonBlank(enhet.telefon(), enhet.mobil()),
                 contactPerson == null ? null : contactPerson.name(),
@@ -320,6 +342,267 @@ public class CompanyApiV1Mapper {
                 "Ingen registrert nettside og ingen tydelig kandidat funnet.",
                 "NONE"
         );
+    }
+
+    private WebsiteQualityAssessment websiteQuality(CompanyCheck companyCheck, EnhetResponse enhet) {
+        if (!hasText(enhet.hjemmeside())) {
+            return null;
+        }
+
+        String website = normalizeWebsiteCandidate(enhet.hjemmeside());
+        List<WebsiteQualitySignal> signals = new ArrayList<>();
+        String thirdPartyPlatform = thirdPartyPlatform(website);
+        if (thirdPartyPlatform != null) {
+            signals.add(new WebsiteQualitySignal(
+                    "THIRD_PARTY_SURFACE",
+                    "Tredjepartsflate",
+                    "BRREG-nettsiden peker mot " + thirdPartyPlatform + " i stedet for en egen nettside.",
+                    "MEDIUM"
+            ));
+        }
+        if (usesNonNorwegianDomain(enhet, website)) {
+            signals.add(new WebsiteQualitySignal(
+                    "NON_NO_DOMAIN",
+                    "Ikke .no-domene",
+                    "Virksomheten er AS/ENK, men registrert nettside bruker ikke .no-domene. Det er ikke feil, men norske kunder forventer ofte .no for lokale virksomheter.",
+                    "INFO"
+            ));
+        }
+        if (!website.startsWith(HTTPS_PREFIX)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_HTTPS",
+                    "Mangler HTTPS",
+                    "Nettsiden er registrert uten HTTPS. Det kan gi svakere tillit og nettleservarsler.",
+                    "MEDIUM"
+            ));
+        }
+
+        boolean reachable = websiteReachabilityService.isReachable(website);
+        if (!reachable) {
+            signals.add(new WebsiteQualitySignal(
+                    "TECHNICAL_FAILURE",
+                    "Teknisk feil",
+                    "Nettsiden svarte ikke ved teknisk sjekk. Dette kan skyldes DNS, timeout, SSL-feil, 404/5xx eller midlertidig nedetid.",
+                    "HIGH"
+            ));
+            return new WebsiteQualityAssessment(
+                    "WEAK",
+                    "Nettsiden svarer ikke",
+                    "BRREG har registrert nettside, men den svarte ikke ved teknisk sjekk.",
+                    signals
+            );
+        }
+
+        WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = websiteContentInspectionService.fetchSnapshot(website);
+        if (snapshot == null) {
+            signals.add(new WebsiteQualitySignal(
+                    "CONTENT_UNREADABLE",
+                    "Innhold kunne ikke leses",
+                    "Nettsiden svarte, men innholdet kunne ikke leses for enkel kvalitetssjekk.",
+                    "MEDIUM"
+            ));
+            return assessmentFromSignals(signals, "Nettsiden svarer, men innholdet kunne ikke vurderes.");
+        }
+
+        addContentQualitySignals(signals, snapshot);
+        addContactQualitySignal(signals, snapshot, enhet);
+        addLocalRelevanceSignal(signals, snapshot, enhet);
+        addActionSignal(signals, snapshot);
+        addBrandDomainSignal(signals, companyCheck, website);
+        addAccessibilitySignals(signals, snapshot);
+
+        return assessmentFromSignals(signals, signals.isEmpty()
+                ? "Nettsiden svarte og de viktigste enkle kvalitetssignalene ser greie ut."
+                : "Nettsiden svarte, men har noen enkle signaler som bør vurderes manuelt.");
+    }
+
+    private WebsiteQualityAssessment assessmentFromSignals(List<WebsiteQualitySignal> signals, String summary) {
+        boolean hasHigh = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()));
+        boolean hasMedium = signals.stream().anyMatch(signal -> "MEDIUM".equals(signal.severity()));
+        String status = hasHigh ? "WEAK" : hasMedium ? "NEEDS_REVIEW" : "OK";
+        String label = switch (status) {
+            case "WEAK" -> "Svak nettsideflate";
+            case "NEEDS_REVIEW" -> "Bør vurderes";
+            default -> "Ser grei ut";
+        };
+        return new WebsiteQualityAssessment(status, label, summary, signals);
+    }
+
+    private void addContentQualitySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        String title = snapshot.title() == null ? "" : snapshot.title().trim();
+        if (title.isBlank() || WEAK_PAGE_TITLES.contains(title.toLowerCase(Locale.ROOT))) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_TITLE",
+                    "Svak sidetittel",
+                    "Sidetittelen er tom eller svært generisk. Det gjør siden svakere i søk og deling.",
+                    "MEDIUM"
+            ));
+        }
+        if (!hasText(snapshot.h1())) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_HOMEPAGE_STRUCTURE",
+                    "Svak førsteside",
+                    "Siden ser ut til å mangle tydelig hovedoverskrift. Det kan gjøre det mindre klart hva virksomheten tilbyr.",
+                    "MEDIUM"
+            ));
+        }
+        if (!hasText(snapshot.metaDescription())) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_META_DESCRIPTION",
+                    "Mangler beskrivelse",
+                    "Siden mangler meta description. Det kan gi svakere presentasjon i søkeresultater.",
+                    "INFO"
+            ));
+        }
+        String bodyText = snapshot.bodyText() == null ? "" : snapshot.bodyText().trim();
+        if (bodyText.length() < 300) {
+            signals.add(new WebsiteQualitySignal(
+                    "THIN_CONTENT",
+                    "Tynn side",
+                    "Siden har lite tekstinnhold. Det kan gjøre det vanskelig å forstå tjenester, område og kontaktpunkt.",
+                    "MEDIUM"
+            ));
+        }
+    }
+
+    private void addContactQualitySignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
+        String text = ((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html())).toLowerCase(Locale.ROOT);
+        boolean hasEmail = EMAIL_PATTERN.matcher(text).find();
+        boolean hasPhone = PHONE_PATTERN.matcher(text).find();
+        boolean hasContactWords = text.contains("kontakt") || text.contains("contact") || text.contains("ring oss") || text.contains("send e-post");
+        if (!hasEmail && !hasPhone && !hasContactWords && (hasText(enhet.epostadresse()) || hasText(enhet.telefon()) || hasText(enhet.mobil()))) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_CONTACT_POINT",
+                    "Mangler tydelig kontaktpunkt",
+                    "BRREG har kontaktdata, men nettsiden ser ikke ut til å vise et tydelig kontaktpunkt.",
+                    "MEDIUM"
+            ));
+        }
+    }
+
+    private void addLocalRelevanceSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
+        String location = firstNonBlank(enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().kommune(), enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().fylke());
+        if (!hasText(location)) {
+            return;
+        }
+        String text = normalizeForWebsiteQuality((snapshot.title() == null ? "" : snapshot.title()) + " " + (snapshot.bodyText() == null ? "" : snapshot.bodyText()));
+        if (!text.contains(normalizeForWebsiteQuality(location))) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_LOCAL_RELEVANCE",
+                    "Mangler lokal relevans",
+                    "BRREG har registrert geografisk tilknytning, men nettsiden ser ikke ut til å nevne området tydelig.",
+                    "INFO"
+            ));
+        }
+    }
+
+    private void addActionSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
+        boolean hasCallToAction = CALL_TO_ACTION_WORDS.stream().anyMatch(word -> text.contains(normalizeForWebsiteQuality(word)));
+        if (!hasCallToAction) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_CALL_TO_ACTION",
+                    "Mangler tydelig handling",
+                    "Siden ser ikke ut til å ha en tydelig oppfordring som Kontakt oss, Bestill eller Be om tilbud.",
+                    "MEDIUM"
+            ));
+        }
+    }
+
+    private void addBrandDomainSignal(List<WebsiteQualitySignal> signals, CompanyCheck companyCheck, String website) {
+        String host = host(website);
+        if (host == null) {
+            return;
+        }
+        String domain = host.replaceFirst("\\.[a-z.]+$", "").replace("-", "");
+        String companyName = normalizeDomainToken(companyCheck.navn());
+        if (companyName.length() >= 5 && !companyName.contains(domain) && !domain.contains(companyName.substring(0, Math.min(companyName.length(), 8)))) {
+            signals.add(new WebsiteQualitySignal(
+                    "DOMAIN_NAME_MISMATCH",
+                    "Domene matcher svakt",
+                    "Nettadressen ser ikke ut til å ligge tett på firmanavnet. Det kan gjøre siden vanskeligere å kjenne igjen.",
+                    "INFO"
+            ));
+        }
+    }
+
+    private void addAccessibilitySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        if (!hasText(snapshot.viewport())) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_VIEWPORT",
+                    "Mulig svak mobiltilpasning",
+                    "Siden mangler viewport-meta. Det er et vanlig tegn på svak mobiltilpasning.",
+                    "MEDIUM"
+            ));
+        }
+        if (!hasText(snapshot.language())) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_LANGUAGE",
+                    "UU-risiko",
+                    "HTML-språk er ikke satt. Dette er et enkelt UU-signal som bør sjekkes manuelt.",
+                    "INFO"
+            ));
+        }
+        String html = snapshot.html() == null ? "" : snapshot.html().toLowerCase(Locale.ROOT);
+        if (html.contains("<img") && html.contains("alt=\"\"")) {
+            signals.add(new WebsiteQualitySignal(
+                    "EMPTY_IMAGE_ALT",
+                    "Mulig UU-risiko på bilder",
+                    "Minst ett bilde ser ut til å ha tom alt-tekst. Det kan være riktig for dekorbilder, men bør sjekkes.",
+                    "INFO"
+            ));
+        }
+    }
+
+    private String thirdPartyPlatform(String website) {
+        String host = host(website);
+        if (host == null) {
+            return null;
+        }
+        for (var entry : THIRD_PARTY_WEBSITE_HOSTS.entrySet()) {
+            if (host.equals(entry.getKey()) || host.endsWith("." + entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    private boolean usesNonNorwegianDomain(EnhetResponse enhet, String website) {
+        String host = host(website);
+        if (host == null || host.endsWith(".no")) {
+            return false;
+        }
+        String organizationForm = enhet.organisasjonsform() == null ? null : OrganizationFormCatalog.normalizeCode(enhet.organisasjonsform().kode());
+        return "AS".equals(organizationForm) || "ENK".equals(organizationForm);
+    }
+
+    private String host(String website) {
+        try {
+            String host = URI.create(website).getHost();
+            if (host == null) {
+                return null;
+            }
+            return host.toLowerCase(Locale.ROOT).replaceFirst("^www\\.", "");
+        } catch (IllegalArgumentException exception) {
+            return null;
+        }
+    }
+
+    private String normalizeForWebsiteQuality(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.toLowerCase(Locale.ROOT)
+                .replace('æ', 'a')
+                .replace('ø', 'o')
+                .replace('å', 'a')
+                .replaceAll("[^a-z0-9 ]", " ")
+                .replaceAll("\\s+", " ")
+                .trim();
+    }
+
+    private String normalizeDomainToken(String value) {
+        return normalizeForWebsiteQuality(value).replaceAll("\\b(as|enk|nuf|sa|fli|da|ans)\\b", "").replace(" ", "");
     }
 
     private List<WebsiteCandidateCheck> checkWebsiteCandidates(List<String> candidates, String companyName, String emailDomain) {
