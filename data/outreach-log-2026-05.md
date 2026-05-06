@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 139
+- Antall hendelser: 140
 - Sendt: 100
 - Angret: 5
 - Aktive kontaktede selskaper: 97
@@ -115,6 +115,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-06 11:34 | not_relevant | 837576482 | ANDRADE MANCISIDOR AUTOMATION AGENCY NORD-FLOW | ENK | email | kr 4.500 | - |
 | 2026-05-05 15:25 | not_relevant | 937395647 | NORSK-UKRAINSK LITTERATURFORMIDLING | FLI | email | kr 4.500 | - |
 | 2026-05-05 15:20 | sent | 937574177 | SCHEI MARKETING | ENK | email | kr 4.500 | - |
 | 2026-05-05 15:19 | sent | 937661614 | MYSKO MULTISERVICE | ENK | email | kr 4.500 | - |
