@@ -225,8 +225,7 @@ class CompanyApiV1MapperTests {
                         "WEAK_NAVIGATION",
                         "MISSING_ORG_NUMBER",
                         "MISSING_VIEWPORT",
-                        "MISSING_LANGUAGE",
-                        "IMAGE_ALT_RISK"
+                        "MISSING_LANGUAGE"
                 );
     }
 

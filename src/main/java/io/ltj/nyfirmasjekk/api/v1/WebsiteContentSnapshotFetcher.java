@@ -52,7 +52,7 @@ public class WebsiteContentSnapshotFetcher {
                     .stream()
                     .filter(element -> {
                         String id = element.id();
-                        return id == null || id.isBlank() || document.selectFirst("label[for=\"" + id + "\"]") == null;
+                        return id.isBlank() || document.selectFirst("label[for=\"" + id + "\"]") == null;
                     })
                     .toList()
                     .size();
@@ -61,8 +61,8 @@ public class WebsiteContentSnapshotFetcher {
                     .toList()
                     .size();
             boolean fixedWidthLayoutSignal = htmlSnapshot.matches("(?is).*\\b(width|min-width)\\s*:\\s*(9\\d{2}|[1-9]\\d{3,})px.*");
-            boolean mixedContentSignal = document.select("[src^=http://], [href^=http://]").size() > 0;
-            boolean privacyLink = document.select("a[href*=personvern], a[href*=privacy], a[href*=gdpr], a[href*=datenschutz]").size() > 0
+            boolean mixedContentSignal = !document.select("[src^=http://], [href^=http://]").isEmpty();
+            boolean privacyLink = !document.select("a[href*=personvern], a[href*=privacy], a[href*=gdpr], a[href*=datenschutz]").isEmpty()
                     || bodyText.toLowerCase().contains("personvern")
                     || bodyText.toLowerCase().contains("privacy");
             boolean cookieOrTrackingSignal = hasCookieOrTrackingSignal(htmlSnapshot);

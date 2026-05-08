@@ -627,7 +627,6 @@ public class CompanyApiV1Mapper {
                     "INFO"
             ));
         }
-        String html = snapshot.html() == null ? "" : snapshot.html().toLowerCase(Locale.ROOT);
         if (snapshot.imageCount() > 0 && snapshot.imagesWithoutAlt() > 0) {
             signals.add(new WebsiteQualitySignal(
                     "IMAGE_ALT_RISK",
