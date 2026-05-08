@@ -216,7 +216,18 @@ class CompanyApiV1MapperTests {
         assertThat(details.websiteQuality()).isNotNull();
         assertThat(details.websiteQuality().status()).isEqualTo("NEEDS_REVIEW");
         assertThat(details.websiteQuality().signals()).extracting(WebsiteQualitySignal::code)
-                .contains("THIRD_PARTY_SURFACE", "NON_NO_DOMAIN", "WEAK_TITLE", "MISSING_VIEWPORT", "MISSING_LANGUAGE", "EMPTY_IMAGE_ALT");
+                .contains(
+                        "THIRD_PARTY_SURFACE",
+                        "NON_NO_DOMAIN",
+                        "WEAK_TITLE",
+                        "WEAK_SHARE_PREVIEW",
+                        "MISSING_STRUCTURED_DATA",
+                        "WEAK_NAVIGATION",
+                        "MISSING_ORG_NUMBER",
+                        "MISSING_VIEWPORT",
+                        "MISSING_LANGUAGE",
+                        "IMAGE_ALT_RISK"
+                );
     }
 
     @Test

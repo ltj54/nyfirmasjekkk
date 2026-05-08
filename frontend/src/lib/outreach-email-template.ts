@@ -38,38 +38,48 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
 
 export function websiteQualityMailLine(company: OutreachEmailCompany) {
   const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
-  const points: string[] = [];
-
-  if (signalCodes.has("MISSING_VIEWPORT")) {
-    points.push("fungere bedre på mobil");
-  }
-  if (signalCodes.has("WEAK_CONTACT_POINT")) {
-    points.push("gjøre kontaktinfo tydeligere");
-  }
-  if (signalCodes.has("WEAK_CALL_TO_ACTION")) {
-    points.push("gjøre det lettere å ta kontakt eller be om tilbud");
-  }
-  if (signalCodes.has("MISSING_LOCAL_RELEVANCE")) {
-    points.push("vise tydeligere hvilket område dere dekker");
-  }
-  if (signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT")) {
-    points.push("gjøre det tydeligere hva dere tilbyr");
-  }
-  if (signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE")) {
-    points.push("presenteres ryddigere i Google og ved deling");
-  }
-  if (signalCodes.has("NON_NO_DOMAIN")) {
-    points.push("vurdere en tydeligere norsk nettadresse");
-  }
-  if (signalCodes.has("THIRD_PARTY_SURFACE")) {
-    points.push("samle informasjonen på en egen nettside");
-  }
+  const points = websiteQualityMailPoints(signalCodes);
 
   if (points.length === 0) {
     return "";
   }
 
-  return `Jeg kan særlig hjelpe med å ${points.slice(0, 2).join(" og ")}.`;
+  return `Uten å gjøre dette til en full teknisk gjennomgang, ser jeg noen områder som kan være verdt å stramme opp: ${formatNorwegianList(points.slice(0, 3))}.`;
+}
+
+function websiteQualityMailPoints(signalCodes: Set<string>) {
+  const points: string[] = [];
+
+  addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT"), "tydeligere førsteside og forklaring av hva dere tilbyr");
+  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE"), "bedre kobling mellom nettsideteksten og bransjen dere er registrert med");
+  addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE"), "tydeligere lokal synlighet og område dere dekker");
+  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("WEAK_CALL_TO_ACTION"), "klarere kontaktpunkt og enklere vei til henvendelse");
+  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("DOMAIN_NAME_MISMATCH"), "flere tillitssignaler som gjør siden lettere å kjenne igjen");
+  addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), "ryddigere visning i Google, e-post og ved deling");
+  addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "bedre mobiltilpasning");
+  addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK") || signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("MISSING_LANGUAGE"), "noen enkle UU-punkter som bør sjekkes");
+  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK"), "personvern- og samtykketekst der siden samler inn eller måler data");
+  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK"), "noen tekniske avhengigheter som bør vurderes");
+  addMailPoint(points, signalCodes.has("NON_NO_DOMAIN"), "vurdering av en tydeligere norsk nettadresse");
+  addMailPoint(points, signalCodes.has("THIRD_PARTY_SURFACE"), "samling av informasjonen på en egen nettside");
+
+  return points;
+}
+
+function addMailPoint(points: string[], include: boolean, point: string) {
+  if (include && !points.includes(point)) {
+    points.push(point);
+  }
+}
+
+function formatNorwegianList(items: string[]) {
+  if (items.length <= 1) {
+    return items[0] ?? "";
+  }
+  if (items.length === 2) {
+    return `${items[0]} og ${items[1]}`;
+  }
+  return `${items.slice(0, -1).join(", ")} og ${items.at(-1)}`;
 }
 
 export function buildOutreachEmailHtml(body: string) {

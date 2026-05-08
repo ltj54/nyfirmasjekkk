@@ -192,10 +192,46 @@ public class WebsiteContentInspectionService {
             String metaDescription,
             String viewport,
             String language,
-            String h1
+            String h1,
+            boolean openGraphTitle,
+            boolean openGraphDescription,
+            boolean structuredData,
+            boolean navigation,
+            int linkCount,
+            int headingCount,
+            String generator,
+            String detectedBuilder,
+            int imageCount,
+            int imagesWithoutAlt,
+            int formControlCount,
+            int unlabeledFormControlCount,
+            int emptyButtonCount,
+            boolean fixedWidthLayoutSignal,
+            boolean mixedContentSignal,
+            boolean privacyLink,
+            boolean cookieOrTrackingSignal,
+            boolean cookieConsentSignal,
+            int externalScriptCount,
+            int externalIframeCount
     ) {
+        public WebsiteContentSnapshot(
+                String title,
+                String bodyText,
+                String html,
+                String metaDescription,
+                String viewport,
+                String language,
+                String h1
+        ) {
+            this(title, bodyText, html, metaDescription, viewport, language, h1, false, false, false, false, 0, hasTextValue(h1) ? 1 : 0, null, null, 0, 0, 0, 0, 0, false, false, false, false, false, 0, 0);
+        }
+
         public WebsiteContentSnapshot(String title, String bodyText) {
             this(title, bodyText, "", null, null, null, null);
+        }
+
+        private static boolean hasTextValue(String value) {
+            return value != null && !value.isBlank();
         }
     }
 }
