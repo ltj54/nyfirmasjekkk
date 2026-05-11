@@ -396,15 +396,22 @@ function domainExampleForCompany(companyName: string) {
     "fli",
     "ba",
   ];
-  const normalized = companyName
+  const namePart = companyName.split(/\s+-\s+/)[0] || companyName;
+  const normalized = namePart
     .toLowerCase()
+    .replaceAll("æ", "ae")
+    .replaceAll("ø", "o")
+    .replaceAll("å", "a")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replaceAll("&", " og ")
-    .replace(/[^a-z0-9\s-]/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
     .split(/\s+/)
     .filter((part) => part && !suffixes.includes(part))
-    .join("-");
+    .slice(0, 4)
+    .join("-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 
   return `${normalized || "firmanavn"}.no`;
 }

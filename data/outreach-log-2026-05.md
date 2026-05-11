@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 143
-- Sendt: 100
+- Antall hendelser: 144
+- Sendt: 101
 - Angret: 5
-- Aktive kontaktede selskaper: 97
+- Aktive kontaktede selskaper: 98
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-11 | 937690266 | STRØK STUDIO - DIVANTOQUE SIERRA | ENK | email | kr 3.990 | website-offer |
 | 2026-05-05 | 937574177 | SCHEI MARKETING | ENK | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937661614 | MYSKO MULTISERVICE | ENK | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937505205 | SOLSKJERMING PAA STEDET AV PREBEN AANONSEN | ENK | email | kr 4.500 | website-improvement-offer |
@@ -115,6 +116,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-11 12:13 | sent | 937690266 | STRØK STUDIO - DIVANTOQUE SIERRA | ENK | email | kr 3.990 | - |
 | 2026-05-07 09:15 | not_relevant | 937540701 | VETERINARY VALUE SWEDEN AB | UTLA | email | kr 4.500 | - |
 | 2026-05-06 12:32 | not_relevant | 837498562 | ASKERPSYKOLOGENE AS | AS | email | kr 4.500 | - |
 | 2026-05-06 12:32 | not_relevant | 937464312 | FIORDO POLAR AS | AS | email | kr 4.500 | - |

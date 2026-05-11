@@ -186,6 +186,7 @@ export function CompanyCheckShell() {
   const [savingOutreachByOrg, setSavingOutreachByOrg] = useState<Record<string, boolean>>({});
   const [sendingEmailByOrg, setSendingEmailByOrg] = useState<Record<string, boolean>>({});
   const [emailSendErrorByOrg, setEmailSendErrorByOrg] = useState<Record<string, string | null>>({});
+  const [emailSentRecipientByOrg, setEmailSentRecipientByOrg] = useState<Record<string, string | null>>({});
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingEmailByOrg, setGeneratingEmailByOrg] = useState<Record<string, boolean>>({});
   const [page, setPage] = useState(0);
@@ -391,6 +392,10 @@ export function CompanyCheckShell() {
       ...current,
       [company.orgNumber]: null,
     }));
+    setEmailSentRecipientByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: null,
+    }));
 
     try {
       const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
@@ -423,10 +428,14 @@ export function CompanyCheckShell() {
         return;
       }
 
-      const payload = (await response.json()) as { outreachStatus: OutreachStatus };
+      const payload = (await response.json()) as { to: string; outreachStatus: OutreachStatus };
       setOutreachStatusByOrg((current) => ({
         ...current,
         [company.orgNumber]: payload.outreachStatus,
+      }));
+      setEmailSentRecipientByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: payload.to,
       }));
       setOutreachEntries((current) => [payload.outreachStatus, ...current]);
     } catch (error) {
@@ -1194,6 +1203,7 @@ export function CompanyCheckShell() {
                   generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
                   generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
                   emailSendError={emailSendErrorByOrg[selectedCompany.orgNumber] ?? null}
+                  emailSentRecipient={emailSentRecipientByOrg[selectedCompany.orgNumber] ?? null}
                   sendingEmail={Boolean(sendingEmailByOrg[selectedCompany.orgNumber])}
                   outreachSaving={Boolean(savingOutreachByOrg[selectedCompany.orgNumber])}
                   outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
@@ -1607,6 +1617,7 @@ function CompanyDetailView({
   generatedEmail,
   generatingEmail,
   emailSendError,
+  emailSentRecipient,
   sendingEmail,
   outreachStatus,
   outreachSaving,
@@ -1620,6 +1631,7 @@ function CompanyDetailView({
   generatedEmail: { subject: string; body: string } | null;
   generatingEmail: boolean;
   emailSendError: string | null;
+  emailSentRecipient: string | null;
   sendingEmail: boolean;
   outreachStatus: OutreachStatus | null;
   outreachSaving: boolean;
@@ -2026,6 +2038,11 @@ function CompanyDetailView({
                     {emailSendError ? (
                       <p className="rounded-sm border border-rose-200 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">
                         {emailSendError}
+                      </p>
+                    ) : null}
+                    {emailSentRecipient ? (
+                      <p className="rounded-sm border border-emerald-200 bg-emerald-50 px-3 py-2 text-[12px] font-medium text-emerald-800">
+                        Sendt til: {emailSentRecipient}
                       </p>
                     ) : null}
                     <div className="border border-[#D9E2EC] bg-[#F8FBFF] p-3">
