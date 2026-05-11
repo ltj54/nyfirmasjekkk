@@ -415,7 +415,12 @@ export function CompanyCheckShell() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Klarte ikke sende e-post.");
+        console.error("Failed to send outreach email", errorText);
+        setEmailSendErrorByOrg((current) => ({
+          ...current,
+          [company.orgNumber]: "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
+        }));
+        return;
       }
 
       const payload = (await response.json()) as { outreachStatus: OutreachStatus };
