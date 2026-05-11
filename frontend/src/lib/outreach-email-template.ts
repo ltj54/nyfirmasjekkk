@@ -3,6 +3,7 @@ import type { CompanySummary } from "@/lib/company-check";
 type OutreachEmailCompany = Pick<
   CompanySummary,
   | "name"
+  | "organizationForm"
   | "orgNumber"
   | "contactPersonName"
   | "email"
@@ -38,6 +39,10 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
 
 export function websiteQualityMailLine(company: OutreachEmailCompany) {
   const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
+  if (signalCodes.has("THIRD_PARTY_SURFACE")) {
+    return "Instagram kan fungere fint som kanal, men en egen nettside gjør det enklere å samle åpningstider, produkter, kontaktinfo og annen praktisk informasjon på ett fast sted.";
+  }
+
   const points = websiteQualityMailPoints(signalCodes);
 
   if (points.length === 0) {
@@ -60,6 +65,10 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     "EXTERNAL_IFRAME_RISK",
     "SENSITIVE_HEALTH_CONTEXT",
   ].some((code) => signalCodes.has(code));
+
+  if (signalCodes.has("THIRD_PARTY_SURFACE") && !signalCodes.has("SENSITIVE_HEALTH_CONTEXT")) {
+    return "";
+  }
 
   if (!hasComplianceSignal) {
     return "";
@@ -230,8 +239,9 @@ function extractMarkdownSection(markdown: string, heading: string) {
 }
 
 function applyOutreachTemplate(template: string, company: OutreachEmailCompany) {
+  const displayName = displayCompanyName(company);
   const contactName = company.contactPersonName?.trim() || "";
-  const greeting = contactName ? firstNameFromContactName(contactName) : `dere i ${company.name}`;
+  const greeting = contactName ? firstNameFromContactName(contactName) : `dere i ${displayName}`;
   const location = [company.municipality, company.county].filter(Boolean).join(", ");
   const recipientSubject = contactName ? "du" : "dere";
   const recipientPossessive = contactName ? "ditt" : "deres";
@@ -239,7 +249,8 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
   const recipientPagePossessive = contactName ? "din" : "deres";
 
   const replacements: Record<string, string> = {
-    "{{companyName}}": company.name,
+    "{{companyName}}": displayName,
+    "{{registeredCompanyName}}": company.name,
     "{{orgNumber}}": company.orgNumber,
     "{{contactPerson}}": contactName,
     "{{companyEmail}}": company.email?.trim() || "",
@@ -263,6 +274,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{senderEmail}}": "kontakt@ltj-production.no",
     "{{senderWebsite}}": "https://ltj-production.no/",
     "{{registeredWebsite}}": company.website?.trim() || "",
+    "{{registeredWebsiteIntro}}": registeredWebsiteIntro(company),
     "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
     "{{websiteQualityMailLine}}": websiteQualityMailLine(company),
     "{{websiteComplianceMailLine}}": websiteComplianceMailLine(company),
@@ -283,7 +295,7 @@ function defaultWebsiteQualityOpportunityEmailTemplate() {
 
 Gratulerer med {{companyName}}.
 
-Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
+{{registeredWebsiteIntro}}
 
 Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
@@ -381,6 +393,19 @@ function firstNameFromContactName(value: string) {
   return value.split(/\s+/)[0] ?? value;
 }
 
+function displayCompanyName(company: Pick<OutreachEmailCompany, "name" | "organizationForm">) {
+  const name = company.name.trim();
+  const organizationForm = company.organizationForm?.trim().toUpperCase() ?? "";
+  if (!organizationForm || new RegExp(`\\b${escapeRegExp(organizationForm)}\\b`, "i").test(name)) {
+    return name;
+  }
+  return `${name} ${organizationForm}`;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function domainExampleForCompany(companyName: string) {
   const suffixes = [
     "aksjeselskap",
@@ -421,6 +446,17 @@ function domainLineForCompany(company: OutreachEmailCompany) {
     return `- Ryddig bruk av nettsiden ${company.website.trim()}`;
   }
   return `- Egen nettadresse, for eksempel ${domainExampleForCompany(company.name)}`;
+}
+
+function registeredWebsiteIntro(company: OutreachEmailCompany) {
+  const website = company.website?.trim() || "";
+  const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
+
+  if (signalCodes.has("THIRD_PARTY_SURFACE")) {
+    return `Jeg så at BRREG peker til ${website} som digital flate.`;
+  }
+
+  return `Jeg så at dere har nettsiden ${website} registrert i BRREG.`;
 }
 
 function escapeHtml(value: string) {

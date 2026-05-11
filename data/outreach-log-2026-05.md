@@ -4,15 +4,56 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 144
-- Sendt: 101
-- Angret: 5
-- Aktive kontaktede selskaper: 98
+- Antall hendelser: 195
+- Sendt: 142
+- Angret: 6
+- Aktive kontaktede selskaper: 139
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-11 | 937692994 | WINDBLADE SOLUTIONS S.R.L. | UTLA | email | kr 3.990 | website-offer |
+| 2026-05-11 | 837693462 | ALPIKOS RYTHMOS G.P | UTLA | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937655096 | NORDSTRAND TRANSPORTFORUM | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937423381 | MELLOM FJORDER KULTURFORENING | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937591160 | BROKEN CHAINS | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937654332 | ROSSELAND BORDTENNISKLUBB | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937664095 | STERRIS TAKRAS | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937664109 | LAYAL ALFARRA | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 837345502 | SKULEHUSET PÅ LYGRA | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937658257 | LAKSBUNES VA-LAG | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937553544 | MOLTZAU AVIATION | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937650051 | ROYAL BARBER BRYNE RASHO | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937687516 | STENSETH | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937586000 | SOLGLIMT TEATERLAG | FLI | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937668341 | FALDALEN LANDBRUKSTJENESTER | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937679947 | HAMNAVIKA SAMEIE | ESEK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937241038 | MARIAS VEI 31 | ESEK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937683936 | FLATSETØY GÅRD | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 837690382 | WÅGØ VILLSAU | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937672241 | MEHARI TRANSPORT | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937689772 | TJÅLAND BAKERI | ENK | email | kr 3.990 | website-improvement-offer |
+| 2026-05-11 | 937587422 | DANIEL BÅRDSEN | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937679378 | YOGA MED DENIZ CLARK | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937568541 | CECILIE GISKEMO | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937673639 | ANNA HJELEN - SANG OG MUSIKK | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937681615 | ETRIO MEDIA HAIDAR | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937689284 | MARGIT ONSTAD | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937693397 | GECCOPRODUKSJON LAURITSEN | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937665091 | ØKONOMILEDELSE AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937664702 | ZENTRA - THUNE | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937602049 | MATE ATTILA GAJDACS - UNGARSK TRANSLATØR | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937668139 | FOTOMET AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937666616 | HOSET SPETT OG SPADE AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937687591 | WALSVIK CREATIVE | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 837690412 | LOGOPED MNLF RIKKE SANDTORV | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937451458 | BONDARENKO LUXDRILL | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937672675 | SHINY TINDELAND | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937681550 | ALBERSKA RENHOLD | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937602278 | SOLBAKKEN LAKK OG VEDLIKEHOLD | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937681461 | SNEKKER LEER | ENK | email | kr 3.990 | website-offer |
+| 2026-05-11 | 937683154 | SAND-HANSSEN BYGG AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-11 | 937690266 | STRØK STUDIO - DIVANTOQUE SIERRA | ENK | email | kr 3.990 | website-offer |
 | 2026-05-05 | 937574177 | SCHEI MARKETING | ENK | email | kr 4.500 | website-offer |
 | 2026-05-05 | 937661614 | MYSKO MULTISERVICE | ENK | email | kr 4.500 | website-offer |
@@ -116,6 +157,57 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-11 13:11 | not_relevant | 937692889 | LUMIFLY OY | UTLA | email | kr 3.990 | - |
+| 2026-05-11 13:10 | sent | 937692994 | WINDBLADE SOLUTIONS S.R.L. | UTLA | email | kr 3.990 | - |
+| 2026-05-11 13:09 | not_relevant | 937693206 | ROPES & BLADES S.R.L. | UTLA | email | kr 3.990 | - |
+| 2026-05-11 13:09 | sent | 837693462 | ALPIKOS RYTHMOS G.P | UTLA | email | kr 3.990 | - |
+| 2026-05-11 13:02 | sent | 937655096 | NORDSTRAND TRANSPORTFORUM | FLI | email | kr 3.990 | - |
+| 2026-05-11 13:01 | sent | 937423381 | MELLOM FJORDER KULTURFORENING | FLI | email | kr 3.990 | - |
+| 2026-05-11 13:01 | sent | 937591160 | BROKEN CHAINS | FLI | email | kr 3.990 | - |
+| 2026-05-11 13:01 | sent | 937654332 | ROSSELAND BORDTENNISKLUBB | FLI | email | kr 3.990 | - |
+| 2026-05-11 13:00 | sent | 937664095 | STERRIS TAKRAS | ENK | email | kr 3.990 | - |
+| 2026-05-11 13:00 | sent | 937664109 | LAYAL ALFARRA | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:59 | sent | 837345502 | SKULEHUSET PÅ LYGRA | FLI | email | kr 3.990 | - |
+| 2026-05-11 12:59 | not_relevant | 937662963 | VEILAGET KJØDE PANORAMA | FLI | email | kr 3.990 | - |
+| 2026-05-11 12:58 | sent | 937658257 | LAKSBUNES VA-LAG | FLI | email | kr 3.990 | - |
+| 2026-05-11 12:57 | sent | 937553544 | MOLTZAU AVIATION | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:56 | sent | 937650051 | ROYAL BARBER BRYNE RASHO | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:54 | not_relevant | 837669782 | TOOLBAR AS | AS | email | kr 3.990 | - |
+| 2026-05-11 12:54 | sent | 937687516 | STENSETH | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:53 | not_relevant | 937659253 | REDD BARNA RØROS | FLI | email | kr 3.990 | Må følges opp |
+| 2026-05-11 12:52 | not_relevant | 937588968 | PROFFIQ V/ DABAS | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:52 | not_relevant | 937683782 | CARLENIUSAI AS | AS | email | kr 3.990 | - |
+| 2026-05-11 12:51 | sent | 937586000 | SOLGLIMT TEATERLAG | FLI | email | kr 3.990 | - |
+| 2026-05-11 12:46 | sent | 937668341 | FALDALEN LANDBRUKSTJENESTER | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:45 | sent | 937679947 | HAMNAVIKA SAMEIE | ESEK | email | kr 3.990 | - |
+| 2026-05-11 12:45 | sent | 937241038 | MARIAS VEI 31 | ESEK | email | kr 3.990 | - |
+| 2026-05-11 12:44 | sent | 937683936 | FLATSETØY GÅRD | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:44 | sent | 837690382 | WÅGØ VILLSAU | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:43 | sent | 937672241 | MEHARI TRANSPORT | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:42 | sent | 937689772 | TJÅLAND BAKERI | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:32 | sent | 937587422 | DANIEL BÅRDSEN | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:32 | sent | 937679378 | YOGA MED DENIZ CLARK | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:31 | sent | 937568541 | CECILIE GISKEMO | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:31 | sent | 937673639 | ANNA HJELEN - SANG OG MUSIKK | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:30 | sent | 937681615 | ETRIO MEDIA HAIDAR | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:30 | sent | 937689284 | MARGIT ONSTAD | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:29 | sent | 937693397 | GECCOPRODUKSJON LAURITSEN | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:28 | not_relevant | 937673787 | IRON DIARY KOFOED | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:28 | reverted | 937659253 | REDD BARNA RØROS | FLI | email | kr 3.990 | Må følges opp |
+| 2026-05-11 12:26 | sent | 937665091 | ØKONOMILEDELSE AS | AS | email | kr 3.990 | - |
+| 2026-05-11 12:26 | sent | 937664702 | ZENTRA - THUNE | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:25 | sent | 937602049 | MATE ATTILA GAJDACS - UNGARSK TRANSLATØR | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:25 | sent | 937668139 | FOTOMET AS | AS | email | kr 3.990 | - |
+| 2026-05-11 12:24 | sent | 937666616 | HOSET SPETT OG SPADE AS | AS | email | kr 3.990 | - |
+| 2026-05-11 12:23 | sent | 937687591 | WALSVIK CREATIVE | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:22 | sent | 837690412 | LOGOPED MNLF RIKKE SANDTORV | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:21 | sent | 937451458 | BONDARENKO LUXDRILL | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:20 | sent | 937672675 | SHINY TINDELAND | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:20 | sent | 937681550 | ALBERSKA RENHOLD | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:19 | sent | 937602278 | SOLBAKKEN LAKK OG VEDLIKEHOLD | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:19 | not_relevant | 937534663 | TETT & RENT COATING ASKER AS | AS | email | kr 3.990 | - |
+| 2026-05-11 12:17 | sent | 937681461 | SNEKKER LEER | ENK | email | kr 3.990 | - |
+| 2026-05-11 12:16 | sent | 937683154 | SAND-HANSSEN BYGG AS | AS | email | kr 3.990 | - |
 | 2026-05-11 12:13 | sent | 937690266 | STRØK STUDIO - DIVANTOQUE SIERRA | ENK | email | kr 3.990 | - |
 | 2026-05-07 09:15 | not_relevant | 937540701 | VETERINARY VALUE SWEDEN AB | UTLA | email | kr 4.500 | - |
 | 2026-05-06 12:32 | not_relevant | 837498562 | ASKERPSYKOLOGENE AS | AS | email | kr 4.500 | - |

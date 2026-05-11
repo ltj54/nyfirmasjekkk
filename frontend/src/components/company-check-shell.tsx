@@ -341,7 +341,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">) {
+  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">) {
     setGeneratingEmailByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,

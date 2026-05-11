@@ -17,6 +17,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
 - Domeneeksempel: `{{domainExample}}`
 - Domenelinje: `{{domainLine}}`
+- Registrert nettside-intro: `{{registeredWebsiteIntro}}`
 - Forsiktig personvern/UU-linje: `{{websiteComplianceMailLine}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
@@ -120,7 +121,7 @@ Hei {{greeting}},
 
 Gratulerer med {{companyName}}.
 
-Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
+{{registeredWebsiteIntro}}
 
 Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
