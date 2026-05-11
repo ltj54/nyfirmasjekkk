@@ -41,12 +41,14 @@ import java.util.stream.Collectors;
 public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
     private static final int SEARCH_RESULT_SIZE = 150;
+    private static final int OUTREACH_OFFER_PRICE = 3990;
 
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
     private final BrregClient brregClient;
     private final MetadataService metadataService;
     private final OutreachLogService outreachLogService;
+    private final OutreachEmailService outreachEmailService;
     private final MeterRegistry meterRegistry;
 
     public CompanyCheckController(
@@ -55,6 +57,7 @@ public class CompanyCheckController {
             BrregClient brregClient,
             MetadataService metadataService,
             OutreachLogService outreachLogService,
+            OutreachEmailService outreachEmailService,
             MeterRegistry meterRegistry
     ) {
         this.companyCheckService = companyCheckService;
@@ -62,6 +65,7 @@ public class CompanyCheckController {
         this.brregClient = brregClient;
         this.metadataService = metadataService;
         this.outreachLogService = outreachLogService;
+        this.outreachEmailService = outreachEmailService;
         this.meterRegistry = meterRegistry;
     }
 
@@ -149,6 +153,28 @@ public class CompanyCheckController {
                 request.note()
         );
         return outreachLogService.register(payload);
+    }
+
+    @PostMapping("/{organisasjonsnummer}/send-outreach-email")
+    public OutreachEmailSendResponse sendOutreachEmail(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer,
+            @RequestBody OutreachEmailSendRequest request
+    ) {
+        String recipient = outreachEmailService.send(request);
+        var status = outreachLogService.register(new OutreachStatusRequest(
+                organisasjonsnummer,
+                request.companyName(),
+                request.organizationForm(),
+                true,
+                "sent",
+                request.price() == null ? OUTREACH_OFFER_PRICE : request.price(),
+                request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
+                request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
+                request.note()
+        ));
+        return new OutreachEmailSendResponse(true, recipient, request.subject(), status);
     }
 
     @GetMapping("/filters")

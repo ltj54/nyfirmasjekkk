@@ -15,6 +15,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Salgsgruppe: `{{salesSegment}}`
 - Tilpasset bransjetekst: `{{salesSegmentPitch}}`
 - Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
+- Domeneeksempel: `{{domainExample}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
   - `[For eksempel: nylig registrert]`
@@ -22,7 +23,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
   - `[For eksempel: har e-post eller telefon registrert]`
 - Tilbud:
   - Produkt: `Nettside`
-  - Pris: kr 4.500,-
+  - Pris: kr 3.990,-
   - Innhold:
     - `Nettside`
     - `Hjelp med domene`
@@ -64,7 +65,7 @@ Jeg setter opp dette ferdig for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
-- Egen nettadresse, for eksempel firmanavn.no
+- Egen nettadresse, for eksempel {{domainExample}}
 - Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
@@ -173,11 +174,11 @@ Jeg setter opp dette ferdig for dere.
 
 Du får:
 - En ryddig nettside
-- Egen nettadresse, for eksempel firmanavn.no
+- Egen nettadresse, for eksempel eksempel.no
 - Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning dere kan bruke med en gang
 
-Fast pris: 4.500 kr - ferdig satt opp.
+Fast pris: 3.990 kr - ferdig satt opp.
 
 Eksempel:
 https://ltj54.github.io/ltj-production/
@@ -187,4 +188,4 @@ Si ifra hvis du vil at jeg lager et konkret forslag til deres side - helt uforpl
 Mvh  
 Lars Tangen Johannessen  
 977 24 209  
-latajo@gmail.no
+kontakt@ltj-production.no

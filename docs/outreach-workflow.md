@@ -12,7 +12,7 @@ Dette oppsettet er laget for én bruker uten databasekostnad.
 
 ## Daglig bruk
 
-1. Åpne appen og marker `E-post sendt om nettside til kr 4.500` når du faktisk har sendt.
+1. Åpne appen og marker `E-post sendt om nettside til kr 3.990` når du faktisk har sendt.
 2. Appen skriver en ny linje i `data/outreach-log.jsonl`.
 3. Eldre måneder flyttes automatisk til `data/archive/`.
 4. Appen oppdaterer samtidig månedlig Markdown-rapport i `data/outreach-log-YYYY-MM.md`.

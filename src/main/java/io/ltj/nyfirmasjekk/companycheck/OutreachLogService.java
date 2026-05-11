@@ -34,6 +34,7 @@ public class OutreachLogService {
     private static final String STATUS_SENT = "sent";
     private static final String STATUS_REVERTED = "reverted";
     private static final String STATUS_NOT_RELEVANT = "not_relevant";
+    private static final int DEFAULT_OUTREACH_PRICE = 3990;
     private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
     private final Path logPath;
@@ -168,7 +169,7 @@ public class OutreachLogService {
                 blankToNull(request.companyName()),
                 blankToNull(request.organizationForm()),
                 normalizeStatus(request),
-                request.price() == null ? 4500 : request.price(),
+                request.price() == null ? DEFAULT_OUTREACH_PRICE : request.price(),
                 blankToNull(request.channel()) == null ? "email" : request.channel().trim(),
                 blankToNull(request.offerType()) == null ? "website-offer" : request.offerType().trim(),
                 blankToNull(request.note())

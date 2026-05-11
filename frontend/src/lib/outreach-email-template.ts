@@ -114,6 +114,15 @@ export function buildOutreachEmailHtml(body: string) {
 
     closeList();
 
+    const signatureBlock = collectSignatureBlock(lines, index);
+    if (signatureBlock.length > 0) {
+      parts.push(
+        `<p style="margin: 0 0 14px;">${signatureBlock.map((signatureLine) => renderInlineHtml(signatureLine)).join("<br>")}</p>`
+      );
+      index += signatureBlock.length - 1;
+      continue;
+    }
+
     const nextLine = lines[index + 1]?.trim() ?? "";
     if (line === "Se eksempel her:" && isHttpUrl(nextLine)) {
       parts.push(
@@ -143,6 +152,32 @@ export function buildOutreachEmailHtml(body: string) {
   closeList();
 
   return `<div style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.55; color: #1F2933;">${parts.join("")}</div>`;
+}
+
+function collectSignatureBlock(lines: string[], startIndex: number) {
+  if (lines[startIndex]?.trim() !== "Mvh") {
+    return [];
+  }
+
+  const block: string[] = [];
+  for (let index = startIndex; index < lines.length; index += 1) {
+    const line = lines[index].trim();
+    if (!line) {
+      continue;
+    }
+    block.push(line);
+  }
+  return block;
+}
+
+function renderInlineHtml(line: string) {
+  if (isEmailAddress(line)) {
+    return `<a href="mailto:${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a>`;
+  }
+  if (isHttpUrl(line)) {
+    return `<a href="${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a>`;
+  }
+  return escapeHtml(line);
 }
 
 function extractMailSubject(markdown: string, heading = "E-postmal") {
@@ -189,16 +224,17 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{salesSegment}}": company.salesSegment?.label ?? "Annet",
     "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "Jeg lager ryddige nettsider for nye virksomheter med tydelig presentasjon og kontaktinfo.",
     "{{salesSegmentExplanation}}": company.salesSegment?.explanation ?? "",
+    "{{domainExample}}": domainExampleForCompany(company.name),
     "{{greeting}}": greeting,
     "{{recipientSubject}}": recipientSubject,
     "{{recipientPossessive}}": recipientPossessive,
     "{{recipientObject}}": recipientObject,
     "{{recipientPagePossessive}}": recipientPagePossessive,
-    "{{price}}": "4.500",
+    "{{price}}": "3.990",
     "{{senderName}}": "Lars Tangen Johannessen",
     "{{senderPhone}}": "977 24 209",
-    "{{senderEmail}}": "latajo@gmail.no",
-    "{{senderWebsite}}": "https://ltj54.github.io/ltj-production/",
+    "{{senderEmail}}": "kontakt@ltj-production.no",
+    "{{senderWebsite}}": "https://ltj-production.no/",
     "{{registeredWebsite}}": company.website?.trim() || "",
     "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
     "{{websiteQualityMailLine}}": websiteQualityMailLine(company),
@@ -295,7 +331,7 @@ Jeg setter opp dette ferdig for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
-- Egen nettadresse, for eksempel firmanavn.no
+- Egen nettadresse, for eksempel {{domainExample}}
 - Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
@@ -314,6 +350,34 @@ Mvh
 
 function firstNameFromContactName(value: string) {
   return value.split(/\s+/)[0] ?? value;
+}
+
+function domainExampleForCompany(companyName: string) {
+  const suffixes = [
+    "aksjeselskap",
+    "enkeltpersonforetak",
+    "as",
+    "asa",
+    "enk",
+    "da",
+    "ans",
+    "nuf",
+    "sa",
+    "stift",
+    "fli",
+    "ba",
+  ];
+  const normalized = companyName
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replaceAll("&", " og ")
+    .replace(/[^a-z0-9\s-]/g, " ")
+    .split(/\s+/)
+    .filter((part) => part && !suffixes.includes(part))
+    .join("-");
+
+  return `${normalized || "firmanavn"}.no`;
 }
 
 function escapeHtml(value: string) {

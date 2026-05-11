@@ -14,6 +14,8 @@ import {
 } from "@/lib/company-formatters";
 import { Button } from "@/components/ui/button";
 
+const outreachOfferPrice = 3990;
+
 export function OutreachOverview({
   entries,
   error,
@@ -220,7 +222,7 @@ function OutreachTable({
                   </td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? 4500)}</td>
+                  <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? outreachOfferPrice)}</td>
                   <td className="px-4 py-3 text-[#52606D]">{formatOutreachOfferType(entry.offerType)}</td>
                 </tr>
               ))}
@@ -274,7 +276,7 @@ function NotesTable({
                   </td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? 4500)}</td>
+                  <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? outreachOfferPrice)}</td>
                   <td className="max-w-sm px-4 py-3 text-[#52606D]">{entry.note || "-"}</td>
                 </tr>
               ))}

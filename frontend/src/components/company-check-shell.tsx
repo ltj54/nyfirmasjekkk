@@ -149,6 +149,7 @@ const organizationFormHelp: Record<string, { label: string; description: string 
 };
 
 const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "STIFT", "SA", "FLI", "ASA", "BA"];
+const outreachOfferPrice = 3990;
 
 const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
   { value: "HAS_EMAIL", label: "Har e-post" },
@@ -183,6 +184,8 @@ export function CompanyCheckShell() {
   const [isOutreachImporting, setIsOutreachImporting] = useState(false);
   const [outreachImportMessage, setOutreachImportMessage] = useState<string | null>(null);
   const [savingOutreachByOrg, setSavingOutreachByOrg] = useState<Record<string, boolean>>({});
+  const [sendingEmailByOrg, setSendingEmailByOrg] = useState<Record<string, boolean>>({});
+  const [emailSendErrorByOrg, setEmailSendErrorByOrg] = useState<Record<string, string | null>>({});
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingEmailByOrg, setGeneratingEmailByOrg] = useState<Record<string, boolean>>({});
   const [page, setPage] = useState(0);
@@ -307,7 +310,7 @@ export function CompanyCheckShell() {
           organizationForm: company.organizationForm,
           sent,
           status: statusOverride ?? (sent ? "sent" : "reverted"),
-          price: 4500,
+          price: outreachOfferPrice,
           channel: "email",
           offerType: outreachOfferTypeForCompany(company),
           note: note?.trim() ? note.trim() : null,
@@ -366,6 +369,69 @@ export function CompanyCheckShell() {
       console.error("Failed to generate outreach email", error);
     } finally {
       setGeneratingEmailByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: false,
+      }));
+    }
+  }
+
+  async function sendGeneratedOutreachEmail(
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "email" | "website" | "websiteDiscovery" | "websiteQuality">,
+    generatedEmail: { subject: string; body: string } | null
+  ) {
+    if (!company.email || !generatedEmail) {
+      return;
+    }
+
+    setSendingEmailByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: true,
+    }));
+    setEmailSendErrorByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: null,
+    }));
+
+    try {
+      const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: company.email,
+          subject: generatedEmail.subject,
+          body: generatedEmail.body,
+          htmlBody: buildOutreachEmailHtml(generatedEmail.body),
+          companyName: company.name,
+          organizationForm: company.organizationForm,
+          price: outreachOfferPrice,
+          channel: "email",
+          offerType: outreachOfferTypeForCompany(company),
+          note: null,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Klarte ikke sende e-post.");
+      }
+
+      const payload = (await response.json()) as { outreachStatus: OutreachStatus };
+      setOutreachStatusByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: payload.outreachStatus,
+      }));
+      setOutreachEntries((current) => [payload.outreachStatus, ...current]);
+    } catch (error) {
+      console.error("Failed to send outreach email", error);
+      setEmailSendErrorByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
+      }));
+    } finally {
+      setSendingEmailByOrg((current) => ({
         ...current,
         [company.orgNumber]: false,
       }));
@@ -1122,10 +1188,13 @@ export function CompanyCheckShell() {
                   events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
                   generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
                   generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
+                  emailSendError={emailSendErrorByOrg[selectedCompany.orgNumber] ?? null}
+                  sendingEmail={Boolean(sendingEmailByOrg[selectedCompany.orgNumber])}
                   outreachSaving={Boolean(savingOutreachByOrg[selectedCompany.orgNumber])}
                   outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
                   onBack={resetToLanding}
                   onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
+                  onSendEmail={() => void sendGeneratedOutreachEmail(selectedCompany, generatedEmailByOrg[selectedCompany.orgNumber] ?? null)}
                   onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(selectedCompany, sent, note, statusOverride)}
                 />
               </div>
@@ -1371,7 +1440,7 @@ function OutreachCheckbox({
   className?: string;
   compact?: boolean;
 }) {
-  const sentPrice = status?.price ?? 4500;
+  const sentPrice = status?.price ?? outreachOfferPrice;
   const sentAlready = status?.sent ?? false;
   const markedNotRelevant = status?.status === "not_relevant";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
@@ -1532,20 +1601,26 @@ function CompanyDetailView({
   events,
   generatedEmail,
   generatingEmail,
+  emailSendError,
+  sendingEmail,
   outreachStatus,
   outreachSaving,
   onBack,
   onGenerateEmail,
+  onSendEmail,
   onToggleOutreach,
 }: {
   company: CompanyDetails;
   events: CompanyEvent[];
   generatedEmail: { subject: string; body: string } | null;
   generatingEmail: boolean;
+  emailSendError: string | null;
+  sendingEmail: boolean;
   outreachStatus: OutreachStatus | null;
   outreachSaving: boolean;
   onBack: () => void;
   onGenerateEmail: () => void;
+  onSendEmail: () => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
   const leadPriority = getLeadPriority(company);
@@ -1934,7 +2009,20 @@ function CompanyDetailView({
                           Mangler e-postadresse
                         </span>
                       )}
+                      <Button
+                        className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
+                        disabled={!company.email || sendingEmail || outreachSaving}
+                        onClick={onSendEmail}
+                        type="button"
+                      >
+                        {sendingEmail ? "Sender..." : "Send automatisk"}
+                      </Button>
                     </div>
+                    {emailSendError ? (
+                      <p className="rounded-sm border border-rose-200 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">
+                        {emailSendError}
+                      </p>
+                    ) : null}
                     <div className="border border-[#D9E2EC] bg-[#F8FBFF] p-3">
                       <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Mailtekst</p>
                       <textarea
