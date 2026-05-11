@@ -43,7 +43,7 @@ public class OutreachEmailService {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "SMTP er ikke konfigurert.");
         }
 
-        String recipient = testRecipient();
+        String recipient = effectiveRecipient(request);
         try {
             var message = mailSender.createMimeMessage();
             var helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
@@ -59,14 +59,11 @@ public class OutreachEmailService {
         }
     }
 
-    private String testRecipient() {
-        if (testRecipient == null || testRecipient.isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.SERVICE_UNAVAILABLE,
-                    "Testmottaker mangler. Automatisk sending er sperret i testperioden."
-            );
+    private String effectiveRecipient(OutreachEmailSendRequest request) {
+        if (testRecipient != null && !testRecipient.isBlank()) {
+            return testRecipient.trim();
         }
-        return testRecipient.trim();
+        return request.to().trim();
     }
 
     private String htmlOrPlain(OutreachEmailSendRequest request) {
