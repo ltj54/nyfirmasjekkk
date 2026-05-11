@@ -83,6 +83,22 @@ public class CompanyApiV1Mapper {
     private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
             "kontakt", "contact", "ring", "bestill", "booking", "book", "send forespørsel", "be om tilbud", "få tilbud", "ta kontakt"
     );
+    private static final Set<String> SENSITIVE_HEALTH_CONTEXT_WORDS = Set.of(
+            "helse",
+            "journal",
+            "pasient",
+            "behandling",
+            "diagnose",
+            "lege",
+            "psykolog",
+            "terapi",
+            "klinikk",
+            "timebestilling",
+            "konsultasjon",
+            "personopplysninger",
+            "sensitive opplysninger",
+            "helseopplysninger"
+    );
     private static final Map<String, String> THIRD_PARTY_WEBSITE_HOSTS = Map.ofEntries(
             Map.entry("instagram.com", "Instagram"),
             Map.entry("facebook.com", "Facebook"),
@@ -702,6 +718,23 @@ public class CompanyApiV1Mapper {
                     "MEDIUM"
             ));
         }
+        if (hasSensitiveHealthContext(text)) {
+            signals.add(new WebsiteQualitySignal(
+                    "SENSITIVE_HEALTH_CONTEXT",
+                    "Mulig sensitivt fagområde",
+                    "Nettsideteksten peker mot helse, journal, pasient eller behandling. Personvern, skjema og databehandling bør vurderes ekstra nøye.",
+                    "MEDIUM"
+            ));
+        }
+    }
+
+    private boolean hasSensitiveHealthContext(String text) {
+        if (!hasText(text)) {
+            return false;
+        }
+        return SENSITIVE_HEALTH_CONTEXT_WORDS.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .anyMatch(text::contains);
     }
 
     private void addTechnologySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {

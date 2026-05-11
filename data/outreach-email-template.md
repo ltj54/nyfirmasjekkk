@@ -16,6 +16,8 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Tilpasset bransjetekst: `{{salesSegmentPitch}}`
 - Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
 - Domeneeksempel: `{{domainExample}}`
+- Domenelinje: `{{domainLine}}`
+- Forsiktig personvern/UU-linje: `{{websiteComplianceMailLine}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
   - `[For eksempel: nylig registrert]`
@@ -65,7 +67,7 @@ Jeg setter opp dette ferdig for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
-- Egen nettadresse, for eksempel {{domainExample}}
+{{domainLine}}
 - Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
@@ -122,6 +124,7 @@ Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
 
 Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
+{{websiteComplianceMailLine}}
 
 Hvis dere ønsker det, kan jeg sette opp en mer ryddig side for {{recipientObject}}.
 

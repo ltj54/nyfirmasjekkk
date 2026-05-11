@@ -47,6 +47,31 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
   return `Uten å gjøre dette til en full teknisk gjennomgang, ser jeg noen områder som kan være verdt å stramme opp: ${formatNorwegianList(points.slice(0, 3))}.`;
 }
 
+export function websiteComplianceMailLine(company: OutreachEmailCompany) {
+  const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
+  const hasComplianceSignal = [
+    "MISSING_PRIVACY_NOTICE",
+    "COOKIE_CONSENT_RISK",
+    "FORM_LABEL_RISK",
+    "EMPTY_BUTTON_RISK",
+    "MISSING_LANGUAGE",
+    "IMAGE_ALT_RISK",
+    "MANY_EXTERNAL_SCRIPTS",
+    "EXTERNAL_IFRAME_RISK",
+    "SENSITIVE_HEALTH_CONTEXT",
+  ].some((code) => signalCodes.has(code));
+
+  if (!hasComplianceSignal) {
+    return "";
+  }
+
+  if (signalCodes.has("SENSITIVE_HEALTH_CONTEXT")) {
+    return "Jeg kan ikke si at dette bryter noen regler uten en full gjennomgang, men når en side berører helse, journal, pasienter eller behandling, ville jeg vært ekstra nøye med personvern, skjema og hvordan opplysninger håndteres.";
+  }
+
+  return "Jeg kan ikke si at dette bryter noen regler uten en full gjennomgang, men personvern, skjema og tilgjengelighet er også punkter jeg ville ryddet opp i når siden først oppdateres.";
+}
+
 function websiteQualityMailPoints(signalCodes: Set<string>) {
   const points: string[] = [];
 
@@ -58,6 +83,7 @@ function websiteQualityMailPoints(signalCodes: Set<string>) {
   addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), "ryddigere visning i Google, e-post og ved deling");
   addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "bedre mobiltilpasning");
   addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK") || signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("MISSING_LANGUAGE"), "noen enkle UU-punkter som bør sjekkes");
+  addMailPoint(points, signalCodes.has("SENSITIVE_HEALTH_CONTEXT"), "ekstra ryddighet rundt personvern og skjema fordi siden berører et sensitivt fagområde");
   addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK"), "personvern- og samtykketekst der siden samler inn eller måler data");
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK"), "noen tekniske avhengigheter som bør vurderes");
   addMailPoint(points, signalCodes.has("NON_NO_DOMAIN"), "vurdering av en tydeligere norsk nettadresse");
@@ -225,6 +251,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "Jeg lager ryddige nettsider for nye virksomheter med tydelig presentasjon og kontaktinfo.",
     "{{salesSegmentExplanation}}": company.salesSegment?.explanation ?? "",
     "{{domainExample}}": domainExampleForCompany(company.name),
+    "{{domainLine}}": domainLineForCompany(company),
     "{{greeting}}": greeting,
     "{{recipientSubject}}": recipientSubject,
     "{{recipientPossessive}}": recipientPossessive,
@@ -238,6 +265,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{registeredWebsite}}": company.website?.trim() || "",
     "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
     "{{websiteQualityMailLine}}": websiteQualityMailLine(company),
+    "{{websiteComplianceMailLine}}": websiteComplianceMailLine(company),
   };
 
   let nextText = template;
@@ -259,6 +287,7 @@ Jeg så at dere har nettsiden {{registeredWebsite}} registrert i BRREG.
 
 Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
+{{websiteComplianceMailLine}}
 
 Hvis dere ønsker det, kan jeg sette opp en mer ryddig side for {{recipientObject}}.
 
@@ -331,7 +360,7 @@ Jeg setter opp dette ferdig for {{recipientObject}}.
 
 Du får:
 - En ryddig nettside
-- Egen nettadresse, for eksempel {{domainExample}}
+{{domainLine}}
 - Kontaktinfo og kort presentasjon av tjenestene
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
@@ -378,6 +407,13 @@ function domainExampleForCompany(companyName: string) {
     .join("-");
 
   return `${normalized || "firmanavn"}.no`;
+}
+
+function domainLineForCompany(company: OutreachEmailCompany) {
+  if (company.website?.trim()) {
+    return `- Ryddig bruk av nettsiden ${company.website.trim()}`;
+  }
+  return `- Egen nettadresse, for eksempel ${domainExampleForCompany(company.name)}`;
 }
 
 function escapeHtml(value: string) {
