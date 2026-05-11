@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 195
-- Sendt: 142
+- Antall hendelser: 197
+- Sendt: 144
 - Angret: 6
-- Aktive kontaktede selskaper: 139
+- Aktive kontaktede selskaper: 141
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-11 | 937691068 | DATAVERDI.NO PABLO ESPINOZA MOYA | ENK | email | kr 3.990 | website-improvement-offer |
+| 2026-05-11 | 937696450 | HOSSAINI ANIMATION | ENK | email | kr 3.990 | website-offer |
 | 2026-05-11 | 937692994 | WINDBLADE SOLUTIONS S.R.L. | UTLA | email | kr 3.990 | website-offer |
 | 2026-05-11 | 837693462 | ALPIKOS RYTHMOS G.P | UTLA | email | kr 3.990 | website-offer |
 | 2026-05-11 | 937655096 | NORDSTRAND TRANSPORTFORUM | FLI | email | kr 3.990 | website-offer |
@@ -157,6 +159,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-11 15:07 | sent | 937691068 | DATAVERDI.NO PABLO ESPINOZA MOYA | ENK | email | kr 3.990 | - |
+| 2026-05-11 15:06 | sent | 937696450 | HOSSAINI ANIMATION | ENK | email | kr 3.990 | - |
 | 2026-05-11 13:11 | not_relevant | 937692889 | LUMIFLY OY | UTLA | email | kr 3.990 | - |
 | 2026-05-11 13:10 | sent | 937692994 | WINDBLADE SOLUTIONS S.R.L. | UTLA | email | kr 3.990 | - |
 | 2026-05-11 13:09 | not_relevant | 937693206 | ROPES & BLADES S.R.L. | UTLA | email | kr 3.990 | - |
