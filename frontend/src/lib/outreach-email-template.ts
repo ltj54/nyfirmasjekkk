@@ -309,12 +309,10 @@ Du får:
 - Kontaktinfo lett tilgjengelig for kunder
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag. Det er helt uforpliktende.
+Jeg kan sende et konkret forslag.
 
 Mvh
 {{senderName}}
@@ -336,12 +334,10 @@ Du får:
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag. Det er helt uforpliktende.
+Jeg kan ta en rask sjekk og sende et konkret forslag.
 
 Mvh
 {{senderName}}
@@ -377,12 +373,10 @@ Du får:
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side. Det er helt uforpliktende.
+Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side.
 
 Mvh
 {{senderName}}

@@ -72,12 +72,10 @@ Du får:
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side. Det er helt uforpliktende.
+Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side.
 
 Mvh  
 {{senderName}}  
@@ -101,12 +99,10 @@ Du får:
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag. Det er helt uforpliktende.
+Jeg kan ta en rask sjekk og sende et konkret forslag.
 
 Mvh  
 {{senderName}}  
@@ -135,12 +131,10 @@ Du får:
 - Kontaktinfo lett tilgjengelig for kunder
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag. Det er helt uforpliktende.
+Jeg kan sende et konkret forslag.
 
 Mvh  
 {{senderName}}  
@@ -155,12 +149,10 @@ Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en n
 
 Jeg kan sette opp nettadresse, nettside og kontaktpunkt ferdig for {{recipientObject}}.
 
-Fast pris: {{price}} kr - ferdig satt opp.
-
 Eksempel på enkel side:
 {{senderWebsite}}
 
-Gi en lyd hvis du vil se et konkret forslag til {{recipientPagePossessive}} side.
+Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side.
 
 Mvh  
 {{senderName}}
@@ -183,12 +175,10 @@ Du får:
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning dere kan bruke med en gang
 
-Fast pris: 3.990 kr - ferdig satt opp.
-
 Eksempel på enkel side:
 https://ltj-production.no/
 
-Si ifra hvis du vil at jeg lager et konkret forslag til deres side. Det er helt uforpliktende.
+Jeg kan sende et konkret forslag til deres side.
 
 Mvh  
 Lars Johannessen  
