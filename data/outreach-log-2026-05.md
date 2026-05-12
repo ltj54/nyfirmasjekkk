@@ -4,15 +4,41 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 197
-- Sendt: 144
+- Antall hendelser: 233
+- Sendt: 170
 - Angret: 6
-- Aktive kontaktede selskaper: 141
+- Aktive kontaktede selskaper: 167
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-12 | 937435681 | HOVEDGATA 50 AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 837496632 | TORSDALEN AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937561024 | AURORA INVESTERING AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937592175 | SPORT TO-GO AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 936332536 | INPIPE BYGG OG RØRFORNYELSE AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937644973 | STØTVIG & CO AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937669194 | RENT A CHEF 5.0 AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937537026 | SJØNA AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937536275 | SARPSBORG AUTO AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937496001 | PROSJEKTERINGSGRUPPEN AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937546866 | KI-LOSEN AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937561083 | KMR SENSE AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937536127 | STUDIO LIZ AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937562942 | AMETYST VELVÆRE AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937502648 | BYGGON AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937539754 | MNDBYGGSERVICE AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937544480 | AURORA MONTERING AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937099134 | NORSK HELSEKOST | NUF | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937530595 | RR DÄCH AB | NUF | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937268742 | HAVDAMP SAUNA AS | AS | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937602731 | ASSEMBLER AB | NUF | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937696965 | FRIDA EKSUND | ENK | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937697937 | MONSEN ARMONTEK | ENK | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937697910 | ALMENDINGEN MEDIA | ENK | email | kr 3.990 | website-offer |
+| 2026-05-12 | 837697832 | GRÆSDAL SERVICE | ENK | email | kr 3.990 | website-offer |
+| 2026-05-12 | 937694695 | TIMRE BYGG & DESIGN AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-11 | 937691068 | DATAVERDI.NO PABLO ESPINOZA MOYA | ENK | email | kr 3.990 | website-improvement-offer |
 | 2026-05-11 | 937696450 | HOSSAINI ANIMATION | ENK | email | kr 3.990 | website-offer |
 | 2026-05-11 | 937692994 | WINDBLADE SOLUTIONS S.R.L. | UTLA | email | kr 3.990 | website-offer |
@@ -159,6 +185,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-12 11:22 | not_relevant | 936575986 | KAAP IMPORT AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:21 | sent | 937435681 | HOVEDGATA 50 AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:20 | sent | 837496632 | TORSDALEN AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:20 | sent | 937561024 | AURORA INVESTERING AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:19 | sent | 937592175 | SPORT TO-GO AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:19 | sent | 936332536 | INPIPE BYGG OG RØRFORNYELSE AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:18 | sent | 937644973 | STØTVIG & CO AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:18 | sent | 937669194 | RENT A CHEF 5.0 AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:17 | sent | 937537026 | SJØNA AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:16 | not_relevant | 937563426 | SOLBECK EIENDOM AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:16 | sent | 937536275 | SARPSBORG AUTO AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:15 | not_relevant | 937428626 | SABRURA JESSHEIM AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:14 | sent | 937496001 | PROSJEKTERINGSGRUPPEN AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:14 | not_relevant | 937500262 | METER-IT AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:13 | sent | 937546866 | KI-LOSEN AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:13 | sent | 937561083 | KMR SENSE AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:12 | not_relevant | 937536348 | SALONGEN AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:11 | sent | 937536127 | STUDIO LIZ AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:10 | sent | 937562942 | AMETYST VELVÆRE AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:09 | sent | 937502648 | BYGGON AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:08 | sent | 937539754 | MNDBYGGSERVICE AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:08 | sent | 937544480 | AURORA MONTERING AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:05 | sent | 937099134 | NORSK HELSEKOST | NUF | email | kr 3.990 | - |
+| 2026-05-12 11:04 | not_relevant | 937129971 | DAVID BROWN SANTASALO FINLAND OY | NUF | email | kr 3.990 | - |
+| 2026-05-12 11:03 | not_relevant | 937601689 | WOODLANDS INTERNATIONAL NUF | NUF | email | kr 3.990 | - |
+| 2026-05-12 11:02 | sent | 937530595 | RR DÄCH AB | NUF | email | kr 3.990 | - |
+| 2026-05-12 11:01 | sent | 937268742 | HAVDAMP SAUNA AS | AS | email | kr 3.990 | - |
+| 2026-05-12 11:00 | sent | 937602731 | ASSEMBLER AB | NUF | email | kr 3.990 | - |
+| 2026-05-12 10:40 | not_relevant | 837676282 | STINA AMANKWAH | ENK | email | kr 3.990 | - |
+| 2026-05-12 10:39 | not_relevant | 937620187 | PÅVAKT AS | AS | email | kr 3.990 | - |
+| 2026-05-12 10:39 | not_relevant | 937681879 | MARKUS ROLAND HOLDING AS | AS | email | kr 3.990 | - |
+| 2026-05-12 10:26 | sent | 937696965 | FRIDA EKSUND | ENK | email | kr 3.990 | - |
+| 2026-05-12 10:26 | sent | 937697937 | MONSEN ARMONTEK | ENK | email | kr 3.990 | - |
+| 2026-05-12 10:25 | sent | 937697910 | ALMENDINGEN MEDIA | ENK | email | kr 3.990 | - |
+| 2026-05-12 10:24 | sent | 837697832 | GRÆSDAL SERVICE | ENK | email | kr 3.990 | - |
+| 2026-05-12 10:23 | sent | 937694695 | TIMRE BYGG & DESIGN AS | AS | email | kr 3.990 | - |
 | 2026-05-11 15:07 | sent | 937691068 | DATAVERDI.NO PABLO ESPINOZA MOYA | ENK | email | kr 3.990 | - |
 | 2026-05-11 15:06 | sent | 937696450 | HOSSAINI ANIMATION | ENK | email | kr 3.990 | - |
 | 2026-05-11 13:11 | not_relevant | 937692889 | LUMIFLY OY | UTLA | email | kr 3.990 | - |

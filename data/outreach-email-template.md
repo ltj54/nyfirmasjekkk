@@ -190,6 +190,6 @@ https://ltj54.github.io/ltj-production/
 Si ifra hvis du vil at jeg lager et konkret forslag til deres side - helt uforpliktende.
 
 Mvh  
-Lars Tangen Johannessen  
+Lars Johannessen  
 977 24 209  
 kontakt@ltj-production.no

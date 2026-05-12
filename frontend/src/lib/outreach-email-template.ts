@@ -269,7 +269,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{recipientObject}}": recipientObject,
     "{{recipientPagePossessive}}": recipientPagePossessive,
     "{{price}}": "3.990",
-    "{{senderName}}": "Lars Tangen Johannessen",
+    "{{senderName}}": "Lars Johannessen",
     "{{senderPhone}}": "977 24 209",
     "{{senderEmail}}": "kontakt@ltj-production.no",
     "{{senderWebsite}}": "https://ltj-production.no/",

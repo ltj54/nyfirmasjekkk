@@ -452,6 +452,13 @@ export function CompanyCheckShell() {
     }
   }
 
+  function updateGeneratedEmail(orgNumber: string, text: string) {
+    setGeneratedEmailByOrg((current) => ({
+      ...current,
+      [orgNumber]: parseGeneratedEmailText(text),
+    }));
+  }
+
   const handleCloseDetail = useEffectEvent(() => {
     resetToLanding();
   });
@@ -1210,6 +1217,7 @@ export function CompanyCheckShell() {
                   onBack={resetToLanding}
                   onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
                   onSendEmail={() => void sendGeneratedOutreachEmail(selectedCompany, generatedEmailByOrg[selectedCompany.orgNumber] ?? null)}
+                  onUpdateGeneratedEmail={(text) => updateGeneratedEmail(selectedCompany.orgNumber, text)}
                   onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(selectedCompany, sent, note, statusOverride)}
                 />
               </div>
@@ -1228,6 +1236,22 @@ function InfoMetric({ label, value }: { label: string; value: string }) {
       <p className="mt-1.5 text-[16px] font-semibold tracking-tight text-[#1F2933]">{value}</p>
     </div>
   );
+}
+
+function parseGeneratedEmailText(text: string) {
+  const normalized = text.replace(/\r\n/g, "\n");
+  const match = normalized.match(/^Emne:\s*(.*?)(?:\n{2,}([\s\S]*))?$/);
+  if (!match) {
+    return {
+      subject: "",
+      body: normalized.trim(),
+    };
+  }
+
+  return {
+    subject: (match[1] ?? "").trim(),
+    body: (match[2] ?? "").trim(),
+  };
 }
 
 function CommercialOfferPoint({ label, text }: { label: string; text: string }) {
@@ -1624,6 +1648,7 @@ function CompanyDetailView({
   onBack,
   onGenerateEmail,
   onSendEmail,
+  onUpdateGeneratedEmail,
   onToggleOutreach,
 }: {
   company: CompanyDetails;
@@ -1638,6 +1663,7 @@ function CompanyDetailView({
   onBack: () => void;
   onGenerateEmail: () => void;
   onSendEmail: () => void;
+  onUpdateGeneratedEmail: (text: string) => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
   const leadPriority = getLeadPriority(company);
@@ -2049,7 +2075,7 @@ function CompanyDetailView({
                       <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Mailtekst</p>
                       <textarea
                         className="min-h-[260px] w-full resize-y border border-[#D9E2EC] bg-white p-3 text-[13px] leading-6 text-[#1F2933] outline-none focus:border-[#2F6FB2]"
-                        readOnly
+                        onChange={(event) => onUpdateGeneratedEmail(event.target.value)}
                         value={generatedEmailText}
                       />
                     </div>
