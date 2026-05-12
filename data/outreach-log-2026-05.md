@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 234
-- Sendt: 171
+- Antall hendelser: 236
+- Sendt: 173
 - Angret: 6
-- Aktive kontaktede selskaper: 168
+- Aktive kontaktede selskaper: 170
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-13 | 937584318 | RØD TERAPI OG KOMPETANSE | ENK | email | kr 3.990 | website-offer |
+| 2026-05-13 | 937520905 | SERHOLT & JENSEN VEILEDNING OG TERAPI | ENK | email | kr 3.990 | website-offer |
 | 2026-05-12 | 937702817 | NORSTOCK AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-12 | 937435681 | HOVEDGATA 50 AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-12 | 837496632 | TORSDALEN AS | AS | email | kr 3.990 | website-offer |
@@ -186,6 +188,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-13 00:12 | sent | 937584318 | RØD TERAPI OG KOMPETANSE | ENK | email | kr 3.990 | - |
+| 2026-05-13 00:11 | sent | 937520905 | SERHOLT & JENSEN VEILEDNING OG TERAPI | ENK | email | kr 3.990 | - |
 | 2026-05-12 22:38 | sent | 937702817 | NORSTOCK AS | AS | email | kr 3.990 | - |
 | 2026-05-12 11:22 | not_relevant | 936575986 | KAAP IMPORT AS | AS | email | kr 3.990 | - |
 | 2026-05-12 11:21 | sent | 937435681 | HOVEDGATA 50 AS | AS | email | kr 3.990 | - |
