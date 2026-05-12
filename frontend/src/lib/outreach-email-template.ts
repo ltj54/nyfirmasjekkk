@@ -40,7 +40,7 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
 export function websiteQualityMailLine(company: OutreachEmailCompany) {
   const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
   if (signalCodes.has("THIRD_PARTY_SURFACE")) {
-    return "Instagram kan fungere fint som kanal, men en egen nettside gjør det enklere å samle åpningstider, produkter, kontaktinfo og annen praktisk informasjon på ett fast sted.";
+    return "Det kan fungere fint, men en egen nettside gir dere et fast sted for åpningstider, tjenester, kontaktinfo og praktisk informasjon - også for kunder som ikke bruker Instagram/Facebook.";
   }
 
   const points = websiteQualityMailPoints(signalCodes);
@@ -49,7 +49,7 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
     return "";
   }
 
-  return `Uten å gjøre dette til en full teknisk gjennomgang, ser jeg noen områder som kan være verdt å stramme opp: ${formatNorwegianList(points.slice(0, 3))}.`;
+  return `Uten å gjøre dette til en full teknisk gjennomgang, ser jeg noen områder som kan være verdt å gjøre tydeligere: ${formatNorwegianList(points.slice(0, 3))}.`;
 }
 
 export function websiteComplianceMailLine(company: OutreachEmailCompany) {
@@ -159,9 +159,9 @@ export function buildOutreachEmailHtml(body: string) {
     }
 
     const nextLine = lines[index + 1]?.trim() ?? "";
-    if (line === "Se eksempel her:" && isHttpUrl(nextLine)) {
+    if ((line === "Se eksempel her:" || line === "Eksempel på enkel side:") && isHttpUrl(nextLine)) {
       parts.push(
-        `<p style="margin: 0 0 14px;">Se eksempel her: <a href="${escapeHtml(nextLine)}" style="color: #1F5FA9;">Se eksempel her</a></p>`
+        `<p style="margin: 0 0 14px;">${escapeHtml(line)} <a href="${escapeHtml(nextLine)}" style="color: #1F5FA9;">Se eksempel</a></p>`
       );
       index += 1;
       continue;
@@ -259,7 +259,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{naceCode}}": company.naceCode?.trim() || "",
     "{{naceDescription}}": company.naceDescription?.trim() || "",
     "{{salesSegment}}": company.salesSegment?.label ?? "Annet",
-    "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "Jeg lager ryddige nettsider for nye virksomheter med tydelig presentasjon og kontaktinfo.",
+    "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "For nye virksomheter er en nettside nyttig for å vise hva dere tilbyr, hvem dere hjelper og hvordan kunder kan ta kontakt.",
     "{{salesSegmentExplanation}}": company.salesSegment?.explanation ?? "",
     "{{domainExample}}": domainExampleForCompany(company.name),
     "{{domainLine}}": domainLineForCompany(company),
@@ -293,27 +293,28 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
 function defaultWebsiteQualityOpportunityEmailTemplate() {
   return `Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
-
 {{registeredWebsiteIntro}}
 
-Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
+Jeg ville bare høre om dere ønsker en enklere og mer ryddig presentasjon på nett.
+
+Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Hvis dere ønsker det, kan jeg sette opp en mer ryddig side for {{recipientObject}}.
+Hvis dere ønsker det, kan jeg sette opp en mer oversiktlig side for {{recipientObject}}.
 
 Du får:
-- En ryddig nettside
-- Kontaktinfo og kort presentasjon av tjenestene
+- En ryddig nettside som fungerer godt på mobil
+- Tydelig presentasjon av tjenester/aktivitet
+- Kontaktinfo lett tilgjengelig for kunder
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag - helt uforpliktende.
+Si ifra hvis du vil at jeg lager et konkret forslag. Det er helt uforpliktende.
 
 Mvh
 {{senderName}}
@@ -324,23 +325,23 @@ Mvh
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
+Jeg så at {{companyName}} har registrert nettsiden {{registeredWebsite}}.
 
-Jeg så at dere har registrert nettsiden {{registeredWebsite}}, men den ser ikke ut til å svare akkurat nå.
+Da jeg sjekket den, så det ut som siden ikke svarte akkurat nå. Det kan være midlertidig, men jeg ville bare gi beskjed.
 
-Jeg kan hjelpe med å få på plass en ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+Jeg kan hjelpe med å få på plass en ryddig nettside på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
 
 Du får:
-- En ryddig nettside
-- Kontaktinfo og kort presentasjon av tjenestene
+- En ryddig nettside som fungerer godt på mobil
+- Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag - helt uforpliktende.
+Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag. Det er helt uforpliktende.
 
 Mvh
 {{senderName}}
@@ -364,24 +365,24 @@ function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
 function defaultOutreachEmailTemplate() {
   return `Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
+Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en nettside.
 
 {{salesSegmentPitch}}
 
-Jeg setter opp dette ferdig for {{recipientObject}}.
+Jeg kan sette opp dette ferdig for {{recipientObject}}, slik at {{recipientSubject}} får en fast side å vise til i e-post, sosiale medier og kundedialog.
 
 Du får:
-- En ryddig nettside
+- En ryddig nettside som fungerer godt på mobil
 {{domainLine}}
-- Kontaktinfo og kort presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side - helt uforpliktende.
+Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side. Det er helt uforpliktende.
 
 Mvh
 {{senderName}}
@@ -443,7 +444,13 @@ function domainExampleForCompany(companyName: string) {
 
 function domainLineForCompany(company: OutreachEmailCompany) {
   if (company.website?.trim()) {
-    return `- Ryddig bruk av nettsiden ${company.website.trim()}`;
+    if (company.websiteDiscovery?.verifiedReachable === false) {
+      return `- Ryddig bruk av domenet ${stripWebsiteForMail(company.website.trim())}`;
+    }
+    if (company.websiteQuality?.signals.some((signal) => signal.code === "THIRD_PARTY_SURFACE")) {
+      return "- En fast nettside i tillegg til Instagram/Facebook";
+    }
+    return "- En mer ryddig og tydelig nettside på dagens domene";
   }
   return `- Egen nettadresse, for eksempel ${domainExampleForCompany(company.name)}`;
 }
@@ -453,10 +460,14 @@ function registeredWebsiteIntro(company: OutreachEmailCompany) {
   const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
 
   if (signalCodes.has("THIRD_PARTY_SURFACE")) {
-    return `Jeg så at BRREG peker til ${website} som digital flate.`;
+    return `Jeg så at dere bruker ${website} som digital flate.`;
   }
 
   return `Jeg så at dere har nettsiden ${website} registrert i BRREG.`;
+}
+
+function stripWebsiteForMail(website: string) {
+  return website.replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/$/g, "");
 }
 
 function escapeHtml(value: string) {

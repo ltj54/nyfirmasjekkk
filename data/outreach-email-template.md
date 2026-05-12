@@ -60,24 +60,24 @@ Emne: `Nettside for {{companyName}}?`
 
 Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
+Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en nettside.
 
 {{salesSegmentPitch}}
 
-Jeg setter opp dette ferdig for {{recipientObject}}.
+Jeg kan sette opp dette ferdig for {{recipientObject}}, slik at {{recipientSubject}} får en fast side å vise til i e-post, sosiale medier og kundedialog.
 
 Du får:
-- En ryddig nettside
+- En ryddig nettside som fungerer godt på mobil
 {{domainLine}}
-- Kontaktinfo og kort presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side - helt uforpliktende.
+Si ifra hvis du vil at jeg lager et konkret forslag til {{recipientPagePossessive}} side. Det er helt uforpliktende.
 
 Mvh  
 {{senderName}}  
@@ -90,23 +90,23 @@ Emne: `Nettsiden til {{companyName}}?`
 
 Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
+Jeg så at {{companyName}} har registrert nettsiden {{registeredWebsite}}.
 
-Jeg så at dere har registrert nettsiden {{registeredWebsite}}, men den ser ikke ut til å svare akkurat nå.
+Da jeg sjekket den, så det ut som siden ikke svarte akkurat nå. Det kan være midlertidig, men jeg ville bare gi beskjed.
 
-Jeg kan hjelpe med å få på plass en ryddig side på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+Jeg kan hjelpe med å få på plass en ryddig nettside på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
 
 Du får:
-- En ryddig nettside
-- Kontaktinfo og kort presentasjon av tjenestene
+- En ryddig nettside som fungerer godt på mobil
+- Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag - helt uforpliktende.
+Si ifra hvis du vil at jeg tar en rask sjekk og lager et konkret forslag. Det er helt uforpliktende.
 
 Mvh  
 {{senderName}}  
@@ -119,27 +119,28 @@ Emne: `Nettsiden til {{companyName}}?`
 
 Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
-
 {{registeredWebsiteIntro}}
 
-Jeg lager ryddige nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
+Jeg ville bare høre om dere ønsker en enklere og mer ryddig presentasjon på nett.
+
+Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Hvis dere ønsker det, kan jeg sette opp en mer ryddig side for {{recipientObject}}.
+Hvis dere ønsker det, kan jeg sette opp en mer oversiktlig side for {{recipientObject}}.
 
 Du får:
-- En ryddig nettside
-- Kontaktinfo og kort presentasjon av tjenestene
+- En ryddig nettside som fungerer godt på mobil
+- Tydelig presentasjon av tjenester/aktivitet
+- Kontaktinfo lett tilgjengelig for kunder
 - Klar løsning {{recipientSubject}} kan bruke med en gang
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
-Si ifra hvis du vil at jeg lager et konkret forslag - helt uforpliktende.
+Si ifra hvis du vil at jeg lager et konkret forslag. Det er helt uforpliktende.
 
 Mvh  
 {{senderName}}  
@@ -150,13 +151,13 @@ Mvh
 
 Hei {{greeting}},
 
-Gratulerer med {{companyName}}.
+Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en nettside.
 
-Jeg setter opp nettadresse, nettside og kontaktpunkt ferdig for {{recipientObject}}.
+Jeg kan sette opp nettadresse, nettside og kontaktpunkt ferdig for {{recipientObject}}.
 
 Fast pris: {{price}} kr - ferdig satt opp.
 
-Eksempel:
+Eksempel på enkel side:
 {{senderWebsite}}
 
 Gi en lyd hvis du vil se et konkret forslag til {{recipientPagePossessive}} side.
@@ -170,24 +171,24 @@ Emne: `Nettside for Eksempel AS?`
 
 Hei dere i Eksempel AS,
 
-Gratulerer med Eksempel AS.
+Jeg så Eksempel AS og ville bare høre om dere trenger en nettside.
 
-Jeg lager nettsider for håndverksbedrifter med tjenester, kontaktinfo, område dere dekker og en ryddig profil som gjør det lettere å bli funnet på Google.
+For bygg- og håndverksbedrifter er det ofte viktig at kunder raskt ser hvilke tjenester dere tilbyr, hvilket område dere dekker og hvordan de kan ta kontakt.
 
-Jeg setter opp dette ferdig for dere.
+Jeg kan sette opp dette ferdig for dere, slik at dere får en fast side å vise til i e-post, sosiale medier og kundedialog.
 
 Du får:
-- En ryddig nettside
+- En ryddig nettside som fungerer godt på mobil
 - Egen nettadresse, for eksempel eksempel.no
-- Kontaktinfo og kort presentasjon av tjenestene
+- Kontaktinfo og kort presentasjon av tjenester/aktivitet
 - Klar løsning dere kan bruke med en gang
 
 Fast pris: 3.990 kr - ferdig satt opp.
 
-Eksempel:
-https://ltj54.github.io/ltj-production/
+Eksempel på enkel side:
+https://ltj-production.no/
 
-Si ifra hvis du vil at jeg lager et konkret forslag til deres side - helt uforpliktende.
+Si ifra hvis du vil at jeg lager et konkret forslag til deres side. Det er helt uforpliktende.
 
 Mvh  
 Lars Johannessen  

@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 233
-- Sendt: 170
+- Antall hendelser: 234
+- Sendt: 171
 - Angret: 6
-- Aktive kontaktede selskaper: 167
+- Aktive kontaktede selskaper: 168
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-12 | 937702817 | NORSTOCK AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-12 | 937435681 | HOVEDGATA 50 AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-12 | 837496632 | TORSDALEN AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-12 | 937561024 | AURORA INVESTERING AS | AS | email | kr 3.990 | website-offer |
@@ -185,6 +186,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-12 22:38 | sent | 937702817 | NORSTOCK AS | AS | email | kr 3.990 | - |
 | 2026-05-12 11:22 | not_relevant | 936575986 | KAAP IMPORT AS | AS | email | kr 3.990 | - |
 | 2026-05-12 11:21 | sent | 937435681 | HOVEDGATA 50 AS | AS | email | kr 3.990 | - |
 | 2026-05-12 11:20 | sent | 837496632 | TORSDALEN AS | AS | email | kr 3.990 | - |
