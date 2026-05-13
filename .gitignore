@@ -42,3 +42,6 @@ out/
 
 ### Runtime locks ###
 /data/nyfirmasjekk-dev.lock
+
+### Local secrets ###
+/scripts/local-secrets.ps1

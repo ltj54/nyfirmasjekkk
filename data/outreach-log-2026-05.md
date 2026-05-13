@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 239
+- Antall hendelser: 241
 - Sendt: 175
 - Angret: 6
 - Aktive kontaktede selskaper: 172
@@ -190,6 +190,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-13 10:29 | not_relevant | 937456298 | SOLTVEDT AS | AS | email | kr 3.990 | - |
+| 2026-05-13 10:23 | not_relevant | 937691327 | SECRET GARDENS OSLO AS | AS | email | kr 3.990 | - |
 | 2026-05-13 08:49 | not_relevant | 937615795 | INGVILD MARIE EK | ENK | email | kr 3.990 | - |
 | 2026-05-13 08:42 | sent | 937618913 | SEBASTIAN KROKSTRAND MEDIA | ENK | email | kr 3.990 | - |
 | 2026-05-13 08:41 | sent | 937614020 | ROV INSPEKSJON SØR AS | AS | email | kr 3.990 | - |

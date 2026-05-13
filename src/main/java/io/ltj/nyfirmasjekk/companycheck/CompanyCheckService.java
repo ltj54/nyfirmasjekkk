@@ -186,7 +186,7 @@ public class CompanyCheckService {
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
-            var pageMatches = deduplicateMatches(vurderSide(searchResponse, request, diagnostics), seenMatches);
+            var pageMatches = deduplicateMatches(vurderSideUtenScoreFilter(searchResponse, request, diagnostics), seenMatches);
 
             if (matchedBeforePage + pageMatches.size() > requestedOffset && matches.size() < request.resultSize()) {
                 int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
@@ -374,6 +374,26 @@ public class CompanyCheckService {
         return results;
     }
 
+    private List<CompanyCheck> vurderSideUtenScoreFilter(EnheterSearchResponse searchResponse, CompanySearchRequest request, SearchDiagnostics diagnostics) {
+        var enheter = hentEnheter(searchResponse);
+        if (enheter.isEmpty()) {
+            return List.of();
+        }
+
+        long preFilterStartedAt = System.nanoTime();
+        List<EnhetResponse> filteredEnheter = enheter.stream()
+                .filter(enhet -> matcherEnhet(enhet, request))
+                .toList();
+        diagnostics.recordPrefilter(filteredEnheter.size(), preFilterStartedAt);
+
+        long scoringStartedAt = System.nanoTime();
+        List<CompanyCheck> results = filteredEnheter.stream()
+                .map(this::byggFastUnscoredSearchCheck)
+                .toList();
+        diagnostics.recordScoring(filteredEnheter.size(), results.size(), scoringStartedAt);
+        return results;
+    }
+
     private boolean isHardRedSearch(CompanySearchRequest request) {
         return request != null && "RED".equalsIgnoreCase(request.score());
     }
@@ -500,6 +520,16 @@ public class CompanyCheckService {
                 List.of(SOURCE_BRREG_API),
                 List.of(QUICK_LIST_ASSESSMENT)
         );
+    }
+
+    private CompanyCheck byggFastUnscoredSearchCheck(EnhetResponse enhet) {
+        if (hasHardRedSignal(enhet)) {
+            return byggHardRedSearchCheck(enhet);
+        }
+        if (canBeFastGreen(enhet)) {
+            return byggFastGreenSearchCheck(enhet);
+        }
+        return byggFastYellowSearchCheck(enhet);
     }
 
     private CompanyFacts byggCompanyFacts(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, boolean hasSeriousSignals) {
