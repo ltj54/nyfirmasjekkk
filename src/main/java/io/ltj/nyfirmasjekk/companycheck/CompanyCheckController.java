@@ -41,8 +41,6 @@ import java.util.stream.Collectors;
 public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
     private static final int SEARCH_RESULT_SIZE = 150;
-    private static final int OUTREACH_OFFER_PRICE = 3990;
-
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
     private final BrregClient brregClient;
@@ -169,7 +167,7 @@ public class CompanyCheckController {
                 request.organizationForm(),
                 true,
                 "sent",
-                request.price() == null ? OUTREACH_OFFER_PRICE : request.price(),
+                request.price(),
                 request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
                 request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
                 request.note()

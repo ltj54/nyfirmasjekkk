@@ -54,6 +54,11 @@ export function compareLeadPriority(left: CompanySummary, right: CompanySummary)
     return yellowEmailDifference;
   }
 
+  const contactabilityDifference = contactabilityRank(left) - contactabilityRank(right);
+  if (contactabilityDifference !== 0) {
+    return contactabilityDifference;
+  }
+
   const emailDifference = emailRank(left) - emailRank(right);
   if (emailDifference !== 0) {
     return emailDifference;
@@ -72,11 +77,6 @@ export function compareLeadPriority(left: CompanySummary, right: CompanySummary)
   const structureDifference = structureSignalRank(left) - structureSignalRank(right);
   if (structureDifference !== 0) {
     return structureDifference;
-  }
-
-  const contactabilityDifference = contactabilityRank(left) - contactabilityRank(right);
-  if (contactabilityDifference !== 0) {
-    return contactabilityDifference;
   }
 
   const registrationDateLeft = left.registrationDate ? new Date(left.registrationDate).getTime() : 0;

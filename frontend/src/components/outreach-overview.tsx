@@ -6,15 +6,12 @@ import type { OutreachStatus } from "@/lib/company-check";
 import {
   formatLogDate,
   formatLogDateTime,
-  formatNokPrice,
   formatOutreachOfferType,
   getActiveContactedOutreachEntries,
   getNotRelevantOutreachEntries,
   getOutreachSortValue,
 } from "@/lib/company-formatters";
 import { Button } from "@/components/ui/button";
-
-const outreachOfferPrice = 3990;
 
 export function OutreachOverview({
   entries,
@@ -125,7 +122,7 @@ export function OutreachOverview({
             </div>
 
             <OutreachTable
-              columns={["Dato", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Pris", "Tilbud"]}
+              columns={["Dato", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Tilbud"]}
               emptyText="Ingen aktive kontaktede selskaper."
               entries={visibleActiveContactedEntries}
               heading="Aktive kontaktede selskaper"
@@ -138,7 +135,7 @@ export function OutreachOverview({
             />
 
             <OutreachTable
-              columns={["Dato", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Pris", "Tilbud"]}
+              columns={["Dato", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Tilbud"]}
               emptyText="Ingen selskaper er markert som ikke aktuell."
               entries={visibleNotRelevantEntries}
               heading="Ikke aktuell"
@@ -222,7 +219,6 @@ function OutreachTable({
                   </td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? outreachOfferPrice)}</td>
                   <td className="px-4 py-3 text-[#52606D]">{formatOutreachOfferType(entry.offerType)}</td>
                 </tr>
               ))}
@@ -260,7 +256,7 @@ function NotesTable({
           <table className="w-full min-w-[900px] border-collapse text-left text-[13px]">
             <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
               <tr>
-                {["Tidspunkt", "Status", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Pris", "Notat"].map((column) => (
+                {["Tidspunkt", "Status", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Notat"].map((column) => (
                   <th key={column} className="border-b border-[#D9E2EC] px-4 py-3">{column}</th>
                 ))}
               </tr>
@@ -276,7 +272,6 @@ function NotesTable({
                   </td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
                   <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">kr {formatNokPrice(entry.price ?? outreachOfferPrice)}</td>
                   <td className="max-w-sm px-4 py-3 text-[#52606D]">{entry.note || "-"}</td>
                 </tr>
               ))}

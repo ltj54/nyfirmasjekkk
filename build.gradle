@@ -35,3 +35,15 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.named('bootRun') {
+    def localSecrets = file('scripts/local-secrets.ps1')
+    if (localSecrets.exists()) {
+        localSecrets.readLines().forEach { line ->
+            def matcher = line =~ "^\\s*\\\$env:([A-Z0-9_]+)\\s*=\\s*[\"'](.*)[\"']\\s*\$"
+            if (matcher.matches() && matcher[0][2]) {
+                environment matcher[0][1], matcher[0][2]
+            }
+        }
+    }
+}

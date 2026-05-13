@@ -26,7 +26,6 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
   - `[For eksempel: har e-post eller telefon registrert]`
 - Tilbud:
   - Produkt: `Nettside`
-  - Pris: kr 3.990,-
   - Innhold:
     - `Nettside`
     - `Hjelp med domene`

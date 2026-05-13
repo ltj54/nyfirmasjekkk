@@ -152,8 +152,6 @@ const organizationFormHelp: Record<string, { label: string; description: string 
 };
 
 const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "FLI", "SA", "STI", "ASA", "BA"];
-const outreachOfferPrice = 3990;
-
 const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
   { value: "HAS_EMAIL", label: "Har e-post" },
   { value: "HAS_WEBSITE", label: "Har nettside" },
@@ -314,7 +312,7 @@ export function CompanyCheckShell() {
           organizationForm: company.organizationForm,
           sent,
           status: statusOverride ?? (sent ? "sent" : "reverted"),
-          price: outreachOfferPrice,
+          price: null,
           channel: "email",
           offerType: outreachOfferTypeForCompany(company),
           note: note?.trim() ? note.trim() : null,
@@ -414,7 +412,7 @@ export function CompanyCheckShell() {
           htmlBody: buildOutreachEmailHtml(generatedEmail.body),
           companyName: company.name,
           organizationForm: company.organizationForm,
-          price: outreachOfferPrice,
+          price: null,
           channel: "email",
           offerType: outreachOfferTypeForCompany(company),
           note: null,
