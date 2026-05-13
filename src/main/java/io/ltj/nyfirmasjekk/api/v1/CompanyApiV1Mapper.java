@@ -79,9 +79,16 @@ public class CompanyApiV1Mapper {
     );
     private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", Pattern.CASE_INSENSITIVE);
     private static final Pattern PHONE_PATTERN = Pattern.compile("(\\+47\\s*)?(\\d\\s*){8}");
+    private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*(20\\d{2})");
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
     private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
             "kontakt", "contact", "ring", "bestill", "booking", "book", "send forespørsel", "be om tilbud", "få tilbud", "ta kontakt"
+    );
+    private static final Set<String> GENERIC_MARKETING_WORDS = Set.of(
+            "kvalitet", "service", "profesjonell", "skreddersydd", "losninger", "løsninger", "erfaring", "dyktige", "trygg", "effektiv"
+    );
+    private static final Set<String> GENERIC_EMAIL_DOMAINS = Set.of(
+            "gmail.com", "hotmail.com", "hotmail.no", "outlook.com", "live.com", "icloud.com", "yahoo.com", "yahoo.no", "online.no"
     );
     private static final Set<String> SENSITIVE_HEALTH_CONTEXT_WORDS = Set.of(
             "helse",
@@ -427,9 +434,12 @@ public class CompanyApiV1Mapper {
         addContactQualitySignal(signals, snapshot, enhet);
         addLocalRelevanceSignal(signals, snapshot, enhet);
         addIndustryRelevanceSignal(signals, snapshot, enhet);
-        addTrustSignal(signals, snapshot, companyCheck);
+        addServiceDescriptionSignal(signals, snapshot, enhet);
+        addTrustSignal(signals, snapshot, companyCheck, enhet);
         addActionSignal(signals, snapshot);
         addBrandDomainSignal(signals, companyCheck, website);
+        addEmailDomainSignal(signals, snapshot, website);
+        addFreshnessSignal(signals, snapshot);
         addResponsiveSignals(signals, snapshot);
         addAccessibilitySignals(signals, snapshot);
         addSecuritySignals(signals, website, snapshot);
@@ -466,9 +476,17 @@ public class CompanyApiV1Mapper {
         if (!hasText(snapshot.h1())) {
             signals.add(new WebsiteQualitySignal(
                     "WEAK_HOMEPAGE_STRUCTURE",
-                    "Svak førsteside",
+                    "Mangler tydelig hovedoverskrift",
                     "Siden ser ut til å mangle tydelig hovedoverskrift. Det kan gjøre det mindre klart hva virksomheten tilbyr.",
                     "MEDIUM"
+            ));
+        }
+        if (snapshot.h1Count() > 1) {
+            signals.add(new WebsiteQualitySignal(
+                    "MULTIPLE_H1",
+                    "Flere hovedoverskrifter",
+                    "Siden har flere hovedoverskrifter. Det er ikke alltid feil, men kan gi svakere struktur for brukere og søkemotorer.",
+                    "INFO"
             ));
         }
         if (!hasText(snapshot.metaDescription())) {
@@ -483,8 +501,8 @@ public class CompanyApiV1Mapper {
         if (bodyText.length() < 300) {
             signals.add(new WebsiteQualitySignal(
                     "THIN_CONTENT",
-                    "Tynn side",
-                    "Siden har lite tekstinnhold. Det kan gjøre det vanskelig å forstå tjenester, område og kontaktpunkt.",
+                    "Svak tekstmengde",
+                    "Førstesiden har lite tekstinnhold. Det kan gjøre det vanskelig for kunder og søkemotorer å forstå hva virksomheten tilbyr.",
                     "MEDIUM"
             ));
         }
@@ -531,8 +549,16 @@ public class CompanyApiV1Mapper {
         if (!hasEmail && !hasPhone && !hasContactWords && (hasText(enhet.epostadresse()) || hasText(enhet.telefon()) || hasText(enhet.mobil()))) {
             signals.add(new WebsiteQualitySignal(
                     "WEAK_CONTACT_POINT",
-                    "Mangler tydelig kontaktpunkt",
-                    "BRREG har kontaktdata, men nettsiden ser ikke ut til å vise et tydelig kontaktpunkt.",
+                    "Kontaktinfo vanskelig å finne",
+                    "BRREG har kontaktdata, men nettsiden ser ikke ut til å vise telefon, e-post eller tydelig kontaktpunkt.",
+                    "MEDIUM"
+            ));
+        }
+        if (hasContactWords && !hasEmail && !hasPhone && (hasText(enhet.epostadresse()) || hasText(enhet.telefon()) || hasText(enhet.mobil()))) {
+            signals.add(new WebsiteQualitySignal(
+                    "CONTACT_DETAILS_NOT_VISIBLE",
+                    "Kontaktinfo lite synlig",
+                    "Siden nevner kontakt, men vi fant ikke tydelig telefon eller e-post på siden. For lokale tjenester bør kontaktinfo være lett tilgjengelig.",
                     "MEDIUM"
             ));
         }
@@ -565,14 +591,35 @@ public class CompanyApiV1Mapper {
         if (!hasIndustryToken) {
             signals.add(new WebsiteQualitySignal(
                     "WEAK_INDUSTRY_RELEVANCE",
-                    "Svak bransjekobling",
-                    "BRREG-bransjen ser ikke tydelig igjen i nettsideteksten. Det kan gjøre det mindre klart hva virksomheten faktisk tilbyr.",
+                    "Svak tjenestebeskrivelse",
+                    "BRREG-bransjen ser ikke tydelig igjen i nettsideteksten. Det kan gjøre det uklart hva kunden faktisk kan bestille.",
                     "INFO"
             ));
         }
     }
 
-    private void addTrustSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, CompanyCheck companyCheck) {
+    private void addServiceDescriptionSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
+        String bodyText = normalizeForWebsiteQuality(snapshot.bodyText() == null ? "" : snapshot.bodyText());
+        if (!hasText(bodyText)) {
+            return;
+        }
+        long genericWords = GENERIC_MARKETING_WORDS.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .filter(bodyText::contains)
+                .count();
+        List<String> industryTokens = industryTokens(enhet.naeringskode1() == null ? null : enhet.naeringskode1().beskrivelse());
+        boolean hasConcreteIndustryText = industryTokens.stream().anyMatch(bodyText::contains);
+        if (genericWords >= 3 && !hasConcreteIndustryText) {
+            signals.add(new WebsiteQualitySignal(
+                    "GENERIC_SERVICE_TEXT",
+                    "For generell tekst",
+                    "Teksten virker generell og lite knyttet til konkrete tjenester, sted eller bransje. Mer konkret innhold kan gjøre siden mer troverdig.",
+                    "INFO"
+            ));
+        }
+    }
+
+    private void addTrustSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, CompanyCheck companyCheck, EnhetResponse enhet) {
         String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
         String orgNumber = companyCheck.organisasjonsnummer();
         if (hasText(orgNumber) && !text.contains(orgNumber) && !text.contains(formatOrgNumberWithSpaces(orgNumber))) {
@@ -580,6 +627,28 @@ public class CompanyApiV1Mapper {
                     "MISSING_ORG_NUMBER",
                     "Mangler org.nr. på siden",
                     "Siden ser ikke ut til å vise organisasjonsnummer. Det er et konkret tillitssignal som ofte bør være synlig for nye virksomheter.",
+                    "INFO"
+            ));
+        }
+        String legalName = normalizeForWebsiteQuality(companyCheck.navn());
+        if (legalName.length() >= 5 && !text.contains(legalName)) {
+            signals.add(new WebsiteQualitySignal(
+                    "LEGAL_NAME_NOT_VISIBLE",
+                    "Mangler juridisk firmanavn",
+                    "Siden bruker ikke tydelig firmanavnet fra BRREG. For nye kunder kan juridisk navn gi mer tillit og etterprøvbarhet.",
+                    "INFO"
+            ));
+        }
+        String businessAddress = addressText(enhet.forretningsadresse());
+        String postalAddress = addressText(enhet.postadresse());
+        if (!hasText(businessAddress) && !hasText(postalAddress)) {
+            return;
+        }
+        if (!text.contains("adresse") && !text.contains("kart") && !text.contains("besok") && !text.contains("besøk")) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_ADDRESS_OR_AREA",
+                    "Mangler adresse eller områdeinfo",
+                    "Siden viser ikke tydelig adresse, kart eller dekningsområde. Dette kan svekke lokal tillit og søkbarhet.",
                     "INFO"
             ));
         }
@@ -591,8 +660,8 @@ public class CompanyApiV1Mapper {
         if (!hasCallToAction) {
             signals.add(new WebsiteQualitySignal(
                     "WEAK_CALL_TO_ACTION",
-                    "Mangler tydelig handling",
-                    "Siden ser ikke ut til å ha en tydelig oppfordring som Kontakt oss, Bestill eller Be om tilbud.",
+                    "Mangler tydelig kontaktknapp",
+                    "Siden mangler en tydelig kontaktknapp eller handlingsknapp på førstesiden. Det kan gjøre det vanskeligere for kunder å ta kontakt raskt.",
                     "MEDIUM"
             ));
         }
@@ -612,6 +681,46 @@ public class CompanyApiV1Mapper {
                     "Nettadressen ser ikke ut til å ligge tett på firmanavnet. Det kan gjøre siden vanskeligere å kjenne igjen.",
                     "INFO"
             ));
+        }
+    }
+
+    private void addEmailDomainSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, String website) {
+        String host = host(website);
+        if (!hasText(host) || thirdPartyPlatform(website) != null) {
+            return;
+        }
+        Set<String> emailDomains = emailDomains((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
+        if (emailDomains.isEmpty()) {
+            return;
+        }
+        String normalizedHost = host.replaceFirst("^www\\.", "");
+        boolean hasMatchingDomain = emailDomains.stream().anyMatch(domain -> normalizedHost.equals(domain) || normalizedHost.endsWith("." + domain) || domain.endsWith("." + normalizedHost));
+        boolean hasGenericDomain = emailDomains.stream().anyMatch(GENERIC_EMAIL_DOMAINS::contains);
+        if (!hasMatchingDomain || hasGenericDomain) {
+            signals.add(new WebsiteQualitySignal(
+                    "EMAIL_DOMAIN_MISMATCH",
+                    "E-post matcher ikke domene",
+                    "E-postadressen på siden ser ikke ut til å bruke samme domene som nettsiden. En domenebasert e-post kan gi et mer profesjonelt inntrykk.",
+                    "INFO"
+            ));
+        }
+    }
+
+    private void addFreshnessSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        String html = snapshot.html() == null ? "" : snapshot.html();
+        var matcher = COPYRIGHT_YEAR_PATTERN.matcher(html);
+        int currentYear = LocalDate.now(clock).getYear();
+        while (matcher.find()) {
+            int year = Integer.parseInt(matcher.group(2));
+            if (year <= currentYear - 3) {
+                signals.add(new WebsiteQualitySignal(
+                        "OUTDATED_COPYRIGHT",
+                        "Utdatert årstall",
+                        "Siden ser ut til å ha utdatert årstall i bunnteksten. Det kan gi inntrykk av at siden ikke vedlikeholdes.",
+                        "INFO"
+                ));
+                return;
+            }
         }
     }
 
@@ -671,6 +780,12 @@ public class CompanyApiV1Mapper {
 
     private void addSecuritySignals(List<WebsiteQualitySignal> signals, String website, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!website.startsWith(HTTPS_PREFIX)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_HTTPS",
+                    "Mangler HTTPS",
+                    "Siden bruker ikke sikker HTTPS-forbindelse. Dette kan gi dårligere tillit og varsler i nettleseren.",
+                    "HIGH"
+            ));
             return;
         }
         if (snapshot.mixedContentSignal()) {
@@ -816,6 +931,29 @@ public class CompanyApiV1Mapper {
 
     private String normalizeDomainToken(String value) {
         return normalizeForWebsiteQuality(value).replaceAll("\\b(as|enk|nuf|sa|fli|da|ans)\\b", "").replace(" ", "");
+    }
+
+    private Set<String> emailDomains(String text) {
+        if (!hasText(text)) {
+            return Set.of();
+        }
+        Set<String> domains = new LinkedHashSet<>();
+        var matcher = EMAIL_PATTERN.matcher(text);
+        while (matcher.find()) {
+            String email = matcher.group().toLowerCase(Locale.ROOT);
+            int atIndex = email.indexOf('@');
+            if (atIndex > 0 && atIndex + 1 < email.length()) {
+                domains.add(email.substring(atIndex + 1));
+            }
+        }
+        return domains;
+    }
+
+    private String addressText(EnhetResponse.Adresse adresse) {
+        if (adresse == null || adresse.adresse() == null || adresse.adresse().isEmpty()) {
+            return null;
+        }
+        return String.join(" ", adresse.adresse());
     }
 
     private List<WebsiteCandidateCheck> checkWebsiteCandidates(List<String> candidates, String companyName, String emailDomain) {

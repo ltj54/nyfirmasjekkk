@@ -41,6 +41,7 @@ public class WebsiteContentSnapshotFetcher {
             boolean structuredData = document.selectFirst("script[type=application/ld+json]") != null;
             int linkCount = document.select("a[href]:not([href^=#]):not([href^=mailto:]):not([href^=tel:]):not([href^=javascript:])").size();
             int headingCount = document.select("h1, h2, h3").size();
+            int h1Count = document.select("h1").size();
             boolean navigation = document.selectFirst("nav, header a[href], [role=navigation], .nav, .navbar, .menu") != null;
             String generator = attrOrNull(document.selectFirst("meta[name=generator]"), "content");
             String htmlSnapshot = document.outerHtml();
@@ -84,6 +85,7 @@ public class WebsiteContentSnapshotFetcher {
                     navigation,
                     linkCount,
                     headingCount,
+                    h1Count,
                     generator,
                     detectedBuilder,
                     imageCount,

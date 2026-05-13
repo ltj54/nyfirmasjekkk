@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 236
-- Sendt: 173
+- Antall hendelser: 239
+- Sendt: 175
 - Angret: 6
-- Aktive kontaktede selskaper: 170
+- Aktive kontaktede selskaper: 172
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Pris | Tilbud |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-13 | 937618913 | SEBASTIAN KROKSTRAND MEDIA | ENK | email | kr 3.990 | website-offer |
+| 2026-05-13 | 937614020 | ROV INSPEKSJON SØR AS | AS | email | kr 3.990 | website-offer |
 | 2026-05-13 | 937584318 | RØD TERAPI OG KOMPETANSE | ENK | email | kr 3.990 | website-offer |
 | 2026-05-13 | 937520905 | SERHOLT & JENSEN VEILEDNING OG TERAPI | ENK | email | kr 3.990 | website-offer |
 | 2026-05-12 | 937702817 | NORSTOCK AS | AS | email | kr 3.990 | website-offer |
@@ -188,6 +190,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Pris | Notat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-13 08:49 | not_relevant | 937615795 | INGVILD MARIE EK | ENK | email | kr 3.990 | - |
+| 2026-05-13 08:42 | sent | 937618913 | SEBASTIAN KROKSTRAND MEDIA | ENK | email | kr 3.990 | - |
+| 2026-05-13 08:41 | sent | 937614020 | ROV INSPEKSJON SØR AS | AS | email | kr 3.990 | - |
 | 2026-05-13 00:12 | sent | 937584318 | RØD TERAPI OG KOMPETANSE | ENK | email | kr 3.990 | - |
 | 2026-05-13 00:11 | sent | 937520905 | SERHOLT & JENSEN VEILEDNING OG TERAPI | ENK | email | kr 3.990 | - |
 | 2026-05-12 22:38 | sent | 937702817 | NORSTOCK AS | AS | email | kr 3.990 | - |

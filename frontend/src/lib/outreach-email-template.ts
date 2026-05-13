@@ -85,16 +85,17 @@ function websiteQualityMailPoints(signalCodes: Set<string>) {
   const points: string[] = [];
 
   addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT"), "tydeligere førsteside og forklaring av hva dere tilbyr");
-  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE"), "bedre kobling mellom nettsideteksten og bransjen dere er registrert med");
-  addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE"), "tydeligere lokal synlighet og område dere dekker");
-  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("WEAK_CALL_TO_ACTION"), "klarere kontaktpunkt og enklere vei til henvendelse");
-  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("DOMAIN_NAME_MISMATCH"), "flere tillitssignaler som gjør siden lettere å kjenne igjen");
+  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT"), "tydeligere beskrivelse av tjenester eller aktivitet");
+  addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), "tydeligere lokal synlighet og område dere dekker");
+  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("WEAK_CALL_TO_ACTION"), "klarere kontaktpunkt og enklere vei til henvendelse");
+  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH"), "flere tillitssignaler som gjør siden lettere å kjenne igjen");
   addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), "ryddigere visning i Google, e-post og ved deling");
   addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "bedre mobiltilpasning");
   addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK") || signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("MISSING_LANGUAGE"), "noen enkle UU-punkter som bør sjekkes");
   addMailPoint(points, signalCodes.has("SENSITIVE_HEALTH_CONTEXT"), "ekstra ryddighet rundt personvern og skjema fordi siden berører et sensitivt fagområde");
   addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK"), "personvern- og samtykketekst der siden samler inn eller måler data");
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK"), "noen tekniske avhengigheter som bør vurderes");
+  addMailPoint(points, signalCodes.has("MISSING_HTTPS") || signalCodes.has("OUTDATED_COPYRIGHT"), "noen tekniske eller vedlikeholdsmessige punkter som kan svekke inntrykket");
   addMailPoint(points, signalCodes.has("NON_NO_DOMAIN"), "vurdering av en tydeligere norsk nettadresse");
   addMailPoint(points, signalCodes.has("THIRD_PARTY_SURFACE"), "samling av informasjonen på en egen nettside");
 

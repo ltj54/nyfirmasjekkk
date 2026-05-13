@@ -199,6 +199,7 @@ public class WebsiteContentInspectionService {
             boolean navigation,
             int linkCount,
             int headingCount,
+            int h1Count,
             String generator,
             String detectedBuilder,
             int imageCount,
@@ -223,7 +224,7 @@ public class WebsiteContentInspectionService {
                 String language,
                 String h1
         ) {
-            this(title, bodyText, html, metaDescription, viewport, language, h1, false, false, false, false, 0, hasTextValue(h1) ? 1 : 0, null, null, 0, 0, 0, 0, 0, false, false, false, false, false, 0, 0);
+            this(title, bodyText, html, metaDescription, viewport, language, h1, false, false, false, false, 0, hasTextValue(h1) ? 1 : 0, hasTextValue(h1) ? 1 : 0, null, null, 0, 0, 0, 0, 0, false, false, false, false, false, 0, 0);
         }
 
         public WebsiteContentSnapshot(String title, String bodyText) {

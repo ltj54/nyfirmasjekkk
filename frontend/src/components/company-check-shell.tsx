@@ -52,7 +52,6 @@ import {
   formatEventDate,
   formatEventSeverity,
   formatEventType,
-  formatNokPrice,
   formatRegistryFlag,
   formatRoleType,
   formatStructureSignalSeverity,
@@ -134,6 +133,10 @@ const organizationFormHelp: Record<string, { label: string; description: string 
     label: "Stiftelse",
     description: "Selveiende virksomhet med vedtektsfestet formål. Kan være relevant, men ofte mindre salgsrettet.",
   },
+  STI: {
+    label: "Stiftelse",
+    description: "Selveiende virksomhet med vedtektsfestet formål. Kan være relevant, men ofte mindre salgsrettet.",
+  },
   FLI: {
     label: "Forening/lag/innretning",
     description: "Forening, lag eller ideell innretning.",
@@ -148,7 +151,7 @@ const organizationFormHelp: Record<string, { label: string; description: string 
   },
 };
 
-const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "STIFT", "SA", "FLI", "ASA", "BA"];
+const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "FLI", "SA", "STI", "ASA", "BA"];
 const outreachOfferPrice = 3990;
 
 const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
@@ -1479,7 +1482,6 @@ function OutreachCheckbox({
   className?: string;
   compact?: boolean;
 }) {
-  const sentPrice = status?.price ?? outreachOfferPrice;
   const sentAlready = status?.sent ?? false;
   const markedNotRelevant = status?.status === "not_relevant";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
@@ -1495,7 +1497,7 @@ function OutreachCheckbox({
       ? "Markert som ikke aktuell. Du kan angre eller sende likevel senere."
     : sentAlready
       ? "Registrert som sendt. Ny utsendelse krever eksplisitt overstyring."
-      : "Marker når tilbudsmail er sendt, så unngår du dobbelt utsendelse.";
+      : "Marker når første e-post er sendt, så unngår du dobbelt henvendelse.";
   const wrapperClassName = `${className ? `${className} ` : ""}${compact ? "mt-4 " : ""}border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3`;
 
   function persistNote(nextNote: string) {
@@ -1527,7 +1529,7 @@ function OutreachCheckbox({
         />
         <span className="min-w-0">
           <span className="block text-[12px] font-semibold text-[#1F2933]">
-            E-post sendt om nettside til kr {formatNokPrice(sentPrice)}
+            Første e-post om nettside er sendt
           </span>
           {!compact ? <span className="mt-1 block text-[12px] text-[#52606D]">{helpText}</span> : null}
           {status?.sent && status.sentAt ? (
