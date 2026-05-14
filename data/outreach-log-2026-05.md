@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 263
+- Antall hendelser: 264
 - Sendt: 188
 - Angret: 7
 - Aktive kontaktede selskaper: 185
@@ -203,6 +203,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-14 22:53 | not_relevant | 937702183 | PERNILLE ECHMANN-BORGE | ENK | email | - |
 | 2026-05-14 12:13 | sent | 937711190 | ARNOL OFFSHORE LIMITED | UTLA | email | - |
 | 2026-05-14 11:27 | not_relevant | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
 | 2026-05-14 11:26 | reverted | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
