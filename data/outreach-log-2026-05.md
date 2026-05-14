@@ -4,15 +4,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 251
-- Sendt: 181
-- Angret: 6
-- Aktive kontaktede selskaper: 178
+- Antall hendelser: 262
+- Sendt: 187
+- Angret: 7
+- Aktive kontaktede selskaper: 184
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-14 | 937681631 | MORAD KUNST OG HONDVERK | ENK | email | website-unavailable-offer |
+| 2026-05-14 | 837649722 | JENNY GLASER BJØRNSEN | ENK | email | website-unavailable-offer |
+| 2026-05-14 | 937395892 | KLEFTARA AGENCY | ENK | email | website-offer |
+| 2026-05-14 | 937711247 | OLM IDRETT OG UTVIKLING | ENK | email | website-offer |
+| 2026-05-14 | 937713282 | OLE MAGNUS ENDRESEN MUSIKKAKTIVITETER | ENK | email | website-offer |
+| 2026-05-14 | 937713320 | BYVEKTER ANFINSEN-ARISÆ | ENK | email | website-offer |
 | 2026-05-13 | 937708122 | SAMMEN FOR TROMSØ SINE BARN | FLI | email | website-offer |
 | 2026-05-13 | 937673221 | BRIKKEVERDEN HEGERLAND | ENK | email | website-unavailable-offer |
 | 2026-05-13 | 937708734 | RK HÅNDVERK KIERLIN | ENK | email | website-offer |
@@ -196,6 +202,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-14 11:27 | not_relevant | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
+| 2026-05-14 11:26 | reverted | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
+| 2026-05-14 11:26 | not_relevant | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
+| 2026-05-14 11:25 | sent | 937681631 | MORAD KUNST OG HONDVERK | ENK | email | - |
+| 2026-05-14 11:21 | not_relevant | 937709536 | HANSEN-ICOMA AB | UTLA | email | - |
+| 2026-05-14 11:20 | sent | 837649722 | JENNY GLASER BJØRNSEN | ENK | email | - |
+| 2026-05-14 11:19 | sent | 937395892 | KLEFTARA AGENCY | ENK | email | - |
+| 2026-05-14 11:15 | sent | 937711247 | OLM IDRETT OG UTVIKLING | ENK | email | - |
+| 2026-05-14 11:14 | not_relevant | 937705069 | DE BRUCQ | ENK | email | - |
+| 2026-05-14 11:13 | sent | 937713282 | OLE MAGNUS ENDRESEN MUSIKKAKTIVITETER | ENK | email | - |
+| 2026-05-14 11:12 | sent | 937713320 | BYVEKTER ANFINSEN-ARISÆ | ENK | email | - |
 | 2026-05-13 11:14 | not_relevant | 937705778 | SAYER CREATIVE | ENK | email | - |
 | 2026-05-13 11:12 | sent | 937708122 | SAMMEN FOR TROMSØ SINE BARN | FLI | email | - |
 | 2026-05-13 11:11 | not_relevant | 937399979 | EPLEKJEKK TORD GRAMSTAD BJULAND | ENK | email | - |

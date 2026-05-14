@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.1'
@@ -39,7 +41,7 @@ tasks.named('test') {
 tasks.named('bootRun') {
     def localSecrets = file('scripts/local-secrets.ps1')
     if (localSecrets.exists()) {
-        def secretPattern = java.util.regex.Pattern.compile("^\\s*\\\$env:([A-Z0-9_]+)\\s*=\\s*[\"'](.*)[\"']\\s*\$")
+        def secretPattern = Pattern.compile("^\\s*\\\$env:([A-Z0-9_]+)\\s*=\\s*[\"'](.*)[\"']\\s*\$")
         localSecrets.readLines().forEach { line ->
             def matcher = secretPattern.matcher(line)
             if (matcher.matches() && matcher.group(2)) {
