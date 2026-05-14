@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 262
-- Sendt: 187
+- Antall hendelser: 263
+- Sendt: 188
 - Angret: 7
-- Aktive kontaktede selskaper: 184
+- Aktive kontaktede selskaper: 185
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-14 | 937711190 | ARNOL OFFSHORE LIMITED | UTLA | email | website-offer |
 | 2026-05-14 | 937681631 | MORAD KUNST OG HONDVERK | ENK | email | website-unavailable-offer |
 | 2026-05-14 | 837649722 | JENNY GLASER BJØRNSEN | ENK | email | website-unavailable-offer |
 | 2026-05-14 | 937395892 | KLEFTARA AGENCY | ENK | email | website-offer |
@@ -202,6 +203,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-14 12:13 | sent | 937711190 | ARNOL OFFSHORE LIMITED | UTLA | email | - |
 | 2026-05-14 11:27 | not_relevant | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
 | 2026-05-14 11:26 | reverted | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
 | 2026-05-14 11:26 | not_relevant | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |
