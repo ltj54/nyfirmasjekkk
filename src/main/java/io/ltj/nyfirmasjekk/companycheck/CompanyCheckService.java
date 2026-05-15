@@ -219,6 +219,7 @@ public class CompanyCheckService {
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
         int matchedBeforePage = 0;
         int sourcePage = 0;
+        boolean reachedEnd = false;
 
         while (matches.size() < request.resultSize() && sourcePage < MAX_SOURCE_PAGES_WITH_SCORE_FILTER) {
             var filter = byggFilter(request, sourcePage, FILTERED_SOURCE_PAGE_SIZE);
@@ -235,6 +236,7 @@ public class CompanyCheckService {
             var pageInfo = searchResponse.page();
             boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
             if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
+                reachedEnd = true;
                 break;
             }
 
@@ -244,7 +246,10 @@ public class CompanyCheckService {
         List<CompanyCheck> items = matches.stream()
                 .limit(request.resultSize())
                 .toList();
-        return buildSearchPage(items, page, request.resultSize(), matchedBeforePage);
+        long totalElements = !reachedEnd && items.size() == request.resultSize()
+                ? (long) requestedOffset + items.size() + 1
+                : matchedBeforePage;
+        return buildSearchPage(items, page, request.resultSize(), totalElements);
     }
 
     private List<CompanyCheck> deduplicateMatches(List<CompanyCheck> candidates, Map<String, CompanyCheck> seenMatches) {

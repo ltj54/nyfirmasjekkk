@@ -18,7 +18,9 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -61,24 +63,48 @@ public class OutreachLogService {
     }
 
     public synchronized OutreachStatusResponse statusFor(String orgNumber) {
-        List<OutreachLogEntry> entries = readAllEntries();
-        OutreachLogEntry latestEntry = entries.stream()
+        return toLatestStatusResponse(orgNumber, readAllEntries().stream()
                 .filter(entry -> orgNumber.equals(entry.orgNumber()))
                 .sorted(Comparator.comparing(this::sortTimestamp))
                 .reduce((first, second) -> second)
-                .orElse(null);
+                .orElse(null));
+    }
 
+    public synchronized Map<String, OutreachStatusResponse> statusesFor(Collection<String> orgNumbers) {
+        if (orgNumbers == null || orgNumbers.isEmpty()) {
+            return Map.of();
+        }
+
+        var requestedOrgNumbers = new HashSet<>(orgNumbers);
+        Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
+        readAllEntries().stream()
+                .filter(entry -> requestedOrgNumbers.contains(entry.orgNumber()))
+                .sorted(Comparator.comparing(this::sortTimestamp))
+                .forEach(entry -> latestByOrgNumber.put(entry.orgNumber(), entry));
+
+        Map<String, OutreachStatusResponse> responses = new LinkedHashMap<>();
+        for (String orgNumber : requestedOrgNumbers) {
+            responses.put(orgNumber, toLatestStatusResponse(orgNumber, latestByOrgNumber.get(orgNumber)));
+        }
+        return responses;
+    }
+
+    private OutreachStatusResponse toLatestStatusResponse(String orgNumber, OutreachLogEntry latestEntry) {
         if (latestEntry == null || !STATUS_SENT.equalsIgnoreCase(latestEntry.status())) {
-            return new OutreachStatusResponse(orgNumber, false, latestEntry == null ? null : latestEntry.status(), latestEntry == null ? null : latestEntry.companyName(),
+            return new OutreachStatusResponse(
+                    orgNumber,
+                    false,
+                    latestEntry == null ? null : latestEntry.status(),
+                    latestEntry == null ? null : latestEntry.companyName(),
                     latestEntry == null ? null : latestEntry.organizationForm(),
                     latestEntry == null ? null : latestEntry.price(),
                     latestEntry == null ? null : latestEntry.channel(),
                     latestEntry == null ? null : latestEntry.offerType(),
                     latestEntry == null ? null : latestEntry.timestamp(),
                     null,
-                    latestEntry == null ? null : latestEntry.note());
+                    latestEntry == null ? null : latestEntry.note()
+            );
         }
-
         return new OutreachStatusResponse(
                 orgNumber,
                 true,

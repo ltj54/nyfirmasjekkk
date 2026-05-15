@@ -91,7 +91,7 @@ class OutreachLogServiceTests {
         assertThat(report).contains("Test AS");
         assertThat(report).contains("Selskapsform");
         assertThat(report).contains("AS");
-        assertThat(report).contains("kr 4.500");
+        assertThat(report).doesNotContain("kr 4.500");
         assertThat(report).contains("Ferdig utkast sendt");
     }
 

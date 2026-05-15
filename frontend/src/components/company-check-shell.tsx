@@ -461,7 +461,7 @@ export function CompanyCheckShell() {
   }
 
   const handleCloseDetail = useEffectEvent(() => {
-    resetToLanding();
+    closeDetailView();
   });
 
   useEffect(() => {
@@ -762,8 +762,7 @@ export function CompanyCheckShell() {
 
   function resetToLanding() {
     if (selectedCompany && hasDetailHistoryEntryRef.current) {
-      hasDetailHistoryEntryRef.current = false;
-      window.history.back();
+      closeDetailView();
       return;
     }
     setSelectedCompany(null);
@@ -778,6 +777,15 @@ export function CompanyCheckShell() {
       organizationFormFilter: "",
       selectedLegend: null,
     });
+  }
+
+  function closeDetailView() {
+    if (hasDetailHistoryEntryRef.current) {
+      hasDetailHistoryEntryRef.current = false;
+      window.history.back();
+      return;
+    }
+    setSelectedCompany(null);
   }
 
   function toggleLeadQuickFilter(filter: LeadQuickFilter) {
@@ -796,6 +804,7 @@ export function CompanyCheckShell() {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
     return !outreachStatus?.sent && outreachStatus?.status !== "not_relevant";
   });
+  const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
@@ -1021,9 +1030,9 @@ export function CompanyCheckShell() {
             importMessage={outreachImportMessage}
             isImporting={isOutreachImporting}
             isLoading={isOutreachListLoading}
-            onImport={(file) => void importOutreachLog(file)}
-            onOpenCompany={(orgNumber) => void openCompanyDetails(orgNumber)}
-            onRefresh={() => void fetchOutreachEntries()}
+            onImportAction={(file) => void importOutreachLog(file)}
+            onOpenCompanyAction={(orgNumber) => void openCompanyDetails(orgNumber)}
+            onRefreshAction={() => void fetchOutreachEntries()}
           />
 
           {/* Dynamic Content */}
@@ -1079,7 +1088,10 @@ export function CompanyCheckShell() {
                   <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Aktuelle selskaper</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
-                    Viser {visibleSearchCompanies.length} treff på denne siden.
+                    Viser {visibleSearchCompanies.length} aktuelle treff på denne siden
+                    {hiddenByOutreachCount > 0
+                      ? ` (${hiddenByOutreachCount} skjult fordi de er sendt eller ikke aktuelle).`
+                      : "."}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">

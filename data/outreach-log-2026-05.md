@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 298
-- Sendt: 213
+- Antall hendelser: 310
+- Sendt: 223
 - Angret: 7
-- Aktive kontaktede selskaper: 210
+- Aktive kontaktede selskaper: 220
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-15 | 937550278 | MANA SØRGÅRD | ENK | email | website-offer |
+| 2026-05-15 | 937564554 | FLYDAL SKRIBLERIER | ENK | email | website-offer |
+| 2026-05-15 | 937541821 | LOFTHUS MASKIN OG TRANSPORT | ENK | email | website-offer |
+| 2026-05-15 | 937533802 | KVALVIK CONSULTING | ENK | email | website-offer |
+| 2026-05-15 | 937568819 | BYGG PEDERSEN | ENK | email | website-offer |
+| 2026-05-15 | 937520964 | POVILAS SMILGEVICIUS BLIKK & TAK | ENK | email | website-offer |
+| 2026-05-15 | 937572859 | TECH-HOME DEL MONTE | ENK | email | website-offer |
+| 2026-05-15 | 837585082 | JANUSMALER BUKSZYNSKI | ENK | email | website-offer |
+| 2026-05-15 | 937551320 | AMALIE SASHA SCHANKE | ENK | email | website-offer |
+| 2026-05-15 | 937647174 | GEBRESILLASIE | ENK | email | website-offer |
 | 2026-05-15 | 937402163 | LEIRGULEN KULTUR- OG NATURHISTORISKE STIFTELSE | STI | email | website-offer |
 | 2026-05-15 | 913483340 | SAND BÅTHAVN SA | SA | email | website-offer |
 | 2026-05-15 | 937617666 | HENNY HANCHE-OLSEN | ENK | email | website-offer |
@@ -228,6 +238,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-15 14:34 | not_relevant | 937566441 | PLAY!FESTIVAL TRONDHEIM | FLI | email | - |
+| 2026-05-15 14:32 | sent | 937550278 | MANA SØRGÅRD | ENK | email | - |
+| 2026-05-15 14:32 | sent | 937564554 | FLYDAL SKRIBLERIER | ENK | email | - |
+| 2026-05-15 14:31 | sent | 937541821 | LOFTHUS MASKIN OG TRANSPORT | ENK | email | - |
+| 2026-05-15 14:30 | sent | 937533802 | KVALVIK CONSULTING | ENK | email | - |
+| 2026-05-15 14:30 | not_relevant | 937588666 | VEDØRA HEKK OG HAGE AS | AS | email | - |
+| 2026-05-15 14:28 | sent | 937568819 | BYGG PEDERSEN | ENK | email | - |
+| 2026-05-15 14:27 | sent | 937520964 | POVILAS SMILGEVICIUS BLIKK & TAK | ENK | email | - |
+| 2026-05-15 14:14 | sent | 937572859 | TECH-HOME DEL MONTE | ENK | email | - |
+| 2026-05-15 14:14 | sent | 837585082 | JANUSMALER BUKSZYNSKI | ENK | email | - |
+| 2026-05-15 14:13 | sent | 937551320 | AMALIE SASHA SCHANKE | ENK | email | - |
+| 2026-05-15 13:56 | sent | 937647174 | GEBRESILLASIE | ENK | email | - |
 | 2026-05-15 12:31 | sent | 937402163 | LEIRGULEN KULTUR- OG NATURHISTORISKE STIFTELSE | STI | email | - |
 | 2026-05-15 12:31 | sent | 913483340 | SAND BÅTHAVN SA | SA | email | - |
 | 2026-05-15 12:29 | sent | 937617666 | HENNY HANCHE-OLSEN | ENK | email | - |

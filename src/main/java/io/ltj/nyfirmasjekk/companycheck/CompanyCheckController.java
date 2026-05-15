@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -220,7 +221,7 @@ public class CompanyCheckController {
                     missingWebsite
             );
 
-            var searchPage = companyCheckService.sokPage(request, page);
+            var searchPage = searchVisiblePage(request, page);
             var results = searchPage.items().stream()
                     .map(check -> mapper.toSummary(check, brregClient.hentEnhet(check.organisasjonsnummer())))
                     .toList();
@@ -244,6 +245,52 @@ public class CompanyCheckController {
             ));
             return mapper.toSearchResponse(results, searchPage.page(), searchPage.size(), searchPage.totalElements(), searchPage.totalPages());
         });
+    }
+
+    private CompanySearchPage searchVisiblePage(CompanySearchRequest request, int page) {
+        int requestedOffset = Math.max(page, 0) * SEARCH_RESULT_SIZE;
+        int visibleBeforePage = 0;
+        int backendPage = 0;
+        boolean reachedEnd = false;
+        List<CompanyCheck> visibleItems = new ArrayList<>();
+
+        while (visibleItems.size() < SEARCH_RESULT_SIZE) {
+            CompanySearchPage backendSearchPage = companyCheckService.sokPage(request, backendPage);
+            List<CompanyCheck> backendItems = backendSearchPage.items();
+            if (backendItems.isEmpty()) {
+                reachedEnd = true;
+                break;
+            }
+
+            Map<String, OutreachStatusResponse> statusesByOrgNumber = outreachLogService.statusesFor(
+                    backendItems.stream().map(CompanyCheck::organisasjonsnummer).toList()
+            );
+            for (CompanyCheck item : backendItems) {
+                if (isHiddenFromSearch(statusesByOrgNumber.get(item.organisasjonsnummer()))) {
+                    continue;
+                }
+                if (visibleBeforePage >= requestedOffset && visibleItems.size() < SEARCH_RESULT_SIZE) {
+                    visibleItems.add(item);
+                }
+                visibleBeforePage += 1;
+            }
+
+            if (backendPage + 1 >= backendSearchPage.totalPages()) {
+                reachedEnd = true;
+                break;
+            }
+            backendPage += 1;
+        }
+
+        long totalElements = !reachedEnd && visibleItems.size() == SEARCH_RESULT_SIZE
+                ? (long) requestedOffset + visibleItems.size() + 1
+                : visibleBeforePage;
+        int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / SEARCH_RESULT_SIZE);
+        return new CompanySearchPage(visibleItems, Math.max(page, 0), SEARCH_RESULT_SIZE, totalElements, totalPages);
+    }
+
+    private boolean isHiddenFromSearch(OutreachStatusResponse status) {
+        return status != null && (status.sent() || "not_relevant".equalsIgnoreCase(status.status()));
     }
 
     private String buildSearchLogLine(

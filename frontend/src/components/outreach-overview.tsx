@@ -19,18 +19,18 @@ export function OutreachOverview({
   importMessage,
   isImporting,
   isLoading,
-  onImport,
-  onOpenCompany,
-  onRefresh,
+  onImportAction,
+  onOpenCompanyAction,
+  onRefreshAction,
 }: {
   entries: OutreachStatus[];
   error: string | null;
   importMessage: string | null;
   isImporting: boolean;
   isLoading: boolean;
-  onImport: (file: File) => void;
-  onOpenCompany: (orgNumber: string) => void;
-  onRefresh: () => void;
+  onImportAction: (file: File) => void;
+  onOpenCompanyAction: (orgNumber: string) => void;
+  onRefreshAction: () => void;
 }) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [activeContactedLimit, setActiveContactedLimit] = useState(10);
@@ -59,7 +59,7 @@ export function OutreachOverview({
             <Button
               className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
               disabled={isLoading}
-              onClick={onRefresh}
+              onClick={onRefreshAction}
               type="button"
               variant="outline"
             >
@@ -82,7 +82,7 @@ export function OutreachOverview({
                 const file = event.target.files?.[0];
                 event.target.value = "";
                 if (file) {
-                  onImport(file);
+                  onImportAction(file);
                 }
               }}
               type="file"
@@ -126,7 +126,7 @@ export function OutreachOverview({
               emptyText="Ingen aktive kontaktede selskaper."
               entries={visibleActiveContactedEntries}
               heading="Aktive kontaktede selskaper"
-              onOpenCompany={onOpenCompany}
+              onOpenCompany={onOpenCompanyAction}
               renderDate={(entry) => formatLogDate(entry.sentAt ?? entry.timestamp)}
               totalCount={activeContactedEntries.length}
               visibleCount={visibleActiveContactedEntries.length}
@@ -139,7 +139,7 @@ export function OutreachOverview({
               emptyText="Ingen selskaper er markert som ikke aktuell."
               entries={visibleNotRelevantEntries}
               heading="Ikke aktuell"
-              onOpenCompany={onOpenCompany}
+              onOpenCompany={onOpenCompanyAction}
               renderDate={(entry) => formatLogDate(entry.timestamp ?? entry.sentAt)}
               totalCount={notRelevantEntries.length}
               visibleCount={visibleNotRelevantEntries.length}
@@ -149,7 +149,7 @@ export function OutreachOverview({
 
             <NotesTable
               entries={visibleNoteEntries}
-              onOpenCompany={onOpenCompany}
+              onOpenCompany={onOpenCompanyAction}
               totalCount={noteEntries.length}
               visibleCount={visibleNoteEntries.length}
               onCollapse={() => setNoteLimit(10)}
