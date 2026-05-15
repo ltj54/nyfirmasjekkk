@@ -854,13 +854,31 @@ public class CompanyApiV1Mapper {
 
     private void addTechnologySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (hasText(snapshot.detectedBuilder())) {
+            String builder = snapshot.detectedBuilder();
             signals.add(new WebsiteQualitySignal(
                     "SITE_BUILDER_DETECTED",
                     "Teknologispor funnet",
-                    "HTML-spor peker mot " + snapshot.detectedBuilder() + ". Dette sier noe om verktøy/plattform, men ikke sikkert hvem som har laget siden.",
+                    "HTML-spor peker mot " + builder + ". Dette sier noe om verktøy/plattform, men ikke sikkert hvem som har laget siden. " + builderCostHint(builder),
                     "INFO"
             ));
         }
+    }
+
+    private String builderCostHint(String builder) {
+        String normalizedBuilder = builder == null ? "" : builder.toLowerCase(Locale.ROOT);
+        if (normalizedBuilder.contains("shopify")) {
+            return "Shopify er normalt en abonnementsplattform for nettbutikk, ofte med løpende plattformkostnad og eventuelle tillegg for apper, betaling og tema.";
+        }
+        if (normalizedBuilder.contains("wix") || normalizedBuilder.contains("squarespace") || normalizedBuilder.contains("webflow") || normalizedBuilder.contains("framer")) {
+            return builder + " er normalt en hostet plattform med løpende måneds-/årsabonnement. Det kan være relevant å vurdere kostnad, eierskap og hvor lett siden er å videreutvikle.";
+        }
+        if (normalizedBuilder.contains("wordpress")) {
+            return "WordPress kan være rimelig å drifte, men totalkostnaden avhenger ofte av hosting, tema, plugins, sikkerhet og vedlikehold.";
+        }
+        if (normalizedBuilder.contains("next") || normalizedBuilder.contains("vite")) {
+            return "Dette peker mot en mer spesialbygget frontend. Pris og vedlikehold avhenger da ofte av hvem som har laget løsningen og hvordan den er hostet.";
+        }
+        return "Pris og vedlikeholdskostnad må vurderes manuelt ut fra hosting, avtale og hvem som faktisk vedlikeholder løsningen.";
     }
 
     private String thirdPartyPlatform(String website) {

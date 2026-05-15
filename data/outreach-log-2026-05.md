@@ -4,15 +4,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 264
-- Sendt: 188
+- Antall hendelser: 298
+- Sendt: 213
 - Angret: 7
-- Aktive kontaktede selskaper: 185
+- Aktive kontaktede selskaper: 210
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-15 | 937402163 | LEIRGULEN KULTUR- OG NATURHISTORISKE STIFTELSE | STI | email | website-offer |
+| 2026-05-15 | 913483340 | SAND BÅTHAVN SA | SA | email | website-offer |
+| 2026-05-15 | 937617666 | HENNY HANCHE-OLSEN | ENK | email | website-offer |
+| 2026-05-15 | 937687427 | VINDEDZIS SKOG TJENESTER | ENK | email | website-offer |
+| 2026-05-15 | 937622325 | VICTOR HELLER | ENK | email | website-offer |
+| 2026-05-15 | 937623925 | TUVA KALGRAFF | ENK | email | website-offer |
+| 2026-05-15 | 937619227 | THALE BJERK | ENK | email | website-offer |
+| 2026-05-15 | 937561164 | 618ACTIVEWEAR AS | AS | email | website-offer |
+| 2026-05-15 | 937257236 | ALGA CARBON CAPTURE AS | AS | email | website-offer |
+| 2026-05-15 | 937541090 | BUE FIX AS | AS | email | website-offer |
+| 2026-05-15 | 937580843 | DRØBAK VINTERLAND AS | AS | email | website-offer |
+| 2026-05-15 | 937665083 | KAPELLET AS | AS | email | website-unavailable-offer |
+| 2026-05-15 | 937715943 | KO BYGG AS | AS | email | website-offer |
+| 2026-05-15 | 937595611 | THANU HOVIND HOLDING AS | AS | email | website-offer |
+| 2026-05-15 | 937582838 | REIME SKULEHUS/GRENDAHUS | FLI | email | website-offer |
+| 2026-05-15 | 937711999 | OSLO GRAVING OG BETONG AS | AS | email | website-offer |
+| 2026-05-15 | 937563698 | RUD ALLIDRETT | FLI | email | website-offer |
+| 2026-05-15 | 937715315 | TVEIT VEGLAG | FLI | email | website-offer |
+| 2026-05-15 | 937717377 | GRØNLI INDUSTRISERVICE | ENK | email | website-offer |
+| 2026-05-15 | 937714904 | VINDSTADVEIEN | FLI | email | website-offer |
+| 2026-05-15 | 937714483 | OMSKAPT NATALIA EMILIA MESZYNSKA | ENK | email | website-offer |
+| 2026-05-15 | 937715005 | NORGE SOM REPUBLIKK UNGDOM SØR | FLI | email | website-offer |
+| 2026-05-15 | 937714955 | AUENHAUGLIE HYTTEEIERFORENING | FLI | email | website-offer |
+| 2026-05-15 | 937714300 | JEG KASTER IKKE SKYGGER FORLAG VIKER-HAUG | ENK | email | website-unavailable-offer |
+| 2026-05-15 | 937714467 | FACEBYLINDA JEGTVOLDEN | ENK | email | website-offer |
 | 2026-05-14 | 937711190 | ARNOL OFFSHORE LIMITED | UTLA | email | website-offer |
 | 2026-05-14 | 937681631 | MORAD KUNST OG HONDVERK | ENK | email | website-unavailable-offer |
 | 2026-05-14 | 837649722 | JENNY GLASER BJØRNSEN | ENK | email | website-unavailable-offer |
@@ -203,6 +228,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-15 12:31 | sent | 937402163 | LEIRGULEN KULTUR- OG NATURHISTORISKE STIFTELSE | STI | email | - |
+| 2026-05-15 12:31 | sent | 913483340 | SAND BÅTHAVN SA | SA | email | - |
+| 2026-05-15 12:29 | sent | 937617666 | HENNY HANCHE-OLSEN | ENK | email | - |
+| 2026-05-15 12:28 | sent | 937687427 | VINDEDZIS SKOG TJENESTER | ENK | email | - |
+| 2026-05-15 12:27 | sent | 937622325 | VICTOR HELLER | ENK | email | - |
+| 2026-05-15 12:27 | sent | 937623925 | TUVA KALGRAFF | ENK | email | - |
+| 2026-05-15 12:26 | sent | 937619227 | THALE BJERK | ENK | email | - |
+| 2026-05-15 12:23 | not_relevant | 937600038 | KUNST OG HOBBYUTSTYR AS | AS | email | - |
+| 2026-05-15 12:22 | sent | 937561164 | 618ACTIVEWEAR AS | AS | email | - |
+| 2026-05-15 12:21 | sent | 937257236 | ALGA CARBON CAPTURE AS | AS | email | - |
+| 2026-05-15 12:20 | not_relevant | 937603088 | BUTIKKDRIFT HUSSAIN AS | AS | email | - |
+| 2026-05-15 12:20 | not_relevant | 937456077 | ARKITEKTURTEKNIKK AS | AS | email | - |
+| 2026-05-15 12:19 | sent | 937541090 | BUE FIX AS | AS | email | - |
+| 2026-05-15 12:18 | sent | 937580843 | DRØBAK VINTERLAND AS | AS | email | - |
+| 2026-05-15 12:17 | not_relevant | 937657714 | RAKKEL AS | AS | email | - |
+| 2026-05-15 12:16 | sent | 937665083 | KAPELLET AS | AS | email | - |
+| 2026-05-15 12:14 | sent | 937715943 | KO BYGG AS | AS | email | - |
+| 2026-05-15 12:13 | sent | 937595611 | THANU HOVIND HOLDING AS | AS | email | - |
+| 2026-05-15 12:12 | sent | 937582838 | REIME SKULEHUS/GRENDAHUS | FLI | email | - |
+| 2026-05-15 12:12 | not_relevant | 937637187 | MOURIK INTERNATIONAL NUF | NUF | email | - |
+| 2026-05-15 12:11 | sent | 937711999 | OSLO GRAVING OG BETONG AS | AS | email | - |
+| 2026-05-15 12:10 | sent | 937563698 | RUD ALLIDRETT | FLI | email | - |
+| 2026-05-15 11:33 | sent | 937715315 | TVEIT VEGLAG | FLI | email | - |
+| 2026-05-15 11:32 | not_relevant | 937714963 | FOLLO MIKROSEMENT AS | AS | email | - |
+| 2026-05-15 11:06 | sent | 937717377 | GRØNLI INDUSTRISERVICE | ENK | email | - |
+| 2026-05-15 11:06 | sent | 937714904 | VINDSTADVEIEN | FLI | email | - |
+| 2026-05-15 11:05 | sent | 937714483 | OMSKAPT NATALIA EMILIA MESZYNSKA | ENK | email | - |
+| 2026-05-15 11:04 | sent | 937715005 | NORGE SOM REPUBLIKK UNGDOM SØR | FLI | email | - |
+| 2026-05-15 11:03 | sent | 937714955 | AUENHAUGLIE HYTTEEIERFORENING | FLI | email | - |
+| 2026-05-15 11:00 | not_relevant | 937698240 | ORTOMED NORGE AS | AS | email | - |
+| 2026-05-15 10:54 | sent | 937714300 | JEG KASTER IKKE SKYGGER FORLAG VIKER-HAUG | ENK | email | - |
+| 2026-05-15 10:52 | not_relevant | 937522673 | FOLLO TAKSERING AS | AS | email | - |
+| 2026-05-15 10:49 | not_relevant | 937714424 | ZENOLTA EKSTANG | ENK | email | - |
+| 2026-05-15 10:48 | sent | 937714467 | FACEBYLINDA JEGTVOLDEN | ENK | email | - |
 | 2026-05-14 22:53 | not_relevant | 937702183 | PERNILLE ECHMANN-BORGE | ENK | email | - |
 | 2026-05-14 12:13 | sent | 937711190 | ARNOL OFFSHORE LIMITED | UTLA | email | - |
 | 2026-05-14 11:27 | not_relevant | 937709382 | MOURIK INTERNATIONAL B.V. | UTLA | email | - |

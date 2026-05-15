@@ -38,22 +38,28 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
 }
 
 export function websiteQualityMailLine(company: OutreachEmailCompany) {
-  const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
+  const signals = company.websiteQuality?.signals ?? [];
+  const signalCodes = new Set(signals.map((signal) => signal.code));
   if (signalCodes.has("THIRD_PARTY_SURFACE")) {
     return "Det kan fungere fint, men en egen nettside gir dere et fast sted for åpningstider, tjenester, kontaktinfo og praktisk informasjon - også for kunder som ikke bruker Instagram/Facebook.";
   }
 
-  const points = websiteQualityMailPoints(signalCodes);
+  const toneProfile = websiteQualityToneProfile(company);
+  const mediumCodes = new Set(signals.filter((signal) => signal.severity === "MEDIUM").map((signal) => signal.code));
+  const mediumPoints = websiteQualityMailPoints(mediumCodes, toneProfile);
+  const fallbackPoints = websiteQualityMailPoints(signalCodes, toneProfile);
+  const points = mediumPoints.length > 0 ? mediumPoints : fallbackPoints;
 
   if (points.length === 0) {
     return "";
   }
 
-  return `Uten å gjøre dette til en full teknisk gjennomgang, ser jeg noen områder som kan være verdt å gjøre tydeligere: ${formatNorwegianList(points.slice(0, 3))}.`;
+  return `Uten å gjøre dette til en full teknisk gjennomgang, la jeg merke til et par ting jeg ville sett på hvis siden først skal ryddes opp: ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
 }
 
 export function websiteComplianceMailLine(company: OutreachEmailCompany) {
   const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
+  const toneProfile = websiteQualityToneProfile(company);
   const hasComplianceSignal = [
     "MISSING_PRIVACY_NOTICE",
     "COOKIE_CONSENT_RISK",
@@ -74,32 +80,135 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     return "";
   }
 
-  if (signalCodes.has("SENSITIVE_HEALTH_CONTEXT")) {
-    return "Jeg kan ikke si at dette bryter noen regler uten en full gjennomgang, men når en side berører helse, journal, pasienter eller behandling, ville jeg vært ekstra nøye med personvern, skjema og hvordan opplysninger håndteres.";
-  }
-
-  return "Jeg kan ikke si at dette bryter noen regler uten en full gjennomgang, men personvern, skjema og tilgjengelighet er også punkter jeg ville ryddet opp i når siden først oppdateres.";
+  return toneProfile.complianceLine;
 }
 
-function websiteQualityMailPoints(signalCodes: Set<string>) {
+function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: WebsiteQualityToneProfile) {
   const points: string[] = [];
 
-  addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT"), "tydeligere førsteside og forklaring av hva dere tilbyr");
-  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT"), "tydeligere beskrivelse av tjenester eller aktivitet");
-  addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), "tydeligere lokal synlighet og område dere dekker");
-  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("WEAK_CALL_TO_ACTION"), "klarere kontaktpunkt og enklere vei til henvendelse");
-  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH"), "flere tillitssignaler som gjør siden lettere å kjenne igjen");
-  addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), "ryddigere visning i Google, e-post og ved deling");
+  addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT"), toneProfile.homepagePoint);
+  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT"), toneProfile.servicePoint);
+  addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), toneProfile.localPoint);
+  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("WEAK_CALL_TO_ACTION"), toneProfile.contactPoint);
+  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH"), toneProfile.trustPoint);
+  addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), toneProfile.searchPoint);
   addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "bedre mobiltilpasning");
-  addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK") || signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("MISSING_LANGUAGE"), "noen enkle UU-punkter som bør sjekkes");
-  addMailPoint(points, signalCodes.has("SENSITIVE_HEALTH_CONTEXT"), "ekstra ryddighet rundt personvern og skjema fordi siden berører et sensitivt fagområde");
-  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK"), "personvern- og samtykketekst der siden samler inn eller måler data");
+  addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK") || signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("MISSING_LANGUAGE"), toneProfile.accessibilityPoint);
+  addMailPoint(points, signalCodes.has("SENSITIVE_HEALTH_CONTEXT") || toneProfile.strictness === "strict", toneProfile.sensitivePoint);
+  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK"), toneProfile.privacyPoint);
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK"), "noen tekniske avhengigheter som bør vurderes");
-  addMailPoint(points, signalCodes.has("MISSING_HTTPS") || signalCodes.has("OUTDATED_COPYRIGHT"), "noen tekniske eller vedlikeholdsmessige punkter som kan svekke inntrykket");
+  addMailPoint(points, signalCodes.has("MISSING_HTTPS") || signalCodes.has("OUTDATED_COPYRIGHT"), toneProfile.maintenancePoint);
   addMailPoint(points, signalCodes.has("NON_NO_DOMAIN"), "vurdering av en tydeligere norsk nettadresse");
   addMailPoint(points, signalCodes.has("THIRD_PARTY_SURFACE"), "samling av informasjonen på en egen nettside");
 
   return points;
+}
+
+type WebsiteQualityStrictness = "strict" | "commerce" | "normal" | "light";
+
+type WebsiteQualityToneProfile = {
+  strictness: WebsiteQualityStrictness;
+  maxMailPoints: number;
+  homepagePoint: string;
+  servicePoint: string;
+  localPoint: string;
+  contactPoint: string;
+  trustPoint: string;
+  searchPoint: string;
+  accessibilityPoint: string;
+  sensitivePoint: string;
+  privacyPoint: string;
+  maintenancePoint: string;
+  complianceLine: string;
+};
+
+const normalWebsiteToneProfile: WebsiteQualityToneProfile = {
+  strictness: "normal",
+  maxMailPoints: 2,
+  homepagePoint: "tydeligere førsteside og forklaring av hva dere tilbyr",
+  servicePoint: "tydeligere beskrivelse av tjenester eller aktivitet",
+  localPoint: "tydeligere lokal synlighet og område dere dekker",
+  contactPoint: "klarere kontaktpunkt og enklere vei til henvendelse",
+  trustPoint: "flere tillitssignaler som gjør siden lettere å kjenne igjen",
+  searchPoint: "ryddigere visning i Google, e-post og ved deling",
+  accessibilityPoint: "noen enkle tilgjengelighetspunkter som bør sjekkes",
+  sensitivePoint: "ekstra ryddighet rundt personvern og skjema fordi siden berører et mer tillitsbasert fagområde",
+  privacyPoint: "personvern- og samtykketekst der siden samler inn eller måler data",
+  maintenancePoint: "noen tekniske eller vedlikeholdsmessige punkter som kan svekke inntrykket",
+  complianceLine: "Jeg sier ikke at noe er feil, men personvern, skjema og tilgjengelighet er også små tillitspunkter som kan være lurt å ha ryddig.",
+};
+
+function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualityToneProfile {
+  const segmentCode = company.salesSegment?.code;
+  const naceCode = company.naceCode?.trim() ?? "";
+  if (segmentCode === "HELSE_VELVAERE" || naceCode.startsWith("86") || naceCode.startsWith("88") || naceCode === "96.040") {
+    return {
+      ...normalWebsiteToneProfile,
+      strictness: "strict",
+      servicePoint: "tydelig beskrivelse av behandlinger, timer og hva kunden kan forvente",
+      contactPoint: "tryggere og mer forklarende kontakt- eller bookingflyt",
+      trustPoint: "tydeligere ansvarlig virksomhet og tillitssignaler",
+      accessibilityPoint: "skjema og tilgjengelighet, siden slike detaljer betyr mer i tillitsbaserte tjenester",
+      sensitivePoint: "ekstra ryddighet rundt personvern og skjema fordi siden berører helse, behandling eller personopplysninger",
+      privacyPoint: "personvern og hvordan skjemaopplysninger behandles",
+      complianceLine: "Jeg sier ikke at noe er feil, men når en side berører helse, behandling eller personopplysninger, ville jeg også passet på at personvern og skjema er ryddig forklart.",
+    };
+  }
+  if (segmentCode === "BUTIKK_LOKALHANDEL" || naceCode.startsWith("47")) {
+    return {
+      ...normalWebsiteToneProfile,
+      strictness: "commerce",
+      homepagePoint: "tydeligere produkter, åpningstider og hvordan kunder kan handle eller ta kontakt",
+      servicePoint: "tydeligere produkt- eller varepresentasjon",
+      contactPoint: "klarere kjøpsvei, kontaktpunkt eller forespørselsmulighet",
+      trustPoint: "flere tillitssignaler rundt butikken og hvem kunden handler med",
+      privacyPoint: "personvern, cookies og praktiske kjøpsvilkår der kunder kan handle eller sende forespørsel",
+      complianceLine: "Jeg sier ikke at noe er feil, men for butikk og netthandel ville jeg vært ekstra nøye med kontaktinfo, kjøpsvilkår, levering/retur, personvern og eventuell bruk av cookies.",
+    };
+  }
+  if (segmentCode === "MAT_SERVERING" || naceCode.startsWith("56")) {
+    return {
+      ...normalWebsiteToneProfile,
+      homepagePoint: "tydeligere meny, åpningstider og hvordan gjester finner eller kontakter dere",
+      servicePoint: "tydeligere presentasjon av mat, servering eller bestilling",
+      localPoint: "tydeligere adresse, kart og lokal synlighet",
+      contactPoint: "enklere vei til bordbestilling, bestilling eller kontakt",
+      complianceLine: "Jeg sier ikke at noe er feil, men for servering ville jeg gjort meny, åpningstider, sted og kontakt så lett å finne som mulig.",
+    };
+  }
+  if (segmentCode === "KONSULENT" || ["62", "63", "69", "70", "71", "72", "74"].some((prefix) => naceCode.startsWith(prefix))) {
+    return {
+      ...normalWebsiteToneProfile,
+      homepagePoint: "tydeligere førsteside som raskt forklarer hvem dere hjelper og med hva",
+      servicePoint: "tydeligere kompetanse, tjenester og hvem tilbudet passer for",
+      trustPoint: "flere tillitssignaler rundt kompetanse, fagområde og ansvarlig virksomhet",
+      searchPoint: "ryddigere faglig presentasjon i Google, e-post og ved deling",
+      complianceLine: "Jeg sier ikke at noe er feil, men for fag- og konsulenttjenester er tydelig kompetanse, tillit og kontaktvei viktig for førsteinntrykket.",
+    };
+  }
+  if (segmentCode === "FORENING_KLUBB" || naceCode.startsWith("94")) {
+    return {
+      ...normalWebsiteToneProfile,
+      strictness: "light",
+      homepagePoint: "tydeligere aktivitet, kontaktpersoner og praktisk informasjon",
+      servicePoint: "tydeligere informasjon om aktivitet, arrangementer eller medlemskap",
+      contactPoint: "enklere vei til kontaktpersoner eller påmelding",
+      trustPoint: "tydeligere avsender og hvem som står bak aktiviteten",
+      complianceLine: "Jeg sier ikke at noe er feil, men for foreninger og klubber ville jeg gjort aktivitet, kontaktpersoner og praktisk informasjon lett å finne.",
+    };
+  }
+  if (["HANDVERK", "RENHOLD_OG_DRIFT", "HAGE_OG_GRONTANLEGG", "TRANSPORT"].includes(segmentCode ?? "")) {
+    return {
+      ...normalWebsiteToneProfile,
+      strictness: "light",
+      homepagePoint: "en tydeligere førsteside som raskt viser tjenester og kontakt",
+      servicePoint: "tydeligere tjenester og hva kunder kan be om hjelp til",
+      localPoint: "tydeligere område dere dekker og lokal synlighet",
+      contactPoint: "klarere kontaktpunkt for befaring, tilbud eller bestilling",
+      complianceLine: "Jeg sier ikke at noe er feil, men jeg ville likevel gjort kontakt, mobilvisning og enkel tilgjengelighet ryddig når siden først oppdateres.",
+    };
+  }
+  return normalWebsiteToneProfile;
 }
 
 function addMailPoint(points: string[], include: boolean, point: string) {
