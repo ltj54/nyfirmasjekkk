@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 310
-- Sendt: 223
+- Antall hendelser: 312
+- Sendt: 225
 - Angret: 7
-- Aktive kontaktede selskaper: 220
+- Aktive kontaktede selskaper: 222
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-15 | 937570120 | SOLODOC AS | AS | email | website-unavailable-offer |
+| 2026-05-15 | 936612857 | SAMEIET DJUPEDALEN VEILAG | SAM | email | website-offer |
 | 2026-05-15 | 937550278 | MANA SØRGÅRD | ENK | email | website-offer |
 | 2026-05-15 | 937564554 | FLYDAL SKRIBLERIER | ENK | email | website-offer |
 | 2026-05-15 | 937541821 | LOFTHUS MASKIN OG TRANSPORT | ENK | email | website-offer |
@@ -238,6 +240,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-15 14:38 | sent | 937570120 | SOLODOC AS | AS | email | - |
+| 2026-05-15 14:35 | sent | 936612857 | SAMEIET DJUPEDALEN VEILAG | SAM | email | - |
 | 2026-05-15 14:34 | not_relevant | 937566441 | PLAY!FESTIVAL TRONDHEIM | FLI | email | - |
 | 2026-05-15 14:32 | sent | 937550278 | MANA SØRGÅRD | ENK | email | - |
 | 2026-05-15 14:32 | sent | 937564554 | FLYDAL SKRIBLERIER | ENK | email | - |
