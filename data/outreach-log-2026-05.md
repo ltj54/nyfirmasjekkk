@@ -4,15 +4,32 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 312
-- Sendt: 225
+- Antall hendelser: 330
+- Sendt: 242
 - Angret: 7
-- Aktive kontaktede selskaper: 222
+- Aktive kontaktede selskaper: 239
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-16 | 937564082 | JBE HANDEL JANNE BRITT ENGEBRETSEN | ENK | email | website-offer |
+| 2026-05-16 | 937576544 | VÅLERENGA KEBAB&PIZZA EKIN | ENK | email | website-offer |
+| 2026-05-16 | 937522053 | ROSENBERG SOLUTIONS | ENK | email | website-offer |
+| 2026-05-16 | 937429983 | HOLM-GLAD HAAGENSEN VISUALS | ENK | email | website-offer |
+| 2026-05-16 | 937539606 | SANDER AASLAND | ENK | email | website-offer |
+| 2026-05-16 | 937576463 | SAMARBEID OG UTVIKLING BJERREGAARD MOE | ENK | email | website-offer |
+| 2026-05-16 | 937567812 | TANNLEGE EMMA PAULINE HAUKELAND | ENK | email | website-offer |
+| 2026-05-16 | 937475489 | PANJSHIRI KLINIKK FOR MUSKELTERAPI | ENK | email | website-offer |
+| 2026-05-16 | 937543999 | IVANIUK | ENK | email | website-offer |
+| 2026-05-16 | 937449658 | REVHOLT VAKTMESTERTJENESTER | ENK | email | website-offer |
+| 2026-05-16 | 937395752 | NOWAK SOLUTION | ENK | email | website-offer |
+| 2026-05-16 | 837569222 | VALLES MULTISERVICE | ENK | email | website-offer |
+| 2026-05-16 | 837579732 | AMAL ARAFA CHTIOUI | ENK | email | website-offer |
+| 2026-05-16 | 937559917 | GRIMLID BYGG OG VEDLIKEHOLD | ENK | email | website-offer |
+| 2026-05-16 | 937568479 | VEVA BYGG VENCLOVAS | ENK | email | website-offer |
+| 2026-05-16 | 937721854 | LIE PHOTO | ENK | email | website-offer |
+| 2026-05-16 | 937718845 | ACCORDA AS | AS | email | website-unavailable-offer |
 | 2026-05-15 | 937570120 | SOLODOC AS | AS | email | website-unavailable-offer |
 | 2026-05-15 | 936612857 | SAMEIET DJUPEDALEN VEILAG | SAM | email | website-offer |
 | 2026-05-15 | 937550278 | MANA SØRGÅRD | ENK | email | website-offer |
@@ -240,6 +257,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-16 12:00 | sent | 937564082 | JBE HANDEL JANNE BRITT ENGEBRETSEN | ENK | email | - |
+| 2026-05-16 12:00 | sent | 937576544 | VÅLERENGA KEBAB&PIZZA EKIN | ENK | email | - |
+| 2026-05-16 11:59 | sent | 937522053 | ROSENBERG SOLUTIONS | ENK | email | - |
+| 2026-05-16 11:59 | sent | 937429983 | HOLM-GLAD HAAGENSEN VISUALS | ENK | email | - |
+| 2026-05-16 11:58 | sent | 937539606 | SANDER AASLAND | ENK | email | - |
+| 2026-05-16 11:57 | sent | 937576463 | SAMARBEID OG UTVIKLING BJERREGAARD MOE | ENK | email | - |
+| 2026-05-16 11:56 | sent | 937567812 | TANNLEGE EMMA PAULINE HAUKELAND | ENK | email | - |
+| 2026-05-16 11:56 | sent | 937475489 | PANJSHIRI KLINIKK FOR MUSKELTERAPI | ENK | email | - |
+| 2026-05-16 11:55 | sent | 937543999 | IVANIUK | ENK | email | - |
+| 2026-05-16 11:55 | sent | 937449658 | REVHOLT VAKTMESTERTJENESTER | ENK | email | - |
+| 2026-05-16 11:55 | sent | 937395752 | NOWAK SOLUTION | ENK | email | - |
+| 2026-05-16 11:54 | sent | 837569222 | VALLES MULTISERVICE | ENK | email | - |
+| 2026-05-16 11:54 | sent | 837579732 | AMAL ARAFA CHTIOUI | ENK | email | - |
+| 2026-05-16 11:54 | sent | 937559917 | GRIMLID BYGG OG VEDLIKEHOLD | ENK | email | - |
+| 2026-05-16 11:53 | sent | 937568479 | VEVA BYGG VENCLOVAS | ENK | email | - |
+| 2026-05-16 11:48 | not_relevant | 937557264 | ALLWINDS AS | AS | email | - |
+| 2026-05-16 11:47 | sent | 937721854 | LIE PHOTO | ENK | email | - |
+| 2026-05-16 11:46 | sent | 937718845 | ACCORDA AS | AS | email | - |
 | 2026-05-15 14:38 | sent | 937570120 | SOLODOC AS | AS | email | - |
 | 2026-05-15 14:35 | sent | 936612857 | SAMEIET DJUPEDALEN VEILAG | SAM | email | - |
 | 2026-05-15 14:34 | not_relevant | 937566441 | PLAY!FESTIVAL TRONDHEIM | FLI | email | - |
