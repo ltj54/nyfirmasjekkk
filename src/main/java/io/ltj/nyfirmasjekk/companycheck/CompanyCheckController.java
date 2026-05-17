@@ -313,8 +313,8 @@ public class CompanyCheckController {
         }
 
         return List.of(
-                withContactFilters(request, true, false, true),
-                withContactFilters(request, true, false, false),
+                withLeadContactFilters(request, true),
+                withLeadContactFilters(request, false),
                 request
         );
     }
@@ -333,12 +333,7 @@ public class CompanyCheckController {
                 && !"RED".equalsIgnoreCase(request.score());
     }
 
-    private CompanySearchRequest withContactFilters(
-            CompanySearchRequest request,
-            boolean hasEmail,
-            boolean hasWebsite,
-            boolean missingWebsite
-    ) {
+    private CompanySearchRequest withLeadContactFilters(CompanySearchRequest request, boolean missingWebsite) {
         return new CompanySearchRequest(
                 request.navn(),
                 request.dager(),
@@ -348,8 +343,8 @@ public class CompanyCheckController {
                 request.organisasjonsform(),
                 request.score(),
                 request.resultSize(),
-                hasEmail,
-                hasWebsite,
+                true,
+                false,
                 missingWebsite
         );
     }
