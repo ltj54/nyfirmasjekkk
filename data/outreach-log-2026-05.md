@@ -4,15 +4,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 330
-- Sendt: 242
+- Antall hendelser: 347
+- Sendt: 258
 - Angret: 7
-- Aktive kontaktede selskaper: 239
+- Aktive kontaktede selskaper: 255
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-17 | 937609051 | HUSMALER WRONA SERVICE FINNMARK | ENK | email | website-offer |
+| 2026-05-17 | 937704755 | NORDIC STONE CRUSHER AB | UTLA | email | website-offer |
+| 2026-05-17 | 937701616 | SNEKKERKARA KLØFTA | FLI | email | website-offer |
+| 2026-05-17 | 937645716 | AKSEL PLENER CONSULTING | ENK | email | website-offer |
+| 2026-05-17 | 937572883 | FORENESET HAGELAG | FLI | email | website-offer |
+| 2026-05-17 | 937717245 | VITENSENTERET INNLANDETS VENNEFORENING | FLI | email | website-offer |
+| 2026-05-17 | 937546076 | ROSENKRANTZ' GATE 32 | ESEK | email | website-offer |
+| 2026-05-17 | 937123868 | GREVINNETIMEN IMPRO | FLI | email | website-offer |
+| 2026-05-17 | 837289602 | AUSTGARDEN EMBERHEART RECORDS | ENK | email | website-offer |
+| 2026-05-17 | 937580177 | MAY-LISE G LAURSEN | ENK | email | website-offer |
+| 2026-05-17 | 937346115 | RISBERGET ARBEIDERFORENING | FLI | email | website-offer |
+| 2026-05-17 | 937430779 | ODI NIPPON NORDIC | ENK | email | website-offer |
+| 2026-05-17 | 937430825 | RAMOS ASIAN RESTAURANT | ENK | email | website-offer |
+| 2026-05-17 | 937604246 | EVEN AAS | ENK | email | website-offer |
+| 2026-05-17 | 937636539 | MATHEW AI FORSKNING OG RÅDGIVNING | ENK | email | website-offer |
+| 2026-05-17 | 937440219 | BOBINMAKEUP AV ZULFEZLI RISHAT | ENK | email | website-offer |
 | 2026-05-16 | 937564082 | JBE HANDEL JANNE BRITT ENGEBRETSEN | ENK | email | website-offer |
 | 2026-05-16 | 937576544 | VÅLERENGA KEBAB&PIZZA EKIN | ENK | email | website-offer |
 | 2026-05-16 | 937522053 | ROSENBERG SOLUTIONS | ENK | email | website-offer |
@@ -257,6 +273,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-17 22:41 | sent | 937609051 | HUSMALER WRONA SERVICE FINNMARK | ENK | email | - |
+| 2026-05-17 22:40 | sent | 937704755 | NORDIC STONE CRUSHER AB | UTLA | email | - |
+| 2026-05-17 22:40 | sent | 937701616 | SNEKKERKARA KLØFTA | FLI | email | - |
+| 2026-05-17 22:40 | sent | 937645716 | AKSEL PLENER CONSULTING | ENK | email | - |
+| 2026-05-17 22:40 | sent | 937572883 | FORENESET HAGELAG | FLI | email | - |
+| 2026-05-17 22:40 | sent | 937717245 | VITENSENTERET INNLANDETS VENNEFORENING | FLI | email | - |
+| 2026-05-17 22:12 | sent | 937546076 | ROSENKRANTZ' GATE 32 | ESEK | email | - |
+| 2026-05-17 22:12 | sent | 937123868 | GREVINNETIMEN IMPRO | FLI | email | - |
+| 2026-05-17 22:11 | sent | 837289602 | AUSTGARDEN EMBERHEART RECORDS | ENK | email | - |
+| 2026-05-17 22:11 | sent | 937580177 | MAY-LISE G LAURSEN | ENK | email | - |
+| 2026-05-17 22:10 | sent | 937346115 | RISBERGET ARBEIDERFORENING | FLI | email | - |
+| 2026-05-17 22:10 | sent | 937430779 | ODI NIPPON NORDIC | ENK | email | - |
+| 2026-05-17 22:09 | not_relevant | 837499402 | ØYRIKET BISTRO AS | AS | email | - |
+| 2026-05-17 22:08 | sent | 937430825 | RAMOS ASIAN RESTAURANT | ENK | email | - |
+| 2026-05-17 22:08 | sent | 937604246 | EVEN AAS | ENK | email | - |
+| 2026-05-17 22:06 | sent | 937636539 | MATHEW AI FORSKNING OG RÅDGIVNING | ENK | email | - |
+| 2026-05-17 22:05 | sent | 937440219 | BOBINMAKEUP AV ZULFEZLI RISHAT | ENK | email | - |
 | 2026-05-16 12:00 | sent | 937564082 | JBE HANDEL JANNE BRITT ENGEBRETSEN | ENK | email | - |
 | 2026-05-16 12:00 | sent | 937576544 | VÅLERENGA KEBAB&PIZZA EKIN | ENK | email | - |
 | 2026-05-16 11:59 | sent | 937522053 | ROSENBERG SOLUTIONS | ENK | email | - |
