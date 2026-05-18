@@ -4,15 +4,52 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 347
-- Sendt: 258
+- Antall hendelser: 387
+- Sendt: 295
 - Angret: 7
-- Aktive kontaktede selskaper: 255
+- Aktive kontaktede selskaper: 292
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-18 | 937574002 | SAMEIET BØRÅS VEILAG | SAM | email | website-offer |
+| 2026-05-18 | 937589166 | PIA ROTH | ENK | email | website-offer |
+| 2026-05-18 | 937569807 | TAKMANN VELVE | ENK | email | website-offer |
+| 2026-05-18 | 937579837 | KJERRGÅRD INSTRUKTØR OG GUIDE | ENK | email | website-offer |
+| 2026-05-18 | 937598971 | LANGEN FØRSTEHJELP | ENK | email | website-offer |
+| 2026-05-18 | 837603552 | NØSTERUD MASKIN & HAGE | ENK | email | website-offer |
+| 2026-05-18 | 937696744 | PRESTO M4 AB | UTLA | email | website-offer |
+| 2026-05-18 | 937702264 | THE M PRODUCTION COMPANY APS | UTLA | email | website-offer |
+| 2026-05-18 | 937626584 | WIRKOLA TRE & HAGESERVICE | ENK | email | website-offer |
+| 2026-05-18 | 937628625 | THORSTENSEN ENTERPRISES | ENK | email | website-offer |
+| 2026-05-18 | 937124546 | KINESIOLOGIE OSLO HATEAU | ENK | email | website-offer |
+| 2026-05-18 | 937633467 | CREATIVE EG HÅRSTAD | ENK | email | website-offer |
+| 2026-05-18 | 937521413 | BUSTANI | ENK | email | website-offer |
+| 2026-05-18 | 937617984 | BRUAAS SERVICE | ENK | email | website-offer |
+| 2026-05-18 | 937477163 | PRESTO M4 AB NUF | NUF | email | website-offer |
+| 2026-05-18 | 937553706 | LUMIFLY OY NUF | NUF | email | website-offer |
+| 2026-05-18 | 937514476 | BERGTRØLLA TEATERLAG | FLI | email | website-offer |
+| 2026-05-18 | 837526922 | NORDRUM MUSIKK, KUNST OG KULTUR | ENK | email | website-offer |
+| 2026-05-18 | 937533667 | ATELIER RANDI VILDSKOG | ENK | email | website-offer |
+| 2026-05-18 | 937540558 | VEIEN TIL SCENEN | FLI | email | website-offer |
+| 2026-05-18 | 937567634 | INGRID OLINE HANCHE-OLSEN | ENK | email | website-offer |
+| 2026-05-18 | 837588502 | ROSA RACET | FLI | email | website-offer |
+| 2026-05-18 | 937483635 | INDERHAUG BEREDSKAP | ENK | email | website-offer |
+| 2026-05-18 | 937483627 | ANTHONSEN COMPANY | ENK | email | website-offer |
+| 2026-05-18 | 937450966 | MESFIN TAXI | ENK | email | website-offer |
+| 2026-05-18 | 937535821 | SULTANI TRANSPORT | ENK | email | website-offer |
+| 2026-05-18 | 937420056 | RUSNAVN-TVEIT FRIHET | ENK | email | website-offer |
+| 2026-05-18 | 937502389 | AYLIN REFIK YASHAR | ENK | email | website-offer |
+| 2026-05-18 | 937543328 | USMAN DEVTECH | ENK | email | website-offer |
+| 2026-05-18 | 937626738 | INDBJO SOFTWARE | ENK | email | website-offer |
+| 2026-05-18 | 937618905 | TSYMBAL ART NAILS | ENK | email | website-offer |
+| 2026-05-18 | 937698941 | CHELE SNEKKERSERVICE | ENK | email | website-offer |
+| 2026-05-18 | 937722621 | WIVEGH SAU OG SJØ | ENK | email | website-offer |
+| 2026-05-18 | 837723922 | ØKO HVITLØK I VESTFOLD AHMADI | ENK | email | website-offer |
+| 2026-05-18 | 837647932 | STEIN OTTO HENRIKSEN | ENK | email | website-offer |
+| 2026-05-18 | 837724082 | FREDRIK ASVARD OLSEN | ENK | email | website-offer |
+| 2026-05-18 | 937626363 | SKUGSTAD UTEMILJØ | ENK | email | website-offer |
 | 2026-05-17 | 937609051 | HUSMALER WRONA SERVICE FINNMARK | ENK | email | website-offer |
 | 2026-05-17 | 937704755 | NORDIC STONE CRUSHER AB | UTLA | email | website-offer |
 | 2026-05-17 | 937701616 | SNEKKERKARA KLØFTA | FLI | email | website-offer |
@@ -273,6 +310,46 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-18 11:28 | sent | 937574002 | SAMEIET BØRÅS VEILAG | SAM | email | - |
+| 2026-05-18 11:27 | sent | 937589166 | PIA ROTH | ENK | email | - |
+| 2026-05-18 11:27 | sent | 937569807 | TAKMANN VELVE | ENK | email | - |
+| 2026-05-18 11:26 | sent | 937579837 | KJERRGÅRD INSTRUKTØR OG GUIDE | ENK | email | - |
+| 2026-05-18 11:26 | sent | 937598971 | LANGEN FØRSTEHJELP | ENK | email | - |
+| 2026-05-18 11:25 | sent | 837603552 | NØSTERUD MASKIN & HAGE | ENK | email | - |
+| 2026-05-18 11:25 | sent | 937696744 | PRESTO M4 AB | UTLA | email | - |
+| 2026-05-18 11:25 | sent | 937702264 | THE M PRODUCTION COMPANY APS | UTLA | email | - |
+| 2026-05-18 11:25 | sent | 937626584 | WIRKOLA TRE & HAGESERVICE | ENK | email | - |
+| 2026-05-18 11:24 | sent | 937628625 | THORSTENSEN ENTERPRISES | ENK | email | - |
+| 2026-05-18 11:24 | sent | 937124546 | KINESIOLOGIE OSLO HATEAU | ENK | email | - |
+| 2026-05-18 11:24 | sent | 937633467 | CREATIVE EG HÅRSTAD | ENK | email | - |
+| 2026-05-18 11:23 | sent | 937521413 | BUSTANI | ENK | email | - |
+| 2026-05-18 11:23 | sent | 937617984 | BRUAAS SERVICE | ENK | email | - |
+| 2026-05-18 11:23 | sent | 937477163 | PRESTO M4 AB NUF | NUF | email | - |
+| 2026-05-18 11:23 | sent | 937553706 | LUMIFLY OY NUF | NUF | email | - |
+| 2026-05-18 11:20 | not_relevant | 937515448 | AGENTIX AS | AS | email | - |
+| 2026-05-18 11:20 | not_relevant | 937549148 | TUNERBEE AS | AS | email | - |
+| 2026-05-18 11:17 | sent | 937514476 | BERGTRØLLA TEATERLAG | FLI | email | - |
+| 2026-05-18 11:17 | sent | 837526922 | NORDRUM MUSIKK, KUNST OG KULTUR | ENK | email | - |
+| 2026-05-18 11:16 | sent | 937533667 | ATELIER RANDI VILDSKOG | ENK | email | - |
+| 2026-05-18 11:16 | sent | 937540558 | VEIEN TIL SCENEN | FLI | email | - |
+| 2026-05-18 11:16 | sent | 937567634 | INGRID OLINE HANCHE-OLSEN | ENK | email | - |
+| 2026-05-18 11:16 | sent | 837588502 | ROSA RACET | FLI | email | - |
+| 2026-05-18 11:15 | sent | 937483635 | INDERHAUG BEREDSKAP | ENK | email | - |
+| 2026-05-18 11:15 | sent | 937483627 | ANTHONSEN COMPANY | ENK | email | - |
+| 2026-05-18 11:15 | sent | 937450966 | MESFIN TAXI | ENK | email | - |
+| 2026-05-18 11:14 | sent | 937535821 | SULTANI TRANSPORT | ENK | email | - |
+| 2026-05-18 11:14 | sent | 937420056 | RUSNAVN-TVEIT FRIHET | ENK | email | - |
+| 2026-05-18 11:14 | sent | 937502389 | AYLIN REFIK YASHAR | ENK | email | - |
+| 2026-05-18 11:13 | sent | 937543328 | USMAN DEVTECH | ENK | email | - |
+| 2026-05-18 11:13 | sent | 937626738 | INDBJO SOFTWARE | ENK | email | - |
+| 2026-05-18 11:12 | sent | 937618905 | TSYMBAL ART NAILS | ENK | email | - |
+| 2026-05-18 11:12 | sent | 937698941 | CHELE SNEKKERSERVICE | ENK | email | - |
+| 2026-05-18 11:10 | sent | 937722621 | WIVEGH SAU OG SJØ | ENK | email | - |
+| 2026-05-18 11:09 | sent | 837723922 | ØKO HVITLØK I VESTFOLD AHMADI | ENK | email | - |
+| 2026-05-18 11:09 | sent | 837647932 | STEIN OTTO HENRIKSEN | ENK | email | - |
+| 2026-05-18 11:08 | sent | 837724082 | FREDRIK ASVARD OLSEN | ENK | email | - |
+| 2026-05-18 11:08 | not_relevant | 937722745 | BALANSE PARTNER AS | AS | email | - |
+| 2026-05-18 11:06 | sent | 937626363 | SKUGSTAD UTEMILJØ | ENK | email | - |
 | 2026-05-17 22:41 | sent | 937609051 | HUSMALER WRONA SERVICE FINNMARK | ENK | email | - |
 | 2026-05-17 22:40 | sent | 937704755 | NORDIC STONE CRUSHER AB | UTLA | email | - |
 | 2026-05-17 22:40 | sent | 937701616 | SNEKKERKARA KLØFTA | FLI | email | - |
