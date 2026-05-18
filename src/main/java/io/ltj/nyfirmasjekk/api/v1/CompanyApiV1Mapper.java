@@ -80,6 +80,7 @@ public class CompanyApiV1Mapper {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", Pattern.CASE_INSENSITIVE);
     private static final Pattern PHONE_PATTERN = Pattern.compile("(\\+47\\s*)?(\\d\\s*){8}");
     private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*(20\\d{2})");
+    private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]+\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
     private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
             "kontakt", "contact", "ring", "bestill", "booking", "book", "send forespørsel", "be om tilbud", "få tilbud", "ta kontakt"
@@ -105,6 +106,27 @@ public class CompanyApiV1Mapper {
             "personopplysninger",
             "sensitive opplysninger",
             "helseopplysninger"
+    );
+    private static final Set<String> MEDICAL_DEVICE_CONTEXT_WORDS = Set.of(
+            "surgical",
+            "surgery",
+            "laparoscopic",
+            "laparoscopy",
+            "medical device",
+            "surgeon",
+            "robotic camera",
+            "camera for laparoscopy",
+            "gynecology",
+            "gyn",
+            "regulatory clearance",
+            "laboratory testing"
+    );
+    private static final Set<String> REGULATORY_LIMIT_WORDS = Set.of(
+            "not yet received regulatory clearance",
+            "not available for use",
+            "late stage development",
+            "laboratory testing",
+            "regulatory clearance"
     );
     private static final Map<String, String> THIRD_PARTY_WEBSITE_HOSTS = Map.ofEntries(
             Map.entry("instagram.com", "Instagram"),
@@ -444,6 +466,7 @@ public class CompanyApiV1Mapper {
         addAccessibilitySignals(signals, snapshot);
         addSecuritySignals(signals, website, snapshot);
         addPrivacySignals(signals, snapshot);
+        addMedicalTrustSignals(signals, snapshot);
         addTechnologySignals(signals, snapshot);
 
         return assessmentFromSignals(signals, signals.isEmpty()
@@ -850,6 +873,95 @@ public class CompanyApiV1Mapper {
         return SENSITIVE_HEALTH_CONTEXT_WORDS.stream()
                 .map(this::normalizeForWebsiteQuality)
                 .anyMatch(text::contains);
+    }
+
+    private void addMedicalTrustSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        String combined = normalizeForWebsiteQuality(
+                (snapshot.title() == null ? "" : snapshot.title()) + " "
+                        + (snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " "
+                        + (snapshot.html() == null ? "" : snapshot.html())
+        );
+        if (!hasMedicalDeviceContext(combined)) {
+            return;
+        }
+
+        if (hasRegulatoryLimitContext(combined)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MEDICAL_REGULATORY_STATUS",
+                    "Regulatorisk status bør fremheves",
+                    "Siden beskriver kirurgisk/medisinsk produkt og nevner at løsningen ikke er regulatorisk godkjent eller tilgjengelig for bruk ennå. Slike forbehold bør være svært tydelige for å unngå feil forventning.",
+                    "MEDIUM"
+            ));
+        } else {
+            signals.add(new WebsiteQualitySignal(
+                    "MEDICAL_REGULATORY_CONTEXT_MISSING",
+                    "Medisinsk dokumentasjon bør sjekkes",
+                    "Siden beskriver kirurgisk/medisinsk produkt. For slike virksomheter bør regulatorisk status, dokumentasjon og ansvarsforhold være ekstra tydelig.",
+                    "MEDIUM"
+            ));
+        }
+
+        if (hasPrototypeOrAiVisualSignal(combined)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MEDICAL_VISUAL_TRUST_RISK",
+                    "Prototype-/AI-preg i visuelt uttrykk",
+                    "Bildespor eller animasjon peker mot visualisering/prototypepreg. For medisinsk/kirurgisk teknologi bør bilder og produktpresentasjon virke etterprøvbare og tydelig skilt fra illustrasjoner.",
+                    "MEDIUM"
+            ));
+        }
+
+        int imageAssetCount = imageAssetCount(snapshot.html());
+        if (imageAssetCount >= 20) {
+            signals.add(new WebsiteQualitySignal(
+                    "HEAVY_PRODUCT_ANIMATION",
+                    "Tung produktanimasjon",
+                    "Siden bruker mange bilde-/animasjonsressurser (" + imageAssetCount + " registrerte bildeassets). Det kan gi visuelt sterkt uttrykk, men også virke tungt eller mer demonstrasjonspreget enn informativt.",
+                    "INFO"
+            ));
+        }
+
+        if (snapshot.cookieOrTrackingSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "HEALTH_TRACKING_CONTEXT",
+                    "Tracking på medisinsk side",
+                    "Siden har spor av analyse/tracking samtidig som innholdet er medisinsk/kirurgisk. Det er ikke nødvendigvis feil, men personvern og samtykke bør vurderes ekstra nøye.",
+                    "MEDIUM"
+            ));
+        }
+    }
+
+    private boolean hasMedicalDeviceContext(String text) {
+        return MEDICAL_DEVICE_CONTEXT_WORDS.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .anyMatch(text::contains);
+    }
+
+    private boolean hasRegulatoryLimitContext(String text) {
+        return REGULATORY_LIMIT_WORDS.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .anyMatch(text::contains);
+    }
+
+    private boolean hasPrototypeOrAiVisualSignal(String text) {
+        return text.contains("ai visualization")
+                || text.contains("aivisualization")
+                || text.contains("prototype")
+                || text.contains("visualization")
+                || text.contains("visualisation")
+                || text.contains("image scrubbing")
+                || text.contains("animated");
+    }
+
+    private int imageAssetCount(String html) {
+        if (!hasText(html)) {
+            return 0;
+        }
+        Set<String> imageUrls = new LinkedHashSet<>();
+        var matcher = WEBSITE_IMAGE_ASSET_PATTERN.matcher(html);
+        while (matcher.find()) {
+            imageUrls.add(matcher.group());
+        }
+        return imageUrls.size();
     }
 
     private void addTechnologySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {

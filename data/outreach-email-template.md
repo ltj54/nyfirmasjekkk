@@ -59,22 +59,22 @@ Emne: `Nettside for {{companyName}}?`
 
 Hei {{greeting}},
 
-Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en nettside.
+Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
 
 {{salesSegmentPitch}}
 
-Jeg kan sette opp dette ferdig for {{recipientObject}}, slik at {{recipientSubject}} får en fast side å vise til i e-post, sosiale medier og kundedialog.
+Jeg lager ryddige nettsider for nye virksomheter, med kontaktinfo, kort presentasjon og en løsning som fungerer godt på mobil.
 
 Du får:
-- En ryddig nettside som fungerer godt på mobil
+- En nettside klar til bruk
 {{domainLine}}
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Klar løsning {{recipientSubject}} kan bruke med en gang
+- Kontaktskjema eller tydelig kontaktvei
 
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side.
+Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side, helt uforpliktende.
 
 Mvh  
 {{senderName}}  
@@ -89,19 +89,14 @@ Hei {{greeting}},
 
 Jeg så at {{companyName}} har registrert nettsiden {{registeredWebsite}}.
 
-Da jeg sjekket den, så det ut som siden ikke svarte akkurat nå. Det kan være midlertidig, men jeg ville bare gi beskjed.
+Da jeg sjekket den, fikk jeg ikke kontakt med siden. Det kan selvfølgelig være midlertidig, men jeg ville bare gi en liten beskjed.
 
-Jeg kan hjelpe med å få på plass en ryddig nettside på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+Hvis dere trenger hjelp, kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
 
-Du får:
-- En ryddig nettside som fungerer godt på mobil
-- Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Klar løsning {{recipientSubject}} kan bruke med en gang
-
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
 
-Jeg kan ta en rask sjekk og sende et konkret forslag.
+Jeg kan gjerne ta en rask sjekk og sende et konkret forslag.
 
 Mvh  
 {{senderName}}  
@@ -116,24 +111,16 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Jeg ville bare høre om dere ønsker en enklere og mer ryddig presentasjon på nett.
+Jeg tok en rask titt og ser at siden allerede er på plass. Samtidig kan det kanskje være mulig å gjøre presentasjonen litt tydeligere for nye kunder.
 
 Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Hvis dere ønsker det, kan jeg sette opp en mer oversiktlig side for {{recipientObject}}.
+Jeg kan gjerne sende et konkret forslag til hvordan siden kan gjøres mer oversiktlig.
 
-Du får:
-- En ryddig nettside som fungerer godt på mobil
-- Tydelig presentasjon av tjenester/aktivitet
-- Kontaktinfo lett tilgjengelig for kunder
-- Klar løsning {{recipientSubject}} kan bruke med en gang
-
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
-
-Jeg kan sende et konkret forslag.
 
 Mvh  
 {{senderName}}  
@@ -144,14 +131,14 @@ Mvh
 
 Hei {{greeting}},
 
-Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en nettside.
+Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
 
-Jeg kan sette opp nettadresse, nettside og kontaktpunkt ferdig for {{recipientObject}}.
+Jeg kan sende et konkret forslag til en ryddig nettside med kontaktinfo, kort presentasjon og tydelig kontaktvei.
 
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side.
+Forslaget er helt uforpliktende.
 
 Mvh  
 {{senderName}}
@@ -162,22 +149,22 @@ Emne: `Nettside for Eksempel AS?`
 
 Hei dere i Eksempel AS,
 
-Jeg så Eksempel AS og ville bare høre om dere trenger en nettside.
+Jeg kom over Eksempel AS og så at jeg ikke fant noen tydelig nettside registrert.
 
 For bygg- og håndverksbedrifter er det ofte viktig at kunder raskt ser hvilke tjenester dere tilbyr, hvilket område dere dekker og hvordan de kan ta kontakt.
 
-Jeg kan sette opp dette ferdig for dere, slik at dere får en fast side å vise til i e-post, sosiale medier og kundedialog.
+Jeg lager ryddige nettsider for nye virksomheter, med kontaktinfo, kort presentasjon og en løsning som fungerer godt på mobil.
 
 Du får:
-- En ryddig nettside som fungerer godt på mobil
+- En nettside klar til bruk
 - Egen nettadresse, for eksempel eksempel.no
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Klar løsning dere kan bruke med en gang
+- Kontaktskjema eller tydelig kontaktvei
 
-Eksempel på enkel side:
+Eksempel:
 https://ltj-production.no/
 
-Jeg kan sende et konkret forslag til deres side.
+Jeg kan sende et konkret forslag til deres side, helt uforpliktende.
 
 Mvh  
 Lars Johannessen  

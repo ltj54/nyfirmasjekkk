@@ -41,7 +41,7 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
   const signals = company.websiteQuality?.signals ?? [];
   const signalCodes = new Set(signals.map((signal) => signal.code));
   if (signalCodes.has("THIRD_PARTY_SURFACE")) {
-    return "Det kan fungere fint, men en egen nettside gir dere et fast sted for åpningstider, tjenester, kontaktinfo og praktisk informasjon - også for kunder som ikke bruker Instagram/Facebook.";
+    return "Sosiale medier fungerer fint som kanal, men en fast nettside gir ofte et mer ryddig sted å samle kontaktinfo, tjenester og praktisk informasjon.";
   }
 
   const toneProfile = websiteQualityToneProfile(company);
@@ -54,7 +54,11 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
     return "";
   }
 
-  return `Uten å gjøre dette til en full teknisk gjennomgang, la jeg merke til et par ting jeg ville sett på hvis siden først skal ryddes opp: ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
+  const introduction = signalCodes.has("MEDICAL_VISUAL_TRUST_RISK") || signalCodes.has("MEDICAL_REGULATORY_STATUS")
+    ? "Siden fremstår visuelt gjennomarbeidet, men siden dette er medisinsk/kirurgisk teknologi ville jeg vært ekstra nøye med"
+    : "Siden ser ut til å være på plass, men jeg la merke til et par punkter som kan være verdt å se på";
+
+  return `${introduction}: ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
 }
 
 export function websiteComplianceMailLine(company: OutreachEmailCompany) {
@@ -70,6 +74,10 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     "MANY_EXTERNAL_SCRIPTS",
     "EXTERNAL_IFRAME_RISK",
     "SENSITIVE_HEALTH_CONTEXT",
+    "MEDICAL_REGULATORY_STATUS",
+    "MEDICAL_REGULATORY_CONTEXT_MISSING",
+    "MEDICAL_VISUAL_TRUST_RISK",
+    "HEALTH_TRACKING_CONTEXT",
   ].some((code) => signalCodes.has(code));
 
   if (signalCodes.has("THIRD_PARTY_SURFACE") && !signalCodes.has("SENSITIVE_HEALTH_CONTEXT")) {
@@ -92,10 +100,20 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("WEAK_CALL_TO_ACTION"), toneProfile.contactPoint);
   addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH"), toneProfile.trustPoint);
   addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), toneProfile.searchPoint);
-  addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "bedre mobiltilpasning");
+  addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "en ekstra sjekk av mobiloppsett og teknisk responsivitet");
   addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK") || signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("MISSING_LANGUAGE"), toneProfile.accessibilityPoint);
-  addMailPoint(points, signalCodes.has("SENSITIVE_HEALTH_CONTEXT") || toneProfile.strictness === "strict", toneProfile.sensitivePoint);
+  addMailPoint(
+    points,
+    signalCodes.has("SENSITIVE_HEALTH_CONTEXT")
+      || signalCodes.has("MEDICAL_REGULATORY_STATUS")
+      || signalCodes.has("MEDICAL_REGULATORY_CONTEXT_MISSING")
+      || toneProfile.strictness === "strict",
+    toneProfile.sensitivePoint
+  );
+  addMailPoint(points, signalCodes.has("MEDICAL_VISUAL_TRUST_RISK"), "tydeligere skille mellom faktiske produktbilder, illustrasjoner og dokumentasjon");
+  addMailPoint(points, signalCodes.has("HEAVY_PRODUCT_ANIMATION"), "at tung bilde-/scrollanimasjon ikke tar fokus bort fra dokumentasjon og tillit");
   addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK"), toneProfile.privacyPoint);
+  addMailPoint(points, signalCodes.has("HEALTH_TRACKING_CONTEXT"), "ekstra ryddighet rundt analyse, tracking og samtykke");
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK"), "noen tekniske avhengigheter som bør vurderes");
   addMailPoint(points, signalCodes.has("MISSING_HTTPS") || signalCodes.has("OUTDATED_COPYRIGHT"), toneProfile.maintenancePoint);
   addMailPoint(points, signalCodes.has("NON_NO_DOMAIN"), "vurdering av en tydeligere norsk nettadresse");
@@ -135,7 +153,7 @@ const normalWebsiteToneProfile: WebsiteQualityToneProfile = {
   sensitivePoint: "ekstra ryddighet rundt personvern og skjema fordi siden berører et mer tillitsbasert fagområde",
   privacyPoint: "personvern- og samtykketekst der siden samler inn eller måler data",
   maintenancePoint: "noen tekniske eller vedlikeholdsmessige punkter som kan svekke inntrykket",
-  complianceLine: "Jeg sier ikke at noe er feil, men personvern, skjema og tilgjengelighet er også små tillitspunkter som kan være lurt å ha ryddig.",
+  complianceLine: "Personvern, skjema og tilgjengelighet er også tillitspunkter som kan være lurt å ha ryddig.",
 };
 
 function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualityToneProfile {
@@ -151,7 +169,7 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       accessibilityPoint: "skjema og tilgjengelighet, siden slike detaljer betyr mer i tillitsbaserte tjenester",
       sensitivePoint: "ekstra ryddighet rundt personvern og skjema fordi siden berører helse, behandling eller personopplysninger",
       privacyPoint: "personvern og hvordan skjemaopplysninger behandles",
-      complianceLine: "Jeg sier ikke at noe er feil, men når en side berører helse, behandling eller personopplysninger, ville jeg også passet på at personvern og skjema er ryddig forklart.",
+      complianceLine: "For virksomheter innen helse og velvære er det også viktig at kontaktskjema, personvern og informasjonsinnhenting er ryddig.",
     };
   }
   if (segmentCode === "BUTIKK_LOKALHANDEL" || naceCode.startsWith("47")) {
@@ -163,7 +181,7 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       contactPoint: "klarere kjøpsvei, kontaktpunkt eller forespørselsmulighet",
       trustPoint: "flere tillitssignaler rundt butikken og hvem kunden handler med",
       privacyPoint: "personvern, cookies og praktiske kjøpsvilkår der kunder kan handle eller sende forespørsel",
-      complianceLine: "Jeg sier ikke at noe er feil, men for butikk og netthandel ville jeg vært ekstra nøye med kontaktinfo, kjøpsvilkår, levering/retur, personvern og eventuell bruk av cookies.",
+      complianceLine: "For butikk og netthandel bør kontaktinfo, kjøpsvilkår, levering, retur, personvern og cookies være lett å finne.",
     };
   }
   if (segmentCode === "MAT_SERVERING" || naceCode.startsWith("56")) {
@@ -173,7 +191,7 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       servicePoint: "tydeligere presentasjon av mat, servering eller bestilling",
       localPoint: "tydeligere adresse, kart og lokal synlighet",
       contactPoint: "enklere vei til bordbestilling, bestilling eller kontakt",
-      complianceLine: "Jeg sier ikke at noe er feil, men for servering ville jeg gjort meny, åpningstider, sted og kontakt så lett å finne som mulig.",
+      complianceLine: "For servering bør meny, åpningstider, sted og kontakt være lett å finne.",
     };
   }
   if (segmentCode === "KONSULENT" || ["62", "63", "69", "70", "71", "72", "74"].some((prefix) => naceCode.startsWith(prefix))) {
@@ -183,7 +201,7 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       servicePoint: "tydeligere kompetanse, tjenester og hvem tilbudet passer for",
       trustPoint: "flere tillitssignaler rundt kompetanse, fagområde og ansvarlig virksomhet",
       searchPoint: "ryddigere faglig presentasjon i Google, e-post og ved deling",
-      complianceLine: "Jeg sier ikke at noe er feil, men for fag- og konsulenttjenester er tydelig kompetanse, tillit og kontaktvei viktig for førsteinntrykket.",
+      complianceLine: "For fag- og konsulenttjenester handler siden ofte mest om tillit, kompetanse og en enkel vei til kontakt.",
     };
   }
   if (segmentCode === "FORENING_KLUBB" || naceCode.startsWith("94")) {
@@ -194,7 +212,7 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       servicePoint: "tydeligere informasjon om aktivitet, arrangementer eller medlemskap",
       contactPoint: "enklere vei til kontaktpersoner eller påmelding",
       trustPoint: "tydeligere avsender og hvem som står bak aktiviteten",
-      complianceLine: "Jeg sier ikke at noe er feil, men for foreninger og klubber ville jeg gjort aktivitet, kontaktpersoner og praktisk informasjon lett å finne.",
+      complianceLine: "For foreninger og klubber bør aktivitet, kontaktpersoner og praktisk informasjon være lett å finne.",
     };
   }
   if (["HANDVERK", "RENHOLD_OG_DRIFT", "HAGE_OG_GRONTANLEGG", "TRANSPORT"].includes(segmentCode ?? "")) {
@@ -205,7 +223,7 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       servicePoint: "tydeligere tjenester og hva kunder kan be om hjelp til",
       localPoint: "tydeligere område dere dekker og lokal synlighet",
       contactPoint: "klarere kontaktpunkt for befaring, tilbud eller bestilling",
-      complianceLine: "Jeg sier ikke at noe er feil, men jeg ville likevel gjort kontakt, mobilvisning og enkel tilgjengelighet ryddig når siden først oppdateres.",
+      complianceLine: "For lokale tjenester er tydelig telefonnummer, område og vei til forespørsel ofte viktigere enn mye tekst.",
     };
   }
   return normalWebsiteToneProfile;
@@ -269,7 +287,7 @@ export function buildOutreachEmailHtml(body: string) {
     }
 
     const nextLine = lines[index + 1]?.trim() ?? "";
-    if ((line === "Se eksempel her:" || line === "Eksempel på enkel side:") && isHttpUrl(nextLine)) {
+    if ((line === "Se eksempel her:" || line === "Eksempel på enkel side:" || line === "Eksempel:") && isHttpUrl(nextLine)) {
       parts.push(
         `<p style="margin: 0 0 14px;">${escapeHtml(line)} <a href="${escapeHtml(nextLine)}" style="color: #1F5FA9;">Se eksempel</a></p>`
       );
@@ -405,24 +423,16 @@ function defaultWebsiteQualityOpportunityEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Jeg ville bare høre om dere ønsker en enklere og mer ryddig presentasjon på nett.
+Jeg tok en rask titt og ser at siden allerede er på plass. Samtidig kan det kanskje være mulig å gjøre presentasjonen litt tydeligere for nye kunder.
 
 Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Hvis dere ønsker det, kan jeg sette opp en mer oversiktlig side for {{recipientObject}}.
+Jeg kan gjerne sende et konkret forslag til hvordan siden kan gjøres mer oversiktlig.
 
-Du får:
-- En ryddig nettside som fungerer godt på mobil
-- Tydelig presentasjon av tjenester/aktivitet
-- Kontaktinfo lett tilgjengelig for kunder
-- Klar løsning {{recipientSubject}} kan bruke med en gang
-
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
-
-Jeg kan sende et konkret forslag.
 
 Mvh
 {{senderName}}
@@ -435,19 +445,14 @@ function defaultRegisteredWebsiteUnavailableEmailTemplate() {
 
 Jeg så at {{companyName}} har registrert nettsiden {{registeredWebsite}}.
 
-Da jeg sjekket den, så det ut som siden ikke svarte akkurat nå. Det kan være midlertidig, men jeg ville bare gi beskjed.
+Da jeg sjekket den, fikk jeg ikke kontakt med siden. Det kan selvfølgelig være midlertidig, men jeg ville bare gi en liten beskjed.
 
-Jeg kan hjelpe med å få på plass en ryddig nettside på domenet, med kontaktinfo og kort presentasjon av hva dere tilbyr.
+Hvis dere trenger hjelp, kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
 
-Du får:
-- En ryddig nettside som fungerer godt på mobil
-- Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Klar løsning {{recipientSubject}} kan bruke med en gang
-
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
 
-Jeg kan ta en rask sjekk og sende et konkret forslag.
+Jeg kan gjerne ta en rask sjekk og sende et konkret forslag.
 
 Mvh
 {{senderName}}
@@ -471,22 +476,22 @@ function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
 function defaultOutreachEmailTemplate() {
   return `Hei {{greeting}},
 
-Jeg så {{companyName}} og ville bare høre om {{recipientSubject}} trenger en nettside.
+Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
 
 {{salesSegmentPitch}}
 
-Jeg kan sette opp dette ferdig for {{recipientObject}}, slik at {{recipientSubject}} får en fast side å vise til i e-post, sosiale medier og kundedialog.
+Jeg lager ryddige nettsider for nye virksomheter, med kontaktinfo, kort presentasjon og en løsning som fungerer godt på mobil.
 
 Du får:
-- En ryddig nettside som fungerer godt på mobil
+- En nettside klar til bruk
 {{domainLine}}
 - Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Klar løsning {{recipientSubject}} kan bruke med en gang
+- Kontaktskjema eller tydelig kontaktvei
 
-Eksempel på enkel side:
+Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side.
+Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side, helt uforpliktende.
 
 Mvh
 {{senderName}}

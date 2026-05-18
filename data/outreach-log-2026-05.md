@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 387
-- Sendt: 295
+- Antall hendelser: 398
+- Sendt: 305
 - Angret: 7
-- Aktive kontaktede selskaper: 292
+- Aktive kontaktede selskaper: 302
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-18 | 937727682 | KINN ADVISORY | ENK | email | website-offer |
+| 2026-05-18 | 837685532 | BAS & VAN STEENIS PHOTOGRAPHY | UTLA | email | website-offer |
+| 2026-05-18 | 937493665 | ORVUE SURGICAL A/S NUF | NUF | email | website-improvement-offer |
+| 2026-05-18 | 937621094 | ØSTERLING SVEJS OG MONTAGE | NUF | email | website-offer |
+| 2026-05-18 | 937724225 | PÅ BERGET LOCKERT HOVLAND | ENK | email | website-offer |
+| 2026-05-18 | 937715811 | MIDT-GUDBRANDSDALEN FREMSKRITTSPARTIETS UNGDOM (FPU) | FLI | email | website-improvement-offer |
+| 2026-05-18 | 937688105 | BAKEKURS MED EMESE SZTANOJEV | ENK | email | website-improvement-offer |
+| 2026-05-18 | 937635737 | IRENE HAFELL NLP VESTFOLD | ENK | email | website-offer |
+| 2026-05-18 | 937634285 | HILLERSØY INSPEKSJON | ENK | email | website-offer |
+| 2026-05-18 | 937633955 | BESTECV MADS NORDAHL | ENK | email | website-offer |
 | 2026-05-18 | 937574002 | SAMEIET BØRÅS VEILAG | SAM | email | website-offer |
 | 2026-05-18 | 937589166 | PIA ROTH | ENK | email | website-offer |
 | 2026-05-18 | 937569807 | TAKMANN VELVE | ENK | email | website-offer |
@@ -310,6 +320,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-18 13:52 | sent | 937727682 | KINN ADVISORY | ENK | email | - |
+| 2026-05-18 13:51 | sent | 837685532 | BAS & VAN STEENIS PHOTOGRAPHY | UTLA | email | - |
+| 2026-05-18 13:47 | sent | 937493665 | ORVUE SURGICAL A/S NUF | NUF | email | - |
+| 2026-05-18 13:20 | sent | 937621094 | ØSTERLING SVEJS OG MONTAGE | NUF | email | - |
+| 2026-05-18 13:19 | not_relevant | 937710941 | NEWSAFE SWEDEN AB | UTLA | email | - |
+| 2026-05-18 13:10 | sent | 937724225 | PÅ BERGET LOCKERT HOVLAND | ENK | email | - |
+| 2026-05-18 13:10 | sent | 937715811 | MIDT-GUDBRANDSDALEN FREMSKRITTSPARTIETS UNGDOM (FPU) | FLI | email | - |
+| 2026-05-18 13:09 | sent | 937688105 | BAKEKURS MED EMESE SZTANOJEV | ENK | email | - |
+| 2026-05-18 13:07 | sent | 937635737 | IRENE HAFELL NLP VESTFOLD | ENK | email | - |
+| 2026-05-18 13:06 | sent | 937634285 | HILLERSØY INSPEKSJON | ENK | email | - |
+| 2026-05-18 13:06 | sent | 937633955 | BESTECV MADS NORDAHL | ENK | email | - |
 | 2026-05-18 11:28 | sent | 937574002 | SAMEIET BØRÅS VEILAG | SAM | email | - |
 | 2026-05-18 11:27 | sent | 937589166 | PIA ROTH | ENK | email | - |
 | 2026-05-18 11:27 | sent | 937569807 | TAKMANN VELVE | ENK | email | - |
