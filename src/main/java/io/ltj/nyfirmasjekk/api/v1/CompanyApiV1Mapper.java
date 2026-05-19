@@ -135,7 +135,6 @@ public class CompanyApiV1Mapper {
             "robotic camera",
             "camera for laparoscopy",
             "gynecology",
-            "gyn",
             "regulatory clearance",
             "laboratory testing"
     );
@@ -1370,7 +1369,7 @@ public class CompanyApiV1Mapper {
         }
         return SENSITIVE_HEALTH_CONTEXT_WORDS.stream()
                 .map(this::normalizeForWebsiteQuality)
-                .anyMatch(text::contains);
+                .anyMatch(needle -> containsNormalizedTerm(text, needle));
     }
 
     private void addMedicalTrustSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -1431,13 +1430,23 @@ public class CompanyApiV1Mapper {
     private boolean hasMedicalDeviceContext(String text) {
         return MEDICAL_DEVICE_CONTEXT_WORDS.stream()
                 .map(this::normalizeForWebsiteQuality)
-                .anyMatch(text::contains);
+                .anyMatch(needle -> containsNormalizedTerm(text, needle));
     }
 
     private boolean hasRegulatoryLimitContext(String text) {
         return REGULATORY_LIMIT_WORDS.stream()
                 .map(this::normalizeForWebsiteQuality)
-                .anyMatch(text::contains);
+                .anyMatch(needle -> containsNormalizedTerm(text, needle));
+    }
+
+    private boolean containsNormalizedTerm(String text, String needle) {
+        if (!hasText(text) || !hasText(needle)) {
+            return false;
+        }
+        if (needle.contains(" ")) {
+            return text.contains(needle);
+        }
+        return java.util.regex.Pattern.compile("\\b" + java.util.regex.Pattern.quote(needle) + "\\b").matcher(text).find();
     }
 
     private boolean hasPrototypeOrAiVisualSignal(String text) {

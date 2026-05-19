@@ -407,7 +407,7 @@ public class WebsiteContentSnapshotFetcher {
         URI baseUri = URI.create(baseUrl);
         Set<String> links = document.select("a[href]").stream()
                 .map(link -> link.attr("abs:href"))
-                .filter(href -> !href.isBlank())
+                .filter(java.util.function.Predicate.not(String::isBlank))
                 .filter(href -> isHttpUrl(href))
                 .filter(href -> sameHost(baseUri, href))
                 .filter(href -> !href.contains("#"))
