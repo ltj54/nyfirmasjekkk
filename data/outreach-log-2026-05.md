@@ -4,15 +4,29 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 419
-- Sendt: 326
+- Antall hendelser: 434
+- Sendt: 340
 - Angret: 7
-- Aktive kontaktede selskaper: 323
+- Aktive kontaktede selskaper: 337
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-19 | 937730772 | SAMEIET BLOMSTERENGEN | ESEK | email | website-offer |
+| 2026-05-19 | 929203895 | TJELDSUND SENTERPARTI | FLI | email | website-offer |
+| 2026-05-19 | 937729979 | HORVATHOVA BYGG OG ANLEGG AS | AS | email | website-offer |
+| 2026-05-19 | 937640471 | OBERBAUER | ENK | email | website-unavailable-offer |
+| 2026-05-19 | 937651449 | MELAS CHRISTOS | UTLA | email | website-offer |
+| 2026-05-19 | 937730241 | LEIRFJÅGE | FLI | email | website-offer |
+| 2026-05-19 | 937729847 | DRAMMEN BILSALG AS | AS | email | website-offer |
+| 2026-05-19 | 937730101 | AGDER FIGURATIVE FELLESSKAP | FLI | email | website-offer |
+| 2026-05-19 | 837731992 | STUB RESOLVER 67 LTD | UTLA | email | website-offer |
+| 2026-05-19 | 937731132 | POWERPOOL MINING SL | UTLA | email | website-improvement-offer |
+| 2026-05-19 | 837642612 | UNN KARIN B MAGNUS FORFATTERSKAP | ENK | email | website-offer |
+| 2026-05-19 | 937643225 | TBF JAMESON BÅTBUKT | ENK | email | website-offer |
+| 2026-05-19 | 937730012 | FJORDBYEN IDRETTSFORENING | FLI | email | website-offer |
+| 2026-05-19 | 937641133 | ALMOHAMMAD BIL & BÅTPLEIE | ENK | email | website-offer |
 | 2026-05-19 | 937568452 | DRÅGEN HAGESERVICE | ENK | email | website-offer |
 | 2026-05-19 | 937565313 | NRVK ROBIN FAGERLI | ENK | email | website-offer |
 | 2026-05-19 | 937590288 | STAFF ADVISORY - KARRIERE OG REKRUTTERING | ENK | email | website-offer |
@@ -341,6 +355,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-19 10:57 | sent | 937730772 | SAMEIET BLOMSTERENGEN | ESEK | email | - |
+| 2026-05-19 10:57 | sent | 929203895 | TJELDSUND SENTERPARTI | FLI | email | - |
+| 2026-05-19 10:56 | sent | 937729979 | HORVATHOVA BYGG OG ANLEGG AS | AS | email | - |
+| 2026-05-19 10:55 | sent | 937640471 | OBERBAUER | ENK | email | - |
+| 2026-05-19 09:14 | sent | 937651449 | MELAS CHRISTOS | UTLA | email | - |
+| 2026-05-19 09:14 | sent | 937730241 | LEIRFJÅGE | FLI | email | - |
+| 2026-05-19 09:13 | sent | 937729847 | DRAMMEN BILSALG AS | AS | email | - |
+| 2026-05-19 09:13 | sent | 937730101 | AGDER FIGURATIVE FELLESSKAP | FLI | email | - |
+| 2026-05-19 09:12 | sent | 837731992 | STUB RESOLVER 67 LTD | UTLA | email | - |
+| 2026-05-19 08:49 | not_relevant | 937512139 | YOGUTIDE AS | AS | email | - |
+| 2026-05-19 08:32 | sent | 937731132 | POWERPOOL MINING SL | UTLA | email | - |
+| 2026-05-19 08:30 | sent | 837642612 | UNN KARIN B MAGNUS FORFATTERSKAP | ENK | email | - |
+| 2026-05-19 08:29 | sent | 937643225 | TBF JAMESON BÅTBUKT | ENK | email | - |
+| 2026-05-19 08:28 | sent | 937730012 | FJORDBYEN IDRETTSFORENING | FLI | email | - |
+| 2026-05-19 08:28 | sent | 937641133 | ALMOHAMMAD BIL & BÅTPLEIE | ENK | email | - |
 | 2026-05-19 06:39 | sent | 937568452 | DRÅGEN HAGESERVICE | ENK | email | - |
 | 2026-05-19 06:39 | sent | 937565313 | NRVK ROBIN FAGERLI | ENK | email | - |
 | 2026-05-19 06:38 | sent | 937590288 | STAFF ADVISORY - KARRIERE OG REKRUTTERING | ENK | email | - |
