@@ -408,7 +408,7 @@ public class WebsiteContentSnapshotFetcher {
         Set<String> links = document.select("a[href]").stream()
                 .map(link -> link.attr("abs:href"))
                 .filter(java.util.function.Predicate.not(String::isBlank))
-                .filter(href -> isHttpUrl(href))
+                .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
                 .filter(href -> sameHost(baseUri, href))
                 .filter(href -> !href.contains("#"))
                 .limit(8)
