@@ -4,15 +4,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 406
-- Sendt: 313
+- Antall hendelser: 419
+- Sendt: 326
 - Angret: 7
-- Aktive kontaktede selskaper: 310
+- Aktive kontaktede selskaper: 323
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-19 | 937568452 | DRÅGEN HAGESERVICE | ENK | email | website-offer |
+| 2026-05-19 | 937565313 | NRVK ROBIN FAGERLI | ENK | email | website-offer |
+| 2026-05-19 | 937590288 | STAFF ADVISORY - KARRIERE OG REKRUTTERING | ENK | email | website-offer |
+| 2026-05-19 | 937673272 | RYKKJE MASKINSERVICE | ENK | email | website-offer |
+| 2026-05-19 | 937634692 | EMIL HOEM | ENK | email | website-offer |
+| 2026-05-19 | 937647565 | BOONRAVEE 'S THAIMASSASJE LIAMSON | ENK | email | website-offer |
+| 2026-05-19 | 937640455 | ARILD HAMRE - ELVIS TRIBUTE | ENK | email | website-offer |
+| 2026-05-19 | 937683219 | LIDARENDE GÅRD MURATI | ENK | email | website-offer |
+| 2026-05-19 | 837697042 | V-DRILL D.O.O. | UTLA | email | website-offer |
+| 2026-05-19 | 999174418 | ERSLANDSVATNET FISKELAG | FLI | email | website-offer |
+| 2026-05-19 | 937488122 | JUSTYNA JANKOWSKA STYLE STUDIO | ENK | email | website-offer |
+| 2026-05-19 | 937711506 | IB´S KRANSERVICE AS | AS | email | website-offer |
+| 2026-05-19 | 837640172 | CATO THORSEN LIVE | ENK | email | website-offer |
 | 2026-05-19 | 837729572 | EIVIND SKARI LANDBRUK | ENK | email | website-offer |
 | 2026-05-19 | 937727461 | HAVGNIST AS | AS | email | website-offer |
 | 2026-05-19 | 937728743 | HØYDEN CONSULTING | ENK | email | website-offer |
@@ -328,6 +341,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-19 06:39 | sent | 937568452 | DRÅGEN HAGESERVICE | ENK | email | - |
+| 2026-05-19 06:39 | sent | 937565313 | NRVK ROBIN FAGERLI | ENK | email | - |
+| 2026-05-19 06:38 | sent | 937590288 | STAFF ADVISORY - KARRIERE OG REKRUTTERING | ENK | email | - |
+| 2026-05-19 06:38 | sent | 937673272 | RYKKJE MASKINSERVICE | ENK | email | - |
+| 2026-05-19 06:37 | sent | 937634692 | EMIL HOEM | ENK | email | - |
+| 2026-05-19 06:37 | sent | 937647565 | BOONRAVEE 'S THAIMASSASJE LIAMSON | ENK | email | - |
+| 2026-05-19 06:36 | sent | 937640455 | ARILD HAMRE - ELVIS TRIBUTE | ENK | email | - |
+| 2026-05-19 06:36 | sent | 937683219 | LIDARENDE GÅRD MURATI | ENK | email | - |
+| 2026-05-19 06:35 | sent | 837697042 | V-DRILL D.O.O. | UTLA | email | - |
+| 2026-05-19 06:34 | sent | 999174418 | ERSLANDSVATNET FISKELAG | FLI | email | - |
+| 2026-05-19 06:27 | sent | 937488122 | JUSTYNA JANKOWSKA STYLE STUDIO | ENK | email | - |
+| 2026-05-19 06:26 | sent | 937711506 | IB´S KRANSERVICE AS | AS | email | - |
+| 2026-05-19 06:25 | sent | 837640172 | CATO THORSEN LIVE | ENK | email | - |
 | 2026-05-19 06:11 | sent | 837729572 | EIVIND SKARI LANDBRUK | ENK | email | - |
 | 2026-05-19 06:10 | sent | 937727461 | HAVGNIST AS | AS | email | - |
 | 2026-05-19 06:07 | sent | 937728743 | HØYDEN CONSULTING | ENK | email | - |
