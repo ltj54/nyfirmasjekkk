@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 398
-- Sendt: 305
+- Antall hendelser: 406
+- Sendt: 313
 - Angret: 7
-- Aktive kontaktede selskaper: 302
+- Aktive kontaktede selskaper: 310
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-19 | 837729572 | EIVIND SKARI LANDBRUK | ENK | email | website-offer |
+| 2026-05-19 | 937727461 | HAVGNIST AS | AS | email | website-offer |
+| 2026-05-19 | 937728743 | HØYDEN CONSULTING | ENK | email | website-offer |
+| 2026-05-19 | 937729642 | DAWID P. PASINSKI | ENK | email | website-offer |
+| 2026-05-19 | 937622686 | SKYCON AS | AS | email | website-offer |
+| 2026-05-19 | 937728867 | THAWON BEAUTY & WELLNESS | ENK | email | website-offer |
+| 2026-05-19 | 937729669 | VIBE VEL VASK | ENK | email | website-offer |
+| 2026-05-19 | 937729561 | TØMRER NADAREVIC | ENK | email | website-offer |
 | 2026-05-18 | 937727682 | KINN ADVISORY | ENK | email | website-offer |
 | 2026-05-18 | 837685532 | BAS & VAN STEENIS PHOTOGRAPHY | UTLA | email | website-offer |
 | 2026-05-18 | 937493665 | ORVUE SURGICAL A/S NUF | NUF | email | website-improvement-offer |
@@ -320,6 +328,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-19 06:11 | sent | 837729572 | EIVIND SKARI LANDBRUK | ENK | email | - |
+| 2026-05-19 06:10 | sent | 937727461 | HAVGNIST AS | AS | email | - |
+| 2026-05-19 06:07 | sent | 937728743 | HØYDEN CONSULTING | ENK | email | - |
+| 2026-05-19 06:06 | sent | 937729642 | DAWID P. PASINSKI | ENK | email | - |
+| 2026-05-19 06:06 | sent | 937622686 | SKYCON AS | AS | email | - |
+| 2026-05-19 06:05 | sent | 937728867 | THAWON BEAUTY & WELLNESS | ENK | email | - |
+| 2026-05-19 06:05 | sent | 937729669 | VIBE VEL VASK | ENK | email | - |
+| 2026-05-19 06:04 | sent | 937729561 | TØMRER NADAREVIC | ENK | email | - |
 | 2026-05-18 13:52 | sent | 937727682 | KINN ADVISORY | ENK | email | - |
 | 2026-05-18 13:51 | sent | 837685532 | BAS & VAN STEENIS PHOTOGRAPHY | UTLA | email | - |
 | 2026-05-18 13:47 | sent | 937493665 | ORVUE SURGICAL A/S NUF | NUF | email | - |
