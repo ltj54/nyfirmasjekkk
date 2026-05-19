@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { fetchBackendJson } from "@/app/api/company-check/_lib/backend-fetch";
+import { backendHeaders, fetchBackendJson } from "@/app/api/company-check/_lib/backend-fetch";
 
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
@@ -42,10 +42,10 @@ export async function POST(
     const response = await fetch(url, {
       method: "POST",
       cache: "no-store",
-      headers: {
+      headers: backendHeaders({
         Accept: "application/json",
         "Content-Type": "application/json",
-      },
+      }),
       body: await request.text(),
     });
 

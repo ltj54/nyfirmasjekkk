@@ -18,12 +18,15 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import type {
+  BrregWebsiteMatch,
   CompanyEvent,
   CompanyDetails,
   CompanySummary,
   MetadataFiltersResponse,
   OutreachImportResponse,
   OutreachStatus,
+  WebsiteInspectionResponse,
+  WebsiteQualityAssessment,
 } from "@/lib/company-check";
 import {
   applyLeadQuickFilters,
@@ -164,6 +167,7 @@ export function CompanyCheckShell() {
   const [backendReady, setBackendReady] = useState(false);
   const [initialResultsReady, setInitialResultsReady] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
+  const [selectedWebsiteInspection, setSelectedWebsiteInspection] = useState<WebsiteInspectionResponse | null>(null);
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
   const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
     organizationForms: [],
@@ -190,6 +194,9 @@ export function CompanyCheckShell() {
   const [emailSentRecipientByOrg, setEmailSentRecipientByOrg] = useState<Record<string, string | null>>({});
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingEmailByOrg, setGeneratingEmailByOrg] = useState<Record<string, boolean>>({});
+  const [websiteInspectionUrl, setWebsiteInspectionUrl] = useState("");
+  const [isWebsiteInspectionLoading, setIsWebsiteInspectionLoading] = useState(false);
+  const [websiteInspectionError, setWebsiteInspectionError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const latestListRequestId = useRef(0);
@@ -458,6 +465,37 @@ export function CompanyCheckShell() {
       ...current,
       [orgNumber]: parseGeneratedEmailText(text),
     }));
+  }
+
+  async function inspectStandaloneWebsite() {
+    const url = normalizeStandaloneWebsiteInput(websiteInspectionUrl);
+    if (!url) {
+      setWebsiteInspectionError("Legg inn en URL først.");
+      return;
+    }
+    setWebsiteInspectionUrl(url);
+
+    setIsWebsiteInspectionLoading(true);
+    setWebsiteInspectionError(null);
+    try {
+      const response = await fetch(`/api/company-check/website-inspection?url=${encodeURIComponent(url)}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to inspect website", errorText);
+        setWebsiteInspectionError("Klarte ikke sjekke nettsiden. Sjekk URL og prøv igjen.");
+        return;
+      }
+
+      const payload = (await response.json()) as WebsiteInspectionResponse;
+      setSelectedWebsiteInspection(payload);
+    } catch (error) {
+      console.error("Failed to inspect website", error);
+      setWebsiteInspectionError("Klarte ikke sjekke nettsiden. Backend kan være opptatt eller utilgjengelig.");
+    } finally {
+      setIsWebsiteInspectionLoading(false);
+    }
   }
 
   const handleCloseDetail = useEffectEvent(() => {
@@ -879,7 +917,7 @@ export function CompanyCheckShell() {
       </header>
 
       <main id="main-content" className="pb-16">
-        <div className={selectedCompany ? "pointer-events-none select-none blur-[3px] transition-all duration-200" : "transition-all duration-200"}>
+        <div className={selectedCompany || selectedWebsiteInspection ? "pointer-events-none select-none blur-[3px] transition-all duration-200" : "transition-all duration-200"}>
           <section id="search" className="mx-auto max-w-7xl px-6 pt-6 sm:pt-8">
             <div className="grid gap-4">
               <div className="border border-[#D9E2EC] bg-white px-5 py-6 sm:px-7 sm:py-7">
@@ -993,6 +1031,50 @@ export function CompanyCheckShell() {
                   </button>
                 </div>
 
+              </div>
+
+              <div className="border border-[#D9E2EC] bg-white p-5 sm:p-6">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                  <div className="max-w-2xl">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#52606D]">
+                      Nettsidesjekk
+                    </p>
+                    <h2 className="mt-1 text-[18px] font-semibold text-[#1F2933]">
+                      Sjekk en vilkårlig URL
+                    </h2>
+                    <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
+                      Bruk samme kvalitetsmotor som detaljvisningen: teknisk trygghet, UU/WCAG-signaler, personvern, innhold, skjema og sikkerhetsheadere.
+                    </p>
+                  </div>
+                  <form
+                    className="flex w-full flex-col gap-2 sm:flex-row lg:max-w-xl"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void inspectStandaloneWebsite();
+                    }}
+                  >
+                    <input
+                      className="min-h-10 flex-1 rounded-sm border border-[#D9E2EC] bg-white px-3 text-[14px] text-[#1F2933] outline-none transition-colors placeholder:text-[#9AA5B1] focus:border-[#2F6FB2]"
+                      inputMode="url"
+                      onChange={(event) => setWebsiteInspectionUrl(event.target.value)}
+                      placeholder="https://eksempel.no"
+                      type="text"
+                      value={websiteInspectionUrl}
+                    />
+                    <Button
+                      className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
+                      disabled={isWebsiteInspectionLoading}
+                      type="submit"
+                    >
+                      {isWebsiteInspectionLoading ? "Sjekker..." : "Sjekk nettside"}
+                    </Button>
+                  </form>
+                </div>
+                {websiteInspectionError ? (
+                  <p className="mt-3 border border-rose-100 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">
+                    {websiteInspectionError}
+                  </p>
+                ) : null}
               </div>
 
               <div id="offer" className="border border-[#D9E2EC] bg-[#F8FBFF] p-6 text-[#1F2933] sm:p-8">
@@ -1237,7 +1319,303 @@ export function CompanyCheckShell() {
             </div>
           </div>
         ) : null}
+
+        {selectedWebsiteInspection ? (
+          <div
+            className="fixed inset-0 z-50 bg-[#102A4314] backdrop-blur-sm"
+            onClick={() => setSelectedWebsiteInspection(null)}
+          >
+            <div className="flex min-h-full items-start justify-center px-4 py-8 sm:px-6 sm:py-12">
+              <div
+                className="max-h-[88vh] w-full max-w-5xl overflow-y-auto border border-[#BCCCDC] bg-white shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)]"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <WebsiteInspectionDetail
+                  inspection={selectedWebsiteInspection}
+                  onBack={() => setSelectedWebsiteInspection(null)}
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
       </main>
+    </div>
+  );
+}
+
+function WebsiteInspectionDetail({
+  inspection,
+  onBack,
+}: {
+  inspection: WebsiteInspectionResponse;
+  onBack: () => void;
+}) {
+  return (
+    <article className="bg-white">
+      <div className="sticky top-0 z-10 border-b border-[#D9E2EC] bg-white/95 px-5 py-4 backdrop-blur sm:px-8">
+        <button
+          className="inline-flex items-center gap-2 rounded-sm border border-[#D9E2EC] bg-white px-3 py-2 text-[13px] font-semibold text-[#1F2933] hover:bg-[#F8FBFF]"
+          onClick={onBack}
+          type="button"
+        >
+          <ArrowLeft className="size-4" />
+          Tilbake til treff
+        </button>
+      </div>
+      <div className="px-5 py-6 sm:px-8 sm:py-8">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#52606D]">
+          Nettsidesjekk
+        </p>
+        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight text-[#1F2933]">
+              {stripWebsiteProtocol(inspection.normalizedUrl)}
+            </h2>
+            <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
+              Frittstående kvalitetskontroll uten BRREG-kontekst. Funnene er automatiske signaler og bør vurderes manuelt før de brukes i kundedialog.
+            </p>
+          </div>
+          <a
+            className="inline-flex w-fit rounded-sm border border-[#D9E2EC] bg-white px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-[#F8FBFF]"
+            href={inspection.normalizedUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Åpne nettside
+          </a>
+        </div>
+        <WebsiteQualityPanel className="mt-6" quality={inspection.websiteQuality} />
+        <BrregWebsiteMatchesPanel inspection={inspection} matches={inspection.brregMatches ?? []} />
+      </div>
+    </article>
+  );
+}
+
+function BrregWebsiteMatchesPanel({
+  inspection,
+  matches,
+}: {
+  inspection: WebsiteInspectionResponse;
+  matches: WebsiteInspectionResponse["brregMatches"];
+}) {
+  const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
+  const [generatingByOrg, setGeneratingByOrg] = useState<Record<string, boolean>>({});
+  const [sendingByOrg, setSendingByOrg] = useState<Record<string, boolean>>({});
+  const [sendErrorByOrg, setSendErrorByOrg] = useState<Record<string, string | null>>({});
+  const [sentRecipientByOrg, setSentRecipientByOrg] = useState<Record<string, string | null>>({});
+
+  async function generateEmail(match: BrregWebsiteMatch) {
+    setGeneratingByOrg((current) => ({ ...current, [match.orgNumber]: true }));
+    try {
+      const response = await fetch("/api/outreach-email-template", { cache: "no-store" });
+      if (!response.ok) {
+        return;
+      }
+      const payload = (await response.json()) as { content?: string };
+      const company = companyFromBrregWebsiteMatch(match, inspection);
+      setGeneratedEmailByOrg((current) => ({
+        ...current,
+        [match.orgNumber]: {
+          subject: buildOutreachEmailSubject(payload.content ?? "", company),
+          body: buildOutreachEmailBody(payload.content ?? "", company),
+        },
+      }));
+    } finally {
+      setGeneratingByOrg((current) => ({ ...current, [match.orgNumber]: false }));
+    }
+  }
+
+  async function sendEmail(match: BrregWebsiteMatch) {
+    const generatedEmail = generatedEmailByOrg[match.orgNumber];
+    if (!match.email || !generatedEmail) {
+      return;
+    }
+
+    setSendingByOrg((current) => ({ ...current, [match.orgNumber]: true }));
+    setSendErrorByOrg((current) => ({ ...current, [match.orgNumber]: null }));
+    setSentRecipientByOrg((current) => ({ ...current, [match.orgNumber]: null }));
+    try {
+      const response = await fetch(`/api/company-check/${match.orgNumber}/send-outreach-email`, {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: match.email,
+          subject: generatedEmail.subject,
+          body: generatedEmail.body,
+          htmlBody: buildOutreachEmailHtml(generatedEmail.body),
+          companyName: match.name,
+          organizationForm: match.organizationForm,
+          price: null,
+          channel: "email",
+          offerType: "website-improvement-offer",
+          note: `Sendt fra nettsidesjekk: ${inspection.normalizedUrl}`,
+        }),
+      });
+      if (!response.ok) {
+        setSendErrorByOrg((current) => ({
+          ...current,
+          [match.orgNumber]: "Klarte ikke sende e-post via SMTP.",
+        }));
+        return;
+      }
+      const payload = (await response.json()) as { to: string };
+      setSentRecipientByOrg((current) => ({ ...current, [match.orgNumber]: payload.to }));
+    } catch {
+      setSendErrorByOrg((current) => ({
+        ...current,
+        [match.orgNumber]: "Klarte ikke sende e-post via SMTP.",
+      }));
+    } finally {
+      setSendingByOrg((current) => ({ ...current, [match.orgNumber]: false }));
+    }
+  }
+
+  return (
+    <div className="mt-6 border border-[#D9E2EC] bg-white p-5">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[12px] font-medium text-[#52606D]">BRREG-kobling</p>
+          <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">
+            {matches.length > 0 ? `${matches.length} mulige registertreff` : "Ingen direkte treff på registrert hjemmeside"}
+          </h4>
+        </div>
+        <span className="inline-flex w-fit rounded-sm bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-700">
+          Hjemmeside
+        </span>
+      </div>
+      <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">
+        Sjekker om domenet finnes som registrert hjemmeside i BRREG. Dette kan gi e-postadresse, telefon, org.nr. og bransje, men flere virksomheter kan dele samme domene.
+      </p>
+      {matches.length > 0 ? (
+        <div className="mt-4 grid gap-3">
+          {matches.map((match) => (
+            <div key={match.orgNumber} className="border border-[#E4E7EB] bg-[#F8FBFF] p-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <p className="text-[14px] font-semibold text-[#1F2933]">{match.name}</p>
+                  <p className="mt-1 text-[12px] font-medium text-[#52606D]">
+                    {[match.orgNumber, match.organizationForm, match.naceCode].filter(Boolean).join(" · ")}
+                  </p>
+                </div>
+                <button
+                  className="w-fit rounded-sm border border-[#D9E2EC] bg-white px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-[#F8FBFF]"
+                  onClick={() => void navigator.clipboard.writeText(match.orgNumber)}
+                  type="button"
+                >
+                  Kopier org.nr
+                </button>
+              </div>
+              <div className="mt-3 grid gap-2 text-[12px] text-[#52606D] sm:grid-cols-2">
+                <p><span className="font-semibold text-[#1F2933]">E-post:</span> {match.email || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Telefon:</span> {match.phone || match.mobile || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Nettside:</span> {match.website || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Sted:</span> {[match.municipality, match.county].filter(Boolean).join(", ") || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Bransje:</span> {match.naceDescription || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Registrert:</span> {match.registrationDate || "Ikke registrert"}</p>
+              </div>
+              <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
+                {match.matchReason}
+              </p>
+              <div className="mt-4 border-t border-[#D9E2EC] pt-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
+                    disabled={Boolean(generatingByOrg[match.orgNumber])}
+                    onClick={() => void generateEmail(match)}
+                    type="button"
+                  >
+                    {generatingByOrg[match.orgNumber] ? "Genererer..." : "Generer mailtekst"}
+                  </Button>
+                  <Button
+                    className="rounded-sm border-[#BCCCDC] bg-white px-4 text-[#1F2933] hover:bg-[#F8FBFF]"
+                    disabled={!match.email || !generatedEmailByOrg[match.orgNumber] || Boolean(sendingByOrg[match.orgNumber])}
+                    onClick={() => void sendEmail(match)}
+                    type="button"
+                    variant="outline"
+                  >
+                    {sendingByOrg[match.orgNumber] ? "Sender..." : "Send automatisk"}
+                  </Button>
+                  {!match.email ? (
+                    <span className="text-[12px] font-medium text-[#7B8794]">Mangler e-post i BRREG</span>
+                  ) : null}
+                </div>
+                {generatedEmailByOrg[match.orgNumber] ? (
+                  <div className="mt-3">
+                    <textarea
+                      className="min-h-64 w-full rounded-sm border border-[#D9E2EC] bg-white p-3 text-[13px] leading-6 text-[#1F2933] outline-none focus:border-[#2F6FB2]"
+                      onChange={(event) => {
+                        const parsed = parseGeneratedEmailText(event.target.value);
+                        setGeneratedEmailByOrg((current) => ({
+                          ...current,
+                          [match.orgNumber]: parsed,
+                        }));
+                      }}
+                      value={`Emne: ${generatedEmailByOrg[match.orgNumber].subject}\n\n${generatedEmailByOrg[match.orgNumber].body}`}
+                    />
+                  </div>
+                ) : null}
+                {sentRecipientByOrg[match.orgNumber] ? (
+                  <p className="mt-2 text-[12px] font-semibold text-emerald-700">
+                    Sendt til {sentRecipientByOrg[match.orgNumber]}
+                  </p>
+                ) : null}
+                {sendErrorByOrg[match.orgNumber] ? (
+                  <p className="mt-2 text-[12px] font-semibold text-rose-700">
+                    {sendErrorByOrg[match.orgNumber]}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function WebsiteQualityPanel({
+  quality,
+  className = "",
+}: {
+  quality: WebsiteQualityAssessment;
+  className?: string;
+}) {
+  return (
+    <div className={`border border-[#D9E2EC] bg-white p-5 ${className}`}>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[12px] font-medium text-[#52606D]">Nettsidekvalitet</p>
+          <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{quality.label}</h4>
+        </div>
+        <span className={`inline-flex w-fit rounded-sm px-2 py-1 text-[10px] font-semibold ${
+          quality.status === "WEAK"
+            ? "bg-rose-50 text-rose-700"
+            : quality.status === "NEEDS_REVIEW"
+              ? "bg-amber-50 text-amber-700"
+              : "bg-slate-100 text-slate-700"
+        }`}>
+          {quality.status === "OK" ? "OK" : "Bør sjekkes"}
+        </span>
+      </div>
+      <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{quality.summary}</p>
+      {quality.signals.length > 0 ? (
+        <div className="mt-4 grid gap-2">
+          {quality.signals.map((signal) => (
+            <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
+                <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
+                  {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
+                </span>
+              </div>
+              <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -1264,6 +1642,51 @@ function parseGeneratedEmailText(text: string) {
   return {
     subject: (match[1] ?? "").trim(),
     body: (match[2] ?? "").trim(),
+  };
+}
+
+function normalizeStandaloneWebsiteInput(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "";
+  }
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+}
+
+function companyFromBrregWebsiteMatch(
+  match: BrregWebsiteMatch,
+  inspection: WebsiteInspectionResponse
+): Parameters<typeof buildOutreachEmailSubject>[1] {
+  return {
+    orgNumber: match.orgNumber,
+    name: match.name,
+    organizationForm: match.organizationForm,
+    municipality: match.municipality,
+    county: match.county,
+    naceCode: match.naceCode,
+    naceDescription: match.naceDescription,
+    salesSegment: null,
+    website: match.website || inspection.normalizedUrl,
+    websiteDiscovery: {
+      status: "REGISTERED",
+      confidence: "HIGH",
+      candidates: [inspection.normalizedUrl],
+      verifiedCandidate: inspection.normalizedUrl,
+      verifiedReachable: inspection.websiteQuality.status !== "WEAK",
+      contentMatched: null,
+      contentMatchReason: match.matchReason,
+      pageTitle: null,
+      candidateChecks: [],
+      reason: "Nettsiden er koblet til BRREG-treff fra frittstående nettsidesjekk.",
+      source: "BRREG hjemmeside",
+    },
+    websiteQuality: inspection.websiteQuality,
+    email: match.email,
+    phone: match.phone || match.mobile,
+    contactPersonName: null,
   };
 }
 
@@ -1933,39 +2356,7 @@ function CompanyDetailView({
               ) : null}
 
               {company.website && company.websiteQuality ? (
-                <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="text-[12px] font-medium text-[#52606D]">Nettsidekvalitet</p>
-                      <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{company.websiteQuality.label}</h4>
-                    </div>
-                    <span className={`inline-flex w-fit rounded-sm px-2 py-1 text-[10px] font-semibold ${
-                      company.websiteQuality.status === "WEAK"
-                        ? "bg-rose-50 text-rose-700"
-                        : company.websiteQuality.status === "NEEDS_REVIEW"
-                          ? "bg-amber-50 text-amber-700"
-                          : "bg-slate-100 text-slate-700"
-                    }`}>
-                      {company.websiteQuality.status === "OK" ? "OK" : "Bør sjekkes"}
-                    </span>
-                  </div>
-                  <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{company.websiteQuality.summary}</p>
-                  {company.websiteQuality.signals.length > 0 ? (
-                    <div className="mt-4 grid gap-2">
-                      {company.websiteQuality.signals.map((signal) => (
-                        <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
-                            <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
-                              {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
-                            </span>
-                          </div>
-                          <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
+                <WebsiteQualityPanel className="mt-4" quality={company.websiteQuality} />
               ) : null}
 
               {elevatedActorContextSignal ? (

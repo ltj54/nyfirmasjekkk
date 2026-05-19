@@ -88,6 +88,24 @@ public class CompanyApiV1Mapper {
     private static final Set<String> GENERIC_MARKETING_WORDS = Set.of(
             "kvalitet", "service", "profesjonell", "skreddersydd", "losninger", "løsninger", "erfaring", "dyktige", "trygg", "effektiv"
     );
+    private static final Set<String> ABOUT_TRUST_WORDS = Set.of(
+            "om oss", "om meg", "about us", "about me", "team", "ansatte", "medarbeidere", "hvem vi er", "hvem jeg er"
+    );
+    private static final Set<String> SOCIAL_PROOF_WORDS = Set.of(
+            "referanse", "referanser", "kundeuttalelse", "kundeomtale", "anmeldelser", "reviews", "testimonials", "case", "prosjekter", "tidligere arbeid"
+    );
+    private static final Set<String> OPENING_HOURS_WORDS = Set.of(
+            "apningstider", "åpningstider", "opening hours", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lordag", "lørdag", "sondag", "søndag"
+    );
+    private static final Set<String> TEMPLATE_PLACEHOLDER_WORDS = Set.of(
+            "lorem ipsum", "under construction", "kommer snart", "coming soon", "test test", "placeholder", "dummy text"
+    );
+    private static final Set<String> GENERIC_IMAGE_SOURCE_WORDS = Set.of(
+            "unsplash", "pexels", "pixabay", "shutterstock", "istock", "gettyimages", "stockphoto", "stock-photo", "aivisualization", "ai visualization", "midjourney", "stable-diffusion"
+    );
+    private static final Set<String> SOCIAL_LINK_HOSTS = Set.of(
+            "facebook.com", "instagram.com", "linkedin.com", "tiktok.com", "youtube.com", "x.com", "twitter.com"
+    );
     private static final Set<String> GENERIC_EMAIL_DOMAINS = Set.of(
             "gmail.com", "hotmail.com", "hotmail.no", "outlook.com", "live.com", "icloud.com", "yahoo.com", "yahoo.no", "online.no"
     );
@@ -458,6 +476,7 @@ public class CompanyApiV1Mapper {
         addIndustryRelevanceSignal(signals, snapshot, enhet);
         addServiceDescriptionSignal(signals, snapshot, enhet);
         addTrustSignal(signals, snapshot, companyCheck, enhet);
+        addCommercialTrustSignals(signals, snapshot, enhet);
         addActionSignal(signals, snapshot);
         addBrandDomainSignal(signals, companyCheck, website);
         addEmailDomainSignal(signals, snapshot, website);
@@ -472,6 +491,109 @@ public class CompanyApiV1Mapper {
         return assessmentFromSignals(signals, signals.isEmpty()
                 ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
                 : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.");
+    }
+
+    public WebsiteInspectionResponse inspectWebsite(String rawUrl) {
+        if (!hasText(rawUrl)) {
+            throw new IllegalArgumentException("URL mangler.");
+        }
+
+        String website = normalizeWebsiteCandidate(rawUrl);
+        List<WebsiteQualitySignal> signals = new ArrayList<>();
+        String thirdPartyPlatform = thirdPartyPlatform(website);
+        if (thirdPartyPlatform != null) {
+            signals.add(new WebsiteQualitySignal(
+                    "THIRD_PARTY_SURFACE",
+                    "Tredjepartsflate",
+                    "Nettsiden peker mot " + thirdPartyPlatform + " i stedet for en egen nettside.",
+                    "MEDIUM"
+            ));
+        }
+        if (!website.startsWith(HTTPS_PREFIX)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_HTTPS",
+                    "Mangler HTTPS",
+                    "Nettsiden bruker ikke HTTPS i oppgitt adresse. Det kan gi svakere tillit og nettleservarsler.",
+                    "MEDIUM"
+            ));
+        }
+
+        boolean reachable = websiteReachabilityService.isReachable(website);
+        if (!reachable) {
+            signals.add(new WebsiteQualitySignal(
+                    "TECHNICAL_FAILURE",
+                    "Teknisk feil",
+                    "Nettsiden svarte ikke ved teknisk sjekk. Dette kan skyldes DNS, timeout, SSL-feil, 404/5xx eller midlertidig nedetid.",
+                    "HIGH"
+            ));
+            return new WebsiteInspectionResponse(
+                    rawUrl,
+                    website,
+                    new WebsiteQualityAssessment(
+                            "WEAK",
+                            "Nettsiden svarer ikke",
+                            "Nettsiden svarte ikke ved teknisk sjekk.",
+                            signals
+                    ),
+                    List.of()
+            );
+        }
+
+        WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = websiteContentInspectionService.fetchSnapshot(website);
+        if (snapshot == null) {
+            signals.add(new WebsiteQualitySignal(
+                    "CONTENT_UNREADABLE",
+                    "Innhold kunne ikke leses",
+                    "Nettsiden svarte, men innholdet kunne ikke leses for kvalitetssjekk.",
+                    "MEDIUM"
+            ));
+            return new WebsiteInspectionResponse(rawUrl, website, assessmentFromSignals(signals, "Nettsiden svarer, men innholdet kunne ikke vurderes."), List.of());
+        }
+
+        addContentQualitySignals(signals, snapshot);
+        addSharePreviewSignal(signals, snapshot);
+        addStructuredDataSignal(signals, snapshot);
+        addNavigationSignal(signals, snapshot);
+        addActionSignal(signals, snapshot);
+        addFreshnessSignal(signals, snapshot);
+        addResponsiveSignals(signals, snapshot);
+        addAccessibilitySignals(signals, snapshot);
+        addSecuritySignals(signals, website, snapshot);
+        addPrivacySignals(signals, snapshot);
+        addMedicalTrustSignals(signals, snapshot);
+        addTechnologySignals(signals, snapshot);
+        addStandaloneWebsiteSignals(signals, snapshot);
+
+        return new WebsiteInspectionResponse(
+                rawUrl,
+                website,
+                assessmentFromSignals(signals, signals.isEmpty()
+                        ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
+                        : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt."),
+                List.of()
+        );
+    }
+
+    private void addStandaloneWebsiteSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        if (snapshot.platformDomainSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "PLATFORM_DOMAIN_RISK",
+                    "Bruker plattformdomene",
+                    "Nettsiden ser ut til å ligge på et plattformdomene. Eget domene gir vanligvis et mer profesjonelt og lettere gjenkjennelig inntrykk.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.placeholderSocialLinkCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "PLACEHOLDER_SOCIAL_LINKS",
+                    "Mulig uferdige sosiale lenker",
+                    snapshot.placeholderSocialLinkCount() + " sosial lenke ser ut til å peke til en generisk eller uferdig profil.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.ecommerceSignal()) {
+            addCommerceSignals(signals, snapshot);
+        }
     }
 
     private WebsiteQualityAssessment assessmentFromSignals(List<WebsiteQualitySignal> signals, String summary) {
@@ -677,6 +799,134 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    private void addCommercialTrustSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
+        String rawHtml = snapshot.html() == null ? "" : snapshot.html();
+        String rawBody = snapshot.bodyText() == null ? "" : snapshot.bodyText();
+        String text = normalizeForWebsiteQuality(rawBody + " " + rawHtml);
+        boolean localOrConsumer = isLocalOrConsumerSegment(enhet);
+
+        if (containsAny(text, TEMPLATE_PLACEHOLDER_WORDS)) {
+            signals.add(new WebsiteQualitySignal(
+                    "TEMPLATE_PLACEHOLDER_CONTENT",
+                    "Uferdig maltekst",
+                    "Siden har spor av placeholder-, test- eller kommer-snart-tekst. Det kan gi inntrykk av at nettsiden ikke er ferdigstilt.",
+                    "HIGH"
+            ));
+        }
+
+        if (!containsAny(text, ABOUT_TRUST_WORDS)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_ABOUT_SECTION",
+                    "Mangler tydelig om-oss",
+                    "Vi fant ikke tydelig om-oss-, team- eller personpresentasjon. For små virksomheter kan en kort presentasjon av hvem kunden møter gi mer tillit.",
+                    localOrConsumer ? "MEDIUM" : "INFO"
+            ));
+        }
+
+        if (localOrConsumer && !containsAny(text, SOCIAL_PROOF_WORDS)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_SOCIAL_PROOF",
+                    "Mangler referanser eller eksempler",
+                    "Siden ser ikke ut til å vise referanser, kundeomtaler, tidligere arbeid eller konkrete eksempler. Det kan gjøre førsteinntrykket mindre etterprøvbart.",
+                    "INFO"
+            ));
+        }
+
+        if (openingHoursUsuallyRelevant(enhet) && !containsAny(text, OPENING_HOURS_WORDS)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_OPENING_HOURS",
+                    "Mangler åpningstider",
+                    "Bransjen gjør åpningstider eller tilgjengelighet relevant, men siden ser ikke ut til å vise dette tydelig.",
+                    "INFO"
+            ));
+        }
+
+        if (localOrConsumer && !containsAny(rawHtml.toLowerCase(Locale.ROOT), SOCIAL_LINK_HOSTS)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_SOCIAL_LINKS",
+                    "Mangler sosiale lenker",
+                    "Vi fant ikke tydelige lenker til sosiale medier. Det er ikke alltid nødvendig, men kan være et tillitssignal for lokale og forbrukerrettede virksomheter.",
+                    "INFO"
+            ));
+        }
+
+        if (hasText(enhet.epostadresse()) && EMAIL_PATTERN.matcher(rawBody + " " + rawHtml).find() && !rawHtml.toLowerCase(Locale.ROOT).contains("mailto:")) {
+            signals.add(new WebsiteQualitySignal(
+                    "EMAIL_NOT_CLICKABLE",
+                    "E-post er ikke klikkbar",
+                    "Siden ser ut til å vise e-postadresse, men ikke som mailto-lenke. Det kan gjøre kontakt litt tyngre for brukeren.",
+                    "INFO"
+            ));
+        }
+
+        if ((hasText(enhet.telefon()) || hasText(enhet.mobil())) && PHONE_PATTERN.matcher(rawBody + " " + rawHtml).find() && !rawHtml.toLowerCase(Locale.ROOT).contains("tel:")) {
+            signals.add(new WebsiteQualitySignal(
+                    "PHONE_NOT_CLICKABLE",
+                    "Telefon er ikke klikkbar",
+                    "Siden ser ut til å vise telefonnummer, men ikke som tel-lenke. På mobil bør telefonnummer normalt være lett å trykke på.",
+                    "INFO"
+            ));
+        }
+
+        if (containsAny(rawHtml.toLowerCase(Locale.ROOT), GENERIC_IMAGE_SOURCE_WORDS)) {
+            signals.add(new WebsiteQualitySignal(
+                    "GENERIC_OR_AI_IMAGE_RISK",
+                    "Mulig generisk bildebruk",
+                    "Bildespor peker mot stock-, AI- eller generiske visualiseringer. Det er ikke nødvendigvis feil, men kan svekke tillit hvis bildene ikke tydelig viser virksomheten, produktet eller arbeidet.",
+                    isHealthOrMedicalSegment(enhet) ? "MEDIUM" : "INFO"
+            ));
+        }
+
+        if (snapshot.platformDomainSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "PLATFORM_DOMAIN_RISK",
+                    "Bruker plattformdomene",
+                    "Nettsiden ser ut til å ligge på et plattformdomene. Eget domene gir vanligvis et mer profesjonelt og lettere gjenkjennelig inntrykk.",
+                    "MEDIUM"
+            ));
+        }
+
+        if (snapshot.placeholderSocialLinkCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "PLACEHOLDER_SOCIAL_LINKS",
+                    "Mulig uferdige sosiale lenker",
+                    snapshot.placeholderSocialLinkCount() + " sosial lenke ser ut til å peke til en generisk eller uferdig profil.",
+                    "INFO"
+            ));
+        }
+
+        if (snapshot.ecommerceSignal()) {
+            addCommerceSignals(signals, snapshot);
+        }
+    }
+
+    private void addCommerceSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        if (!snapshot.termsLink()) {
+            signals.add(new WebsiteQualitySignal(
+                    "COMMERCE_TERMS_MISSING",
+                    "Mangler tydelige vilkår",
+                    "Siden har tegn på salg eller bestilling, men vi fant ikke tydelige kjøpsvilkår eller salgsbetingelser.",
+                    "MEDIUM"
+            ));
+        }
+        if (!snapshot.returnInfo()) {
+            signals.add(new WebsiteQualitySignal(
+                    "COMMERCE_RETURN_INFO_MISSING",
+                    "Mangler retur-/angrerettinfo",
+                    "Siden har tegn på salg eller bestilling, men vi fant ikke tydelig informasjon om retur, angrerett eller reklamasjon.",
+                    "MEDIUM"
+            ));
+        }
+        if (!snapshot.deliveryInfo() && snapshot.cartOrCheckoutSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "COMMERCE_DELIVERY_INFO_MISSING",
+                    "Mangler leveringsinfo",
+                    "Siden har tegn på handlekurv eller checkout, men vi fant ikke tydelig leverings- eller fraktinformasjon.",
+                    "INFO"
+            ));
+        }
+    }
+
     private void addActionSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
         boolean hasCallToAction = CALL_TO_ACTION_WORDS.stream().anyMatch(word -> text.contains(normalizeForWebsiteQuality(word)));
@@ -688,6 +938,50 @@ public class CompanyApiV1Mapper {
                     "MEDIUM"
             ));
         }
+    }
+
+    private boolean containsAny(String text, Set<String> needles) {
+        if (!hasText(text)) {
+            return false;
+        }
+        return needles.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .anyMatch(text::contains);
+    }
+
+    private boolean isLocalOrConsumerSegment(EnhetResponse enhet) {
+        String code = normalizedNaceCode(enhet);
+        return startsWithAny(code, "43", "47", "49", "52", "53", "56", "81", "86", "88", "96");
+    }
+
+    private boolean openingHoursUsuallyRelevant(EnhetResponse enhet) {
+        String code = normalizedNaceCode(enhet);
+        return startsWithAny(code, "47", "56", "86", "88", "96")
+                || code.startsWith("81.3");
+    }
+
+    private boolean isHealthOrMedicalSegment(EnhetResponse enhet) {
+        String code = normalizedNaceCode(enhet);
+        return startsWithAny(code, "86", "88") || code.startsWith("96.04");
+    }
+
+    private String normalizedNaceCode(EnhetResponse enhet) {
+        if (enhet == null || enhet.naeringskode1() == null || enhet.naeringskode1().kode() == null) {
+            return "";
+        }
+        return enhet.naeringskode1().kode().trim();
+    }
+
+    private boolean startsWithAny(String value, String... prefixes) {
+        if (!hasText(value)) {
+            return false;
+        }
+        for (String prefix : prefixes) {
+            if (value.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addBrandDomainSignal(List<WebsiteQualitySignal> signals, CompanyCheck companyCheck, String website) {
@@ -799,6 +1093,94 @@ public class CompanyApiV1Mapper {
                     "MEDIUM"
             ));
         }
+        if (!snapshot.mainLandmark()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_MAIN_LANDMARK",
+                    "Mangler main-landemerke",
+                    "Siden ser ikke ut til å ha tydelig main-landemerke. Det kan gjøre navigasjon vanskeligere for skjermleser og tastaturbrukere.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.headerLandmark() || !snapshot.footerLandmark()) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_PAGE_LANDMARKS",
+                    "Svak sidestruktur",
+                    "Siden ser ut til å mangle tydelig header- eller footer-struktur. Slike landemerker gjør siden enklere å orientere seg i.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.skippedHeadingLevelCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "SKIPPED_HEADING_LEVELS",
+                    "Uryddig overskriftsstruktur",
+                    "Overskriftsnivå hopper over nivå " + snapshot.skippedHeadingLevelCount() + " gang(er). Det kan gjøre innholdet vanskeligere å forstå med hjelpeteknologi.",
+                    snapshot.skippedHeadingLevelCount() > 2 ? "MEDIUM" : "INFO"
+            ));
+        }
+        if (snapshot.vagueLinkTextCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "VAGUE_LINK_TEXT",
+                    "Utydelige lenketekster",
+                    snapshot.vagueLinkTextCount() + " lenke(r) har generisk tekst som \"les mer\" eller \"her\". Lenketekster bør beskrive hvor de leder.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.tableCount() > 0 && snapshot.dataTablesWithoutHeadersCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "TABLE_HEADERS_MISSING",
+                    "Tabell uten tydelige overskrifter",
+                    snapshot.dataTablesWithoutHeadersCount() + " av " + snapshot.tableCount() + " tabeller ser ut til å mangle tabelloverskrifter.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.inputsWithoutAutocompleteCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "FORM_AUTOCOMPLETE_MISSING",
+                    "Skjema mangler autocomplete",
+                    snapshot.inputsWithoutAutocompleteCount() + " felt for kontakt- eller personopplysninger ser ut til å mangle autocomplete. Det kan gjøre skjema tyngre å bruke.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.wrongEmailInputTypeCount() > 0 || snapshot.wrongPhoneInputTypeCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "FORM_INPUT_TYPE_RISK",
+                    "Feil inputtype i skjema",
+                    "E-post- eller telefonfelt ser ut til å bruke vanlig tekstfelt. Riktig inputtype gir bedre mobilopplevelse og færre feil.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.outlineNoneSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "FOCUS_STYLE_RISK",
+                    "Mulig svak fokusmarkering",
+                    "CSS-en inneholder tegn til at fokusmarkering kan være fjernet. Tastaturbrukere må kunne se hvor fokus er.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.autoplayMediaSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "AUTOPLAY_MEDIA_RISK",
+                    "Autoplay-media",
+                    "Siden har video, lyd eller innebygd innhold med autoplay. Bevegelig innhold bør kunne stoppes eller kontrolleres av brukeren.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.motionWithoutReducedMotionSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MOTION_ACCESSIBILITY_RISK",
+                    "Bevegelse uten redusert-motion signal",
+                    "HTML/CSS har spor av animasjon eller scroll-effekter, men vi fant ikke tydelig støtte for prefers-reduced-motion.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.iframeWithoutTitleCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "IFRAME_TITLE_RISK",
+                    "Iframe mangler tittel",
+                    snapshot.iframeWithoutTitleCount() + " iframe-element(er) ser ut til å mangle tittel. Innebygd innhold bør beskrives for skjermleser.",
+                    "INFO"
+            ));
+        }
     }
 
     private void addSecuritySignals(List<WebsiteQualitySignal> signals, String website, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -835,6 +1217,66 @@ public class CompanyApiV1Mapper {
                     "INFO"
             ));
         }
+        if (snapshot.checkedInternalLinkCount() > 0 && snapshot.brokenInternalLinkCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "BROKEN_INTERNAL_LINKS",
+                    "Mulige døde interne lenker",
+                    snapshot.brokenInternalLinkCount() + " av " + snapshot.checkedInternalLinkCount() + " sjekkede interne lenker svarte med feilstatus.",
+                    "MEDIUM"
+            ));
+        }
+        addSecurityHeaderSignals(signals, snapshot);
+    }
+
+    private void addSecurityHeaderSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        if (!snapshot.hstsHeader()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_HSTS_HEADER",
+                    "Mangler HSTS-header",
+                    "Siden bruker HTTPS, men vi fant ikke Strict-Transport-Security-header. Det er et teknisk trygghetssignal som bør vurderes.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.contentSecurityPolicyHeader()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_CSP_HEADER",
+                    "Mangler Content Security Policy",
+                    "Vi fant ikke Content-Security-Policy-header. En ryddig CSP kan redusere risiko fra uønskede scripts og tredjepartsinnhold.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.contentTypeOptionsHeader()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_CONTENT_TYPE_OPTIONS",
+                    "Mangler X-Content-Type-Options",
+                    "Vi fant ikke X-Content-Type-Options-header. Dette er en enkel sikkerhetsheader som ofte bør være på plass.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.referrerPolicyHeader() && (snapshot.googleAnalyticsSignal() || snapshot.metaPixelSignal() || snapshot.externalScriptCount() > 0)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_REFERRER_POLICY",
+                    "Mangler Referrer-Policy",
+                    "Siden bruker eksterne ressurser eller måling, men vi fant ikke Referrer-Policy-header. Dette bør vurderes av personvern- og sikkerhetshensyn.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.permissionsPolicyHeader() && (snapshot.youtubeEmbedSignal() || snapshot.mapsEmbedSignal() || snapshot.externalIframeCount() > 0)) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_PERMISSIONS_POLICY",
+                    "Mangler Permissions-Policy",
+                    "Siden har innebygd eller ekstern funksjonalitet, men vi fant ikke Permissions-Policy-header. Det kan være nyttig for å begrense nettleserfunksjoner.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.frameOptionsHeader() && !snapshot.contentSecurityPolicyHeader()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_FRAME_PROTECTION",
+                    "Mangler enkel frame-beskyttelse",
+                    "Vi fant verken X-Frame-Options eller Content-Security-Policy. Det kan gjøre siden svakere beskyttet mot innbygging på andre sider.",
+                    "INFO"
+            ));
+        }
     }
 
     private void addPrivacySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -862,6 +1304,62 @@ public class CompanyApiV1Mapper {
                     "Mulig sensitivt fagområde",
                     "Nettsideteksten peker mot helse, journal, pasient eller behandling. Personvern, skjema og databehandling bør vurderes ekstra nøye.",
                     "MEDIUM"
+            ));
+        }
+        if (snapshot.googleAnalyticsSignal() && !snapshot.cookieConsentSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "GOOGLE_ANALYTICS_WITHOUT_CONSENT",
+                    "Google-måling uten tydelig samtykke",
+                    "Siden har spor av Google Analytics/Tag Manager, men vi fant ikke tydelig samtykkemekanisme i HTML-en.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.metaPixelSignal() && !snapshot.cookieConsentSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "META_PIXEL_WITHOUT_CONSENT",
+                    "Meta Pixel uten tydelig samtykke",
+                    "Siden har spor av Meta/Facebook Pixel, men vi fant ikke tydelig samtykkemekanisme i HTML-en.",
+                    "MEDIUM"
+            ));
+        }
+        if ((snapshot.hotjarSignal() || snapshot.claritySignal()) && !snapshot.cookieConsentSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SESSION_TRACKING_WITHOUT_CONSENT",
+                    "Sesjonsmåling uten tydelig samtykke",
+                    "Siden har spor av Hotjar eller Microsoft Clarity, men vi fant ikke tydelig samtykkemekanisme i HTML-en.",
+                    "MEDIUM"
+            ));
+        }
+        if ((snapshot.mapsEmbedSignal() || snapshot.youtubeEmbedSignal()) && !snapshot.cookieConsentSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "THIRD_PARTY_EMBED_CONSENT_RISK",
+                    "Innebygd tredjepartsinnhold",
+                    "Siden har kart/video fra tredjepart. Slike elementer bør vurderes opp mot cookies, samtykke og personvern.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.thirdPartyFormSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "THIRD_PARTY_FORM_RISK",
+                    "Skjema via tredjepart",
+                    "Siden ser ut til å bruke ekstern skjema-, booking- eller markedsføringstjeneste. Databehandling og personvern bør være tydelig.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.insecureFormActionSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "INSECURE_FORM_ACTION",
+                    "Skjema sender til usikker adresse",
+                    "Minst ett skjema ser ut til å sende data til HTTP-adresse. Skjemadata bør normalt sendes over HTTPS.",
+                    "HIGH"
+            ));
+        }
+        if (snapshot.passwordFieldsWithoutAutocompleteCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "PASSWORD_AUTOCOMPLETE_RISK",
+                    "Passordfelt mangler autocomplete",
+                    snapshot.passwordFieldsWithoutAutocompleteCount() + " passordfelt mangler autocomplete. Dette kan svekke brukervennlighet og passordhåndtering.",
+                    "INFO"
             ));
         }
     }
@@ -1358,10 +1856,11 @@ public class CompanyApiV1Mapper {
         if (!hasText(website)) {
             return website;
         }
-        if (website.startsWith("http://") || website.startsWith(HTTPS_PREFIX)) {
-            return website;
+        String normalized = website.trim();
+        if (normalized.startsWith("http://") || normalized.startsWith(HTTPS_PREFIX)) {
+            return normalized;
         }
-        return HTTPS_PREFIX + website;
+        return HTTPS_PREFIX + normalized;
     }
 
     private String firstReachableCandidate(List<String> candidates) {

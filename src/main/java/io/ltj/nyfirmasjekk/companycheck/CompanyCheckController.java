@@ -7,6 +7,9 @@ import io.ltj.nyfirmasjekk.api.v1.MetadataFiltersResponse;
 import io.ltj.nyfirmasjekk.api.v1.MetadataService;
 import io.ltj.nyfirmasjekk.api.v1.CompanySearchResponse;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
+import io.ltj.nyfirmasjekk.api.v1.BrregWebsiteMatch;
+import io.ltj.nyfirmasjekk.api.v1.WebsiteInspectionResponse;
+import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
 import io.ltj.nyfirmasjekk.brreg.EnhetFinnesIkkeException;
@@ -28,9 +31,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,12 +51,15 @@ import java.util.stream.Collectors;
 public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
     private static final int SEARCH_RESULT_SIZE = 50;
+    private static final int MAX_IMPORT_BYTES = 2_000_000;
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
     private final BrregClient brregClient;
     private final MetadataService metadataService;
     private final OutreachLogService outreachLogService;
     private final OutreachEmailService outreachEmailService;
+    private final AdminAccessService adminAccessService;
+    private final InMemoryRateLimitService rateLimitService;
     private final MeterRegistry meterRegistry;
 
     public CompanyCheckController(
@@ -59,6 +69,8 @@ public class CompanyCheckController {
             MetadataService metadataService,
             OutreachLogService outreachLogService,
             OutreachEmailService outreachEmailService,
+            AdminAccessService adminAccessService,
+            InMemoryRateLimitService rateLimitService,
             MeterRegistry meterRegistry
     ) {
         this.companyCheckService = companyCheckService;
@@ -67,6 +79,8 @@ public class CompanyCheckController {
         this.metadataService = metadataService;
         this.outreachLogService = outreachLogService;
         this.outreachEmailService = outreachEmailService;
+        this.adminAccessService = adminAccessService;
+        this.rateLimitService = rateLimitService;
         this.meterRegistry = meterRegistry;
     }
 
@@ -76,6 +90,7 @@ public class CompanyCheckController {
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer
     ) {
+        rateLimitService.requireAllowed("company-details", 120, Duration.ofMinutes(10));
         meterRegistry.counter("company_check_details_requests_total").increment();
         return meterRegistry.timer("company_check_details_timer").record(() -> {
             CompanyCheck check = companyCheckService.vurder(organisasjonsnummer);
@@ -99,18 +114,26 @@ public class CompanyCheckController {
     public OutreachStatusResponse outreachStatus(
             @PathVariable
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
-            String organisasjonsnummer
+            String organisasjonsnummer,
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
     ) {
+        adminAccessService.requireAdmin(adminToken);
         return outreachLogService.statusFor(organisasjonsnummer);
     }
 
     @GetMapping("/outreach")
-    public List<OutreachStatusResponse> outreachStatuses() {
+    public List<OutreachStatusResponse> outreachStatuses(
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+    ) {
+        adminAccessService.requireAdmin(adminToken);
         return outreachLogService.statuses();
     }
 
     @GetMapping(value = "/outreach/export", produces = "application/x-ndjson")
-    public ResponseEntity<String> exportOutreachLog() {
+    public ResponseEntity<String> exportOutreachLog(
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+    ) {
+        adminAccessService.requireAdmin(adminToken);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/x-ndjson"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"outreach-log-export.jsonl\"")
@@ -118,12 +141,23 @@ public class CompanyCheckController {
     }
 
     @PostMapping(value = "/outreach/import", consumes = MediaType.TEXT_PLAIN_VALUE)
-    public OutreachImportResponse importOutreachLog(@RequestBody String jsonl) {
+    public OutreachImportResponse importOutreachLog(
+            @RequestBody String jsonl,
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+    ) {
+        adminAccessService.requireAdmin(adminToken);
+        if (jsonl != null && jsonl.length() > MAX_IMPORT_BYTES) {
+            throw new IllegalArgumentException("Importfilen er for stor.");
+        }
         return outreachLogService.importJsonl(jsonl);
     }
 
     @PostMapping("/outreach-statuses")
-    public List<OutreachStatusResponse> outreachStatusesFor(@RequestBody List<String> orgNumbers) {
+    public List<OutreachStatusResponse> outreachStatusesFor(
+            @RequestBody List<String> orgNumbers,
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+    ) {
+        adminAccessService.requireAdmin(adminToken);
         if (orgNumbers == null || orgNumbers.isEmpty()) {
             return List.of();
         }
@@ -140,8 +174,13 @@ public class CompanyCheckController {
             @PathVariable
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer,
-            @RequestBody OutreachStatusRequest request
+            @RequestBody OutreachStatusRequest request,
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
     ) {
+        adminAccessService.requireAdmin(adminToken);
+        if (request == null) {
+            throw new IllegalArgumentException("Mangler outreach-status.");
+        }
         var payload = new OutreachStatusRequest(
                 organisasjonsnummer,
                 request.companyName(),
@@ -161,8 +200,11 @@ public class CompanyCheckController {
             @PathVariable
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer,
-            @RequestBody OutreachEmailSendRequest request
+            @RequestBody OutreachEmailSendRequest request,
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
     ) {
+        adminAccessService.requireAdmin(adminToken);
+        rateLimitService.requireAllowed("send-outreach-email", 25, Duration.ofHours(1));
         String recipient = outreachEmailService.send(request);
         var status = outreachLogService.register(new OutreachStatusRequest(
                 organisasjonsnummer,
@@ -181,6 +223,98 @@ public class CompanyCheckController {
     @GetMapping("/filters")
     public MetadataFiltersResponse filters() {
         return metadataService.filters();
+    }
+
+    @GetMapping("/website-inspection")
+    public WebsiteInspectionResponse inspectWebsite(@RequestParam String url) {
+        rateLimitService.requireAllowed("website-inspection", 60, Duration.ofHours(1));
+        WebsiteInspectionResponse inspection = mapper.inspectWebsite(url);
+        return new WebsiteInspectionResponse(
+                inspection.inputUrl(),
+                inspection.normalizedUrl(),
+                inspection.websiteQuality(),
+                findBrregWebsiteMatches(inspection.normalizedUrl())
+        );
+    }
+
+    private List<BrregWebsiteMatch> findBrregWebsiteMatches(String normalizedUrl) {
+        List<String> homepageVariants = homepageSearchVariants(normalizedUrl);
+        if (homepageVariants.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, BrregWebsiteMatch> matches = new LinkedHashMap<>();
+        for (String homepage : homepageVariants) {
+            try {
+                EnheterSearchResponsePage page = searchBrregByHomepage(homepage);
+                page.enheter().stream()
+                        .filter(enhet -> enhet != null && enhet.organisasjonsnummer() != null)
+                        .map(enhet -> toBrregWebsiteMatch(enhet, homepage))
+                        .forEach(match -> matches.putIfAbsent(match.orgNumber(), match));
+            } catch (BrregClientException exception) {
+                log.debug("BRREG homepage lookup failed for {}", homepage, exception);
+            }
+        }
+        return matches.values().stream().limit(10).toList();
+    }
+
+    private EnheterSearchResponsePage searchBrregByHomepage(String homepage) {
+        var response = brregClient.sok(Map.of(
+                "hjemmeside", homepage,
+                "size", "10",
+                "page", "0"
+        ));
+        var enheter = response != null && response._embedded() != null && response._embedded().enheter() != null
+                ? response._embedded().enheter()
+                : List.<EnhetResponse>of();
+        return new EnheterSearchResponsePage(enheter);
+    }
+
+    private List<String> homepageSearchVariants(String normalizedUrl) {
+        String host = hostWithoutWww(normalizedUrl);
+        if (host == null || host.isBlank()) {
+            return List.of();
+        }
+        List<String> variants = new ArrayList<>();
+        variants.add(host);
+        variants.add("www." + host);
+        variants.add("https://" + host);
+        variants.add("https://www." + host);
+        return variants;
+    }
+
+    private String hostWithoutWww(String url) {
+        try {
+            URI uri = URI.create(url);
+            String host = uri.getHost();
+            if (host == null || host.isBlank()) {
+                return null;
+            }
+            return host.replaceFirst("(?i)^www\\.", "");
+        } catch (IllegalArgumentException exception) {
+            return null;
+        }
+    }
+
+    private BrregWebsiteMatch toBrregWebsiteMatch(EnhetResponse enhet, String matchedHomepage) {
+        return new BrregWebsiteMatch(
+                enhet.organisasjonsnummer(),
+                enhet.navn(),
+                enhet.organisasjonsform() == null ? null : enhet.organisasjonsform().kode(),
+                enhet.hjemmeside(),
+                enhet.epostadresse(),
+                enhet.telefon(),
+                enhet.mobil(),
+                enhet.naeringskode1() == null ? null : enhet.naeringskode1().kode(),
+                enhet.naeringskode1() == null ? null : enhet.naeringskode1().beskrivelse(),
+                enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().kommune(),
+                enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().fylke(),
+                enhet.registreringsdatoEnhetsregisteret(),
+                "BRREG hjemmeside=" + matchedHomepage
+        );
+    }
+
+    private record EnheterSearchResponsePage(List<EnhetResponse> enheter) {
     }
 
     @GetMapping("/nye-as")

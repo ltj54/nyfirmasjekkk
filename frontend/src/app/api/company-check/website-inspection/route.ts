@@ -1,24 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-import { backendHeaders } from "@/app/api/company-check/_lib/backend-fetch";
+import { fetchBackendJson } from "@/app/api/company-check/_lib/backend-fetch";
 
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
 
-export async function POST(request: Request) {
-  const url = `${backendBaseUrl}/api/company-check/outreach/import`;
+export async function GET(request: NextRequest) {
+  const urlToInspect = request.nextUrl.searchParams.get("url") ?? "";
+  const url = `${backendBaseUrl}/api/company-check/website-inspection?url=${encodeURIComponent(urlToInspect)}`;
 
   try {
-    const body = await request.text();
-    const response = await fetch(url, {
-      method: "POST",
-      cache: "no-store",
-      headers: backendHeaders({
-        "Content-Type": "text/plain; charset=utf-8",
-      }),
-      body,
-    });
-
+    const response = await fetchBackendJson(url);
     if (!response.ok) {
       return new NextResponse(await response.text(), { status: response.status });
     }

@@ -14,6 +14,15 @@ function isRetryableError(error: unknown) {
   return cause?.code != null && RETRYABLE_ERROR_CODES.has(cause.code);
 }
 
+export function backendHeaders(extra?: HeadersInit) {
+  const headers = new Headers(extra);
+  const adminToken = process.env.COMPANY_CHECK_ADMIN_TOKEN;
+  if (adminToken?.trim()) {
+    headers.set("X-Admin-Token", adminToken.trim());
+  }
+  return headers;
+}
+
 export async function fetchBackendJson(url: string) {
   let lastError: unknown;
 
@@ -21,9 +30,9 @@ export async function fetchBackendJson(url: string) {
     try {
       return await fetch(url, {
         cache: "no-store",
-        headers: {
+        headers: backendHeaders({
           Accept: "application/json",
-        },
+        }),
       });
     } catch (error) {
       lastError = error;

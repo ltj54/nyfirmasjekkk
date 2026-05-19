@@ -131,6 +131,29 @@ export interface WebsiteQualitySignal {
   severity: "HIGH" | "MEDIUM" | "INFO";
 }
 
+export interface WebsiteInspectionResponse {
+  inputUrl: string;
+  normalizedUrl: string;
+  websiteQuality: WebsiteQualityAssessment;
+  brregMatches: BrregWebsiteMatch[];
+}
+
+export interface BrregWebsiteMatch {
+  orgNumber: string;
+  name: string;
+  organizationForm: string | null;
+  website: string | null;
+  email: string | null;
+  phone: string | null;
+  mobile: string | null;
+  naceCode: string | null;
+  naceDescription: string | null;
+  municipality: string | null;
+  county: string | null;
+  registrationDate: string | null;
+  matchReason: string;
+}
+
 export interface OutreachStatus {
   orgNumber: string;
   sent: boolean;

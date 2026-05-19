@@ -1,12 +1,18 @@
 package io.ltj.nyfirmasjekk.api.v1;
 
 import org.jsoup.Jsoup;
+import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class WebsiteContentSnapshotFetcher {
@@ -21,11 +27,12 @@ public class WebsiteContentSnapshotFetcher {
         }
 
         try {
-            Document document = Jsoup.connect(url)
+            Connection.Response response = Jsoup.connect(url)
                     .userAgent("Nyfirmasjekk-App")
                     .timeout(4000)
                     .followRedirects(true)
-                    .get();
+                    .execute();
+            Document document = response.parse();
 
             String title = document.title();
             String bodyText = document.body().text();
@@ -70,6 +77,45 @@ public class WebsiteContentSnapshotFetcher {
             boolean cookieConsentSignal = hasCookieConsentSignal(htmlSnapshot);
             int externalScriptCount = document.select("script[src^=http]").size();
             int externalIframeCount = document.select("iframe[src^=http]").size();
+            boolean mainLandmark = document.selectFirst("main, [role=main]") != null;
+            boolean headerLandmark = document.selectFirst("header, [role=banner]") != null;
+            boolean footerLandmark = document.selectFirst("footer, [role=contentinfo]") != null;
+            int skippedHeadingLevelCount = skippedHeadingLevelCount(document);
+            int vagueLinkTextCount = vagueLinkTextCount(document);
+            int tableCount = document.select("table").size();
+            int dataTablesWithoutHeadersCount = dataTablesWithoutHeadersCount(document);
+            int inputsWithoutAutocompleteCount = inputsWithoutAutocompleteCount(document);
+            int wrongEmailInputTypeCount = wrongInputTypeCount(document, "email", "epost", "e-post");
+            int wrongPhoneInputTypeCount = wrongInputTypeCount(document, "tel", "telefon", "phone", "mobil");
+            boolean outlineNoneSignal = htmlSnapshot.matches("(?is).*outline\\s*:\\s*(0|none).*");
+            boolean autoplayMediaSignal = document.selectFirst("video[autoplay], audio[autoplay], iframe[src*=autoplay=1]") != null;
+            boolean motionWithoutReducedMotionSignal = hasMotionSignalWithoutReducedMotion(htmlSnapshot);
+            int videoCount = document.select("video").size();
+            int iframeWithoutTitleCount = document.select("iframe:not([title]), iframe[title=\"\"]").size();
+            Map<String, String> headers = response.headers();
+            boolean hstsHeader = hasHeader(headers, "strict-transport-security");
+            boolean contentSecurityPolicyHeader = hasHeader(headers, "content-security-policy");
+            boolean contentTypeOptionsHeader = hasHeader(headers, "x-content-type-options");
+            boolean referrerPolicyHeader = hasHeader(headers, "referrer-policy");
+            boolean permissionsPolicyHeader = hasHeader(headers, "permissions-policy");
+            boolean frameOptionsHeader = hasHeader(headers, "x-frame-options");
+            boolean insecureFormActionSignal = document.selectFirst("form[action^=http://]") != null;
+            int passwordFieldsWithoutAutocompleteCount = document.select("input[type=password]:not([autocomplete])").size();
+            boolean googleAnalyticsSignal = hasAny(htmlSnapshot, "google-analytics", "googletagmanager", "gtag(");
+            boolean metaPixelSignal = hasAny(htmlSnapshot, "fbq(", "connect.facebook.net", "facebook.com/tr");
+            boolean hotjarSignal = hasAny(htmlSnapshot, "hotjar");
+            boolean claritySignal = hasAny(htmlSnapshot, "clarity.ms");
+            boolean mapsEmbedSignal = hasAny(htmlSnapshot, "google.com/maps", "maps.googleapis.com", "openstreetmap", "mapbox");
+            boolean youtubeEmbedSignal = hasAny(htmlSnapshot, "youtube.com/embed", "youtu.be", "youtube-nocookie.com", "vimeo.com");
+            boolean thirdPartyFormSignal = hasAny(htmlSnapshot, "typeform.com", "jotform", "hubspot", "mailchimp", "calendly", "forms.gle");
+            boolean ecommerceSignal = hasEcommerceSignal(document, htmlSnapshot);
+            boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", "vilkår", "terms", "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår");
+            boolean returnInfo = hasLinkOrText(document, bodyText, "retur", "angrerett", "reklamasjon", "return", "refund");
+            boolean deliveryInfo = hasLinkOrText(document, bodyText, "frakt", "levering", "shipping", "delivery");
+            boolean cartOrCheckoutSignal = hasAny(htmlSnapshot, "checkout", "cart", "handlekurv", "shopping-cart");
+            boolean platformDomainSignal = hasPlatformDomainSignal(response.url().toString());
+            int placeholderSocialLinkCount = placeholderSocialLinkCount(document);
+            LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
 
             return new WebsiteContentInspectionService.WebsiteContentSnapshot(
                     title,
@@ -99,7 +145,48 @@ public class WebsiteContentSnapshotFetcher {
                     cookieOrTrackingSignal,
                     cookieConsentSignal,
                     externalScriptCount,
-                    externalIframeCount
+                    externalIframeCount,
+                    mainLandmark,
+                    headerLandmark,
+                    footerLandmark,
+                    skippedHeadingLevelCount,
+                    vagueLinkTextCount,
+                    tableCount,
+                    dataTablesWithoutHeadersCount,
+                    inputsWithoutAutocompleteCount,
+                    wrongEmailInputTypeCount,
+                    wrongPhoneInputTypeCount,
+                    outlineNoneSignal,
+                    autoplayMediaSignal,
+                    motionWithoutReducedMotionSignal,
+                    videoCount,
+                    iframeWithoutTitleCount,
+                    response.statusCode(),
+                    response.url().toString(),
+                    hstsHeader,
+                    contentSecurityPolicyHeader,
+                    contentTypeOptionsHeader,
+                    referrerPolicyHeader,
+                    permissionsPolicyHeader,
+                    frameOptionsHeader,
+                    insecureFormActionSignal,
+                    passwordFieldsWithoutAutocompleteCount,
+                    googleAnalyticsSignal,
+                    metaPixelSignal,
+                    hotjarSignal,
+                    claritySignal,
+                    mapsEmbedSignal,
+                    youtubeEmbedSignal,
+                    thirdPartyFormSignal,
+                    ecommerceSignal,
+                    termsLink,
+                    returnInfo,
+                    deliveryInfo,
+                    cartOrCheckoutSignal,
+                    platformDomainSignal,
+                    placeholderSocialLinkCount,
+                    linkCheckResult.checkedCount(),
+                    linkCheckResult.brokenCount()
             );
         } catch (IOException | IllegalArgumentException exception) {
             return null;
@@ -171,5 +258,216 @@ public class WebsiteContentSnapshotFetcher {
                 || normalized.contains("klaro")
                 || normalized.contains("samtykke")
                 || normalized.contains("consent");
+    }
+
+    private static int skippedHeadingLevelCount(Document document) {
+        int previousLevel = 0;
+        int skipped = 0;
+        for (Element heading : document.select("h1, h2, h3, h4, h5, h6")) {
+            int level = Character.digit(heading.tagName().charAt(1), 10);
+            if (previousLevel > 0 && level - previousLevel > 1) {
+                skipped++;
+            }
+            previousLevel = level;
+        }
+        return skipped;
+    }
+
+    private static int vagueLinkTextCount(Document document) {
+        return (int) document.select("a[href]").stream()
+                .filter(link -> {
+                    String text = link.text().trim().toLowerCase();
+                    return "her".equals(text)
+                            || "les mer".equals(text)
+                            || "read more".equals(text)
+                            || "more".equals(text)
+                            || "click here".equals(text)
+                            || "klikk her".equals(text);
+                })
+                .count();
+    }
+
+    private static int dataTablesWithoutHeadersCount(Document document) {
+        return (int) document.select("table").stream()
+                .filter(table -> table.select("th, thead").isEmpty())
+                .count();
+    }
+
+    private static int inputsWithoutAutocompleteCount(Document document) {
+        return (int) document.select("input:not([type=hidden])").stream()
+                .filter(WebsiteContentSnapshotFetcher::isPersonalDataInput)
+                .filter(input -> attrOrNull(input, "autocomplete") == null)
+                .count();
+    }
+
+    private static int wrongInputTypeCount(Document document, String expectedType, String... identifiers) {
+        return (int) document.select("input:not([type=hidden])").stream()
+                .filter(input -> {
+                    String combined = (
+                            input.attr("name") + " "
+                                    + input.attr("id") + " "
+                                    + input.attr("placeholder") + " "
+                                    + input.attr("aria-label")
+                    ).toLowerCase();
+                    for (String identifier : identifiers) {
+                        if (combined.contains(identifier)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .filter(input -> !expectedType.equalsIgnoreCase(input.attr("type")))
+                .count();
+    }
+
+    private static boolean isPersonalDataInput(Element input) {
+        String combined = (
+                input.attr("name") + " "
+                        + input.attr("id") + " "
+                        + input.attr("placeholder") + " "
+                        + input.attr("aria-label")
+        ).toLowerCase();
+        return combined.contains("name")
+                || combined.contains("navn")
+                || combined.contains("email")
+                || combined.contains("epost")
+                || combined.contains("e-post")
+                || combined.contains("tel")
+                || combined.contains("telefon")
+                || combined.contains("phone")
+                || combined.contains("mobil")
+                || combined.contains("address")
+                || combined.contains("adresse");
+    }
+
+    private static boolean hasMotionSignalWithoutReducedMotion(String html) {
+        String normalized = html == null ? "" : html.toLowerCase();
+        boolean hasMotionSignal = normalized.contains("animation:")
+                || normalized.contains("transition:")
+                || normalized.contains("carousel")
+                || normalized.contains("parallax")
+                || normalized.contains("scrolltrigger")
+                || normalized.contains("gsap");
+        return hasMotionSignal && !normalized.contains("prefers-reduced-motion");
+    }
+
+    private static boolean hasHeader(Map<String, String> headers, String headerName) {
+        return headers.keySet().stream().anyMatch(key -> key.equalsIgnoreCase(headerName));
+    }
+
+    private static boolean hasAny(String value, String... needles) {
+        String normalized = value == null ? "" : value.toLowerCase(Locale.ROOT);
+        for (String needle : needles) {
+            if (normalized.contains(needle.toLowerCase(Locale.ROOT))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasLinkOrText(Document document, String bodyText, String... needles) {
+        String combined = (bodyText == null ? "" : bodyText) + " " + document.select("a[href]").eachAttr("href");
+        return hasAny(combined, needles);
+    }
+
+    private static boolean hasEcommerceSignal(Document document, String html) {
+        return hasAny(html, "shopify", "woocommerce", "klarna", "vipps", "stripe", "nets", "checkout", "handlekurv")
+                || document.selectFirst("button:contains(Kjøp), button:contains(Bestill), a:contains(Legg i handlekurv), a[href*=checkout], form[action*=checkout]") != null;
+    }
+
+    private static boolean hasPlatformDomainSignal(String url) {
+        String normalized = url == null ? "" : url.toLowerCase(Locale.ROOT);
+        return normalized.contains("wixsite.com")
+                || normalized.contains("wordpress.com")
+                || normalized.contains("webflow.io")
+                || normalized.contains("squarespace.com")
+                || normalized.contains("myshopify.com")
+                || normalized.contains("business.site");
+    }
+
+    private static int placeholderSocialLinkCount(Document document) {
+        return (int) document.select("a[href]").stream()
+                .filter(link -> {
+                    String href = link.attr("href").toLowerCase(Locale.ROOT);
+                    boolean socialHost = href.contains("facebook.com")
+                            || href.contains("instagram.com")
+                            || href.contains("linkedin.com")
+                            || href.contains("tiktok.com")
+                            || href.contains("youtube.com");
+                    return socialHost && (href.endsWith("#")
+                            || href.contains("your")
+                            || href.contains("username")
+                            || href.contains("profile")
+                            || href.contains("example"));
+                })
+                .count();
+    }
+
+    private static LinkCheckResult checkInternalLinks(Document document, String baseUrl) {
+        URI baseUri = URI.create(baseUrl);
+        Set<String> links = document.select("a[href]").stream()
+                .map(link -> link.attr("abs:href"))
+                .filter(href -> !href.isBlank())
+                .filter(href -> isHttpUrl(href))
+                .filter(href -> sameHost(baseUri, href))
+                .filter(href -> !href.contains("#"))
+                .limit(8)
+                .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
+
+        int broken = 0;
+        for (String link : links) {
+            if (isBrokenLink(link)) {
+                broken++;
+            }
+        }
+        return new LinkCheckResult(links.size(), broken);
+    }
+
+    private static boolean isHttpUrl(String href) {
+        return href.startsWith("http://") || href.startsWith("https://");
+    }
+
+    private static boolean sameHost(URI baseUri, String href) {
+        try {
+            URI uri = URI.create(href);
+            return uri.getHost() != null && uri.getHost().equalsIgnoreCase(baseUri.getHost());
+        } catch (IllegalArgumentException exception) {
+            return false;
+        }
+    }
+
+    private static boolean isBrokenLink(String url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setInstanceFollowRedirects(true);
+            connection.setConnectTimeout(1200);
+            connection.setReadTimeout(1200);
+            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            int status = connection.getResponseCode();
+            if (status == HttpURLConnection.HTTP_BAD_METHOD) {
+                return isBrokenLinkWithGet(url);
+            }
+            return status >= 400;
+        } catch (IOException | IllegalArgumentException exception) {
+            return false;
+        }
+    }
+
+    private static boolean isBrokenLinkWithGet(String url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+            connection.setRequestMethod("GET");
+            connection.setInstanceFollowRedirects(true);
+            connection.setConnectTimeout(1200);
+            connection.setReadTimeout(1200);
+            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            return connection.getResponseCode() >= 400;
+        } catch (IOException | IllegalArgumentException exception) {
+            return false;
+        }
+    }
+
+    private record LinkCheckResult(int checkedCount, int brokenCount) {
     }
 }

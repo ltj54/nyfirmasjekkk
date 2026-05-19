@@ -74,7 +74,7 @@ Du får:
 Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag til {{recipientPagePossessive}} side, helt uforpliktende.
+Jeg kan sende et konkret forslag hvis det er interessant.
 
 Mvh  
 {{senderName}}  
@@ -96,7 +96,7 @@ Hvis dere trenger hjelp, kan jeg sette opp eller rydde opp i en nettside med kon
 Eksempel:
 {{senderWebsite}}
 
-Jeg kan gjerne ta en rask sjekk og sende et konkret forslag.
+Jeg kan sende et konkret forslag hvis det er interessant.
 
 Mvh  
 {{senderName}}  
@@ -111,13 +111,13 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Jeg tok en rask titt og ser at siden allerede er på plass. Samtidig kan det kanskje være mulig å gjøre presentasjonen litt tydeligere for nye kunder.
+Jeg tok en rask titt på nettsiden og kan gjerne sende et lite forslag til hvordan den kan gjøres tydeligere og enklere å bruke.
 
 Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Jeg kan gjerne sende et konkret forslag til hvordan siden kan gjøres mer oversiktlig.
+Jeg kan sende et konkret forslag hvis det er interessant.
 
 Eksempel:
 {{senderWebsite}}
@@ -133,7 +133,7 @@ Hei {{greeting}},
 
 Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
 
-Jeg kan sende et konkret forslag til en ryddig nettside med kontaktinfo, kort presentasjon og tydelig kontaktvei.
+Jeg kan sende et konkret forslag til en ryddig nettside med kontaktinfo, kort presentasjon og tydelig kontaktvei hvis det er interessant.
 
 Eksempel:
 {{senderWebsite}}
@@ -164,7 +164,7 @@ Du får:
 Eksempel:
 https://ltj-production.no/
 
-Jeg kan sende et konkret forslag til deres side, helt uforpliktende.
+Jeg kan sende et konkret forslag hvis det er interessant.
 
 Mvh  
 Lars Johannessen  
