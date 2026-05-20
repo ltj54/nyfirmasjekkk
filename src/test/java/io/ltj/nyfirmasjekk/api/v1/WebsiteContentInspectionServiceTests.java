@@ -41,6 +41,23 @@ class WebsiteContentInspectionServiceTests {
         assertThat(ogMatch.matched()).isTrue();
     }
 
+    @Test
+    void teknologisporFinnerEmergent() {
+        String html = """
+                <html>
+                <head>
+                  <meta name="description" content="A product of emergent.sh">
+                  <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
+                </head>
+                <body>
+                  <a id="emergent-badge" href="https://app.emergent.sh/">Made with Emergent</a>
+                </body>
+                </html>
+                """;
+
+        assertThat(WebsiteContentSnapshotFetcher.detectBuilder(null, html)).isEqualTo("Emergent");
+    }
+
     private static final class StubWebsiteContentInspectionService extends WebsiteContentInspectionService {
         private final WebsiteContentSnapshot snapshot;
 

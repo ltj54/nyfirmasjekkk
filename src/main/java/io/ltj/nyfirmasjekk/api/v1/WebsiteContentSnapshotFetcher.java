@@ -79,7 +79,8 @@ public class WebsiteContentSnapshotFetcher {
             int externalIframeCount = document.select("iframe[src^=http]").size();
             boolean mainLandmark = document.selectFirst("main, [role=main]") != null;
             boolean headerLandmark = document.selectFirst("header, [role=banner]") != null;
-            boolean footerLandmark = document.selectFirst("footer, [role=contentinfo]") != null;
+            boolean footerLandmark = document.selectFirst("footer, [role=contentinfo], #footer, .footer, [class*=footer], [id*=footer]") != null
+                    || hasFooterContentSignal(document, bodyText);
             int skippedHeadingLevelCount = skippedHeadingLevelCount(document);
             int vagueLinkTextCount = vagueLinkTextCount(document);
             int tableCount = document.select("table").size();
@@ -109,12 +110,18 @@ public class WebsiteContentSnapshotFetcher {
             boolean youtubeEmbedSignal = hasAny(htmlSnapshot, "youtube.com/embed", "youtu.be", "youtube-nocookie.com", "vimeo.com");
             boolean thirdPartyFormSignal = hasAny(htmlSnapshot, "typeform.com", "jotform", "hubspot", "mailchimp", "calendly", "forms.gle");
             boolean ecommerceSignal = hasEcommerceSignal(document, htmlSnapshot);
-            boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", "vilkår", "terms", "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår");
-            boolean returnInfo = hasLinkOrText(document, bodyText, "retur", "angrerett", "reklamasjon", "return", "refund");
-            boolean deliveryInfo = hasLinkOrText(document, bodyText, "frakt", "levering", "shipping", "delivery");
+            boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", "vilkår", "villkor", "terms", "policy", "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår", "kopvillkor", "köpvillkor", "allmanna villkor", "allmänna villkor");
+            boolean returnInfo = hasLinkOrText(document, bodyText, "retur", "angrerett", "angerratt", "ångerrätt", "reklamasjon", "reklamation", "return", "refund", "aterbetalning", "återbetalning", "byte");
+            boolean deliveryInfo = hasLinkOrText(document, bodyText, "frakt", "levering", "leverans", "shipping", "delivery");
             boolean cartOrCheckoutSignal = hasAny(htmlSnapshot, "checkout", "cart", "handlekurv", "shopping-cart");
             boolean platformDomainSignal = hasPlatformDomainSignal(response.url().toString());
             int placeholderSocialLinkCount = placeholderSocialLinkCount(document);
+            boolean cloudflareEmailProtectionSignal = hasAny(htmlSnapshot, "/cdn-cgi/l/email-protection", "data-cfemail");
+            boolean loadingOverlaySignal = hasAny(htmlSnapshot, "ett ögonblick", "ett ogonblick", "loading icon", "please wait", "laddar", "loader");
+            boolean visibleDiscountCodeSignal = hasAny(htmlSnapshot, "discount=", "coupon=", "rabattkode", "rabattkod", "promo code");
+            boolean paymentLogoSignal = hasAny(htmlSnapshot, "visa", "mastercard", "apple pay", "klarna", "vipps");
+            boolean paymentTrustInfoSignal = hasAny(bodyText + " " + htmlSnapshot, "sikker betaling", "trygg betaling", "secure payment", "ssl", "kryptert", "säker betalning", "saker betalning", "safe checkout");
+            boolean newsletterFormSignal = hasAny(bodyText + " " + htmlSnapshot, "newsletter", "nyhetsbrev", "prenumerera", "subscribe");
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
 
             return new WebsiteContentInspectionService.WebsiteContentSnapshot(
@@ -185,6 +192,12 @@ public class WebsiteContentSnapshotFetcher {
                     cartOrCheckoutSignal,
                     platformDomainSignal,
                     placeholderSocialLinkCount,
+                    cloudflareEmailProtectionSignal,
+                    loadingOverlaySignal,
+                    visibleDiscountCodeSignal,
+                    paymentLogoSignal,
+                    paymentTrustInfoSignal,
+                    newsletterFormSignal,
                     linkCheckResult.checkedCount(),
                     linkCheckResult.brokenCount()
             );
@@ -209,8 +222,11 @@ public class WebsiteContentSnapshotFetcher {
         return value.isBlank() ? null : value;
     }
 
-    private static String detectBuilder(String generator, String html) {
+    static String detectBuilder(String generator, String html) {
         String combined = ((generator == null ? "" : generator) + " " + (html == null ? "" : html)).toLowerCase();
+        if (combined.contains("emergent.sh") || combined.contains("made with emergent") || combined.contains("a product of emergent")) {
+            return "Emergent";
+        }
         if (combined.contains("webflow")) {
             return "Webflow";
         }
@@ -368,6 +384,27 @@ public class WebsiteContentSnapshotFetcher {
     private static boolean hasLinkOrText(Document document, String bodyText, String... needles) {
         String combined = (bodyText == null ? "" : bodyText) + " " + document.select("a[href]").eachAttr("href");
         return hasAny(combined, needles);
+    }
+
+    private static boolean hasFooterContentSignal(Document document, String bodyText) {
+        String combined = (bodyText == null ? "" : bodyText)
+                + " " + document.select("a[href]").eachText()
+                + " " + document.select("a[href]").eachAttr("href");
+        return hasAny(combined,
+                "copyright",
+                "kontakt",
+                "contact",
+                "personvern",
+                "privacy",
+                "villkor",
+                "vilkår",
+                "policy",
+                "frakt",
+                "leverans",
+                "retur",
+                "visa",
+                "mastercard",
+                "apple pay");
     }
 
     private static boolean hasEcommerceSignal(Document document, String html) {

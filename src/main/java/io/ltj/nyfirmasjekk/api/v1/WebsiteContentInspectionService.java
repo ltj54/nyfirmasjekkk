@@ -253,6 +253,12 @@ public class WebsiteContentInspectionService {
             boolean cartOrCheckoutSignal,
             boolean platformDomainSignal,
             int placeholderSocialLinkCount,
+            boolean cloudflareEmailProtectionSignal,
+            boolean loadingOverlaySignal,
+            boolean visibleDiscountCodeSignal,
+            boolean paymentLogoSignal,
+            boolean paymentTrustInfoSignal,
+            boolean newsletterFormSignal,
             int checkedInternalLinkCount,
             int brokenInternalLinkCount
     ) {
@@ -281,7 +287,9 @@ public class WebsiteContentInspectionService {
                     false, 0,
                     false, false, false, false, false, false, false,
                     false, false, false, false, false, false,
-                    0, 0, 0);
+                    0,
+                    false, false, false, false, false, false,
+                    0, 0);
         }
 
         public WebsiteContentSnapshot(String title, String bodyText) {

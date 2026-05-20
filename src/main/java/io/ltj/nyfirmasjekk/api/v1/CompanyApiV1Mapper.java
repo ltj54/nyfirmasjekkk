@@ -766,7 +766,7 @@ public class CompanyApiV1Mapper {
     private void addTrustSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, CompanyCheck companyCheck, EnhetResponse enhet) {
         String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
         String orgNumber = companyCheck.organisasjonsnummer();
-        if (hasText(orgNumber) && !text.contains(orgNumber) && !text.contains(formatOrgNumberWithSpaces(orgNumber))) {
+        if (hasText(orgNumber) && !hasVisibleOrganizationIdentifier(text, orgNumber, companyCheck, enhet)) {
             signals.add(new WebsiteQualitySignal(
                     "MISSING_ORG_NUMBER",
                     "Mangler org.nr. på siden",
@@ -849,7 +849,14 @@ public class CompanyApiV1Mapper {
             ));
         }
 
-        if (hasText(enhet.epostadresse()) && EMAIL_PATTERN.matcher(rawBody + " " + rawHtml).find() && !rawHtml.toLowerCase(Locale.ROOT).contains("mailto:")) {
+        if (snapshot.cloudflareEmailProtectionSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "CLOUDFLARE_EMAIL_PROTECTION",
+                    "Skjult e-postadresse",
+                    "E-post ser ut til å være skjult via Cloudflare email protection. Det kan redusere spam, men gjør også e-post mindre tilgjengelig for brukere uten JavaScript, skjermleser/noscript og enkel kopiering.",
+                    "INFO"
+            ));
+        } else if (hasText(enhet.epostadresse()) && EMAIL_PATTERN.matcher(rawBody + " " + rawHtml).find() && !rawHtml.toLowerCase(Locale.ROOT).contains("mailto:")) {
             signals.add(new WebsiteQualitySignal(
                     "EMAIL_NOT_CLICKABLE",
                     "E-post er ikke klikkbar",
@@ -894,6 +901,33 @@ public class CompanyApiV1Mapper {
             ));
         }
 
+        if (snapshot.loadingOverlaySignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "CLIENT_LOADING_OVERLAY",
+                    "Tung klientlasting",
+                    "Siden har spor av lasteoverlay eller ventetekst. Det kan tyde på tung klient-side rendering og bør sjekkes for mobilopplevelse, LCP og førsteinntrykk.",
+                    "INFO"
+            ));
+        }
+
+        if (snapshot.visibleDiscountCodeSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "VISIBLE_DISCOUNT_CODE",
+                    "Synlig rabattkode",
+                    "Rabattkode ser ut til å ligge synlig i URL eller HTML. Det er ikke en sikkerhetsfeil i seg selv, men kan gjøre kampanjer lettere å dele og gjenbruke ukontrollert.",
+                    "INFO"
+            ));
+        }
+
+        if (snapshot.newsletterFormSignal() && snapshot.unlabeledFormControlCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "NEWSLETTER_FORM_LABEL_RISK",
+                    "Nyhetsbrevskjema bør sjekkes",
+                    "Siden har spor av nyhetsbrevskjema og skjemafelt uten tydelig label/aria-label. Dette bør sjekkes for tilgjengelighet og brukervennlighet.",
+                    "INFO"
+            ));
+        }
+
         if (snapshot.ecommerceSignal()) {
             addCommerceSignals(signals, snapshot);
         }
@@ -921,6 +955,14 @@ public class CompanyApiV1Mapper {
                     "COMMERCE_DELIVERY_INFO_MISSING",
                     "Mangler leveringsinfo",
                     "Siden har tegn på handlekurv eller checkout, men vi fant ikke tydelig leverings- eller fraktinformasjon.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.paymentLogoSignal() && !snapshot.paymentTrustInfoSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "PAYMENT_TRUST_INFO_MISSING",
+                    "Betalingstillit bør sjekkes",
+                    "Siden viser betalingsmerker eller betalingsspor, men vi fant ikke tydelig tekst om sikker betaling. Det er ikke nødvendigvis feil, men bør vurderes for nettbutikk-tillit.",
                     "INFO"
             ));
         }
@@ -962,6 +1004,19 @@ public class CompanyApiV1Mapper {
     private boolean isHealthOrMedicalSegment(EnhetResponse enhet) {
         String code = normalizedNaceCode(enhet);
         return startsWithAny(code, "86", "88") || code.startsWith("96.04");
+    }
+
+    private boolean hasLikelySwedishContent(WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        String rawText = ((snapshot.title() == null ? "" : snapshot.title()) + " "
+                + (snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " "
+                + (snapshot.html() == null ? "" : snapshot.html())).toLowerCase(Locale.ROOT);
+        return rawText.contains("villkor")
+                || rawText.contains("köp")
+                || rawText.contains("prenumerera")
+                || rawText.contains("leverans")
+                || rawText.contains("moms")
+                || rawText.contains("organisationsnummer")
+                || rawText.contains("ett ögonblick");
     }
 
     private String normalizedNaceCode(EnhetResponse enhet) {
@@ -1067,6 +1122,13 @@ public class CompanyApiV1Mapper {
                     "HTML-språk er ikke satt. Dette er et UU-signal som bør sjekkes manuelt.",
                     "INFO"
             ));
+        } else if (hasLikelySwedishContent(snapshot) && !snapshot.language().toLowerCase(Locale.ROOT).startsWith("sv")) {
+            signals.add(new WebsiteQualitySignal(
+                    "LANGUAGE_MISMATCH_RISK",
+                    "Mulig feil språkmerking",
+                    "Siden ser ut til å ha svensk innhold, men HTML-språket ser ikke ut til å være satt til svensk. Feil lang-attributt kan gi dårligere skjermleseropplevelse.",
+                    "INFO"
+            ));
         }
         if (snapshot.imageCount() > 0 && snapshot.imagesWithoutAlt() > 0) {
             signals.add(new WebsiteQualitySignal(
@@ -1103,8 +1165,8 @@ public class CompanyApiV1Mapper {
         if (!snapshot.headerLandmark() || !snapshot.footerLandmark()) {
             signals.add(new WebsiteQualitySignal(
                     "WEAK_PAGE_LANDMARKS",
-                    "Svak sidestruktur",
-                    "Siden ser ut til å mangle tydelig header- eller footer-struktur. Slike landemerker gjør siden enklere å orientere seg i.",
+                    "Mangler semantiske landemerker",
+                    "Siden kan ha visuell header eller footer, men HTML-en ser ut til å mangle tydelige semantiske header-/footer-landemerker. Slike landemerker gjør siden enklere å orientere seg i for skjermleser og tastaturbrukere.",
                     "INFO"
             ));
         }
@@ -1281,7 +1343,14 @@ public class CompanyApiV1Mapper {
     private void addPrivacySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
         boolean hasContactForm = snapshot.formControlCount() > 0 || text.contains("send melding") || text.contains("kontakt oss");
-        if (hasContactForm && !snapshot.privacyLink()) {
+        if (hasContactForm && !snapshot.privacyLink() && snapshot.termsLink()) {
+            signals.add(new WebsiteQualitySignal(
+                    "PRIVACY_LINK_REVIEW",
+                    "Personvernlenke bør verifiseres",
+                    "Siden ser ut til å samle inn kontaktdata, og vi fant en generell vilkår-/policylenke. Innholdet bak lenken bør verifiseres manuelt for personvern, skjema og cookies.",
+                    "INFO"
+            ));
+        } else if (hasContactForm && !snapshot.privacyLink()) {
             signals.add(new WebsiteQualitySignal(
                     "MISSING_PRIVACY_NOTICE",
                     "Mangler synlig personverninfo",
@@ -1491,6 +1560,9 @@ public class CompanyApiV1Mapper {
         if (normalizedBuilder.contains("wix") || normalizedBuilder.contains("squarespace") || normalizedBuilder.contains("webflow") || normalizedBuilder.contains("framer")) {
             return builder + " er normalt en hostet plattform med løpende måneds-/årsabonnement. Det kan være relevant å vurdere kostnad, eierskap og hvor lett siden er å videreutvikle.";
         }
+        if (normalizedBuilder.contains("emergent")) {
+            return "Emergent-spor betyr at siden trolig er bygget eller publisert via en AI-/appbyggerplattform. Eierskap, videreutvikling, hosting og vedlikehold bør vurderes manuelt.";
+        }
         if (normalizedBuilder.contains("wordpress")) {
             return "WordPress kan være rimelig å drifte, men totalkostnaden avhenger ofte av hosting, tema, plugins, sikkerhet og vedlikehold.";
         }
@@ -1543,6 +1615,32 @@ public class CompanyApiV1Mapper {
                 .filter(token -> !Set.of("annen", "andre", "virksomhet", "tjenester", "arbeid", "egen", "leid").contains(token))
                 .limit(4)
                 .toList();
+    }
+
+    private boolean hasVisibleOrganizationIdentifier(String text, String orgNumber, CompanyCheck companyCheck, EnhetResponse enhet) {
+        if (text.contains(orgNumber) || text.contains(formatOrgNumberWithSpaces(orgNumber))) {
+            return true;
+        }
+        if (!isForeignRegisteredUnit(companyCheck, enhet)) {
+            return false;
+        }
+        return text.matches("(?s).*\\b\\d{6}\\s\\d{4}\\b.*")
+                || text.matches("(?s).*\\bse\\d{10,12}\\b.*")
+                || text.contains("organisationsnummer")
+                || text.contains("organisasjonsnummer")
+                || text.contains("mva")
+                || text.contains("vat");
+    }
+
+    private boolean isForeignRegisteredUnit(CompanyCheck companyCheck, EnhetResponse enhet) {
+        String organizationForm = enhet != null && enhet.organisasjonsform() != null
+                ? enhet.organisasjonsform().kode()
+                : "";
+        String companyName = companyCheck == null || companyCheck.navn() == null ? "" : companyCheck.navn().toUpperCase(Locale.ROOT);
+        return "NUF".equalsIgnoreCase(organizationForm)
+                || companyName.contains(" AB")
+                || companyName.endsWith(" AB")
+                || companyName.contains(" A/S");
     }
 
     private String formatOrgNumberWithSpaces(String orgNumber) {

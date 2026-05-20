@@ -4,15 +4,34 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 434
-- Sendt: 340
+- Antall hendelser: 453
+- Sendt: 359
 - Angret: 7
-- Aktive kontaktede selskaper: 337
+- Aktive kontaktede selskaper: 356
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-20 | 937240406 | DØDSBO OG EDELMETALL OMSETNING AS | AS | email | website-improvement-offer |
+| 2026-05-20 | 937605315 | MONICA NILSEN | ENK | email | website-improvement-offer |
+| 2026-05-20 | 837734452 | AOK NÆRKONTAKTFORENINGEN | FLI | email | website-improvement-offer |
+| 2026-05-20 | 937741170 | SMAKBOX AB | UTLA | email | website-improvement-offer |
+| 2026-05-20 | 937649452 | LEADU FRØYSA | ENK | email | website-offer |
+| 2026-05-20 | 937650094 | ROSETTSPESIALISTEN KRISTINE AKSLAND | ENK | email | website-offer |
+| 2026-05-20 | 937646135 | KJELL ARNE OLSEN LØYPEMÅLING | ENK | email | website-offer |
+| 2026-05-20 | 937647220 | LIDIANE FAGERHEIM RENHOLD | ENK | email | website-offer |
+| 2026-05-20 | 937647042 | NATLAND CONSULTING | ENK | email | website-offer |
+| 2026-05-20 | 937402384 | MILJØ SØNVISEN | ENK | email | website-offer |
+| 2026-05-20 | 937647905 | MALMIN VAKTMESTERTJENESTER | ENK | email | website-offer |
+| 2026-05-20 | 937647999 | JENSSEN DRIFT & SERVICE | ENK | email | website-offer |
+| 2026-05-20 | 937647891 | JANE MYHRE FOTPLEIE, KURS OG OPPLÆRING | ENK | email | website-offer |
+| 2026-05-20 | 937548281 | INSIGHT BY HAUGAN | ENK | email | website-offer |
+| 2026-05-20 | 937648170 | HANS OLA RØKSUND FORVALTNING | ENK | email | website-offer |
+| 2026-05-20 | 937697821 | BALANSEN JOHANSEN | ENK | email | website-offer |
+| 2026-05-20 | 937648618 | ARNE MOE LYSAKER - PROSJEKTLEDELSE, UNDERVISNING OG SAMSKAPING | ENK | email | website-offer |
+| 2026-05-20 | 937732007 | ASOY ROJHALATI KURDISTAN (ARK) | FLI | email | website-offer |
+| 2026-05-20 | 837648432 | AMALIE KRISTENSEN MØRNER SPORT | ENK | email | website-offer |
 | 2026-05-19 | 937730772 | SAMEIET BLOMSTERENGEN | ESEK | email | website-offer |
 | 2026-05-19 | 929203895 | TJELDSUND SENTERPARTI | FLI | email | website-offer |
 | 2026-05-19 | 937729979 | HORVATHOVA BYGG OG ANLEGG AS | AS | email | website-offer |
@@ -355,6 +374,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-20 10:33 | sent | 937240406 | DØDSBO OG EDELMETALL OMSETNING AS | AS | email | - |
+| 2026-05-20 10:30 | sent | 937605315 | MONICA NILSEN | ENK | email | - |
+| 2026-05-20 10:13 | sent | 837734452 | AOK NÆRKONTAKTFORENINGEN | FLI | email | - |
+| 2026-05-20 10:12 | sent | 937741170 | SMAKBOX AB | UTLA | email | - |
+| 2026-05-20 09:43 | sent | 937649452 | LEADU FRØYSA | ENK | email | - |
+| 2026-05-20 09:42 | sent | 937650094 | ROSETTSPESIALISTEN KRISTINE AKSLAND | ENK | email | - |
+| 2026-05-20 09:42 | sent | 937646135 | KJELL ARNE OLSEN LØYPEMÅLING | ENK | email | - |
+| 2026-05-20 09:41 | sent | 937647220 | LIDIANE FAGERHEIM RENHOLD | ENK | email | - |
+| 2026-05-20 09:41 | sent | 937647042 | NATLAND CONSULTING | ENK | email | - |
+| 2026-05-20 09:40 | sent | 937402384 | MILJØ SØNVISEN | ENK | email | - |
+| 2026-05-20 09:39 | sent | 937647905 | MALMIN VAKTMESTERTJENESTER | ENK | email | - |
+| 2026-05-20 09:39 | sent | 937647999 | JENSSEN DRIFT & SERVICE | ENK | email | - |
+| 2026-05-20 09:39 | sent | 937647891 | JANE MYHRE FOTPLEIE, KURS OG OPPLÆRING | ENK | email | - |
+| 2026-05-20 09:38 | sent | 937548281 | INSIGHT BY HAUGAN | ENK | email | - |
+| 2026-05-20 09:38 | sent | 937648170 | HANS OLA RØKSUND FORVALTNING | ENK | email | - |
+| 2026-05-20 09:37 | sent | 937697821 | BALANSEN JOHANSEN | ENK | email | - |
+| 2026-05-20 09:37 | sent | 937648618 | ARNE MOE LYSAKER - PROSJEKTLEDELSE, UNDERVISNING OG SAMSKAPING | ENK | email | - |
+| 2026-05-20 09:36 | sent | 937732007 | ASOY ROJHALATI KURDISTAN (ARK) | FLI | email | - |
+| 2026-05-20 09:35 | sent | 837648432 | AMALIE KRISTENSEN MØRNER SPORT | ENK | email | - |
 | 2026-05-19 10:57 | sent | 937730772 | SAMEIET BLOMSTERENGEN | ESEK | email | - |
 | 2026-05-19 10:57 | sent | 929203895 | TJELDSUND SENTERPARTI | FLI | email | - |
 | 2026-05-19 10:56 | sent | 937729979 | HORVATHOVA BYGG OG ANLEGG AS | AS | email | - |
