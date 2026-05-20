@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 453
-- Sendt: 359
+- Antall hendelser: 458
+- Sendt: 364
 - Angret: 7
-- Aktive kontaktede selskaper: 356
+- Aktive kontaktede selskaper: 360
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-20 | 937729987 | DIGITALIT AS | AS | email | website-offer |
+| 2026-05-20 | 984267363 | DIGITALIT Torkild Engebrethsen | ENK | email | website-improvement-offer |
+| 2026-05-20 | 937742770 | KRISTENSEN DRUM ACADEMY | ENK | email | website-offer |
+| 2026-05-20 | 937746474 | ELZA KAMALDINA MANICURE | ENK | email | website-offer |
 | 2026-05-20 | 937240406 | DØDSBO OG EDELMETALL OMSETNING AS | AS | email | website-improvement-offer |
 | 2026-05-20 | 937605315 | MONICA NILSEN | ENK | email | website-improvement-offer |
 | 2026-05-20 | 837734452 | AOK NÆRKONTAKTFORENINGEN | FLI | email | website-improvement-offer |
@@ -374,6 +378,11 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-20 17:20 | sent | 937729987 | DIGITALIT AS | AS | email | - |
+| 2026-05-20 17:11 | sent | 984267363 | DIGITALIT Torkild Engebrethsen | ENK | email | Sendt fra nettsidesjekk: https://digitalit.no/ |
+| 2026-05-20 17:10 | sent | 984267363 | DIGITALIT Torkild Engebrethsen | ENK | email | Sendt fra nettsidesjekk: https://digitalit.no/ |
+| 2026-05-20 17:04 | sent | 937742770 | KRISTENSEN DRUM ACADEMY | ENK | email | - |
+| 2026-05-20 17:04 | sent | 937746474 | ELZA KAMALDINA MANICURE | ENK | email | - |
 | 2026-05-20 10:33 | sent | 937240406 | DØDSBO OG EDELMETALL OMSETNING AS | AS | email | - |
 | 2026-05-20 10:30 | sent | 937605315 | MONICA NILSEN | ENK | email | - |
 | 2026-05-20 10:13 | sent | 837734452 | AOK NÆRKONTAKTFORENINGEN | FLI | email | - |

@@ -731,6 +731,14 @@ export function CompanyCheckShell() {
   }, [backendReady, selectedCompany]);
 
   useEffect(() => {
+    if (!backendReady || !selectedWebsiteInspection?.brregMatches?.length) {
+      return;
+    }
+
+    void fetchOutreachStatuses(selectedWebsiteInspection.brregMatches.map((match) => match.orgNumber));
+  }, [backendReady, selectedWebsiteInspection]);
+
+  useEffect(() => {
     if (!selectedCompany) {
       document.body.style.overflow = "";
       return;
@@ -1332,7 +1340,15 @@ export function CompanyCheckShell() {
               >
                 <WebsiteInspectionDetail
                   inspection={selectedWebsiteInspection}
+                  outreachStatusByOrg={outreachStatusByOrg}
                   onBack={() => setSelectedWebsiteInspection(null)}
+                  onOutreachEmailSent={(status) => {
+                    setOutreachStatusByOrg((current) => ({
+                      ...current,
+                      [status.orgNumber]: status,
+                    }));
+                    setOutreachEntries((current) => [status, ...current]);
+                  }}
                 />
               </div>
             </div>
@@ -1345,10 +1361,14 @@ export function CompanyCheckShell() {
 
 function WebsiteInspectionDetail({
   inspection,
+  outreachStatusByOrg,
   onBack,
+  onOutreachEmailSent,
 }: {
   inspection: WebsiteInspectionResponse;
+  outreachStatusByOrg: Record<string, OutreachStatus>;
   onBack: () => void;
+  onOutreachEmailSent: (status: OutreachStatus) => void;
 }) {
   return (
     <article className="bg-white">
@@ -1385,7 +1405,12 @@ function WebsiteInspectionDetail({
           </a>
         </div>
         <WebsiteQualityPanel className="mt-6" quality={inspection.websiteQuality} />
-        <BrregWebsiteMatchesPanel inspection={inspection} matches={inspection.brregMatches ?? []} />
+        <BrregWebsiteMatchesPanel
+          inspection={inspection}
+          matches={inspection.brregMatches ?? []}
+          outreachStatusByOrg={outreachStatusByOrg}
+          onOutreachEmailSent={onOutreachEmailSent}
+        />
       </div>
     </article>
   );
@@ -1394,9 +1419,13 @@ function WebsiteInspectionDetail({
 function BrregWebsiteMatchesPanel({
   inspection,
   matches,
+  outreachStatusByOrg,
+  onOutreachEmailSent,
 }: {
   inspection: WebsiteInspectionResponse;
   matches: WebsiteInspectionResponse["brregMatches"];
+  outreachStatusByOrg: Record<string, OutreachStatus>;
+  onOutreachEmailSent: (status: OutreachStatus) => void;
 }) {
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingByOrg, setGeneratingByOrg] = useState<Record<string, boolean>>({});
@@ -1461,8 +1490,11 @@ function BrregWebsiteMatchesPanel({
         }));
         return;
       }
-      const payload = (await response.json()) as { to: string };
+      const payload = (await response.json()) as { to: string; outreachStatus?: OutreachStatus };
       setSentRecipientByOrg((current) => ({ ...current, [match.orgNumber]: payload.to }));
+      if (payload.outreachStatus) {
+        onOutreachEmailSent(payload.outreachStatus);
+      }
     } catch {
       setSendErrorByOrg((current) => ({
         ...current,
@@ -1519,7 +1551,18 @@ function BrregWebsiteMatchesPanel({
               <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
                 {match.matchReason}
               </p>
+              <OutreachCheckbox
+                compact
+                className="mt-4"
+                onToggle={() => undefined}
+                saving={false}
+                status={outreachStatusByOrg[match.orgNumber] ?? null}
+              />
               <div className="mt-4 border-t border-[#D9E2EC] pt-4">
+                <p className="mb-3 text-[12px] leading-5 text-[#52606D]">
+                  Utsending loggføres på <span className="font-semibold text-[#1F2933]">{match.name}</span>
+                  {" "}({match.orgNumber}). Mottaker: {match.email || "ingen e-post registrert"}.
+                </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
                     className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
