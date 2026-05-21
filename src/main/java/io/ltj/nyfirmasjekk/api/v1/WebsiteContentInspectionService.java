@@ -259,6 +259,27 @@ public class WebsiteContentInspectionService {
             boolean paymentLogoSignal,
             boolean paymentTrustInfoSignal,
             boolean newsletterFormSignal,
+            int insecureCookieCount,
+            int cookieWithoutHttpOnlyCount,
+            int cookieWithoutSameSiteCount,
+            boolean adminOrLoginPathSignal,
+            boolean loginFormSignal,
+            boolean fileUploadSignal,
+            int apiEndpointReferenceCount,
+            boolean exposedCmsVersionSignal,
+            boolean httpRedirectsToHttps,
+            boolean tlsCertificateValid,
+            Integer tlsCertificateDaysRemaining,
+            boolean weakHstsHeaderSignal,
+            boolean weakContentSecurityPolicySignal,
+            boolean serverTechnologyHeaderSignal,
+            boolean securityTxtSignal,
+            boolean robotsSensitivePathSignal,
+            boolean spfRecord,
+            boolean dkimRecord,
+            boolean dmarcRecord,
+            boolean spfSoftfailSignal,
+            boolean dmarcPolicyNoneSignal,
             int checkedInternalLinkCount,
             int brokenInternalLinkCount
     ) {
@@ -289,6 +310,9 @@ public class WebsiteContentInspectionService {
                     false, false, false, false, false, false,
                     0,
                     false, false, false, false, false, false,
+                    0, 0, 0,
+                    false, false, false, 0, false, false, false, null,
+                    false, false, false, false, false, false, false, false, false, false,
                     0, 0);
         }
 

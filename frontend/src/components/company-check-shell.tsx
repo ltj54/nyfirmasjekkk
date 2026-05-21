@@ -27,6 +27,7 @@ import type {
   OutreachStatus,
   WebsiteInspectionResponse,
   WebsiteQualityAssessment,
+  WebsiteQualitySignal,
 } from "@/lib/company-check";
 import {
   applyLeadQuickFilters,
@@ -1626,6 +1627,7 @@ function WebsiteQualityPanel({
   quality: WebsiteQualityAssessment;
   className?: string;
 }) {
+  const groupedSignals = groupWebsiteQualitySignals(quality.signals);
   return (
     <div className={`border border-[#D9E2EC] bg-white p-5 ${className}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -1644,23 +1646,105 @@ function WebsiteQualityPanel({
         </span>
       </div>
       <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{quality.summary}</p>
-      {quality.signals.length > 0 ? (
-        <div className="mt-4 grid gap-2">
-          {quality.signals.map((signal) => (
-            <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
-                <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
-                  {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
-                </span>
+      {groupedSignals.length > 0 ? (
+        <div className="mt-4 grid gap-4">
+          {groupedSignals.map((group) => (
+            <div key={group.title}>
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{group.title}</p>
+              <div className="grid gap-2">
+                {group.signals.map((signal) => (
+                  <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
+                      <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
+                        {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
+                  </div>
+                ))}
               </div>
-              <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
             </div>
           ))}
         </div>
       ) : null}
     </div>
   );
+}
+
+function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
+  const groups = [
+    {
+      title: "Viktigste funn",
+      predicate: (signal: WebsiteQualitySignal) => signal.severity === "HIGH" || [
+        "INCOMPLETE_MARKET_OR_CHECKOUT",
+        "TEMPLATE_PLACEHOLDER_CONTENT",
+        "WEAK_HOMEPAGE_STRUCTURE",
+        "FORM_LABEL_RISK",
+        "EMPTY_BUTTON_RISK",
+        "IMAGE_ALT_RISK",
+      ].includes(signal.code),
+    },
+    {
+      title: "Tillit og innhold",
+      predicate: (signal: WebsiteQualitySignal) => [
+        "LEGAL_NAME_NOT_VISIBLE",
+        "MISSING_ORG_NUMBER",
+        "MISSING_ADDRESS_OR_AREA",
+        "MISSING_ABOUT_SECTION",
+        "MISSING_SOCIAL_PROOF",
+        "WEAK_INDUSTRY_RELEVANCE",
+        "GENERIC_SERVICE_TEXT",
+        "MISSING_STRUCTURED_DATA",
+        "VISIBLE_DISCOUNT_CODE",
+      ].includes(signal.code),
+    },
+    {
+      title: "Teknisk sikkerhet og personvern",
+      predicate: (signal: WebsiteQualitySignal) => [
+        "MISSING_HTTPS",
+        "TLS_CERTIFICATE_REVIEW",
+        "TLS_CERTIFICATE_EXPIRING",
+        "HTTP_TO_HTTPS_REDIRECT_REVIEW",
+        "MIXED_CONTENT_RISK",
+        "MISSING_HSTS_HEADER",
+        "WEAK_HSTS_HEADER",
+        "MISSING_CSP_HEADER",
+        "WEAK_CSP_HEADER",
+        "MISSING_REFERRER_POLICY",
+        "MISSING_PERMISSIONS_POLICY",
+        "SERVER_TECH_HEADER_EXPOSED",
+        "SECURITY_TXT_MISSING",
+        "ROBOTS_SENSITIVE_PATHS",
+        "ADMIN_OR_LOGIN_PATH_EXPOSED",
+        "LOGIN_FORM_SECURITY_REVIEW",
+        "FILE_UPLOAD_REVIEW",
+        "API_ENDPOINTS_VISIBLE",
+        "CMS_VERSION_EXPOSED",
+        "EMAIL_SECURITY_DNS_REVIEW",
+        "SPF_POLICY_SOFT",
+        "DMARC_POLICY_NONE",
+        "COOKIE_SECURE_FLAG_MISSING",
+        "COOKIE_HTTPONLY_REVIEW",
+        "COOKIE_SAMESITE_REVIEW",
+        "MISSING_PRIVACY_NOTICE",
+        "COOKIE_CONSENT_RISK",
+      ].includes(signal.code),
+    },
+  ];
+  const used = new Set<string>();
+  const grouped = groups
+    .map((group) => {
+      const groupSignals = signals.filter((signal) => !used.has(signal.code) && group.predicate(signal));
+      groupSignals.forEach((signal) => used.add(signal.code));
+      return { title: group.title, signals: groupSignals };
+    })
+    .filter((group) => group.signals.length > 0);
+  const otherSignals = signals.filter((signal) => !used.has(signal.code));
+  if (otherSignals.length > 0) {
+    grouped.push({ title: "Andre signaler", signals: otherSignals });
+  }
+  return grouped;
 }
 
 function InfoMetric({ label, value }: { label: string; value: string }) {

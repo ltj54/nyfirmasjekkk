@@ -4,15 +4,33 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 458
-- Sendt: 364
+- Antall hendelser: 476
+- Sendt: 382
 - Angret: 7
-- Aktive kontaktede selskaper: 360
+- Aktive kontaktede selskaper: 378
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-21 | 937733747 | NNN I BAMA | FLI | email | website-offer |
+| 2026-05-21 | 937734182 | AUTHORITATIVE NAME SERVER 66 LTD | UTLA | email | website-offer |
+| 2026-05-21 | 937739400 | WHITEOUT SVALBARD AS | AS | email | website-offer |
+| 2026-05-21 | 937530404 | TENKETANK HVALER | FLI | email | website-offer |
+| 2026-05-21 | 937745729 | SHV, STØTTEGRUPPE FOR VERDENS HUNDER. | FLI | email | website-offer |
+| 2026-05-21 | 937741685 | NORRLANDS INDUSTRISERVICE I JUNSELE AB | UTLA | email | website-offer |
+| 2026-05-21 | 837661692 | MARKUS HAMMERØ HAGEN | ENK | email | website-offer |
+| 2026-05-21 | 937705220 | JAYARAM DOSA CORNER | ENK | email | website-offer |
+| 2026-05-21 | 937337612 | INTERNATIONAL ASSEMBLIES OF THE FIRSTBORN, OSLO NORWAY | FLI | email | website-offer |
+| 2026-05-21 | 937657234 | HJEM EKSPERTEN MOUSALI SIRJIE | ENK | email | website-offer |
+| 2026-05-21 | 837657202 | GRO KARINE SIGVARTSEN | ENK | email | website-offer |
+| 2026-05-21 | 937474601 | ERIKSEN LAGER | ENK | email | website-offer |
+| 2026-05-21 | 937661770 | ENA NYSTRØM HOCKEY DEVELOPMENT | ENK | email | website-offer |
+| 2026-05-21 | 937566654 | E. A. FALLET HÅNDTVERKTJENEDTER. | ENK | email | website-offer |
+| 2026-05-21 | 937741480 | BARRAS & AGRI LTD | UTLA | email | website-offer |
+| 2026-05-21 | 937742894 | NSH KONSULT AB | UTLA | email | website-offer |
+| 2026-05-21 | 937742673 | HOLST FISKE | ENK | email | website-offer |
+| 2026-05-21 | 937664737 | KJELE KRAFT JACOBSEN | ENK | email | website-offer |
 | 2026-05-20 | 937729987 | DIGITALIT AS | AS | email | website-offer |
 | 2026-05-20 | 984267363 | DIGITALIT Torkild Engebrethsen | ENK | email | website-improvement-offer |
 | 2026-05-20 | 937742770 | KRISTENSEN DRUM ACADEMY | ENK | email | website-offer |
@@ -378,6 +396,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-21 09:25 | sent | 937733747 | NNN I BAMA | FLI | email | - |
+| 2026-05-21 09:24 | sent | 937734182 | AUTHORITATIVE NAME SERVER 66 LTD | UTLA | email | - |
+| 2026-05-21 09:23 | sent | 937739400 | WHITEOUT SVALBARD AS | AS | email | - |
+| 2026-05-21 09:22 | sent | 937530404 | TENKETANK HVALER | FLI | email | - |
+| 2026-05-21 09:18 | sent | 937745729 | SHV, STØTTEGRUPPE FOR VERDENS HUNDER. | FLI | email | - |
+| 2026-05-21 09:16 | sent | 937741685 | NORRLANDS INDUSTRISERVICE I JUNSELE AB | UTLA | email | - |
+| 2026-05-21 09:14 | sent | 837661692 | MARKUS HAMMERØ HAGEN | ENK | email | - |
+| 2026-05-21 09:13 | sent | 937705220 | JAYARAM DOSA CORNER | ENK | email | - |
+| 2026-05-21 09:13 | sent | 937337612 | INTERNATIONAL ASSEMBLIES OF THE FIRSTBORN, OSLO NORWAY | FLI | email | - |
+| 2026-05-21 09:10 | sent | 937657234 | HJEM EKSPERTEN MOUSALI SIRJIE | ENK | email | - |
+| 2026-05-21 09:09 | sent | 837657202 | GRO KARINE SIGVARTSEN | ENK | email | - |
+| 2026-05-21 09:09 | sent | 937474601 | ERIKSEN LAGER | ENK | email | - |
+| 2026-05-21 09:08 | sent | 937661770 | ENA NYSTRØM HOCKEY DEVELOPMENT | ENK | email | - |
+| 2026-05-21 09:08 | sent | 937566654 | E. A. FALLET HÅNDTVERKTJENEDTER. | ENK | email | - |
+| 2026-05-21 09:07 | sent | 937741480 | BARRAS & AGRI LTD | UTLA | email | - |
+| 2026-05-21 08:55 | sent | 937742894 | NSH KONSULT AB | UTLA | email | - |
+| 2026-05-21 08:18 | sent | 937742673 | HOLST FISKE | ENK | email | - |
+| 2026-05-21 08:09 | sent | 937664737 | KJELE KRAFT JACOBSEN | ENK | email | - |
 | 2026-05-20 17:20 | sent | 937729987 | DIGITALIT AS | AS | email | - |
 | 2026-05-20 17:11 | sent | 984267363 | DIGITALIT Torkild Engebrethsen | ENK | email | Sendt fra nettsidesjekk: https://digitalit.no/ |
 | 2026-05-20 17:10 | sent | 984267363 | DIGITALIT Torkild Engebrethsen | ENK | email | Sendt fra nettsidesjekk: https://digitalit.no/ |

@@ -10,9 +10,15 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.security.cert.X509Certificate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.naming.NamingException;
+import javax.naming.directory.InitialDirContext;
+import javax.net.ssl.HttpsURLConnection;
 
 @Component
 public class WebsiteContentSnapshotFetcher {
@@ -100,6 +106,9 @@ public class WebsiteContentSnapshotFetcher {
             boolean referrerPolicyHeader = hasHeader(headers, "referrer-policy");
             boolean permissionsPolicyHeader = hasHeader(headers, "permissions-policy");
             boolean frameOptionsHeader = hasHeader(headers, "x-frame-options");
+            boolean weakHstsHeaderSignal = weakHstsHeaderSignal(headerValue(headers, "strict-transport-security"));
+            boolean weakContentSecurityPolicySignal = weakContentSecurityPolicySignal(headerValue(headers, "content-security-policy"));
+            boolean serverTechnologyHeaderSignal = hasHeader(headers, "server") || hasHeader(headers, "x-powered-by");
             boolean insecureFormActionSignal = document.selectFirst("form[action^=http://]") != null;
             int passwordFieldsWithoutAutocompleteCount = document.select("input[type=password]:not([autocomplete])").size();
             boolean googleAnalyticsSignal = hasAny(htmlSnapshot, "google-analytics", "googletagmanager", "gtag(");
@@ -122,6 +131,19 @@ public class WebsiteContentSnapshotFetcher {
             boolean paymentLogoSignal = hasAny(htmlSnapshot, "visa", "mastercard", "apple pay", "klarna", "vipps");
             boolean paymentTrustInfoSignal = hasAny(bodyText + " " + htmlSnapshot, "sikker betaling", "trygg betaling", "secure payment", "ssl", "kryptert", "säker betalning", "saker betalning", "safe checkout");
             boolean newsletterFormSignal = hasAny(bodyText + " " + htmlSnapshot, "newsletter", "nyhetsbrev", "prenumerera", "subscribe");
+            int insecureCookieCount = insecureCookieCount(headers, response.url().getProtocol());
+            int cookieWithoutHttpOnlyCount = cookieWithoutAttributeCount(headers, "httponly");
+            int cookieWithoutSameSiteCount = cookieWithoutAttributeCount(headers, "samesite");
+            boolean adminOrLoginPathSignal = hasAdminOrLoginPathSignal(document, htmlSnapshot);
+            boolean loginFormSignal = document.selectFirst("input[type=password], form[action*=login], form[action*=signin], form[action*=wp-login]") != null;
+            boolean fileUploadSignal = document.selectFirst("input[type=file]") != null;
+            int apiEndpointReferenceCount = apiEndpointReferenceCount(document, htmlSnapshot);
+            boolean exposedCmsVersionSignal = hasExposedCmsVersionSignal(generator, htmlSnapshot);
+            DnsSecurityResult dnsSecurityResult = dnsSecurityResult(response.url().getHost());
+            TlsCertificateResult tlsCertificateResult = tlsCertificateResult(response.url().toString());
+            boolean httpRedirectsToHttps = httpRedirectsToHttps(response.url().getHost());
+            boolean securityTxtSignal = hasSecurityTxt(response.url().toString());
+            boolean robotsSensitivePathSignal = robotsSensitivePathSignal(response.url().toString());
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
 
             return new WebsiteContentInspectionService.WebsiteContentSnapshot(
@@ -198,6 +220,27 @@ public class WebsiteContentSnapshotFetcher {
                     paymentLogoSignal,
                     paymentTrustInfoSignal,
                     newsletterFormSignal,
+                    insecureCookieCount,
+                    cookieWithoutHttpOnlyCount,
+                    cookieWithoutSameSiteCount,
+                    adminOrLoginPathSignal,
+                    loginFormSignal,
+                    fileUploadSignal,
+                    apiEndpointReferenceCount,
+                    exposedCmsVersionSignal,
+                    httpRedirectsToHttps,
+                    tlsCertificateResult.valid(),
+                    tlsCertificateResult.daysRemaining(),
+                    weakHstsHeaderSignal,
+                    weakContentSecurityPolicySignal,
+                    serverTechnologyHeaderSignal,
+                    securityTxtSignal,
+                    robotsSensitivePathSignal,
+                    dnsSecurityResult.spf(),
+                    dnsSecurityResult.dkim(),
+                    dnsSecurityResult.dmarc(),
+                    dnsSecurityResult.spfSoftfail(),
+                    dnsSecurityResult.dmarcPolicyNone(),
                     linkCheckResult.checkedCount(),
                     linkCheckResult.brokenCount()
             );
@@ -371,6 +414,36 @@ public class WebsiteContentSnapshotFetcher {
         return headers.keySet().stream().anyMatch(key -> key.equalsIgnoreCase(headerName));
     }
 
+    private static String headerValue(Map<String, String> headers, String headerName) {
+        return headers.entrySet().stream()
+                .filter(entry -> entry.getKey().equalsIgnoreCase(headerName))
+                .map(Map.Entry::getValue)
+                .filter(value -> value != null && !value.isBlank())
+                .findFirst()
+                .orElse("");
+    }
+
+    private static boolean weakHstsHeaderSignal(String hsts) {
+        if (hsts == null || hsts.isBlank()) {
+            return false;
+        }
+        java.util.regex.Matcher matcher = java.util.regex.Pattern
+                .compile("max-age\\s*=\\s*(\\d+)", java.util.regex.Pattern.CASE_INSENSITIVE)
+                .matcher(hsts);
+        return !matcher.find() || Long.parseLong(matcher.group(1)) < 15_552_000L;
+    }
+
+    private static boolean weakContentSecurityPolicySignal(String csp) {
+        if (csp == null || csp.isBlank()) {
+            return false;
+        }
+        String normalized = csp.toLowerCase(Locale.ROOT);
+        return normalized.contains("'unsafe-inline'")
+                || normalized.contains("'unsafe-eval'")
+                || normalized.matches("(?s).*(^|;)\\s*script-src[^;]*\\*.*")
+                || !normalized.contains("frame-ancestors");
+    }
+
     private static boolean hasAny(String value, String... needles) {
         String normalized = value == null ? "" : value.toLowerCase(Locale.ROOT);
         for (String needle : needles) {
@@ -440,6 +513,220 @@ public class WebsiteContentSnapshotFetcher {
                 .count();
     }
 
+    private static int insecureCookieCount(Map<String, String> headers, String protocol) {
+        if (!"https".equalsIgnoreCase(protocol)) {
+            return 0;
+        }
+        return (int) setCookieHeaders(headers).stream()
+                .filter(cookie -> !cookie.toLowerCase(Locale.ROOT).contains("secure"))
+                .count();
+    }
+
+    private static int cookieWithoutAttributeCount(Map<String, String> headers, String attribute) {
+        String normalizedAttribute = attribute.toLowerCase(Locale.ROOT);
+        return (int) setCookieHeaders(headers).stream()
+                .filter(cookie -> !cookie.toLowerCase(Locale.ROOT).contains(normalizedAttribute))
+                .count();
+    }
+
+    private static java.util.List<String> setCookieHeaders(Map<String, String> headers) {
+        return headers.entrySet().stream()
+                .filter(entry -> entry.getKey().equalsIgnoreCase("set-cookie") || entry.getKey().toLowerCase(Locale.ROOT).startsWith("set-cookie"))
+                .map(Map.Entry::getValue)
+                .filter(value -> value != null && !value.isBlank())
+                .toList();
+    }
+
+    private static boolean hasAdminOrLoginPathSignal(Document document, String html) {
+        String links = String.join(" ", document.select("a[href], form[action]").eachAttr("href"))
+                + " " + String.join(" ", document.select("form[action]").eachAttr("action"))
+                + " " + html;
+        return hasAny(links,
+                "/wp-admin",
+                "/wp-login",
+                "/admin",
+                "/administrator",
+                "/user/login",
+                "/login",
+                "/signin",
+                "/dashboard");
+    }
+
+    private static int apiEndpointReferenceCount(Document document, String html) {
+        Set<String> references = new java.util.LinkedHashSet<>();
+        document.select("[href], [src], form[action]").forEach(element -> {
+            addIfApiReference(references, element.attr("href"));
+            addIfApiReference(references, element.attr("src"));
+            addIfApiReference(references, element.attr("action"));
+        });
+        java.util.regex.Matcher matcher = java.util.regex.Pattern
+                .compile("['\"]([^'\"]*(?:/api/|/wp-json/|graphql|rest/)[^'\"]*)['\"]", java.util.regex.Pattern.CASE_INSENSITIVE)
+                .matcher(html == null ? "" : html);
+        while (matcher.find() && references.size() < 20) {
+            addIfApiReference(references, matcher.group(1));
+        }
+        return references.size();
+    }
+
+    private static void addIfApiReference(Set<String> references, String value) {
+        if (value == null || value.isBlank()) {
+            return;
+        }
+        String normalized = value.toLowerCase(Locale.ROOT);
+        if (normalized.contains("/api/")
+                || normalized.contains("/wp-json/")
+                || normalized.contains("graphql")
+                || normalized.contains("/rest/")) {
+            references.add(value);
+        }
+    }
+
+    private static boolean hasExposedCmsVersionSignal(String generator, String html) {
+        String combined = ((generator == null ? "" : generator) + " " + (html == null ? "" : html)).toLowerCase(Locale.ROOT);
+        return combined.matches("(?s).*wordpress\\s+[0-9]+\\.[0-9].*")
+                || combined.matches("(?s).*wp-(?:includes|content)/[^?]+\\?ver=[0-9]+\\.[0-9].*")
+                || combined.matches("(?s).*joomla!?(?:\\s+[0-9]+\\.[0-9])?.*")
+                || combined.matches("(?s).*drupal\\s+[0-9]+\\.[0-9].*");
+    }
+
+    private static DnsSecurityResult dnsSecurityResult(String host) {
+        String domain = registrableDomain(host);
+        if (domain == null) {
+            return new DnsSecurityResult(false, false, false, false, false);
+        }
+        java.util.List<String> spfRecords = txtRecords(domain).stream()
+                .filter(record -> record.toLowerCase(Locale.ROOT).contains("v=spf1"))
+                .toList();
+        java.util.List<String> dmarcRecords = txtRecords("_dmarc." + domain).stream()
+                .filter(record -> record.toLowerCase(Locale.ROOT).contains("v=dmarc1"))
+                .toList();
+        return new DnsSecurityResult(
+                !spfRecords.isEmpty(),
+                hasDkimRecord(domain),
+                !dmarcRecords.isEmpty(),
+                spfRecords.stream().anyMatch(record -> record.contains("~all") || record.contains("?all")),
+                dmarcRecords.stream().anyMatch(record -> record.toLowerCase(Locale.ROOT).contains("p=none"))
+        );
+    }
+
+    private static boolean hasDkimRecord(String domain) {
+        return java.util.stream.Stream.of("default", "selector1", "selector2", "google", "k1", "mail", "dkim")
+                .map(selector -> selector + "._domainkey." + domain)
+                .map(WebsiteContentSnapshotFetcher::txtRecords)
+                .flatMap(java.util.Collection::stream)
+                .anyMatch(record -> record.toLowerCase(Locale.ROOT).contains("v=dkim1") || record.toLowerCase(Locale.ROOT).contains("p="));
+    }
+
+    private static String registrableDomain(String host) {
+        if (host == null || host.isBlank()) {
+            return null;
+        }
+        String normalized = host.toLowerCase(Locale.ROOT).replaceFirst("^www\\.", "");
+        String[] parts = normalized.split("\\.");
+        if (parts.length < 2) {
+            return null;
+        }
+        return parts[parts.length - 2] + "." + parts[parts.length - 1];
+    }
+
+    private static java.util.List<String> txtRecords(String name) {
+        try {
+            var attributes = new InitialDirContext().getAttributes("dns:/" + name, new String[]{"TXT"});
+            var txt = attributes.get("TXT");
+            if (txt == null) {
+                return java.util.List.of();
+            }
+            java.util.List<String> records = new java.util.ArrayList<>();
+            for (int index = 0; index < txt.size(); index++) {
+                records.add(String.valueOf(txt.get(index)).replace("\" \"", "").replace("\"", ""));
+            }
+            return records;
+        } catch (NamingException exception) {
+            return java.util.List.of();
+        }
+    }
+
+    private static TlsCertificateResult tlsCertificateResult(String url) {
+        if (url == null || !url.toLowerCase(Locale.ROOT).startsWith("https://")) {
+            return new TlsCertificateResult(false, null);
+        }
+        try {
+            HttpsURLConnection connection = (HttpsURLConnection) URI.create(url).toURL().openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setInstanceFollowRedirects(true);
+            connection.setConnectTimeout(1500);
+            connection.setReadTimeout(1500);
+            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.connect();
+            X509Certificate certificate = (X509Certificate) connection.getServerCertificates()[0];
+            certificate.checkValidity();
+            long daysRemaining = ChronoUnit.DAYS.between(Instant.now(), certificate.getNotAfter().toInstant());
+            return new TlsCertificateResult(daysRemaining >= 0, (int) daysRemaining);
+        } catch (Exception exception) {
+            return new TlsCertificateResult(false, null);
+        }
+    }
+
+    private static boolean httpRedirectsToHttps(String host) {
+        if (host == null || host.isBlank()) {
+            return false;
+        }
+        try {
+            HttpURLConnection connection = (HttpURLConnection) URI.create("http://" + host).toURL().openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setInstanceFollowRedirects(false);
+            connection.setConnectTimeout(1200);
+            connection.setReadTimeout(1200);
+            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            int status = connection.getResponseCode();
+            String location = connection.getHeaderField("Location");
+            return status >= 300 && status < 400 && location != null && location.toLowerCase(Locale.ROOT).startsWith("https://");
+        } catch (IOException | IllegalArgumentException exception) {
+            return false;
+        }
+    }
+
+    private static boolean hasSecurityTxt(String finalUrl) {
+        URI baseUri = URI.create(finalUrl);
+        String origin = baseUri.getScheme() + "://" + baseUri.getHost();
+        return hasReadableTextResource(origin + "/.well-known/security.txt")
+                || hasReadableTextResource(origin + "/security.txt");
+    }
+
+    private static boolean robotsSensitivePathSignal(String finalUrl) {
+        URI baseUri = URI.create(finalUrl);
+        String origin = baseUri.getScheme() + "://" + baseUri.getHost();
+        String robots = readSmallTextResource(origin + "/robots.txt");
+        if (robots.isBlank()) {
+            return false;
+        }
+        return hasAny(robots, "/admin", "/wp-admin", "/login", "/user", "/api", "/backup", "/private", "/config");
+    }
+
+    private static boolean hasReadableTextResource(String url) {
+        return !readSmallTextResource(url).isBlank();
+    }
+
+    private static String readSmallTextResource(String url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+            connection.setRequestMethod("GET");
+            connection.setInstanceFollowRedirects(true);
+            connection.setConnectTimeout(1200);
+            connection.setReadTimeout(1200);
+            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            int status = connection.getResponseCode();
+            if (status < 200 || status >= 300) {
+                return "";
+            }
+            try (java.io.InputStream stream = connection.getInputStream()) {
+                return new String(stream.readNBytes(4096), java.nio.charset.StandardCharsets.UTF_8);
+            }
+        } catch (IOException | IllegalArgumentException exception) {
+            return "";
+        }
+    }
+
     private static LinkCheckResult checkInternalLinks(Document document, String baseUrl) {
         URI baseUri = URI.create(baseUrl);
         Set<String> links = document.select("a[href]").stream()
@@ -506,5 +793,11 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private record LinkCheckResult(int checkedCount, int brokenCount) {
+    }
+
+    private record DnsSecurityResult(boolean spf, boolean dkim, boolean dmarc, boolean spfSoftfail, boolean dmarcPolicyNone) {
+    }
+
+    private record TlsCertificateResult(boolean valid, Integer daysRemaining) {
     }
 }

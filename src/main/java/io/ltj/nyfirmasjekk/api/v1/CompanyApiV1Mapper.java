@@ -463,7 +463,7 @@ public class CompanyApiV1Mapper {
                     "Nettsiden svarte, men innholdet kunne ikke leses for kvalitetssjekk.",
                     "MEDIUM"
             ));
-            return assessmentFromSignals(signals, "Nettsiden svarer, men innholdet kunne ikke vurderes.");
+            return contentUnreadableAssessment(signals);
         }
 
         addContentQualitySignals(signals, snapshot);
@@ -489,7 +489,7 @@ public class CompanyApiV1Mapper {
 
         return assessmentFromSignals(signals, signals.isEmpty()
                 ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
-                : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.");
+                : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", snapshot);
     }
 
     public WebsiteInspectionResponse inspectWebsite(String rawUrl) {
@@ -546,7 +546,7 @@ public class CompanyApiV1Mapper {
                     "Nettsiden svarte, men innholdet kunne ikke leses for kvalitetssjekk.",
                     "MEDIUM"
             ));
-            return new WebsiteInspectionResponse(rawUrl, website, assessmentFromSignals(signals, "Nettsiden svarer, men innholdet kunne ikke vurderes."), List.of());
+            return new WebsiteInspectionResponse(rawUrl, website, contentUnreadableAssessment(signals), List.of());
         }
 
         addContentQualitySignals(signals, snapshot);
@@ -568,7 +568,7 @@ public class CompanyApiV1Mapper {
                 website,
                 assessmentFromSignals(signals, signals.isEmpty()
                         ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
-                        : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt."),
+                        : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", snapshot),
                 List.of()
         );
     }
@@ -596,15 +596,43 @@ public class CompanyApiV1Mapper {
     }
 
     private WebsiteQualityAssessment assessmentFromSignals(List<WebsiteQualitySignal> signals, String summary) {
+        return assessmentFromSignals(signals, summary, null);
+    }
+
+    private WebsiteQualityAssessment contentUnreadableAssessment(List<WebsiteQualitySignal> signals) {
         boolean hasHigh = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()));
+        String status = hasHigh ? "WEAK" : "NEEDS_REVIEW";
+        String label = hasHigh ? "Svak nettsideflate" : "Bør vurderes";
+        return new WebsiteQualityAssessment(
+                status,
+                label,
+                "Nettsiden svarer, men innholdet kunne ikke vurderes.",
+                signals
+        );
+    }
+
+    private WebsiteQualityAssessment assessmentFromSignals(List<WebsiteQualitySignal> signals, String summary, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        boolean ecommerce = snapshot != null && snapshot.ecommerceSignal();
+        boolean hasCriticalWeak = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()) && isCriticalWeakWebsiteSignal(signal.code()));
         boolean hasMedium = signals.stream().anyMatch(signal -> "MEDIUM".equals(signal.severity()));
-        String status = hasHigh ? "WEAK" : hasMedium ? "NEEDS_REVIEW" : "OK";
+        String status = hasCriticalWeak ? "WEAK" : hasMedium || signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity())) ? "NEEDS_REVIEW" : "OK";
+        String effectiveSummary = ecommerce && !"OK".equals(status)
+                ? "Siden fremstår som en aktiv nettbutikk, men analysen fant enkelte tekniske, tillitsmessige og tilgjengelighetsrelaterte signaler som bør vurderes manuelt."
+                : summary;
         String label = switch (status) {
             case "WEAK" -> "Svak nettsideflate";
-            case "NEEDS_REVIEW" -> "Bør vurderes";
+            case "NEEDS_REVIEW" -> ecommerce ? "Nettside med forbedringspunkter" : "Bør vurderes";
             default -> "Ser grei ut";
         };
-        return new WebsiteQualityAssessment(status, label, summary, signals);
+        return new WebsiteQualityAssessment(status, label, effectiveSummary, signals);
+    }
+
+    private boolean isCriticalWeakWebsiteSignal(String code) {
+        return Set.of(
+                "TECHNICAL_FAILURE",
+                "MISSING_HTTPS",
+                "INSECURE_FORM_ACTION"
+        ).contains(code);
     }
 
     private void addContentQualitySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -709,6 +737,9 @@ public class CompanyApiV1Mapper {
     }
 
     private void addLocalRelevanceSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
+        if (snapshot.ecommerceSignal()) {
+            return;
+        }
         String location = firstNonBlank(enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().kommune(), enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().fylke());
         if (!hasText(location)) {
             return;
@@ -778,8 +809,10 @@ public class CompanyApiV1Mapper {
         if (legalName.length() >= 5 && !text.contains(legalName)) {
             signals.add(new WebsiteQualitySignal(
                     "LEGAL_NAME_NOT_VISIBLE",
-                    "Mangler juridisk firmanavn",
-                    "Siden bruker ikke tydelig firmanavnet fra BRREG. For nye kunder kan juridisk navn gi mer tillit og etterprøvbarhet.",
+                    snapshot.ecommerceSignal() ? "Mangler tydelig juridisk avsender" : "Mangler juridisk firmanavn",
+                    snapshot.ecommerceSignal()
+                            ? "Siden viser merkevaren, men juridisk selskap/organisasjonsnummer fremstår ikke tydelig i innholdet vi sjekket. For nettbutikk bør selger og kontaktinformasjon være lett å verifisere."
+                            : "Siden bruker ikke tydelig firmanavnet fra BRREG. For nye kunder kan juridisk navn gi mer tillit og etterprøvbarhet.",
                     "INFO"
             ));
         }
@@ -791,8 +824,10 @@ public class CompanyApiV1Mapper {
         if (!text.contains("adresse") && !text.contains("kart") && !text.contains("besok") && !text.contains("besøk")) {
             signals.add(new WebsiteQualitySignal(
                     "MISSING_ADDRESS_OR_AREA",
-                    "Mangler adresse eller områdeinfo",
-                    "Siden viser ikke tydelig adresse, kart eller dekningsområde. Dette kan svekke lokal tillit og søkbarhet.",
+                    snapshot.ecommerceSignal() ? "Kontakt-/selskapsinfo bør verifiseres" : "Mangler adresse eller områdeinfo",
+                    snapshot.ecommerceSignal()
+                            ? "Vi fant ikke tydelig adresse eller selskapsinfo i innholdet vi sjekket. For nettbutikk bør kunde lett finne juridisk selger, kontaktinformasjon, vilkår og returinfo."
+                            : "Siden viser ikke tydelig adresse, kart eller dekningsområde. Dette kan svekke lokal tillit og søkbarhet.",
                     "INFO"
             ));
         }
@@ -804,7 +839,16 @@ public class CompanyApiV1Mapper {
         String text = normalizeForWebsiteQuality(rawBody + " " + rawHtml);
         boolean localOrConsumer = isLocalOrConsumerSegment(enhet);
 
-        if (containsAny(text, TEMPLATE_PLACEHOLDER_WORDS)) {
+        boolean incompleteMarketSignal = containsAny(text,
+                Set.of("checkout er dessverre ikke tilgjengelig", "vi apner snart", "vi åpner snart", "opens soon", "opening soon"));
+        if (incompleteMarketSignal) {
+            signals.add(new WebsiteQualitySignal(
+                    "INCOMPLETE_MARKET_OR_CHECKOUT",
+                    "Spor av uferdig markedstilpasning",
+                    "Siden inneholder tekst om at marked eller checkout ikke er tilgjengelig ennå. Det kan gi inntrykk av at deler av nettbutikken eller enkelte markeder ikke er ferdig lansert.",
+                    "HIGH"
+            ));
+        } else if (containsAny(text, TEMPLATE_PLACEHOLDER_WORDS)) {
             signals.add(new WebsiteQualitySignal(
                     "TEMPLATE_PLACEHOLDER_CONTENT",
                     "Uferdig maltekst",
@@ -913,8 +957,8 @@ public class CompanyApiV1Mapper {
         if (snapshot.visibleDiscountCodeSignal()) {
             signals.add(new WebsiteQualitySignal(
                     "VISIBLE_DISCOUNT_CODE",
-                    "Synlig rabattkode",
-                    "Rabattkode ser ut til å ligge synlig i URL eller HTML. Det er ikke en sikkerhetsfeil i seg selv, men kan gjøre kampanjer lettere å dele og gjenbruke ukontrollert.",
+                    "Kampanje-/affiliate-spor synlig",
+                    "Siden inneholder spor av kampanje, rabatt eller affiliate-funksjonalitet. Dette er normalt for nettbutikk, men kan vurderes hvis kampanjer skal være begrenset.",
                     "INFO"
             ));
         }
@@ -1245,7 +1289,7 @@ public class CompanyApiV1Mapper {
     }
 
     private void addSecuritySignals(List<WebsiteQualitySignal> signals, String website, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
-        if (!website.startsWith(HTTPS_PREFIX)) {
+        if (!website.startsWith(HTTPS_PREFIX) && (snapshot.finalUrl() == null || !snapshot.finalUrl().startsWith(HTTPS_PREFIX))) {
             signals.add(new WebsiteQualitySignal(
                     "MISSING_HTTPS",
                     "Mangler HTTPS",
@@ -1253,6 +1297,69 @@ public class CompanyApiV1Mapper {
                     "HIGH"
             ));
             return;
+        }
+        if (!snapshot.tlsCertificateValid()) {
+            signals.add(new WebsiteQualitySignal(
+                    "TLS_CERTIFICATE_REVIEW",
+                    "TLS-/sertifikatoppsett bør sjekkes",
+                    "Siden bruker HTTPS, men sertifikatstatus kunne ikke verifiseres i den enkle sjekken. Dette bør kontrolleres hvis siden brukes kommersielt.",
+                    "MEDIUM"
+            ));
+        } else if (snapshot.tlsCertificateDaysRemaining() != null && snapshot.tlsCertificateDaysRemaining() < 30) {
+            signals.add(new WebsiteQualitySignal(
+                    "TLS_CERTIFICATE_EXPIRING",
+                    "TLS-sertifikat utløper snart",
+                    "Sertifikatet ser ut til å utløpe om " + snapshot.tlsCertificateDaysRemaining() + " dager. Dette bør følges opp før nettlesere begynner å varsle.",
+                    "MEDIUM"
+            ));
+        }
+        if (!snapshot.httpRedirectsToHttps()) {
+            signals.add(new WebsiteQualitySignal(
+                    "HTTP_TO_HTTPS_REDIRECT_REVIEW",
+                    "HTTP til HTTPS bør sjekkes",
+                    "Vi fant ikke en tydelig redirect fra HTTP til HTTPS. Det kan gi svakere sikkerhetsopplevelse hvis brukere åpner domenet uten https.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.weakHstsHeaderSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_HSTS_HEADER",
+                    "Svak HSTS-header",
+                    "Siden har HSTS-header, men verdien ser kort eller ufullstendig ut. Dette bør vurderes hvis domenet skal fremstå teknisk robust.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.weakContentSecurityPolicySignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "WEAK_CSP_HEADER",
+                    "Svak Content Security Policy",
+                    "Siden har CSP, men den ser ut til å tillate svake mønstre som unsafe-inline/unsafe-eval, wildcard eller manglende frame-ancestors.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.serverTechnologyHeaderSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SERVER_TECH_HEADER_EXPOSED",
+                    "Serverteknologi eksponeres",
+                    "HTTP-headerne ser ut til å eksponere server- eller applikasjonsteknologi. Det er ikke nødvendigvis feil, men kan reduseres for mindre teknisk støy.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.securityTxtSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SECURITY_TXT_MISSING",
+                    "Mangler security.txt",
+                    "Vi fant ikke security.txt. Det er ikke påkrevd for små nettsteder, men gir en ryddig kanal for sikkerhetshenvendelser.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.robotsSensitivePathSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "ROBOTS_SENSITIVE_PATHS",
+                    "Robots.txt nevner sensitive stier",
+                    "Robots.txt peker mot admin-, API-, backup- eller private stier. Dette er ikke en sårbarhet alene, men kan gi unødvendig informasjon.",
+                    "INFO"
+            ));
         }
         if (snapshot.mixedContentSignal()) {
             signals.add(new WebsiteQualitySignal(
@@ -1284,6 +1391,77 @@ public class CompanyApiV1Mapper {
                     "Mulige døde interne lenker",
                     snapshot.brokenInternalLinkCount() + " av " + snapshot.checkedInternalLinkCount() + " sjekkede interne lenker svarte med feilstatus.",
                     "MEDIUM"
+            ));
+        }
+        if (snapshot.adminOrLoginPathSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "ADMIN_OR_LOGIN_PATH_EXPOSED",
+                    "Admin-/innloggingsspor synlig",
+                    "HTML eller lenker peker mot admin-, login- eller dashboard-stier. Det er ikke nødvendigvis en feil, men slike innganger bør sikres med sterke passord, 2FA og rate limiting.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.loginFormSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "LOGIN_FORM_SECURITY_REVIEW",
+                    "Innlogging bør sikkerhetssjekkes",
+                    "Siden ser ut til å ha innlogging eller passordfelt. Passord-reset, session cookies, rate limiting og 2FA bør vurderes manuelt.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.fileUploadSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "FILE_UPLOAD_REVIEW",
+                    "Filopplasting bør sikkerhetssjekkes",
+                    "Siden har spor av filopplasting. Filtyper, størrelsesgrenser, viruskontroll og lagring bør vurderes manuelt.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.apiEndpointReferenceCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "API_ENDPOINTS_VISIBLE",
+                    "API-endepunkter synlige",
+                    "Vi fant " + snapshot.apiEndpointReferenceCount() + " synlige API-/REST-/GraphQL-spor i HTML-en. Tilgangsstyring, CORS og rate limiting bør vurderes manuelt.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.exposedCmsVersionSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "CMS_VERSION_EXPOSED",
+                    "CMS-versjon eksponert",
+                    "HTML-en ser ut til å eksponere CMS- eller pluginversjoner. Det kan gjøre kjente sårbarheter lettere å kartlegge.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.spfRecord() || !snapshot.dkimRecord() || !snapshot.dmarcRecord()) {
+            signals.add(new WebsiteQualitySignal(
+                    "EMAIL_SECURITY_DNS_REVIEW",
+                    "E-postsikkerhet i DNS bør sjekkes",
+                    (!snapshot.spfRecord() && !snapshot.dkimRecord() && !snapshot.dmarcRecord()
+                            ? "Vi fant ikke tydelige SPF-, DKIM- eller DMARC-spor"
+                            : !snapshot.spfRecord()
+                            ? "Vi fant ikke tydelig SPF-spor"
+                            : !snapshot.dkimRecord()
+                            ? "Vi fant ikke tydelig DKIM-spor med vanlige selector-navn"
+                            : "Vi fant ikke tydelig DMARC-spor")
+                            + " for domenet. Dette bør vurderes for å redusere risiko for spoofing og spamproblemer.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.spfSoftfailSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SPF_POLICY_SOFT",
+                    "SPF-policy er myk",
+                    "SPF ser ut til å bruke ~all eller ?all. Det er ikke nødvendigvis feil, men en strengere policy kan være bedre når e-postoppsettet er ryddig.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.dmarcPolicyNoneSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DMARC_POLICY_NONE",
+                    "DMARC står til overvåking",
+                    "DMARC-policy ser ut til å være p=none. Det er nyttig for overvåking, men beskytter svakere mot spoofing enn quarantine/reject.",
+                    "INFO"
             ));
         }
         addSecurityHeaderSignals(signals, snapshot);
@@ -1427,6 +1605,30 @@ public class CompanyApiV1Mapper {
                     "PASSWORD_AUTOCOMPLETE_RISK",
                     "Passordfelt mangler autocomplete",
                     snapshot.passwordFieldsWithoutAutocompleteCount() + " passordfelt mangler autocomplete. Dette kan svekke brukervennlighet og passordhåndtering.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.insecureCookieCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "COOKIE_SECURE_FLAG_MISSING",
+                    "Cookie mangler Secure",
+                    snapshot.insecureCookieCount() + " cookie(r) ser ut til å mangle Secure-flagget. Cookies på HTTPS-sider bør normalt begrenses til sikker transport.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.cookieWithoutHttpOnlyCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "COOKIE_HTTPONLY_REVIEW",
+                    "Cookie mangler HttpOnly",
+                    snapshot.cookieWithoutHttpOnlyCount() + " cookie(r) ser ut til å mangle HttpOnly. Det bør vurderes hvis cookien brukes til innlogging eller sesjon.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.cookieWithoutSameSiteCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "COOKIE_SAMESITE_REVIEW",
+                    "Cookie mangler SameSite",
+                    snapshot.cookieWithoutSameSiteCount() + " cookie(r) ser ut til å mangle SameSite. Det bør vurderes for å redusere risiko ved kryssnettstedsforespørsler.",
                     "INFO"
             ));
         }

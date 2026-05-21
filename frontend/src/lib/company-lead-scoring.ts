@@ -153,6 +153,7 @@ function evaluateLeadSignal(company: CompanySummary) {
   const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
   const hasRegisteredUnreachableWebsite = Boolean(company.website) && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false;
   const hasWeakWebsiteQuality = company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW";
+  const hasCommerceWebsiteQuality = isCommerceWebsiteQuality(company);
   const missingWebsite = !company.website && !hasPossibleWebsite;
 
   if (company.scoreColor === "RED") {
@@ -181,8 +182,10 @@ function evaluateLeadSignal(company: CompanySummary) {
     return leadSignalResult(
       "Mulig lead",
       hasEmail ? `Start med e-post: ${company.email}` : "Nettside bør vurderes",
-      "Nettside kan forbedres",
-      "Selskapet har nettside registrert i BRREG, men detaljsjekken fant tekniske eller innholdsmessige signaler som bør vurderes manuelt.",
+      hasCommerceWebsiteQuality ? "Nettbutikk kan forbedres" : "Nettside kan forbedres",
+      hasCommerceWebsiteQuality
+        ? "Siden finnes allerede og virker etablert. Muligheten ligger i forbedring av tillit, tilgjengelighet, teknisk kvalitet, SEO og markedstilpasning."
+        : "Selskapet har nettside registrert i BRREG, men detaljsjekken fant tekniske eller innholdsmessige signaler som bør vurderes manuelt.",
       "Se detaljer",
       "border-amber-100 bg-amber-50/70"
     );
@@ -286,6 +289,18 @@ function evaluateLeadSignal(company: CompanySummary) {
     "Se detaljer",
     "border-[#E4E7EB] bg-[#F8FAFC]"
   );
+}
+
+function isCommerceWebsiteQuality(company: CompanySummary) {
+  const commerceCodes = new Set([
+    "COMMERCE_TERMS_MISSING",
+    "COMMERCE_RETURN_INFO_MISSING",
+    "COMMERCE_DELIVERY_INFO_MISSING",
+    "PAYMENT_TRUST_INFO_MISSING",
+    "VISIBLE_DISCOUNT_CODE",
+    "INCOMPLETE_MARKET_OR_CHECKOUT",
+  ]);
+  return company.websiteQuality?.signals.some((signal) => commerceCodes.has(signal.code)) ?? false;
 }
 
 function leadSignalResult(

@@ -90,6 +90,25 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     "MISSING_CSP_HEADER",
     "MISSING_REFERRER_POLICY",
     "MISSING_PERMISSIONS_POLICY",
+    "TLS_CERTIFICATE_REVIEW",
+    "TLS_CERTIFICATE_EXPIRING",
+    "HTTP_TO_HTTPS_REDIRECT_REVIEW",
+    "WEAK_HSTS_HEADER",
+    "WEAK_CSP_HEADER",
+    "SERVER_TECH_HEADER_EXPOSED",
+    "SECURITY_TXT_MISSING",
+    "ROBOTS_SENSITIVE_PATHS",
+    "ADMIN_OR_LOGIN_PATH_EXPOSED",
+    "LOGIN_FORM_SECURITY_REVIEW",
+    "FILE_UPLOAD_REVIEW",
+    "API_ENDPOINTS_VISIBLE",
+    "CMS_VERSION_EXPOSED",
+    "EMAIL_SECURITY_DNS_REVIEW",
+    "COOKIE_SECURE_FLAG_MISSING",
+    "COOKIE_HTTPONLY_REVIEW",
+    "COOKIE_SAMESITE_REVIEW",
+    "SPF_POLICY_SOFT",
+    "DMARC_POLICY_NONE",
     "GOOGLE_ANALYTICS_WITHOUT_CONSENT",
     "META_PIXEL_WITHOUT_CONSENT",
     "SESSION_TRACKING_WITHOUT_CONSENT",
@@ -105,6 +124,7 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     "MEDICAL_REGULATORY_CONTEXT_MISSING",
     "MEDICAL_VISUAL_TRUST_RISK",
     "HEALTH_TRACKING_CONTEXT",
+    "INCOMPLETE_MARKET_OR_CHECKOUT",
     "TEMPLATE_PLACEHOLDER_CONTENT",
     "GENERIC_OR_AI_IMAGE_RISK",
     "CLOUDFLARE_EMAIL_PROTECTION",
@@ -133,6 +153,15 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("INSECURE_FORM_ACTION"), "skjema som bør sjekkes for sikker innsending");
   addMailPoint(points, signalCodes.has("MISSING_CSP_HEADER"), "manglende Content Security Policy");
   addMailPoint(points, signalCodes.has("MISSING_HSTS_HEADER"), "manglende HSTS-header for tryggere HTTPS-bruk");
+  addMailPoint(points, signalCodes.has("TLS_CERTIFICATE_REVIEW") || signalCodes.has("TLS_CERTIFICATE_EXPIRING"), "TLS-/sertifikatoppsett som bør følges opp");
+  addMailPoint(points, signalCodes.has("HTTP_TO_HTTPS_REDIRECT_REVIEW"), "redirect fra HTTP til HTTPS");
+  addMailPoint(points, signalCodes.has("WEAK_HSTS_HEADER") || signalCodes.has("WEAK_CSP_HEADER"), "sikkerhetsheadere som finnes, men bør strammes inn");
+  addMailPoint(points, signalCodes.has("SERVER_TECH_HEADER_EXPOSED") || signalCodes.has("ROBOTS_SENSITIVE_PATHS"), "teknisk informasjon som eksponeres mer enn nødvendig");
+  addMailPoint(points, signalCodes.has("LOGIN_FORM_SECURITY_REVIEW") || signalCodes.has("ADMIN_OR_LOGIN_PATH_EXPOSED"), "innlogging/adminspor som bør sikres med 2FA, rate limiting og ryddige sesjoner");
+  addMailPoint(points, signalCodes.has("FILE_UPLOAD_REVIEW"), "filopplasting som bør sikkerhetssjekkes");
+  addMailPoint(points, signalCodes.has("API_ENDPOINTS_VISIBLE"), "synlige API-spor der tilgang, CORS og rate limiting bør vurderes");
+  addMailPoint(points, signalCodes.has("EMAIL_SECURITY_DNS_REVIEW") || signalCodes.has("SPF_POLICY_SOFT") || signalCodes.has("DMARC_POLICY_NONE"), "SPF, DKIM og DMARC for e-postsikkerhet på domenet");
+  addMailPoint(points, signalCodes.has("COOKIE_SECURE_FLAG_MISSING") || signalCodes.has("COOKIE_HTTPONLY_REVIEW") || signalCodes.has("COOKIE_SAMESITE_REVIEW"), "cookie-flagg for sesjon, sikkerhet og personvern");
   addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE"), "personverninfo ved skjema eller innsamling av kontaktdata");
   addMailPoint(points, signalCodes.has("COOKIE_CONSENT_RISK"), "cookies eller måling uten tydelig samtykkespor");
   addMailPoint(points, hasTrackingConsentRisk(signalCodes), "tracking og tredjepartsinnhold som bør vurderes opp mot samtykke");
@@ -157,6 +186,7 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   const points: string[] = [];
 
   addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT"), toneProfile.homepagePoint);
+  addMailPoint(points, signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT"), "tekst om uferdig marked eller checkout som bør avklares");
   addMailPoint(points, signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT"), "å få bort uferdig maltekst eller kommer-snart-preg");
   addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT"), toneProfile.servicePoint);
   addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), toneProfile.localPoint);
@@ -185,7 +215,7 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   addMailPoint(points, hasTrackingConsentRisk(signalCodes), "cookies, måling og tredjepartsinnhold som bør presenteres ryddig");
   addMailPoint(points, hasCommerceRisk(signalCodes), "tydeligere vilkår, levering, retur, betaling eller kjøpsinformasjon");
   addMailPoint(points, signalCodes.has("HEALTH_TRACKING_CONTEXT"), "ekstra ryddighet rundt analyse, tracking og samtykke");
-  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK") || hasSecurityHeaderRisk(signalCodes), "noen tekniske sikkerhets- og avhengighetspunkter som bør vurderes");
+  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK") || hasSecurityHeaderRisk(signalCodes) || hasApplicationSecurityRisk(signalCodes), "noen tekniske sikkerhets- og avhengighetspunkter som bør vurderes");
   addMailPoint(points, signalCodes.has("MISSING_HTTPS") || signalCodes.has("OUTDATED_COPYRIGHT"), toneProfile.maintenancePoint);
   addMailPoint(points, signalCodes.has("CLIENT_LOADING_OVERLAY"), "lasteopplevelse og førsteinntrykk på mobil");
   addMailPoint(points, signalCodes.has("VISIBLE_DISCOUNT_CODE"), "ryddigere kampanje- og rabattinformasjon");
@@ -236,7 +266,29 @@ function hasSecurityHeaderRisk(signalCodes: Set<string>) {
     || signalCodes.has("MISSING_CONTENT_TYPE_OPTIONS")
     || signalCodes.has("MISSING_REFERRER_POLICY")
     || signalCodes.has("MISSING_PERMISSIONS_POLICY")
-    || signalCodes.has("MISSING_FRAME_PROTECTION");
+    || signalCodes.has("MISSING_FRAME_PROTECTION")
+    || signalCodes.has("TLS_CERTIFICATE_REVIEW")
+    || signalCodes.has("TLS_CERTIFICATE_EXPIRING")
+    || signalCodes.has("HTTP_TO_HTTPS_REDIRECT_REVIEW")
+    || signalCodes.has("WEAK_HSTS_HEADER")
+    || signalCodes.has("WEAK_CSP_HEADER")
+    || signalCodes.has("SERVER_TECH_HEADER_EXPOSED")
+    || signalCodes.has("SECURITY_TXT_MISSING")
+    || signalCodes.has("ROBOTS_SENSITIVE_PATHS");
+}
+
+function hasApplicationSecurityRisk(signalCodes: Set<string>) {
+  return signalCodes.has("ADMIN_OR_LOGIN_PATH_EXPOSED")
+    || signalCodes.has("LOGIN_FORM_SECURITY_REVIEW")
+    || signalCodes.has("FILE_UPLOAD_REVIEW")
+    || signalCodes.has("API_ENDPOINTS_VISIBLE")
+    || signalCodes.has("CMS_VERSION_EXPOSED")
+    || signalCodes.has("EMAIL_SECURITY_DNS_REVIEW")
+    || signalCodes.has("SPF_POLICY_SOFT")
+    || signalCodes.has("DMARC_POLICY_NONE")
+    || signalCodes.has("COOKIE_SECURE_FLAG_MISSING")
+    || signalCodes.has("COOKIE_HTTPONLY_REVIEW")
+    || signalCodes.has("COOKIE_SAMESITE_REVIEW");
 }
 
 type WebsiteQualityStrictness = "strict" | "commerce" | "normal" | "light";
@@ -506,7 +558,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{salesSegment}}": company.salesSegment?.label ?? "Annet",
     "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "For nye virksomheter er en nettside nyttig for å vise hva dere tilbyr, hvem dere hjelper og hvordan kunder kan ta kontakt.",
     "{{salesSegmentExplanation}}": company.salesSegment?.explanation ?? "",
-    "{{domainExample}}": domainExampleForCompany(company.name),
+    "{{domainExample}}": domainExamplesForCompany(company)[0] ?? "firmanavn.no",
     "{{domainLine}}": domainLineForCompany(company),
     "{{greeting}}": greeting,
     "{{recipientSubject}}": recipientSubject,
@@ -633,12 +685,13 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function domainExampleForCompany(companyName: string) {
+function domainExamplesForCompany(company: OutreachEmailCompany) {
   const suffixes = [
     "aksjeselskap",
     "enkeltpersonforetak",
     "as",
     "asa",
+    "ab",
     "enk",
     "da",
     "ans",
@@ -647,9 +700,117 @@ function domainExampleForCompany(companyName: string) {
     "stift",
     "fli",
     "ba",
+    "ltd",
+    "limited",
+    "llc",
+    "inc",
+    "gmbh",
+    "og",
+    "and",
+    "of",
+    "the",
+    "i",
+    "for",
+    "til",
+    "av",
+    "pa",
+    "paa",
+    "fra",
+    "med",
+    "mot",
+    "hos",
+    "ved",
+    "om",
+    "under",
+    "over",
+    "innen",
+    "utan",
+    "utanfor",
+    "uten",
+    "utenfor",
+    "och",
+    "att",
+    "eller",
+    "samt",
+    "in",
+    "on",
+    "at",
+    "to",
+    "from",
+    "with",
+    "by",
+    "gruppe",
+    "gruppa",
+    "group",
+    "stottegruppe",
+    "support",
+    "supportgroup",
+    "association",
+    "forening",
+    "lag",
   ];
+  const words = normalizedCompanyNameWords(company.name, suffixes);
+  const naceCode = company.naceCode?.trim() ?? "";
+  const segmentCode = company.salesSegment?.code;
+  const locationWord = normalizedLocationWord(company.municipality);
+  const emailWords = normalizedEmailLocalWords(company.email, suffixes);
+  const emailDomainWords = normalizedEmailDomainWords(company.email, suffixes);
+  const coreNameWords = compactCoreCompanyWords(words);
+  const foodDomains = foodDomainExamples(
+    coreNameWords.length > 0 ? coreNameWords : words,
+    locationWord,
+    emailWords,
+    segmentCode === "MAT_SERVERING" || naceCode.startsWith("56")
+  );
+  if (foodDomains.length > 0) {
+    return foodDomains;
+  }
+
+  const suggestions: string[] = [];
+  const addSuggestion = (value: string) => {
+    if (!suggestions.includes(value)) {
+      suggestions.push(value);
+    }
+  };
+  const normalizedWords = coreNameWords.length > 0 ? coreNameWords : words.slice(0, 4);
+  const normalized = normalizedWords
+    .join("-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  if (normalized) {
+    addSuggestion(`${normalized}.no`);
+  }
+  const compactName = coreNameWords.length > 0 ? coreNameWords.join("") : words.slice(0, 2).join("");
+  if (compactName && compactName !== normalized.replaceAll("-", "") && compactName.length >= 5 && compactName.length <= 24) {
+    addSuggestion(`${compactName}.no`);
+  }
+  if (locationWord && words.length > 0) {
+    if (compactName.length >= 5 && compactName.length + locationWord.length <= 26) {
+      addSuggestion(withOptionalLocation(compactName, locationWord));
+    }
+    if (coreNameWords.length === 0 && words[0].length + locationWord.length <= 24) {
+      addSuggestion(withOptionalLocation(words[0], locationWord));
+    }
+  }
+  if (emailWords.length > 0 && shouldUseEmailDomainHint(emailWords, coreNameWords)) {
+    addSuggestion(`${emailWords.join("")}.no`);
+    if (emailWords.length >= 2) {
+      addSuggestion(`${emailWords.join("-")}.no`);
+    }
+  }
+  if (emailDomainWords.length > 0 && shouldUseEmailDomainHint(emailDomainWords, coreNameWords)) {
+    addSuggestion(`${emailDomainWords.join("")}.no`);
+    if (emailDomainWords.length >= 2) {
+      addSuggestion(`${emailDomainWords.join("-")}.no`);
+    }
+  }
+
+  return (suggestions.length > 0 ? suggestions : ["firmanavn.no"]).slice(0, 4);
+}
+
+function normalizedCompanyNameWords(companyName: string, excludedWords: string[]) {
   const namePart = companyName.split(/\s+-\s+/)[0] || companyName;
-  const normalized = namePart
+  return namePart
     .toLowerCase()
     .replaceAll("æ", "ae")
     .replaceAll("ø", "o")
@@ -659,13 +820,136 @@ function domainExampleForCompany(companyName: string) {
     .replaceAll("&", " og ")
     .replace(/[^a-z0-9]+/g, " ")
     .split(/\s+/)
-    .filter((part) => part && !suffixes.includes(part))
-    .slice(0, 4)
-    .join("-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .filter((part) => part && !excludedWords.includes(part));
+}
 
-  return `${normalized || "firmanavn"}.no`;
+function normalizedLocationWord(value: string | null | undefined) {
+  const words = normalizedCompanyNameWords(value ?? "", []);
+  return words.find((word) => word.length >= 4) ?? null;
+}
+
+function normalizedEmailLocalWords(email: string | null | undefined, excludedWords: string[]) {
+  const localPart = email?.split("@")[0] ?? "";
+  const cleanedLocalPart = localPart
+    .replace(/\bog\b/gi, " og ")
+    .replace(/(as|asa|enk|nuf|da|ans|sa|ba)$/i, " $1");
+  return normalizedCompanyNameWords(cleanedLocalPart, excludedWords);
+}
+
+function normalizedEmailDomainWords(email: string | null | undefined, excludedWords: string[]) {
+  const domain = email?.split("@")[1]?.split(".")[0] ?? "";
+  const commonDomains = new Set(["gmail", "hotmail", "outlook", "yahoo", "icloud", "live", "online"]);
+  if (!domain || commonDomains.has(domain.toLowerCase())) {
+    return [];
+  }
+  return normalizedCompanyNameWords(domain, excludedWords);
+}
+
+function compactCoreCompanyWords(words: string[]) {
+  if (words.length <= 3) {
+    return words;
+  }
+
+  const stopWords = new Set([
+    "jacobsen",
+    "johansen",
+    "hansen",
+    "olsen",
+    "andersen",
+    "pedersen",
+    "nilsen",
+    "larsen",
+    "karlsen",
+    "kristiansen",
+    "eriksen",
+    "berg",
+    "dahl",
+  ]);
+  const withoutLikelyPersonSuffix = words.filter((word, index) => index < 2 || !stopWords.has(word));
+  return withoutLikelyPersonSuffix.slice(0, 3);
+}
+
+function shouldUseEmailDomainHint(emailWords: string[], coreNameWords: string[]) {
+  if (emailWords.length === 0) {
+    return false;
+  }
+
+  const emailText = emailWords.join("");
+  const coreText = coreNameWords.join("");
+  if (!coreText) {
+    return emailText.length >= 5 && emailWords.length >= 2;
+  }
+
+  if (emailText.includes(coreText) || coreText.includes(emailText)) {
+    return true;
+  }
+
+  return emailWords.some((word) => word.length >= 4 && coreNameWords.includes(word));
+}
+
+function withOptionalLocation(base: string, locationWord: string) {
+  const compactBase = base.replaceAll("-", "");
+  if (compactBase.includes(locationWord) || locationWord.includes(compactBase)) {
+    return `${base}.no`;
+  }
+  return `${base}-${locationWord}.no`;
+}
+
+function foodDomainExamples(
+  words: string[],
+  locationWord: string | null,
+  emailWords: string[],
+  isFoodSegment: boolean
+) {
+  if (!isFoodSegment || words.length === 0) {
+    return [];
+  }
+
+  const suggestions: string[] = [];
+  const addSuggestion = (value: string) => {
+    if (!suggestions.includes(value)) {
+      suggestions.push(value);
+    }
+  };
+
+  if (emailWords.length > 0) {
+    const emailBrand = emailWords.join("");
+    if (emailBrand.length >= 5 && emailBrand.length <= 24) {
+      addSuggestion(`${emailBrand}.no`);
+    }
+    if (emailWords.length >= 2) {
+      const hyphenatedEmailBrand = emailWords.join("-");
+      if (hyphenatedEmailBrand.length >= 5 && hyphenatedEmailBrand.length <= 28) {
+        addSuggestion(`${hyphenatedEmailBrand}.no`);
+      }
+    }
+  }
+
+  if (words.length >= 2) {
+    const compactBrand = words.slice(0, 2).join("");
+    if (compactBrand.length >= 5 && compactBrand.length <= 20) {
+      if (locationWord && compactBrand.length + locationWord.length <= 26) {
+        addSuggestion(withOptionalLocation(compactBrand, locationWord));
+      }
+      addSuggestion(`${compactBrand}.no`);
+      addSuggestion(`${compactBrand}-catering.no`);
+    }
+  }
+
+  const firstWord = words[0];
+  if (firstWord && firstWord.length <= 16) {
+    if (locationWord && firstWord.length + locationWord.length <= 24) {
+      addSuggestion(withOptionalLocation(firstWord, locationWord));
+      addSuggestion(withOptionalLocation(`${firstWord}-catering`, locationWord));
+    }
+    addSuggestion(`${firstWord}catering.no`);
+  }
+
+  if (locationWord) {
+    addSuggestion(`catering-${locationWord}.no`);
+  }
+
+  return suggestions.slice(0, 4);
 }
 
 function domainLineForCompany(company: OutreachEmailCompany) {
@@ -678,7 +962,11 @@ function domainLineForCompany(company: OutreachEmailCompany) {
     }
     return "- En mer ryddig og tydelig nettside på dagens domene";
   }
-  return `- Egen nettadresse, for eksempel ${domainExampleForCompany(company.name)}`;
+  const examples = domainExamplesForCompany(company);
+  if (examples.length <= 1) {
+    return `- Egen nettadresse, for eksempel ${examples[0] ?? "firmanavn.no"}`;
+  }
+  return `- Egen nettadresse, for eksempel ${formatNorwegianList(examples)}`;
 }
 
 function registeredWebsiteIntro(company: OutreachEmailCompany) {
