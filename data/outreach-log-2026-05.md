@@ -4,15 +4,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 476
-- Sendt: 382
+- Antall hendelser: 488
+- Sendt: 393
 - Angret: 7
-- Aktive kontaktede selskaper: 378
+- Aktive kontaktede selskaper: 389
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-21 | 937751931 | IOGT ROGALAND FYLKESLAG | FLI | email | website-offer |
+| 2026-05-21 | 837748232 | GAMLE SUNDAL GARD | FLI | email | website-offer |
+| 2026-05-21 | 937752776 | FELLES HJERTE ( TRÁI TIM CHUNG) | FLI | email | website-offer |
+| 2026-05-21 | 937754353 | DJØNNO BADSTOVELAG | FLI | email | website-offer |
+| 2026-05-21 | 937752768 | BØSTAD VEL | FLI | email | website-offer |
+| 2026-05-21 | 937744749 | TELEMARK CRAFT | FLI | email | website-improvement-offer |
+| 2026-05-21 | 937202482 | SAMEIET ERLANDSTUVEIEN 21 | ESEK | email | website-offer |
+| 2026-05-21 | 937749961 | ODDERNESVEIEN 31 | ESEK | email | website-offer |
+| 2026-05-21 | 937753470 | JONATHAN STORMO PETERSEN SERVICE | ENK | email | website-offer |
+| 2026-05-21 | 937752725 | STEDJAN BYGG & ANLEGG | ENK | email | website-offer |
+| 2026-05-21 | 937752423 | RINDHØLEN DAHL DRIFT | ENK | email | website-offer |
 | 2026-05-21 | 937733747 | NNN I BAMA | FLI | email | website-offer |
 | 2026-05-21 | 937734182 | AUTHORITATIVE NAME SERVER 66 LTD | UTLA | email | website-offer |
 | 2026-05-21 | 937739400 | WHITEOUT SVALBARD AS | AS | email | website-offer |
@@ -396,6 +407,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-21 23:45 | sent | 937751931 | IOGT ROGALAND FYLKESLAG | FLI | email | - |
+| 2026-05-21 23:44 | sent | 837748232 | GAMLE SUNDAL GARD | FLI | email | - |
+| 2026-05-21 23:44 | sent | 937752776 | FELLES HJERTE ( TRÁI TIM CHUNG) | FLI | email | - |
+| 2026-05-21 23:44 | sent | 937754353 | DJØNNO BADSTOVELAG | FLI | email | - |
+| 2026-05-21 23:43 | sent | 937752768 | BØSTAD VEL | FLI | email | - |
+| 2026-05-21 23:41 | not_relevant | 937723997 | SAMEIET OSCARS GATE 11 | ESEK | email | - |
+| 2026-05-21 23:40 | sent | 937744749 | TELEMARK CRAFT | FLI | email | - |
+| 2026-05-21 23:38 | sent | 937202482 | SAMEIET ERLANDSTUVEIEN 21 | ESEK | email | - |
+| 2026-05-21 23:37 | sent | 937749961 | ODDERNESVEIEN 31 | ESEK | email | - |
+| 2026-05-21 23:37 | sent | 937753470 | JONATHAN STORMO PETERSEN SERVICE | ENK | email | - |
+| 2026-05-21 23:36 | sent | 937752725 | STEDJAN BYGG & ANLEGG | ENK | email | - |
+| 2026-05-21 23:35 | sent | 937752423 | RINDHØLEN DAHL DRIFT | ENK | email | - |
 | 2026-05-21 09:25 | sent | 937733747 | NNN I BAMA | FLI | email | - |
 | 2026-05-21 09:24 | sent | 937734182 | AUTHORITATIVE NAME SERVER 66 LTD | UTLA | email | - |
 | 2026-05-21 09:23 | sent | 937739400 | WHITEOUT SVALBARD AS | AS | email | - |
