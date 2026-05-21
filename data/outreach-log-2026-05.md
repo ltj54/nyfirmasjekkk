@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 488
-- Sendt: 393
+- Antall hendelser: 512
+- Sendt: 417
 - Angret: 7
-- Aktive kontaktede selskaper: 389
+- Aktive kontaktede selskaper: 413
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-22 | 937619413 | GLACIER DETAILING & BILPLEIE - NANA MAHOP | ENK | email | website-offer |
+| 2026-05-22 | 937471793 | ABANILLA CREATES | ENK | email | website-offer |
+| 2026-05-22 | 937643705 | SÆTREBAKKE | ENK | email | website-offer |
+| 2026-05-22 | 937594380 | OSATEKST ALSTAD | ENK | email | website-offer |
+| 2026-05-22 | 937596421 | INDAHL LIVREDDENDE KOMPETANSE | ENK | email | website-offer |
+| 2026-05-22 | 937599838 | BURKIVSKYI BOLIGSERVICE | ENK | email | website-offer |
+| 2026-05-22 | 936462685 | BILKOMPANIET MEHMOOD | ENK | email | website-offer |
+| 2026-05-22 | 937687893 | ZENTURA TRADE XIONG | ENK | email | website-offer |
+| 2026-05-22 | 937656483 | BLOMST BY MVO OVERGÅRD | ENK | email | website-offer |
+| 2026-05-22 | 937748639 | YAGORI MUSIKKFESTIVAL | FLI | email | website-offer |
+| 2026-05-22 | 937748825 | SUDANSKE FORENINGEN I AGDER | FLI | email | website-offer |
+| 2026-05-22 | 937562292 | NYLUND SERVICES AS | AS | email | website-offer |
+| 2026-05-22 | 937478771 | MYRENS FILMVERKSTED | FLI | email | website-offer |
+| 2026-05-22 | 937748698 | MAMMUTBERGET | FLI | email | website-offer |
+| 2026-05-22 | 937668090 | DIN BILBUTIKK AS | AS | email | website-offer |
+| 2026-05-22 | 937712758 | UZNORD IMPORT ABRARKHAN | ENK | email | website-offer |
+| 2026-05-22 | 837648572 | MUKHTIAR MUHAMMAD MALERSERVICE | ENK | email | website-offer |
+| 2026-05-22 | 937601271 | JUST K KRISTINE LINDENBLATE | ENK | email | website-offer |
+| 2026-05-22 | 937661754 | FAYEN FORSIKRINGSFORMIDLING | ENK | email | website-offer |
+| 2026-05-22 | 837753732 | TEXFLOW AS | AS | email | website-offer |
+| 2026-05-22 | 937751982 | STORSLETT VEL | FLI | email | website-offer |
+| 2026-05-22 | 937753438 | SKIM BÅT OG BADE FOREINING | FLI | email | website-offer |
+| 2026-05-22 | 936669379 | MAXIMIZE LIVING AS | AS | email | website-offer |
+| 2026-05-22 | 937574045 | LEISO DRIFT LEIDLAND | ENK | email | website-offer |
 | 2026-05-21 | 937751931 | IOGT ROGALAND FYLKESLAG | FLI | email | website-offer |
 | 2026-05-21 | 837748232 | GAMLE SUNDAL GARD | FLI | email | website-offer |
 | 2026-05-21 | 937752776 | FELLES HJERTE ( TRÁI TIM CHUNG) | FLI | email | website-offer |
@@ -407,6 +431,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-22 00:49 | sent | 937619413 | GLACIER DETAILING & BILPLEIE - NANA MAHOP | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937471793 | ABANILLA CREATES | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937643705 | SÆTREBAKKE | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937594380 | OSATEKST ALSTAD | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937596421 | INDAHL LIVREDDENDE KOMPETANSE | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937599838 | BURKIVSKYI BOLIGSERVICE | ENK | email | - |
+| 2026-05-22 00:49 | sent | 936462685 | BILKOMPANIET MEHMOOD | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937687893 | ZENTURA TRADE XIONG | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937656483 | BLOMST BY MVO OVERGÅRD | ENK | email | - |
+| 2026-05-22 00:49 | sent | 937748639 | YAGORI MUSIKKFESTIVAL | FLI | email | - |
+| 2026-05-22 00:49 | sent | 937748825 | SUDANSKE FORENINGEN I AGDER | FLI | email | - |
+| 2026-05-22 00:49 | sent | 937562292 | NYLUND SERVICES AS | AS | email | - |
+| 2026-05-22 00:49 | sent | 937478771 | MYRENS FILMVERKSTED | FLI | email | - |
+| 2026-05-22 00:48 | sent | 937748698 | MAMMUTBERGET | FLI | email | - |
+| 2026-05-22 00:45 | sent | 937668090 | DIN BILBUTIKK AS | AS | email | - |
+| 2026-05-22 00:44 | sent | 937712758 | UZNORD IMPORT ABRARKHAN | ENK | email | - |
+| 2026-05-22 00:44 | sent | 837648572 | MUKHTIAR MUHAMMAD MALERSERVICE | ENK | email | - |
+| 2026-05-22 00:44 | sent | 937601271 | JUST K KRISTINE LINDENBLATE | ENK | email | - |
+| 2026-05-22 00:44 | sent | 937661754 | FAYEN FORSIKRINGSFORMIDLING | ENK | email | - |
+| 2026-05-22 00:44 | sent | 837753732 | TEXFLOW AS | AS | email | - |
+| 2026-05-22 00:44 | sent | 937751982 | STORSLETT VEL | FLI | email | - |
+| 2026-05-22 00:43 | sent | 937753438 | SKIM BÅT OG BADE FOREINING | FLI | email | - |
+| 2026-05-22 00:43 | sent | 936669379 | MAXIMIZE LIVING AS | AS | email | - |
+| 2026-05-22 00:43 | sent | 937574045 | LEISO DRIFT LEIDLAND | ENK | email | - |
 | 2026-05-21 23:45 | sent | 937751931 | IOGT ROGALAND FYLKESLAG | FLI | email | - |
 | 2026-05-21 23:44 | sent | 837748232 | GAMLE SUNDAL GARD | FLI | email | - |
 | 2026-05-21 23:44 | sent | 937752776 | FELLES HJERTE ( TRÁI TIM CHUNG) | FLI | email | - |

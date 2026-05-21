@@ -12,7 +12,6 @@ import {
   AlertCircle,
   CheckCircle2,
   AlertTriangle,
-  Menu,
   ArrowLeft,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -164,6 +163,20 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
 
+function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
+  const discovery = company.websiteDiscovery;
+  if (company.website || discovery?.status !== "POSSIBLE_MATCH" || discovery.candidates.length === 0) {
+    return false;
+  }
+
+  if (!discovery.candidateChecks?.length) {
+    return discovery.verifiedReachable === false;
+  }
+
+  const candidates = websiteCandidateRows(discovery);
+  return candidates.length > 0 && candidates.every((candidate) => candidate.reachable === false);
+}
+
 export function CompanyCheckShell() {
   const [backendReady, setBackendReady] = useState(false);
   const [initialResultsReady, setInitialResultsReady] = useState(false);
@@ -184,6 +197,8 @@ export function CompanyCheckShell() {
   const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([]);
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
+  const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
+  const [isBatchSending, setIsBatchSending] = useState(false);
   const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
   const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
   const [outreachListError, setOutreachListError] = useState<string | null>(null);
@@ -390,7 +405,7 @@ export function CompanyCheckShell() {
     generatedEmail: { subject: string; body: string } | null
   ) {
     if (!company.email || !generatedEmail) {
-      return;
+      return false;
     }
 
     setSendingEmailByOrg((current) => ({
@@ -434,7 +449,7 @@ export function CompanyCheckShell() {
           ...current,
           [company.orgNumber]: "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
         }));
-        return;
+        return false;
       }
 
       const payload = (await response.json()) as { to: string; outreachStatus: OutreachStatus };
@@ -447,17 +462,106 @@ export function CompanyCheckShell() {
         [company.orgNumber]: payload.to,
       }));
       setOutreachEntries((current) => [payload.outreachStatus, ...current]);
+      return true;
     } catch (error) {
       console.error("Failed to send outreach email", error);
       setEmailSendErrorByOrg((current) => ({
         ...current,
         [company.orgNumber]: "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
       }));
+      return false;
     } finally {
       setSendingEmailByOrg((current) => ({
         ...current,
         [company.orgNumber]: false,
       }));
+    }
+  }
+
+  async function runEmailBatch(companies: CompanySummary[]) {
+    if (isBatchSending) {
+      return;
+    }
+
+    const eligibleCompanies = companies.filter(hasOnlyUnreachablePossibleWebsiteCandidates);
+    const sendableCompanies = eligibleCompanies.filter((company) => Boolean(company.email));
+    if (sendableCompanies.length === 0) {
+      window.alert("Ingen av de valgte treffene har både e-post og mulige nettsider som alle står som 'Svarte ikke'.");
+      return;
+    }
+
+    const skippedCount = companies.length - sendableCompanies.length;
+    const confirmed = window.confirm(
+      skippedCount > 0
+        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Fortsette?`
+        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter. Fortsette?`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    setIsBatchSending(true);
+    try {
+      const response = await fetch("/api/outreach-email-template", {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        console.error("Failed to load outreach email template for batch");
+        window.alert("Klarte ikke laste e-postmalen. Batch ble ikke sendt.");
+        return;
+      }
+
+      const payload = (await response.json()) as { content?: string };
+      const templateContent = payload.content ?? "";
+      let sentCount = 0;
+
+      for (const company of sendableCompanies) {
+        const detailedCompany = await fetchCompanyDetailsForBatch(company.orgNumber);
+        if (!detailedCompany) {
+          window.alert(`Batch stoppet. Klarte ikke hente detaljene for ${company.name}. ${sentCount} sendt før stopp.`);
+          return;
+        }
+        if (!detailedCompany.email || !hasOnlyUnreachablePossibleWebsiteCandidates(detailedCompany)) {
+          window.alert(`Batch stoppet. ${detailedCompany.name} oppfyller ikke lenger batch-kravene. ${sentCount} sendt før stopp.`);
+          return;
+        }
+
+        const generatedEmail = generatedEmailByOrg[detailedCompany.orgNumber] ?? {
+          subject: buildOutreachEmailSubject(templateContent, detailedCompany),
+          body: buildOutreachEmailBody(templateContent, detailedCompany),
+        };
+        setGeneratedEmailByOrg((current) => ({
+          ...current,
+          [detailedCompany.orgNumber]: generatedEmail,
+        }));
+        const sent = await sendGeneratedOutreachEmail(detailedCompany, generatedEmail);
+        if (!sent) {
+          window.alert(`Batch stoppet. Klarte ikke sende e-post til ${detailedCompany.name}. ${sentCount} sendt før stopp.`);
+          return;
+        }
+        sentCount += 1;
+      }
+
+      window.alert(`Batch ferdig. ${sentCount} e-poster sendt.`);
+    } finally {
+      setIsBatchSending(false);
+    }
+  }
+
+  async function fetchCompanyDetailsForBatch(orgNumber: string) {
+    try {
+      const response = await fetch(`/api/company-check/${orgNumber}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        console.error(`Failed to fetch company details for batch: ${orgNumber}`);
+        return null;
+      }
+      return (await response.json()) as CompanyDetails;
+    } catch (error) {
+      console.error("Failed to fetch company details for batch", error);
+      return null;
     }
   }
 
@@ -851,6 +955,11 @@ export function CompanyCheckShell() {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
     return !outreachStatus?.sent && outreachStatus?.status !== "not_relevant";
   });
+  const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL") && leadQuickFilters.includes("MISSING_WEBSITE");
+  const selectedBatchCompanies = canUseEmailBatch
+    ? visibleSearchCompanies.filter((company) => batchSelectionByOrg[company.orgNumber] && hasOnlyUnreachablePossibleWebsiteCandidates(company))
+    : [];
+  const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
   const resultsSummary = buildResultsSummary(
     daysFilter,
@@ -890,38 +999,6 @@ export function CompanyCheckShell() {
             </div>
           </button>
 
-          <nav className="hidden items-center gap-7 text-[13px] font-semibold text-[#52606D] md:flex">
-            <button className="transition-colors hover:text-[#1F2933]" onClick={() => scrollToSection("results")} type="button">
-              Søkeresultater
-            </button>
-            <button
-              className="transition-colors hover:text-[#1F2933]"
-              onClick={() => {
-                void fetchOutreachEntries();
-                scrollToSection("outreach");
-              }}
-              type="button"
-            >
-              Utsendelser
-            </button>
-            <button className="transition-colors hover:text-[#1F2933]" onClick={() => scrollToSection("offer")} type="button">
-              Startpakke
-            </button>
-            <button className="transition-colors hover:text-[#1F2933]" onClick={() => scrollToSection("footer")} type="button">
-              Kontakt
-            </button>
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="hidden items-center gap-2 text-[#52606D] sm:inline-flex">
-              <Globe className="size-4" />
-              NO
-            </Button>
-            <Button variant="default" size="sm" className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]">
-              <Menu className="size-4" />
-              <span className="hidden sm:inline">Meny</span>
-            </Button>
-          </div>
         </div>
       </header>
 
@@ -1238,6 +1315,18 @@ export function CompanyCheckShell() {
                       Nullstill hurtigfilter
                     </button>
                   ) : null}
+                  <Button
+                    className="ml-auto rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
+                    disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || isBatchSending}
+                    onClick={() => void runEmailBatch(selectedBatchCompanies)}
+                    size="sm"
+                    title={canUseEmailBatch ? undefined : "Velg Har e-post og Mangler nettside før batch kan kjøres."}
+                    type="button"
+                    variant="outline"
+                  >
+                    {isBatchSending ? "Sender batch..." : "Kjør e-post batch"}
+                    {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
+                  </Button>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -1264,6 +1353,14 @@ export function CompanyCheckShell() {
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
+                    batchSelectable={canUseEmailBatch && hasOnlyUnreachablePossibleWebsiteCandidates(company)}
+                    batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
+                    onToggleBatch={(selected) => {
+                      setBatchSelectionByOrg((current) => ({
+                        ...current,
+                        [company.orgNumber]: selected,
+                      }));
+                    }}
                     onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(company, sent, note, statusOverride)}
                   />
                 ))
@@ -1831,12 +1928,18 @@ function CompanyCard({
   onClick,
   outreachStatus,
   outreachSaving,
+  batchSelectable,
+  batchSelected,
+  onToggleBatch,
   onToggleOutreach,
 }: {
   company: CompanySummary;
   onClick: () => void;
   outreachStatus: OutreachStatus | null;
   outreachSaving: boolean;
+  batchSelectable: boolean;
+  batchSelected: boolean;
+  onToggleBatch: (selected: boolean) => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
   const scoreColors = {
@@ -2018,6 +2121,26 @@ function CompanyCard({
           </button>
         </div>
       </div>
+      <label
+        className={`mt-4 flex items-center gap-3 border border-[#D9E2EC] bg-white px-4 py-3 text-[12px] font-semibold ${
+          batchSelectable ? "cursor-pointer text-[#1F2933]" : "cursor-not-allowed text-[#9FB3C8]"
+        }`}
+        onClick={(event) => event.stopPropagation()}
+        title={batchSelectable ? undefined : "Krever Har e-post, Mangler nettside og at alle mulige nettsider står som Svarte ikke."}
+      >
+        <input
+          checked={batchSelectable && batchSelected}
+          className="size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
+          disabled={!batchSelectable}
+          onChange={(event) => {
+            if (batchSelectable) {
+              onToggleBatch(event.target.checked);
+            }
+          }}
+          type="checkbox"
+        />
+        <span>Send e-post i batch</span>
+      </label>
       <OutreachCheckbox
         key={`${company.orgNumber}-${outreachStatus?.sentAt ?? "draft"}-${outreachStatus?.note ?? ""}`}
         compact
