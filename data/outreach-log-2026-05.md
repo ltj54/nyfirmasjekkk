@@ -4,15 +4,50 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 512
-- Sendt: 417
+- Antall hendelser: 547
+- Sendt: 452
 - Angret: 7
-- Aktive kontaktede selskaper: 413
+- Aktive kontaktede selskaper: 448
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-22 | 937618875 | EIVIND DVERG. ERIKSEN | ENK | email | website-offer |
+| 2026-05-22 | 937520743 | ZVIDRINS BOLIGFORBEDRING | ENK | email | website-offer |
+| 2026-05-22 | 937523246 | RUNE XAVIER LUNDE KONSULT | ENK | email | website-offer |
+| 2026-05-22 | 937635044 | QUALIQUO ADVISORY LIMITED | UTLA | email | website-offer |
+| 2026-05-22 | 937542224 | KOMPANJONG REITEN | ENK | email | website-offer |
+| 2026-05-22 | 937634218 | JOHANSEN MULTISERVICE | ENK | email | website-offer |
+| 2026-05-22 | 837542812 | HØYLAND ARKITEKTUR OG HELSE | ENK | email | website-offer |
+| 2026-05-22 | 937646305 | VERTIGO ROPE ACCESS SOLUTIONS S.R.L. | UTLA | email | website-offer |
+| 2026-05-22 | 837579252 | NORNIRARTS BY DE ALMEIDA PISA | ENK | email | website-offer |
+| 2026-05-22 | 937634102 | KVALA MINIGÅRD HAUGLAND | ENK | email | website-offer |
+| 2026-05-22 | 937577427 | GYTH MASKIN | ENK | email | website-offer |
+| 2026-05-22 | 937578806 | GJESDAL OZONSPESIALISTEN | ENK | email | website-offer |
+| 2026-05-22 | 937546270 | GEOLOGISKE UNDERSØKELSER RUNE STIEN | ENK | email | website-offer |
+| 2026-05-22 | 937571941 | DIOSOMITO CONSULT | ENK | email | website-offer |
+| 2026-05-22 | 936984428 | DENIS DRAGULEA | ENK | email | website-offer |
+| 2026-05-22 | 937646488 | CHRISTIAN HEIBERG ALBERT ENK | ENK | email | website-offer |
+| 2026-05-22 | 937554192 | ZALO BRAINFOOD | ENK | email | website-offer |
+| 2026-05-22 | 937558295 | MAX RESAR | ENK | email | website-offer |
+| 2026-05-22 | 937566778 | AL MUQBEL SERVICE | ENK | email | website-offer |
+| 2026-05-22 | 937590369 | SAMER ALHAFEZ | ENK | email | website-offer |
+| 2026-05-22 | 837486572 | SAID COMMERCE | ENK | email | website-offer |
+| 2026-05-22 | 937626630 | RUMBO NORGE GALVAN VAZQUEZ | ENK | email | website-offer |
+| 2026-05-22 | 937589050 | MIKKELSEN GEIR | ENK | email | website-offer |
+| 2026-05-22 | 937757557 | MJ CNC SERVICES LIMITED | UTLA | email | website-offer |
+| 2026-05-22 | 937759940 | MILTOM SPOLKA Z ORGANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
+| 2026-05-22 | 937738811 | OLHA MALYSHEVA "PINK CLEAN" | ENK | email | website-offer |
+| 2026-05-22 | 937758308 | VOKSENGAMING IO | FLI | email | website-offer |
+| 2026-05-22 | 937757301 | MAHMOUD IBRAHIM | TVAM | email | website-offer |
+| 2026-05-22 | 937757581 | KVIVEN SOPP OG NYTTEVEKSTFORENING | FLI | email | website-offer |
+| 2026-05-22 | 937758065 | HENNING R. ANDERSEN, STØVRING APS | UTLA | email | website-offer |
+| 2026-05-22 | 937757883 | EMRE KAN | TVAM | email | website-offer |
+| 2026-05-22 | 937717318 | DISCIPLES MC JESHUA IS LORD | FLI | email | website-offer |
+| 2026-05-22 | 937757743 | VANGEN FORLAG | ENK | email | website-offer |
+| 2026-05-22 | 937759193 | JAKOBSEN KONSULENTTJENESTER | ENK | email | website-offer |
+| 2026-05-22 | 937758677 | JACOBSEN-NYGAARD HELSE | ENK | email | website-offer |
 | 2026-05-22 | 937619413 | GLACIER DETAILING & BILPLEIE - NANA MAHOP | ENK | email | website-offer |
 | 2026-05-22 | 937471793 | ABANILLA CREATES | ENK | email | website-offer |
 | 2026-05-22 | 937643705 | SÆTREBAKKE | ENK | email | website-offer |
@@ -431,6 +466,41 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-22 12:01 | sent | 937618875 | EIVIND DVERG. ERIKSEN | ENK | email | - |
+| 2026-05-22 12:01 | sent | 937520743 | ZVIDRINS BOLIGFORBEDRING | ENK | email | - |
+| 2026-05-22 12:01 | sent | 937523246 | RUNE XAVIER LUNDE KONSULT | ENK | email | - |
+| 2026-05-22 12:01 | sent | 937635044 | QUALIQUO ADVISORY LIMITED | UTLA | email | - |
+| 2026-05-22 12:00 | sent | 937542224 | KOMPANJONG REITEN | ENK | email | - |
+| 2026-05-22 11:58 | sent | 937634218 | JOHANSEN MULTISERVICE | ENK | email | - |
+| 2026-05-22 11:57 | sent | 837542812 | HØYLAND ARKITEKTUR OG HELSE | ENK | email | - |
+| 2026-05-22 11:57 | sent | 937646305 | VERTIGO ROPE ACCESS SOLUTIONS S.R.L. | UTLA | email | - |
+| 2026-05-22 11:57 | sent | 837579252 | NORNIRARTS BY DE ALMEIDA PISA | ENK | email | - |
+| 2026-05-22 11:57 | sent | 937634102 | KVALA MINIGÅRD HAUGLAND | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937577427 | GYTH MASKIN | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937578806 | GJESDAL OZONSPESIALISTEN | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937546270 | GEOLOGISKE UNDERSØKELSER RUNE STIEN | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937571941 | DIOSOMITO CONSULT | ENK | email | - |
+| 2026-05-22 11:46 | sent | 936984428 | DENIS DRAGULEA | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937646488 | CHRISTIAN HEIBERG ALBERT ENK | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937554192 | ZALO BRAINFOOD | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937558295 | MAX RESAR | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937566778 | AL MUQBEL SERVICE | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937590369 | SAMER ALHAFEZ | ENK | email | - |
+| 2026-05-22 11:46 | sent | 837486572 | SAID COMMERCE | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937626630 | RUMBO NORGE GALVAN VAZQUEZ | ENK | email | - |
+| 2026-05-22 11:46 | sent | 937589050 | MIKKELSEN GEIR | ENK | email | - |
+| 2026-05-22 11:33 | sent | 937757557 | MJ CNC SERVICES LIMITED | UTLA | email | - |
+| 2026-05-22 11:33 | sent | 937759940 | MILTOM SPOLKA Z ORGANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | - |
+| 2026-05-22 11:33 | sent | 937738811 | OLHA MALYSHEVA "PINK CLEAN" | ENK | email | - |
+| 2026-05-22 11:32 | sent | 937758308 | VOKSENGAMING IO | FLI | email | - |
+| 2026-05-22 11:32 | sent | 937757301 | MAHMOUD IBRAHIM | TVAM | email | - |
+| 2026-05-22 11:32 | sent | 937757581 | KVIVEN SOPP OG NYTTEVEKSTFORENING | FLI | email | - |
+| 2026-05-22 11:32 | sent | 937758065 | HENNING R. ANDERSEN, STØVRING APS | UTLA | email | - |
+| 2026-05-22 11:32 | sent | 937757883 | EMRE KAN | TVAM | email | - |
+| 2026-05-22 11:32 | sent | 937717318 | DISCIPLES MC JESHUA IS LORD | FLI | email | - |
+| 2026-05-22 11:28 | sent | 937757743 | VANGEN FORLAG | ENK | email | - |
+| 2026-05-22 11:28 | sent | 937759193 | JAKOBSEN KONSULENTTJENESTER | ENK | email | - |
+| 2026-05-22 11:28 | sent | 937758677 | JACOBSEN-NYGAARD HELSE | ENK | email | - |
 | 2026-05-22 00:49 | sent | 937619413 | GLACIER DETAILING & BILPLEIE - NANA MAHOP | ENK | email | - |
 | 2026-05-22 00:49 | sent | 937471793 | ABANILLA CREATES | ENK | email | - |
 | 2026-05-22 00:49 | sent | 937643705 | SÆTREBAKKE | ENK | email | - |

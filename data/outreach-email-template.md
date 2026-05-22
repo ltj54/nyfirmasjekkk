@@ -59,7 +59,7 @@ Emne: `Nettside for {{companyName}}?`
 
 Hei {{greeting}},
 
-Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
+{{companyName}} ser ut til å mangle en tydelig nettside.
 
 {{salesSegmentPitch}}
 
@@ -74,7 +74,7 @@ Du får:
 Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh  
 {{senderName}}  
@@ -87,16 +87,16 @@ Emne: `Nettsiden til {{companyName}}?`
 
 Hei {{greeting}},
 
-Jeg så at {{companyName}} har registrert nettsiden {{registeredWebsite}}.
+{{companyName}} har nettsiden {{registeredWebsite}} registrert i BRREG.
 
-Da jeg sjekket den, fikk jeg ikke kontakt med siden. Det kan selvfølgelig være midlertidig, men jeg ville bare gi en liten beskjed.
+Ved en enkel sjekk svarte ikke siden. Det kan selvfølgelig være midlertidig, men det kan være greit å være klar over.
 
-Hvis dere trenger hjelp, kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
+Ved behov kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
 
 Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh  
 {{senderName}}  
@@ -111,13 +111,13 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Jeg tok en rask titt på nettsiden og kan gjerne sende et lite forslag til hvordan den kan gjøres tydeligere og enklere å bruke.
+Nettsiden ble sjekket raskt, og det kan være mulig å gjøre den tydeligere og enklere å bruke.
 
 Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Eksempel:
 {{senderWebsite}}
@@ -131,9 +131,9 @@ Mvh
 
 Hei {{greeting}},
 
-Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
+{{companyName}} ser ut til å mangle en tydelig nettside.
 
-Jeg kan sende et konkret forslag til en ryddig nettside med kontaktinfo, kort presentasjon og tydelig kontaktvei hvis det er interessant.
+Et konkret forslag til en ryddig nettside med kontaktinfo, kort presentasjon og tydelig kontaktvei kan sendes hvis det er interessant.
 
 Eksempel:
 {{senderWebsite}}
@@ -149,7 +149,7 @@ Emne: `Nettside for Eksempel AS?`
 
 Hei dere i Eksempel AS,
 
-Jeg kom over Eksempel AS og så at jeg ikke fant noen tydelig nettside registrert.
+Eksempel AS ser ut til å mangle en tydelig nettside.
 
 For bygg- og håndverksbedrifter er det ofte viktig at kunder raskt ser hvilke tjenester dere tilbyr, hvilket område dere dekker og hvordan de kan ta kontakt.
 
@@ -164,7 +164,7 @@ Du får:
 Eksempel:
 https://ltj-production.no/
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh  
 Lars Johannessen  

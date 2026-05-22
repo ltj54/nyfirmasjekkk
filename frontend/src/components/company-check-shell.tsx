@@ -162,6 +162,14 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
+const MAX_EMAIL_BATCH_SIZE = 15;
+const EMAIL_BATCH_SEND_DELAY_MS = 12_000;
+
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
 
 function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
   const discovery = company.websiteDiscovery;
@@ -447,7 +455,9 @@ export function CompanyCheckShell() {
         console.error("Failed to send outreach email", errorText);
         setEmailSendErrorByOrg((current) => ({
           ...current,
-          [company.orgNumber]: "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
+          [company.orgNumber]: response.status === 429
+            ? "For mange e-postforsøk på kort tid. Vent før du prøver igjen."
+            : "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
         }));
         return false;
       }
@@ -489,12 +499,17 @@ export function CompanyCheckShell() {
       window.alert("Ingen av de valgte treffene har både e-post og mulige nettsider som alle står som 'Svarte ikke'.");
       return;
     }
+    if (sendableCompanies.length > MAX_EMAIL_BATCH_SIZE) {
+      window.alert(`Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch. Dette reduserer risikoen for rate limit og feilutsending.`);
+      return;
+    }
 
     const skippedCount = companies.length - sendableCompanies.length;
+    const delaySeconds = Math.round(EMAIL_BATCH_SEND_DELAY_MS / 1000);
     const confirmed = window.confirm(
       skippedCount > 0
-        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Fortsette?`
-        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter. Fortsette?`,
+        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Fortsette?`
+        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. Fortsette?`,
     );
     if (!confirmed) {
       return;
@@ -541,6 +556,9 @@ export function CompanyCheckShell() {
           return;
         }
         sentCount += 1;
+        if (sentCount < sendableCompanies.length) {
+          await wait(EMAIL_BATCH_SEND_DELAY_MS);
+        }
       }
 
       window.alert(`Batch ferdig. ${sentCount} e-poster sendt.`);
@@ -960,6 +978,7 @@ export function CompanyCheckShell() {
     ? visibleSearchCompanies.filter((company) => batchSelectionByOrg[company.orgNumber] && hasOnlyUnreachablePossibleWebsiteCandidates(company))
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
+  const overEmailBatchLimit = sendableBatchCount > MAX_EMAIL_BATCH_SIZE;
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
   const resultsSummary = buildResultsSummary(
     daysFilter,
@@ -1317,16 +1336,27 @@ export function CompanyCheckShell() {
                   ) : null}
                   <Button
                     className="ml-auto rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
-                    disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || isBatchSending}
+                    disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || overEmailBatchLimit || isBatchSending}
                     onClick={() => void runEmailBatch(selectedBatchCompanies)}
                     size="sm"
-                    title={canUseEmailBatch ? undefined : "Velg Har e-post og Mangler nettside før batch kan kjøres."}
+                    title={
+                      !canUseEmailBatch
+                        ? "Velg Har e-post og Mangler nettside før batch kan kjøres."
+                        : overEmailBatchLimit
+                          ? `Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch.`
+                          : undefined
+                    }
                     type="button"
                     variant="outline"
                   >
                     {isBatchSending ? "Sender batch..." : "Kjør e-post batch"}
                     {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
                   </Button>
+                  {overEmailBatchLimit ? (
+                    <span className="basis-full text-[12px] font-medium text-[#9F580A] sm:basis-auto">
+                      Maks {MAX_EMAIL_BATCH_SIZE} per batch.
+                    </span>
+                  ) : null}
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

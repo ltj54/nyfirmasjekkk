@@ -56,8 +56,8 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
   }
 
   const introduction = signalCodes.has("MEDICAL_VISUAL_TRUST_RISK") || signalCodes.has("MEDICAL_REGULATORY_STATUS")
-    ? "Jeg gjorde bare en enkel sjekk, men siden dette berører medisinsk/kirurgisk teknologi ville jeg vært ekstra nøye med"
-    : "Jeg gjorde bare en enkel sjekk, men ser et par ting som kan være verdt å rydde samtidig";
+    ? "En enkel sjekk viser at dette berører medisinsk/kirurgisk teknologi, så særlig disse punktene bør vurderes nøye"
+    : "En enkel sjekk viser et par punkter som kan være verdt å rydde samtidig";
 
   return `${introduction}: ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
 }
@@ -592,13 +592,13 @@ function defaultWebsiteQualityOpportunityEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Jeg tok en rask titt på nettsiden og kan gjerne sende et lite forslag til hvordan den kan gjøres tydeligere og enklere å bruke.
+Nettsiden ble sjekket raskt, og det kan være mulig å gjøre den tydeligere og enklere å bruke.
 
 Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Eksempel:
 {{senderWebsite}}
@@ -612,16 +612,16 @@ Mvh
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `Hei {{greeting}},
 
-Jeg så at {{companyName}} har registrert nettsiden {{registeredWebsite}}.
+{{companyName}} har nettsiden {{registeredWebsite}} registrert i BRREG.
 
-Da jeg sjekket den, fikk jeg ikke kontakt med siden. Det kan selvfølgelig være midlertidig, men jeg ville bare gi en liten beskjed.
+Ved en enkel sjekk svarte ikke siden. Det kan selvfølgelig være midlertidig, men det kan være greit å være klar over.
 
-Hvis dere trenger hjelp, kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
+Ved behov kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
 
 Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh
 {{senderName}}
@@ -645,7 +645,7 @@ function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
 function defaultOutreachEmailTemplate() {
   return `Hei {{greeting}},
 
-Jeg kom over {{companyName}} og så at jeg ikke fant noen tydelig nettside registrert.
+{{companyName}} ser ut til å mangle en tydelig nettside.
 
 {{salesSegmentPitch}}
 
@@ -660,7 +660,7 @@ Du får:
 Eksempel:
 {{senderWebsite}}
 
-Jeg kan sende et konkret forslag hvis det er interessant.
+Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh
 {{senderName}}
@@ -974,10 +974,10 @@ function registeredWebsiteIntro(company: OutreachEmailCompany) {
   const signalCodes = new Set(company.websiteQuality?.signals.map((signal) => signal.code) ?? []);
 
   if (signalCodes.has("THIRD_PARTY_SURFACE")) {
-    return `Jeg så at dere bruker ${website} som digital flate.`;
+    return `${website} ser ut til å være brukt som digital flate.`;
   }
 
-  return `Jeg så at dere har nettsiden ${website} registrert i BRREG.`;
+  return `${website} er registrert som nettside i BRREG.`;
 }
 
 function stripWebsiteForMail(website: string) {
