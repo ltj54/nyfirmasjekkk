@@ -88,6 +88,30 @@ public class CompanyApiV1Mapper {
     private static final Set<String> GENERIC_MARKETING_WORDS = Set.of(
             "kvalitet", "service", "profesjonell", "skreddersydd", "losninger", "løsninger", "erfaring", "dyktige", "trygg", "effektiv"
     );
+    private static final Set<String> GENERIC_PRESENTATION_PHRASES = Set.of(
+            "skaper leads",
+            "se skarpere ut",
+            "sterkere forsteinntrykk",
+            "sterkere førsteinntrykk",
+            "tydeligere system",
+            "digitalt system",
+            "digital profil",
+            "målbar effekt",
+            "malbar effekt",
+            "uten stoy",
+            "uten støy",
+            "strategi til publisering",
+            "kunder forstar verdien",
+            "kunder forstår verdien",
+            "ambisiose virksomheter",
+            "ambisiøse virksomheter",
+            "vekst",
+            "konvertering",
+            "optimalisering",
+            "performance",
+            "posisjonering",
+            "bevisst uttrykk"
+    );
     private static final Set<String> ABOUT_TRUST_WORDS = Set.of(
             "om oss", "om meg", "about us", "about me", "team", "ansatte", "medarbeidere", "hvem vi er", "hvem jeg er"
     );
@@ -991,12 +1015,16 @@ public class CompanyApiV1Mapper {
                 .map(this::normalizeForWebsiteQuality)
                 .filter(bodyText::contains)
                 .count();
+        long genericPhrases = GENERIC_PRESENTATION_PHRASES.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .filter(combined::contains)
+                .count();
         boolean hasAbout = containsAny(combined, ABOUT_TRUST_WORDS);
         boolean hasSocialProof = containsAny(combined, SOCIAL_PROOF_WORDS);
         boolean hasGenericImageSource = containsAny(rawHtml.toLowerCase(Locale.ROOT), GENERIC_IMAGE_SOURCE_WORDS);
         int imageAssetCount = imageAssetCount(rawHtml);
 
-        boolean textLooksGeneric = genericWords >= 4 && (!hasAbout || !hasSocialProof);
+        boolean textLooksGeneric = (genericWords >= 4 || genericPhrases >= 4) && (!hasAbout || !hasSocialProof);
         boolean visualLooksGeneric = (hasGenericImageSource || imageAssetCount >= 18) && !hasSocialProof;
         if (!textLooksGeneric && !visualLooksGeneric) {
             return;

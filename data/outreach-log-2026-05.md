@@ -4,15 +4,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 586
-- Sendt: 489
+- Antall hendelser: 611
+- Sendt: 514
 - Angret: 7
-- Aktive kontaktede selskaper: 485
+- Aktive kontaktede selskaper: 510
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-24 | 937431228 | DAG KOPPERVIK MANAGEMENT & CONSULTING | ENK | email | website-offer |
+| 2026-05-24 | 937568061 | JOLAKO SVEISESERVICE | ENK | email | website-offer |
+| 2026-05-24 | 937472463 | VEKSTPUNKT HELSE BJERKSETH | ENK | email | website-offer |
+| 2026-05-24 | 937473672 | PARKTIC MORTEN HANSEN | ENK | email | website-offer |
+| 2026-05-24 | 937474075 | LUKSOR LYS DESISLAVA KOSTOVA | ENK | email | website-offer |
+| 2026-05-24 | 837473942 | LAGESEN SANS&SAMLING | ENK | email | website-offer |
+| 2026-05-24 | 937472293 | KHANINIEVA CLEAN-HOUSE | ENK | email | website-offer |
+| 2026-05-24 | 937473397 | KAKEKUNST SMYRNOVA | ENK | email | website-offer |
+| 2026-05-24 | 937355165 | JØRGENSENS SMIE | ENK | email | website-offer |
+| 2026-05-24 | 937483465 | HOW ANLEGGSSERVICE | ENK | email | website-offer |
+| 2026-05-24 | 937473176 | GRØTTERUDS SNEKKER SERVICE | ENK | email | website-offer |
+| 2026-05-24 | 837475082 | FA. HØIBO | ENK | email | website-offer |
+| 2026-05-24 | 937591136 | NUER COMMUNITY IN NORWAY | FLI | email | website-offer |
+| 2026-05-24 | 937495188 | KRISTIANSEN SMYKKEMAGI | ENK | email | website-offer |
+| 2026-05-24 | 937504977 | RIDEMOVI S.P.A. NUF | NUF | email | website-offer |
+| 2026-05-24 | 937498381 | VINKELNER SONDRE ARNEVIK | ENK | email | website-offer |
+| 2026-05-24 | 937597010 | UAB "NDT POWER" | UTLA | email | website-offer |
+| 2026-05-24 | 937509391 | SEMENKO LUNA & CHASE EVENT | ENK | email | website-offer |
+| 2026-05-24 | 937491549 | MYKLEBUST SOLUTIONS | ENK | email | website-offer |
+| 2026-05-24 | 937492561 | HØEG | ENK | email | website-offer |
+| 2026-05-24 | 937508069 | HANSEN VAKTMESTER & HAGEHJELP | ENK | email | website-offer |
+| 2026-05-24 | 937500955 | FJELDE UTMARKSTJENESTER | ENK | email | website-offer |
+| 2026-05-24 | 937539347 | ERLANDSEN CONSULTING | ENK | email | website-offer |
+| 2026-05-24 | 937769636 | MICHAELSEN EIENDOM | ENK | email | website-offer |
+| 2026-05-24 | 937765800 | DENIMFRIENDS AS | AS | email | website-offer |
 | 2026-05-23 | 937521324 | BJERKLI COACHING | ENK | email | website-offer |
 | 2026-05-23 | 937501722 | AGNETE OFSTAD | ENK | email | website-offer |
 | 2026-05-23 | 937495609 | PK EGELAND | ENK | email | website-offer |
@@ -503,6 +528,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-24 01:07 | sent | 937431228 | DAG KOPPERVIK MANAGEMENT & CONSULTING | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937568061 | JOLAKO SVEISESERVICE | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937472463 | VEKSTPUNKT HELSE BJERKSETH | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937473672 | PARKTIC MORTEN HANSEN | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937474075 | LUKSOR LYS DESISLAVA KOSTOVA | ENK | email | - |
+| 2026-05-24 01:07 | sent | 837473942 | LAGESEN SANS&SAMLING | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937472293 | KHANINIEVA CLEAN-HOUSE | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937473397 | KAKEKUNST SMYRNOVA | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937355165 | JØRGENSENS SMIE | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937483465 | HOW ANLEGGSSERVICE | ENK | email | - |
+| 2026-05-24 01:07 | sent | 937473176 | GRØTTERUDS SNEKKER SERVICE | ENK | email | - |
+| 2026-05-24 01:07 | sent | 837475082 | FA. HØIBO | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937591136 | NUER COMMUNITY IN NORWAY | FLI | email | - |
+| 2026-05-24 01:01 | sent | 937495188 | KRISTIANSEN SMYKKEMAGI | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937504977 | RIDEMOVI S.P.A. NUF | NUF | email | - |
+| 2026-05-24 01:01 | sent | 937498381 | VINKELNER SONDRE ARNEVIK | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937597010 | UAB "NDT POWER" | UTLA | email | - |
+| 2026-05-24 01:01 | sent | 937509391 | SEMENKO LUNA & CHASE EVENT | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937491549 | MYKLEBUST SOLUTIONS | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937492561 | HØEG | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937508069 | HANSEN VAKTMESTER & HAGEHJELP | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937500955 | FJELDE UTMARKSTJENESTER | ENK | email | - |
+| 2026-05-24 01:01 | sent | 937539347 | ERLANDSEN CONSULTING | ENK | email | - |
+| 2026-05-24 00:51 | sent | 937769636 | MICHAELSEN EIENDOM | ENK | email | - |
+| 2026-05-24 00:49 | sent | 937765800 | DENIMFRIENDS AS | AS | email | - |
 | 2026-05-23 14:16 | sent | 937521324 | BJERKLI COACHING | ENK | email | - |
 | 2026-05-23 14:16 | sent | 937501722 | AGNETE OFSTAD | ENK | email | - |
 | 2026-05-23 14:16 | sent | 937495609 | PK EGELAND | ENK | email | - |

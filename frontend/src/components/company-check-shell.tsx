@@ -1854,10 +1854,9 @@ function WebsiteQualityPanel({
                       </span>
                     </div>
                     <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
-                    <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-3">
+                    <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-2">
                       <WebsiteSignalReportItem label="Hvorfor" value={websiteSignalWhy(signal)} />
                       <WebsiteSignalReportItem label="Tiltak" value={websiteSignalAction(signal)} />
-                      <WebsiteSignalReportItem label="LTJ kan" value={websiteSignalLtjScope(signal)} />
                     </div>
                   </div>
                 ))}
@@ -2178,54 +2177,6 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
     return "Skriv mer konkret om tjenester, målgruppe, område og hva kunden faktisk kan bestille.";
   }
   return "Sjekk funnet manuelt og prioriter tiltak hvis det påvirker tillit, kontakt eller sikkerhet.";
-}
-
-function websiteSignalLtjScope(signal: WebsiteQualitySignal) {
-  if ([
-    "GENERIC_PRESENTATION_TRUST_RISK",
-    "GENERIC_OR_AI_IMAGE_RISK",
-    "WEAK_HOMEPAGE_STRUCTURE",
-    "WEAK_INDUSTRY_RELEVANCE",
-    "GENERIC_SERVICE_TEXT",
-    "MISSING_LOCAL_RELEVANCE",
-    "MISSING_ABOUT_SECTION",
-    "MISSING_SOCIAL_PROOF",
-    "FORM_LABEL_RISK",
-    "EMPTY_BUTTON_RISK",
-    "IMAGE_ALT_RISK",
-    "MISSING_LANGUAGE",
-    "IFRAME_TITLE_RISK",
-  ].includes(signal.code)) {
-    return "Kan normalt forbedres i nettsidearbeid.";
-  }
-  if ([
-    "MISSING_HSTS_HEADER",
-    "MISSING_CSP_HEADER",
-    "WEAK_CSP_HEADER",
-    "MISSING_REFERRER_POLICY",
-    "MISSING_PERMISSIONS_POLICY",
-    "MISSING_X_CONTENT_TYPE_OPTIONS",
-  ].includes(signal.code)) {
-    return "Kan ofte forbedres hvis hosting/CMS gir tilgang.";
-  }
-  if ([
-    "ADMIN_OR_LOGIN_PATH_EXPOSED",
-    "LOGIN_FORM_SECURITY_REVIEW",
-    "FILE_UPLOAD_REVIEW",
-    "API_ENDPOINTS_VISIBLE",
-    "CMS_VERSION_EXPOSED",
-  ].includes(signal.code)) {
-    return "Bør vurderes som teknisk sikkerhetsarbeid, eventuelt med ekstern sikkerhetspartner.";
-  }
-  if ([
-    "MISSING_PRIVACY_NOTICE",
-    "COOKIE_CONSENT_RISK",
-    "SENSITIVE_HEALTH_CONTEXT",
-    "HEALTH_TRACKING_CONTEXT",
-  ].includes(signal.code)) {
-    return "Kan ryddes teknisk, men juridisk innhold bør kvalitetssikres av virksomheten.";
-  }
-  return "Kan vurderes i en manuell rapport før tiltak foreslås.";
 }
 
 function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
