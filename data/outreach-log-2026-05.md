@@ -4,15 +4,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 574
-- Sendt: 477
+- Antall hendelser: 586
+- Sendt: 489
 - Angret: 7
-- Aktive kontaktede selskaper: 473
+- Aktive kontaktede selskaper: 485
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-23 | 937521324 | BJERKLI COACHING | ENK | email | website-offer |
+| 2026-05-23 | 937501722 | AGNETE OFSTAD | ENK | email | website-offer |
+| 2026-05-23 | 937495609 | PK EGELAND | ENK | email | website-offer |
+| 2026-05-23 | 937551452 | PANIAGUA BERNAL INK | ENK | email | website-offer |
+| 2026-05-23 | 837610222 | INTELLUX CAPITAL MANAGEMENT S.A.SPF | UTLA | email | website-offer |
+| 2026-05-23 | 937521057 | OLUFSEN MULTISERVICES | ENK | email | website-offer |
+| 2026-05-23 | 937522061 | J. OMDAL DRIFT | ENK | email | website-offer |
+| 2026-05-23 | 937620993 | DAIKIN APPLIED EUROPE S.P.A. | UTLA | email | website-offer |
+| 2026-05-23 | 837620562 | CRIDERA AB | UTLA | email | website-offer |
+| 2026-05-23 | 937535864 | WIWATOWSKI STUDIO | ENK | email | website-offer |
+| 2026-05-23 | 937533640 | REBROVA KIKASTUDIO | ENK | email | website-offer |
+| 2026-05-23 | 937584431 | VAAGE GROWTH | ENK | email | website-offer |
 | 2026-05-23 | 937751249 | STORMBERRY AS | AS | email | website-improvement-offer |
 | 2026-05-23 | 937754124 | VEVELSTAD BYGDEAVIS | FLI | email | website-improvement-offer |
 | 2026-05-23 | 937732058 | FAMILIEMIDDAG EMMAUS REGE | FLI | email | website-improvement-offer |
@@ -491,6 +503,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-23 14:16 | sent | 937521324 | BJERKLI COACHING | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937501722 | AGNETE OFSTAD | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937495609 | PK EGELAND | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937551452 | PANIAGUA BERNAL INK | ENK | email | - |
+| 2026-05-23 14:16 | sent | 837610222 | INTELLUX CAPITAL MANAGEMENT S.A.SPF | UTLA | email | - |
+| 2026-05-23 14:16 | sent | 937521057 | OLUFSEN MULTISERVICES | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937522061 | J. OMDAL DRIFT | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937620993 | DAIKIN APPLIED EUROPE S.P.A. | UTLA | email | - |
+| 2026-05-23 14:16 | sent | 837620562 | CRIDERA AB | UTLA | email | - |
+| 2026-05-23 14:16 | sent | 937535864 | WIWATOWSKI STUDIO | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937533640 | REBROVA KIKASTUDIO | ENK | email | - |
+| 2026-05-23 14:16 | sent | 937584431 | VAAGE GROWTH | ENK | email | - |
 | 2026-05-23 13:38 | sent | 937751249 | STORMBERRY AS | AS | email | - |
 | 2026-05-23 13:36 | sent | 937754124 | VEVELSTAD BYGDEAVIS | FLI | email | - |
 | 2026-05-23 13:35 | sent | 937732058 | FAMILIEMIDDAG EMMAUS REGE | FLI | email | - |
