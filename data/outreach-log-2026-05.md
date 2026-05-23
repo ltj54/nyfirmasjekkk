@@ -4,15 +4,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 547
-- Sendt: 452
+- Antall hendelser: 574
+- Sendt: 477
 - Angret: 7
-- Aktive kontaktede selskaper: 448
+- Aktive kontaktede selskaper: 473
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-23 | 937751249 | STORMBERRY AS | AS | email | website-improvement-offer |
+| 2026-05-23 | 937754124 | VEVELSTAD BYGDEAVIS | FLI | email | website-improvement-offer |
+| 2026-05-23 | 937732058 | FAMILIEMIDDAG EMMAUS REGE | FLI | email | website-improvement-offer |
+| 2026-05-23 | 937767889 | NORDIC DATA TRUST AS | AS | email | website-improvement-offer |
+| 2026-05-23 | 937754825 | PLATFORM GUILD | FLI | email | website-improvement-offer |
+| 2026-05-23 | 937761473 | PRIME CARGO SOLUTIONS AS | AS | email | website-improvement-offer |
+| 2026-05-23 | 937766343 | HUSMANNSPLASSEN HAMNS VENNER | FLI | email | website-unavailable-offer |
+| 2026-05-23 | 937673337 | IVANCHUK CLEANING | ENK | email | website-offer |
+| 2026-05-23 | 937714262 | MELUM MARINA | ENK | email | website-offer |
+| 2026-05-23 | 937662211 | KREATIV KODE DA | DA | email | website-offer |
+| 2026-05-23 | 937668619 | FOTLAND FJORD DYKK | ENK | email | website-offer |
+| 2026-05-23 | 937766793 | YOUME | FLI | email | website-offer |
+| 2026-05-23 | 937766548 | SRPSKO KOLO ROGALAND | FLI | email | website-offer |
+| 2026-05-23 | 937766750 | NESNA HØYRE | FLI | email | website-offer |
+| 2026-05-23 | 937766726 | IFI-CREATORS' GUILD | FLI | email | website-offer |
+| 2026-05-23 | 837726182 | HARSSTAD INTERNASJONALE FOLKEDANSKLUBB | FLI | email | website-offer |
+| 2026-05-23 | 937766432 | GÅPING CYKLEKLUBB BÆRUM | FLI | email | website-offer |
+| 2026-05-23 | 937503113 | EKSINGEDALEN BYGDEKVINNELAG | FLI | email | website-offer |
+| 2026-05-23 | 937766505 | BLOMSTERSENIORER ØSTFOLD | FLI | email | website-offer |
+| 2026-05-23 | 937766815 | AGDER TERNING-SPILLKLUBB | FLI | email | website-offer |
+| 2026-05-23 | 937764251 | SENJA HIKING & ADVENTURE HENRIKSEN | ENK | email | website-offer |
+| 2026-05-23 | 937764456 | SENJA EXPLORER & SERVICES HENRIKSEN | ENK | email | website-offer |
+| 2026-05-23 | 937767749 | MT. LØBACH COACHING OG TRENING | ENK | email | website-offer |
+| 2026-05-23 | 937768028 | BØ PÆNG | ENK | email | website-offer |
+| 2026-05-23 | 937669577 | NIHAD AHMED GRAVESERVICE | ENK | email | website-offer |
 | 2026-05-22 | 937618875 | EIVIND DVERG. ERIKSEN | ENK | email | website-offer |
 | 2026-05-22 | 937520743 | ZVIDRINS BOLIGFORBEDRING | ENK | email | website-offer |
 | 2026-05-22 | 937523246 | RUNE XAVIER LUNDE KONSULT | ENK | email | website-offer |
@@ -466,6 +491,33 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-23 13:38 | sent | 937751249 | STORMBERRY AS | AS | email | - |
+| 2026-05-23 13:36 | sent | 937754124 | VEVELSTAD BYGDEAVIS | FLI | email | - |
+| 2026-05-23 13:35 | sent | 937732058 | FAMILIEMIDDAG EMMAUS REGE | FLI | email | - |
+| 2026-05-23 13:34 | sent | 937767889 | NORDIC DATA TRUST AS | AS | email | - |
+| 2026-05-23 13:32 | sent | 937754825 | PLATFORM GUILD | FLI | email | - |
+| 2026-05-23 13:27 | sent | 937761473 | PRIME CARGO SOLUTIONS AS | AS | email | - |
+| 2026-05-23 13:25 | not_relevant | 837752612 | HUNDEVERNTJENESTEN | FLI | email | - |
+| 2026-05-23 13:20 | sent | 937766343 | HUSMANNSPLASSEN HAMNS VENNER | FLI | email | - |
+| 2026-05-23 12:30 | not_relevant | 937757425 | BLUEFIN TUNA SWEDEN AB | UTLA | email | - |
+| 2026-05-23 12:29 | sent | 937673337 | IVANCHUK CLEANING | ENK | email | - |
+| 2026-05-23 12:29 | sent | 937714262 | MELUM MARINA | ENK | email | - |
+| 2026-05-23 12:29 | sent | 937662211 | KREATIV KODE DA | DA | email | - |
+| 2026-05-23 12:29 | sent | 937668619 | FOTLAND FJORD DYKK | ENK | email | - |
+| 2026-05-23 12:29 | sent | 937766793 | YOUME | FLI | email | - |
+| 2026-05-23 12:29 | sent | 937766548 | SRPSKO KOLO ROGALAND | FLI | email | - |
+| 2026-05-23 12:29 | sent | 937766750 | NESNA HØYRE | FLI | email | - |
+| 2026-05-23 12:29 | sent | 937766726 | IFI-CREATORS' GUILD | FLI | email | - |
+| 2026-05-23 12:29 | sent | 837726182 | HARSSTAD INTERNASJONALE FOLKEDANSKLUBB | FLI | email | - |
+| 2026-05-23 12:29 | sent | 937766432 | GÅPING CYKLEKLUBB BÆRUM | FLI | email | - |
+| 2026-05-23 12:29 | sent | 937503113 | EKSINGEDALEN BYGDEKVINNELAG | FLI | email | - |
+| 2026-05-23 12:28 | sent | 937766505 | BLOMSTERSENIORER ØSTFOLD | FLI | email | - |
+| 2026-05-23 12:28 | sent | 937766815 | AGDER TERNING-SPILLKLUBB | FLI | email | - |
+| 2026-05-23 12:25 | sent | 937764251 | SENJA HIKING & ADVENTURE HENRIKSEN | ENK | email | - |
+| 2026-05-23 12:25 | sent | 937764456 | SENJA EXPLORER & SERVICES HENRIKSEN | ENK | email | - |
+| 2026-05-23 12:25 | sent | 937767749 | MT. LØBACH COACHING OG TRENING | ENK | email | - |
+| 2026-05-23 12:25 | sent | 937768028 | BØ PÆNG | ENK | email | - |
+| 2026-05-23 12:25 | sent | 937669577 | NIHAD AHMED GRAVESERVICE | ENK | email | - |
 | 2026-05-22 12:01 | sent | 937618875 | EIVIND DVERG. ERIKSEN | ENK | email | - |
 | 2026-05-22 12:01 | sent | 937520743 | ZVIDRINS BOLIGFORBEDRING | ENK | email | - |
 | 2026-05-22 12:01 | sent | 937523246 | RUNE XAVIER LUNDE KONSULT | ENK | email | - |

@@ -595,10 +595,6 @@ public class CompanyApiV1Mapper {
         }
     }
 
-    private WebsiteQualityAssessment assessmentFromSignals(List<WebsiteQualitySignal> signals, String summary) {
-        return assessmentFromSignals(signals, summary, null);
-    }
-
     private WebsiteQualityAssessment contentUnreadableAssessment(List<WebsiteQualitySignal> signals) {
         boolean hasHigh = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()));
         String status = hasHigh ? "WEAK" : "NEEDS_REVIEW";
@@ -926,6 +922,7 @@ public class CompanyApiV1Mapper {
                     isHealthOrMedicalSegment(enhet) ? "MEDIUM" : "INFO"
             ));
         }
+        addGenericPresentationTrustSignal(signals, snapshot, isHealthOrMedicalSegment(enhet));
 
         if (snapshot.platformDomainSignal()) {
             signals.add(new WebsiteQualitySignal(
@@ -975,6 +972,42 @@ public class CompanyApiV1Mapper {
         if (snapshot.ecommerceSignal()) {
             addCommerceSignals(signals, snapshot);
         }
+        addGenericPresentationTrustSignal(signals, snapshot, false);
+    }
+
+    private void addGenericPresentationTrustSignal(
+            List<WebsiteQualitySignal> signals,
+            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
+            boolean stricterContext
+    ) {
+        if (signals.stream().anyMatch(signal -> "GENERIC_PRESENTATION_TRUST_RISK".equals(signal.code()))) {
+            return;
+        }
+
+        String rawHtml = snapshot.html() == null ? "" : snapshot.html();
+        String bodyText = normalizeForWebsiteQuality(snapshot.bodyText() == null ? "" : snapshot.bodyText());
+        String combined = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + rawHtml);
+        long genericWords = GENERIC_MARKETING_WORDS.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .filter(bodyText::contains)
+                .count();
+        boolean hasAbout = containsAny(combined, ABOUT_TRUST_WORDS);
+        boolean hasSocialProof = containsAny(combined, SOCIAL_PROOF_WORDS);
+        boolean hasGenericImageSource = containsAny(rawHtml.toLowerCase(Locale.ROOT), GENERIC_IMAGE_SOURCE_WORDS);
+        int imageAssetCount = imageAssetCount(rawHtml);
+
+        boolean textLooksGeneric = genericWords >= 4 && (!hasAbout || !hasSocialProof);
+        boolean visualLooksGeneric = (hasGenericImageSource || imageAssetCount >= 18) && !hasSocialProof;
+        if (!textLooksGeneric && !visualLooksGeneric) {
+            return;
+        }
+
+        signals.add(new WebsiteQualitySignal(
+                "GENERIC_PRESENTATION_TRUST_RISK",
+                "Mulig generisk uttrykk",
+                "Tekst eller visuelle spor virker lite konkrete for virksomheten. Det er ikke nødvendigvis feil, men kan svekke tillit hvis siden mangler ekte bilder, referanser, personer, prosjekter eller tydelig faglig dokumentasjon.",
+                stricterContext ? "MEDIUM" : "INFO"
+        ));
     }
 
     private void addCommerceSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {

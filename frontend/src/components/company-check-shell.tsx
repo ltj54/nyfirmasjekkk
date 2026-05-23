@@ -163,7 +163,7 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
 const MAX_EMAIL_BATCH_SIZE = 15;
-const EMAIL_BATCH_SEND_DELAY_MS = 12_000;
+const EMAIL_BATCH_SEND_DELAY_MS = 2_000;
 
 function wait(ms: number) {
   return new Promise((resolve) => {
@@ -1755,6 +1755,26 @@ function WebsiteQualityPanel({
   className?: string;
 }) {
   const groupedSignals = groupWebsiteQualitySignals(quality.signals);
+  const reportSummary = websiteQualityReportSummary(quality.signals);
+  const [showShortReport, setShowShortReport] = useState(false);
+  const [copiedShortReport, setCopiedShortReport] = useState(false);
+  const [copiedCustomerReport, setCopiedCustomerReport] = useState(false);
+  const shortReport = buildWebsiteShortReport(quality);
+  const customerReport = buildWebsiteCustomerReport(quality);
+
+  async function copyReport(text: string, onCopied: (value: boolean) => void) {
+    if (!text) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      onCopied(true);
+      window.setTimeout(() => onCopied(false), 1800);
+    } catch (error) {
+      console.error("Failed to copy website report", error);
+    }
+  }
+
   return (
     <div className={`border border-[#D9E2EC] bg-white p-5 ${className}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -1773,6 +1793,52 @@ function WebsiteQualityPanel({
         </span>
       </div>
       <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{quality.summary}</p>
+      {shortReport ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button
+            className="rounded-sm text-[12px] font-semibold"
+            onClick={() => setShowShortReport((current) => !current)}
+            size="sm"
+            type="button"
+            variant="outline"
+          >
+            {showShortReport ? "Skjul kort rapport" : "Lag kort rapport"}
+          </Button>
+          <Button
+            className="rounded-sm text-[12px] font-semibold"
+            onClick={() => void copyReport(shortReport, setCopiedShortReport)}
+            size="sm"
+            type="button"
+            variant="outline"
+          >
+            {copiedShortReport ? "Rapport kopiert" : "Kopier rapport"}
+          </Button>
+          <Button
+            className="rounded-sm text-[12px] font-semibold"
+            onClick={() => void copyReport(customerReport, setCopiedCustomerReport)}
+            size="sm"
+            type="button"
+            variant="outline"
+          >
+            {copiedCustomerReport ? "Kundetekst kopiert" : "Kopier kundetekst"}
+          </Button>
+        </div>
+      ) : null}
+      {showShortReport && shortReport ? (
+        <pre className="mt-3 whitespace-pre-wrap border border-[#D9E2EC] bg-[#F8FBFF] p-4 text-[12px] leading-5 text-[#334E68]">
+          {shortReport}
+        </pre>
+      ) : null}
+      {reportSummary.length > 0 ? (
+        <div className="mt-4 grid gap-3 border border-[#D9E2EC] bg-[#F8FBFF] p-4 md:grid-cols-3">
+          {reportSummary.map((item) => (
+            <div key={item.label}>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{item.label}</p>
+              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#1F2933]">{item.value}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
       {groupedSignals.length > 0 ? (
         <div className="mt-4 grid gap-4">
           {groupedSignals.map((group) => (
@@ -1788,6 +1854,11 @@ function WebsiteQualityPanel({
                       </span>
                     </div>
                     <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
+                    <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-3">
+                      <WebsiteSignalReportItem label="Hvorfor" value={websiteSignalWhy(signal)} />
+                      <WebsiteSignalReportItem label="Tiltak" value={websiteSignalAction(signal)} />
+                      <WebsiteSignalReportItem label="LTJ kan" value={websiteSignalLtjScope(signal)} />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1797,6 +1868,364 @@ function WebsiteQualityPanel({
       ) : null}
     </div>
   );
+}
+
+function websiteQualityReportSummary(signals: WebsiteQualitySignal[]) {
+  if (signals.length === 0) {
+    return [];
+  }
+
+  const signalCodes = new Set(signals.map((signal) => signal.code));
+  return [
+    {
+      label: "Første tiltak",
+      value: firstWebsiteQualityAction(signalCodes),
+    },
+    {
+      label: "Teknisk/sikkerhet",
+      value: technicalWebsiteQualityPriority(signalCodes),
+    },
+    {
+      label: "Manuell vurdering",
+      value: manualWebsiteQualityReview(signalCodes),
+    },
+  ];
+}
+
+function buildWebsiteShortReport(quality: WebsiteQualityAssessment) {
+  if (quality.signals.length === 0) {
+    return "";
+  }
+
+  const topSignals = prioritizeWebsiteReportSignals(quality.signals).slice(0, 3);
+  const signalCodes = new Set(quality.signals.map((signal) => signal.code));
+  const lines = [
+    "Kort nettsiderapport",
+    "",
+    "Kort vurdering",
+    quality.summary,
+    "",
+    "3 viktigste funn",
+    ...topSignals.map((signal, index) => `${index + 1}. ${signal.title}: ${signal.detail}`),
+    "",
+    "Anbefalte tiltak",
+    ...topSignals.map((signal, index) => `${index + 1}. ${websiteSignalAction(signal)}`),
+    "",
+    "Hva jeg kan hjelpe med",
+    websiteReportScopeSummary(signalCodes),
+    "",
+    "Merk",
+    "Dette er en automatisk førstevurdering. Funnene bør bekreftes manuelt før de brukes som bastante påstander.",
+  ];
+
+  return lines.join("\n");
+}
+
+function buildWebsiteCustomerReport(quality: WebsiteQualityAssessment) {
+  if (quality.signals.length === 0) {
+    return "";
+  }
+
+  const topSignals = prioritizeWebsiteReportSignals(quality.signals).slice(0, 2);
+  const signalCodes = new Set(quality.signals.map((signal) => signal.code));
+  const focusLine = firstWebsiteQualityAction(signalCodes);
+  const findingsLine = topSignals
+    .map((signal) => customerFriendlySignalPhrase(signal))
+    .filter(Boolean)
+    .join(" og ");
+
+  return [
+    "Jeg tok en rask og overordnet sjekk av nettsiden.",
+    "",
+    findingsLine
+      ? `Det jeg ville sett nærmere på først, er ${findingsLine}.`
+      : `Det jeg ville sett nærmere på først, er dette: ${focusLine}`,
+    "",
+    websiteReportScopeSummary(signalCodes),
+    "",
+    "Dette er ikke ment som en full teknisk gjennomgang, men som et konkret utgangspunkt for å gjøre siden tydeligere, tryggere og enklere å bruke.",
+  ].join("\n");
+}
+
+function customerFriendlySignalPhrase(signal: WebsiteQualitySignal) {
+  switch (signal.code) {
+    case "GENERIC_PRESENTATION_TRUST_RISK":
+    case "GENERIC_OR_AI_IMAGE_RISK":
+      return "å gjøre uttrykket mer konkret og tillitvekkende";
+    case "FORM_LABEL_RISK":
+      return "å gjøre skjemaene enklere å bruke";
+    case "EMPTY_BUTTON_RISK":
+      return "å gjøre knapper og kontaktpunkter tydeligere";
+    case "IMAGE_ALT_RISK":
+      return "å rydde noen tilgjengelighetspunkter rundt bilder";
+    case "MISSING_CSP_HEADER":
+    case "MISSING_HSTS_HEADER":
+    case "WEAK_CSP_HEADER":
+      return "å se på noen enkle tekniske trygghetspunkter";
+    case "MISSING_PRIVACY_NOTICE":
+    case "COOKIE_CONSENT_RISK":
+      return "å gjøre personvern og samtykke mer ryddig";
+    case "WEAK_HOMEPAGE_STRUCTURE":
+      return "å gjøre førstesiden tydeligere";
+    case "WEAK_INDUSTRY_RELEVANCE":
+    case "GENERIC_SERVICE_TEXT":
+      return "å beskrive tjenestene mer konkret";
+    case "MISSING_ORG_NUMBER":
+    case "LEGAL_NAME_NOT_VISIBLE":
+      return "å gjøre virksomheten lettere å verifisere";
+    default:
+      return signal.severity === "HIGH" || signal.severity === "MEDIUM"
+        ? signal.title.toLowerCase()
+        : "";
+  }
+}
+
+function prioritizeWebsiteReportSignals(signals: WebsiteQualitySignal[]) {
+  const priorityCodes = [
+    "TECHNICAL_FAILURE",
+    "INCOMPLETE_MARKET_OR_CHECKOUT",
+    "TEMPLATE_PLACEHOLDER_CONTENT",
+    "GENERIC_PRESENTATION_TRUST_RISK",
+    "GENERIC_OR_AI_IMAGE_RISK",
+    "FORM_LABEL_RISK",
+    "EMPTY_BUTTON_RISK",
+    "MISSING_PRIVACY_NOTICE",
+    "COOKIE_CONSENT_RISK",
+    "MISSING_HTTPS",
+    "MIXED_CONTENT_RISK",
+    "MISSING_CSP_HEADER",
+    "MISSING_HSTS_HEADER",
+    "WEAK_HOMEPAGE_STRUCTURE",
+    "WEAK_INDUSTRY_RELEVANCE",
+    "MISSING_ORG_NUMBER",
+    "LEGAL_NAME_NOT_VISIBLE",
+    "IMAGE_ALT_RISK",
+  ];
+
+  return [...signals].sort((a, b) => {
+    const severityScore = (signal: WebsiteQualitySignal) => signal.severity === "HIGH" ? 0 : signal.severity === "MEDIUM" ? 1 : 2;
+    const priorityScore = (signal: WebsiteQualitySignal) => {
+      const index = priorityCodes.indexOf(signal.code);
+      return index === -1 ? 999 : index;
+    };
+    return severityScore(a) - severityScore(b) || priorityScore(a) - priorityScore(b);
+  });
+}
+
+function websiteReportScopeSummary(signalCodes: Set<string>) {
+  const items: string[] = [];
+  if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK") || signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")) {
+    items.push("gjøre innholdet mer konkret, tydelig og tillitvekkende");
+  }
+  if (signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("IMAGE_ALT_RISK")) {
+    items.push("rydde UU-punkter i skjema, knapper og bilder");
+  }
+  if (signalCodes.has("MISSING_CSP_HEADER") || signalCodes.has("MISSING_HSTS_HEADER") || signalCodes.has("MISSING_REFERRER_POLICY")) {
+    items.push("vurdere tekniske sikkerhetsheadere hvis hosting/CMS gir tilgang");
+  }
+  if (signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK")) {
+    items.push("strukturere personvern- og cookie-informasjon, med virksomhetens egen kvalitetssikring");
+  }
+
+  if (items.length === 0) {
+    return "Jeg kan lage en mer konkret manuell vurdering og foreslå en ryddigere nettsideflyt.";
+  }
+
+  return `Jeg kan hjelpe med å ${formatNorwegianTextList(items)}.`;
+}
+
+function formatNorwegianTextList(items: string[]) {
+  if (items.length <= 1) {
+    return items[0] ?? "";
+  }
+  if (items.length === 2) {
+    return `${items[0]} og ${items[1]}`;
+  }
+  return `${items.slice(0, -1).join(", ")} og ${items.at(-1)}`;
+}
+
+function firstWebsiteQualityAction(signalCodes: Set<string>) {
+  if (signalCodes.has("TECHNICAL_FAILURE")) {
+    return "Få nettsiden til å svare stabilt før andre forbedringer vurderes.";
+  }
+  if (signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT") || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT")) {
+    return "Fjern uferdig tekst og avklar hva som faktisk er lansert.";
+  }
+  if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")) {
+    return "Gjør siden mer konkret med ekte bilder, faglig profil og etterprøvbare tillitssignaler.";
+  }
+  if (signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK")) {
+    return "Rydd skjema, knapper og kontaktflyt først.";
+  }
+  if (signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")) {
+    return "Gjør førstesiden tydeligere på hva virksomheten tilbyr.";
+  }
+  return "Start med de funnene som påvirker tillit, kontakt og mobilbruk.";
+}
+
+function technicalWebsiteQualityPriority(signalCodes: Set<string>) {
+  if (signalCodes.has("MISSING_HTTPS") || signalCodes.has("MIXED_CONTENT_RISK")) {
+    return "HTTPS og blandet innhold bør prioriteres høyt.";
+  }
+  if (signalCodes.has("MISSING_CSP_HEADER") || signalCodes.has("MISSING_HSTS_HEADER") || signalCodes.has("WEAK_CSP_HEADER")) {
+    return "Sikkerhetsheadere bør vurderes når innhold og hosting er avklart.";
+  }
+  if (signalCodes.has("ADMIN_OR_LOGIN_PATH_EXPOSED") || signalCodes.has("LOGIN_FORM_SECURITY_REVIEW") || signalCodes.has("API_ENDPOINTS_VISIBLE")) {
+    return "Admin, innlogging og API-spor bør vurderes teknisk før dette omtales for bastant.";
+  }
+  if (signalCodes.has("COOKIE_SECURE_FLAG_MISSING") || signalCodes.has("COOKIE_HTTPONLY_REVIEW") || signalCodes.has("COOKIE_SAMESITE_REVIEW")) {
+    return "Cookie-oppsett bør sjekkes mot faktisk bruk av sesjon og tracking.";
+  }
+  return "Ingen kritiske tekniske sikkerhetssignaler er løftet øverst, men funn bør fortsatt vurderes.";
+}
+
+function manualWebsiteQualityReview(signalCodes: Set<string>) {
+  if (signalCodes.has("SENSITIVE_HEALTH_CONTEXT") || signalCodes.has("HEALTH_TRACKING_CONTEXT")) {
+    return "Helse/persondata bør vurderes ekstra varsomt og ikke beskrives som regelbrudd uten full gjennomgang.";
+  }
+  if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")) {
+    return "Vurder visuelt uttrykk manuelt før det brukes i kundedialog.";
+  }
+  if (signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("COOKIE_CONSENT_RISK")) {
+    return "Personvern og cookies bør bekreftes manuelt, særlig hvis lenker ligger på undersider.";
+  }
+  return "Automatiske signaler bør bekreftes manuelt før konkrete påstander sendes til kunden.";
+}
+
+function WebsiteSignalReportItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.05em] text-[#829AB1]">{label}</p>
+      <p className="mt-1 text-[12px] leading-5 text-[#334E68]">{value}</p>
+    </div>
+  );
+}
+
+function websiteSignalWhy(signal: WebsiteQualitySignal) {
+  if ([
+    "GENERIC_PRESENTATION_TRUST_RISK",
+    "GENERIC_OR_AI_IMAGE_RISK",
+    "MISSING_SOCIAL_PROOF",
+    "MISSING_ABOUT_SECTION",
+  ].includes(signal.code)) {
+    return "Tilliten svekkes når siden virker generisk eller lite etterprøvbar.";
+  }
+  if ([
+    "FORM_LABEL_RISK",
+    "EMPTY_BUTTON_RISK",
+    "IMAGE_ALT_RISK",
+    "MISSING_LANGUAGE",
+    "IFRAME_TITLE_RISK",
+  ].includes(signal.code)) {
+    return "Kan gjøre siden vanskeligere å bruke med skjermleser, tastatur eller mobil.";
+  }
+  if ([
+    "MISSING_HSTS_HEADER",
+    "MISSING_CSP_HEADER",
+    "WEAK_CSP_HEADER",
+    "COOKIE_SECURE_FLAG_MISSING",
+    "COOKIE_HTTPONLY_REVIEW",
+    "COOKIE_SAMESITE_REVIEW",
+    "MIXED_CONTENT_RISK",
+  ].includes(signal.code)) {
+    return "Tekniske sikkerhetssignaler påvirker robusthet, tillit og risiko fra tredjepartsinnhold.";
+  }
+  if ([
+    "MISSING_PRIVACY_NOTICE",
+    "COOKIE_CONSENT_RISK",
+    "HEALTH_TRACKING_CONTEXT",
+    "SENSITIVE_HEALTH_CONTEXT",
+  ].includes(signal.code)) {
+    return "Persondata, skjema og tracking bør være ryddig forklart før kunden sender inn informasjon.";
+  }
+  if ([
+    "WEAK_HOMEPAGE_STRUCTURE",
+    "WEAK_INDUSTRY_RELEVANCE",
+    "GENERIC_SERVICE_TEXT",
+    "MISSING_LOCAL_RELEVANCE",
+  ].includes(signal.code)) {
+    return "Kunden må raskt forstå hva virksomheten tilbyr, hvor den holder til og hvorfor den er relevant.";
+  }
+  return "Dette er et automatisk signal som bør brukes som startpunkt for manuell vurdering.";
+}
+
+function websiteSignalAction(signal: WebsiteQualitySignal) {
+  if (["GENERIC_PRESENTATION_TRUST_RISK", "GENERIC_OR_AI_IMAGE_RISK"].includes(signal.code)) {
+    return "Legg inn mer konkret tekst, ekte bilder, referanser, prosjekter eller dokumentasjon.";
+  }
+  if (signal.code === "FORM_LABEL_RISK") {
+    return "Koble alle skjemafelt til synlige labels eller aria-label.";
+  }
+  if (signal.code === "EMPTY_BUTTON_RISK") {
+    return "Gi alle knapper og ikonlenker tydelig tekst eller aria-label.";
+  }
+  if (signal.code === "IMAGE_ALT_RISK") {
+    return "Legg alt-tekst på informative bilder og tom alt på rene dekorbilder.";
+  }
+  if (signal.code === "MISSING_CSP_HEADER" || signal.code === "WEAK_CSP_HEADER") {
+    return "Definer eller stram inn Content Security Policy basert på faktiske scripts og embeds.";
+  }
+  if (signal.code === "MISSING_HSTS_HEADER" || signal.code === "WEAK_HSTS_HEADER") {
+    return "Sett HSTS når HTTPS fungerer stabilt for domenet.";
+  }
+  if (signal.code.startsWith("COOKIE_")) {
+    return "Vurder cookie-flagg og samtykkeflyt ut fra hva cookien faktisk brukes til.";
+  }
+  if (signal.code === "MISSING_PRIVACY_NOTICE" || signal.code === "COOKIE_CONSENT_RISK") {
+    return "Lag tydelig personverntekst og samtykke der skjema, cookies eller tracking brukes.";
+  }
+  if (signal.code === "WEAK_INDUSTRY_RELEVANCE" || signal.code === "GENERIC_SERVICE_TEXT") {
+    return "Skriv mer konkret om tjenester, målgruppe, område og hva kunden faktisk kan bestille.";
+  }
+  return "Sjekk funnet manuelt og prioriter tiltak hvis det påvirker tillit, kontakt eller sikkerhet.";
+}
+
+function websiteSignalLtjScope(signal: WebsiteQualitySignal) {
+  if ([
+    "GENERIC_PRESENTATION_TRUST_RISK",
+    "GENERIC_OR_AI_IMAGE_RISK",
+    "WEAK_HOMEPAGE_STRUCTURE",
+    "WEAK_INDUSTRY_RELEVANCE",
+    "GENERIC_SERVICE_TEXT",
+    "MISSING_LOCAL_RELEVANCE",
+    "MISSING_ABOUT_SECTION",
+    "MISSING_SOCIAL_PROOF",
+    "FORM_LABEL_RISK",
+    "EMPTY_BUTTON_RISK",
+    "IMAGE_ALT_RISK",
+    "MISSING_LANGUAGE",
+    "IFRAME_TITLE_RISK",
+  ].includes(signal.code)) {
+    return "Kan normalt forbedres i nettsidearbeid.";
+  }
+  if ([
+    "MISSING_HSTS_HEADER",
+    "MISSING_CSP_HEADER",
+    "WEAK_CSP_HEADER",
+    "MISSING_REFERRER_POLICY",
+    "MISSING_PERMISSIONS_POLICY",
+    "MISSING_X_CONTENT_TYPE_OPTIONS",
+  ].includes(signal.code)) {
+    return "Kan ofte forbedres hvis hosting/CMS gir tilgang.";
+  }
+  if ([
+    "ADMIN_OR_LOGIN_PATH_EXPOSED",
+    "LOGIN_FORM_SECURITY_REVIEW",
+    "FILE_UPLOAD_REVIEW",
+    "API_ENDPOINTS_VISIBLE",
+    "CMS_VERSION_EXPOSED",
+  ].includes(signal.code)) {
+    return "Bør vurderes som teknisk sikkerhetsarbeid, eventuelt med ekstern sikkerhetspartner.";
+  }
+  if ([
+    "MISSING_PRIVACY_NOTICE",
+    "COOKIE_CONSENT_RISK",
+    "SENSITIVE_HEALTH_CONTEXT",
+    "HEALTH_TRACKING_CONTEXT",
+  ].includes(signal.code)) {
+    return "Kan ryddes teknisk, men juridisk innhold bør kvalitetssikres av virksomheten.";
+  }
+  return "Kan vurderes i en manuell rapport før tiltak foreslås.";
 }
 
 function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
@@ -1822,6 +2251,8 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "MISSING_SOCIAL_PROOF",
         "WEAK_INDUSTRY_RELEVANCE",
         "GENERIC_SERVICE_TEXT",
+        "GENERIC_PRESENTATION_TRUST_RISK",
+        "GENERIC_OR_AI_IMAGE_RISK",
         "MISSING_STRUCTURED_DATA",
         "VISIBLE_DISCOUNT_CODE",
       ].includes(signal.code),
