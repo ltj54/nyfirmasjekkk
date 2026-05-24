@@ -201,10 +201,9 @@ public class CompanyCheckController {
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer,
             @RequestBody OutreachEmailSendRequest request,
-            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+        @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
     ) {
         adminAccessService.requireAdmin(adminToken);
-        rateLimitService.requireAllowed("send-outreach-email", 25, Duration.ofHours(1));
         String recipient = outreachEmailService.send(request);
         var status = outreachLogService.register(new OutreachStatusRequest(
                 organisasjonsnummer,

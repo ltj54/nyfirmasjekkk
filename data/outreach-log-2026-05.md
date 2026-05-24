@@ -4,15 +4,34 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 611
-- Sendt: 514
+- Antall hendelser: 630
+- Sendt: 533
 - Angret: 7
-- Aktive kontaktede selskaper: 510
+- Aktive kontaktede selskaper: 529
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-24 | 937554478 | MATIAS MACHIN RAKNES | ENK | email | website-offer |
+| 2026-05-24 | 937440936 | RUDRA | ENK | email | website-offer |
+| 2026-05-24 | 937454821 | LIVSSTYRKETRENER I TØNSBERG CHRISTINE SCHRADER | ENK | email | website-offer |
+| 2026-05-24 | 937483481 | ØRSLEIE AERO | ENK | email | website-offer |
+| 2026-05-24 | 937492448 | FIRING MULTISERVICE | ENK | email | website-offer |
+| 2026-05-24 | 937532873 | HØYEM DRONEFOTO | ENK | email | website-offer |
+| 2026-05-24 | 937534922 | HARTERINK ADVENTURES | ENK | email | website-offer |
+| 2026-05-24 | 937566891 | PAULSEN TEK | ENK | email | website-offer |
+| 2026-05-24 | 937556500 | FOLKEAKADEMIET KUNSTBROEN | FLI | email | website-offer |
+| 2026-05-24 | 937179243 | 2019-KULLET VED HOFFSVANGEN SKOLE | FLI | email | website-offer |
+| 2026-05-24 | 937562403 | VENER AV SPORTSKAPELLET PÅ VAKSVIKFJELLET | FLI | email | website-offer |
+| 2026-05-24 | 937563523 | UBUNTU IMPACT COLLECTIVE | FLI | email | website-offer |
+| 2026-05-24 | 937563868 | SAGANETTVERK | FLI | email | website-offer |
+| 2026-05-24 | 937572832 | FORENINGEN POSEBYEN | FLI | email | website-offer |
+| 2026-05-24 | 937515073 | DEN GULE VEGGEN RISKA | FLI | email | website-offer |
+| 2026-05-24 | 937557590 | 3-PRODUKT BJØRNSTAD | ENK | email | website-offer |
+| 2026-05-24 | 837566312 | MAZLUM DOGAN KAPLAN | ENK | email | website-offer |
+| 2026-05-24 | 937568533 | LEBEDEVS CARGO | ENK | email | website-offer |
+| 2026-05-24 | 937467044 | DUMITRU RIDER | ENK | email | website-offer |
 | 2026-05-24 | 937431228 | DAG KOPPERVIK MANAGEMENT & CONSULTING | ENK | email | website-offer |
 | 2026-05-24 | 937568061 | JOLAKO SVEISESERVICE | ENK | email | website-offer |
 | 2026-05-24 | 937472463 | VEKSTPUNKT HELSE BJERKSETH | ENK | email | website-offer |
@@ -528,6 +547,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-24 08:17 | sent | 937554478 | MATIAS MACHIN RAKNES | ENK | email | - |
+| 2026-05-24 08:17 | sent | 937440936 | RUDRA | ENK | email | - |
+| 2026-05-24 08:17 | sent | 937454821 | LIVSSTYRKETRENER I TØNSBERG CHRISTINE SCHRADER | ENK | email | - |
+| 2026-05-24 08:16 | sent | 937483481 | ØRSLEIE AERO | ENK | email | - |
+| 2026-05-24 08:16 | sent | 937492448 | FIRING MULTISERVICE | ENK | email | - |
+| 2026-05-24 08:16 | sent | 937532873 | HØYEM DRONEFOTO | ENK | email | - |
+| 2026-05-24 08:15 | sent | 937534922 | HARTERINK ADVENTURES | ENK | email | - |
+| 2026-05-24 08:15 | sent | 937566891 | PAULSEN TEK | ENK | email | - |
+| 2026-05-24 08:10 | sent | 937556500 | FOLKEAKADEMIET KUNSTBROEN | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937179243 | 2019-KULLET VED HOFFSVANGEN SKOLE | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937562403 | VENER AV SPORTSKAPELLET PÅ VAKSVIKFJELLET | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937563523 | UBUNTU IMPACT COLLECTIVE | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937563868 | SAGANETTVERK | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937572832 | FORENINGEN POSEBYEN | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937515073 | DEN GULE VEGGEN RISKA | FLI | email | - |
+| 2026-05-24 08:10 | sent | 937557590 | 3-PRODUKT BJØRNSTAD | ENK | email | - |
+| 2026-05-24 08:10 | sent | 837566312 | MAZLUM DOGAN KAPLAN | ENK | email | - |
+| 2026-05-24 08:10 | sent | 937568533 | LEBEDEVS CARGO | ENK | email | - |
+| 2026-05-24 08:10 | sent | 937467044 | DUMITRU RIDER | ENK | email | - |
 | 2026-05-24 01:07 | sent | 937431228 | DAG KOPPERVIK MANAGEMENT & CONSULTING | ENK | email | - |
 | 2026-05-24 01:07 | sent | 937568061 | JOLAKO SVEISESERVICE | ENK | email | - |
 | 2026-05-24 01:07 | sent | 937472463 | VEKSTPUNKT HELSE BJERKSETH | ENK | email | - |
