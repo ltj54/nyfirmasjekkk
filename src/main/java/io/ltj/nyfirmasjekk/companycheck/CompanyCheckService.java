@@ -722,10 +722,6 @@ public class CompanyCheckService {
         return null;
     }
 
-    private Map<String, String> byggFilter(CompanySearchRequest r, int p) {
-        return byggFilter(r, p, SOURCE_PAGE_SIZE);
-    }
-
     private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size) {
         return byggFilter(r, p, size, Map.of());
     }
@@ -739,11 +735,15 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn) {
-        return byggFilterMedNavn(r, p, SOURCE_PAGE_SIZE, navn, Map.of());
+        return byggFilterMedNavn(r, p, navn, Map.of(), null);
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams) {
         return byggFilterMedNavn(r, p, size, navn, extraParams, null);
+    }
+
+    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
+        return byggFilterMedNavn(r, p, SOURCE_PAGE_SIZE, navn, extraParams, upperRegistrationDate);
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams, LocalDate upperRegistrationDate) {

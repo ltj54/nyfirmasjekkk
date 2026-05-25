@@ -1,6 +1,5 @@
 package io.ltj.nyfirmasjekk.api.v1;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -30,13 +29,8 @@ public class WebsiteContentInspectionService {
     private static final Set<String> SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
     private final Function<String, WebsiteContentSnapshot> snapshotFetcher;
 
-    protected WebsiteContentInspectionService() {
+    public WebsiteContentInspectionService() {
         this.snapshotFetcher = this::fetchSnapshot;
-    }
-
-    @Autowired
-    public WebsiteContentInspectionService(WebsiteContentSnapshotFetcher snapshotFetcher) {
-        this.snapshotFetcher = snapshotFetcher::fetchSnapshot;
     }
 
     public WebsiteContentMatch inspect(String url, String companyName, String emailDomain) {

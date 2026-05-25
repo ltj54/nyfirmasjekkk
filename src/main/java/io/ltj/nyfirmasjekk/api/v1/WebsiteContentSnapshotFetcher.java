@@ -4,7 +4,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -42,20 +41,6 @@ public class WebsiteContentSnapshotFetcher {
             "/tjenester",
             "/services"
     );
-    @Cacheable(value = "websiteContent", key = "#url")
-    public WebsiteContentInspectionService.WebsiteContentSnapshot fetchSnapshot(String url) {
-        return fetch(url, false);
-    }
-
-    @Cacheable(value = "websiteContentExtended", key = "#url")
-    public WebsiteContentInspectionService.WebsiteContentSnapshot fetchExtendedSnapshot(String url) {
-        return fetch(url, true);
-    }
-
-    static WebsiteContentInspectionService.WebsiteContentSnapshot fetch(String url) {
-        return fetch(url, false);
-    }
-
     static WebsiteContentInspectionService.WebsiteContentSnapshot fetch(String url, boolean extended) {
         if (url == null || url.isBlank()) {
             return null;
