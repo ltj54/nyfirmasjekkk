@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 630
-- Sendt: 533
+- Antall hendelser: 634
+- Sendt: 537
 - Angret: 7
-- Aktive kontaktede selskaper: 529
+- Aktive kontaktede selskaper: 533
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-25 | 937770766 | DALEN-KLETTELI FOTO | ENK | email | website-offer |
+| 2026-05-24 | 937769822 | BACK TO NATURE BY KNUTSEN HORRILLO | ENK | email | website-improvement-offer |
+| 2026-05-24 | 937766033 | BYDAZED SANDVOLL | ENK | email | website-unavailable-offer |
+| 2026-05-24 | 937770391 | MOONKHAO SIAM SMILE THAI MASSASJE | ENK | email | website-offer |
 | 2026-05-24 | 937554478 | MATIAS MACHIN RAKNES | ENK | email | website-offer |
 | 2026-05-24 | 937440936 | RUDRA | ENK | email | website-offer |
 | 2026-05-24 | 937454821 | LIVSSTYRKETRENER I TØNSBERG CHRISTINE SCHRADER | ENK | email | website-offer |
@@ -547,6 +551,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-25 09:32 | sent | 937770766 | DALEN-KLETTELI FOTO | ENK | email | - |
+| 2026-05-24 20:49 | sent | 937769822 | BACK TO NATURE BY KNUTSEN HORRILLO | ENK | email | - |
+| 2026-05-24 20:46 | sent | 937766033 | BYDAZED SANDVOLL | ENK | email | - |
+| 2026-05-24 20:45 | sent | 937770391 | MOONKHAO SIAM SMILE THAI MASSASJE | ENK | email | - |
 | 2026-05-24 08:17 | sent | 937554478 | MATIAS MACHIN RAKNES | ENK | email | - |
 | 2026-05-24 08:17 | sent | 937440936 | RUDRA | ENK | email | - |
 | 2026-05-24 08:17 | sent | 937454821 | LIVSSTYRKETRENER I TØNSBERG CHRISTINE SCHRADER | ENK | email | - |

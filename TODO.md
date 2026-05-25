@@ -1,6 +1,6 @@
 # TODO
 
-## Status 2026-04-27
+## Status 2026-05-25
 
 ### Beslutning
 
@@ -12,6 +12,7 @@
 - Løsningen er først og fremst énbruker og filbasert.
 - Løsningen skal være en intern arbeidsflate, ikke en offentlig landingsside.
 - Dagens oppsett uten database, aktørrisiko, historikk og CRM-integrasjon fungerer som ønsket nå.
+- Loggfilene i `data/` er historikk. Applikasjonen kan skrive til dem, men de skal ikke redigeres, nullstilles eller ryddes manuelt.
 
 ### Levert
 
@@ -70,6 +71,23 @@
 - `data/`-strategien er dokumentert i [outreach-workflow.md](docs/outreach-workflow.md).
 - Frontend production build er gjort uavhengig av Google Fonts/nettverk.
 - Appen er verifisert uten databaseavhengigheter gjennom backend-tester og Spring Boot-startforsøk.
+- Automatisk SMTP-utsending er på plass via domenemailen `kontakt@ltj-production.no`.
+- SMTP-passord skal kun ligge i lokale secrets/miljøvariabler, ikke som defaultverdi i `application.properties`.
+- Batchutsending er på plass med maksgrense og pause mellom sendinger.
+- Batchutsending krever relevante hurtigfiltre og valgte selskaper.
+- Batchutsending stopper ved feil og logger ikke mislykket sending som sendt.
+- Nettsidesjekk kan kjøres på registrert BRREG-nettside og på vilkårlig URL.
+- Nettsidesjekk normaliserer URL-input som mangler protokoll, for eksempel `tryg.no`.
+- Nettsidesjekk gjør passiv kvalitetssjekk av innhold, kontakt, tillit, SEO, UU, teknisk sikkerhet, personvern, cookies og plattformspor.
+- Nettsidesjekk gjør begrenset intern undersidesjekk av relevante sider som kontakt, om oss, personvern, cookies, vilkår og tjenester.
+- Nettsidesjekk skiller bedre mellom lokal tjenestebedrift, nettbutikk og helse/sensitive fagområder.
+- Nettsidesjekk grupperer funn i `Viktigste funn`, `Tillit og innhold`, `SEO og deling`, `Nettbutikk og kjøpsinformasjon`, `Teknisk sikkerhet og personvern` og `UU og brukervennlighet`.
+- Rapporttekstene for nettsidesjekk har konkrete `Hvorfor` og `Tiltak` for de viktigste signalene.
+- Hovedoppsummeringen i nettsidesjekk prioriterer innhold/tillit før tekniske funn når det er mest relevant.
+- Nettbutikk omtales som etablert flate med forbedringspunkter, ikke automatisk som svak nettside.
+- Registrert nettside som ikke svarer får egen teknisk vurdering og mer presis forklaring.
+- Mailtekst for eksisterende nettside bruker nettsidesjekkens mest salgbare funn først, og prioriterer ikke DNS/serverteknikk foran innhold, tillit, skjema, samtykke eller nettbutikkvilkår.
+- Nettsidesjekk er fortsatt en automatisk førstevurdering, ikke pentest, juridisk GDPR-vurdering eller full WCAG-revisjon.
 
 ## Neste steg
 
@@ -103,6 +121,16 @@
 - [x] Gjør detaljvisningen enda mer operativ: tydelig kontaktpunkt, mulig nettside, mailtekst og status øverst.
 - [x] Vurder om leadlisten bør ha egne hurtigfiltre for `Har e-post`, `Mangler nettside`, `Ikke sendt` og `Ikke aktuell`.
 - [x] Vurder om `Alvorlige registerspor` skal skjules som standard i en salgslead-flyt.
+- [x] Legg inn nettsidesjekk for registrert BRREG-nettside.
+- [x] Legg inn frittstående URL-sjekk.
+- [x] Utvid nettsidesjekk med trygg/passiv sikkerhets-, personvern-, UU- og SEO-vurdering.
+- [x] Legg inn begrenset undersidesjekk for kontakt, personvern, om-side, vilkår og tjenester.
+- [x] Gjør nettsidesjekk mer kontekstsmart for nettbutikk, helse/sensitive fagområder og lokale tjenester.
+- [x] Stram rapportgruppering og `Hvorfor`/`Tiltak` slik at rapporten blir praktisk og ikke bare teknisk.
+- [x] La mailforslag for eksisterende nettside bruke de mest relevante funnene fra nettsidesjekken.
+- [ ] Test nettsidesjekk manuelt på representative sider: lokal tjeneste, nettbutikk, nettside som ikke svarer, helse/personvern-nær side og generisk/AI-preget side.
+- [ ] Sjekk at `Linje som brukes i mail` er salgsrelevant og ikke for teknisk på representative sider.
+- [ ] Vurder om tekniske sikkerhetsfunn bør skjules bak en `Vis teknisk`-seksjon hvis rapporten blir for lang.
 
 ### Produksjon
 
@@ -111,6 +139,10 @@
 - [x] Verifiser logging, CORS, health endpoints og proxy-oppsett.
 - [x] Avklar hvordan `data/` håndteres på Render uten database.
 - [x] Hvis persistent disk ikke brukes: lag tydelig manuell rutine for nedlasting/backup av loggfilene.
+- [ ] Avklar endelig driftsmodell for automatisk e-postutsending: lokal maskin, Render eller annen host.
+- [ ] Sikre at SMTP-passord aldri committes og at lokale secrets ikke ligger i git.
+- [ ] Test avsenderomdømme over tid: Gmail/Outlook, svarrate og spamindikasjoner.
+- [ ] Vurder rate limit og batchstørrelse på nytt etter faktisk bruk.
 
 ### Ikke nå
 
@@ -129,5 +161,12 @@ npx tsc --noEmit
 npm run build
 ```
 
-Sist kjørt 2026-04-27: `./gradlew test`, `npm run lint`, `npx tsc --noEmit`, `npm run build`.
-Merk: `bootRun` på standardport feilet fordi `8080` allerede var i bruk, ikke på grunn av databasekonfigurasjon. Start på tilfeldig port ble holdt i gang til timeout.
+Sist kjørt 2026-05-25:
+
+```bash
+./gradlew test --tests io.ltj.nyfirmasjekk.api.v1.CompanyApiV1MapperTests
+cd frontend
+npm run build
+```
+
+Begge gikk OK.

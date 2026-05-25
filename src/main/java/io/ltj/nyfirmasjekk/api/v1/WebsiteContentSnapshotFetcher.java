@@ -16,12 +16,32 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import javax.net.ssl.HttpsURLConnection;
 
 @Component
 public class WebsiteContentSnapshotFetcher {
+    private static final int EXTENDED_CRAWL_LIMIT = 6;
+    private static final int EXTENDED_CRAWL_TIMEOUT_MS = 900;
+    private static final int EXTENDED_CRAWL_BYTES = 12_000;
+    private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s+p[åa]\\s*<[^>]*>\\s*(\\d+)\\s*</[^>]+>\\s*av\\s*<[^>]*>\\s*(\\d+)\\s*</[^>]+>", Pattern.CASE_INSENSITIVE);
+    private static final java.util.List<String> STANDARD_REVIEW_PATHS = java.util.List.of(
+            "/kontakt",
+            "/contact",
+            "/om-oss",
+            "/about",
+            "/personvern",
+            "/privacy",
+            "/cookies",
+            "/vilkar",
+            "/vilkår",
+            "/terms",
+            "/tjenester",
+            "/services"
+    );
     @Cacheable(value = "websiteContent", key = "#url")
     public WebsiteContentInspectionService.WebsiteContentSnapshot fetchSnapshot(String url) {
         return fetch(url);
@@ -122,7 +142,7 @@ public class WebsiteContentSnapshotFetcher {
             boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", "vilkår", "villkor", "terms", "policy", "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår", "kopvillkor", "köpvillkor", "allmanna villkor", "allmänna villkor");
             boolean returnInfo = hasLinkOrText(document, bodyText, "retur", "angrerett", "angerratt", "ångerrätt", "reklamasjon", "reklamation", "return", "refund", "aterbetalning", "återbetalning", "byte");
             boolean deliveryInfo = hasLinkOrText(document, bodyText, "frakt", "levering", "leverans", "shipping", "delivery");
-            boolean cartOrCheckoutSignal = hasAny(htmlSnapshot, "checkout", "cart", "handlekurv", "shopping-cart");
+            boolean cartOrCheckoutSignal = hasCartOrCheckoutSignal(document, htmlSnapshot);
             boolean platformDomainSignal = hasPlatformDomainSignal(response.url().toString());
             int placeholderSocialLinkCount = placeholderSocialLinkCount(document);
             boolean cloudflareEmailProtectionSignal = hasAny(htmlSnapshot, "/cdn-cgi/l/email-protection", "data-cfemail");
@@ -145,6 +165,9 @@ public class WebsiteContentSnapshotFetcher {
             boolean securityTxtSignal = hasSecurityTxt(response.url().toString());
             boolean robotsSensitivePathSignal = robotsSensitivePathSignal(response.url().toString());
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
+            ExtendedCrawlResult crawlResult = extendedCrawl(document, response.url().toString());
+            String accessibilityDeclarationUrl = accessibilityDeclarationUrl(document, response.url().toString());
+            AccessibilityDeclarationResult accessibilityDeclarationResult = accessibilityDeclarationResult(accessibilityDeclarationUrl);
 
             return new WebsiteContentInspectionService.WebsiteContentSnapshot(
                     title,
@@ -242,7 +265,17 @@ public class WebsiteContentSnapshotFetcher {
                     dnsSecurityResult.spfSoftfail(),
                     dnsSecurityResult.dmarcPolicyNone(),
                     linkCheckResult.checkedCount(),
-                    linkCheckResult.brokenCount()
+                    linkCheckResult.brokenCount(),
+                    crawlResult.pageCount(),
+                    crawlResult.privacyPageFound(),
+                    crawlResult.contactPageFound(),
+                    crawlResult.aboutPageFound(),
+                    crawlResult.termsPageFound(),
+                    crawlResult.formPageCount(),
+                    crawlResult.privacyTextPageCount(),
+                    accessibilityDeclarationUrl,
+                    accessibilityDeclarationResult.violationCount(),
+                    accessibilityDeclarationResult.requirementCount()
             );
         } catch (IOException | IllegalArgumentException exception) {
             return null;
@@ -263,6 +296,45 @@ public class WebsiteContentSnapshotFetcher {
         }
         String value = element.text();
         return value.isBlank() ? null : value;
+    }
+
+    private static String accessibilityDeclarationUrl(Document document, String baseUrl) {
+        Element link = document.selectFirst("a[href*=uustatus.no], a:contains(Tilgjengelighetserklæring), a:contains(Tilgjengeerklæring), a:contains(Accessibility statement)");
+        if (link == null) {
+            return null;
+        }
+        String href = link.attr("href");
+        if (href == null || href.isBlank()) {
+            return null;
+        }
+        try {
+            return URI.create(baseUrl).resolve(href.trim()).toString();
+        } catch (IllegalArgumentException exception) {
+            return href.trim();
+        }
+    }
+
+    private static AccessibilityDeclarationResult accessibilityDeclarationResult(String url) {
+        if (url == null || url.isBlank() || !url.toLowerCase(Locale.ROOT).contains("uustatus.no")) {
+            return new AccessibilityDeclarationResult(null, null);
+        }
+        try {
+            Connection.Response response = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (compatible; Nyfirmasjekk-App)")
+                    .timeout(2500)
+                    .followRedirects(true)
+                    .execute();
+            Matcher matcher = ACCESSIBILITY_VIOLATION_PATTERN.matcher(response.body());
+            if (matcher.find()) {
+                return new AccessibilityDeclarationResult(
+                        Integer.parseInt(matcher.group(1)),
+                        Integer.parseInt(matcher.group(2))
+                );
+            }
+        } catch (IOException | IllegalArgumentException exception) {
+            return new AccessibilityDeclarationResult(null, null);
+        }
+        return new AccessibilityDeclarationResult(null, null);
     }
 
     static String detectBuilder(String generator, String html) {
@@ -481,8 +553,21 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static boolean hasEcommerceSignal(Document document, String html) {
-        return hasAny(html, "shopify", "woocommerce", "klarna", "vipps", "stripe", "nets", "checkout", "handlekurv")
-                || document.selectFirst("button:contains(Kjøp), button:contains(Bestill), a:contains(Legg i handlekurv), a[href*=checkout], form[action*=checkout]") != null;
+        String normalized = html == null ? "" : html.toLowerCase(Locale.ROOT);
+        boolean cartOrCheckoutSignal = hasCartOrCheckoutSignal(document, html);
+        boolean productOrCommerceIntent = hasAny(normalized, "add-to-cart", "add_to_cart", "product_id", "single-product", "wc-block-cart")
+                || document.selectFirst("button:contains(Kjøp), a:contains(Legg i handlekurv), form[class*=cart], form[action*=cart]") != null;
+        boolean ecommercePlatform = hasAny(normalized, "shopify", "myshopify")
+                || (hasAny(normalized, "woocommerce") && (cartOrCheckoutSignal || productOrCommerceIntent));
+        boolean paymentProviderWithCheckout = hasAny(normalized, "klarna", "vipps", "stripe", "nets")
+                && cartOrCheckoutSignal;
+        return ecommercePlatform || cartOrCheckoutSignal || paymentProviderWithCheckout || productOrCommerceIntent;
+    }
+
+    private static boolean hasCartOrCheckoutSignal(Document document, String html) {
+        String normalized = html == null ? "" : html.toLowerCase(Locale.ROOT);
+        return hasAny(normalized, "handlekurv", "shopping-cart", "cart__", "cart-drawer", "cart-items", "wc-block-cart")
+                || document.selectFirst("a[href*=checkout], form[action*=checkout], a[href*=handlekurv], a[href*=cart]") != null;
     }
 
     private static boolean hasPlatformDomainSignal(String url) {
@@ -727,6 +812,137 @@ public class WebsiteContentSnapshotFetcher {
         }
     }
 
+    private static ExtendedCrawlResult extendedCrawl(Document document, String baseUrl) {
+        URI baseUri;
+        try {
+            baseUri = URI.create(baseUrl);
+        } catch (IllegalArgumentException exception) {
+            return ExtendedCrawlResult.empty();
+        }
+        String origin = origin(baseUri);
+        if (origin == null) {
+            return ExtendedCrawlResult.empty();
+        }
+
+        Set<String> candidates = new java.util.LinkedHashSet<>();
+        STANDARD_REVIEW_PATHS.stream()
+                .map(path -> origin + path)
+                .forEach(candidates::add);
+        document.select("a[href]").stream()
+                .map(link -> link.attr("abs:href"))
+                .filter(java.util.function.Predicate.not(String::isBlank))
+                .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
+                .filter(href -> sameHost(baseUri, href))
+                .filter(href -> !href.contains("#"))
+                .filter(WebsiteContentSnapshotFetcher::isLikelyReviewPage)
+                .forEach(candidates::add);
+
+        int crawled = 0;
+        boolean privacyPageFound = false;
+        boolean contactPageFound = false;
+        boolean aboutPageFound = false;
+        boolean termsPageFound = false;
+        int formPages = 0;
+        int privacyTextPages = 0;
+
+        for (String candidate : candidates) {
+            if (crawled >= EXTENDED_CRAWL_LIMIT) {
+                break;
+            }
+            String html = readSmallHtmlResource(candidate);
+            if (html.isBlank()) {
+                continue;
+            }
+            crawled++;
+            String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
+            String normalizedContent = html.toLowerCase(Locale.ROOT);
+            privacyPageFound = privacyPageFound || hasAny(normalizedUrl + " " + normalizedContent,
+                    "personvern", "privacy", "gdpr", "datenschutz", "integritetspolicy");
+            contactPageFound = contactPageFound || hasAny(normalizedUrl + " " + normalizedContent,
+                    "kontakt", "contact", "kundeservice", "support");
+            aboutPageFound = aboutPageFound || hasAny(normalizedUrl + " " + normalizedContent,
+                    "om-oss", "about", "om oss", "hvem vi er", "about us");
+            termsPageFound = termsPageFound || hasAny(normalizedUrl + " " + normalizedContent,
+                    "vilkar", "vilkår", "villkor", "terms", "conditions", "policy", "retur", "refund");
+            if (normalizedContent.contains("<form")) {
+                formPages++;
+            }
+            if (hasAny(normalizedContent,
+                    "personopplysninger",
+                    "personvern",
+                    "privacy",
+                    "gdpr",
+                    "databehandler",
+                    "cookies",
+                    "informasjonskapsler",
+                    "integritetspolicy")) {
+                privacyTextPages++;
+            }
+        }
+
+        return new ExtendedCrawlResult(
+                crawled,
+                privacyPageFound,
+                contactPageFound,
+                aboutPageFound,
+                termsPageFound,
+                formPages,
+                privacyTextPages
+        );
+    }
+
+    private static String origin(URI uri) {
+        if (uri.getScheme() == null || uri.getHost() == null) {
+            return null;
+        }
+        return uri.getScheme() + "://" + uri.getHost();
+    }
+
+    private static boolean isLikelyReviewPage(String url) {
+        String normalized = url.toLowerCase(Locale.ROOT);
+        return hasAny(normalized,
+                "/kontakt",
+                "/contact",
+                "/om",
+                "/about",
+                "/personvern",
+                "/privacy",
+                "/cookies",
+                "/vilkar",
+                "/vilkår",
+                "/villkor",
+                "/terms",
+                "/policy",
+                "/tjenester",
+                "/services",
+                "/retur",
+                "/refund");
+    }
+
+    private static String readSmallHtmlResource(String url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+            connection.setRequestMethod("GET");
+            connection.setInstanceFollowRedirects(true);
+            connection.setConnectTimeout(EXTENDED_CRAWL_TIMEOUT_MS);
+            connection.setReadTimeout(EXTENDED_CRAWL_TIMEOUT_MS);
+            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            int status = connection.getResponseCode();
+            if (status < 200 || status >= 300) {
+                return "";
+            }
+            String contentType = connection.getContentType();
+            if (contentType != null && !contentType.toLowerCase(Locale.ROOT).contains("text/html")) {
+                return "";
+            }
+            try (java.io.InputStream stream = connection.getInputStream()) {
+                return new String(stream.readNBytes(EXTENDED_CRAWL_BYTES), java.nio.charset.StandardCharsets.UTF_8);
+            }
+        } catch (IOException | IllegalArgumentException exception) {
+            return "";
+        }
+    }
+
     private static LinkCheckResult checkInternalLinks(Document document, String baseUrl) {
         URI baseUri = URI.create(baseUrl);
         Set<String> links = document.select("a[href]").stream()
@@ -795,7 +1011,24 @@ public class WebsiteContentSnapshotFetcher {
     private record LinkCheckResult(int checkedCount, int brokenCount) {
     }
 
+    private record ExtendedCrawlResult(
+            int pageCount,
+            boolean privacyPageFound,
+            boolean contactPageFound,
+            boolean aboutPageFound,
+            boolean termsPageFound,
+            int formPageCount,
+            int privacyTextPageCount
+    ) {
+        private static ExtendedCrawlResult empty() {
+            return new ExtendedCrawlResult(0, false, false, false, false, 0, 0);
+        }
+    }
+
     private record DnsSecurityResult(boolean spf, boolean dkim, boolean dmarc, boolean spfSoftfail, boolean dmarcPolicyNone) {
+    }
+
+    private record AccessibilityDeclarationResult(Integer violationCount, Integer requirementCount) {
     }
 
     private record TlsCertificateResult(boolean valid, Integer daysRemaining) {

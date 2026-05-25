@@ -281,7 +281,17 @@ public class WebsiteContentInspectionService {
             boolean spfSoftfailSignal,
             boolean dmarcPolicyNoneSignal,
             int checkedInternalLinkCount,
-            int brokenInternalLinkCount
+            int brokenInternalLinkCount,
+            int crawledPageCount,
+            boolean crawlPrivacyPageFound,
+            boolean crawlContactPageFound,
+            boolean crawlAboutPageFound,
+            boolean crawlTermsPageFound,
+            int crawledFormPageCount,
+            int crawledPrivacyTextPageCount,
+            String accessibilityDeclarationUrl,
+            Integer accessibilityViolationCount,
+            Integer accessibilityRequirementCount
     ) {
         public WebsiteContentSnapshot(
                 String title,
@@ -313,7 +323,9 @@ public class WebsiteContentInspectionService {
                     0, 0, 0,
                     false, false, false, 0, false, false, false, null,
                     false, false, false, false, false, false, false, false, false, false,
-                    0, 0);
+                    0, 0,
+                    0, false, false, false, false, 0, 0,
+                    null, null, null);
         }
 
         public WebsiteContentSnapshot(String title, String bodyText) {

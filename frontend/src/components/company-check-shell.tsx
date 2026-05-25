@@ -2047,6 +2047,9 @@ function firstWebsiteQualityAction(signalCodes: Set<string>) {
   if (signalCodes.has("TECHNICAL_FAILURE")) {
     return "Få nettsiden til å svare stabilt før andre forbedringer vurderes.";
   }
+  if (signalCodes.has("PUBLIC_SECTOR_CONTEXT")) {
+    return "Behandle funnene som revisjonspunkter for UU, personvern og teknisk kvalitet, ikke som salgslead.";
+  }
   if (signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT") || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT")) {
     return "Fjern uferdig tekst og avklar hva som faktisk er lansert.";
   }
@@ -2063,8 +2066,14 @@ function firstWebsiteQualityAction(signalCodes: Set<string>) {
 }
 
 function technicalWebsiteQualityPriority(signalCodes: Set<string>) {
-  if (signalCodes.has("MISSING_HTTPS") || signalCodes.has("MIXED_CONTENT_RISK")) {
+  if (signalCodes.has("TECHNICAL_FAILURE")) {
+    return "Nettsiden svarte ikke. Sjekk DNS, SSL, hosting, redirect og eventuell 404/5xx manuelt.";
+  }
+  if (signalCodes.has("MISSING_HTTPS")) {
     return "HTTPS og blandet innhold bør prioriteres høyt.";
+  }
+  if (signalCodes.has("MIXED_CONTENT_RISK")) {
+    return "Blandet HTTP/HTTPS-innhold bør prioriteres fordi det kan gi nettleservarsler eller blokkert innhold.";
   }
   if (signalCodes.has("MISSING_CSP_HEADER") || signalCodes.has("MISSING_HSTS_HEADER") || signalCodes.has("WEAK_CSP_HEADER")) {
     return "Sikkerhetsheadere bør vurderes når innhold og hosting er avklart.";
@@ -2079,6 +2088,12 @@ function technicalWebsiteQualityPriority(signalCodes: Set<string>) {
 }
 
 function manualWebsiteQualityReview(signalCodes: Set<string>) {
+  if (signalCodes.has("TECHNICAL_FAILURE")) {
+    return "Bekreft feilen manuelt i nettleser før den brukes i kundedialog. Nedetid kan være midlertidig.";
+  }
+  if (signalCodes.has("PUBLIC_SECTOR_CONTEXT")) {
+    return "Offentlige og store tjenestenettsteder bør vurderes med revisjonsspråk, ikke som vanlige kundehenvendelser.";
+  }
   if (signalCodes.has("SENSITIVE_HEALTH_CONTEXT") || signalCodes.has("HEALTH_TRACKING_CONTEXT")) {
     return "Helse/persondata bør vurderes ekstra varsomt og ikke beskrives som regelbrudd uten full gjennomgang.";
   }
@@ -2101,6 +2116,129 @@ function WebsiteSignalReportItem({ label, value }: { label: string; value: strin
 }
 
 function websiteSignalWhy(signal: WebsiteQualitySignal) {
+  switch (signal.code) {
+    case "TECHNICAL_FAILURE":
+      return "Hvis registrert nettside ikke svarer, mister virksomheten et viktig kontaktpunkt og kan fremstå mindre aktiv.";
+    case "PUBLIC_SECTOR_CONTEXT":
+      return "Offentlige og store tjenestenettsteder har andre krav, eiere og ansvarsforhold enn en vanlig småbedriftsside.";
+    case "ACCESSIBILITY_DECLARATION_VIOLATIONS":
+      return "Dette kommer fra publisert tilgjengelighetserklæring, ikke bare fra automatisk HTML-sjekk.";
+    case "TEMPLATE_PLACEHOLDER_CONTENT":
+      return "Uferdig tekst er et tydelig førsteinntrykkssignal og kan få siden til å virke upublisert eller lite kvalitetssikret.";
+    case "MISSING_ORG_NUMBER":
+    case "LEGAL_NAME_NOT_VISIBLE":
+      return "Juridisk navn og org.nr. gjør det lettere å verifisere hvem kunden faktisk handler med.";
+    case "MISSING_ADDRESS_OR_AREA":
+      if (signal.title.toLowerCase().includes("selskapsinfo")) {
+        return "Ved nettbutikk bør kunden raskt kunne verifisere juridisk selger, kontaktinformasjon og ansvarlig virksomhet.";
+      }
+      return "Lokale kunder trenger raskt å forstå hvor virksomheten holder til eller hvilket område den dekker.";
+    case "MISSING_LOCAL_RELEVANCE":
+      return "Sted eller dekningsområde gjør virksomheten mer relevant i lokale søk og for kunder som vurderer avstand.";
+    case "NON_NO_DOMAIN":
+      return ".no er ikke et krav, men kan gjøre en norsk virksomhet lettere å kjenne igjen og stole på.";
+    case "THIN_CONTENT":
+      return "Lite tekst gjør det vanskeligere for både kunder og søkemotorer å forstå hva virksomheten faktisk tilbyr.";
+    case "WEAK_HOMEPAGE_STRUCTURE":
+      return "En tydelig hovedoverskrift hjelper brukeren å forstå tilbudet før resten av siden leses.";
+    case "MULTIPLE_H1":
+      return "Flere H1 kan gjøre sidestrukturen mindre tydelig for søkemotorer og hjelpemidler.";
+    case "WEAK_NAVIGATION":
+      return "Tydelig navigasjon og seksjoner gjør det enklere å finne tjenester, kontakt og praktisk informasjon.";
+    case "COMMERCE_TERMS_MISSING":
+    case "COMMERCE_RETURN_INFO_MISSING":
+    case "COMMERCE_DELIVERY_INFO_MISSING":
+      return "Ved salg eller bestilling bør vilkår, retur og levering være lett å finne før kunden tar en beslutning.";
+    case "DOMAIN_NAME_MISMATCH":
+      return "Når domene og firmanavn peker i ulike retninger, kan det svekke gjenkjenning og tillit.";
+    case "EMAIL_DOMAIN_MISMATCH":
+      return "Domenebasert e-post kan gi mer profesjonelt inntrykk og gjøre avsenderen lettere å kjenne igjen.";
+    case "MISSING_ABOUT_SECTION":
+      return "En kort om-side eller personpresentasjon gjør virksomheten mer etterprøvbar og mindre anonym.";
+    case "WEAK_TITLE":
+      return "Sidetittelen vises i nettleser, søkeresultater og deling, og bør raskt forklare hvem siden gjelder.";
+    case "MISSING_META_DESCRIPTION":
+      return "Meta description påvirker hvordan siden presenteres i søkeresultater og ved deling.";
+    case "WEAK_SHARE_PREVIEW":
+      return "Open Graph/Twitter-data styrer ofte hvordan lenken ser ut i sosiale medier, meldinger og e-post.";
+    case "MISSING_STRUCTURED_DATA":
+      return "Strukturert data hjelper søkemotorer å forstå virksomhet, kontaktpunkt og innhold mer presist.";
+    case "CLOUDFLARE_EMAIL_PROTECTION":
+      return "Skjult e-post kan redusere spam, men kan også gjøre kontakt vanskeligere uten JavaScript eller for hjelpemidler.";
+    case "MISSING_OPENING_HOURS":
+      return "Åpningstider eller tilgjengelighet reduserer friksjon for kunder som vil ta kontakt eller møte opp.";
+    case "MISSING_SOCIAL_LINKS":
+      return "Sosiale lenker er ikke alltid nødvendig, men kan gi ekstra etterprøvbarhet for lokale og forbrukerrettede virksomheter.";
+    case "PHONE_NOT_CLICKABLE":
+    case "EMAIL_NOT_CLICKABLE":
+    case "CONTACT_PAGE_NOT_FOUND":
+      return "Kontaktpunkter bør være raske å bruke, særlig på mobil.";
+    case "CLIENT_LOADING_OVERLAY":
+      return "Tung klientlasting kan gi svakere førsteinntrykk og dårligere mobilopplevelse selv om siden til slutt laster.";
+    case "FORM_AUTOCOMPLETE_MISSING":
+      return "Autocomplete gjør skjema enklere å fylle ut og er et praktisk UU- og mobilbrukssignal.";
+    case "NEWSLETTER_FORM_LABEL_RISK":
+      return "Nyhetsbrevskjema samler kontaktdata og bør være tydelig merket for både brukervennlighet og tilgjengelighet.";
+    case "FIXED_WIDTH_LAYOUT":
+      return "Fast bredde i HTML/CSS kan gi dårlig mobilvisning selv om siden ser grei ut på stor skjerm.";
+    case "MISSING_MAIN_LANDMARK":
+    case "WEAK_PAGE_LANDMARKS":
+      return "Landemerker hjelper skjermleser- og tastaturbrukere å hoppe direkte til hovedinnhold.";
+    case "MISSING_LANGUAGE":
+    case "LANGUAGE_MISMATCH_RISK":
+      return "Riktig språkmerking hjelper skjermlesere med uttale og gjør siden mer robust for hjelpeteknologi.";
+    case "SKIPPED_HEADING_LEVELS":
+      return "Riktig overskriftsrekkefølge gjør siden lettere å skumme og mer forståelig for skjermlesere.";
+    case "VAGUE_LINK_TEXT":
+      return "Lenketekst bør gi mening uten kontekst, slik at brukeren forstår hvor lenken leder.";
+    case "IFRAME_TITLE_RISK":
+      return "Iframe uten tittel gjør det vanskeligere for skjermleserbrukere å forstå hva det innebygde innholdet er.";
+    case "FOCUS_STYLE_RISK":
+      return "Synlig fokusmarkering er nødvendig for brukere som navigerer med tastatur.";
+    case "MOTION_ACCESSIBILITY_RISK":
+      return "Brukere som reagerer på bevegelse bør kunne få redusert animasjon når nettleseren ber om det.";
+    case "MANY_EXTERNAL_SCRIPTS":
+    case "EXTERNAL_IFRAME_RISK":
+    case "THIRD_PARTY_EMBED_CONSENT_RISK":
+      return "Tredjepartsinnhold kan påvirke ytelse, personvern, samtykke og feilkilder.";
+    case "TLS_CERTIFICATE_REVIEW":
+    case "TLS_CERTIFICATE_EXPIRING":
+      return "Sertifikatproblemer kan gi nettleservarsler eller nedetid hvis HTTPS ikke fornyes og valideres riktig.";
+    case "THIRD_PARTY_FORM_RISK":
+      return "Eksterne skjema-, booking- eller markedsføringstjenester kan innebære databehandling utenfor selve nettstedet.";
+    case "SERVER_TECH_HEADER_EXPOSED":
+    case "CMS_VERSION_EXPOSED":
+      return "Eksponert teknologi er sjelden kritisk alene, men kan gi unødvendig informasjon ved teknisk kartlegging.";
+    case "SECURITY_TXT_MISSING":
+      return "security.txt er ikke påkrevd, men gir en ryddig kanal for ansvarlig sikkerhetshenvendelse.";
+    case "ROBOTS_SENSITIVE_PATHS":
+      return "Robots.txt skal ikke brukes som skjulested; sensitive stier der kan gi unødvendige hint.";
+    case "ADMIN_OR_LOGIN_PATH_EXPOSED":
+    case "LOGIN_FORM_SECURITY_REVIEW":
+      return "Synlig innlogging er normalt, men bør ha sterke passord, 2FA, rate limiting og ryddige sesjoner.";
+    case "API_ENDPOINTS_VISIBLE":
+      return "Synlige API-spor er vanlige i moderne sider, men tilgang, CORS og rate limiting bør være kontrollert.";
+    case "SPF_POLICY_SOFT":
+    case "DMARC_POLICY_NONE":
+    case "EMAIL_SECURITY_DNS_REVIEW":
+      return "E-postdomener bør ha ryddig SPF, DKIM og DMARC for å redusere spoofing og leveringsproblemer.";
+    case "GOOGLE_ANALYTICS_WITHOUT_CONSENT":
+    case "META_PIXEL_WITHOUT_CONSENT":
+    case "SESSION_TRACKING_WITHOUT_CONSENT":
+      return "Analyse- og sporingsverktøy bør kobles til en ryddig samtykkeflyt der det er relevant.";
+    case "MISSING_REFERRER_POLICY":
+    case "MISSING_PERMISSIONS_POLICY":
+    case "MISSING_CONTENT_TYPE_OPTIONS":
+    case "MISSING_FRAME_PROTECTION":
+      return "Dette er enkle sikkerhetsheadere som kan redusere unødvendig eksponering i nettleseren.";
+    case "TECHNOLOGY_STACK_DETECTED":
+      return "Teknologispor sier noe om plattform og vedlikeholdsbehov, men ikke sikkert hvem som har laget siden.";
+    case "SENSITIVE_HEALTH_CONTEXT":
+    case "HEALTH_TRACKING_CONTEXT":
+      return "Når siden berører helse, behandling eller personopplysninger, bør personvern og skjema vurderes ekstra varsomt.";
+    case "PRIVACY_LINK_REVIEW":
+      return "En policy- eller vilkårslenke er funnet, men innholdet må bekreftes når skjema, cookies eller kontaktdata brukes.";
+  }
   if ([
     "GENERIC_PRESENTATION_TRUST_RISK",
     "GENERIC_OR_AI_IMAGE_RISK",
@@ -2131,6 +2269,9 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
   }
   if ([
     "MISSING_PRIVACY_NOTICE",
+    "CRAWL_PRIVACY_PAGE_NOT_FOUND",
+    "CRAWL_FORM_PRIVACY_REVIEW",
+    "CRAWL_TERMS_PAGE_NOT_FOUND",
     "COOKIE_CONSENT_RISK",
     "HEALTH_TRACKING_CONTEXT",
     "SENSITIVE_HEALTH_CONTEXT",
@@ -2149,6 +2290,142 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
 }
 
 function websiteSignalAction(signal: WebsiteQualitySignal) {
+  switch (signal.code) {
+    case "TECHNICAL_FAILURE":
+      return "Sjekk domenet manuelt og avklar om problemet gjelder DNS, SSL, hosting, redirect, 404/5xx eller midlertidig nedetid.";
+    case "PUBLIC_SECTOR_CONTEXT":
+      return "Bruk funnene som grunnlag for manuell UU-, personvern- og sikkerhetsrevisjon, ikke som enkel nettsidekritikk.";
+    case "ACCESSIBILITY_DECLARATION_VIOLATIONS":
+      return "Åpne tilgjengelighetserklæringen og prioriter de konkrete WCAG-kravene som virksomheten selv har oppgitt som brudd.";
+    case "TEMPLATE_PLACEHOLDER_CONTENT":
+      return "Fjern test-, placeholder- og kommer-snart-tekst før siden brukes aktivt.";
+    case "MISSING_ORG_NUMBER":
+      return "Vis organisasjonsnummer i footer, kontaktseksjon eller om-side der det passer naturlig.";
+    case "LEGAL_NAME_NOT_VISIBLE":
+      return "Vis juridisk firmanavn tydelig, særlig hvis markedsnavn og selskapsnavn er ulike.";
+    case "MISSING_ADDRESS_OR_AREA":
+      if (signal.title.toLowerCase().includes("selskapsinfo")) {
+        return "Gjør juridisk selger, kontaktinformasjon, vilkår og returinfo lett tilgjengelig fra footer og checkout.";
+      }
+      return "Legg inn sted, dekningsområde eller adresse der det er relevant for kundens valg.";
+    case "MISSING_LOCAL_RELEVANCE":
+      return "Nevn relevant sted, marked eller dekningsområde på en naturlig måte i tekst og metadata.";
+    case "NON_NO_DOMAIN":
+      return "Vurder .no-domene hvis virksomheten primært retter seg mot norske kunder.";
+    case "THIN_CONTENT":
+      return "Legg til kort, konkret tekst om produkter/tjenester, målgruppe og hvorfor kunden bør ta kontakt.";
+    case "WEAK_HOMEPAGE_STRUCTURE":
+      return "Lag en klar H1 som sier hva virksomheten tilbyr, gjerne med produkt/tjeneste og målgruppe.";
+    case "MULTIPLE_H1":
+      return "Bruk én tydelig H1 for hovedtemaet og legg resten av seksjonene under H2/H3.";
+    case "WEAK_NAVIGATION":
+      return "Legg inn tydelig meny, seksjoner og kontaktvei slik at brukeren raskt finner frem.";
+    case "COMMERCE_TERMS_MISSING":
+      return "Gjør kjøpsvilkår eller salgsbetingelser lett tilgjengelig fra footer og checkout.";
+    case "COMMERCE_RETURN_INFO_MISSING":
+      return "Legg inn tydelig informasjon om angrerett, retur, reklamasjon eller bytte.";
+    case "COMMERCE_DELIVERY_INFO_MISSING":
+      return "Legg inn leverings-, frakt- eller hentingsinformasjon der kunden forventer det.";
+    case "DOMAIN_NAME_MISMATCH":
+      return "Vurder om domene, markedsnavn og juridisk navn bør knyttes tydeligere sammen på siden.";
+    case "EMAIL_DOMAIN_MISMATCH":
+      return "Vurder domenebasert e-post eller forklar tydelig hvilken e-post som er offisiell kontaktvei.";
+    case "MISSING_ABOUT_SECTION":
+      return "Legg inn en kort presentasjon av hvem som står bak, erfaring, rolle eller hvordan virksomheten jobber.";
+    case "WEAK_TITLE":
+      return "Skriv en konkret sidetittel med virksomhet, tjeneste/produkt og gjerne sted eller marked.";
+    case "MISSING_META_DESCRIPTION":
+      return "Skriv en kort meta description som forklarer hva virksomheten tilbyr og hvorfor siden er relevant.";
+    case "WEAK_SHARE_PREVIEW":
+      return "Legg inn Open Graph/Twitter-tittel og beskrivelse som gir en ryddig forhåndsvisning.";
+    case "MISSING_STRUCTURED_DATA":
+      return "Vurder Organization, LocalBusiness eller Product/Service-data der det passer for virksomheten.";
+    case "CLOUDFLARE_EMAIL_PROTECTION":
+      return "Sørg for at e-post også finnes som tydelig kontaktvei for brukere uten JavaScript.";
+    case "MISSING_OPENING_HOURS":
+      return "Legg inn åpningstider, responstid eller når virksomheten kan kontaktes.";
+    case "MISSING_SOCIAL_LINKS":
+      return "Legg inn relevante sosiale profiler, eller la dem være borte hvis de ikke brukes aktivt.";
+    case "PHONE_NOT_CLICKABLE":
+      return "Gjør telefonnummer til tel-lenke og plasser det tydelig for mobilbrukere.";
+    case "EMAIL_NOT_CLICKABLE":
+      return "Gjør e-postadresse til mailto-lenke hvis den skal brukes som kontaktvei.";
+    case "CLIENT_LOADING_OVERLAY":
+      return "Sjekk mobilhastighet, LCP og om viktig innhold vises uten tung JavaScript.";
+    case "FORM_AUTOCOMPLETE_MISSING":
+      return "Legg autocomplete på navn, e-post, telefon og adressefelt.";
+    case "NEWSLETTER_FORM_LABEL_RISK":
+      return "Gi nyhetsbrevfeltet synlig label, tydelig hjelpetekst og ryddig personvernkobling.";
+    case "FIXED_WIDTH_LAYOUT":
+      return "Test siden på mobil og fjern faste bredder som skaper horisontal scroll eller kuttet innhold.";
+    case "MISSING_MAIN_LANDMARK":
+    case "WEAK_PAGE_LANDMARKS":
+      return "Legg inn semantiske landemerker som header, main, nav og footer.";
+    case "MISSING_LANGUAGE":
+      return "Sett riktig lang-attributt på HTML-elementet, for eksempel lang=\"no\" eller lang=\"nb\".";
+    case "LANGUAGE_MISMATCH_RISK":
+      return "Sjekk at lang-attributt stemmer med faktisk språk på siden.";
+    case "SKIPPED_HEADING_LEVELS":
+      return "Rydd overskriftsnivåene slik at siden går logisk fra H1 til H2, H3 og videre.";
+    case "VAGUE_LINK_TEXT":
+      return "Bytt generiske lenker som «les mer» med konkrete tekster som beskriver målet.";
+    case "IFRAME_TITLE_RISK":
+      return "Gi iframe-elementer en kort title som beskriver kart, video, skjema eller annet innebygd innhold.";
+    case "FOCUS_STYLE_RISK":
+      return "Sørg for tydelig :focus-visible/:focus-stil og ikke fjern outline uten erstatning.";
+    case "MOTION_ACCESSIBILITY_RISK":
+      return "Legg støtte for prefers-reduced-motion og unngå at animasjon skjuler viktig innhold.";
+    case "MIXED_CONTENT_RISK":
+      return "Bytt HTTP-ressurser til HTTPS eller fjern dem hvis de ikke lenger brukes.";
+    case "MANY_EXTERNAL_SCRIPTS":
+      return "Gå gjennom scripts og fjern måling, widgets eller plugins som ikke gir tydelig verdi.";
+    case "TLS_CERTIFICATE_REVIEW":
+    case "TLS_CERTIFICATE_EXPIRING":
+      return "Forny TLS-sertifikatet eller verifiser at automatisk fornyelse fungerer før utløpsdato.";
+    case "EXTERNAL_IFRAME_RISK":
+    case "THIRD_PARTY_EMBED_CONSENT_RISK":
+      return "Vurder samtykke, lazy loading og personverntekst for kart, video og andre embeds.";
+    case "THIRD_PARTY_FORM_RISK":
+      return "Verifiser hvor skjemadata sendes, hvem som er databehandler og hvordan dette forklares i personvernteksten.";
+    case "SERVER_TECH_HEADER_EXPOSED":
+      return "Skjul eller reduser Server/X-Powered-By-headere hvis hostingmiljøet tillater det.";
+    case "CMS_VERSION_EXPOSED":
+      return "Skjul synlige CMS/plugin-versjoner og hold CMS, tema og plugins oppdatert.";
+    case "SECURITY_TXT_MISSING":
+      return "Vurder security.txt hvis virksomheten ønsker en ryddig kanal for sikkerhetsfunn.";
+    case "ROBOTS_SENSITIVE_PATHS":
+      return "Fjern unødvendige sensitive stier fra robots.txt og sikre faktiske admin/API-endepunkter.";
+    case "ADMIN_OR_LOGIN_PATH_EXPOSED":
+    case "LOGIN_FORM_SECURITY_REVIEW":
+      return "Sjekk 2FA, rate limiting, passord-reset, session cookies og tilgangsstyring.";
+    case "API_ENDPOINTS_VISIBLE":
+      return "Verifiser CORS, autentisering, rate limiting og at API ikke eksponerer interne data.";
+    case "SPF_POLICY_SOFT":
+      return "Stram SPF når alle legitime avsendere er kartlagt.";
+    case "DMARC_POLICY_NONE":
+      return "Gå gradvis fra DMARC-overvåking til quarantine/reject når e-postflyten er verifisert.";
+    case "EMAIL_SECURITY_DNS_REVIEW":
+      return "Verifiser SPF, DKIM og DMARC for domenet med DNS-/mail-leverandør.";
+    case "GOOGLE_ANALYTICS_WITHOUT_CONSENT":
+    case "META_PIXEL_WITHOUT_CONSENT":
+    case "SESSION_TRACKING_WITHOUT_CONSENT":
+      return "Verifiser at måling/tracking først aktiveres etter riktig samtykke, eller dokumenter hvorfor det ikke kreves.";
+    case "MISSING_REFERRER_POLICY":
+      return "Sett Referrer-Policy, for eksempel strict-origin-when-cross-origin, etter behov.";
+    case "MISSING_PERMISSIONS_POLICY":
+      return "Sett Permissions-Policy for å begrense unødvendige nettleserfunksjoner.";
+    case "MISSING_CONTENT_TYPE_OPTIONS":
+      return "Sett X-Content-Type-Options: nosniff.";
+    case "MISSING_FRAME_PROTECTION":
+      return "Bruk CSP frame-ancestors eller X-Frame-Options for å styre innbygging.";
+    case "TECHNOLOGY_STACK_DETECTED":
+      return "Bruk teknologisporet som vedlikeholds- og kostnadsinfo, ikke som bevis på feil eller leverandør.";
+    case "SENSITIVE_HEALTH_CONTEXT":
+    case "HEALTH_TRACKING_CONTEXT":
+      return "Verifiser personverntekst, skjema, samtykke og databehandling manuelt før dette omtales konkret.";
+    case "PRIVACY_LINK_REVIEW":
+      return "Åpne policylenken og sjekk at den faktisk dekker personvern, skjema, cookies og databehandlerforhold.";
+  }
   if (["GENERIC_PRESENTATION_TRUST_RISK", "GENERIC_OR_AI_IMAGE_RISK"].includes(signal.code)) {
     return "Legg inn mer konkret tekst, ekte bilder, referanser, prosjekter eller dokumentasjon.";
   }
@@ -2172,6 +2449,15 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
   }
   if (signal.code === "MISSING_PRIVACY_NOTICE" || signal.code === "COOKIE_CONSENT_RISK") {
     return "Lag tydelig personverntekst og samtykke der skjema, cookies eller tracking brukes.";
+  }
+  if (signal.code === "CRAWL_PRIVACY_PAGE_NOT_FOUND" || signal.code === "CRAWL_FORM_PRIVACY_REVIEW") {
+    return "Legg personverninfo nær skjema/kontaktpunkter og gjør personvernsiden lett tilgjengelig.";
+  }
+  if (signal.code === "CRAWL_TERMS_PAGE_NOT_FOUND") {
+    return "Verifiser vilkår, retur, levering og personvern for nettbutikk før siden brukes aktivt.";
+  }
+  if (signal.code === "CONTACT_PAGE_NOT_FOUND") {
+    return "Gjør kontaktside eller kontaktpunkt tydelig fra meny, footer og førsteside.";
   }
   if (signal.code === "WEAK_INDUSTRY_RELEVANCE" || signal.code === "GENERIC_SERVICE_TEXT") {
     return "Skriv mer konkret om tjenester, målgruppe, område og hva kunden faktisk kan bestille.";
@@ -2200,12 +2486,39 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "MISSING_ADDRESS_OR_AREA",
         "MISSING_ABOUT_SECTION",
         "MISSING_SOCIAL_PROOF",
+        "CONTACT_PAGE_NOT_FOUND",
+        "WEAK_NAVIGATION",
         "WEAK_INDUSTRY_RELEVANCE",
         "GENERIC_SERVICE_TEXT",
         "GENERIC_PRESENTATION_TRUST_RISK",
         "GENERIC_OR_AI_IMAGE_RISK",
         "MISSING_STRUCTURED_DATA",
         "VISIBLE_DISCOUNT_CODE",
+        "NON_NO_DOMAIN",
+        "THIN_CONTENT",
+        "DOMAIN_NAME_MISMATCH",
+        "EMAIL_DOMAIN_MISMATCH",
+        "PUBLIC_SECTOR_CONTEXT",
+      ].includes(signal.code),
+    },
+    {
+      title: "SEO og deling",
+      predicate: (signal: WebsiteQualitySignal) => [
+        "WEAK_TITLE",
+        "MISSING_META_DESCRIPTION",
+        "WEAK_SHARE_PREVIEW",
+        "MISSING_STRUCTURED_DATA",
+        "MISSING_LOCAL_RELEVANCE",
+      ].includes(signal.code),
+    },
+    {
+      title: "Nettbutikk og kjøpsinformasjon",
+      predicate: (signal: WebsiteQualitySignal) => [
+        "COMMERCE_TERMS_MISSING",
+        "COMMERCE_RETURN_INFO_MISSING",
+        "COMMERCE_DELIVERY_INFO_MISSING",
+        "PAYMENT_TRUST_INFO_MISSING",
+        "CRAWL_TERMS_PAGE_NOT_FOUND",
       ].includes(signal.code),
     },
     {
@@ -2222,7 +2535,13 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "WEAK_CSP_HEADER",
         "MISSING_REFERRER_POLICY",
         "MISSING_PERMISSIONS_POLICY",
+        "MISSING_CONTENT_TYPE_OPTIONS",
+        "MISSING_FRAME_PROTECTION",
         "SERVER_TECH_HEADER_EXPOSED",
+        "MANY_EXTERNAL_SCRIPTS",
+        "THIRD_PARTY_FORM_RISK",
+        "EXTERNAL_IFRAME_RISK",
+        "THIRD_PARTY_EMBED_CONSENT_RISK",
         "SECURITY_TXT_MISSING",
         "ROBOTS_SENSITIVE_PATHS",
         "ADMIN_OR_LOGIN_PATH_EXPOSED",
@@ -2237,7 +2556,40 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "COOKIE_HTTPONLY_REVIEW",
         "COOKIE_SAMESITE_REVIEW",
         "MISSING_PRIVACY_NOTICE",
+        "PRIVACY_LINK_REVIEW",
+        "CRAWL_PRIVACY_PAGE_NOT_FOUND",
+        "CRAWL_FORM_PRIVACY_REVIEW",
+        "CRAWL_TERMS_PAGE_NOT_FOUND",
         "COOKIE_CONSENT_RISK",
+        "GOOGLE_ANALYTICS_WITHOUT_CONSENT",
+        "META_PIXEL_WITHOUT_CONSENT",
+        "SESSION_TRACKING_WITHOUT_CONSENT",
+        "TECHNOLOGY_STACK_DETECTED",
+      ].includes(signal.code),
+    },
+    {
+      title: "UU og brukervennlighet",
+      predicate: (signal: WebsiteQualitySignal) => [
+        "MISSING_LANGUAGE",
+        "LANGUAGE_MISMATCH_RISK",
+        "MULTIPLE_H1",
+        "ACCESSIBILITY_DECLARATION_VIOLATIONS",
+        "MISSING_MAIN_LANDMARK",
+        "WEAK_PAGE_LANDMARKS",
+        "SKIPPED_HEADING_LEVELS",
+        "VAGUE_LINK_TEXT",
+        "FORM_LABEL_RISK",
+        "EMPTY_BUTTON_RISK",
+        "IMAGE_ALT_RISK",
+        "FORM_AUTOCOMPLETE_MISSING",
+        "NEWSLETTER_FORM_LABEL_RISK",
+        "FIXED_WIDTH_LAYOUT",
+        "FOCUS_STYLE_RISK",
+        "MOTION_ACCESSIBILITY_RISK",
+        "IFRAME_TITLE_RISK",
+        "CLIENT_LOADING_OVERLAY",
+        "PHONE_NOT_CLICKABLE",
+        "EMAIL_NOT_CLICKABLE",
       ].includes(signal.code),
     },
   ];
@@ -2776,7 +3128,7 @@ function CompanyDetailView({
   const elevatedActorContextSignal = structureSignals.find((signal) => signal.code === "ACTOR_CONTEXT_ELEVATED") ?? null;
   const commercialOpportunity = getCommercialOpportunity(company);
   const offerType = outreachOfferTypeForCompany(company);
-  const requiresManualWebsiteCheck = offerType === "website-unavailable-offer" || offerType === "website-improvement-offer";
+  const requiresManualWebsiteCheck = offerType === "website-unavailable-offer" || offerType === "website-improvement-offer" || offerType === "website-registered-review";
   const mailQualityLine = offerType === "website-improvement-offer" ? websiteQualityMailLine(company) : "";
   const quickEvidence = scoreEvidence.slice(0, 3);
   const extendedEvidence = scoreEvidence.slice(3);
@@ -3061,7 +3413,9 @@ function CompanyDetailView({
                     </div>
                     {requiresManualWebsiteCheck ? (
                       <p className="mt-3 max-w-2xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] font-medium leading-5 text-amber-800">
-                        Sjekk nettsiden manuelt før du sender. Denne mailtypen bygger på teknisk nettsidesjekk og enkle kvalitetssignaler.
+                        {offerType === "website-registered-review"
+                          ? "Selskapet har registrert nettside som ser grei ut i automatisk sjekk. Send bare hvis du har gjort en manuell vurdering og ser et konkret forbedringsbehov."
+                          : "Sjekk nettsiden manuelt før du sender. Denne mailtypen bygger på teknisk nettsidesjekk og enkle kvalitetssignaler."}
                       </p>
                     ) : null}
                     {mailQualityLine ? (

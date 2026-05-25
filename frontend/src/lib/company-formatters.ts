@@ -1,8 +1,15 @@
 import type { CompanyEvent, CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
 
-export function outreachOfferTypeForCompany(company: Pick<CompanySummary, "website" | "websiteDiscovery" | "websiteQuality">) {
+type OutreachOfferCompany = Pick<CompanySummary, "name" | "organizationForm" | "website" | "websiteDiscovery" | "websiteQuality"> & {
+  naceDescription?: string | null;
+};
+
+export function outreachOfferTypeForCompany(company: OutreachOfferCompany) {
   if (company.website && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false) {
     return "website-unavailable-offer";
+  }
+  if (hasRegisteredWebsiteThatShouldOnlyBeReviewedManually(company)) {
+    return "website-registered-review";
   }
   if (
     company.website
@@ -12,7 +19,26 @@ export function outreachOfferTypeForCompany(company: Pick<CompanySummary, "websi
   ) {
     return "website-improvement-offer";
   }
+  if (company.website && company.websiteDiscovery?.status === "REGISTERED") {
+    return "website-registered-review";
+  }
   return "website-offer";
+}
+
+function hasRegisteredWebsiteThatShouldOnlyBeReviewedManually(company: OutreachOfferCompany) {
+  if (!company.website || company.websiteDiscovery?.status !== "REGISTERED" || company.websiteDiscovery.verifiedReachable === false) {
+    return false;
+  }
+  const text = `${company.name} ${company.organizationForm ?? ""} ${company.naceDescription ?? ""}`.toLowerCase();
+  return [
+    "forsikring",
+    "insurance",
+    "bank",
+    "finans",
+    "financial",
+    "pensjon",
+    "kreditt",
+  ].some((word) => text.includes(word));
 }
 
 export function formatOutreachOfferType(value: string | null | undefined) {
@@ -21,6 +47,8 @@ export function formatOutreachOfferType(value: string | null | undefined) {
       return "Nettside svarer ikke";
     case "website-improvement-offer":
       return "Nettside kan forbedres";
+    case "website-registered-review":
+      return "Har registrert nettside";
     case "website-offer":
       return "Ny nettside";
     default:

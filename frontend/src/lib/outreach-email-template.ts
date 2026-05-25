@@ -23,6 +23,8 @@ export function buildOutreachEmailSubject(markdown: string, company: OutreachEma
     ? extractMailSubject(markdown, "E-postmal - registrert nettside svarer ikke") ?? "Nettsiden til {{companyName}}?"
     : hasWebsiteQualityOpportunity(company)
       ? extractMailSubject(markdown, "E-postmal - nettside kan forbedres") ?? "Nettsiden til {{companyName}}?"
+    : hasRegisteredWebsiteForManualReview(company)
+      ? extractMailSubject(markdown, "E-postmal - registrert nettside bør vurderes") ?? "Nettsiden til {{companyName}}?"
     : extractMailSubject(markdown) ?? "Nettside for {{companyName}}?";
   return applyOutreachTemplate(template, company);
 }
@@ -32,6 +34,8 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
     ? extractMarkdownSection(markdown, "E-postmal - registrert nettside svarer ikke") ?? defaultRegisteredWebsiteUnavailableEmailTemplate()
     : hasWebsiteQualityOpportunity(company)
       ? extractMarkdownSection(markdown, "E-postmal - nettside kan forbedres") ?? defaultWebsiteQualityOpportunityEmailTemplate()
+    : hasRegisteredWebsiteForManualReview(company)
+      ? extractMarkdownSection(markdown, "E-postmal - registrert nettside bør vurderes") ?? defaultRegisteredWebsiteReviewEmailTemplate()
     : extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
   const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
   return applyOutreachTemplate(cleanedTemplate, company);
@@ -67,6 +71,9 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
   const toneProfile = websiteQualityToneProfile(company);
   const hasComplianceSignal = [
     "MISSING_PRIVACY_NOTICE",
+    "CRAWL_PRIVACY_PAGE_NOT_FOUND",
+    "CRAWL_FORM_PRIVACY_REVIEW",
+    "CRAWL_TERMS_PAGE_NOT_FOUND",
     "PRIVACY_LINK_REVIEW",
     "COOKIE_CONSENT_RISK",
     "FORM_LABEL_RISK",
@@ -149,6 +156,14 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   const points: string[] = [];
 
   addMailPoint(points, signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK"), "tydeligere faglig profil, ekte tillitssignaler og mindre generisk innhold");
+  addMailPoint(points, signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT"), "uferdig maltekst eller kommer-snart-preg");
+  addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT") || signalCodes.has("WEAK_NAVIGATION"), "tydeligere førsteside, mer konkret innhold og enklere navigasjon");
+  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT"), "tydeligere beskrivelse av hva virksomheten faktisk tilbyr");
+  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("MISSING_ABOUT_SECTION"), "tydeligere juridisk avsender, org.nr. og hvem som står bak");
+  addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), "tydeligere sted, adresse eller område virksomheten dekker");
+  addMailPoint(points, signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("NEWSLETTER_FORM_LABEL_RISK"), "skjema som bør få tydeligere label, hjelpetekst og personvernkobling");
+  addMailPoint(points, signalCodes.has("COOKIE_CONSENT_RISK") || hasTrackingConsentRisk(signalCodes), "cookies, måling eller tracking som bør kobles til ryddig samtykke");
+  addMailPoint(points, hasCommerceRisk(signalCodes) || signalCodes.has("CRAWL_TERMS_PAGE_NOT_FOUND"), "vilkår, retur, levering eller kjøpsinformasjon som bør være tydeligere");
   addMailPoint(points, signalCodes.has("MISSING_HTTPS"), "HTTPS/sikker tilkobling");
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK"), "blandet HTTP/HTTPS-innhold som kan gi sikkerhetsvarsler");
   addMailPoint(points, signalCodes.has("INSECURE_FORM_ACTION"), "skjema som bør sjekkes for sikker innsending");
@@ -163,7 +178,7 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("API_ENDPOINTS_VISIBLE"), "synlige API-spor der tilgang, CORS og rate limiting bør vurderes");
   addMailPoint(points, signalCodes.has("EMAIL_SECURITY_DNS_REVIEW") || signalCodes.has("SPF_POLICY_SOFT") || signalCodes.has("DMARC_POLICY_NONE"), "SPF, DKIM og DMARC for e-postsikkerhet på domenet");
   addMailPoint(points, signalCodes.has("COOKIE_SECURE_FLAG_MISSING") || signalCodes.has("COOKIE_HTTPONLY_REVIEW") || signalCodes.has("COOKIE_SAMESITE_REVIEW"), "cookie-flagg for sesjon, sikkerhet og personvern");
-  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE"), "personverninfo ved skjema eller innsamling av kontaktdata");
+  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("CRAWL_PRIVACY_PAGE_NOT_FOUND") || signalCodes.has("CRAWL_FORM_PRIVACY_REVIEW"), "personverninfo ved skjema eller innsamling av kontaktdata");
   addMailPoint(points, signalCodes.has("COOKIE_CONSENT_RISK"), "cookies eller måling uten tydelig samtykkespor");
   addMailPoint(points, hasTrackingConsentRisk(signalCodes), "tracking og tredjepartsinnhold som bør vurderes opp mot samtykke");
   addMailPoint(points, signalCodes.has("FORM_LABEL_RISK"), "skjemafelt som ser ut til å mangle tydelig label");
@@ -173,7 +188,6 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK"), "alt-tekst på bilder");
   addMailPoint(points, signalCodes.has("FOCUS_STYLE_RISK"), "synlig tastaturfokus");
   addMailPoint(points, signalCodes.has("IFRAME_TITLE_RISK"), "tittel på iframe/innbygget innhold");
-  addMailPoint(points, signalCodes.has("NEWSLETTER_FORM_LABEL_RISK"), "nyhetsbrevskjema med tydeligere label og hjelpetekst");
 
   if (points.length === 0 && toneProfile.strictness === "strict") {
     addMailPoint(points, signalCodes.has("SENSITIVE_HEALTH_CONTEXT") || signalCodes.has("HEALTH_TRACKING_CONTEXT"), toneProfile.sensitivePoint);
@@ -191,7 +205,7 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.servicePoint);
   addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), toneProfile.localPoint);
   addMailPoint(points, signalCodes.has("MISSING_OPENING_HOURS"), "tydeligere åpningstider eller tilgjengelighet");
-  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("WEAK_CALL_TO_ACTION") || signalCodes.has("EMAIL_NOT_CLICKABLE") || signalCodes.has("PHONE_NOT_CLICKABLE") || signalCodes.has("CLOUDFLARE_EMAIL_PROTECTION"), toneProfile.contactPoint);
+  addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("CONTACT_PAGE_NOT_FOUND") || signalCodes.has("WEAK_CALL_TO_ACTION") || signalCodes.has("EMAIL_NOT_CLICKABLE") || signalCodes.has("PHONE_NOT_CLICKABLE") || signalCodes.has("CLOUDFLARE_EMAIL_PROTECTION"), toneProfile.contactPoint);
   addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH") || signalCodes.has("MISSING_ABOUT_SECTION") || signalCodes.has("MISSING_SOCIAL_PROOF") || signalCodes.has("MISSING_SOCIAL_LINKS") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.trustPoint);
   addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), toneProfile.searchPoint);
   addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "en ekstra sjekk av mobiloppsett og teknisk responsivitet");
@@ -211,9 +225,9 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   addMailPoint(points, signalCodes.has("MEDICAL_VISUAL_TRUST_RISK"), "tydeligere skille mellom faktiske produktbilder, illustrasjoner og dokumentasjon");
   addMailPoint(points, signalCodes.has("GENERIC_OR_AI_IMAGE_RISK"), "mer etterprøvbare bilder som viser virksomheten, produktet eller arbeidet");
   addMailPoint(points, signalCodes.has("HEAVY_PRODUCT_ANIMATION"), "at tung bilde-/scrollanimasjon ikke tar fokus bort fra dokumentasjon og tillit");
-  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("PRIVACY_LINK_REVIEW") || signalCodes.has("COOKIE_CONSENT_RISK"), toneProfile.privacyPoint);
+  addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("CRAWL_PRIVACY_PAGE_NOT_FOUND") || signalCodes.has("CRAWL_FORM_PRIVACY_REVIEW") || signalCodes.has("PRIVACY_LINK_REVIEW") || signalCodes.has("COOKIE_CONSENT_RISK"), toneProfile.privacyPoint);
   addMailPoint(points, hasTrackingConsentRisk(signalCodes), "cookies, måling og tredjepartsinnhold som bør presenteres ryddig");
-  addMailPoint(points, hasCommerceRisk(signalCodes), "tydeligere vilkår, levering, retur, betaling eller kjøpsinformasjon");
+  addMailPoint(points, hasCommerceRisk(signalCodes) || signalCodes.has("CRAWL_TERMS_PAGE_NOT_FOUND"), "tydeligere vilkår, levering, retur, betaling eller kjøpsinformasjon");
   addMailPoint(points, signalCodes.has("HEALTH_TRACKING_CONTEXT"), "ekstra ryddighet rundt analyse, tracking og samtykke");
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || signalCodes.has("MANY_EXTERNAL_SCRIPTS") || signalCodes.has("EXTERNAL_IFRAME_RISK") || hasSecurityHeaderRisk(signalCodes) || hasApplicationSecurityRisk(signalCodes), "noen tekniske sikkerhets- og avhengighetspunkter som bør vurderes");
   addMailPoint(points, signalCodes.has("MISSING_HTTPS") || signalCodes.has("OUTDATED_COPYRIGHT"), toneProfile.maintenancePoint);
@@ -638,7 +652,45 @@ function isRegisteredWebsiteUnavailable(company: OutreachEmailCompany) {
 function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
   return Boolean(company.website)
     && company.websiteDiscovery?.status === "REGISTERED"
+    && company.websiteDiscovery.verifiedReachable !== false
+    && !isRegulatedOrEstablishedWebsiteOwner(company);
+}
+
+function hasRegisteredWebsiteForManualReview(company: OutreachEmailCompany) {
+  return Boolean(company.website)
+    && company.websiteDiscovery?.status === "REGISTERED"
     && company.websiteDiscovery.verifiedReachable !== false;
+}
+
+function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany, "name" | "organizationForm" | "naceDescription">) {
+  const text = `${company.name} ${company.organizationForm ?? ""} ${company.naceDescription ?? ""}`.toLowerCase();
+  return [
+    "forsikring",
+    "insurance",
+    "bank",
+    "finans",
+    "financial",
+    "pensjon",
+    "kreditt",
+  ].some((word) => text.includes(word));
+}
+
+function defaultRegisteredWebsiteReviewEmailTemplate() {
+  return `Hei {{greeting}},
+
+{{registeredWebsiteIntro}}
+
+Jeg gjorde bare en enkel, automatisk sjekk. For en etablert eller regulert virksomhet bør slike funn vurderes manuelt før man konkluderer.
+
+Hvis dere ønsker det, kan jeg sende en kort teknisk og innholdsmessig gjennomgang med konkrete punkter som gjelder tilgjengelighet, personvern, sikkerhetsheadere og tydelighet.
+
+Eksempel:
+{{senderWebsite}}
+
+Mvh
+{{senderName}}
+{{senderPhone}}
+{{senderEmail}}`;
 }
 
 function defaultOutreachEmailTemplate() {
