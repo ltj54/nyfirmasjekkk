@@ -44,10 +44,19 @@ public class WebsiteContentSnapshotFetcher {
     );
     @Cacheable(value = "websiteContent", key = "#url")
     public WebsiteContentInspectionService.WebsiteContentSnapshot fetchSnapshot(String url) {
-        return fetch(url);
+        return fetch(url, false);
+    }
+
+    @Cacheable(value = "websiteContentExtended", key = "#url")
+    public WebsiteContentInspectionService.WebsiteContentSnapshot fetchExtendedSnapshot(String url) {
+        return fetch(url, true);
     }
 
     static WebsiteContentInspectionService.WebsiteContentSnapshot fetch(String url) {
+        return fetch(url, false);
+    }
+
+    static WebsiteContentInspectionService.WebsiteContentSnapshot fetch(String url, boolean extended) {
         if (url == null || url.isBlank()) {
             return null;
         }
@@ -167,7 +176,9 @@ public class WebsiteContentSnapshotFetcher {
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
             ExtendedCrawlResult crawlResult = extendedCrawl(document, response.url().toString());
             String accessibilityDeclarationUrl = accessibilityDeclarationUrl(document, response.url().toString());
-            AccessibilityDeclarationResult accessibilityDeclarationResult = accessibilityDeclarationResult(accessibilityDeclarationUrl);
+            AccessibilityDeclarationResult accessibilityDeclarationResult = extended
+                    ? accessibilityDeclarationResult(accessibilityDeclarationUrl)
+                    : new AccessibilityDeclarationResult(null, null);
 
             return new WebsiteContentInspectionService.WebsiteContentSnapshot(
                     title,
@@ -304,7 +315,7 @@ public class WebsiteContentSnapshotFetcher {
             return null;
         }
         String href = link.attr("href");
-        if (href == null || href.isBlank()) {
+        if (href.isBlank()) {
             return null;
         }
         try {
@@ -559,9 +570,7 @@ public class WebsiteContentSnapshotFetcher {
                 || document.selectFirst("button:contains(Kjøp), a:contains(Legg i handlekurv), form[class*=cart], form[action*=cart]") != null;
         boolean ecommercePlatform = hasAny(normalized, "shopify", "myshopify")
                 || (hasAny(normalized, "woocommerce") && (cartOrCheckoutSignal || productOrCommerceIntent));
-        boolean paymentProviderWithCheckout = hasAny(normalized, "klarna", "vipps", "stripe", "nets")
-                && cartOrCheckoutSignal;
-        return ecommercePlatform || cartOrCheckoutSignal || paymentProviderWithCheckout || productOrCommerceIntent;
+        return ecommercePlatform || cartOrCheckoutSignal || productOrCommerceIntent;
     }
 
     private static boolean hasCartOrCheckoutSignal(Document document, String html) {

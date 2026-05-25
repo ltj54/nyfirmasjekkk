@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/company-check")
 public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
-    private static final int SEARCH_RESULT_SIZE = 50;
+    private static final int SEARCH_RESULT_SIZE = 25;
     private static final int MAX_IMPORT_BYTES = 2_000_000;
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
@@ -228,6 +228,18 @@ public class CompanyCheckController {
     public WebsiteInspectionResponse inspectWebsite(@RequestParam String url) {
         rateLimitService.requireAllowed("website-inspection", 60, Duration.ofHours(1));
         WebsiteInspectionResponse inspection = mapper.inspectWebsite(url);
+        return new WebsiteInspectionResponse(
+                inspection.inputUrl(),
+                inspection.normalizedUrl(),
+                inspection.websiteQuality(),
+                findBrregWebsiteMatches(inspection.normalizedUrl())
+        );
+    }
+
+    @GetMapping("/website-inspection/extended")
+    public WebsiteInspectionResponse inspectWebsiteExtended(@RequestParam String url) {
+        rateLimitService.requireAllowed("website-inspection-extended", 20, Duration.ofHours(1));
+        WebsiteInspectionResponse inspection = mapper.inspectWebsiteExtended(url);
         return new WebsiteInspectionResponse(
                 inspection.inputUrl(),
                 inspection.normalizedUrl(),

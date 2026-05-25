@@ -111,12 +111,11 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Nettsiden ble sjekket raskt, og det kan være mulig å gjøre den tydeligere og enklere å bruke.
-
-Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
+Jeg gjorde en enkel, automatisk sjekk av nettsiden og ville startet med punktene som påvirker tillit, tilgjengelighet og sikkerhet mest.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
+Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 Et konkret forslag kan sendes hvis det er interessant.
 
 Eksempel:

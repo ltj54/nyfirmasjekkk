@@ -73,7 +73,11 @@ public class WebsiteContentInspectionService {
     }
 
     public WebsiteContentSnapshot fetchSnapshot(String url) {
-        return WebsiteContentSnapshotFetcher.fetch(url);
+        return WebsiteContentSnapshotFetcher.fetch(url, false);
+    }
+
+    public WebsiteContentSnapshot fetchExtendedSnapshot(String url) {
+        return WebsiteContentSnapshotFetcher.fetch(url, true);
     }
 
     private boolean containsCompanyName(String haystack, String companyName) {

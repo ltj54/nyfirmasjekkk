@@ -532,6 +532,14 @@ public class CompanyApiV1Mapper {
     }
 
     public WebsiteInspectionResponse inspectWebsite(String rawUrl) {
+        return inspectWebsite(rawUrl, false);
+    }
+
+    public WebsiteInspectionResponse inspectWebsiteExtended(String rawUrl) {
+        return inspectWebsite(rawUrl, true);
+    }
+
+    private WebsiteInspectionResponse inspectWebsite(String rawUrl, boolean extended) {
         if (!hasText(rawUrl)) {
             throw new IllegalArgumentException("URL mangler.");
         }
@@ -577,7 +585,9 @@ public class CompanyApiV1Mapper {
             );
         }
 
-        WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = websiteContentInspectionService.fetchSnapshot(website);
+        WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = extended
+                ? websiteContentInspectionService.fetchExtendedSnapshot(website)
+                : websiteContentInspectionService.fetchSnapshot(website);
         if (snapshot == null) {
             signals.add(new WebsiteQualitySignal(
                     "CONTENT_UNREADABLE",

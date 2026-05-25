@@ -49,7 +49,11 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
   }
 
   const toneProfile = websiteQualityToneProfile(company);
-  const prioritizedPoints = prioritizedWebsiteQualityMailPoints(signalCodes, toneProfile);
+  const importantCodes = new Set(signals.filter((signal) => signal.severity === "HIGH" || signal.severity === "MEDIUM").map((signal) => signal.code));
+  const importantPrioritizedPoints = prioritizedWebsiteQualityMailPoints(importantCodes, toneProfile);
+  const prioritizedPoints = importantPrioritizedPoints.length > 0
+    ? importantPrioritizedPoints
+    : prioritizedWebsiteQualityMailPoints(signalCodes, toneProfile);
   const mediumCodes = new Set(signals.filter((signal) => signal.severity === "MEDIUM").map((signal) => signal.code));
   const mediumPoints = websiteQualityMailPoints(mediumCodes, toneProfile);
   const fallbackPoints = websiteQualityMailPoints(signalCodes, toneProfile);
@@ -167,6 +171,7 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("MISSING_HTTPS"), "HTTPS/sikker tilkobling");
   addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK"), "blandet HTTP/HTTPS-innhold som kan gi sikkerhetsvarsler");
   addMailPoint(points, signalCodes.has("INSECURE_FORM_ACTION"), "skjema som bør sjekkes for sikker innsending");
+  addMailPoint(points, hasSecurityHeaderRisk(signalCodes), "sikkerhetsheadere som bør strammes inn");
   addMailPoint(points, signalCodes.has("MISSING_CSP_HEADER"), "manglende Content Security Policy");
   addMailPoint(points, signalCodes.has("MISSING_HSTS_HEADER"), "manglende HSTS-header for tryggere HTTPS-bruk");
   addMailPoint(points, signalCodes.has("TLS_CERTIFICATE_REVIEW") || signalCodes.has("TLS_CERTIFICATE_EXPIRING"), "TLS-/sertifikatoppsett som bør følges opp");
@@ -182,7 +187,7 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("COOKIE_CONSENT_RISK"), "cookies eller måling uten tydelig samtykkespor");
   addMailPoint(points, hasTrackingConsentRisk(signalCodes), "tracking og tredjepartsinnhold som bør vurderes opp mot samtykke");
   addMailPoint(points, signalCodes.has("FORM_LABEL_RISK"), "skjemafelt som ser ut til å mangle tydelig label");
-  addMailPoint(points, signalCodes.has("EMPTY_BUTTON_RISK"), "knapper eller knappelenker som kan mangle tilgjengelig navn");
+  addMailPoint(points, signalCodes.has("EMPTY_BUTTON_RISK"), "knapper eller ikonlenker som bør ha tydelig tilgjengelig navn");
   addMailPoint(points, signalCodes.has("MISSING_LANGUAGE") || signalCodes.has("LANGUAGE_MISMATCH_RISK"), "språkmerking i HTML for skjermlesere");
   addMailPoint(points, signalCodes.has("MISSING_MAIN_LANDMARK") || signalCodes.has("WEAK_PAGE_LANDMARKS"), "semantiske landemerker for skjermleser og tastaturbrukere");
   addMailPoint(points, signalCodes.has("IMAGE_ALT_RISK"), "alt-tekst på bilder");
@@ -606,12 +611,11 @@ function defaultWebsiteQualityOpportunityEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Nettsiden ble sjekket raskt, og det kan være mulig å gjøre den tydeligere og enklere å bruke.
-
-Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
+Jeg gjorde en enkel, automatisk sjekk av nettsiden og ville startet med punktene som påvirker tillit, tilgjengelighet og sikkerhet mest.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
+Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
 Et konkret forslag kan sendes hvis det er interessant.
 
 Eksempel:

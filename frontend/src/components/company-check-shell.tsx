@@ -185,6 +185,15 @@ function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummar
   return candidates.length > 0 && candidates.every((candidate) => candidate.reachable === false);
 }
 
+function compareEmailBatchPriority(left: CompanySummary, right: CompanySummary) {
+  const leftSelectable = hasOnlyUnreachablePossibleWebsiteCandidates(left) ? 0 : 1;
+  const rightSelectable = hasOnlyUnreachablePossibleWebsiteCandidates(right) ? 0 : 1;
+  if (leftSelectable !== rightSelectable) {
+    return leftSelectable - rightSelectable;
+  }
+  return compareLeadPriority(left, right);
+}
+
 export function CompanyCheckShell() {
   const [backendReady, setBackendReady] = useState(false);
   const [initialResultsReady, setInitialResultsReady] = useState(false);
@@ -965,15 +974,15 @@ export function CompanyCheckShell() {
     );
   }
 
+  const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL") && leadQuickFilters.includes("MISSING_WEBSITE");
   const filteredCompanies = applyLeadQuickFilters((selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
     : recentCompanies
-  ), outreachStatusByOrg, leadQuickFilters).sort(compareLeadPriority);
+  ), outreachStatusByOrg, leadQuickFilters).sort(canUseEmailBatch ? compareEmailBatchPriority : compareLeadPriority);
   const visibleSearchCompanies = filteredCompanies.filter((company) => {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
     return !outreachStatus?.sent && outreachStatus?.status !== "not_relevant";
   });
-  const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL") && leadQuickFilters.includes("MISSING_WEBSITE");
   const selectedBatchCompanies = canUseEmailBatch
     ? visibleSearchCompanies.filter((company) => batchSelectionByOrg[company.orgNumber] && hasOnlyUnreachablePossibleWebsiteCandidates(company))
     : [];
@@ -1498,6 +1507,41 @@ function WebsiteInspectionDetail({
   onBack: () => void;
   onOutreachEmailSent: (status: OutreachStatus) => void;
 }) {
+  const [currentInspection, setCurrentInspection] = useState(inspection);
+  const [extendedLoading, setExtendedLoading] = useState(false);
+  const [extendedError, setExtendedError] = useState<string | null>(null);
+  const hasExtendedAccessibilityDeclaration = currentInspection.websiteQuality.signals.some(
+    (signal) => signal.code === "ACCESSIBILITY_DECLARATION_VIOLATIONS"
+  );
+
+  useEffect(() => {
+    setCurrentInspection(inspection);
+    setExtendedError(null);
+    setExtendedLoading(false);
+  }, [inspection]);
+
+  async function runExtendedWebsiteInspection() {
+    setExtendedLoading(true);
+    setExtendedError(null);
+    try {
+      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(currentInspection.normalizedUrl)}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to run extended website inspection", errorText);
+        setExtendedError("Klarte ikke kjøre utvidet sjekk. Prøv igjen senere.");
+        return;
+      }
+      setCurrentInspection((await response.json()) as WebsiteInspectionResponse);
+    } catch (error) {
+      console.error("Failed to run extended website inspection", error);
+      setExtendedError("Klarte ikke kjøre utvidet sjekk. Backend kan være opptatt.");
+    } finally {
+      setExtendedLoading(false);
+    }
+  }
+
   return (
     <article className="bg-white">
       <div className="sticky top-0 z-10 border-b border-[#D9E2EC] bg-white/95 px-5 py-4 backdrop-blur sm:px-8">
@@ -1517,25 +1561,39 @@ function WebsiteInspectionDetail({
         <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-[#1F2933]">
-              {stripWebsiteProtocol(inspection.normalizedUrl)}
+              {stripWebsiteProtocol(currentInspection.normalizedUrl)}
             </h2>
             <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
               Frittstående kvalitetskontroll uten BRREG-kontekst. Funnene er automatiske signaler og bør vurderes manuelt før de brukes i kundedialog.
             </p>
           </div>
-          <a
-            className="inline-flex w-fit rounded-sm border border-[#D9E2EC] bg-white px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-[#F8FBFF]"
-            href={inspection.normalizedUrl}
-            rel="noreferrer"
-            target="_blank"
-          >
-            Åpne nettside
-          </a>
+          <div className="flex flex-col gap-2 sm:items-end">
+            <a
+              className="inline-flex w-fit rounded-sm border border-[#D9E2EC] bg-white px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-[#F8FBFF]"
+              href={currentInspection.normalizedUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Åpne nettside
+            </a>
+            <button
+              className="inline-flex w-fit rounded-sm border border-[#BCCCDC] bg-[#102A43] px-3 py-2 text-[12px] font-semibold text-white hover:bg-[#243B53] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={extendedLoading}
+              onClick={() => void runExtendedWebsiteInspection()}
+              type="button"
+            >
+              {extendedLoading ? "Kjører utvidet sjekk..." : hasExtendedAccessibilityDeclaration ? "Kjør utvidet sjekk på nytt" : "Kjør utvidet nettsidesjekk"}
+            </button>
+          </div>
         </div>
-        <WebsiteQualityPanel className="mt-6" quality={inspection.websiteQuality} />
+        <div className="mt-4 border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3 text-[12px] leading-5 text-[#52606D]">
+          Utvidet sjekk kjøres bare manuelt. Den henter blant annet publisert tilgjengelighetserklæring fra uustatus.no når siden lenker dit.
+          {extendedError ? <p className="mt-2 font-semibold text-[#BA2525]">{extendedError}</p> : null}
+        </div>
+        <WebsiteQualityPanel className="mt-6" quality={currentInspection.websiteQuality} />
         <BrregWebsiteMatchesPanel
-          inspection={inspection}
-          matches={inspection.brregMatches ?? []}
+          inspection={currentInspection}
+          matches={currentInspection.brregMatches ?? []}
           outreachStatusByOrg={outreachStatusByOrg}
           onOutreachEmailSent={onOutreachEmailSent}
         />
@@ -3120,6 +3178,9 @@ function CompanyDetailView({
   const StatusIcon = config.icon;
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedHtmlEmail, setCopiedHtmlEmail] = useState(false);
+  const [currentWebsiteQuality, setCurrentWebsiteQuality] = useState(company.websiteQuality);
+  const [extendedWebsiteQualityLoading, setExtendedWebsiteQualityLoading] = useState(false);
+  const [extendedWebsiteQualityError, setExtendedWebsiteQualityError] = useState<string | null>(null);
 
   const scoreLabel = leadPriority.label;
   const scoreReasons = company.score?.reasons || [];
@@ -3138,6 +3199,42 @@ function CompanyDetailView({
   const generatedEmailHref = generatedEmail && company.email
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
+  const hasExtendedWebsiteQuality = currentWebsiteQuality?.signals.some(
+    (signal) => signal.code === "ACCESSIBILITY_DECLARATION_VIOLATIONS"
+  ) ?? false;
+
+  useEffect(() => {
+    setCurrentWebsiteQuality(company.websiteQuality);
+    setExtendedWebsiteQualityError(null);
+    setExtendedWebsiteQualityLoading(false);
+  }, [company.orgNumber, company.websiteQuality]);
+
+  async function runExtendedCompanyWebsiteInspection() {
+    if (!company.website) {
+      return;
+    }
+
+    setExtendedWebsiteQualityLoading(true);
+    setExtendedWebsiteQualityError(null);
+    try {
+      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(normalizeWebsiteUrl(company.website))}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to run extended company website inspection", errorText);
+        setExtendedWebsiteQualityError("Klarte ikke kjøre utvidet nettsidesjekk.");
+        return;
+      }
+      const payload = (await response.json()) as WebsiteInspectionResponse;
+      setCurrentWebsiteQuality(payload.websiteQuality);
+    } catch (error) {
+      console.error("Failed to run extended company website inspection", error);
+      setExtendedWebsiteQualityError("Klarte ikke kjøre utvidet nettsidesjekk.");
+    } finally {
+      setExtendedWebsiteQualityLoading(false);
+    }
+  }
 
   async function handleCopyGeneratedEmail() {
     if (!generatedEmailText) {
@@ -3369,8 +3466,32 @@ function CompanyDetailView({
                 </div>
               ) : null}
 
-              {company.website && company.websiteQuality ? (
-                <WebsiteQualityPanel className="mt-4" quality={company.websiteQuality} />
+              {company.website && currentWebsiteQuality ? (
+                <div className="mt-4">
+                  <div className="border border-[#D9E2EC] bg-[#F8FBFF] p-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-[12px] font-semibold text-[#1F2933]">Utvidet nettsidekvalitet</p>
+                        <p className="mt-1 text-[12px] leading-5 text-[#52606D]">
+                          Kjøres manuelt. Henter blant annet publisert tilgjengelighetserklæring fra uustatus.no når nettsiden lenker dit.
+                        </p>
+                      </div>
+                      <Button
+                        className="w-fit rounded-sm bg-[#102A43] px-4 text-white hover:bg-[#243B53]"
+                        disabled={extendedWebsiteQualityLoading}
+                        onClick={() => void runExtendedCompanyWebsiteInspection()}
+                        size="sm"
+                        type="button"
+                      >
+                        {extendedWebsiteQualityLoading ? "Kjører utvidet sjekk..." : hasExtendedWebsiteQuality ? "Kjør utvidet sjekk på nytt" : "Kjør utvidet nettsidesjekk"}
+                      </Button>
+                    </div>
+                    {extendedWebsiteQualityError ? (
+                      <p className="mt-3 text-[12px] font-semibold text-[#BA2525]">{extendedWebsiteQualityError}</p>
+                    ) : null}
+                  </div>
+                  <WebsiteQualityPanel className="mt-4" quality={currentWebsiteQuality} />
+                </div>
               ) : null}
 
               {elevatedActorContextSignal ? (

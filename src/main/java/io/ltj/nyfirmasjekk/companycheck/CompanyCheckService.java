@@ -32,7 +32,8 @@ public class CompanyCheckService {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckService.class);
     private static final int SOURCE_PAGE_SIZE = 100;
     private static final int FILTERED_SOURCE_PAGE_SIZE = 25;
-    private static final int BRREG_MAX_PAGE_WINDOW = 10_000;
+    private static final int BRREG_API_RESULT_WINDOW = 10_000;
+    private static final int BRREG_MAX_SCAN_WINDOW = 30_000;
     private static final int MAX_SOURCE_PAGES_WITH_TEXT_SEARCH = 10;
     private static final int MAX_SOURCE_PAGES_PER_NAME_VARIANT = 3;
     private static final int MAX_SOURCE_PAGES_WITH_SCORE_FILTER = 400;
@@ -180,12 +181,18 @@ public class CompanyCheckService {
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
         int matchedBeforePage = 0;
         int sourcePage = 0;
+        int scannedSourcePages = 0;
+        int maxSourcePages = maxSourcePagesForUnscoredSearch(request);
+        LocalDate upperRegistrationDate = null;
 
-        while (true) {
-            var filter = byggFilter(request, sourcePage);
+        while (scannedSourcePages < maxSourcePages) {
+            var filter = byggFilter(request, sourcePage, SOURCE_PAGE_SIZE, Map.of(), upperRegistrationDate);
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+            scannedSourcePages += 1;
+
+            List<EnhetResponse> sourceItems = hentEnheter(searchResponse);
             var pageMatches = deduplicateMatches(vurderSideUtenScoreFilter(searchResponse, request, diagnostics), seenMatches);
 
             if (matchedBeforePage + pageMatches.size() > requestedOffset && matches.size() < request.resultSize()) {
@@ -201,10 +208,19 @@ public class CompanyCheckService {
             boolean textSearchHasMatchesForRequestedPage = hasText(request.navn()) && !matches.isEmpty();
             boolean noMorePages = pageInfo == null
                     || sourcePage >= pageInfo.totalPages() - 1
-                    || sourcePage >= maxSourcePageForUnscoredSearch(request)
                     || textSearchHasMatchesForRequestedPage;
-            if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
+            if (noMorePages || sourceItems.isEmpty()) {
                 break;
+            }
+
+            if (sourcePage >= maxBrregSourcePage()) {
+                upperRegistrationDate = oldestRegistrationDate(sourceItems);
+                if (upperRegistrationDate == null) {
+                    break;
+                }
+                upperRegistrationDate = upperRegistrationDate.minusDays(1);
+                sourcePage = 0;
+                continue;
             }
 
             sourcePage += 1;
@@ -269,15 +285,23 @@ public class CompanyCheckService {
     }
 
     private int maxBrregSourcePage() {
-        return Math.max(0, BRREG_MAX_PAGE_WINDOW / SOURCE_PAGE_SIZE - 1);
+        return Math.max(0, BRREG_API_RESULT_WINDOW / SOURCE_PAGE_SIZE - 1);
     }
 
-    private int maxSourcePageForUnscoredSearch(CompanySearchRequest request) {
-        int maxBrregPage = maxBrregSourcePage();
+    private int maxSourcePagesForUnscoredSearch(CompanySearchRequest request) {
+        int maxBrregPages = maxBrregSourcePage() + 1;
         if (hasText(request.navn())) {
-            return Math.min(maxBrregPage, MAX_SOURCE_PAGES_WITH_TEXT_SEARCH - 1);
+            return Math.min(maxBrregPages, MAX_SOURCE_PAGES_WITH_TEXT_SEARCH);
         }
-        return maxBrregPage;
+        return Math.max(1, BRREG_MAX_SCAN_WINDOW / SOURCE_PAGE_SIZE);
+    }
+
+    private LocalDate oldestRegistrationDate(List<EnhetResponse> enheter) {
+        return enheter.stream()
+                .map(EnhetResponse::registreringsdatoEnhetsregisteret)
+                .filter(Objects::nonNull)
+                .min(LocalDate::compareTo)
+                .orElse(null);
     }
 
     private String navnForBrregSearch(String navn) {
@@ -707,7 +731,11 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size, Map<String, String> extraParams) {
-        return byggFilterMedNavn(r, p, size, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams);
+        return byggFilter(r, p, size, extraParams, null);
+    }
+
+    private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
+        return byggFilterMedNavn(r, p, size, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams, upperRegistrationDate);
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn) {
@@ -715,9 +743,14 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams) {
+        return byggFilterMedNavn(r, p, size, navn, extraParams, null);
+    }
+
+    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
         Map<String, String> f = new HashMap<>();
         f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
         if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
+        if (upperRegistrationDate != null) f.put("tilRegistreringsdatoEnhetsregisteret", upperRegistrationDate.toString());
         if (hasText(navn)) f.put("navn", navn.trim());
         f.putAll(extraParams);
         f.put("sort", "registreringsdatoEnhetsregisteret,desc");
