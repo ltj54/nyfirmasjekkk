@@ -104,7 +104,7 @@ public class CompanyCheckService {
             int sourcePage = 0;
 
             while (matches.size() < requestedOffset + request.resultSize() && sourcePage < MAX_RED_SOURCE_PAGES_PER_VARIANT) {
-                var filter = byggFilter(request, sourcePage, FILTERED_SOURCE_PAGE_SIZE, redFilter);
+                var filter = byggFiltrertFilter(request, sourcePage, redFilter);
                 long fetchStartedAt = System.nanoTime();
                 EnheterSearchResponse searchResponse = brregClient.sok(filter);
                 diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
@@ -186,7 +186,7 @@ public class CompanyCheckService {
         LocalDate upperRegistrationDate = null;
 
         while (scannedSourcePages < maxSourcePages) {
-            var filter = byggFilter(request, sourcePage, SOURCE_PAGE_SIZE, Map.of(), upperRegistrationDate);
+            var filter = byggStandardFilter(request, sourcePage, upperRegistrationDate);
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
@@ -238,7 +238,7 @@ public class CompanyCheckService {
         boolean reachedEnd = false;
 
         while (matches.size() < request.resultSize() && sourcePage < MAX_SOURCE_PAGES_WITH_SCORE_FILTER) {
-            var filter = byggFilter(request, sourcePage, FILTERED_SOURCE_PAGE_SIZE);
+            var filter = byggFiltrertFilter(request, sourcePage, Map.of());
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
@@ -722,28 +722,16 @@ public class CompanyCheckService {
         return null;
     }
 
-    private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size) {
-        return byggFilter(r, p, size, Map.of());
+    private Map<String, String> byggStandardFilter(CompanySearchRequest r, int p, LocalDate upperRegistrationDate) {
+        return byggFilterMedNavn(r, p, SOURCE_PAGE_SIZE, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, Map.of(), upperRegistrationDate);
     }
 
-    private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size, Map<String, String> extraParams) {
-        return byggFilter(r, p, size, extraParams, null);
-    }
-
-    private Map<String, String> byggFilter(CompanySearchRequest r, int p, int size, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
-        return byggFilterMedNavn(r, p, size, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams, upperRegistrationDate);
+    private Map<String, String> byggFiltrertFilter(CompanySearchRequest r, int p, Map<String, String> extraParams) {
+        return byggFilterMedNavn(r, p, FILTERED_SOURCE_PAGE_SIZE, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams, null);
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn) {
-        return byggFilterMedNavn(r, p, navn, Map.of(), null);
-    }
-
-    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams) {
-        return byggFilterMedNavn(r, p, size, navn, extraParams, null);
-    }
-
-    private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
-        return byggFilterMedNavn(r, p, SOURCE_PAGE_SIZE, navn, extraParams, upperRegistrationDate);
+        return byggFilterMedNavn(r, p, SOURCE_PAGE_SIZE, navn, Map.of(), null);
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
