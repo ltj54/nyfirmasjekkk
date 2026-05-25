@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 634
-- Sendt: 537
+- Antall hendelser: 641
+- Sendt: 544
 - Angret: 7
-- Aktive kontaktede selskaper: 533
+- Aktive kontaktede selskaper: 540
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-25 | 940100925 | RINGERIKE KOMMUNE | KOMM | email | website-improvement-offer |
+| 2026-05-25 | 937440006 | VIMANA HRYNCHUK | ENK | email | website-offer |
+| 2026-05-25 | 937483538 | FATEMEH GHANEI | ENK | email | website-offer |
+| 2026-05-25 | 937584652 | FAKHRIDDIN ALIEV | TVAM | email | website-offer |
+| 2026-05-25 | 937770642 | LIDAL FOOD SERVICE | ENK | email | website-offer |
+| 2026-05-25 | 937694067 | MILTOM SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA NUF | NUF | email | website-offer |
+| 2026-05-25 | 937771126 | NEDRE LITLABØ GARD - OMA LITLABØ | ENK | email | website-offer |
 | 2026-05-25 | 937770766 | DALEN-KLETTELI FOTO | ENK | email | website-offer |
 | 2026-05-24 | 937769822 | BACK TO NATURE BY KNUTSEN HORRILLO | ENK | email | website-improvement-offer |
 | 2026-05-24 | 937766033 | BYDAZED SANDVOLL | ENK | email | website-unavailable-offer |
@@ -551,6 +558,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-25 11:48 | sent | 940100925 | RINGERIKE KOMMUNE | KOMM | email | Sendt fra nettsidesjekk: https://ringerike.kommune.no |
+| 2026-05-25 11:35 | sent | 937440006 | VIMANA HRYNCHUK | ENK | email | - |
+| 2026-05-25 11:33 | sent | 937483538 | FATEMEH GHANEI | ENK | email | - |
+| 2026-05-25 11:33 | sent | 937584652 | FAKHRIDDIN ALIEV | TVAM | email | - |
+| 2026-05-25 11:23 | sent | 937770642 | LIDAL FOOD SERVICE | ENK | email | - |
+| 2026-05-25 11:23 | sent | 937694067 | MILTOM SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA NUF | NUF | email | - |
+| 2026-05-25 11:20 | sent | 937771126 | NEDRE LITLABØ GARD - OMA LITLABØ | ENK | email | - |
 | 2026-05-25 09:32 | sent | 937770766 | DALEN-KLETTELI FOTO | ENK | email | - |
 | 2026-05-24 20:49 | sent | 937769822 | BACK TO NATURE BY KNUTSEN HORRILLO | ENK | email | - |
 | 2026-05-24 20:46 | sent | 937766033 | BYDAZED SANDVOLL | ENK | email | - |
