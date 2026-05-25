@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 641
-- Sendt: 544
+- Antall hendelser: 643
+- Sendt: 546
 - Angret: 7
-- Aktive kontaktede selskaper: 540
+- Aktive kontaktede selskaper: 542
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-25 | 937771509 | ARCE GONZALEZ TUANIS | ENK | email | website-offer |
+| 2026-05-25 | 937771959 | ROYAL MOTORS MAGOMADOV | ENK | email | website-offer |
 | 2026-05-25 | 940100925 | RINGERIKE KOMMUNE | KOMM | email | website-improvement-offer |
 | 2026-05-25 | 937440006 | VIMANA HRYNCHUK | ENK | email | website-offer |
 | 2026-05-25 | 937483538 | FATEMEH GHANEI | ENK | email | website-offer |
@@ -558,6 +560,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-25 23:04 | sent | 937771509 | ARCE GONZALEZ TUANIS | ENK | email | - |
+| 2026-05-25 23:03 | sent | 937771959 | ROYAL MOTORS MAGOMADOV | ENK | email | - |
 | 2026-05-25 11:48 | sent | 940100925 | RINGERIKE KOMMUNE | KOMM | email | Sendt fra nettsidesjekk: https://ringerike.kommune.no |
 | 2026-05-25 11:35 | sent | 937440006 | VIMANA HRYNCHUK | ENK | email | - |
 | 2026-05-25 11:33 | sent | 937483538 | FATEMEH GHANEI | ENK | email | - |

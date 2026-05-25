@@ -38,6 +38,10 @@ function hasRegisteredWebsiteThatShouldOnlyBeReviewedManually(company: OutreachO
     "financial",
     "pensjon",
     "kreditt",
+    "forbund",
+    "forening",
+    "medlemsorganisasjon",
+    "arbeidstakerorganisasjon",
   ].some((word) => text.includes(word));
 }
 

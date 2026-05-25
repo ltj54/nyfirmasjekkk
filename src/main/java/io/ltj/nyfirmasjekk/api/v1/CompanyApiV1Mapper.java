@@ -860,6 +860,14 @@ public class CompanyApiV1Mapper {
                     "INFO"
             ));
         }
+        if (snapshot.repeatedMetaDescriptionCount() >= 2) {
+            signals.add(new WebsiteQualitySignal(
+                    "DUPLICATE_META_DESCRIPTIONS",
+                    "Like meta-beskrivelser på flere sider",
+                    snapshot.repeatedMetaDescriptionCount() + " undersider ser ut til å bruke samme meta description som forsiden. Det kan gi svakere og mindre presis visning i søk og deling.",
+                    "INFO"
+            ));
+        }
         String bodyText = snapshot.bodyText() == null ? "" : snapshot.bodyText().trim();
         if (bodyText.length() < 300) {
             signals.add(new WebsiteQualitySignal(
@@ -1039,6 +1047,7 @@ public class CompanyApiV1Mapper {
         String rawBody = snapshot.bodyText() == null ? "" : snapshot.bodyText();
         String text = normalizeForWebsiteQuality(rawBody + " " + rawHtml);
         boolean localOrConsumer = isLocalOrConsumerSegment(enhet);
+        boolean trustDecisionContext = hasTrustDecisionContext(text);
 
         boolean incompleteMarketSignal = containsAny(text,
                 Set.of("checkout er dessverre ikke tilgjengelig", "vi apner snart", "vi åpner snart", "opens soon", "opening soon"));
@@ -1067,12 +1076,50 @@ public class CompanyApiV1Mapper {
             ));
         }
 
-        if (localOrConsumer && !containsAny(text, SOCIAL_PROOF_WORDS)) {
+        if ((localOrConsumer || trustDecisionContext) && !containsAny(text, SOCIAL_PROOF_WORDS)) {
             signals.add(new WebsiteQualitySignal(
                     "MISSING_SOCIAL_PROOF",
                     "Mangler referanser eller eksempler",
-                    "Siden ser ikke ut til å vise referanser, kundeomtaler, tidligere arbeid eller konkrete eksempler. Det kan gjøre førsteinntrykket mindre etterprøvbart.",
+                    trustDecisionContext
+                            ? "Siden retter seg mot beslutningstakere eller tillitsbaserte tjenester, men vi fant ikke tydelige caser, kundeuttalelser, tall eller resultater som underbygger løftene."
+                            : "Siden ser ikke ut til å vise referanser, kundeomtaler, tidligere arbeid eller konkrete eksempler. Det kan gjøre førsteinntrykket mindre etterprøvbart.",
+                    trustDecisionContext ? "MEDIUM" : "INFO"
+            ));
+        }
+
+        if (trustDecisionContext && !snapshot.crawlFaqPageFound() && !containsAny(text, Set.of("faq", "ofte stilte", "sporsmal", "spørsmål"))) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_FAQ",
+                    "Mangler FAQ eller praktiske svar",
+                    "Siden beskriver et tillitsbasert tilbud, men vi fant ikke tydelig FAQ eller praktiske svar på vanlige spørsmål. Det kan gjøre vurderingen tyngre for nye kunder.",
                     "INFO"
+            ));
+        }
+
+        if (trustDecisionContext && !snapshot.crawlPricingSignal() && !containsAny(text, Set.of("pris", "priser", "abonnement", "demo", "gratis prove", "gratis prøve", "pilot"))) {
+            signals.add(new WebsiteQualitySignal(
+                    "MISSING_PRICE_OR_MODEL",
+                    "Uklart prisnivå eller modell",
+                    "Vi fant ikke tydelig pris, demo, pilot, abonnement eller forklaring av forretningsmodell. For beslutningstakere kan det gjøre neste steg uklart.",
+                    "INFO"
+            ));
+        }
+
+        if (trustDecisionContext && !snapshot.crawlDataHandlingPageFound() && containsAny(text, Set.of("arbeidshelse", "arbeidsmiljo", "arbeidsmiljø", "team", "sykefravar", "sykefravær"))) {
+            signals.add(new WebsiteQualitySignal(
+                    "DATA_HANDLING_INFO_REVIEW",
+                    "Datahåndtering bør forklares tydeligere",
+                    "Siden berører arbeidshelse, team eller arbeidsmiljødata. Da bør det være lett å finne hvordan data samles inn, brukes og sikres, utover en generell personvernerklæring.",
+                    "MEDIUM"
+            ));
+        }
+
+        if (snapshot.ctaMismatchSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "CTA_DESTINATION_MISMATCH",
+                    "CTA kan lede feil",
+                    "En handlingsknapp ser ut til å love én handling, men peker til en annen produkt- eller temaside. Det kan gjøre brukerflyten forvirrende.",
+                    "MEDIUM"
             ));
         }
 
@@ -1127,6 +1174,14 @@ public class CompanyApiV1Mapper {
                     isHealthOrMedicalSegment(enhet) ? "MEDIUM" : "INFO"
             ));
         }
+        if (snapshot.placeholderImageCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "PLACEHOLDER_IMAGE_RISK",
+                    "Placeholder-bilder synlige",
+                    snapshot.placeholderImageCount() + " bilde(r) ser ut til å bruke placeholder- eller dummy-spor. På sider som bygger tillit rundt mennesker eller team kan det virke uferdig.",
+                    "MEDIUM"
+            ));
+        }
         addGenericPresentationTrustSignal(signals, snapshot, isHealthOrMedicalSegment(enhet));
 
         if (snapshot.platformDomainSignal()) {
@@ -1178,6 +1233,26 @@ public class CompanyApiV1Mapper {
             addCommerceSignals(signals, snapshot);
         }
         addGenericPresentationTrustSignal(signals, snapshot, false);
+    }
+
+    private boolean hasTrustDecisionContext(String normalizedText) {
+        return containsAny(normalizedText, Set.of(
+                "leder",
+                "ledere",
+                "team",
+                "arbeidshelse",
+                "arbeidsmiljo",
+                "arbeidsmiljø",
+                "sykefravar",
+                "sykefravær",
+                "fravaer",
+                "fravær",
+                "kartlegging",
+                "radar",
+                "radaren",
+                "tidlige varsler",
+                "konkrete tiltak"
+        ));
     }
 
     private void addGenericPresentationTrustSignal(

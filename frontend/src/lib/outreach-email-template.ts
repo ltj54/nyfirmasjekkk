@@ -160,6 +160,10 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   const points: string[] = [];
 
   addMailPoint(points, signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK"), "tydeligere faglig profil, ekte tillitssignaler og mindre generisk innhold");
+  addMailPoint(points, signalCodes.has("PLACEHOLDER_IMAGE_RISK"), "placeholder-bilder som bør erstattes med ekte bilder eller fjernes");
+  addMailPoint(points, signalCodes.has("CTA_DESTINATION_MISMATCH"), "CTA-knapper der tekst og landingsside bør stemme bedre");
+  addMailPoint(points, signalCodes.has("MISSING_SOCIAL_PROOF"), "mer konkrete bevis som case, kundeuttalelser, tall eller resultater");
+  addMailPoint(points, signalCodes.has("DATA_HANDLING_INFO_REVIEW"), "tydeligere forklaring av datahåndtering og personvern");
   addMailPoint(points, signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT"), "uferdig maltekst eller kommer-snart-preg");
   addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT") || signalCodes.has("WEAK_NAVIGATION"), "tydeligere førsteside, mer konkret innhold og enklere navigasjon");
   addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT"), "tydeligere beskrivelse av hva virksomheten faktisk tilbyr");
@@ -213,6 +217,8 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("CONTACT_PAGE_NOT_FOUND") || signalCodes.has("WEAK_CALL_TO_ACTION") || signalCodes.has("EMAIL_NOT_CLICKABLE") || signalCodes.has("PHONE_NOT_CLICKABLE") || signalCodes.has("CLOUDFLARE_EMAIL_PROTECTION"), toneProfile.contactPoint);
   addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH") || signalCodes.has("MISSING_ABOUT_SECTION") || signalCodes.has("MISSING_SOCIAL_PROOF") || signalCodes.has("MISSING_SOCIAL_LINKS") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.trustPoint);
   addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), toneProfile.searchPoint);
+  addMailPoint(points, signalCodes.has("DUPLICATE_META_DESCRIPTIONS"), "mer presise beskrivelser for viktige undersider");
+  addMailPoint(points, signalCodes.has("MISSING_FAQ") || signalCodes.has("MISSING_PRICE_OR_MODEL"), "tydeligere svar på pris, modell, FAQ eller neste steg");
   addMailPoint(points, signalCodes.has("MISSING_VIEWPORT") || signalCodes.has("FIXED_WIDTH_LAYOUT"), "en ekstra sjekk av mobiloppsett og teknisk responsivitet");
   addMailPoint(points, hasSemanticAccessibilityRisk(signalCodes), "tydeligere UU-struktur for overskrifter, lenker og sidestruktur");
   addMailPoint(points, hasFormAccessibilityRisk(signalCodes), "skjema og kontaktpunkter som er enklere å bruke på mobil og med hjelpeteknologi");
@@ -676,6 +682,10 @@ function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany
     "financial",
     "pensjon",
     "kreditt",
+    "forbund",
+    "forening",
+    "medlemsorganisasjon",
+    "arbeidstakerorganisasjon",
   ].some((word) => text.includes(word));
 }
 
@@ -684,9 +694,11 @@ function defaultRegisteredWebsiteReviewEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde bare en enkel, automatisk sjekk. For en etablert eller regulert virksomhet bør slike funn vurderes manuelt før man konkluderer.
+Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt.
 
-Hvis dere ønsker det, kan jeg sende en kort teknisk og innholdsmessig gjennomgang med konkrete punkter som gjelder tilgjengelighet, personvern, sikkerhetsheadere og tydelighet.
+For en etablert organisasjon er det særlig relevant å se på tilgjengelighet, personvern, samtykkeflyt, sikkerhetsheadere, eksterne scripts og innebygd tredjepartsinnhold.
+
+Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
 {{senderWebsite}}

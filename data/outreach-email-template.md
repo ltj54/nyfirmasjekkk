@@ -126,6 +126,35 @@ Mvh
 {{senderPhone}}  
 {{senderEmail}}
 
+## E-postmal - registrert nettside bør vurderes
+
+Emne: `Kort nettsidegjennomgang for {{registeredWebsite}}?`
+
+Hei {{greeting}},
+
+{{registeredWebsiteIntro}}
+
+Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt — særlig for en etablert organisasjon der tillit, tilgjengelighet og personvern er viktig.
+
+Eksempler på områder jeg kan gå gjennom:
+
+- tilgjengelighet / universell utforming
+- knapper, bilder og struktur for skjermleser og mobil
+- cookies, analyse og samtykkeflyt
+- sikkerhetsheadere og tekniske eksponeringer
+- eksterne scripts og innebygd tredjepartsinnhold
+- e-postdomene / DMARC, SPF og DKIM på overordnet nivå
+
+Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
+
+Eksempel:
+{{senderWebsite}}
+
+Mvh  
+{{senderName}}  
+{{senderPhone}}  
+{{senderEmail}}
+
 ## Kort variant
 
 Hei {{greeting}},

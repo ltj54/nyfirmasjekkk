@@ -2213,10 +2213,24 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "Domenebasert e-post kan gi mer profesjonelt inntrykk og gjøre avsenderen lettere å kjenne igjen.";
     case "MISSING_ABOUT_SECTION":
       return "En kort om-side eller personpresentasjon gjør virksomheten mer etterprøvbar og mindre anonym.";
+    case "MISSING_SOCIAL_PROOF":
+      return "For tillitsbaserte tjenester trenger nye kunder bevis på effekt, erfaring eller hvem som faktisk står bak løftene.";
+    case "MISSING_FAQ":
+      return "FAQ eller praktiske svar kan redusere usikkerhet før en kunde eller leder tar kontakt.";
+    case "MISSING_PRICE_OR_MODEL":
+      return "Når prisnivå, demo, pilot eller forretningsmodell er uklar, blir neste steg vanskeligere å vurdere.";
+    case "DATA_HANDLING_INFO_REVIEW":
+      return "Arbeidshelse, teamdata og personopplysninger krever ekstra tydelig forklaring av databehandling og ansvar.";
+    case "CTA_DESTINATION_MISMATCH":
+      return "Hvis knappetekst og landingsside peker i ulike retninger, kan brukeren miste flyten eller tro at noe er feil.";
+    case "PLACEHOLDER_IMAGE_RISK":
+      return "Placeholder-bilder på person- eller teamsider gir et uferdig inntrykk og svekker tilliten.";
     case "WEAK_TITLE":
       return "Sidetittelen vises i nettleser, søkeresultater og deling, og bør raskt forklare hvem siden gjelder.";
     case "MISSING_META_DESCRIPTION":
       return "Meta description påvirker hvordan siden presenteres i søkeresultater og ved deling.";
+    case "DUPLICATE_META_DESCRIPTIONS":
+      return "Når flere undersider bruker samme beskrivelse, mister hver side muligheten til å forklare sitt eget formål i søk og deling.";
     case "WEAK_SHARE_PREVIEW":
       return "Open Graph/Twitter-data styrer ofte hvordan lenken ser ut i sosiale medier, meldinger og e-post.";
     case "MISSING_STRUCTURED_DATA":
@@ -2390,10 +2404,24 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Vurder domenebasert e-post eller forklar tydelig hvilken e-post som er offisiell kontaktvei.";
     case "MISSING_ABOUT_SECTION":
       return "Legg inn en kort presentasjon av hvem som står bak, erfaring, rolle eller hvordan virksomheten jobber.";
+    case "MISSING_SOCIAL_PROOF":
+      return "Legg inn minst ett konkret bevis: kundeuttalelse, pilotkunde, case, tall, resultat eller kort eksempel.";
+    case "MISSING_FAQ":
+      return "Legg inn korte svar på vanlige spørsmål om målgruppe, prosess, databruk, levering, pris eller neste steg.";
+    case "MISSING_PRICE_OR_MODEL":
+      return "Forklar om tilbudet er abonnement, pilot, demo, engangsleveranse eller skreddersydd pris.";
+    case "DATA_HANDLING_INFO_REVIEW":
+      return "Lag en tydelig side eller seksjon som forklarer datainnsamling, lagring, tilgang, behandlingsansvar og kontaktpunkt.";
+    case "CTA_DESTINATION_MISMATCH":
+      return "Sjekk at CTA-knapper leder til siden/handlingen teksten lover, eller endre teksten slik at forventningen stemmer.";
+    case "PLACEHOLDER_IMAGE_RISK":
+      return "Bytt placeholder-bilder med ekte bilder, fjern personkortene midlertidig eller merk tydelig hva som kommer senere.";
     case "WEAK_TITLE":
       return "Skriv en konkret sidetittel med virksomhet, tjeneste/produkt og gjerne sted eller marked.";
     case "MISSING_META_DESCRIPTION":
       return "Skriv en kort meta description som forklarer hva virksomheten tilbyr og hvorfor siden er relevant.";
+    case "DUPLICATE_META_DESCRIPTIONS":
+      return "Skriv egne meta descriptions for viktige undersider som tjenester, om oss, team, FAQ og produkt-/landingssider.";
     case "WEAK_SHARE_PREVIEW":
       return "Legg inn Open Graph/Twitter-tittel og beskrivelse som gir en ryddig forhåndsvisning.";
     case "MISSING_STRUCTURED_DATA":
@@ -2544,6 +2572,11 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "MISSING_ADDRESS_OR_AREA",
         "MISSING_ABOUT_SECTION",
         "MISSING_SOCIAL_PROOF",
+        "MISSING_FAQ",
+        "MISSING_PRICE_OR_MODEL",
+        "DATA_HANDLING_INFO_REVIEW",
+        "CTA_DESTINATION_MISMATCH",
+        "PLACEHOLDER_IMAGE_RISK",
         "CONTACT_PAGE_NOT_FOUND",
         "WEAK_NAVIGATION",
         "WEAK_INDUSTRY_RELEVANCE",
@@ -2564,6 +2597,7 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
       predicate: (signal: WebsiteQualitySignal) => [
         "WEAK_TITLE",
         "MISSING_META_DESCRIPTION",
+        "DUPLICATE_META_DESCRIPTIONS",
         "WEAK_SHARE_PREVIEW",
         "MISSING_STRUCTURED_DATA",
         "MISSING_LOCAL_RELEVANCE",

@@ -227,6 +227,8 @@ public class WebsiteContentInspectionService {
             boolean motionWithoutReducedMotionSignal,
             int videoCount,
             int iframeWithoutTitleCount,
+            int placeholderImageCount,
+            boolean ctaMismatchSignal,
             int statusCode,
             String finalUrl,
             boolean hstsHeader,
@@ -287,6 +289,10 @@ public class WebsiteContentInspectionService {
             boolean crawlTermsPageFound,
             int crawledFormPageCount,
             int crawledPrivacyTextPageCount,
+            int repeatedMetaDescriptionCount,
+            boolean crawlFaqPageFound,
+            boolean crawlPricingSignal,
+            boolean crawlDataHandlingPageFound,
             String accessibilityDeclarationUrl,
             Integer accessibilityViolationCount,
             Integer accessibilityRequirementCount
@@ -310,7 +316,7 @@ public class WebsiteContentInspectionService {
                     false, false, false,
                     0, 0, 0, 0, 0, 0, 0,
                     false, false, false,
-                    0, 0,
+                    0, 0, 0, false,
                     0, null,
                     false, false, false, false, false, false,
                     false, 0,
@@ -322,7 +328,7 @@ public class WebsiteContentInspectionService {
                     false, false, false, 0, false, false, false, null,
                     false, false, false, false, false, false, false, false, false, false,
                     0, 0,
-                    0, false, false, false, false, 0, 0,
+                    0, false, false, false, false, 0, 0, 0, false, false, false,
                     null, null, null);
         }
 

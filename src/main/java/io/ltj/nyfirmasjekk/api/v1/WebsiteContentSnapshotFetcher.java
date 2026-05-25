@@ -39,7 +39,14 @@ public class WebsiteContentSnapshotFetcher {
             "/vilkår",
             "/terms",
             "/tjenester",
-            "/services"
+            "/services",
+            "/menneskene",
+            "/team",
+            "/faq",
+            "/pris",
+            "/pricing",
+            "/arbeidshelsesjekken",
+            "/arbeidshelseradaren"
     );
     static WebsiteContentInspectionService.WebsiteContentSnapshot fetch(String url, boolean extended) {
         if (url == null || url.isBlank()) {
@@ -113,6 +120,8 @@ public class WebsiteContentSnapshotFetcher {
             boolean motionWithoutReducedMotionSignal = hasMotionSignalWithoutReducedMotion(htmlSnapshot);
             int videoCount = document.select("video").size();
             int iframeWithoutTitleCount = document.select("iframe:not([title]), iframe[title=\"\"]").size();
+            int placeholderImageCount = placeholderImageCount(document);
+            boolean ctaMismatchSignal = ctaMismatchSignal(document);
             Map<String, String> headers = response.headers();
             boolean hstsHeader = hasHeader(headers, "strict-transport-security");
             boolean contentSecurityPolicyHeader = hasHeader(headers, "content-security-policy");
@@ -209,6 +218,8 @@ public class WebsiteContentSnapshotFetcher {
                     motionWithoutReducedMotionSignal,
                     videoCount,
                     iframeWithoutTitleCount,
+                    placeholderImageCount,
+                    ctaMismatchSignal,
                     response.statusCode(),
                     response.url().toString(),
                     hstsHeader,
@@ -269,6 +280,10 @@ public class WebsiteContentSnapshotFetcher {
                     crawlResult.termsPageFound(),
                     crawlResult.formPageCount(),
                     crawlResult.privacyTextPageCount(),
+                    crawlResult.repeatedMetaDescriptionCount(),
+                    crawlResult.faqPageFound(),
+                    crawlResult.pricingSignal(),
+                    crawlResult.dataHandlingPageFound(),
                     accessibilityDeclarationUrl,
                     accessibilityDeclarationResult.violationCount(),
                     accessibilityDeclarationResult.requirementCount()
@@ -292,6 +307,24 @@ public class WebsiteContentSnapshotFetcher {
         }
         String value = element.text();
         return value.isBlank() ? null : value;
+    }
+
+    private static int placeholderImageCount(Document document) {
+        return document.select("img").stream()
+                .filter(image -> hasAny((image.attr("src") + " " + image.attr("alt") + " " + image.attr("class") + " " + image.attr("id")).toLowerCase(Locale.ROOT),
+                        "placeholder", "placeholder_img", "dummy", "avatar-placeholder", "profile-placeholder"))
+                .toList()
+                .size();
+    }
+
+    private static boolean ctaMismatchSignal(Document document) {
+        return document.select("a[href], button").stream()
+                .anyMatch(element -> {
+                    String text = element.text().toLowerCase(Locale.ROOT);
+                    String href = element.attr("href").toLowerCase(Locale.ROOT);
+                    return hasAny(text, "start arbeidshelsesjekken", "arbeidshelsesjekken")
+                            && href.contains("arbeidshelseradaren");
+                });
     }
 
     private static String accessibilityDeclarationUrl(Document document, String baseUrl) {
@@ -838,6 +871,11 @@ public class WebsiteContentSnapshotFetcher {
         boolean termsPageFound = false;
         int formPages = 0;
         int privacyTextPages = 0;
+        int repeatedMetaDescriptionCount = 0;
+        boolean faqPageFound = false;
+        boolean pricingSignal = false;
+        boolean dataHandlingPageFound = false;
+        String frontPageMetaDescription = normalizedMetaDescription(document);
 
         for (String candidate : candidates) {
             if (crawled >= EXTENDED_CRAWL_LIMIT) {
@@ -850,6 +888,13 @@ public class WebsiteContentSnapshotFetcher {
             crawled++;
             String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
             String normalizedContent = html.toLowerCase(Locale.ROOT);
+            Document crawledDocument = Jsoup.parse(html, candidate);
+            String crawledMetaDescription = normalizedMetaDescription(crawledDocument);
+            if (!frontPageMetaDescription.isBlank()
+                    && frontPageMetaDescription.equals(crawledMetaDescription)
+                    && !candidate.equals(baseUrl)) {
+                repeatedMetaDescriptionCount++;
+            }
             privacyPageFound = privacyPageFound || hasAny(normalizedUrl + " " + normalizedContent,
                     "personvern", "privacy", "gdpr", "datenschutz", "integritetspolicy");
             contactPageFound = contactPageFound || hasAny(normalizedUrl + " " + normalizedContent,
@@ -858,6 +903,12 @@ public class WebsiteContentSnapshotFetcher {
                     "om-oss", "about", "om oss", "hvem vi er", "about us");
             termsPageFound = termsPageFound || hasAny(normalizedUrl + " " + normalizedContent,
                     "vilkar", "vilkår", "villkor", "terms", "conditions", "policy", "retur", "refund");
+            faqPageFound = faqPageFound || hasAny(normalizedUrl + " " + normalizedContent,
+                    "faq", "ofte stilte", "sporsmal", "spørsmål", "questions");
+            pricingSignal = pricingSignal || hasAny(normalizedContent,
+                    "pris", "priser", "pricing", "abonnement", "subscription", "gratis prøve", "free trial", "demo");
+            dataHandlingPageFound = dataHandlingPageFound || hasAny(normalizedContent,
+                    "datahåndtering", "datahandtering", "databehandling", "databehandler", "personopplysninger", "arbeidsmiljødata", "arbeidsmiljodata");
             if (normalizedContent.contains("<form")) {
                 formPages++;
             }
@@ -881,8 +932,18 @@ public class WebsiteContentSnapshotFetcher {
                 aboutPageFound,
                 termsPageFound,
                 formPages,
-                privacyTextPages
+                privacyTextPages,
+                repeatedMetaDescriptionCount,
+                faqPageFound,
+                pricingSignal,
+                dataHandlingPageFound
         );
+    }
+
+    private static String normalizedMetaDescription(Document document) {
+        Element description = document.selectFirst("meta[name=description]");
+        String value = attrOrNull(description, "content");
+        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
     }
 
     private static String origin(URI uri) {
@@ -909,6 +970,13 @@ public class WebsiteContentSnapshotFetcher {
                 "/policy",
                 "/tjenester",
                 "/services",
+                "/menneskene",
+                "/team",
+                "/faq",
+                "/pris",
+                "/pricing",
+                "/arbeidshelsesjekken",
+                "/arbeidshelseradaren",
                 "/retur",
                 "/refund");
     }
@@ -1012,10 +1080,14 @@ public class WebsiteContentSnapshotFetcher {
             boolean aboutPageFound,
             boolean termsPageFound,
             int formPageCount,
-            int privacyTextPageCount
+            int privacyTextPageCount,
+            int repeatedMetaDescriptionCount,
+            boolean faqPageFound,
+            boolean pricingSignal,
+            boolean dataHandlingPageFound
     ) {
         private static ExtendedCrawlResult empty() {
-            return new ExtendedCrawlResult(0, false, false, false, false, 0, 0);
+            return new ExtendedCrawlResult(0, false, false, false, false, 0, 0, 0, false, false, false);
         }
     }
 
