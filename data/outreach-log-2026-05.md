@@ -4,15 +4,36 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 643
-- Sendt: 546
+- Antall hendelser: 664
+- Sendt: 567
 - Angret: 7
-- Aktive kontaktede selskaper: 542
+- Aktive kontaktede selskaper: 563
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 | 937514514 | KREATIV VANDRING | FLI | email | website-offer |
+| 2026-05-26 | 937510829 | FINANSFORENINGEN UIO | FLI | email | website-offer |
+| 2026-05-26 | 914280796 | FAU LUNDE BARNESKOLE | FLI | email | website-offer |
+| 2026-05-26 | 937518994 | DYVIKODDEN HYTTEVEL | FLI | email | website-offer |
+| 2026-05-26 | 937515332 | SAMEIET LEDANG VASSLAG | SAM | email | website-offer |
+| 2026-05-26 | 937405308 | MOVIK VESTRE AVLØPSSAMEIE | SAM | email | website-offer |
+| 2026-05-26 | 927044897 | KOBBABUKTA BÅTLAG | FLI | email | website-offer |
+| 2026-05-26 | 937503598 | HAMARJENTENE KOR | FLI | email | website-offer |
+| 2026-05-26 | 937350333 | TAALE | FLI | email | website-offer |
+| 2026-05-26 | 937413963 | STOKMARKNES 250 ÅR | FLI | email | website-offer |
+| 2026-05-26 | 937514484 | SELSØYVIK GOLF | FLI | email | website-offer |
+| 2026-05-26 | 937516290 | LAND STYRKEKLUBB | FLI | email | website-offer |
+| 2026-05-26 | 937510144 | GITTA ESPORT | FLI | email | website-offer |
+| 2026-05-26 | 937519451 | LA FRENCH TECH NORWAY | FLI | email | website-offer |
+| 2026-05-26 | 837509122 | KASSIM BYGGETJENESTER | ENK | email | website-offer |
+| 2026-05-26 | 937542933 | FUTURE READY FOUNDATION | FLI | email | website-offer |
+| 2026-05-26 | 937393067 | ANANDA NATYAM KULTURFORENING | FLI | email | website-offer |
+| 2026-05-26 | 936867502 | SAMEIET FRYDENBØVEIEN 19 | ESEK | email | website-offer |
+| 2026-05-26 | 937540361 | TSI SJAKK | FLI | email | website-offer |
+| 2026-05-26 | 937447310 | NOR FORLAG MASOOMA GILANI | ENK | email | website-offer |
+| 2026-05-26 | 937772262 | SARA HILMARSEN | ENK | email | website-offer |
 | 2026-05-25 | 937771509 | ARCE GONZALEZ TUANIS | ENK | email | website-offer |
 | 2026-05-25 | 937771959 | ROYAL MOTORS MAGOMADOV | ENK | email | website-offer |
 | 2026-05-25 | 940100925 | RINGERIKE KOMMUNE | KOMM | email | website-improvement-offer |
@@ -560,6 +581,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 06:54 | sent | 937514514 | KREATIV VANDRING | FLI | email | - |
+| 2026-05-26 06:54 | sent | 937510829 | FINANSFORENINGEN UIO | FLI | email | - |
+| 2026-05-26 06:54 | sent | 914280796 | FAU LUNDE BARNESKOLE | FLI | email | - |
+| 2026-05-26 06:54 | sent | 937518994 | DYVIKODDEN HYTTEVEL | FLI | email | - |
+| 2026-05-26 06:54 | sent | 937515332 | SAMEIET LEDANG VASSLAG | SAM | email | - |
+| 2026-05-26 06:54 | sent | 937405308 | MOVIK VESTRE AVLØPSSAMEIE | SAM | email | - |
+| 2026-05-26 06:54 | sent | 927044897 | KOBBABUKTA BÅTLAG | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937503598 | HAMARJENTENE KOR | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937350333 | TAALE | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937413963 | STOKMARKNES 250 ÅR | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937514484 | SELSØYVIK GOLF | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937516290 | LAND STYRKEKLUBB | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937510144 | GITTA ESPORT | FLI | email | - |
+| 2026-05-26 06:53 | sent | 937519451 | LA FRENCH TECH NORWAY | FLI | email | - |
+| 2026-05-26 06:53 | sent | 837509122 | KASSIM BYGGETJENESTER | ENK | email | - |
+| 2026-05-26 06:50 | sent | 937542933 | FUTURE READY FOUNDATION | FLI | email | - |
+| 2026-05-26 06:50 | sent | 937393067 | ANANDA NATYAM KULTURFORENING | FLI | email | - |
+| 2026-05-26 06:50 | sent | 936867502 | SAMEIET FRYDENBØVEIEN 19 | ESEK | email | - |
+| 2026-05-26 06:49 | sent | 937540361 | TSI SJAKK | FLI | email | - |
+| 2026-05-26 06:49 | sent | 937447310 | NOR FORLAG MASOOMA GILANI | ENK | email | - |
+| 2026-05-26 06:49 | sent | 937772262 | SARA HILMARSEN | ENK | email | - |
 | 2026-05-25 23:04 | sent | 937771509 | ARCE GONZALEZ TUANIS | ENK | email | - |
 | 2026-05-25 23:03 | sent | 937771959 | ROYAL MOTORS MAGOMADOV | ENK | email | - |
 | 2026-05-25 11:48 | sent | 940100925 | RINGERIKE KOMMUNE | KOMM | email | Sendt fra nettsidesjekk: https://ringerike.kommune.no |

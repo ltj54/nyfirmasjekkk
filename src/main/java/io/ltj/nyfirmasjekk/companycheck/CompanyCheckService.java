@@ -36,7 +36,6 @@ public class CompanyCheckService {
     private static final int BRREG_MAX_SCAN_WINDOW = 30_000;
     private static final int MAX_SOURCE_PAGES_WITH_TEXT_SEARCH = 10;
     private static final int MAX_SOURCE_PAGES_PER_NAME_VARIANT = 3;
-    private static final int MAX_SOURCE_PAGES_WITH_SCORE_FILTER = 400;
     private static final int MAX_RED_SOURCE_PAGES_PER_VARIANT = 40;
     private static final String SOURCE_BRREG_API = "BRREG API";
     private static final String FINDING_ORG_NUMBER = "Organisasjonsnummer";
@@ -235,13 +234,19 @@ public class CompanyCheckService {
         int requestedOffset = Math.max(page, 0) * Math.max(request.resultSize(), 1);
         int matchedBeforePage = 0;
         int sourcePage = 0;
+        int scannedSourcePages = 0;
+        int maxSourcePages = maxSourcePagesForScoreSearch();
+        LocalDate upperRegistrationDate = null;
         boolean reachedEnd = false;
 
-        while (matches.size() < request.resultSize() && sourcePage < MAX_SOURCE_PAGES_WITH_SCORE_FILTER) {
-            var filter = byggFiltrertFilter(request, sourcePage, Map.of());
+        while (matches.size() < request.resultSize() && scannedSourcePages < maxSourcePages) {
+            var filter = byggFiltrertFilter(request, sourcePage, Map.of(), upperRegistrationDate);
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
             diagnostics.recordFetch(hentEnheter(searchResponse).size(), fetchStartedAt);
+            scannedSourcePages += 1;
+
+            List<EnhetResponse> sourceItems = hentEnheter(searchResponse);
             var pageMatches = deduplicateMatches(vurderSide(searchResponse, request, diagnostics), seenMatches);
             if (matchedBeforePage + pageMatches.size() > requestedOffset) {
                 int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
@@ -251,9 +256,20 @@ public class CompanyCheckService {
 
             var pageInfo = searchResponse.page();
             boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
-            if (noMorePages || hentEnheter(searchResponse).isEmpty()) {
+            if (noMorePages || sourceItems.isEmpty()) {
                 reachedEnd = true;
                 break;
+            }
+
+            if (sourcePage >= maxBrregSourcePage(FILTERED_SOURCE_PAGE_SIZE)) {
+                upperRegistrationDate = oldestRegistrationDate(sourceItems);
+                if (upperRegistrationDate == null) {
+                    reachedEnd = true;
+                    break;
+                }
+                upperRegistrationDate = upperRegistrationDate.minusDays(1);
+                sourcePage = 0;
+                continue;
             }
 
             sourcePage += 1;
@@ -285,7 +301,11 @@ public class CompanyCheckService {
     }
 
     private int maxBrregSourcePage() {
-        return Math.max(0, BRREG_API_RESULT_WINDOW / SOURCE_PAGE_SIZE - 1);
+        return maxBrregSourcePage(SOURCE_PAGE_SIZE);
+    }
+
+    private int maxBrregSourcePage(int pageSize) {
+        return Math.max(0, BRREG_API_RESULT_WINDOW / Math.max(pageSize, 1) - 1);
     }
 
     private int maxSourcePagesForUnscoredSearch(CompanySearchRequest request) {
@@ -294,6 +314,10 @@ public class CompanyCheckService {
             return Math.min(maxBrregPages, MAX_SOURCE_PAGES_WITH_TEXT_SEARCH);
         }
         return Math.max(1, BRREG_MAX_SCAN_WINDOW / SOURCE_PAGE_SIZE);
+    }
+
+    private int maxSourcePagesForScoreSearch() {
+        return Math.max(1, BRREG_MAX_SCAN_WINDOW / FILTERED_SOURCE_PAGE_SIZE);
     }
 
     private LocalDate oldestRegistrationDate(List<EnhetResponse> enheter) {
@@ -727,7 +751,11 @@ public class CompanyCheckService {
     }
 
     private Map<String, String> byggFiltrertFilter(CompanySearchRequest r, int p, Map<String, String> extraParams) {
-        return byggFilterMedNavn(r, p, FILTERED_SOURCE_PAGE_SIZE, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams, null);
+        return byggFiltrertFilter(r, p, extraParams, null);
+    }
+
+    private Map<String, String> byggFiltrertFilter(CompanySearchRequest r, int p, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
+        return byggFilterMedNavn(r, p, FILTERED_SOURCE_PAGE_SIZE, hasText(r.navn()) ? navnForBrregSearch(r.navn()) : null, extraParams, upperRegistrationDate);
     }
 
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, String navn) {

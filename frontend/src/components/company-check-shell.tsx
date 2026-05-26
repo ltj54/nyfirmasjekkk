@@ -162,7 +162,7 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
-const MAX_EMAIL_BATCH_SIZE = 15;
+const MAX_EMAIL_BATCH_SIZE = 25;
 const EMAIL_BATCH_SEND_DELAY_MS = 2_000;
 
 function wait(ms: number) {
