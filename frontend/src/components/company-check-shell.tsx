@@ -599,8 +599,8 @@ export function CompanyCheckShell() {
     }));
   }
 
-  async function inspectStandaloneWebsite() {
-    const url = normalizeStandaloneWebsiteInput(websiteInspectionUrl);
+  async function inspectWebsiteUrl(rawUrl: string, contextMatch?: BrregWebsiteMatch) {
+    const url = normalizeStandaloneWebsiteInput(rawUrl);
     if (!url) {
       setWebsiteInspectionError("Legg inn en URL først.");
       return;
@@ -621,13 +621,17 @@ export function CompanyCheckShell() {
       }
 
       const payload = (await response.json()) as WebsiteInspectionResponse;
-      setSelectedWebsiteInspection(payload);
+      setSelectedWebsiteInspection(contextMatch ? withInspectionContextMatch(payload, contextMatch) : payload);
     } catch (error) {
       console.error("Failed to inspect website", error);
       setWebsiteInspectionError("Klarte ikke sjekke nettsiden. Backend kan være opptatt eller utilgjengelig.");
     } finally {
       setIsWebsiteInspectionLoading(false);
     }
+  }
+
+  async function inspectStandaloneWebsite() {
+    await inspectWebsiteUrl(websiteInspectionUrl);
   }
 
   const handleCloseDetail = useEffectEvent(() => {
@@ -1459,6 +1463,7 @@ export function CompanyCheckShell() {
                   onSendEmail={() => void sendGeneratedOutreachEmail(selectedCompany, generatedEmailByOrg[selectedCompany.orgNumber] ?? null)}
                   onUpdateGeneratedEmail={(text) => updateGeneratedEmail(selectedCompany.orgNumber, text)}
                   onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(selectedCompany, sent, note, statusOverride)}
+                  onInspectWebsite={(url) => void inspectWebsiteUrl(url, brregWebsiteMatchFromCompany(selectedCompany, url))}
                 />
               </div>
             </div>
@@ -1533,7 +1538,8 @@ function WebsiteInspectionDetail({
         setExtendedError("Klarte ikke kjøre utvidet sjekk. Prøv igjen senere.");
         return;
       }
-      setCurrentInspection((await response.json()) as WebsiteInspectionResponse);
+      const payload = (await response.json()) as WebsiteInspectionResponse;
+      setCurrentInspection((current) => mergeInspectionMatches(payload, current.brregMatches));
     } catch (error) {
       console.error("Failed to run extended website inspection", error);
       setExtendedError("Klarte ikke kjøre utvidet sjekk. Backend kan være opptatt.");
@@ -2235,6 +2241,10 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "Open Graph/Twitter-data styrer ofte hvordan lenken ser ut i sosiale medier, meldinger og e-post.";
     case "MISSING_STRUCTURED_DATA":
       return "Strukturert data hjelper søkemotorer å forstå virksomhet, kontaktpunkt og innhold mer presist.";
+    case "NOINDEX_SIGNAL":
+      return "Noindex kan gjøre at en ellers fungerende nettside ikke vises i søkemotorer.";
+    case "SITEMAP_MISSING":
+      return "Sitemap er ikke påkrevd, men gjør det enklere for søkemotorer å finne viktige undersider.";
     case "CLOUDFLARE_EMAIL_PROTECTION":
       return "Skjult e-post kan redusere spam, men kan også gjøre kontakt vanskeligere uten JavaScript eller for hjelpemidler.";
     case "MISSING_OPENING_HOURS":
@@ -2293,7 +2303,40 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
     case "SPF_POLICY_SOFT":
     case "DMARC_POLICY_NONE":
     case "EMAIL_SECURITY_DNS_REVIEW":
+    case "EMAIL_MX_MISSING":
+    case "SPF_LOOKUP_RISK":
+    case "DUPLICATE_SPF_RECORDS":
+    case "DMARC_RUA_MISSING":
       return "E-postdomener bør ha ryddig SPF, DKIM og DMARC for å redusere spoofing og leveringsproblemer.";
+    case "DNS_CAA_MISSING":
+      return "CAA er et ekstra DNS-signal som kan redusere risikoen for uønsket sertifikatutstedelse.";
+    case "SOURCE_MAP_EXPOSED":
+    case "DEVELOPMENT_REFERENCE_EXPOSED":
+      return "Utviklingsspor er sjelden kritisk alene, men kan gi unødvendig innsikt i kildekode, filstruktur eller miljø.";
+    case "TARGET_BLANK_NOOPENER_MISSING":
+      return "Lenker som åpnes i ny fane bør isoleres slik at den nye siden ikke kan påvirke den opprinnelige fanen.";
+    case "PERSONAL_DATA_GET_FORM":
+      return "GET-skjema kan legge personopplysninger i URL, nettleserhistorikk, logger og analyseverktøy.";
+    case "EXTERNAL_FORM_ACTION":
+      return "Når skjema sendes til annet domene, bør databehandler og personvern være tydelig avklart.";
+    case "DOM_XSS_SURFACE_REVIEW":
+      return "XSS oppstår ofte når URL-, skjema- eller brukerdata ender i HTML/JavaScript uten trygg escaping. Dette er et passivt signal om angrepsflate, ikke et bevis.";
+    case "DANGEROUS_JS_SINK_REVIEW":
+      return "Dynamiske JavaScript-sinks kan være trygge, men blir risikable hvis de kombineres med ufiltrert brukerinput.";
+    case "INLINE_EVENT_HANDLER_REVIEW":
+      return "Inline event handlers gjør streng CSP vanskeligere og kan øke konsekvensen av injeksjonsfeil.";
+    case "JAVASCRIPT_HREF_REVIEW":
+      return "javascript:-lenker blander navigasjon og kode og er et gammelt mønster som bør vurderes ved sikkerhetsherding.";
+    case "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW":
+      return "Tredjeparts-script er en forsyningskjederisiko: hvis leverandøren eller CDN-et endres, kjører koden i brukerens nettleser.";
+    case "MANY_THIRD_PARTY_SCRIPT_HOSTS":
+      return "Mange script-leverandører gir flere feilkilder, mer personvernflate og større avhengighet av eksterne domener.";
+    case "MANY_INLINE_SCRIPTS_WITHOUT_CSP":
+      return "Inline scripts gjør streng CSP vanskeligere, og manglende CSP gir svakere skadebegrensning ved script-injeksjon.";
+    case "POST_FORM_CSRF_REVIEW":
+      return "Skjema som sender data med POST bør vurderes for CSRF dersom det endrer data, logger inn eller sender sensitive opplysninger.";
+    case "OUTDATED_JS_LIBRARY_REVIEW":
+      return "Gamle frontend-biblioteker kan ha kjente sårbarheter og bør verifiseres mot faktisk versjon og bruk.";
     case "GOOGLE_ANALYTICS_WITHOUT_CONSENT":
     case "META_PIXEL_WITHOUT_CONSENT":
     case "SESSION_TRACKING_WITHOUT_CONSENT":
@@ -2426,6 +2469,10 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Legg inn Open Graph/Twitter-tittel og beskrivelse som gir en ryddig forhåndsvisning.";
     case "MISSING_STRUCTURED_DATA":
       return "Vurder Organization, LocalBusiness eller Product/Service-data der det passer for virksomheten.";
+    case "NOINDEX_SIGNAL":
+      return "Sjekk om noindex er bevisst. Fjern det hvis siden skal finnes i Google og andre søkemotorer.";
+    case "SITEMAP_MISSING":
+      return "Legg inn sitemap.xml eller sørg for at CMS/host publiserer sitemap automatisk.";
     case "CLOUDFLARE_EMAIL_PROTECTION":
       return "Sørg for at e-post også finnes som tydelig kontaktvei for brukere uten JavaScript.";
     case "MISSING_OPENING_HOURS":
@@ -2492,6 +2539,44 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Gå gradvis fra DMARC-overvåking til quarantine/reject når e-postflyten er verifisert.";
     case "EMAIL_SECURITY_DNS_REVIEW":
       return "Verifiser SPF, DKIM og DMARC for domenet med DNS-/mail-leverandør.";
+    case "EMAIL_MX_MISSING":
+      return "Verifiser MX-oppsett hvis domenet skal brukes til e-post.";
+    case "DNS_CAA_MISSING":
+      return "Vurder CAA-record for å begrense hvilke sertifikatutstedere som kan utstede sertifikat for domenet.";
+    case "SPF_LOOKUP_RISK":
+      return "Forenkle SPF ved å fjerne gamle include-regler eller samle e-postleverandører riktig.";
+    case "DUPLICATE_SPF_RECORDS":
+      return "Slå sammen SPF til én TXT-record med alle legitime avsendere.";
+    case "DMARC_RUA_MISSING":
+      return "Legg til rua-adresse hvis virksomheten vil følge med på DMARC før policy strammes inn.";
+    case "SOURCE_MAP_EXPOSED":
+      return "Vurder om sourcemaps skal fjernes fra produksjon eller bare være tilgjengelig internt.";
+    case "DEVELOPMENT_REFERENCE_EXPOSED":
+      return "Fjern staging-, debug-, backup- og lokale referanser fra produksjons-HTML og publiserte assets.";
+    case "TARGET_BLANK_NOOPENER_MISSING":
+      return "Legg rel=\"noopener noreferrer\" på eksterne lenker som åpnes i ny fane.";
+    case "PERSONAL_DATA_GET_FORM":
+      return "Bruk POST for skjema med navn, e-post, telefon eller andre personopplysninger.";
+    case "EXTERNAL_FORM_ACTION":
+      return "Verifiser ekstern skjematjeneste, databehandleravtale og forklaringen i personvernteksten.";
+    case "DOM_XSS_SURFACE_REVIEW":
+      return "Gå gjennom JavaScript som leser URL/hash/query og sjekk at verdier ikke settes inn i HTML uten trygg escaping/sanitering.";
+    case "DANGEROUS_JS_SINK_REVIEW":
+      return "Unngå eval/document.write og bruk sikre DOM-metoder eller sanitering hvis HTML må settes dynamisk.";
+    case "INLINE_EVENT_HANDLER_REVIEW":
+      return "Flytt inline onclick/onload til bundne event listeners og stram CSP når koden er ryddet.";
+    case "JAVASCRIPT_HREF_REVIEW":
+      return "Erstatt javascript:-lenker med knapper eller vanlige lenker med event handlers i JavaScript-koden.";
+    case "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW":
+      return "Vurder Subresource Integrity for statiske tredjepartsressurser, eller host kritiske scripts selv.";
+    case "MANY_THIRD_PARTY_SCRIPT_HOSTS":
+      return "Gå gjennom alle script-leverandører og fjern måling, widgets eller plugins som ikke er nødvendige.";
+    case "MANY_INLINE_SCRIPTS_WITHOUT_CSP":
+      return "Rydd inline scripts og innfør CSP gradvis, gjerne først i report-only-modus.";
+    case "POST_FORM_CSRF_REVIEW":
+      return "Verifiser CSRF-beskyttelse på POST-skjema, særlig ved innlogging, konto, skjema med persondata eller dataendringer.";
+    case "OUTDATED_JS_LIBRARY_REVIEW":
+      return "Bekreft versjonen og oppdater eller fjern gamle JavaScript-biblioteker hvis de faktisk er i bruk.";
     case "GOOGLE_ANALYTICS_WITHOUT_CONSENT":
     case "META_PIXEL_WITHOUT_CONSENT":
     case "SESSION_TRACKING_WITHOUT_CONSENT":
@@ -2600,6 +2685,8 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "DUPLICATE_META_DESCRIPTIONS",
         "WEAK_SHARE_PREVIEW",
         "MISSING_STRUCTURED_DATA",
+        "NOINDEX_SIGNAL",
+        "SITEMAP_MISSING",
         "MISSING_LOCAL_RELEVANCE",
       ].includes(signal.code),
     },
@@ -2641,9 +2728,28 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "FILE_UPLOAD_REVIEW",
         "API_ENDPOINTS_VISIBLE",
         "CMS_VERSION_EXPOSED",
+        "SOURCE_MAP_EXPOSED",
+        "DEVELOPMENT_REFERENCE_EXPOSED",
+        "TARGET_BLANK_NOOPENER_MISSING",
+        "PERSONAL_DATA_GET_FORM",
+        "EXTERNAL_FORM_ACTION",
+        "DOM_XSS_SURFACE_REVIEW",
+        "DANGEROUS_JS_SINK_REVIEW",
+        "INLINE_EVENT_HANDLER_REVIEW",
+        "JAVASCRIPT_HREF_REVIEW",
+        "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
+        "MANY_THIRD_PARTY_SCRIPT_HOSTS",
+        "MANY_INLINE_SCRIPTS_WITHOUT_CSP",
+        "POST_FORM_CSRF_REVIEW",
+        "OUTDATED_JS_LIBRARY_REVIEW",
         "EMAIL_SECURITY_DNS_REVIEW",
+        "EMAIL_MX_MISSING",
+        "DNS_CAA_MISSING",
         "SPF_POLICY_SOFT",
+        "SPF_LOOKUP_RISK",
+        "DUPLICATE_SPF_RECORDS",
         "DMARC_POLICY_NONE",
+        "DMARC_RUA_MISSING",
         "COOKIE_SECURE_FLAG_MISSING",
         "COOKIE_HTTPONLY_REVIEW",
         "COOKIE_SAMESITE_REVIEW",
@@ -2736,10 +2842,62 @@ function normalizeStandaloneWebsiteInput(value: string) {
   return `https://${trimmed}`;
 }
 
+function withInspectionContextMatch(
+  inspection: WebsiteInspectionResponse,
+  contextMatch: BrregWebsiteMatch
+): WebsiteInspectionResponse {
+  const existingMatches = inspection.brregMatches ?? [];
+  if (existingMatches.some((match) => match.orgNumber === contextMatch.orgNumber)) {
+    return inspection;
+  }
+  return {
+    ...inspection,
+    brregMatches: [contextMatch, ...existingMatches],
+  };
+}
+
+function mergeInspectionMatches(
+  inspection: WebsiteInspectionResponse,
+  previousMatches: BrregWebsiteMatch[]
+): WebsiteInspectionResponse {
+  if (!previousMatches.length) {
+    return inspection;
+  }
+  const nextMatches = [...(inspection.brregMatches ?? [])];
+  for (const previousMatch of previousMatches) {
+    if (!nextMatches.some((match) => match.orgNumber === previousMatch.orgNumber)) {
+      nextMatches.unshift(previousMatch);
+    }
+  }
+  return {
+    ...inspection,
+    brregMatches: nextMatches,
+  };
+}
+
+function brregWebsiteMatchFromCompany(company: CompanyDetails, websiteUrl: string): BrregWebsiteMatch {
+  return {
+    orgNumber: company.orgNumber,
+    name: company.name,
+    organizationForm: company.organizationForm,
+    website: normalizeStandaloneWebsiteInput(websiteUrl),
+    email: company.email,
+    phone: company.phone,
+    mobile: null,
+    naceCode: company.naceCode,
+    naceDescription: company.naceDescription,
+    municipality: company.municipality,
+    county: company.county,
+    registrationDate: company.registrationDate,
+    matchReason: "Nettsidekandidat fra detaljsiden. BRREG har ikke registrert nettside, men kandidaten ble vurdert som mulig eller sannsynlig match.",
+  };
+}
+
 function companyFromBrregWebsiteMatch(
   match: BrregWebsiteMatch,
   inspection: WebsiteInspectionResponse
 ): Parameters<typeof buildOutreachEmailSubject>[1] {
+  const candidateContext = match.matchReason.toLowerCase().includes("nettsidekandidat");
   return {
     orgNumber: match.orgNumber,
     name: match.name,
@@ -2751,7 +2909,7 @@ function companyFromBrregWebsiteMatch(
     salesSegment: null,
     website: match.website || inspection.normalizedUrl,
     websiteDiscovery: {
-      status: "REGISTERED",
+      status: candidateContext ? "POSSIBLE_MATCH" : "REGISTERED",
       confidence: "HIGH",
       candidates: [inspection.normalizedUrl],
       verifiedCandidate: inspection.normalizedUrl,
@@ -2760,8 +2918,10 @@ function companyFromBrregWebsiteMatch(
       contentMatchReason: match.matchReason,
       pageTitle: null,
       candidateChecks: [],
-      reason: "Nettsiden er koblet til BRREG-treff fra frittstående nettsidesjekk.",
-      source: "BRREG hjemmeside",
+      reason: candidateContext
+        ? "Nettsiden er koblet til en nettsidekandidat fra virksomhetsdetaljene."
+        : "Nettsiden er koblet til BRREG-treff fra frittstående nettsidesjekk.",
+      source: candidateContext ? "Detaljside nettsidekandidat" : "BRREG hjemmeside",
     },
     websiteQuality: inspection.websiteQuality,
     email: match.email,
@@ -3191,6 +3351,7 @@ function CompanyDetailView({
   onSendEmail,
   onUpdateGeneratedEmail,
   onToggleOutreach,
+  onInspectWebsite,
 }: {
   company: CompanyDetails;
   events: CompanyEvent[];
@@ -3206,6 +3367,7 @@ function CompanyDetailView({
   onSendEmail: () => void;
   onUpdateGeneratedEmail: (text: string) => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
+  onInspectWebsite: (url: string) => void;
 }) {
   const leadPriority = getLeadPriority(company);
   const config = detailLeadSignalConfig(leadPriority.label);
@@ -3430,18 +3592,31 @@ function CompanyDetailView({
                   </p>
                   <div className="mt-3 grid gap-2">
                     {websiteCandidateRows(company.websiteDiscovery).map((candidate) => (
-                      <a
+                      <div
                         key={candidate.url}
-                        className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-white"
-                        href={candidate.url}
-                        rel="noreferrer"
-                        target="_blank"
+                        className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F2933]"
                       >
-                        <span>{stripWebsiteProtocol(candidate.url)}</span>
-                        <span className="text-[11px] font-medium text-[#52606D]">
-                          {formatWebsiteCandidateStatus(candidate)}
-                        </span>
-                      </a>
+                        <div className="min-w-0">
+                          <a
+                            className="text-[#1F5FA9] hover:underline"
+                            href={candidate.url}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            {stripWebsiteProtocol(candidate.url)}
+                          </a>
+                          <p className="mt-1 text-[11px] font-medium text-[#52606D]">
+                            {formatWebsiteCandidateStatus(candidate)}
+                          </p>
+                        </div>
+                        <button
+                          className="rounded-sm border border-[#BCCCDC] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#1F5FA9] hover:border-[#829AB1] hover:bg-white"
+                          onClick={() => onInspectWebsite(candidate.url)}
+                          type="button"
+                        >
+                          Nettsidesjekk
+                        </button>
+                      </div>
                     ))}
                   </div>
                   <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{company.websiteDiscovery.reason}</p>

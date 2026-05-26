@@ -4,15 +4,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 695
-- Sendt: 595
+- Antall hendelser: 700
+- Sendt: 600
 - Angret: 7
-- Aktive kontaktede selskaper: 591
+- Aktive kontaktede selskaper: 596
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 | 937450923 | MAKRONNYS RONNY STORUM | ENK | email | website-offer |
+| 2026-05-26 | 937430167 | ABDI TRANSPORT | ENK | email | website-offer |
+| 2026-05-26 | 937586949 | MIKO YOUNG YOUNG | ENK | email | website-offer |
+| 2026-05-26 | 937777078 | MEHEIA EIENDOMSUTVIKLING AS | AS | email | website-offer |
+| 2026-05-26 | 937776470 | JACOBY | ENK | email | website-offer |
 | 2026-05-26 | 937511736 | SKIEN SENIOR HØYRE | FLI | email | website-offer |
 | 2026-05-26 | 937513968 | NORSK-UKRAINSK ALLIANSE FOR BISTAND OG GJENOPPBYGGING | FLI | email | website-offer |
 | 2026-05-26 | 837524512 | ANNE NYGÅRD | ENK | email | website-offer |
@@ -609,6 +614,11 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 18:30 | sent | 937450923 | MAKRONNYS RONNY STORUM | ENK | email | - |
+| 2026-05-26 18:29 | sent | 937430167 | ABDI TRANSPORT | ENK | email | - |
+| 2026-05-26 18:28 | sent | 937586949 | MIKO YOUNG YOUNG | ENK | email | - |
+| 2026-05-26 17:07 | sent | 937777078 | MEHEIA EIENDOMSUTVIKLING AS | AS | email | - |
+| 2026-05-26 17:07 | sent | 937776470 | JACOBY | ENK | email | - |
 | 2026-05-26 10:56 | sent | 937511736 | SKIEN SENIOR HØYRE | FLI | email | - |
 | 2026-05-26 10:56 | sent | 937513968 | NORSK-UKRAINSK ALLIANSE FOR BISTAND OG GJENOPPBYGGING | FLI | email | - |
 | 2026-05-26 10:56 | sent | 837524512 | ANNE NYGÅRD | ENK | email | - |

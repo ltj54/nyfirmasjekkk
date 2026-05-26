@@ -755,6 +755,25 @@ public class CompanyApiV1Mapper {
                 "API_ENDPOINTS_VISIBLE",
                 "CMS_VERSION_EXPOSED",
                 "EMAIL_SECURITY_DNS_REVIEW",
+                "EMAIL_MX_MISSING",
+                "DNS_CAA_MISSING",
+                "SPF_LOOKUP_RISK",
+                "DUPLICATE_SPF_RECORDS",
+                "DMARC_RUA_MISSING",
+                "SOURCE_MAP_EXPOSED",
+                "DEVELOPMENT_REFERENCE_EXPOSED",
+                "TARGET_BLANK_NOOPENER_MISSING",
+                "PERSONAL_DATA_GET_FORM",
+                "EXTERNAL_FORM_ACTION",
+                "DOM_XSS_SURFACE_REVIEW",
+                "DANGEROUS_JS_SINK_REVIEW",
+                "INLINE_EVENT_HANDLER_REVIEW",
+                "JAVASCRIPT_HREF_REVIEW",
+                "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
+                "MANY_THIRD_PARTY_SCRIPT_HOSTS",
+                "MANY_INLINE_SCRIPTS_WITHOUT_CSP",
+                "POST_FORM_CSRF_REVIEW",
+                "OUTDATED_JS_LIBRARY_REVIEW",
                 "COOKIE_SECURE_FLAG_MISSING",
                 "COOKIE_HTTPONLY_REVIEW",
                 "COOKIE_SAMESITE_REVIEW",
@@ -896,6 +915,22 @@ public class CompanyApiV1Mapper {
                     "MISSING_STRUCTURED_DATA",
                     "Mangler strukturert data",
                     "Siden ser ikke ut til å ha strukturert data. Det kan gjøre det vanskeligere for søkemotorer å forstå virksomhet, kontaktpunkt og innhold.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.noIndexSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "NOINDEX_SIGNAL",
+                    "Siden ber søkemotorer ikke indeksere",
+                    "HTML-en har noindex-signal. Det kan være bevisst, men hvis siden skal finnes i Google bør dette sjekkes.",
+                    "MEDIUM"
+            ));
+        }
+        if (!snapshot.sitemapSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SITEMAP_MISSING",
+                    "Sitemap ikke funnet",
+                    "Vi fant ikke sitemap.xml eller sitemap_index.xml. Det er ikke kritisk for små sider, men kan hjelpe søkemotorer å finne viktig innhold.",
                     "INFO"
             ));
         }
@@ -1773,6 +1808,22 @@ public class CompanyApiV1Mapper {
                     "INFO"
             ));
         }
+        if (!snapshot.mxRecord()) {
+            signals.add(new WebsiteQualitySignal(
+                    "EMAIL_MX_MISSING",
+                    "MX-oppsett bør sjekkes",
+                    "Vi fant ikke tydelig MX-oppsett for domenet. Det kan være riktig hvis domenet ikke brukes til e-post, men bør sjekkes hvis virksomheten sender eller mottar e-post på domenet.",
+                    "INFO"
+            ));
+        }
+        if (!snapshot.caaRecord()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DNS_CAA_MISSING",
+                    "CAA-record mangler",
+                    "Vi fant ikke CAA-record i DNS. Det er ikke påkrevd, men kan begrense hvilke sertifikatutstedere som får utstede TLS-sertifikat for domenet.",
+                    "INFO"
+            ));
+        }
         if (snapshot.spfSoftfailSignal()) {
             signals.add(new WebsiteQualitySignal(
                     "SPF_POLICY_SOFT",
@@ -1781,11 +1832,146 @@ public class CompanyApiV1Mapper {
                     "INFO"
             ));
         }
+        if (snapshot.spfTooManyLookupsSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SPF_LOOKUP_RISK",
+                    "SPF kan være for kompleks",
+                    "SPF-oppsettet ser ut til å ha mange DNS-oppslag. SPF har en grense på 10 oppslag, og for komplekst oppsett kan gi leveringsproblemer.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.duplicateSpfRecordSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DUPLICATE_SPF_RECORDS",
+                    "Flere SPF-records",
+                    "Domenet ser ut til å ha flere SPF-records. Det kan gjøre SPF ugyldig og bør ryddes til én samlet record.",
+                    "MEDIUM"
+            ));
+        }
         if (snapshot.dmarcPolicyNoneSignal()) {
             signals.add(new WebsiteQualitySignal(
                     "DMARC_POLICY_NONE",
                     "DMARC står til overvåking",
                     "DMARC-policy ser ut til å være p=none. Det er nyttig for overvåking, men beskytter svakere mot spoofing enn quarantine/reject.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.dmarcRuaMissingSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DMARC_RUA_MISSING",
+                    "DMARC mangler rapportadresse",
+                    "DMARC-recorden ser ut til å mangle rua-rapportering. Rapportering gjør det enklere å følge med før policy strammes inn.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.sourceMapReferenceSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SOURCE_MAP_EXPOSED",
+                    "Kildekart eksponert",
+                    "HTML-en peker mot JavaScript- eller CSS-sourcemaps. Det er ikke nødvendigvis kritisk, men kan gjøre kildekode og interne filstier lettere å kartlegge.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.developmentReferenceSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DEVELOPMENT_REFERENCE_EXPOSED",
+                    "Utviklingsspor synlig",
+                    "HTML eller lenker inneholder spor av staging, debug, backup, .env eller lokale adresser. Dette bør ryddes før siden brukes aktivt.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.targetBlankWithoutNoopenerCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "TARGET_BLANK_NOOPENER_MISSING",
+                    "Eksterne lenker mangler noopener",
+                    snapshot.targetBlankWithoutNoopenerCount() + " ekstern lenke åpnes i ny fane uten tydelig rel=\"noopener\" eller rel=\"noreferrer\". Dette er en enkel nettlesersikkerhetsforbedring.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.personalDataGetFormSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "PERSONAL_DATA_GET_FORM",
+                    "Skjema kan sende persondata i URL",
+                    "Minst ett skjema med persondatafelt ser ut til å bruke GET eller mangler method. Det kan legge navn, e-post eller telefon i URL/logg.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.externalFormActionSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "EXTERNAL_FORM_ACTION",
+                    "Skjema sender til ekstern tjeneste",
+                    "Minst ett skjema ser ut til å sende data til et annet domene. Databehandler, personvern og formål bør verifiseres manuelt.",
+                    "MEDIUM"
+            ));
+        }
+        if (snapshot.domXssSinkSignal() && snapshot.clientUrlInputSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DOM_XSS_SURFACE_REVIEW",
+                    "Mulig DOM-XSS-angrepsflate",
+                    "JavaScript ser ut til å lese fra URL/hash og bruke mønstre som kan skrive HTML eller kjøre dynamisk kode. Dette beviser ikke XSS, men bør vurderes manuelt.",
+                    "MEDIUM"
+            ));
+        } else if (snapshot.domXssSinkSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "DANGEROUS_JS_SINK_REVIEW",
+                    "JavaScript-mønstre bør sjekkes",
+                    "HTML/JavaScript inneholder mønstre som innerHTML, document.write, eval eller lignende. Det er ikke nødvendigvis feil, men bør vurderes hvis brukerinput kan nå koden.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.inlineEventHandlerCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "INLINE_EVENT_HANDLER_REVIEW",
+                    "Inline JavaScript-hendelser",
+                    snapshot.inlineEventHandlerCount() + " element(er) ser ut til å bruke inline event handlers som onclick/onload. Det kan gjøre CSP vanskeligere og bør vurderes ved sikkerhetsherding.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.javascriptHrefCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "JAVASCRIPT_HREF_REVIEW",
+                    "javascript:-lenker funnet",
+                    snapshot.javascriptHrefCount() + " lenke(r) bruker javascript: i href. Dette kan være legitimt, men bør ryddes eller erstattes med vanlig knappelogikk.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.externalScriptsWithoutIntegrityCount() > 0 && snapshot.thirdPartyScriptHostCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
+                    "Tredjeparts-script uten integritetssjekk",
+                    snapshot.externalScriptsWithoutIntegrityCount() + " eksterne script ser ut til å mangle Subresource Integrity. Dette er ikke alltid praktisk mulig, men bør vurderes for statiske tredjepartsressurser.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.thirdPartyScriptHostCount() >= 4) {
+            signals.add(new WebsiteQualitySignal(
+                    "MANY_THIRD_PARTY_SCRIPT_HOSTS",
+                    "Mange script-leverandører",
+                    "Siden laster scripts fra " + snapshot.thirdPartyScriptHostCount() + " eksterne domener. Det øker avhengigheter, personvernflate og feilkilder.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.inlineScriptCount() >= 8 && !snapshot.contentSecurityPolicyHeader()) {
+            signals.add(new WebsiteQualitySignal(
+                    "MANY_INLINE_SCRIPTS_WITHOUT_CSP",
+                    "Mange inline scripts uten CSP",
+                    "Siden har mange inline scripts og mangler Content Security Policy. Det gjør det vanskeligere å begrense skade ved script-injeksjon.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.postFormsWithoutCsrfTokenCount() > 0) {
+            signals.add(new WebsiteQualitySignal(
+                    "POST_FORM_CSRF_REVIEW",
+                    "POST-skjema bør sjekkes for CSRF",
+                    snapshot.postFormsWithoutCsrfTokenCount() + " POST-skjema ser ikke ut til å ha tydelig CSRF-token i HTML-en. Dette bør vurderes manuelt for skjema som endrer data eller sender sensitive opplysninger.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.outdatedJavascriptLibrarySignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "OUTDATED_JS_LIBRARY_REVIEW",
+                    "Mulig gammel JavaScript-avhengighet",
+                    "HTML-en peker mot en kjent eldre JavaScript-bibliotekversjon. Gamle frontend-avhengigheter kan ha kjente svakheter og bør verifiseres.",
                     "INFO"
             ));
         }

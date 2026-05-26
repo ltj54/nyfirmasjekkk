@@ -115,7 +115,26 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     "FILE_UPLOAD_REVIEW",
     "API_ENDPOINTS_VISIBLE",
     "CMS_VERSION_EXPOSED",
+    "SOURCE_MAP_EXPOSED",
+    "DEVELOPMENT_REFERENCE_EXPOSED",
+    "TARGET_BLANK_NOOPENER_MISSING",
+    "PERSONAL_DATA_GET_FORM",
+    "EXTERNAL_FORM_ACTION",
+    "DOM_XSS_SURFACE_REVIEW",
+    "DANGEROUS_JS_SINK_REVIEW",
+    "INLINE_EVENT_HANDLER_REVIEW",
+    "JAVASCRIPT_HREF_REVIEW",
+    "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
+    "MANY_THIRD_PARTY_SCRIPT_HOSTS",
+    "MANY_INLINE_SCRIPTS_WITHOUT_CSP",
+    "POST_FORM_CSRF_REVIEW",
+    "OUTDATED_JS_LIBRARY_REVIEW",
     "EMAIL_SECURITY_DNS_REVIEW",
+    "EMAIL_MX_MISSING",
+    "DNS_CAA_MISSING",
+    "SPF_LOOKUP_RISK",
+    "DUPLICATE_SPF_RECORDS",
+    "DMARC_RUA_MISSING",
     "COOKIE_SECURE_FLAG_MISSING",
     "COOKIE_HTTPONLY_REVIEW",
     "COOKIE_SAMESITE_REVIEW",
@@ -187,6 +206,11 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("FILE_UPLOAD_REVIEW"), "filopplasting som bør sikkerhetssjekkes");
   addMailPoint(points, signalCodes.has("API_ENDPOINTS_VISIBLE"), "synlige API-spor der tilgang, CORS og rate limiting bør vurderes");
   addMailPoint(points, signalCodes.has("EMAIL_SECURITY_DNS_REVIEW") || signalCodes.has("SPF_POLICY_SOFT") || signalCodes.has("DMARC_POLICY_NONE"), "SPF, DKIM og DMARC for e-postsikkerhet på domenet");
+  addMailPoint(points, signalCodes.has("DUPLICATE_SPF_RECORDS") || signalCodes.has("SPF_LOOKUP_RISK") || signalCodes.has("DMARC_RUA_MISSING") || signalCodes.has("EMAIL_MX_MISSING"), "DNS- og e-postoppsett som bør ryddes");
+  addMailPoint(points, signalCodes.has("SOURCE_MAP_EXPOSED") || signalCodes.has("DEVELOPMENT_REFERENCE_EXPOSED"), "utviklingsspor eller kildekart som bør vurderes");
+  addMailPoint(points, signalCodes.has("DOM_XSS_SURFACE_REVIEW") || signalCodes.has("DANGEROUS_JS_SINK_REVIEW") || signalCodes.has("INLINE_EVENT_HANDLER_REVIEW") || signalCodes.has("JAVASCRIPT_HREF_REVIEW"), "JavaScript- og XSS-angrepsflate som bør vurderes manuelt");
+  addMailPoint(points, signalCodes.has("THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW") || signalCodes.has("MANY_THIRD_PARTY_SCRIPT_HOSTS") || signalCodes.has("MANY_INLINE_SCRIPTS_WITHOUT_CSP") || signalCodes.has("OUTDATED_JS_LIBRARY_REVIEW"), "script-avhengigheter og frontend-herding som bør vurderes");
+  addMailPoint(points, signalCodes.has("POST_FORM_CSRF_REVIEW"), "POST-skjema som bør vurderes for CSRF-beskyttelse");
   addMailPoint(points, signalCodes.has("COOKIE_SECURE_FLAG_MISSING") || signalCodes.has("COOKIE_HTTPONLY_REVIEW") || signalCodes.has("COOKIE_SAMESITE_REVIEW"), "cookie-flagg for sesjon, sikkerhet og personvern");
   addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("CRAWL_PRIVACY_PAGE_NOT_FOUND") || signalCodes.has("CRAWL_FORM_PRIVACY_REVIEW"), "personverninfo ved skjema eller innsamling av kontaktdata");
   addMailPoint(points, signalCodes.has("COOKIE_CONSENT_RISK"), "cookies eller måling uten tydelig samtykkespor");
@@ -309,9 +333,28 @@ function hasApplicationSecurityRisk(signalCodes: Set<string>) {
     || signalCodes.has("FILE_UPLOAD_REVIEW")
     || signalCodes.has("API_ENDPOINTS_VISIBLE")
     || signalCodes.has("CMS_VERSION_EXPOSED")
+    || signalCodes.has("SOURCE_MAP_EXPOSED")
+    || signalCodes.has("DEVELOPMENT_REFERENCE_EXPOSED")
+    || signalCodes.has("TARGET_BLANK_NOOPENER_MISSING")
+    || signalCodes.has("PERSONAL_DATA_GET_FORM")
+    || signalCodes.has("EXTERNAL_FORM_ACTION")
+    || signalCodes.has("DOM_XSS_SURFACE_REVIEW")
+    || signalCodes.has("DANGEROUS_JS_SINK_REVIEW")
+    || signalCodes.has("INLINE_EVENT_HANDLER_REVIEW")
+    || signalCodes.has("JAVASCRIPT_HREF_REVIEW")
+    || signalCodes.has("THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW")
+    || signalCodes.has("MANY_THIRD_PARTY_SCRIPT_HOSTS")
+    || signalCodes.has("MANY_INLINE_SCRIPTS_WITHOUT_CSP")
+    || signalCodes.has("POST_FORM_CSRF_REVIEW")
+    || signalCodes.has("OUTDATED_JS_LIBRARY_REVIEW")
     || signalCodes.has("EMAIL_SECURITY_DNS_REVIEW")
+    || signalCodes.has("EMAIL_MX_MISSING")
+    || signalCodes.has("DNS_CAA_MISSING")
     || signalCodes.has("SPF_POLICY_SOFT")
+    || signalCodes.has("SPF_LOOKUP_RISK")
+    || signalCodes.has("DUPLICATE_SPF_RECORDS")
     || signalCodes.has("DMARC_POLICY_NONE")
+    || signalCodes.has("DMARC_RUA_MISSING")
     || signalCodes.has("COOKIE_SECURE_FLAG_MISSING")
     || signalCodes.has("COOKIE_HTTPONLY_REVIEW")
     || signalCodes.has("COOKIE_SAMESITE_REVIEW");
@@ -337,6 +380,8 @@ function hasTechnologyExposure(signalCodes: Set<string>) {
   return signalCodes.has("TECHNOLOGY_STACK_DETECTED")
     || signalCodes.has("SERVER_TECH_HEADER_EXPOSED")
     || signalCodes.has("CMS_VERSION_EXPOSED")
+    || signalCodes.has("SOURCE_MAP_EXPOSED")
+    || signalCodes.has("DEVELOPMENT_REFERENCE_EXPOSED")
     || signalCodes.has("ROBOTS_SENSITIVE_PATHS");
 }
 
@@ -353,6 +398,8 @@ function hasPrivacyOrThirdPartyRisk(signalCodes: Set<string>) {
     || signalCodes.has("EXTERNAL_IFRAME_RISK")
     || signalCodes.has("THIRD_PARTY_EMBED_CONSENT_RISK")
     || signalCodes.has("THIRD_PARTY_FORM_RISK")
+    || signalCodes.has("PERSONAL_DATA_GET_FORM")
+    || signalCodes.has("EXTERNAL_FORM_ACTION")
     || signalCodes.has("GOOGLE_ANALYTICS_WITHOUT_CONSENT")
     || signalCodes.has("META_PIXEL_WITHOUT_CONSENT")
     || signalCodes.has("SESSION_TRACKING_WITHOUT_CONSENT");
@@ -374,8 +421,13 @@ function hasAccessibilityCategoryRisk(signalCodes: Set<string>) {
 
 function hasEmailSecurityRisk(signalCodes: Set<string>) {
   return signalCodes.has("EMAIL_SECURITY_DNS_REVIEW")
+    || signalCodes.has("EMAIL_MX_MISSING")
+    || signalCodes.has("DNS_CAA_MISSING")
     || signalCodes.has("SPF_POLICY_SOFT")
-    || signalCodes.has("DMARC_POLICY_NONE");
+    || signalCodes.has("SPF_LOOKUP_RISK")
+    || signalCodes.has("DUPLICATE_SPF_RECORDS")
+    || signalCodes.has("DMARC_POLICY_NONE")
+    || signalCodes.has("DMARC_RUA_MISSING");
 }
 
 function hasTrustOrContentRisk(signalCodes: Set<string>) {
@@ -784,9 +836,10 @@ function isRegisteredWebsiteUnavailable(company: OutreachEmailCompany) {
 }
 
 function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
+  const discovery = company.websiteDiscovery;
   return Boolean(company.website)
-    && company.websiteDiscovery?.status === "REGISTERED"
-    && company.websiteDiscovery.verifiedReachable !== false
+    && (discovery?.status === "REGISTERED" || isWebsiteCandidateContext(company))
+    && discovery?.verifiedReachable !== false
     && !isRegulatedOrEstablishedWebsiteOwner(company);
 }
 
@@ -1158,8 +1211,16 @@ function registeredWebsiteIntro(company: OutreachEmailCompany) {
   if (signalCodes.has("THIRD_PARTY_SURFACE")) {
     return `${website} ser ut til å være brukt som digital flate.`;
   }
+  if (isWebsiteCandidateContext(company)) {
+    return `${website} ser ut til å være aktuell nettside for ${company.name}, selv om den ikke er registrert som nettside i BRREG.`;
+  }
 
   return `${website} er registrert som nettside i BRREG.`;
+}
+
+function isWebsiteCandidateContext(company: OutreachEmailCompany) {
+  return company.websiteDiscovery?.status === "POSSIBLE_MATCH"
+    && company.websiteDiscovery.source === "Detaljside nettsidekandidat";
 }
 
 function stripWebsiteForMail(website: string) {

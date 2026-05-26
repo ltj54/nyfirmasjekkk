@@ -162,6 +162,22 @@ public class WebsiteContentSnapshotFetcher {
             boolean fileUploadSignal = document.selectFirst("input[type=file]") != null;
             int apiEndpointReferenceCount = apiEndpointReferenceCount(document, htmlSnapshot);
             boolean exposedCmsVersionSignal = hasExposedCmsVersionSignal(generator, htmlSnapshot);
+            boolean sourceMapReferenceSignal = hasAny(htmlSnapshot, ".js.map", ".css.map", "sourceMappingURL=");
+            boolean developmentReferenceSignal = hasDevelopmentReferenceSignal(document, htmlSnapshot);
+            int targetBlankWithoutNoopenerCount = targetBlankWithoutNoopenerCount(document);
+            boolean personalDataGetFormSignal = personalDataGetFormSignal(document);
+            boolean externalFormActionSignal = externalFormActionSignal(document, response.url().toString());
+            boolean noIndexSignal = document.selectFirst("meta[name=robots][content*=noindex], meta[name=googlebot][content*=noindex]") != null;
+            boolean sitemapSignal = hasSitemap(response.url().toString());
+            int inlineEventHandlerCount = inlineEventHandlerCount(document);
+            int javascriptHrefCount = document.select("a[href^=javascript:]").size();
+            boolean domXssSinkSignal = hasDomXssSinkSignal(htmlSnapshot);
+            boolean clientUrlInputSignal = hasClientUrlInputSignal(htmlSnapshot);
+            int externalScriptsWithoutIntegrityCount = externalScriptsWithoutIntegrityCount(document);
+            int thirdPartyScriptHostCount = thirdPartyScriptHostCount(document, response.url().toString());
+            int inlineScriptCount = inlineScriptCount(document);
+            int postFormsWithoutCsrfTokenCount = postFormsWithoutCsrfTokenCount(document);
+            boolean outdatedJavascriptLibrarySignal = hasOutdatedJavascriptLibrarySignal(htmlSnapshot);
             DnsSecurityResult dnsSecurityResult = dnsSecurityResult(response.url().getHost());
             TlsCertificateResult tlsCertificateResult = tlsCertificateResult(response.url().toString());
             boolean httpRedirectsToHttps = httpRedirectsToHttps(response.url().getHost());
@@ -258,6 +274,22 @@ public class WebsiteContentSnapshotFetcher {
                     fileUploadSignal,
                     apiEndpointReferenceCount,
                     exposedCmsVersionSignal,
+                    sourceMapReferenceSignal,
+                    developmentReferenceSignal,
+                    targetBlankWithoutNoopenerCount,
+                    personalDataGetFormSignal,
+                    externalFormActionSignal,
+                    noIndexSignal,
+                    sitemapSignal,
+                    inlineEventHandlerCount,
+                    javascriptHrefCount,
+                    domXssSinkSignal,
+                    clientUrlInputSignal,
+                    externalScriptsWithoutIntegrityCount,
+                    thirdPartyScriptHostCount,
+                    inlineScriptCount,
+                    postFormsWithoutCsrfTokenCount,
+                    outdatedJavascriptLibrarySignal,
                     httpRedirectsToHttps,
                     tlsCertificateResult.valid(),
                     tlsCertificateResult.daysRemaining(),
@@ -269,8 +301,13 @@ public class WebsiteContentSnapshotFetcher {
                     dnsSecurityResult.spf(),
                     dnsSecurityResult.dkim(),
                     dnsSecurityResult.dmarc(),
+                    dnsSecurityResult.mx(),
+                    dnsSecurityResult.caa(),
                     dnsSecurityResult.spfSoftfail(),
+                    dnsSecurityResult.spfTooManyLookups(),
+                    dnsSecurityResult.duplicateSpf(),
                     dnsSecurityResult.dmarcPolicyNone(),
+                    dnsSecurityResult.dmarcRuaMissing(),
                     linkCheckResult.checkedCount(),
                     linkCheckResult.brokenCount(),
                     crawlResult.pageCount(),
@@ -701,10 +738,149 @@ public class WebsiteContentSnapshotFetcher {
                 || combined.matches("(?s).*drupal\\s+[0-9]+\\.[0-9].*");
     }
 
+    private static boolean hasDevelopmentReferenceSignal(Document document, String html) {
+        String combined = (html == null ? "" : html).toLowerCase(Locale.ROOT)
+                + " " + document.select("[href], [src], form[action]").eachAttr("href")
+                + " " + document.select("[href], [src], form[action]").eachAttr("src")
+                + " " + document.select("[href], [src], form[action]").eachAttr("action");
+        return hasAny(combined,
+                "localhost:",
+                "127.0.0.1",
+                "0.0.0.0",
+                "staging.",
+                "dev.",
+                "test.",
+                ".env",
+                "debug=true",
+                "debug=1",
+                "/debug",
+                "/backup",
+                ".bak",
+                ".old",
+                ".sql");
+    }
+
+    private static int targetBlankWithoutNoopenerCount(Document document) {
+        return (int) document.select("a[target=_blank], a[target=\"_blank\"]").stream()
+                .filter(link -> {
+                    String rel = link.attr("rel").toLowerCase(Locale.ROOT);
+                    return !rel.contains("noopener") && !rel.contains("noreferrer");
+                })
+                .count();
+    }
+
+    private static boolean personalDataGetFormSignal(Document document) {
+        return document.select("form").stream()
+                .filter(form -> {
+                    String method = form.attr("method");
+                    return method == null || method.isBlank() || "get".equalsIgnoreCase(method);
+                })
+                .flatMap(form -> form.select("input:not([type=hidden]), textarea, select").stream())
+                .anyMatch(WebsiteContentSnapshotFetcher::isPersonalDataInput);
+    }
+
+    private static boolean externalFormActionSignal(Document document, String finalUrl) {
+        URI baseUri;
+        try {
+            baseUri = URI.create(finalUrl);
+        } catch (IllegalArgumentException exception) {
+            return false;
+        }
+        return document.select("form[action^=http]").stream()
+                .map(form -> form.attr("action"))
+                .anyMatch(action -> !sameHost(baseUri, action));
+    }
+
+    private static int inlineEventHandlerCount(Document document) {
+        return (int) document.getAllElements().stream()
+                .filter(element -> element.attributes().asList().stream()
+                        .anyMatch(attribute -> attribute.getKey().toLowerCase(Locale.ROOT).startsWith("on")))
+                .count();
+    }
+
+    private static boolean hasDomXssSinkSignal(String html) {
+        return hasAny(html,
+                "innerHTML",
+                "outerHTML",
+                "insertAdjacentHTML",
+                "document.write",
+                "eval(",
+                "new Function(",
+                "dangerouslySetInnerHTML",
+                "v-html");
+    }
+
+    private static boolean hasClientUrlInputSignal(String html) {
+        return hasAny(html,
+                "location.search",
+                "window.location.search",
+                "location.hash",
+                "window.location.hash",
+                "URLSearchParams",
+                "document.location");
+    }
+
+    private static int externalScriptsWithoutIntegrityCount(Document document) {
+        return (int) document.select("script[src^=http]").stream()
+                .filter(script -> attrOrNull(script, "integrity") == null)
+                .count();
+    }
+
+    private static int thirdPartyScriptHostCount(Document document, String finalUrl) {
+        URI baseUri;
+        try {
+            baseUri = URI.create(finalUrl);
+        } catch (IllegalArgumentException exception) {
+            return 0;
+        }
+        Set<String> hosts = new java.util.LinkedHashSet<>();
+        document.select("script[src^=http]").stream()
+                .map(script -> script.attr("src"))
+                .forEach(src -> {
+                    try {
+                        URI uri = URI.create(src);
+                        if (uri.getHost() != null && !sameHost(baseUri, src)) {
+                            hosts.add(uri.getHost().toLowerCase(Locale.ROOT));
+                        }
+                    } catch (IllegalArgumentException ignored) {
+                        // Ignore malformed script URLs in passive checks.
+                    }
+                });
+        return hosts.size();
+    }
+
+    private static int inlineScriptCount(Document document) {
+        return (int) document.select("script:not([src])").stream()
+                .filter(script -> !script.data().isBlank() || !script.html().isBlank())
+                .count();
+    }
+
+    private static int postFormsWithoutCsrfTokenCount(Document document) {
+        return (int) document.select("form").stream()
+                .filter(form -> "post".equalsIgnoreCase(form.attr("method")))
+                .filter(form -> form.select("input[type=hidden]").stream().noneMatch(input -> {
+                    String combined = (input.attr("name") + " " + input.attr("id")).toLowerCase(Locale.ROOT);
+                    return combined.contains("csrf")
+                            || combined.contains("_token")
+                            || combined.contains("authenticity")
+                            || combined.contains("xsrf");
+                }))
+                .count();
+    }
+
+    private static boolean hasOutdatedJavascriptLibrarySignal(String html) {
+        String normalized = html == null ? "" : html.toLowerCase(Locale.ROOT);
+        return normalized.matches("(?s).*jquery[-.]1\\.[0-9][^0-9].*")
+                || normalized.matches("(?s).*jquery[-.]2\\.[0-9][^0-9].*")
+                || normalized.matches("(?s).*bootstrap[-.]3\\.[0-9][^0-9].*")
+                || normalized.matches("(?s).*angular(?:\\.min)?\\.js\\?ver=1\\.[0-7].*")
+                || normalized.matches("(?s).*angular[-.]1\\.[0-7][^0-9].*");
+    }
+
     private static DnsSecurityResult dnsSecurityResult(String host) {
         String domain = registrableDomain(host);
         if (domain == null) {
-            return new DnsSecurityResult(false, false, false, false, false);
+            return new DnsSecurityResult(false, false, false, false, false, false, false, false, false, false);
         }
         java.util.List<String> spfRecords = txtRecords(domain).stream()
                 .filter(record -> record.toLowerCase(Locale.ROOT).contains("v=spf1"))
@@ -712,13 +888,50 @@ public class WebsiteContentSnapshotFetcher {
         java.util.List<String> dmarcRecords = txtRecords("_dmarc." + domain).stream()
                 .filter(record -> record.toLowerCase(Locale.ROOT).contains("v=dmarc1"))
                 .toList();
+        String combinedSpf = String.join(" ", spfRecords).toLowerCase(Locale.ROOT);
+        String combinedDmarc = String.join(" ", dmarcRecords).toLowerCase(Locale.ROOT);
         return new DnsSecurityResult(
                 !spfRecords.isEmpty(),
                 hasDkimRecord(domain),
                 !dmarcRecords.isEmpty(),
+                hasMxRecord(domain),
+                hasCaaRecord(domain),
                 spfRecords.stream().anyMatch(record -> record.contains("~all") || record.contains("?all")),
-                dmarcRecords.stream().anyMatch(record -> record.toLowerCase(Locale.ROOT).contains("p=none"))
+                spfLookupTokenCount(combinedSpf) > 8,
+                spfRecords.size() > 1,
+                combinedDmarc.contains("p=none"),
+                !dmarcRecords.isEmpty() && !combinedDmarc.contains("rua=")
         );
+    }
+
+    private static boolean hasMxRecord(String domain) {
+        return hasDnsRecord(domain, "MX");
+    }
+
+    private static boolean hasCaaRecord(String domain) {
+        return hasDnsRecord(domain, "CAA");
+    }
+
+    private static boolean hasDnsRecord(String name, String type) {
+        try {
+            return new InitialDirContext().getAttributes("dns:/" + name, new String[]{type}).get(type) != null;
+        } catch (NamingException exception) {
+            return false;
+        }
+    }
+
+    private static int spfLookupTokenCount(String spf) {
+        if (spf == null || spf.isBlank()) {
+            return 0;
+        }
+        java.util.regex.Matcher matcher = java.util.regex.Pattern
+                .compile("\\b(include|a|mx|ptr|exists|redirect)[:=]?", java.util.regex.Pattern.CASE_INSENSITIVE)
+                .matcher(spf);
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
     }
 
     private static boolean hasDkimRecord(String domain) {
@@ -803,6 +1016,13 @@ public class WebsiteContentSnapshotFetcher {
         String origin = baseUri.getScheme() + "://" + baseUri.getHost();
         return hasReadableTextResource(origin + "/.well-known/security.txt")
                 || hasReadableTextResource(origin + "/security.txt");
+    }
+
+    private static boolean hasSitemap(String finalUrl) {
+        URI baseUri = URI.create(finalUrl);
+        String origin = baseUri.getScheme() + "://" + baseUri.getHost();
+        return hasReadableTextResource(origin + "/sitemap.xml")
+                || hasReadableTextResource(origin + "/sitemap_index.xml");
     }
 
     private static boolean robotsSensitivePathSignal(String finalUrl) {
@@ -1091,7 +1311,18 @@ public class WebsiteContentSnapshotFetcher {
         }
     }
 
-    private record DnsSecurityResult(boolean spf, boolean dkim, boolean dmarc, boolean spfSoftfail, boolean dmarcPolicyNone) {
+    private record DnsSecurityResult(
+            boolean spf,
+            boolean dkim,
+            boolean dmarc,
+            boolean mx,
+            boolean caa,
+            boolean spfSoftfail,
+            boolean spfTooManyLookups,
+            boolean duplicateSpf,
+            boolean dmarcPolicyNone,
+            boolean dmarcRuaMissing
+    ) {
     }
 
     private record AccessibilityDeclarationResult(Integer violationCount, Integer requirementCount) {
