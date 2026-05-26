@@ -1818,9 +1818,19 @@ function WebsiteQualityPanel({
   quality: WebsiteQualityAssessment;
   className?: string;
 }) {
-  const groupedSignals = groupWebsiteQualitySignals(quality.signals);
+  const visibleSignals = prioritizedWebsiteQualitySignals(quality.signals, 10);
+  const visibleSignalCodes = new Set(visibleSignals.map((signal) => signal.code));
+  const hiddenSignals = quality.signals.filter((signal) => !visibleSignalCodes.has(signal.code));
+  const groupedSignals = groupWebsiteQualitySignals(visibleSignals);
+  const advancedSignals = hiddenSignals.filter(isAdvancedWebsiteSignal);
+  const otherHiddenSignals = hiddenSignals.filter((signal) => !isAdvancedWebsiteSignal(signal));
+  const hiddenGroupedSignals = groupWebsiteQualitySignals(otherHiddenSignals);
+  const advancedGroupedSignals = advancedSignals.length > 0
+    ? [{ title: "Avanserte tekniske signaler", signals: advancedSignals }]
+    : [];
   const reportSummary = websiteQualityReportSummary(quality.signals);
   const [showShortReport, setShowShortReport] = useState(false);
+  const [showAllSignals, setShowAllSignals] = useState(false);
   const [copiedShortReport, setCopiedShortReport] = useState(false);
   const [copiedCustomerReport, setCopiedCustomerReport] = useState(false);
   const shortReport = buildWebsiteShortReport(quality);
@@ -1929,6 +1939,48 @@ function WebsiteQualityPanel({
           ))}
         </div>
       ) : null}
+      {hiddenSignals.length > 0 ? (
+        <div className="mt-4 border-t border-[#E4E7EB] pt-4">
+          <Button
+            className="rounded-sm text-[12px] font-semibold"
+            onClick={() => setShowAllSignals((current) => !current)}
+            size="sm"
+            type="button"
+            variant="outline"
+          >
+            {showAllSignals ? "Skjul avansert detaljnivå" : `Vis avansert detaljnivå (${hiddenSignals.length})`}
+          </Button>
+          <p className="mt-2 text-[12px] leading-5 text-[#52606D]">
+            Standardvisningen viser de viktigste funnene. Resten er tekniske signaler som kan være nyttige ved manuell gjennomgang, men som ofte blir støy i første kundedialog.
+          </p>
+          {showAllSignals ? (
+            <div className="mt-4 grid gap-4">
+              {[...hiddenGroupedSignals, ...advancedGroupedSignals].map((group) => (
+                <div key={group.title}>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{group.title}</p>
+                  <div className="grid gap-2">
+                    {group.signals.map((signal) => (
+                      <div key={signal.code} className="border border-[#E4E7EB] bg-white px-3 py-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
+                          <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
+                            {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
+                        <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-2">
+                          <WebsiteSignalReportItem label="Hvorfor" value={websiteSignalWhy(signal)} />
+                          <WebsiteSignalReportItem label="Tiltak" value={websiteSignalAction(signal)} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -2009,6 +2061,102 @@ function buildWebsiteCustomerReport(quality: WebsiteQualityAssessment) {
     "Dette er ikke ment som en full teknisk gjennomgang, men som et konkret utgangspunkt for å gjøre siden tydeligere, tryggere og enklere å bruke.",
   ].join("\n");
 }
+
+function prioritizedWebsiteQualitySignals(signals: WebsiteQualitySignal[], limit: number) {
+  return [...signals]
+    .sort((left, right) => websiteSignalPriority(left) - websiteSignalPriority(right))
+    .slice(0, limit);
+}
+
+function websiteSignalPriority(signal: WebsiteQualitySignal) {
+  const codePriority = STANDARD_WEBSITE_SIGNAL_PRIORITY[signal.code];
+  if (typeof codePriority === "number") {
+    return codePriority;
+  }
+  const severityPriority = signal.severity === "HIGH" ? 20 : signal.severity === "MEDIUM" ? 45 : 80;
+  return severityPriority + (isAdvancedWebsiteSignal(signal) ? 80 : 0);
+}
+
+const STANDARD_WEBSITE_SIGNAL_PRIORITY: Record<string, number> = {
+  TECHNICAL_FAILURE: 1,
+  INSECURE_FORM_ACTION: 2,
+  MISSING_HTTPS: 3,
+  INCOMPLETE_MARKET_OR_CHECKOUT: 4,
+  TEMPLATE_PLACEHOLDER_CONTENT: 5,
+  WEAK_HOMEPAGE_STRUCTURE: 10,
+  THIN_CONTENT: 11,
+  MISSING_ORG_NUMBER: 12,
+  LEGAL_NAME_NOT_VISIBLE: 13,
+  MISSING_ADDRESS_OR_AREA: 14,
+  MISSING_ABOUT_SECTION: 15,
+  MISSING_SOCIAL_PROOF: 16,
+  PLACEHOLDER_IMAGE_RISK: 17,
+  CTA_DESTINATION_MISMATCH: 18,
+  FORM_LABEL_RISK: 20,
+  EMPTY_BUTTON_RISK: 21,
+  IMAGE_ALT_RISK: 22,
+  FIXED_WIDTH_LAYOUT: 23,
+  FOCUS_STYLE_RISK: 24,
+  MISSING_MAIN_LANDMARK: 25,
+  WEAK_PAGE_LANDMARKS: 26,
+  SKIPPED_HEADING_LEVELS: 27,
+  TLS_CERTIFICATE_EXPIRING: 30,
+  MIXED_CONTENT_RISK: 31,
+  MISSING_CSP_HEADER: 32,
+  WEAK_CSP_HEADER: 33,
+  MANY_INLINE_SCRIPTS_WITHOUT_CSP: 34,
+  MISSING_REFERRER_POLICY: 35,
+  COOKIE_CONSENT_RISK: 36,
+  MISSING_PRIVACY_NOTICE: 37,
+  PRIVACY_LINK_REVIEW: 38,
+  MISSING_META_DESCRIPTION: 40,
+  WEAK_SHARE_PREVIEW: 41,
+  NOINDEX_SIGNAL: 42,
+  MANY_EXTERNAL_SCRIPTS: 45,
+  CLIENT_LOADING_OVERLAY: 46,
+  MOTION_ACCESSIBILITY_RISK: 47,
+};
+
+function isAdvancedWebsiteSignal(signal: WebsiteQualitySignal) {
+  return ADVANCED_WEBSITE_SIGNAL_CODES.has(signal.code);
+}
+
+const ADVANCED_WEBSITE_SIGNAL_CODES = new Set([
+  "SECURITY_TXT_MISSING",
+  "DNS_CAA_MISSING",
+  "SERVER_TECH_HEADER_EXPOSED",
+  "TECHNOLOGY_STACK_DETECTED",
+  "CMS_VERSION_EXPOSED",
+  "SOURCE_MAP_EXPOSED",
+  "DEVELOPMENT_REFERENCE_EXPOSED",
+  "JAVASCRIPT_HREF_REVIEW",
+  "INLINE_EVENT_HANDLER_REVIEW",
+  "DANGEROUS_JS_SINK_REVIEW",
+  "DOM_XSS_SURFACE_REVIEW",
+  "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
+  "MANY_THIRD_PARTY_SCRIPT_HOSTS",
+  "POST_FORM_CSRF_REVIEW",
+  "OUTDATED_JS_LIBRARY_REVIEW",
+  "API_ENDPOINTS_VISIBLE",
+  "ADMIN_OR_LOGIN_PATH_EXPOSED",
+  "LOGIN_FORM_SECURITY_REVIEW",
+  "FILE_UPLOAD_REVIEW",
+  "ROBOTS_SENSITIVE_PATHS",
+  "EMAIL_SECURITY_DNS_REVIEW",
+  "EMAIL_MX_MISSING",
+  "SPF_POLICY_SOFT",
+  "SPF_LOOKUP_RISK",
+  "DUPLICATE_SPF_RECORDS",
+  "DMARC_POLICY_NONE",
+  "DMARC_RUA_MISSING",
+  "SITEMAP_MISSING",
+  "TARGET_BLANK_NOOPENER_MISSING",
+  "COOKIE_HTTPONLY_REVIEW",
+  "COOKIE_SAMESITE_REVIEW",
+  "MISSING_PERMISSIONS_POLICY",
+  "MISSING_CONTENT_TYPE_OPTIONS",
+  "MISSING_FRAME_PROTECTION",
+]);
 
 function customerFriendlySignalPhrase(signal: WebsiteQualitySignal) {
   switch (signal.code) {
