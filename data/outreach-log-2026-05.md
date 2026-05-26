@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 671
-- Sendt: 571
+- Antall hendelser: 672
+- Sendt: 572
 - Angret: 7
-- Aktive kontaktede selskaper: 567
+- Aktive kontaktede selskaper: 568
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 | 937587368 | TRONDHEIMS FRIVILLIGSENTRALER | FLI | email | website-registered-review |
 | 2026-05-26 | 937554222 | GE HEALTHCARE B.I.L. OSLO | FLI | email | website-improvement-offer |
 | 2026-05-26 | 937567081 | JENNY NORDBY DESIGN | ENK | email | website-improvement-offer |
 | 2026-05-26 | 937185294 | PUBLIT NORWAY AS | AS | email | website-unavailable-offer |
@@ -585,6 +586,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 08:04 | sent | 937587368 | TRONDHEIMS FRIVILLIGSENTRALER | FLI | email | - |
 | 2026-05-26 07:57 | sent | 937554222 | GE HEALTHCARE B.I.L. OSLO | FLI | email | - |
 | 2026-05-26 07:50 | not_relevant | 937451040 | ENGE WEBDESIGN | ENK | email | - |
 | 2026-05-26 07:47 | sent | 937567081 | JENNY NORDBY DESIGN | ENK | email | - |
