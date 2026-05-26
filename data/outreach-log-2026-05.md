@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 664
-- Sendt: 567
+- Antall hendelser: 671
+- Sendt: 571
 - Angret: 7
-- Aktive kontaktede selskaper: 563
+- Aktive kontaktede selskaper: 567
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 | 937554222 | GE HEALTHCARE B.I.L. OSLO | FLI | email | website-improvement-offer |
+| 2026-05-26 | 937567081 | JENNY NORDBY DESIGN | ENK | email | website-improvement-offer |
+| 2026-05-26 | 937185294 | PUBLIT NORWAY AS | AS | email | website-unavailable-offer |
+| 2026-05-26 | 937573820 | SPØR EN VENN | FLI | email | website-improvement-offer |
 | 2026-05-26 | 937514514 | KREATIV VANDRING | FLI | email | website-offer |
 | 2026-05-26 | 937510829 | FINANSFORENINGEN UIO | FLI | email | website-offer |
 | 2026-05-26 | 914280796 | FAU LUNDE BARNESKOLE | FLI | email | website-offer |
@@ -581,6 +585,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 07:57 | sent | 937554222 | GE HEALTHCARE B.I.L. OSLO | FLI | email | - |
+| 2026-05-26 07:50 | not_relevant | 937451040 | ENGE WEBDESIGN | ENK | email | - |
+| 2026-05-26 07:47 | sent | 937567081 | JENNY NORDBY DESIGN | ENK | email | - |
+| 2026-05-26 07:43 | not_relevant | 937467893 | DOSSEV DYNAMIC | ENK | email | - |
+| 2026-05-26 07:40 | sent | 937185294 | PUBLIT NORWAY AS | AS | email | - |
+| 2026-05-26 07:31 | not_relevant | 837650992 | GJERDE EIENDOMSSTRATEGI AS | AS | email | - |
+| 2026-05-26 07:30 | sent | 937573820 | SPØR EN VENN | FLI | email | - |
 | 2026-05-26 06:54 | sent | 937514514 | KREATIV VANDRING | FLI | email | - |
 | 2026-05-26 06:54 | sent | 937510829 | FINANSFORENINGEN UIO | FLI | email | - |
 | 2026-05-26 06:54 | sent | 914280796 | FAU LUNDE BARNESKOLE | FLI | email | - |

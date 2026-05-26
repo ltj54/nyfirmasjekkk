@@ -49,6 +49,11 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
   }
 
   const toneProfile = websiteQualityToneProfile(company);
+  const categoryPoints = websiteQualityMailCategoryPoints(signalCodes);
+  if (categoryPoints.length > 0) {
+    return `Blant punktene som kom opp var blant annet ${formatNorwegianList(categoryPoints.slice(0, toneProfile.maxMailPoints + 3))}.`;
+  }
+
   const importantCodes = new Set(signals.filter((signal) => signal.severity === "HIGH" || signal.severity === "MEDIUM").map((signal) => signal.code));
   const importantPrioritizedPoints = prioritizedWebsiteQualityMailPoints(importantCodes, toneProfile);
   const prioritizedPoints = importantPrioritizedPoints.length > 0
@@ -63,11 +68,7 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
     return "";
   }
 
-  const introduction = signalCodes.has("MEDICAL_VISUAL_TRUST_RISK") || signalCodes.has("MEDICAL_REGULATORY_STATUS")
-    ? "En enkel sjekk viser at dette berører medisinsk/kirurgisk teknologi, så særlig disse punktene bør vurderes nøye"
-    : "En enkel sjekk viser et par punkter som kan være verdt å rydde samtidig";
-
-  return `${introduction}: ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
+  return `Blant punktene som kom opp var blant annet ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
 }
 
 export function websiteComplianceMailLine(company: OutreachEmailCompany) {
@@ -316,6 +317,87 @@ function hasApplicationSecurityRisk(signalCodes: Set<string>) {
     || signalCodes.has("COOKIE_SAMESITE_REVIEW");
 }
 
+function websiteQualityMailCategoryPoints(signalCodes: Set<string>) {
+  const points: string[] = [];
+
+  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK"), "mulig mixed content");
+  addMailPoint(points, hasSecurityHeaderRisk(signalCodes), "manglende eller svake sikkerhetsheadere");
+  addMailPoint(points, hasTechnologyExposure(signalCodes), "synlige teknologispor");
+  addMailPoint(points, hasPrivacyOrThirdPartyRisk(signalCodes), "personvern rundt skjema, cookies eller tredjepartsinnhold");
+  addMailPoint(points, hasAccessibilityCategoryRisk(signalCodes), "noen enkle UU-signaler");
+  addMailPoint(points, hasApplicationSecurityRisk(signalCodes), "admin-, API- eller cookiepunkter som bør vurderes manuelt");
+  addMailPoint(points, hasEmailSecurityRisk(signalCodes), "e-postsikkerhet på domenet");
+  addMailPoint(points, hasCommerceRisk(signalCodes), "vilkår, retur, levering eller kjøpsinformasjon");
+  addMailPoint(points, hasTrustOrContentRisk(signalCodes), "tillit, innhold eller brukerflyt");
+
+  return points;
+}
+
+function hasTechnologyExposure(signalCodes: Set<string>) {
+  return signalCodes.has("TECHNOLOGY_STACK_DETECTED")
+    || signalCodes.has("SERVER_TECH_HEADER_EXPOSED")
+    || signalCodes.has("CMS_VERSION_EXPOSED")
+    || signalCodes.has("ROBOTS_SENSITIVE_PATHS");
+}
+
+function hasPrivacyOrThirdPartyRisk(signalCodes: Set<string>) {
+  return signalCodes.has("MISSING_PRIVACY_NOTICE")
+    || signalCodes.has("CRAWL_PRIVACY_PAGE_NOT_FOUND")
+    || signalCodes.has("CRAWL_FORM_PRIVACY_REVIEW")
+    || signalCodes.has("PRIVACY_LINK_REVIEW")
+    || signalCodes.has("COOKIE_CONSENT_RISK")
+    || signalCodes.has("COOKIE_SECURE_FLAG_MISSING")
+    || signalCodes.has("COOKIE_HTTPONLY_REVIEW")
+    || signalCodes.has("COOKIE_SAMESITE_REVIEW")
+    || signalCodes.has("MANY_EXTERNAL_SCRIPTS")
+    || signalCodes.has("EXTERNAL_IFRAME_RISK")
+    || signalCodes.has("THIRD_PARTY_EMBED_CONSENT_RISK")
+    || signalCodes.has("THIRD_PARTY_FORM_RISK")
+    || signalCodes.has("GOOGLE_ANALYTICS_WITHOUT_CONSENT")
+    || signalCodes.has("META_PIXEL_WITHOUT_CONSENT")
+    || signalCodes.has("SESSION_TRACKING_WITHOUT_CONSENT");
+}
+
+function hasAccessibilityCategoryRisk(signalCodes: Set<string>) {
+  return hasSemanticAccessibilityRisk(signalCodes)
+    || hasFormAccessibilityRisk(signalCodes)
+    || signalCodes.has("IMAGE_ALT_RISK")
+    || signalCodes.has("EMPTY_BUTTON_RISK")
+    || signalCodes.has("MISSING_LANGUAGE")
+    || signalCodes.has("LANGUAGE_MISMATCH_RISK")
+    || signalCodes.has("FOCUS_STYLE_RISK")
+    || signalCodes.has("AUTOPLAY_MEDIA_RISK")
+    || signalCodes.has("MOTION_ACCESSIBILITY_RISK")
+    || signalCodes.has("FIXED_WIDTH_LAYOUT")
+    || signalCodes.has("MISSING_VIEWPORT");
+}
+
+function hasEmailSecurityRisk(signalCodes: Set<string>) {
+  return signalCodes.has("EMAIL_SECURITY_DNS_REVIEW")
+    || signalCodes.has("SPF_POLICY_SOFT")
+    || signalCodes.has("DMARC_POLICY_NONE");
+}
+
+function hasTrustOrContentRisk(signalCodes: Set<string>) {
+  return signalCodes.has("WEAK_HOMEPAGE_STRUCTURE")
+    || signalCodes.has("THIN_CONTENT")
+    || signalCodes.has("WEAK_NAVIGATION")
+    || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")
+    || signalCodes.has("GENERIC_SERVICE_TEXT")
+    || signalCodes.has("MISSING_ORG_NUMBER")
+    || signalCodes.has("LEGAL_NAME_NOT_VISIBLE")
+    || signalCodes.has("MISSING_ADDRESS_OR_AREA")
+    || signalCodes.has("MISSING_ABOUT_SECTION")
+    || signalCodes.has("MISSING_SOCIAL_PROOF")
+    || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK")
+    || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")
+    || signalCodes.has("PLACEHOLDER_IMAGE_RISK")
+    || signalCodes.has("CTA_DESTINATION_MISMATCH")
+    || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT")
+    || signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT")
+    || signalCodes.has("DATA_HANDLING_INFO_REVIEW");
+}
+
 type WebsiteQualityStrictness = "strict" | "commerce" | "normal" | "light";
 
 type WebsiteQualityToneProfile = {
@@ -363,7 +445,20 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
       accessibilityPoint: "skjema og tilgjengelighet, siden slike detaljer betyr mer i tillitsbaserte tjenester",
       sensitivePoint: "ekstra ryddighet rundt personvern og skjema fordi siden berører helse, behandling eller personopplysninger",
       privacyPoint: "personvern og hvordan skjemaopplysninger behandles",
-      complianceLine: "For virksomheter innen helse og velvære er det også viktig at kontaktskjema, personvern og informasjonsinnhenting er ryddig.",
+      complianceLine: "For virksomheter innen helse, rådgivning eller lavterskel hjelp er det ekstra viktig at nettsiden fremstår trygg, tydelig og ryddig - særlig rundt kontakt, personvern og hvem som står bak tjenesten.",
+    };
+  }
+  if (isAdviceOrLowThresholdContext(company)) {
+    return {
+      ...normalWebsiteToneProfile,
+      strictness: "strict",
+      servicePoint: "tydeligere beskrivelse av hvem tilbudet hjelper og hvordan kontakten foregår",
+      contactPoint: "tryggere og mer forklarende kontaktflyt",
+      trustPoint: "tydeligere ansvarlig avsender, personer og tillitssignaler",
+      accessibilityPoint: "skjema, knapper og tilgjengelighet fordi kontaktveien bør være enkel å bruke",
+      sensitivePoint: "ekstra ryddighet rundt personvern, kontakt og hvem som står bak tjenesten",
+      privacyPoint: "personvern og hvordan henvendelser eller skjemaopplysninger behandles",
+      complianceLine: "For virksomheter innen helse, rådgivning eller lavterskel hjelp er det ekstra viktig at nettsiden fremstår trygg, tydelig og ryddig - særlig rundt kontakt, personvern og hvem som står bak tjenesten.",
     };
   }
   if (segmentCode === "BUTIKK_LOKALHANDEL" || naceCode.startsWith("47")) {
@@ -421,6 +516,28 @@ function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualit
     };
   }
   return normalWebsiteToneProfile;
+}
+
+function isAdviceOrLowThresholdContext(company: OutreachEmailCompany) {
+  const text = normalizeContextText(`${company.name} ${company.naceDescription ?? ""} ${company.salesSegment?.label ?? ""}`);
+  return text.includes("spor en venn")
+    || text.includes("spør en venn")
+    || text.includes("lavterskel")
+    || text.includes("radgiv")
+    || text.includes("rådgiv")
+    || text.includes("samtale")
+    || text.includes("psyk")
+    || text.includes("omsorg")
+    || text.includes("sosial")
+    || text.includes("stotte")
+    || text.includes("støtte");
+}
+
+function normalizeContextText(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function addMailPoint(points: string[], include: boolean, point: string) {
@@ -617,12 +734,11 @@ function defaultWebsiteQualityOpportunityEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde en enkel, automatisk sjekk av nettsiden og ville startet med punktene som påvirker tillit, tilgjengelighet og sikkerhet mest.
+Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
-Et konkret forslag kan sendes hvis det er interessant.
+Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
 {{senderWebsite}}
@@ -636,16 +752,24 @@ Mvh
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `Hei {{greeting}},
 
-{{companyName}} har nettsiden {{registeredWebsite}} registrert i BRREG.
+{{companyName}} har {{registeredWebsite}} registrert som nettside i BRREG.
 
-Ved en enkel sjekk svarte ikke siden. Det kan selvfølgelig være midlertidig, men det kan være greit å være klar over.
+Jeg gjorde en enkel førstesjekk, og akkurat da svarte ikke nettsiden. Det kan selvfølgelig være midlertidig, men dersom siden er ustabil eller utilgjengelig over tid, kan det gjøre at kunder, samarbeidspartnere eller søkemotorer ikke får tak i informasjonen de trenger.
 
-Ved behov kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
+Jeg kan gjerne gjøre en kort og konkret gjennomgang av nettsiden og se på:
+
+- om siden svarer stabilt
+- tekniske feil eller videresendinger
+- mobilvisning
+- kontaktinformasjon
+- enkel synlighet og tillitssignaler
+
+Hvis siden faktisk er nede eller mangler fungerende oppsett, kan jeg også ta oppdraget med å få en ryddig og mobilvennlig nettside på plass.
+
+Hvis dere ønsker det, kan jeg sende en kort vurdering med eventuelle funn og forslag til tiltak.
 
 Eksempel:
 {{senderWebsite}}
-
-Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh
 {{senderName}}
@@ -740,16 +864,7 @@ function firstNameFromContactName(value: string) {
 }
 
 function displayCompanyName(company: Pick<OutreachEmailCompany, "name" | "organizationForm">) {
-  const name = company.name.trim();
-  const organizationForm = company.organizationForm?.trim().toUpperCase() ?? "";
-  if (!organizationForm || new RegExp(`\\b${escapeRegExp(organizationForm)}\\b`, "i").test(name)) {
-    return name;
-  }
-  return `${name} ${organizationForm}`;
-}
-
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return company.name.trim();
 }
 
 function domainExamplesForCompany(company: OutreachEmailCompany) {

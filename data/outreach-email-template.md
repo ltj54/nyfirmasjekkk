@@ -83,20 +83,28 @@ Mvh
 
 ## E-postmal - registrert nettside svarer ikke
 
-Emne: `Nettsiden til {{companyName}}?`
+Emne: `Kort nettsidegjennomgang for {{registeredWebsite}}?`
 
 Hei {{greeting}},
 
-{{companyName}} har nettsiden {{registeredWebsite}} registrert i BRREG.
+{{companyName}} har {{registeredWebsite}} registrert som nettside i BRREG.
 
-Ved en enkel sjekk svarte ikke siden. Det kan selvfølgelig være midlertidig, men det kan være greit å være klar over.
+Jeg gjorde en enkel førstesjekk, og akkurat da svarte ikke nettsiden. Det kan selvfølgelig være midlertidig, men dersom siden er ustabil eller utilgjengelig over tid, kan det gjøre at kunder, samarbeidspartnere eller søkemotorer ikke får tak i informasjonen de trenger.
 
-Ved behov kan jeg sette opp eller rydde opp i en nettside med kontaktinfo, kort presentasjon og god mobilvisning.
+Jeg kan gjerne gjøre en kort og konkret gjennomgang av nettsiden og se på:
+
+- om siden svarer stabilt
+- tekniske feil eller videresendinger
+- mobilvisning
+- kontaktinformasjon
+- enkel synlighet og tillitssignaler
+
+Hvis siden faktisk er nede eller mangler fungerende oppsett, kan jeg også ta oppdraget med å få en ryddig og mobilvennlig nettside på plass.
+
+Hvis dere ønsker det, kan jeg sende en kort vurdering med eventuelle funn og forslag til tiltak.
 
 Eksempel:
 {{senderWebsite}}
-
-Et konkret forslag kan sendes hvis det er interessant.
 
 Mvh  
 {{senderName}}  
@@ -111,12 +119,11 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde en enkel, automatisk sjekk av nettsiden og ville startet med punktene som påvirker tillit, tilgjengelighet og sikkerhet mest.
+Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt.
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Jeg lager nettsider med tydelig presentasjon av tjenester, kontaktinfo og en løsning som fungerer godt på mobil.
-Et konkret forslag kan sendes hvis det er interessant.
+Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
 {{senderWebsite}}
