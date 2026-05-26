@@ -4,15 +4,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 672
-- Sendt: 572
+- Antall hendelser: 695
+- Sendt: 595
 - Angret: 7
-- Aktive kontaktede selskaper: 568
+- Aktive kontaktede selskaper: 591
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 | 937511736 | SKIEN SENIOR HØYRE | FLI | email | website-offer |
+| 2026-05-26 | 937513968 | NORSK-UKRAINSK ALLIANSE FOR BISTAND OG GJENOPPBYGGING | FLI | email | website-offer |
+| 2026-05-26 | 837524512 | ANNE NYGÅRD | ENK | email | website-offer |
+| 2026-05-26 | 937509472 | ZAMANI | ENK | email | website-offer |
+| 2026-05-26 | 937526458 | NOOR HASSAN MAROOFKHEL | ENK | email | website-offer |
+| 2026-05-26 | 937395566 | DIRAC HOLDING AB NUF | NUF | email | website-offer |
+| 2026-05-26 | 937405189 | ÅRNES MANJANA | ENK | email | website-offer |
+| 2026-05-26 | 937525273 | TE KRISTIANSEN | ENK | email | website-offer |
+| 2026-05-26 | 937525788 | MOHAMED AYDIID TAHAR | TVAM | email | website-offer |
+| 2026-05-26 | 937407874 | MADRY ANTIKK | ENK | email | website-offer |
+| 2026-05-26 | 937409036 | SANDER SPRO PERSONLIG TRENER | ENK | email | website-offer |
+| 2026-05-26 | 937526415 | JIN JIYAN AZADI-KVINNE PLATTFORM | FLI | email | website-offer |
+| 2026-05-26 | 837409772 | CAROLINE M BJERKE | ENK | email | website-offer |
+| 2026-05-26 | 937451326 | MELKIBS, M KIBSGAARD | ENK | email | website-offer |
+| 2026-05-26 | 937450664 | MARSELA MOUTSAI NAIL ATELIER | ENK | email | website-offer |
+| 2026-05-26 | 837452422 | INGER TVEIT NORSKOPPLÆRING OG SPRÅKTJENESTER | ENK | email | website-offer |
+| 2026-05-26 | 937435843 | EVELYN MOSDØL | ENK | email | website-offer |
+| 2026-05-26 | 937349017 | NATALIA KOPEC EVENTS | ENK | email | website-offer |
+| 2026-05-26 | 937547137 | INTREPRINZATOR INDIVIDUAL CIOBANU ALEXANDRU | UTLA | email | website-offer |
+| 2026-05-26 | 937581645 | SPILDE BLOMSTERHAGE | ENK | email | website-offer |
+| 2026-05-26 | 937658648 | JAKOBMAD | UTLA | email | website-offer |
+| 2026-05-26 | 937676603 | ENGEN LAGERSIKKERHET | ENK | email | website-offer |
+| 2026-05-26 | 937676913 | BAHTA | ENK | email | website-offer |
 | 2026-05-26 | 937587368 | TRONDHEIMS FRIVILLIGSENTRALER | FLI | email | website-registered-review |
 | 2026-05-26 | 937554222 | GE HEALTHCARE B.I.L. OSLO | FLI | email | website-improvement-offer |
 | 2026-05-26 | 937567081 | JENNY NORDBY DESIGN | ENK | email | website-improvement-offer |
@@ -586,6 +609,29 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26 10:56 | sent | 937511736 | SKIEN SENIOR HØYRE | FLI | email | - |
+| 2026-05-26 10:56 | sent | 937513968 | NORSK-UKRAINSK ALLIANSE FOR BISTAND OG GJENOPPBYGGING | FLI | email | - |
+| 2026-05-26 10:56 | sent | 837524512 | ANNE NYGÅRD | ENK | email | - |
+| 2026-05-26 10:56 | sent | 937509472 | ZAMANI | ENK | email | - |
+| 2026-05-26 10:56 | sent | 937526458 | NOOR HASSAN MAROOFKHEL | ENK | email | - |
+| 2026-05-26 10:56 | sent | 937395566 | DIRAC HOLDING AB NUF | NUF | email | - |
+| 2026-05-26 10:56 | sent | 937405189 | ÅRNES MANJANA | ENK | email | - |
+| 2026-05-26 10:56 | sent | 937525273 | TE KRISTIANSEN | ENK | email | - |
+| 2026-05-26 10:56 | sent | 937525788 | MOHAMED AYDIID TAHAR | TVAM | email | - |
+| 2026-05-26 10:56 | sent | 937407874 | MADRY ANTIKK | ENK | email | - |
+| 2026-05-26 10:56 | sent | 937409036 | SANDER SPRO PERSONLIG TRENER | ENK | email | - |
+| 2026-05-26 10:51 | sent | 937526415 | JIN JIYAN AZADI-KVINNE PLATTFORM | FLI | email | - |
+| 2026-05-26 10:50 | sent | 837409772 | CAROLINE M BJERKE | ENK | email | - |
+| 2026-05-26 10:50 | sent | 937451326 | MELKIBS, M KIBSGAARD | ENK | email | - |
+| 2026-05-26 10:50 | sent | 937450664 | MARSELA MOUTSAI NAIL ATELIER | ENK | email | - |
+| 2026-05-26 10:50 | sent | 837452422 | INGER TVEIT NORSKOPPLÆRING OG SPRÅKTJENESTER | ENK | email | - |
+| 2026-05-26 10:50 | sent | 937435843 | EVELYN MOSDØL | ENK | email | - |
+| 2026-05-26 10:50 | sent | 937349017 | NATALIA KOPEC EVENTS | ENK | email | - |
+| 2026-05-26 10:50 | sent | 937547137 | INTREPRINZATOR INDIVIDUAL CIOBANU ALEXANDRU | UTLA | email | - |
+| 2026-05-26 10:30 | sent | 937581645 | SPILDE BLOMSTERHAGE | ENK | email | - |
+| 2026-05-26 10:30 | sent | 937658648 | JAKOBMAD | UTLA | email | - |
+| 2026-05-26 10:30 | sent | 937676603 | ENGEN LAGERSIKKERHET | ENK | email | - |
+| 2026-05-26 10:21 | sent | 937676913 | BAHTA | ENK | email | - |
 | 2026-05-26 08:04 | sent | 937587368 | TRONDHEIMS FRIVILLIGSENTRALER | FLI | email | - |
 | 2026-05-26 07:57 | sent | 937554222 | GE HEALTHCARE B.I.L. OSLO | FLI | email | - |
 | 2026-05-26 07:50 | not_relevant | 937451040 | ENGE WEBDESIGN | ENK | email | - |
