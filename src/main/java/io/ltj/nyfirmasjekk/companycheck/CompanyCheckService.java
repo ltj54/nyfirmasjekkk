@@ -195,7 +195,7 @@ public class CompanyCheckService {
             List<EnhetResponse> sourceItems = hentEnheter(searchResponse);
             var pageMatches = deduplicateMatches(vurderSideUtenScoreFilter(searchResponse, request, diagnostics), seenMatches);
 
-            if (matchedBeforePage + pageMatches.size() > requestedOffset && matches.size() < request.resultSize()) {
+            if (matchedBeforePage + pageMatches.size() > requestedOffset) {
                 int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
                 int toIndex = Math.min(pageMatches.size(), fromIndex + (request.resultSize() - matches.size()));
                 if (fromIndex < toIndex) {
