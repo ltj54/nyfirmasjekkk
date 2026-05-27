@@ -26,6 +26,7 @@ public class WebsiteContentSnapshotFetcher {
     private static final int EXTENDED_CRAWL_LIMIT = 6;
     private static final int EXTENDED_CRAWL_TIMEOUT_MS = 900;
     private static final int EXTENDED_CRAWL_BYTES = 12_000;
+    private static final int EXTENDED_CRAWL_TEXT_BYTES = 16_000;
     private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s+p[åa]\\s*<[^>]*>\\s*(\\d+)\\s*</[^>]+>\\s*av\\s*<[^>]*>\\s*(\\d+)\\s*</[^>]+>", Pattern.CASE_INSENSITIVE);
     private static final java.util.List<String> STANDARD_REVIEW_PATHS = java.util.List.of(
             "/kontakt",
@@ -42,6 +43,11 @@ public class WebsiteContentSnapshotFetcher {
             "/services",
             "/menneskene",
             "/team",
+            "/referanser",
+            "/referanse",
+            "/references",
+            "/case",
+            "/prosjekter",
             "/faq",
             "/pris",
             "/pricing",
@@ -193,6 +199,7 @@ public class WebsiteContentSnapshotFetcher {
             return new WebsiteContentInspectionService.WebsiteContentSnapshot(
                     title,
                     bodyText,
+                    crawlResult.bodyText(),
                     document.outerHtml(),
                     attrOrNull(description, "content"),
                     attrOrNull(viewport, "content"),
@@ -1095,6 +1102,7 @@ public class WebsiteContentSnapshotFetcher {
         boolean faqPageFound = false;
         boolean pricingSignal = false;
         boolean dataHandlingPageFound = false;
+        StringBuilder crawledBodyText = new StringBuilder();
         String frontPageMetaDescription = normalizedMetaDescription(document);
 
         for (String candidate : candidates) {
@@ -1109,6 +1117,7 @@ public class WebsiteContentSnapshotFetcher {
             String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
             String normalizedContent = html.toLowerCase(Locale.ROOT);
             Document crawledDocument = Jsoup.parse(html, candidate);
+            appendCrawledBodyText(crawledBodyText, crawledDocument);
             String crawledMetaDescription = normalizedMetaDescription(crawledDocument);
             if (!frontPageMetaDescription.isBlank()
                     && frontPageMetaDescription.equals(crawledMetaDescription)
@@ -1156,8 +1165,28 @@ public class WebsiteContentSnapshotFetcher {
                 repeatedMetaDescriptionCount,
                 faqPageFound,
                 pricingSignal,
-                dataHandlingPageFound
+                dataHandlingPageFound,
+                crawledBodyText.toString().trim()
         );
+    }
+
+    private static void appendCrawledBodyText(StringBuilder target, Document document) {
+        if (target.length() >= EXTENDED_CRAWL_TEXT_BYTES || document.body() == null) {
+            return;
+        }
+        String text = document.body().text();
+        if (text.isBlank()) {
+            return;
+        }
+        int remaining = EXTENDED_CRAWL_TEXT_BYTES - target.length();
+        if (remaining <= 0) {
+            return;
+        }
+        if (!target.isEmpty()) {
+            target.append(' ');
+            remaining--;
+        }
+        target.append(text, 0, Math.min(text.length(), remaining));
     }
 
     private static String normalizedMetaDescription(Document document) {
@@ -1192,6 +1221,13 @@ public class WebsiteContentSnapshotFetcher {
                 "/services",
                 "/menneskene",
                 "/team",
+                "/referanser",
+                "/referanse",
+                "/references",
+                "/case",
+                "/cases",
+                "/prosjekter",
+                "/kunder",
                 "/faq",
                 "/pris",
                 "/pricing",
@@ -1304,10 +1340,11 @@ public class WebsiteContentSnapshotFetcher {
             int repeatedMetaDescriptionCount,
             boolean faqPageFound,
             boolean pricingSignal,
-            boolean dataHandlingPageFound
+            boolean dataHandlingPageFound,
+            String bodyText
     ) {
         private static ExtendedCrawlResult empty() {
-            return new ExtendedCrawlResult(0, false, false, false, false, 0, 0, 0, false, false, false);
+            return new ExtendedCrawlResult(0, false, false, false, false, 0, 0, 0, false, false, false, "");
         }
     }
 

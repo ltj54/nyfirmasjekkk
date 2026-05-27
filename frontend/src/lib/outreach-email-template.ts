@@ -179,6 +179,7 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
 function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfile: WebsiteQualityToneProfile) {
   const points: string[] = [];
 
+  addMailPoint(points, signalCodes.has("AI_LIKE_PRESENTATION_RISK"), "tekst som virker AI-lignende eller mønsterpreget og bør skrus mer mot faktisk virksomhet");
   addMailPoint(points, signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK"), "tydeligere faglig profil, ekte tillitssignaler og mindre generisk innhold");
   addMailPoint(points, signalCodes.has("PLACEHOLDER_IMAGE_RISK"), "placeholder-bilder som bør erstattes med ekte bilder eller fjernes");
   addMailPoint(points, signalCodes.has("CTA_DESTINATION_MISMATCH"), "CTA-knapper der tekst og landingsside bør stemme bedre");
@@ -236,11 +237,11 @@ function websiteQualityMailPoints(signalCodes: Set<string>, toneProfile: Website
   addMailPoint(points, signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("THIN_CONTENT"), toneProfile.homepagePoint);
   addMailPoint(points, signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT"), "tekst om uferdig marked eller checkout som bør avklares");
   addMailPoint(points, signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT"), "å få bort uferdig maltekst eller kommer-snart-preg");
-  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.servicePoint);
+  addMailPoint(points, signalCodes.has("WEAK_INDUSTRY_RELEVANCE") || signalCodes.has("GENERIC_SERVICE_TEXT") || signalCodes.has("AI_LIKE_PRESENTATION_RISK") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.servicePoint);
   addMailPoint(points, signalCodes.has("MISSING_LOCAL_RELEVANCE") || signalCodes.has("MISSING_ADDRESS_OR_AREA"), toneProfile.localPoint);
   addMailPoint(points, signalCodes.has("MISSING_OPENING_HOURS"), "tydeligere åpningstider eller tilgjengelighet");
   addMailPoint(points, signalCodes.has("WEAK_CONTACT_POINT") || signalCodes.has("CONTACT_DETAILS_NOT_VISIBLE") || signalCodes.has("CONTACT_PAGE_NOT_FOUND") || signalCodes.has("WEAK_CALL_TO_ACTION") || signalCodes.has("EMAIL_NOT_CLICKABLE") || signalCodes.has("PHONE_NOT_CLICKABLE") || signalCodes.has("CLOUDFLARE_EMAIL_PROTECTION"), toneProfile.contactPoint);
-  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH") || signalCodes.has("MISSING_ABOUT_SECTION") || signalCodes.has("MISSING_SOCIAL_PROOF") || signalCodes.has("MISSING_SOCIAL_LINKS") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.trustPoint);
+  addMailPoint(points, signalCodes.has("MISSING_ORG_NUMBER") || signalCodes.has("LEGAL_NAME_NOT_VISIBLE") || signalCodes.has("DOMAIN_NAME_MISMATCH") || signalCodes.has("EMAIL_DOMAIN_MISMATCH") || signalCodes.has("MISSING_ABOUT_SECTION") || signalCodes.has("MISSING_SOCIAL_PROOF") || signalCodes.has("MISSING_SOCIAL_LINKS") || signalCodes.has("AI_LIKE_PRESENTATION_RISK") || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK"), toneProfile.trustPoint);
   addMailPoint(points, signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_TITLE") || signalCodes.has("WEAK_SHARE_PREVIEW"), toneProfile.searchPoint);
   addMailPoint(points, signalCodes.has("DUPLICATE_META_DESCRIPTIONS"), "mer presise beskrivelser for viktige undersider");
   addMailPoint(points, signalCodes.has("MISSING_FAQ") || signalCodes.has("MISSING_PRICE_OR_MODEL"), "tydeligere svar på pris, modell, FAQ eller neste steg");
@@ -436,11 +437,13 @@ function hasTrustOrContentRisk(signalCodes: Set<string>) {
     || signalCodes.has("WEAK_NAVIGATION")
     || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")
     || signalCodes.has("GENERIC_SERVICE_TEXT")
+    || signalCodes.has("AI_LIKE_PRESENTATION_RISK")
     || signalCodes.has("MISSING_ORG_NUMBER")
     || signalCodes.has("LEGAL_NAME_NOT_VISIBLE")
     || signalCodes.has("MISSING_ADDRESS_OR_AREA")
     || signalCodes.has("MISSING_ABOUT_SECTION")
     || signalCodes.has("MISSING_SOCIAL_PROOF")
+    || signalCodes.has("AI_LIKE_PRESENTATION_RISK")
     || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK")
     || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")
     || signalCodes.has("PLACEHOLDER_IMAGE_RISK")

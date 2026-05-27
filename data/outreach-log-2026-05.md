@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 797
+- Antall hendelser: 798
 - Sendt: 640
 - Angret: 7
 - Aktive kontaktede selskaper: 636
@@ -654,6 +654,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-28 00:17 | not_relevant | 937772505 | FORMAA AS | AS | email | Mulig nettside svarte: https://formaa.no (utledet fra registrert e-postdomene). |
 | 2026-05-27 17:34 | batch_excluded | 937420994 | MACQUARIE BANK LIMITED NUF | NUF | email | Mulig nettside svarte: https://macquarie.com (utledet fra registrert e-postdomene). |
 | 2026-05-27 17:32 | batch_excluded | 937475209 | FRIDTJOFSEN PIANOSERVICE | ENK | email | mulig nettside svarte: https://fridtjofsenpianoservice.no (Innholdet på siden ligner på selskapsnavnet.) |
 | 2026-05-27 17:32 | batch_excluded | 937475357 | ESTETISK SYKEPLEIER HURME | ENK | email | mulig nettside svarte: https://estetisksykepleier.no (Klarte ikke lese innhold fra nettsiden.) |

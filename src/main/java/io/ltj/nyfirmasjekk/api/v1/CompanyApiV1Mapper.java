@@ -112,6 +112,27 @@ public class CompanyApiV1Mapper {
             "posisjonering",
             "bevisst uttrykk"
     );
+    private static final Set<String> AI_LIKE_PRESENTATION_PHRASES = Set.of(
+            "any business",
+            "any product",
+            "any industry",
+            "for any industry",
+            "real time",
+            "human approved",
+            "reads your site",
+            "works out exactly what you do",
+            "fresh leads every morning",
+            "nothing sends without your say-so",
+            "ready to send",
+            "personalised email",
+            "personalized email",
+            "the right leads",
+            "seamless",
+            "effortless",
+            "unlock",
+            "scale faster",
+            "at scale"
+    );
     private static final Set<String> ABOUT_TRUST_WORDS = Set.of(
             "om oss", "om meg", "about us", "about me", "team", "ansatte", "medarbeidere", "hvem vi er", "hvem jeg er"
     );
@@ -722,6 +743,9 @@ public class CompanyApiV1Mapper {
                 || hasSignal(signals, "MEDICAL_REGULATORY_CONTEXT_MISSING")) {
             return "Siden berører et mer tillitsbasert eller sensitivt fagområde. Personvern, skjema, dokumentasjon og tilgjengelighet bør vurderes ekstra nøye.";
         }
+        if (hasSignal(signals, "AI_LIKE_PRESENTATION_RISK")) {
+            return "Nettsiden svarer, men førsteinntrykket kan virke AI-lignende eller mønsterpreget. Mer konkret innhold, ekte virksomhetsspesifikke detaljer og tydelige tillitssignaler bør vurderes.";
+        }
         if (hasSignal(signals, "GENERIC_PRESENTATION_TRUST_RISK")
                 || hasSignal(signals, "GENERIC_OR_AI_IMAGE_RISK")) {
             return "Nettsiden svarer, men førsteinntrykket kan virke generisk. Ekte bilder, konkrete tjenester og tydelige tillitssignaler bør vurderes.";
@@ -748,6 +772,7 @@ public class CompanyApiV1Mapper {
                 "LEGAL_NAME_NOT_VISIBLE",
                 "MISSING_ADDRESS_OR_AREA",
                 "MISSING_ABOUT_SECTION",
+                "AI_LIKE_PRESENTATION_RISK",
                 "DOMAIN_NAME_MISMATCH",
                 "EMAIL_DOMAIN_MISMATCH",
                 "MISSING_META_DESCRIPTION",
@@ -971,8 +996,14 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    private String visibleWebsiteText(WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        return (snapshot.bodyText() == null ? "" : snapshot.bodyText())
+                + " "
+                + (snapshot.crawledBodyText() == null ? "" : snapshot.crawledBodyText());
+    }
+
     private void addContactQualitySignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
-        String text = ((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html())).toLowerCase(Locale.ROOT);
+        String text = (visibleWebsiteText(snapshot) + " " + (snapshot.html() == null ? "" : snapshot.html())).toLowerCase(Locale.ROOT);
         boolean hasEmail = EMAIL_PATTERN.matcher(text).find();
         boolean hasPhone = PHONE_PATTERN.matcher(text).find();
         boolean hasContactWords = text.contains("kontakt") || text.contains("contact") || text.contains("ring oss") || text.contains("send e-post");
@@ -1010,7 +1041,7 @@ public class CompanyApiV1Mapper {
         if (!hasText(location)) {
             return;
         }
-        String text = normalizeForWebsiteQuality((snapshot.title() == null ? "" : snapshot.title()) + " " + (snapshot.bodyText() == null ? "" : snapshot.bodyText()));
+        String text = normalizeForWebsiteQuality((snapshot.title() == null ? "" : snapshot.title()) + " " + visibleWebsiteText(snapshot));
         if (!text.contains(normalizeForWebsiteQuality(location))) {
             signals.add(new WebsiteQualitySignal(
                     "MISSING_LOCAL_RELEVANCE",
@@ -1027,7 +1058,7 @@ public class CompanyApiV1Mapper {
         if (tokens.isEmpty()) {
             return;
         }
-        String text = normalizeForWebsiteQuality((snapshot.title() == null ? "" : snapshot.title()) + " " + (snapshot.bodyText() == null ? "" : snapshot.bodyText()));
+        String text = normalizeForWebsiteQuality((snapshot.title() == null ? "" : snapshot.title()) + " " + visibleWebsiteText(snapshot));
         boolean hasIndustryToken = tokens.stream().anyMatch(text::contains);
         if (!hasIndustryToken) {
             signals.add(new WebsiteQualitySignal(
@@ -1040,7 +1071,7 @@ public class CompanyApiV1Mapper {
     }
 
     private void addServiceDescriptionSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
-        String bodyText = normalizeForWebsiteQuality(snapshot.bodyText() == null ? "" : snapshot.bodyText());
+        String bodyText = normalizeForWebsiteQuality(visibleWebsiteText(snapshot));
         if (!hasText(bodyText)) {
             return;
         }
@@ -1061,7 +1092,7 @@ public class CompanyApiV1Mapper {
     }
 
     private void addTrustSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, CompanyCheck companyCheck, EnhetResponse enhet) {
-        String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
+        String text = normalizeForWebsiteQuality(visibleWebsiteText(snapshot) + " " + (snapshot.html() == null ? "" : snapshot.html()));
         String orgNumber = companyCheck.organisasjonsnummer();
         if (hasText(orgNumber) && !hasVisibleOrganizationIdentifier(text, orgNumber, companyCheck, enhet)) {
             signals.add(new WebsiteQualitySignal(
@@ -1088,7 +1119,7 @@ public class CompanyApiV1Mapper {
         if (!hasText(businessAddress) && !hasText(postalAddress)) {
             return;
         }
-        if (!text.contains("adresse") && !text.contains("kart") && !text.contains("besok") && !text.contains("besøk")) {
+        if (!hasAddressOrAreaEvidence(text, enhet)) {
             boolean ecommerce = isEffectiveEcommerceWebsite(snapshot);
             signals.add(new WebsiteQualitySignal(
                     "MISSING_ADDRESS_OR_AREA",
@@ -1101,9 +1132,17 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    private boolean hasAddressOrAreaEvidence(String normalizedText, EnhetResponse enhet) {
+        if (normalizedText.contains("adresse") || normalizedText.contains("kart") || normalizedText.contains("besok")) {
+            return true;
+        }
+        return addressTokens(enhet.forretningsadresse()).stream().anyMatch(normalizedText::contains)
+                || addressTokens(enhet.postadresse()).stream().anyMatch(normalizedText::contains);
+    }
+
     private void addCommercialTrustSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
         String rawHtml = snapshot.html() == null ? "" : snapshot.html();
-        String rawBody = snapshot.bodyText() == null ? "" : snapshot.bodyText();
+        String rawBody = visibleWebsiteText(snapshot);
         String text = normalizeForWebsiteQuality(rawBody + " " + rawHtml);
         boolean localOrConsumer = isLocalOrConsumerSegment(enhet);
         boolean trustDecisionContext = hasTrustDecisionContext(text);
@@ -1319,18 +1358,24 @@ public class CompanyApiV1Mapper {
             WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
             boolean stricterContext
     ) {
-        if (signals.stream().anyMatch(signal -> "GENERIC_PRESENTATION_TRUST_RISK".equals(signal.code()))) {
+        if (signals.stream().anyMatch(signal -> "GENERIC_PRESENTATION_TRUST_RISK".equals(signal.code())
+                || "AI_LIKE_PRESENTATION_RISK".equals(signal.code()))) {
             return;
         }
 
         String rawHtml = snapshot.html() == null ? "" : snapshot.html();
-        String bodyText = normalizeForWebsiteQuality(snapshot.bodyText() == null ? "" : snapshot.bodyText());
-        String combined = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + rawHtml);
+        String combinedText = visibleWebsiteText(snapshot);
+        String bodyText = normalizeForWebsiteQuality(combinedText);
+        String combined = normalizeForWebsiteQuality(combinedText + " " + rawHtml);
         long genericWords = GENERIC_MARKETING_WORDS.stream()
                 .map(this::normalizeForWebsiteQuality)
                 .filter(bodyText::contains)
                 .count();
         long genericPhrases = GENERIC_PRESENTATION_PHRASES.stream()
+                .map(this::normalizeForWebsiteQuality)
+                .filter(combined::contains)
+                .count();
+        long aiLikePhrases = AI_LIKE_PRESENTATION_PHRASES.stream()
                 .map(this::normalizeForWebsiteQuality)
                 .filter(combined::contains)
                 .count();
@@ -1341,16 +1386,34 @@ public class CompanyApiV1Mapper {
 
         boolean textLooksGeneric = (genericWords >= 4 || genericPhrases >= 4) && (!hasAbout || !hasSocialProof);
         boolean visualLooksGeneric = (hasGenericImageSource || imageAssetCount >= 18) && !hasSocialProof;
-        if (!textLooksGeneric && !visualLooksGeneric) {
+        boolean textLooksAiLike = aiLikePhrases >= 4 && (genericWords >= 4 || genericPhrases >= 3) && (!hasAbout || !hasSocialProof);
+        if (!textLooksGeneric && !visualLooksGeneric && !textLooksAiLike) {
             return;
         }
 
-        signals.add(new WebsiteQualitySignal(
-                "GENERIC_PRESENTATION_TRUST_RISK",
-                "Mulig generisk uttrykk",
-                "Tekst eller visuelle spor virker lite konkrete for virksomheten. Det er ikke nødvendigvis feil, men kan svekke tillit hvis siden mangler ekte bilder, referanser, personer, prosjekter eller tydelig faglig dokumentasjon.",
-                stricterContext ? "MEDIUM" : "INFO"
-        ));
+        if (textLooksAiLike) {
+            signals.add(new WebsiteQualitySignal(
+                    "AI_LIKE_PRESENTATION_RISK",
+                    "Mulig AI-lignende eller mønsterpreget tekst",
+                    "Teksten har mange brede, mønsterpregede formuleringer og lite konkret virksomhetsspesifikt innhold. Det er ikke et bevis på AI-bruk, men et signal om at teksten bør vurderes manuelt.",
+                    stricterContext ? "MEDIUM" : "INFO"
+            ));
+        } else if (textLooksGeneric) {
+            signals.add(new WebsiteQualitySignal(
+                    "GENERIC_PRESENTATION_TRUST_RISK",
+                    "Mulig generisk uttrykk",
+                    "Teksten virker lite konkret for virksomheten. Det er ikke nødvendigvis feil, men kan svekke tillit hvis siden mangler ekte bilder, referanser, personer, prosjekter eller tydelig faglig dokumentasjon.",
+                    stricterContext ? "MEDIUM" : "INFO"
+            ));
+        }
+        if (visualLooksGeneric) {
+            signals.add(new WebsiteQualitySignal(
+                    "GENERIC_OR_AI_IMAGE_RISK",
+                    "Mulig generisk bildebruk",
+                    "Bildespor peker mot stock-, AI- eller generiske visualiseringer. Det er ikke nødvendigvis feil, men kan svekke tillit hvis bildene ikke tydelig viser virksomheten, produktet eller arbeidet.",
+                    stricterContext ? "MEDIUM" : "INFO"
+            ));
+        }
     }
 
     private void addCommerceSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -2464,6 +2527,27 @@ public class CompanyApiV1Mapper {
             return null;
         }
         return String.join(" ", adresse.adresse());
+    }
+
+    private List<String> addressTokens(EnhetResponse.Adresse adresse) {
+        if (adresse == null) {
+            return List.of();
+        }
+        List<String> tokens = new ArrayList<>();
+        if (adresse.adresse() != null) {
+            adresse.adresse().stream()
+                    .map(this::normalizeForWebsiteQuality)
+                    .filter(token -> token.length() >= 5)
+                    .forEach(tokens::add);
+        }
+        Stream.of(adresse.poststed(), adresse.kommune(), adresse.fylke())
+                .map(this::normalizeForWebsiteQuality)
+                .filter(token -> token.length() >= 4)
+                .forEach(tokens::add);
+        if (adresse.postnummer() != null && adresse.postnummer().matches("\\d{4}")) {
+            tokens.add(adresse.postnummer());
+        }
+        return tokens;
     }
 
     private List<WebsiteCandidateCheck> checkWebsiteCandidates(List<String> candidates, String companyName, String emailDomain) {

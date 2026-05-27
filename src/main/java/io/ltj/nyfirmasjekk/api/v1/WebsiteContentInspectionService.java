@@ -186,6 +186,7 @@ public class WebsiteContentInspectionService {
     public record WebsiteContentSnapshot(
             String title,
             String bodyText,
+            String crawledBodyText,
             String html,
             String metaDescription,
             String viewport,
@@ -327,7 +328,7 @@ public class WebsiteContentInspectionService {
                 String language,
                 String h1
         ) {
-            this(title, bodyText, html, metaDescription, viewport, language, h1,
+            this(title, bodyText, "", html, metaDescription, viewport, language, h1,
                     false, false, false, false,
                     0, hasTextValue(h1) ? 1 : 0, hasTextValue(h1) ? 1 : 0,
                     null, null,

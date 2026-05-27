@@ -2435,6 +2435,8 @@ const ADVANCED_WEBSITE_SIGNAL_CODES = new Set([
 
 function customerFriendlySignalPhrase(signal: WebsiteQualitySignal) {
   switch (signal.code) {
+    case "AI_LIKE_PRESENTATION_RISK":
+      return "å gjøre teksten mer virksomhetsspesifikk og mindre mønsterpreget";
     case "GENERIC_PRESENTATION_TRUST_RISK":
     case "GENERIC_OR_AI_IMAGE_RISK":
       return "å gjøre uttrykket mer konkret og tillitvekkende";
@@ -2471,6 +2473,7 @@ function prioritizeWebsiteReportSignals(signals: WebsiteQualitySignal[]) {
     "TECHNICAL_FAILURE",
     "INCOMPLETE_MARKET_OR_CHECKOUT",
     "TEMPLATE_PLACEHOLDER_CONTENT",
+    "AI_LIKE_PRESENTATION_RISK",
     "GENERIC_PRESENTATION_TRUST_RISK",
     "GENERIC_OR_AI_IMAGE_RISK",
     "FORM_LABEL_RISK",
@@ -2500,6 +2503,9 @@ function prioritizeWebsiteReportSignals(signals: WebsiteQualitySignal[]) {
 
 function websiteReportScopeSummary(signalCodes: Set<string>) {
   const items: string[] = [];
+  if (signalCodes.has("AI_LIKE_PRESENTATION_RISK")) {
+    items.push("gjøre teksten mer virksomhetsspesifikk og mindre mønsterpreget");
+  }
   if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK") || signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")) {
     items.push("gjøre innholdet mer konkret, tydelig og tillitvekkende");
   }
@@ -2539,6 +2545,9 @@ function firstWebsiteQualityAction(signalCodes: Set<string>) {
   }
   if (signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT") || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT")) {
     return "Fjern uferdig tekst og avklar hva som faktisk er lansert.";
+  }
+  if (signalCodes.has("AI_LIKE_PRESENTATION_RISK")) {
+    return "Gjør teksten mindre mønsterpreget og mer tydelig knyttet til faktisk virksomhet.";
   }
   if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")) {
     return "Gjør siden mer konkret med ekte bilder, faglig profil og etterprøvbare tillitssignaler.";
@@ -2584,6 +2593,9 @@ function manualWebsiteQualityReview(signalCodes: Set<string>) {
   if (signalCodes.has("SENSITIVE_HEALTH_CONTEXT") || signalCodes.has("HEALTH_TRACKING_CONTEXT")) {
     return "Helse/persondata bør vurderes ekstra varsomt og ikke beskrives som regelbrudd uten full gjennomgang.";
   }
+  if (signalCodes.has("AI_LIKE_PRESENTATION_RISK")) {
+    return "Vurder om teksten fremstår AI-lignende eller mønsterpreget før den brukes i kundedialog.";
+  }
   if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")) {
     return "Vurder visuelt uttrykk manuelt før det brukes i kundedialog.";
   }
@@ -2612,6 +2624,8 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "Dette kommer fra publisert tilgjengelighetserklæring, ikke bare fra automatisk HTML-sjekk.";
     case "TEMPLATE_PLACEHOLDER_CONTENT":
       return "Uferdig tekst er et tydelig førsteinntrykkssignal og kan få siden til å virke upublisert eller lite kvalitetssikret.";
+    case "AI_LIKE_PRESENTATION_RISK":
+      return "Siden har mange brede og mønsterpregede formuleringer, med lite virksomhetsspesifikt innhold. Det er ikke et bevis på AI-bruk, men et signal som bør vurderes manuelt.";
     case "MISSING_ORG_NUMBER":
     case "LEGAL_NAME_NOT_VISIBLE":
       return "Juridisk navn og org.nr. gjør det lettere å verifisere hvem kunden faktisk handler med.";
@@ -2831,6 +2845,8 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
   switch (signal.code) {
     case "TECHNICAL_FAILURE":
       return "Sjekk domenet manuelt og avklar om problemet gjelder DNS, SSL, hosting, redirect, 404/5xx eller midlertidig nedetid.";
+    case "AI_LIKE_PRESENTATION_RISK":
+      return "Vurder om teksten fremstår AI-lignende eller mønsterpreget før den brukes i kundedialog.";
     case "PUBLIC_SECTOR_CONTEXT":
       return "Bruk funnene som grunnlag for manuell UU-, personvern- og sikkerhetsrevisjon, ikke som enkel nettsidekritikk.";
     case "ACCESSIBILITY_DECLARATION_VIOLATIONS":
@@ -3020,7 +3036,7 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
     case "PRIVACY_LINK_REVIEW":
       return "Åpne policylenken og sjekk at den faktisk dekker personvern, skjema, cookies og databehandlerforhold.";
   }
-  if (["GENERIC_PRESENTATION_TRUST_RISK", "GENERIC_OR_AI_IMAGE_RISK"].includes(signal.code)) {
+  if (["AI_LIKE_PRESENTATION_RISK", "GENERIC_PRESENTATION_TRUST_RISK", "GENERIC_OR_AI_IMAGE_RISK"].includes(signal.code)) {
     return "Legg inn mer konkret tekst, ekte bilder, referanser, prosjekter eller dokumentasjon.";
   }
   if (signal.code === "FORM_LABEL_RISK") {
@@ -3070,6 +3086,12 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
         "FORM_LABEL_RISK",
         "EMPTY_BUTTON_RISK",
         "IMAGE_ALT_RISK",
+      ].includes(signal.code),
+    },
+    {
+      title: "AI-lignende tekst",
+      predicate: (signal: WebsiteQualitySignal) => [
+        "AI_LIKE_PRESENTATION_RISK",
       ].includes(signal.code),
     },
     {
