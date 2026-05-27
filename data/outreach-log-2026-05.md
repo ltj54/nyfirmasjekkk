@@ -4,15 +4,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 720
-- Sendt: 617
+- Antall hendelser: 736
+- Sendt: 633
 - Angret: 7
-- Aktive kontaktede selskaper: 613
+- Aktive kontaktede selskaper: 629
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-27 | 937505922 | SOON AUTOMOBIL CLUB | FLI | email | website-offer |
+| 2026-05-27 | 937504233 | SENIORNETTVERK STAVANGER | FLI | email | website-offer |
+| 2026-05-27 | 937399405 | DAVIES KVITBERGMO GÅRD | ENK | email | website-offer |
+| 2026-05-27 | 937396430 | FORENINGEN ODDA KINOS VENNER | FLI | email | website-offer |
+| 2026-05-27 | 937335083 | ALVDALSKONSERTENE | FLI | email | website-offer |
+| 2026-05-27 | 937406231 | SANDEFJORD SPORTSKLUBB | FLI | email | website-offer |
+| 2026-05-27 | 837500842 | SABRIYE UTMERKET SERVICE | ENK | email | website-offer |
+| 2026-05-27 | 937400756 | ATAMANCHUK AUTO | ENK | email | website-offer |
+| 2026-05-27 | 937492316 | NEHME RAAD | ENK | email | website-offer |
+| 2026-05-27 | 937505647 | NETTLI - BYGGELEDERFIRMA | ENK | email | website-offer |
+| 2026-05-27 | 937400152 | GUDBRANDSEN VISUAL | ENK | email | website-offer |
+| 2026-05-27 | 937400187 | FISKNES MASKIN | ENK | email | website-offer |
+| 2026-05-27 | 937401167 | BJORDAL FJELLKOMPETANSE | ENK | email | website-offer |
+| 2026-05-27 | 937507046 | TEIDE INSPECTION LTD | UTLA | email | website-offer |
+| 2026-05-27 | 937508131 | DIRAC HOLDING AB | UTLA | email | website-offer |
+| 2026-05-27 | 837388252 | OLSSON & HEDSTRÖM ÄLVSERVICE AB NUF | NUF | email | website-offer |
 | 2026-05-27 | 937766645 | U39 VALDRES | FLI | email | website-improvement-offer |
 | 2026-05-27 | 937714343 | VAN VUUREN STUDIO, VV STUDIO | ENK | email | website-improvement-offer |
 | 2026-05-27 | 937783701 | QORDER APS | UTLA | email | website-improvement-offer |
@@ -631,6 +647,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-27 12:14 | sent | 937505922 | SOON AUTOMOBIL CLUB | FLI | email | - |
+| 2026-05-27 12:14 | sent | 937504233 | SENIORNETTVERK STAVANGER | FLI | email | - |
+| 2026-05-27 12:13 | sent | 937399405 | DAVIES KVITBERGMO GÅRD | ENK | email | - |
+| 2026-05-27 12:13 | sent | 937396430 | FORENINGEN ODDA KINOS VENNER | FLI | email | - |
+| 2026-05-27 12:13 | sent | 937335083 | ALVDALSKONSERTENE | FLI | email | - |
+| 2026-05-27 12:13 | sent | 937406231 | SANDEFJORD SPORTSKLUBB | FLI | email | - |
+| 2026-05-27 12:13 | sent | 837500842 | SABRIYE UTMERKET SERVICE | ENK | email | - |
+| 2026-05-27 12:13 | sent | 937400756 | ATAMANCHUK AUTO | ENK | email | - |
+| 2026-05-27 12:13 | sent | 937492316 | NEHME RAAD | ENK | email | - |
+| 2026-05-27 12:12 | sent | 937505647 | NETTLI - BYGGELEDERFIRMA | ENK | email | - |
+| 2026-05-27 12:10 | sent | 937400152 | GUDBRANDSEN VISUAL | ENK | email | - |
+| 2026-05-27 12:10 | sent | 937400187 | FISKNES MASKIN | ENK | email | - |
+| 2026-05-27 12:10 | sent | 937401167 | BJORDAL FJELLKOMPETANSE | ENK | email | - |
+| 2026-05-27 12:10 | sent | 937507046 | TEIDE INSPECTION LTD | UTLA | email | - |
+| 2026-05-27 12:10 | sent | 937508131 | DIRAC HOLDING AB | UTLA | email | - |
+| 2026-05-27 12:10 | sent | 837388252 | OLSSON & HEDSTRÖM ÄLVSERVICE AB NUF | NUF | email | - |
 | 2026-05-27 10:29 | sent | 937766645 | U39 VALDRES | FLI | email | Sendt fra nettsidesjekk: https://valdres-nhage.no |
 | 2026-05-27 10:24 | sent | 937714343 | VAN VUUREN STUDIO, VV STUDIO | ENK | email | Sendt fra nettsidesjekk: https://vanvuuren.no |
 | 2026-05-27 10:19 | sent | 937783701 | QORDER APS | UTLA | email | Sendt fra nettsidesjekk: https://fresto.io |
