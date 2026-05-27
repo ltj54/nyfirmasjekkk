@@ -274,7 +274,7 @@ export function CompanyCheckShell() {
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
-  const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, "checking" | "blocked" | "ready">>({});
+  const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, { status: "checking" | "blocked" | "ready"; reason?: string }>>({});
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
   const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
@@ -645,37 +645,26 @@ export function CompanyCheckShell() {
       }));
       setBatchValidationByOrg((current) => ({
         ...current,
-        [company.orgNumber]: "ready",
+        [company.orgNumber]: { status: "ready" },
       }));
       return;
     }
 
     setBatchValidationByOrg((current) => ({
       ...current,
-      [company.orgNumber]: "checking",
+      [company.orgNumber]: { status: "checking" },
     }));
 
-    const detailedCompany = await fetchCompanyDetailsForBatch(company.orgNumber);
-    if (!detailedCompany) {
-      setBatchValidationByOrg((current) => ({
-        ...current,
-        [company.orgNumber]: "blocked",
-      }));
-      window.alert(`Kan ikke velge ${company.name} til batch: klarte ikke hente detaljsjekk.`);
-      return;
-    }
-
-    const blockReason = emailBatchBlockReason(detailedCompany);
-    if (blockReason || !hasOnlyUnreachablePossibleWebsiteCandidates(detailedCompany)) {
+    const validation = await validateCompanyForBatchSelection(company);
+    if (validation.reason) {
       setBatchSelectionByOrg((current) => ({
         ...current,
         [company.orgNumber]: false,
       }));
       setBatchValidationByOrg((current) => ({
         ...current,
-        [company.orgNumber]: "blocked",
+        [company.orgNumber]: { status: "blocked", reason: validation.reason ?? undefined },
       }));
-      window.alert(`Kan ikke velge ${detailedCompany.name} til batch: ${blockReason ?? "mulig nettside må sjekkes manuelt"}.`);
       return;
     }
 
@@ -685,8 +674,24 @@ export function CompanyCheckShell() {
     }));
     setBatchValidationByOrg((current) => ({
       ...current,
-      [company.orgNumber]: "ready",
+      [company.orgNumber]: { status: "ready" },
     }));
+  }
+
+  async function validateCompanyForBatchSelection(company: Pick<CompanySummary, "orgNumber" | "name">) {
+    try {
+      const response = await fetch(`/api/company-check/${company.orgNumber}/batch-eligibility`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        return { reason: "Klarte ikke hente batch-sjekk." };
+      }
+      const payload = (await response.json()) as { eligible?: boolean; reason?: string | null };
+      return { reason: payload.eligible ? null : payload.reason ?? "Oppfyller ikke batch-kravene." };
+    } catch (error) {
+      console.error("Failed to validate batch eligibility", error);
+      return { reason: "Klarte ikke hente detaljsjekk." };
+    }
   }
 
   async function fetchCompanyDetailsForBatch(orgNumber: string) {
@@ -1101,11 +1106,21 @@ export function CompanyCheckShell() {
     return !outreachStatus?.sent && outreachStatus?.status !== "not_relevant";
   });
   const selectedBatchCompanies = canUseEmailBatch
-    ? visibleSearchCompanies.filter((company) => batchSelectionByOrg[company.orgNumber] && canSelectEmailBatchCandidate(company))
+    ? visibleSearchCompanies.filter((company) =>
+      batchSelectionByOrg[company.orgNumber]
+      && canSelectEmailBatchCandidate(company)
+      && batchValidationByOrg[company.orgNumber]?.status !== "blocked"
+    )
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
   const overEmailBatchLimit = sendableBatchCount > MAX_EMAIL_BATCH_SIZE;
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
+  const visibleBatchValidationKey = canUseEmailBatch
+    ? visibleSearchCompanies
+      .filter((company) => company.email && canSelectEmailBatchCandidate(company))
+      .map((company) => company.orgNumber)
+      .join("|")
+    : "";
   const resultsSummary = buildResultsSummary(
     daysFilter,
     countyFilter,
@@ -1114,6 +1129,51 @@ export function CompanyCheckShell() {
     selectedLegend,
   );
   const filterButtonDisabled = !initialResultsReady || isListLoading;
+
+  useEffect(() => {
+    if (!canUseEmailBatch || !visibleBatchValidationKey) {
+      return;
+    }
+
+    let cancelled = false;
+    const companiesToValidate = visibleSearchCompanies.filter((company) => {
+      const validation = batchValidationByOrg[company.orgNumber];
+      return company.email
+        && canSelectEmailBatchCandidate(company)
+        && validation?.status !== "ready"
+        && validation?.status !== "blocked"
+        && validation?.status !== "checking";
+    });
+
+    async function validateVisibleBatchCandidates() {
+      for (const company of companiesToValidate) {
+        if (cancelled) {
+          return;
+        }
+        setBatchValidationByOrg((current) => ({
+          ...current,
+          [company.orgNumber]: { status: "checking" },
+        }));
+        const validation = await validateCompanyForBatchSelection(company);
+        if (cancelled) {
+          return;
+        }
+        setBatchValidationByOrg((current) => ({
+          ...current,
+          [company.orgNumber]: validation.reason
+            ? { status: "blocked", reason: validation.reason ?? undefined }
+            : { status: "ready" },
+        }));
+      }
+    }
+
+    void validateVisibleBatchCandidates();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [canUseEmailBatch, visibleBatchValidationKey]);
+
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-[#1F5FA9]/10">
       <button
@@ -1541,7 +1601,7 @@ export function CompanyCheckShell() {
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company)}
+                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked"}
                     batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
                     batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
                     onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
@@ -3245,7 +3305,7 @@ function CompanyCard({
   outreachSaving: boolean;
   batchSelectable: boolean;
   batchSelected: boolean;
-  batchValidation: "checking" | "blocked" | "ready" | null;
+  batchValidation: { status: "checking" | "blocked" | "ready"; reason?: string } | null;
   onToggleBatch: (selected: boolean) => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
@@ -3438,7 +3498,7 @@ function CompanyCard({
         <input
           checked={batchSelectable && batchSelected}
           className="size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
-          disabled={!batchSelectable || batchValidation === "checking"}
+          disabled={!batchSelectable || batchValidation?.status === "checking"}
           onChange={(event) => {
             if (batchSelectable) {
               onToggleBatch(event.target.checked);
@@ -3447,13 +3507,18 @@ function CompanyCard({
           type="checkbox"
         />
         <span>
-          {batchValidation === "checking"
+          {batchValidation?.status === "checking"
             ? "Sjekker batch-krav..."
-            : batchValidation === "blocked"
+            : batchValidation?.status === "blocked"
               ? "Kan ikke batch-sendes"
               : "Send e-post i batch"}
         </span>
       </label>
+      {batchValidation?.status === "blocked" && batchValidation.reason ? (
+        <p className="mt-2 border border-[#F7D9A8] bg-[#FFF8E8] px-3 py-2 text-[11px] font-medium leading-5 text-[#8A5A00]">
+          {batchValidation.reason}
+        </p>
+      ) : null}
       <OutreachCheckbox
         key={`${company.orgNumber}-${outreachStatus?.sentAt ?? "draft"}-${outreachStatus?.note ?? ""}`}
         compact

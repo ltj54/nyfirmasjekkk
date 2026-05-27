@@ -9,6 +9,7 @@ import io.ltj.nyfirmasjekk.api.v1.CompanySearchResponse;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.api.v1.BrregWebsiteMatch;
 import io.ltj.nyfirmasjekk.api.v1.WebsiteInspectionResponse;
+import io.ltj.nyfirmasjekk.api.v1.WebsiteReachabilityService;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -61,6 +63,7 @@ public class CompanyCheckController {
     private final AdminAccessService adminAccessService;
     private final InMemoryRateLimitService rateLimitService;
     private final MeterRegistry meterRegistry;
+    private final WebsiteReachabilityService websiteReachabilityService;
 
     public CompanyCheckController(
             CompanyCheckService companyCheckService,
@@ -71,7 +74,8 @@ public class CompanyCheckController {
             OutreachEmailService outreachEmailService,
             AdminAccessService adminAccessService,
             InMemoryRateLimitService rateLimitService,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            WebsiteReachabilityService websiteReachabilityService
     ) {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
@@ -82,6 +86,7 @@ public class CompanyCheckController {
         this.adminAccessService = adminAccessService;
         this.rateLimitService = rateLimitService;
         this.meterRegistry = meterRegistry;
+        this.websiteReachabilityService = websiteReachabilityService;
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -108,6 +113,47 @@ public class CompanyCheckController {
     ) {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         return mapper.toEvents(enhet);
+    }
+
+    @GetMapping("/{organisasjonsnummer}/batch-eligibility")
+    public BatchEmailEligibilityResponse batchEligibility(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        rateLimitService.requireAllowed("company-batch-eligibility", 240, Duration.ofMinutes(10));
+        var enhet = brregClient.hentEnhet(organisasjonsnummer);
+        if (hasText(enhet.hjemmeside())) {
+            return new BatchEmailEligibilityResponse(
+                    organisasjonsnummer,
+                    false,
+                    "Har registrert nettside: " + enhet.hjemmeside(),
+                    enhet.hjemmeside()
+            );
+        }
+        if (!hasText(enhet.epostadresse())) {
+            return new BatchEmailEligibilityResponse(
+                    organisasjonsnummer,
+                    false,
+                    "Mangler e-postadresse.",
+                    null
+            );
+        }
+
+        String emailDomain = extractEmailDomain(enhet.epostadresse());
+        if (hasText(emailDomain) && !isGenericEmailDomain(emailDomain)) {
+            String candidate = "https://" + emailDomain;
+            if (websiteReachabilityService.isReachable(candidate)) {
+                return new BatchEmailEligibilityResponse(
+                        organisasjonsnummer,
+                        false,
+                        "Mulig nettside svarte: " + candidate + " (utledet fra registrert e-postdomene).",
+                        candidate
+                );
+            }
+        }
+
+        return new BatchEmailEligibilityResponse(organisasjonsnummer, true, null, null);
     }
 
     @GetMapping("/{organisasjonsnummer}/outreach-status")
@@ -450,6 +496,37 @@ public class CompanyCheckController {
 
     private boolean isHiddenFromSearch(OutreachStatusResponse status) {
         return status != null && (status.sent() || "not_relevant".equalsIgnoreCase(status.status()));
+    }
+
+    private String extractEmailDomain(String email) {
+        if (!hasText(email) || !email.contains("@")) {
+            return null;
+        }
+        return email.substring(email.indexOf('@') + 1).trim().toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isGenericEmailDomain(String emailDomain) {
+        return Set.of(
+                "gmail.com",
+                "gmail.no",
+                "outlook.com",
+                "outlook.no",
+                "hotmail.com",
+                "hotmail.no",
+                "live.com",
+                "live.no",
+                "icloud.com",
+                "me.com",
+                "online.no",
+                "yahoo.com",
+                "yahoo.no",
+                "proton.me",
+                "protonmail.com"
+        ).contains(emailDomain);
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     private List<CompanySearchRequest> searchRequestsForVisiblePage(CompanySearchRequest request) {
