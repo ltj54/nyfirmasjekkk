@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 736
-- Sendt: 633
+- Antall hendelser: 797
+- Sendt: 640
 - Angret: 7
-- Aktive kontaktede selskaper: 629
+- Aktive kontaktede selskaper: 636
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-27 | 937539460 | LOFOTEN OG VESTERÅLEN MÅLLAG | FLI | email | website-offer |
+| 2026-05-27 | 937483503 | AK HINNA | ENK | email | website-offer |
+| 2026-05-27 | 937584407 | NATI BY THE WAY MUNOZ GONZALEZ | ENK | email | website-offer |
+| 2026-05-27 | 937592973 | KRYLLINGHEIMENS VENNER | FLI | email | website-offer |
+| 2026-05-27 | 937784236 | OMMEDAL ANLEGG AS | AS | email | website-offer |
+| 2026-05-27 | 837681642 | SVAE KURS OG KOMPETANSE | ENK | email | website-offer |
+| 2026-05-27 | 937602030 | RELASJONSVEILEDNING - TONE HUNSKAAR | ENK | email | website-offer |
 | 2026-05-27 | 937505922 | SOON AUTOMOBIL CLUB | FLI | email | website-offer |
 | 2026-05-27 | 937504233 | SENIORNETTVERK STAVANGER | FLI | email | website-offer |
 | 2026-05-27 | 937399405 | DAVIES KVITBERGMO GÅRD | ENK | email | website-offer |
@@ -647,6 +654,67 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-27 17:34 | batch_excluded | 937420994 | MACQUARIE BANK LIMITED NUF | NUF | email | Mulig nettside svarte: https://macquarie.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:32 | batch_excluded | 937475209 | FRIDTJOFSEN PIANOSERVICE | ENK | email | mulig nettside svarte: https://fridtjofsenpianoservice.no (Innholdet på siden ligner på selskapsnavnet.) |
+| 2026-05-27 17:32 | batch_excluded | 937475357 | ESTETISK SYKEPLEIER HURME | ENK | email | mulig nettside svarte: https://estetisksykepleier.no (Klarte ikke lese innhold fra nettsiden.) |
+| 2026-05-27 17:32 | batch_excluded | 937588453 | MIGA NORWAY | FLI | email | Mulig nettside svarte: https://miganorway.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:32 | batch_excluded | 937581319 | JM MONTØRKLUBB | FLI | email | Mulig nettside svarte: https://nte.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:32 | batch_excluded | 937604343 | SKOLENES LANDSFORBUND FORENING KRISTIANSUND | FLI | email | Mulig nettside svarte: https://mrfylke.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 837618592 | HONNEMYR SERVICE | ENK | email | Mulig nettside svarte: https://honnemyr-service.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937472064 | KAMANZI TAXI | ENK | email | Mulig nettside svarte: https://yahoo.fr (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937473370 | ENERGI OG TERAPIROMMET LUNDSETH | ENK | email | mulig nettside svarte: https://energi.no (Nettsiden svarte, men vi fant ingen tydelig kobling til selskapsnavn eller e-postdomene i innholdet.) |
+| 2026-05-27 17:31 | batch_excluded | 937480296 | BELSVIK SØRGÅRDEN | ENK | email | Mulig nettside svarte: https://kre.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 837582652 | HOST LATVIA SIA | UTLA | email | Mulig nettside svarte: https://host.lv (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937588623 | DAVID BROWN SANTASALO FINLAND OY | UTLA | email | Mulig nettside svarte: https://dbsantasalo.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937581882 | BØDKERIET A/S | UTLA | email | Mulig nettside svarte: https://boedkeriet.dk (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937551975 | LINDER SPORTS IMPROVEMENT | ENK | email | mulig nettside svarte: https://lindersportsimprovement.no (Innholdet på siden ligner på selskapsnavnet.) |
+| 2026-05-27 17:31 | batch_excluded | 837622212 | SIA BURTI | UTLA | email | Mulig nettside svarte: https://burti.lv (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937625715 | MAGNUSDREAM AB | UTLA | email | Mulig nettside svarte: https://magnusdream.se (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937620055 | FANTINI MOSAICI S.R.L. | UTLA | email | Mulig nettside svarte: https://pec.it (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937631286 | MB KK BUSTAS | UTLA | email | Mulig nettside svarte: https://kkbustas.lt (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937639910 | UPROOT TECHNOLOGIES B.V. | UTLA | email | Mulig nettside svarte: https://uproottechnologies.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937544014 | MUGHAL DEVAI | ENK | email | Mulig nettside svarte: https://devai.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937663420 | E-HANDEL APS | UTLA | email | Mulig nettside svarte: https://capida.dk (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937562322 | ALVASAR OÜ NUF | NUF | email | Mulig nettside svarte: https://bhras.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937545924 | PAUL SMITH LIMITED | NUF | email | Mulig nettside svarte: https://momspartner.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937477007 | ESKILD TORGERSEN ARNTSEN NUF | NUF | email | Mulig nettside svarte: https://arngeodata.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 837354692 | EKSAR AB | NUF | email | Mulig nettside svarte: https://eksar.se (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | batch_excluded | 937530536 | WE ARE BITTE | NUF | email | Mulig nettside svarte: https://timevat.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:31 | sent | 937539460 | LOFOTEN OG VESTERÅLEN MÅLLAG | FLI | email | - |
+| 2026-05-27 17:31 | sent | 937483503 | AK HINNA | ENK | email | - |
+| 2026-05-27 17:31 | sent | 937584407 | NATI BY THE WAY MUNOZ GONZALEZ | ENK | email | - |
+| 2026-05-27 17:29 | batch_excluded | 937584253 | ØKONOMI OG REGNSKAPSRÅDGIVNING - STÅLE OSTAD | ENK | email | mulig nettside svarte: https://okonomi.no (Klarte ikke lese innhold fra nettsiden.) |
+| 2026-05-27 17:29 | batch_excluded | 937671113 | KD NORD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Mulig nettside svarte: https://kd-group.pl (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:28 | batch_excluded | 837635942 | CRUISE YACHT OPCO LTD | NUF | email | Mulig nettside svarte: https://aider.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:28 | batch_excluded | 937752814 | NOR TRADING AS | AS | email | mulig nettside svarte: https://nortrading.no (Innholdet på siden ligner på selskapsnavnet.) |
+| 2026-05-27 17:28 | batch_excluded | 937635966 | NEXT-GEN CRUISES LTD. NUF | NUF | email | Mulig nettside svarte: https://aider.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:28 | batch_excluded | 937664508 | YSTAD RAFFERTY STUDIOS | ENK | email | Mulig nettside svarte: https://babelserver.org (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:28 | batch_excluded | 937685416 | GRAND CAR CARE SWEDEN AB | UTLA | email | Mulig nettside svarte: https://grandcar.se (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937732430 | WIDE HORIZON S.C.S. | UTLA | email | Mulig nettside svarte: https://directorship.lu (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937537115 | POLDERSTAETE AS | AS | email | Mulig nettside svarte: https://seland-roedl.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937728441 | SOMMER I SØR NORMISJON | FLI | email | Mulig nettside svarte: https://normisjon.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937731582 | UNIVERSITETET I INNLANDET, LILLEHAMMER PENSJONISTFORENING | FLI | email | Mulig nettside svarte: https://inn.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937418523 | EL OG IT FORBUNDET VIVICTA | FLI | email | Mulig nettside svarte: https://vivicta.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937660111 | TRULTE FLIKKA | ENK | email | Mulig nettside svarte: https://s32.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937743483 | NORTH 57 APS | UTLA | email | Mulig nettside svarte: https://estheme.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 837642922 | BARRAS MARINE & AGRI LTD | NUF | email | Mulig nettside svarte: https://headenergy.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937754663 | UNGE KONSERVATIVE TRØNDELAG | FLI | email | Mulig nettside svarte: https://ungekonservative.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937752040 | TRANSNORD APS | UTLA | email | Mulig nettside svarte: https://mail.dk (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937660766 | MONTAR | NUF | email | Mulig nettside svarte: https://intravat.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937660804 | INOPLAY | NUF | email | Mulig nettside svarte: https://intravat.com (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:27 | batch_excluded | 937601565 | AS PRODUCTION & INVESTMENTS ARKADIUSZ SEK NUF | NUF | email | Mulig nettside svarte: https://mtagroup.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:26 | batch_excluded | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | mulig nettside svarte: https://bluefintuna.no (Nettsiden svarte, men vi fant ingen tydelig kobling til selskapsnavn eller e-postdomene i innholdet.) |
+| 2026-05-27 17:25 | batch_excluded | 937772505 | FORMAA AS | AS | email | Mulig nettside svarte: https://formaa.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:25 | batch_excluded | 837763932 | UAB ELLA GROUP | UTLA | email | Mulig nettside svarte: https://ellagroup.eu (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:25 | batch_excluded | 937684088 | PRIMEBRIDGE NETHERLANDS B.V. NUF | NUF | email | Mulig nettside svarte: https://primebridge.nl (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:25 | batch_excluded | 937768729 | LGENO AS | AS | email | Mulig nettside svarte: https://lgeno.nl (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:25 | batch_excluded | 937701047 | OU ULTRAMARIN SERVICES NUF | NUF | email | Mulig nettside svarte: https://bhras.no (utledet fra registrert e-postdomene). |
+| 2026-05-27 17:25 | batch_excluded | 937454074 | LUMIXAVERO OÜ NUF | NUF | email | Batch-sjekk tok for lang tid. Prøv igjen eller åpne detaljsiden. |
+| 2026-05-27 17:21 | sent | 937592973 | KRYLLINGHEIMENS VENNER | FLI | email | - |
+| 2026-05-27 17:20 | batch_excluded | 937693478 | BUCHEN-ICS MOBILE SERVICE LTD. NUF | NUF | email | Batch-sjekk tok for lang tid. Prøv igjen eller åpne detaljsiden. |
+| 2026-05-27 17:12 | sent | 937784236 | OMMEDAL ANLEGG AS | AS | email | - |
+| 2026-05-27 16:52 | sent | 837681642 | SVAE KURS OG KOMPETANSE | ENK | email | - |
+| 2026-05-27 16:52 | sent | 937602030 | RELASJONSVEILEDNING - TONE HUNSKAAR | ENK | email | - |
 | 2026-05-27 12:14 | sent | 937505922 | SOON AUTOMOBIL CLUB | FLI | email | - |
 | 2026-05-27 12:14 | sent | 937504233 | SENIORNETTVERK STAVANGER | FLI | email | - |
 | 2026-05-27 12:13 | sent | 937399405 | DAVIES KVITBERGMO GÅRD | ENK | email | - |

@@ -10,10 +10,13 @@ export async function GET(
 ) {
   const { organisasjonsnummer } = await context.params;
   const url = `${backendBaseUrl}/api/company-check/${organisasjonsnummer}/batch-eligibility`;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
   try {
     const response = await fetch(url, {
       cache: "no-store",
+      signal: controller.signal,
       headers: backendHeaders({
         Accept: "application/json",
       }),
@@ -33,5 +36,7 @@ export async function GET(
       },
       { status: 502 }
     );
+  } finally {
+    clearTimeout(timeoutId);
   }
 }

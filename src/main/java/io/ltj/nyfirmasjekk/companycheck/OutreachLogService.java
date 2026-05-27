@@ -36,6 +36,7 @@ public class OutreachLogService {
     private static final String STATUS_SENT = "sent";
     private static final String STATUS_REVERTED = "reverted";
     private static final String STATUS_NOT_RELEVANT = "not_relevant";
+    private static final String STATUS_BATCH_EXCLUDED = "batch_excluded";
     private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
     private final Path logPath;
@@ -237,6 +238,7 @@ public class OutreachLogService {
             case STATUS_SENT -> STATUS_SENT;
             case STATUS_REVERTED -> STATUS_REVERTED;
             case STATUS_NOT_RELEVANT -> STATUS_NOT_RELEVANT;
+            case STATUS_BATCH_EXCLUDED -> STATUS_BATCH_EXCLUDED;
             default -> throw new IllegalArgumentException("Ugyldig outreach-status");
         };
     }
@@ -437,7 +439,7 @@ public class OutreachLogService {
 
     private void validateImportedStatus(String status) {
         switch (status.trim().toLowerCase(Locale.ROOT)) {
-            case STATUS_SENT, STATUS_REVERTED, STATUS_NOT_RELEVANT -> {
+            case STATUS_SENT, STATUS_REVERTED, STATUS_NOT_RELEVANT, STATUS_BATCH_EXCLUDED -> {
             }
             default -> throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
         }
