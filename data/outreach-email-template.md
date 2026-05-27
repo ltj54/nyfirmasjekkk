@@ -104,7 +104,7 @@ Hvis siden faktisk er nede eller mangler fungerende oppsett, kan jeg også ta op
 Hvis dere ønsker det, kan jeg sende en kort vurdering med eventuelle funn og forslag til tiltak.
 
 Eksempel:
-{{senderWebsite}}
+{{websiteCheckSenderWebsite}}
 
 Mvh  
 {{senderName}}  
@@ -126,7 +126,7 @@ Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter s
 Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
-{{senderWebsite}}
+{{websiteCheckSenderWebsite}}
 
 Mvh  
 {{senderName}}  
@@ -155,7 +155,7 @@ Eksempler på områder jeg kan gå gjennom:
 Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
-{{senderWebsite}}
+{{websiteCheckSenderWebsite}}
 
 Mvh  
 {{senderName}}  

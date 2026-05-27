@@ -366,6 +366,21 @@ public class CompanyApiV1Mapper {
         String emailDomain = extractEmailDomain(enhet.epostadresse());
         if (hasText(emailDomain) && !isGenericEmailDomain(emailDomain)) {
             String candidate = HTTPS_PREFIX + emailDomain;
+            if (!inspectAllCandidates) {
+                return new WebsiteDiscovery(
+                        "POSSIBLE_MATCH",
+                        CONFIDENCE_MEDIUM,
+                        List.of(candidate),
+                        null,
+                        null,
+                        null,
+                        "Domene er utledet fra registrert e-postadresse, men ikke teknisk sjekket i listevisning.",
+                        null,
+                        List.of(),
+                        "Mulig nettside er utledet fra registrert e-postadresse. Åpne detaljsiden for teknisk sjekk.",
+                        "EMAIL_DOMAIN"
+                );
+            }
             boolean reachable = websiteReachabilityService.isReachable(candidate);
             WebsiteContentMatch contentMatch = reachable
                     ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), emailDomain)
@@ -390,18 +405,27 @@ public class CompanyApiV1Mapper {
 
         List<String> nameCandidates = nameBasedWebsiteCandidates(companyCheck.navn());
         if (!nameCandidates.isEmpty()) {
-            List<WebsiteCandidateCheck> candidateChecks = inspectAllCandidates
-                    ? checkWebsiteCandidates(nameCandidates, companyCheck.navn(), emailDomain)
-                    : List.of();
-            String reachableCandidate = inspectAllCandidates
-                    ? preferredWebsiteCandidate(candidateChecks)
-                    : firstReachableCandidate(nameCandidates);
-            WebsiteCandidateCheck preferredCheck = inspectAllCandidates
-                    ? candidateChecks.stream()
+            if (!inspectAllCandidates) {
+                return new WebsiteDiscovery(
+                        "POSSIBLE_MATCH",
+                        "LOW",
+                        nameCandidates,
+                        null,
+                        null,
+                        null,
+                        "Navnebaserte domene-forslag er ikke teknisk sjekket i listevisning.",
+                        null,
+                        List.of(),
+                        "Navnebaserte domene-forslag uten bekreftet kobling. Åpne detaljsiden for teknisk sjekk.",
+                        "NAME_HEURISTIC"
+                );
+            }
+            List<WebsiteCandidateCheck> candidateChecks = checkWebsiteCandidates(nameCandidates, companyCheck.navn(), emailDomain);
+            String reachableCandidate = preferredWebsiteCandidate(candidateChecks);
+            WebsiteCandidateCheck preferredCheck = candidateChecks.stream()
                     .filter(check -> Objects.equals(check.url(), reachableCandidate))
                     .findFirst()
-                    .orElse(null)
-                    : null;
+                    .orElse(null);
             boolean reachable = reachableCandidate != null;
             WebsiteContentMatch contentMatch = preferredCheck != null
                     ? new WebsiteContentMatch(
@@ -2719,13 +2743,6 @@ public class CompanyApiV1Mapper {
             return normalized;
         }
         return HTTPS_PREFIX + normalized;
-    }
-
-    private String firstReachableCandidate(List<String> candidates) {
-        return candidates.stream()
-                .filter(websiteReachabilityService::isReachable)
-                .findFirst()
-                .orElse(null);
     }
 
     private boolean hasText(String value) {

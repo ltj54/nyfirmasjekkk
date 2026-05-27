@@ -173,10 +173,16 @@ function wait(ms: number) {
 
 function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
   const discovery = company.websiteDiscovery;
-  if (company.website || discovery?.status !== "POSSIBLE_MATCH" || discovery.candidates.length === 0) {
+  if (company.website) {
     return false;
   }
 
+  if (discovery?.status === "NONE") {
+    return true;
+  }
+  if (discovery?.status !== "POSSIBLE_MATCH" || discovery.candidates.length === 0) {
+    return false;
+  }
   if (!discovery.candidateChecks?.length) {
     return discovery.verifiedReachable === false;
   }
@@ -185,13 +191,66 @@ function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummar
   return candidates.length > 0 && candidates.every((candidate) => candidate.reachable === false);
 }
 
+function canSelectEmailBatchCandidate(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
+  return !company.website && (
+    company.websiteDiscovery?.status === "NONE"
+      || company.websiteDiscovery?.status === "POSSIBLE_MATCH"
+  );
+}
+
+function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website" | "websiteDiscovery">) {
+  if (!company.email) {
+    return "mangler e-postadresse";
+  }
+  if (company.website) {
+    return `har registrert nettside: ${company.website}`;
+  }
+
+  const discovery = company.websiteDiscovery;
+  if (!discovery) {
+    return "mangler nettsidevurdering";
+  }
+  if (discovery.status === "NONE") {
+    return null;
+  }
+  if (discovery.status !== "POSSIBLE_MATCH") {
+    return "har ikke status som manglende nettside";
+  }
+
+  const reachableCandidate = discovery.candidateChecks?.find((candidate) => candidate.reachable);
+  if (reachableCandidate) {
+    return `mulig nettside svarte: ${reachableCandidate.url}${reachableCandidate.reason ? ` (${reachableCandidate.reason})` : ""}`;
+  }
+  if (discovery.verifiedReachable === true && discovery.verifiedCandidate) {
+    return `mulig nettside svarte: ${discovery.verifiedCandidate}`;
+  }
+
+  return null;
+}
+
 function compareEmailBatchPriority(left: CompanySummary, right: CompanySummary) {
-  const leftSelectable = hasOnlyUnreachablePossibleWebsiteCandidates(left) ? 0 : 1;
-  const rightSelectable = hasOnlyUnreachablePossibleWebsiteCandidates(right) ? 0 : 1;
+  const leftSelectable = canSelectEmailBatchCandidate(left) ? 0 : 1;
+  const rightSelectable = canSelectEmailBatchCandidate(right) ? 0 : 1;
   if (leftSelectable !== rightSelectable) {
     return leftSelectable - rightSelectable;
   }
   return compareLeadPriority(left, right);
+}
+
+function paginationItems(currentPage: number, totalPages: number): Array<number | "..."> {
+  if (totalPages <= 0) {
+    return [];
+  }
+  if (totalPages <= 9) {
+    return Array.from({ length: totalPages }, (_, index) => index);
+  }
+  if (currentPage <= 4) {
+    return [0, 1, 2, 3, 4, 5, 6, "...", totalPages - 1];
+  }
+  if (currentPage >= totalPages - 5) {
+    return [0, "...", totalPages - 7, totalPages - 6, totalPages - 5, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1];
+  }
+  return [0, "...", currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, "...", totalPages - 1];
 }
 
 export function CompanyCheckShell() {
@@ -215,6 +274,7 @@ export function CompanyCheckShell() {
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
+  const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, "checking" | "blocked" | "ready">>({});
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
   const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
@@ -502,10 +562,10 @@ export function CompanyCheckShell() {
       return;
     }
 
-    const eligibleCompanies = companies.filter(hasOnlyUnreachablePossibleWebsiteCandidates);
+    const eligibleCompanies = companies.filter(canSelectEmailBatchCandidate);
     const sendableCompanies = eligibleCompanies.filter((company) => Boolean(company.email));
     if (sendableCompanies.length === 0) {
-      window.alert("Ingen av de valgte treffene har både e-post og mulige nettsider som alle står som 'Svarte ikke'.");
+      window.alert("Ingen av de valgte treffene har både e-post og manglende registrert nettside.");
       return;
     }
     if (sendableCompanies.length > MAX_EMAIL_BATCH_SIZE) {
@@ -517,8 +577,8 @@ export function CompanyCheckShell() {
     const delaySeconds = Math.round(EMAIL_BATCH_SEND_DELAY_MS / 1000);
     const confirmed = window.confirm(
       skippedCount > 0
-        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Fortsette?`
-        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. Fortsette?`,
+        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Detaljsjekk stopper før sending hvis en mulig nettside faktisk svarer. Fortsette?`
+        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. Detaljsjekk stopper før sending hvis en mulig nettside faktisk svarer. Fortsette?`,
     );
     if (!confirmed) {
       return;
@@ -546,8 +606,9 @@ export function CompanyCheckShell() {
           window.alert(`Batch stoppet. Klarte ikke hente detaljene for ${company.name}. ${sentCount} sendt før stopp.`);
           return;
         }
-        if (!detailedCompany.email || !hasOnlyUnreachablePossibleWebsiteCandidates(detailedCompany)) {
-          window.alert(`Batch stoppet. ${detailedCompany.name} oppfyller ikke lenger batch-kravene. ${sentCount} sendt før stopp.`);
+        const blockReason = emailBatchBlockReason(detailedCompany);
+        if (blockReason || !hasOnlyUnreachablePossibleWebsiteCandidates(detailedCompany)) {
+          window.alert(`Batch stoppet. ${detailedCompany.name} oppfyller ikke lenger batch-kravene: ${blockReason ?? "mulig nettside må sjekkes manuelt"}. ${sentCount} sendt før stopp.`);
           return;
         }
 
@@ -574,6 +635,58 @@ export function CompanyCheckShell() {
     } finally {
       setIsBatchSending(false);
     }
+  }
+
+  async function toggleBatchSelectionWithValidation(company: CompanySummary, selected: boolean) {
+    if (!selected) {
+      setBatchSelectionByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: false,
+      }));
+      setBatchValidationByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: "ready",
+      }));
+      return;
+    }
+
+    setBatchValidationByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: "checking",
+    }));
+
+    const detailedCompany = await fetchCompanyDetailsForBatch(company.orgNumber);
+    if (!detailedCompany) {
+      setBatchValidationByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: "blocked",
+      }));
+      window.alert(`Kan ikke velge ${company.name} til batch: klarte ikke hente detaljsjekk.`);
+      return;
+    }
+
+    const blockReason = emailBatchBlockReason(detailedCompany);
+    if (blockReason || !hasOnlyUnreachablePossibleWebsiteCandidates(detailedCompany)) {
+      setBatchSelectionByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: false,
+      }));
+      setBatchValidationByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: "blocked",
+      }));
+      window.alert(`Kan ikke velge ${detailedCompany.name} til batch: ${blockReason ?? "mulig nettside må sjekkes manuelt"}.`);
+      return;
+    }
+
+    setBatchSelectionByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: true,
+    }));
+    setBatchValidationByOrg((current) => ({
+      ...current,
+      [company.orgNumber]: "ready",
+    }));
   }
 
   async function fetchCompanyDetailsForBatch(orgNumber: string) {
@@ -988,7 +1101,7 @@ export function CompanyCheckShell() {
     return !outreachStatus?.sent && outreachStatus?.status !== "not_relevant";
   });
   const selectedBatchCompanies = canUseEmailBatch
-    ? visibleSearchCompanies.filter((company) => batchSelectionByOrg[company.orgNumber] && hasOnlyUnreachablePossibleWebsiteCandidates(company))
+    ? visibleSearchCompanies.filter((company) => batchSelectionByOrg[company.orgNumber] && canSelectEmailBatchCandidate(company))
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
   const overEmailBatchLimit = sendableBatchCount > MAX_EMAIL_BATCH_SIZE;
@@ -1295,26 +1408,58 @@ export function CompanyCheckShell() {
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-2 border border-[#D9E2EC] bg-white px-2 py-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={page === 0 || isListLoading}
-                      onClick={() => void fetchRecent(page - 1)}
-                    >
-                      Forrige
-                    </Button>
-                    <span className="min-w-24 text-center text-sm font-medium">
-                      Side {totalPages > 0 ? page + 1 : 0} av {Math.max(totalPages, 0)}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={page + 1 >= totalPages || isListLoading}
-                      onClick={() => void fetchRecent(page + 1)}
-                    >
-                      Neste
-                    </Button>
+                  <div className="flex flex-col gap-2 border border-[#D9E2EC] bg-white px-2 py-2">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={page === 0 || isListLoading}
+                        onClick={() => void fetchRecent(page - 1)}
+                      >
+                        Forrige
+                      </Button>
+                      <span className="min-w-24 text-center text-sm font-medium">
+                        Side {totalPages > 0 ? page + 1 : 0} av {Math.max(totalPages, 0)}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={page + 1 >= totalPages || isListLoading}
+                        onClick={() => void fetchRecent(page + 1)}
+                      >
+                        Neste
+                      </Button>
+                    </div>
+                    {totalPages > 1 ? (
+                      <div className="flex max-w-[360px] flex-wrap justify-center gap-1">
+                        {paginationItems(page, totalPages).map((item, index) =>
+                          item === "..." ? (
+                            <span
+                              key={`ellipsis-${index}`}
+                              className="flex h-8 min-w-8 items-center justify-center px-1 text-[12px] font-medium text-[#829AB1]"
+                            >
+                              ...
+                            </span>
+                          ) : (
+                            <button
+                              key={item}
+                              type="button"
+                              disabled={isListLoading || item === page}
+                              onClick={() => void fetchRecent(item)}
+                              className={`h-8 min-w-8 border px-2 text-[12px] font-semibold transition-colors ${
+                                item === page
+                                  ? "border-[#1F5FA9] bg-[#1F5FA9] text-white"
+                                  : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933] disabled:cursor-not-allowed disabled:opacity-50"
+                              }`}
+                              aria-current={item === page ? "page" : undefined}
+                              aria-label={`Gå til side ${item + 1}`}
+                            >
+                              {item + 1}
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
                 </div>
@@ -1396,14 +1541,10 @@ export function CompanyCheckShell() {
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    batchSelectable={canUseEmailBatch && hasOnlyUnreachablePossibleWebsiteCandidates(company)}
+                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company)}
                     batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
-                    onToggleBatch={(selected) => {
-                      setBatchSelectionByOrg((current) => ({
-                        ...current,
-                        [company.orgNumber]: selected,
-                      }));
-                    }}
+                    batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
+                    onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
                     onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(company, sent, note, statusOverride)}
                   />
                 ))
@@ -3094,6 +3235,7 @@ function CompanyCard({
   outreachSaving,
   batchSelectable,
   batchSelected,
+  batchValidation,
   onToggleBatch,
   onToggleOutreach,
 }: {
@@ -3103,6 +3245,7 @@ function CompanyCard({
   outreachSaving: boolean;
   batchSelectable: boolean;
   batchSelected: boolean;
+  batchValidation: "checking" | "blocked" | "ready" | null;
   onToggleBatch: (selected: boolean) => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: "sent" | "reverted" | "not_relevant") => void;
 }) {
@@ -3290,12 +3433,12 @@ function CompanyCard({
           batchSelectable ? "cursor-pointer text-[#1F2933]" : "cursor-not-allowed text-[#9FB3C8]"
         }`}
         onClick={(event) => event.stopPropagation()}
-        title={batchSelectable ? undefined : "Krever Har e-post, Mangler nettside og at alle mulige nettsider står som Svarte ikke."}
+        title={batchSelectable ? undefined : "Krever Har e-post og Mangler nettside. Eventuelle nettsidekandidater sjekkes før sending."}
       >
         <input
           checked={batchSelectable && batchSelected}
           className="size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
-          disabled={!batchSelectable}
+          disabled={!batchSelectable || batchValidation === "checking"}
           onChange={(event) => {
             if (batchSelectable) {
               onToggleBatch(event.target.checked);
@@ -3303,7 +3446,13 @@ function CompanyCard({
           }}
           type="checkbox"
         />
-        <span>Send e-post i batch</span>
+        <span>
+          {batchValidation === "checking"
+            ? "Sjekker batch-krav..."
+            : batchValidation === "blocked"
+              ? "Kan ikke batch-sendes"
+              : "Send e-post i batch"}
+        </span>
       </label>
       <OutreachCheckbox
         key={`${company.orgNumber}-${outreachStatus?.sentAt ?? "draft"}-${outreachStatus?.note ?? ""}`}

@@ -4,15 +4,32 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 700
-- Sendt: 600
+- Antall hendelser: 720
+- Sendt: 617
 - Angret: 7
-- Aktive kontaktede selskaper: 596
+- Aktive kontaktede selskaper: 613
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-27 | 937766645 | U39 VALDRES | FLI | email | website-improvement-offer |
+| 2026-05-27 | 937714343 | VAN VUUREN STUDIO, VV STUDIO | ENK | email | website-improvement-offer |
+| 2026-05-27 | 937783701 | QORDER APS | UTLA | email | website-improvement-offer |
+| 2026-05-27 | 937775970 | SUBSEASTEVE LIMITED | UTLA | email | website-offer |
+| 2026-05-27 | 937777728 | FRYWARE LIMITED | UTLA | email | website-offer |
+| 2026-05-27 | 937680260 | PROTECTION CONSULTING LARSEN | ENK | email | website-improvement-offer |
+| 2026-05-27 | 937714084 | KARANI STUDIO_VED KARIN ANITA TØMMERÅS | ENK | email | website-unavailable-offer |
+| 2026-05-27 | 937783124 | TELEMARK HOLDING AS | AS | email | website-offer |
+| 2026-05-27 | 937713622 | OSLO VASK, RENSERI OG SØM CAYBASI | ENK | email | website-offer |
+| 2026-05-27 | 937681119 | NIMANIS MARKETING | ENK | email | website-offer |
+| 2026-05-27 | 937778147 | KAR DIGITAL LIMITED | UTLA | email | website-offer |
+| 2026-05-27 | 937154453 | ELVENES SERVICE AS | AS | email | website-offer |
+| 2026-05-27 | 937089279 | SENTER FOR ELDRE LILLESAND | FLI | email | website-offer |
+| 2026-05-27 | 937781571 | RASDAL CATERING | ENK | email | website-offer |
+| 2026-05-27 | 937781733 | BJØRNSTAD SERVICE | ENK | email | website-offer |
+| 2026-05-27 | 937781687 | MILEVA FOTO | ENK | email | website-offer |
+| 2026-05-27 | 937779658 | KNUSTA AS | AS | email | website-offer |
 | 2026-05-26 | 937450923 | MAKRONNYS RONNY STORUM | ENK | email | website-offer |
 | 2026-05-26 | 937430167 | ABDI TRANSPORT | ENK | email | website-offer |
 | 2026-05-26 | 937586949 | MIKO YOUNG YOUNG | ENK | email | website-offer |
@@ -614,6 +631,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-27 10:29 | sent | 937766645 | U39 VALDRES | FLI | email | Sendt fra nettsidesjekk: https://valdres-nhage.no |
+| 2026-05-27 10:24 | sent | 937714343 | VAN VUUREN STUDIO, VV STUDIO | ENK | email | Sendt fra nettsidesjekk: https://vanvuuren.no |
+| 2026-05-27 10:19 | sent | 937783701 | QORDER APS | UTLA | email | Sendt fra nettsidesjekk: https://fresto.io |
+| 2026-05-27 10:10 | sent | 937775970 | SUBSEASTEVE LIMITED | UTLA | email | - |
+| 2026-05-27 10:10 | sent | 937777728 | FRYWARE LIMITED | UTLA | email | - |
+| 2026-05-27 09:46 | sent | 937680260 | PROTECTION CONSULTING LARSEN | ENK | email | - |
+| 2026-05-27 09:43 | not_relevant | 937782411 | ATELIER KALKMALING AS | AS | email | - |
+| 2026-05-27 09:43 | sent | 937714084 | KARANI STUDIO_VED KARIN ANITA TØMMERÅS | ENK | email | - |
+| 2026-05-27 09:30 | sent | 937783124 | TELEMARK HOLDING AS | AS | email | - |
+| 2026-05-27 09:30 | sent | 937713622 | OSLO VASK, RENSERI OG SØM CAYBASI | ENK | email | - |
+| 2026-05-27 09:30 | sent | 937681119 | NIMANIS MARKETING | ENK | email | - |
+| 2026-05-27 09:30 | sent | 937778147 | KAR DIGITAL LIMITED | UTLA | email | - |
+| 2026-05-27 09:30 | sent | 937154453 | ELVENES SERVICE AS | AS | email | - |
+| 2026-05-27 09:30 | sent | 937089279 | SENTER FOR ELDRE LILLESAND | FLI | email | - |
+| 2026-05-27 09:28 | sent | 937781571 | RASDAL CATERING | ENK | email | - |
+| 2026-05-27 09:24 | not_relevant | 937534612 | NESTTUN HELSE OG TRENING AS | AS | email | - |
+| 2026-05-27 09:19 | not_relevant | 937779674 | NAMDAL BYGG AS | AS | email | - |
+| 2026-05-27 09:13 | sent | 937781733 | BJØRNSTAD SERVICE | ENK | email | - |
+| 2026-05-27 09:13 | sent | 937781687 | MILEVA FOTO | ENK | email | - |
+| 2026-05-27 09:13 | sent | 937779658 | KNUSTA AS | AS | email | - |
 | 2026-05-26 18:30 | sent | 937450923 | MAKRONNYS RONNY STORUM | ENK | email | - |
 | 2026-05-26 18:29 | sent | 937430167 | ABDI TRANSPORT | ENK | email | - |
 | 2026-05-26 18:28 | sent | 937586949 | MIKO YOUNG YOUNG | ENK | email | - |

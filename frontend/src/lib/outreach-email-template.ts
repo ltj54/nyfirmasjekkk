@@ -763,7 +763,8 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{senderName}}": "Lars Johannessen",
     "{{senderPhone}}": "977 24 209",
     "{{senderEmail}}": "kontakt@ltj-production.no",
-    "{{senderWebsite}}": "https://ltj-production.no/",
+    "{{senderWebsite}}": "https://www.ltj-production.no/",
+    "{{websiteCheckSenderWebsite}}": "https://www.ltj-production.no/nettsidesjekk.html",
     "{{registeredWebsite}}": company.website?.trim() || "",
     "{{registeredWebsiteIntro}}": registeredWebsiteIntro(company),
     "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
@@ -793,7 +794,7 @@ Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter s
 Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
-{{senderWebsite}}
+{{websiteCheckSenderWebsite}}
 
 Mvh
 {{senderName}}
@@ -821,7 +822,7 @@ Hvis siden faktisk er nede eller mangler fungerende oppsett, kan jeg også ta op
 Hvis dere ønsker det, kan jeg sende en kort vurdering med eventuelle funn og forslag til tiltak.
 
 Eksempel:
-{{senderWebsite}}
+{{websiteCheckSenderWebsite}}
 
 Mvh
 {{senderName}}
@@ -878,7 +879,7 @@ For en etablert organisasjon er det særlig relevant å se på tilgjengelighet, 
 Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
 
 Eksempel:
-{{senderWebsite}}
+{{websiteCheckSenderWebsite}}
 
 Mvh
 {{senderName}}

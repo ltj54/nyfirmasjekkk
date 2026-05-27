@@ -183,8 +183,9 @@ public class CompanyCheckService {
         int scannedSourcePages = 0;
         int maxSourcePages = maxSourcePagesForUnscoredSearch(request);
         LocalDate upperRegistrationDate = null;
+        boolean reachedEnd = false;
 
-        while (scannedSourcePages < maxSourcePages) {
+        while (matches.size() < request.resultSize() && scannedSourcePages < maxSourcePages) {
             var filter = byggStandardFilter(request, sourcePage, upperRegistrationDate);
             long fetchStartedAt = System.nanoTime();
             EnheterSearchResponse searchResponse = brregClient.sok(filter);
@@ -209,12 +210,14 @@ public class CompanyCheckService {
                     || sourcePage >= pageInfo.totalPages() - 1
                     || textSearchHasMatchesForRequestedPage;
             if (noMorePages || sourceItems.isEmpty()) {
+                reachedEnd = true;
                 break;
             }
 
             if (sourcePage >= maxBrregSourcePage()) {
                 upperRegistrationDate = oldestRegistrationDate(sourceItems);
                 if (upperRegistrationDate == null) {
+                    reachedEnd = true;
                     break;
                 }
                 upperRegistrationDate = upperRegistrationDate.minusDays(1);
@@ -225,7 +228,10 @@ public class CompanyCheckService {
             sourcePage += 1;
         }
 
-        return buildSearchPage(matches, page, request.resultSize(), matchedBeforePage);
+        long totalElements = !reachedEnd && matches.size() == request.resultSize()
+                ? (long) requestedOffset + matches.size() + 1
+                : matchedBeforePage;
+        return buildSearchPage(matches, page, request.resultSize(), totalElements);
     }
 
     private CompanySearchPage sokMedScoreFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
