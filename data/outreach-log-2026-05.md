@@ -4,15 +4,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 820
-- Sendt: 662
+- Antall hendelser: 826
+- Sendt: 668
 - Angret: 7
-- Aktive kontaktede selskaper: 658
+- Aktive kontaktede selskaper: 664
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-28 | 837509572 | TAMANG SAMAJ NORWAY | FLI | email | website-offer |
+| 2026-05-28 | 937511272 | ST. JOSEF STUDENTERHJEM | FLI | email | website-offer |
+| 2026-05-28 | 937533845 | RUNDSÅSEN GAPAHUK | FLI | email | website-offer |
+| 2026-05-28 | 937535260 | SAHIN DIGITAL | ENK | email | website-offer |
+| 2026-05-28 | 937409893 | RAUS BY SCHJØLBERG | ENK | email | website-offer |
+| 2026-05-28 | 937407408 | LAKOMKINAS HUS BYGG OG BETONG | ENK | email | website-offer |
 | 2026-05-28 | 937503792 | KORTEATERET | FLI | email | website-offer |
 | 2026-05-28 | 937196970 | CHEREVATENKO MOTORS | ENK | email | website-offer |
 | 2026-05-28 | 937504314 | MARKEDSPULS NORDØY | ENK | email | website-offer |
@@ -676,6 +682,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-28 19:25 | sent | 837509572 | TAMANG SAMAJ NORWAY | FLI | email | - |
+| 2026-05-28 19:24 | sent | 937511272 | ST. JOSEF STUDENTERHJEM | FLI | email | - |
+| 2026-05-28 19:24 | sent | 937533845 | RUNDSÅSEN GAPAHUK | FLI | email | - |
+| 2026-05-28 19:24 | sent | 937535260 | SAHIN DIGITAL | ENK | email | - |
+| 2026-05-28 19:24 | sent | 937409893 | RAUS BY SCHJØLBERG | ENK | email | - |
+| 2026-05-28 19:24 | sent | 937407408 | LAKOMKINAS HUS BYGG OG BETONG | ENK | email | - |
 | 2026-05-28 07:56 | sent | 937503792 | KORTEATERET | FLI | email | - |
 | 2026-05-28 07:56 | sent | 937196970 | CHEREVATENKO MOTORS | ENK | email | - |
 | 2026-05-28 07:56 | sent | 937504314 | MARKEDSPULS NORDØY | ENK | email | - |
