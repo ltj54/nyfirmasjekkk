@@ -4,15 +4,37 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 798
-- Sendt: 640
+- Antall hendelser: 820
+- Sendt: 662
 - Angret: 7
-- Aktive kontaktede selskaper: 636
+- Aktive kontaktede selskaper: 658
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-28 | 937503792 | KORTEATERET | FLI | email | website-offer |
+| 2026-05-28 | 937196970 | CHEREVATENKO MOTORS | ENK | email | website-offer |
+| 2026-05-28 | 937504314 | MARKEDSPULS NORDØY | ENK | email | website-offer |
+| 2026-05-28 | 937498616 | SVEIN THORSHEIM | TVAM | email | website-offer |
+| 2026-05-28 | 937403712 | PERCY TVERRKULTURELL RÅDGIVNING | ENK | email | website-offer |
+| 2026-05-28 | 937505809 | TLM FIEDLER HOLDING UG (HÄFTUNGSBESCHRÄNKT) | UTLA | email | website-offer |
+| 2026-05-28 | 937277008 | TLM FIEDLER HOLDING UG (HAFTUNGSBESCHRÄNKT) NUF | NUF | email | website-offer |
+| 2026-05-28 | 937529635 | LOKAL LEVERANSE | FLI | email | website-offer |
+| 2026-05-28 | 937434995 | KVITSØY HUMMERKLEKKERI | FLI | email | website-offer |
+| 2026-05-28 | 937535406 | KAPITAN ARROW STRZALKA ARTUR | ENK | email | website-offer |
+| 2026-05-28 | 837539692 | EMMA SUNDLI-HÄRDIG | ENK | email | website-offer |
+| 2026-05-28 | 937424558 | PERLA FELICIA GOMEZ SUAREZ | ENK | email | website-offer |
+| 2026-05-28 | 837409322 | NUUNOW | ENK | email | website-offer |
+| 2026-05-28 | 937366248 | MARTINUSSEN SJÅFØRUTLEIE | ENK | email | website-offer |
+| 2026-05-28 | 937412614 | MALIN FINNI LANDBRUKSTJENESTER | ENK | email | website-offer |
+| 2026-05-28 | 937426542 | LARS VIKO GAUPSET | ENK | email | website-offer |
+| 2026-05-28 | 937415818 | KRINGEN COLLECTIBLES | ENK | email | website-offer |
+| 2026-05-28 | 937429614 | HANI MOHAMED ( BUTIKKNAVN: SUHEYLA COLLECTION) | ENK | email | website-offer |
+| 2026-05-28 | 937407173 | ELISABETH VISLIE | ENK | email | website-offer |
+| 2026-05-28 | 937409958 | BØRJESSON TATTOO | ENK | email | website-offer |
+| 2026-05-28 | 837431832 | MOE | ENK | email | website-offer |
+| 2026-05-28 | 937701004 | SIA "ULTRAMARIN SERVICES" NUF | NUF | email | website-offer |
 | 2026-05-27 | 937539460 | LOFOTEN OG VESTERÅLEN MÅLLAG | FLI | email | website-offer |
 | 2026-05-27 | 937483503 | AK HINNA | ENK | email | website-offer |
 | 2026-05-27 | 937584407 | NATI BY THE WAY MUNOZ GONZALEZ | ENK | email | website-offer |
@@ -654,6 +676,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-28 07:56 | sent | 937503792 | KORTEATERET | FLI | email | - |
+| 2026-05-28 07:56 | sent | 937196970 | CHEREVATENKO MOTORS | ENK | email | - |
+| 2026-05-28 07:56 | sent | 937504314 | MARKEDSPULS NORDØY | ENK | email | - |
+| 2026-05-28 07:56 | sent | 937498616 | SVEIN THORSHEIM | TVAM | email | - |
+| 2026-05-28 07:56 | sent | 937403712 | PERCY TVERRKULTURELL RÅDGIVNING | ENK | email | - |
+| 2026-05-28 07:56 | sent | 937505809 | TLM FIEDLER HOLDING UG (HÄFTUNGSBESCHRÄNKT) | UTLA | email | - |
+| 2026-05-28 07:55 | sent | 937277008 | TLM FIEDLER HOLDING UG (HAFTUNGSBESCHRÄNKT) NUF | NUF | email | - |
+| 2026-05-28 07:50 | sent | 937529635 | LOKAL LEVERANSE | FLI | email | - |
+| 2026-05-28 07:50 | sent | 937434995 | KVITSØY HUMMERKLEKKERI | FLI | email | - |
+| 2026-05-28 07:50 | sent | 937535406 | KAPITAN ARROW STRZALKA ARTUR | ENK | email | - |
+| 2026-05-28 07:50 | sent | 837539692 | EMMA SUNDLI-HÄRDIG | ENK | email | - |
+| 2026-05-28 07:50 | sent | 937424558 | PERLA FELICIA GOMEZ SUAREZ | ENK | email | - |
+| 2026-05-28 07:50 | sent | 837409322 | NUUNOW | ENK | email | - |
+| 2026-05-28 07:50 | sent | 937366248 | MARTINUSSEN SJÅFØRUTLEIE | ENK | email | - |
+| 2026-05-28 07:50 | sent | 937412614 | MALIN FINNI LANDBRUKSTJENESTER | ENK | email | - |
+| 2026-05-28 07:49 | sent | 937426542 | LARS VIKO GAUPSET | ENK | email | - |
+| 2026-05-28 07:49 | sent | 937415818 | KRINGEN COLLECTIBLES | ENK | email | - |
+| 2026-05-28 07:49 | sent | 937429614 | HANI MOHAMED ( BUTIKKNAVN: SUHEYLA COLLECTION) | ENK | email | - |
+| 2026-05-28 07:49 | sent | 937407173 | ELISABETH VISLIE | ENK | email | - |
+| 2026-05-28 07:49 | sent | 937409958 | BØRJESSON TATTOO | ENK | email | - |
+| 2026-05-28 07:49 | sent | 837431832 | MOE | ENK | email | - |
+| 2026-05-28 07:44 | sent | 937701004 | SIA "ULTRAMARIN SERVICES" NUF | NUF | email | - |
 | 2026-05-28 00:17 | not_relevant | 937772505 | FORMAA AS | AS | email | Mulig nettside svarte: https://formaa.no (utledet fra registrert e-postdomene). |
 | 2026-05-27 17:34 | batch_excluded | 937420994 | MACQUARIE BANK LIMITED NUF | NUF | email | Mulig nettside svarte: https://macquarie.com (utledet fra registrert e-postdomene). |
 | 2026-05-27 17:32 | batch_excluded | 937475209 | FRIDTJOFSEN PIANOSERVICE | ENK | email | mulig nettside svarte: https://fridtjofsenpianoservice.no (Innholdet på siden ligner på selskapsnavnet.) |
