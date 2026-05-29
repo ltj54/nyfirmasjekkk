@@ -1151,7 +1151,7 @@ export function CompanyCheckShell() {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
     return !outreachStatus?.sent
       && outreachStatus?.status !== "not_relevant"
-      && !(canUseEmailBatch && isBatchExcluded(outreachStatus));
+      && outreachStatus?.status !== "batch_excluded";
   });
   const selectedBatchCompanies = canUseEmailBatch
     ? visibleSearchCompanies.filter((company) =>

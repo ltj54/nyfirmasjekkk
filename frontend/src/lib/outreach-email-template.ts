@@ -48,10 +48,18 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
     return "Sosiale medier fungerer fint som kanal, men en fast nettside gir ofte et mer ryddig sted å samle kontaktinfo, tjenester og praktisk informasjon.";
   }
 
+  const isCandidate = isWebsiteCandidateContext(company);
+  const isThin = signalCodes.has("THIN_CONTENT") || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT") || signalCodes.has("WEAK_HOMEPAGE_STRUCTURE");
+
+  if (isCandidate && isThin) {
+    return "Siden kan se ut til å være under arbeid eller mangler foreløpig en del innhold og teknisk oppsett.";
+  }
+
   const toneProfile = websiteQualityToneProfile(company);
   const categoryPoints = websiteQualityMailCategoryPoints(signalCodes);
   if (categoryPoints.length > 0) {
-    return `Blant punktene som kom opp var blant annet ${formatNorwegianList(categoryPoints.slice(0, toneProfile.maxMailPoints + 3))}.`;
+    const limit = isCandidate ? 2 : toneProfile.maxMailPoints + 1;
+    return `Punktene gjelder blant annet ${formatNorwegianList(categoryPoints.slice(0, limit))}.`;
   }
 
   const importantCodes = new Set(signals.filter((signal) => signal.severity === "HIGH" || signal.severity === "MEDIUM").map((signal) => signal.code));
@@ -68,7 +76,7 @@ export function websiteQualityMailLine(company: OutreachEmailCompany) {
     return "";
   }
 
-  return `Blant punktene som kom opp var blant annet ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
+  return `Punktene gjelder blant annet ${formatNorwegianList(points.slice(0, toneProfile.maxMailPoints))}.`;
 }
 
 export function websiteComplianceMailLine(company: OutreachEmailCompany) {
@@ -119,6 +127,7 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
     "DEVELOPMENT_REFERENCE_EXPOSED",
     "TARGET_BLANK_NOOPENER_MISSING",
     "PERSONAL_DATA_GET_FORM",
+    "SENSITIVE_DATA_FORM",
     "EXTERNAL_FORM_ACTION",
     "DOM_XSS_SURFACE_REVIEW",
     "DANGEROUS_JS_SINK_REVIEW",
@@ -214,6 +223,7 @@ function prioritizedWebsiteQualityMailPoints(signalCodes: Set<string>, toneProfi
   addMailPoint(points, signalCodes.has("POST_FORM_CSRF_REVIEW"), "POST-skjema som bør vurderes for CSRF-beskyttelse");
   addMailPoint(points, signalCodes.has("COOKIE_SECURE_FLAG_MISSING") || signalCodes.has("COOKIE_HTTPONLY_REVIEW") || signalCodes.has("COOKIE_SAMESITE_REVIEW"), "cookie-flagg for sesjon, sikkerhet og personvern");
   addMailPoint(points, signalCodes.has("MISSING_PRIVACY_NOTICE") || signalCodes.has("CRAWL_PRIVACY_PAGE_NOT_FOUND") || signalCodes.has("CRAWL_FORM_PRIVACY_REVIEW"), "personverninfo ved skjema eller innsamling av kontaktdata");
+  addMailPoint(points, signalCodes.has("SENSITIVE_DATA_FORM"), "sikkerhet og personvern rundt skjemafelt for sensitive opplysninger");
   addMailPoint(points, signalCodes.has("COOKIE_CONSENT_RISK"), "cookies eller måling uten tydelig samtykkespor");
   addMailPoint(points, hasTrackingConsentRisk(signalCodes), "tracking og tredjepartsinnhold som bør vurderes opp mot samtykke");
   addMailPoint(points, signalCodes.has("FORM_LABEL_RISK"), "skjemafelt som ser ut til å mangle tydelig label");
@@ -338,6 +348,7 @@ function hasApplicationSecurityRisk(signalCodes: Set<string>) {
     || signalCodes.has("DEVELOPMENT_REFERENCE_EXPOSED")
     || signalCodes.has("TARGET_BLANK_NOOPENER_MISSING")
     || signalCodes.has("PERSONAL_DATA_GET_FORM")
+    || signalCodes.has("SENSITIVE_DATA_FORM")
     || signalCodes.has("EXTERNAL_FORM_ACTION")
     || signalCodes.has("DOM_XSS_SURFACE_REVIEW")
     || signalCodes.has("DANGEROUS_JS_SINK_REVIEW")
@@ -364,15 +375,15 @@ function hasApplicationSecurityRisk(signalCodes: Set<string>) {
 function websiteQualityMailCategoryPoints(signalCodes: Set<string>) {
   const points: string[] = [];
 
-  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK"), "mulig mixed content");
-  addMailPoint(points, hasSecurityHeaderRisk(signalCodes), "manglende eller svake sikkerhetsheadere");
-  addMailPoint(points, hasTechnologyExposure(signalCodes), "synlige teknologispor");
-  addMailPoint(points, hasPrivacyOrThirdPartyRisk(signalCodes), "personvern rundt skjema, cookies eller tredjepartsinnhold");
-  addMailPoint(points, hasAccessibilityCategoryRisk(signalCodes), "noen enkle UU-signaler");
-  addMailPoint(points, hasApplicationSecurityRisk(signalCodes), "admin-, API- eller cookiepunkter som bør vurderes manuelt");
+  addMailPoint(points, hasTrustOrContentRisk(signalCodes), "tillit og innhold");
+  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || hasTechnologyExposure(signalCodes), "teknisk kvalitet");
+  addMailPoint(points, hasSecurityHeaderRisk(signalCodes), "sikkerhetsoppsett");
+  addMailPoint(points, hasPrivacyOrThirdPartyRisk(signalCodes), "personvern/skjema");
+  addMailPoint(points, hasAccessibilityCategoryRisk(signalCodes), "noen enkle tilgjengelighetssignaler");
+  addMailPoint(points, hasApplicationSecurityRisk(signalCodes), "admin-, API- eller cookiepunkter");
   addMailPoint(points, hasEmailSecurityRisk(signalCodes), "e-postsikkerhet på domenet");
-  addMailPoint(points, hasCommerceRisk(signalCodes), "vilkår, retur, levering eller kjøpsinformasjon");
-  addMailPoint(points, hasTrustOrContentRisk(signalCodes), "tillit, innhold eller brukerflyt");
+  addMailPoint(points, hasCommerceRisk(signalCodes), "vilkår, retur og kjøpsinformasjon");
+  addMailPoint(points, hasTrustOrContentRisk(signalCodes), "tillit og innhold");
 
   return points;
 }
@@ -400,6 +411,7 @@ function hasPrivacyOrThirdPartyRisk(signalCodes: Set<string>) {
     || signalCodes.has("THIRD_PARTY_EMBED_CONSENT_RISK")
     || signalCodes.has("THIRD_PARTY_FORM_RISK")
     || signalCodes.has("PERSONAL_DATA_GET_FORM")
+    || signalCodes.has("SENSITIVE_DATA_FORM")
     || signalCodes.has("EXTERNAL_FORM_ACTION")
     || signalCodes.has("GOOGLE_ANALYTICS_WITHOUT_CONSENT")
     || signalCodes.has("META_PIXEL_WITHOUT_CONSENT")
@@ -484,7 +496,7 @@ const normalWebsiteToneProfile: WebsiteQualityToneProfile = {
   sensitivePoint: "ekstra ryddighet rundt personvern og skjema fordi siden berører et mer tillitsbasert fagområde",
   privacyPoint: "personvern- og samtykketekst der siden samler inn eller måler data",
   maintenancePoint: "noen tekniske eller vedlikeholdsmessige punkter som kan svekke inntrykket",
-  complianceLine: "Personvern, skjema og tilgjengelighet er også tillitspunkter som kan være lurt å ha ryddig.",
+  complianceLine: "Slike ting handler ikke bare om teknikk, men også om tillit for besøkende som vurderer å ta kontakt.",
 };
 
 function websiteQualityToneProfile(company: OutreachEmailCompany): WebsiteQualityToneProfile {
@@ -790,7 +802,8 @@ function defaultWebsiteQualityOpportunityEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt.
+Jeg gjorde en enkel, automatisk førstesjekk av siden og fikk noen signaler som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som en kort teknisk indikasjon som bør vurderes manuelt.
+
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
@@ -875,7 +888,7 @@ function defaultRegisteredWebsiteReviewEmailTemplate() {
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt.
+Jeg gjorde en enkel, automatisk førstesjekk av siden og fikk noen signaler som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som en kort teknisk indikasjon som bør vurderes manuelt.
 
 For en etablert organisasjon er det særlig relevant å se på tilgjengelighet, personvern, samtykkeflyt, sikkerhetsheadere, eksterne scripts og innebygd tredjepartsinnhold.
 
@@ -921,7 +934,10 @@ function firstNameFromContactName(value: string) {
 }
 
 function displayCompanyName(company: Pick<OutreachEmailCompany, "name" | "organizationForm">) {
-  return company.name.trim();
+  return company.name
+    .replace(/\s+(AS|ASA|ENK|NUF|DA|ANS|SA|BA|LTD|LIMITED|LLC|INC|GMBH|OU|OÜ)$/i, "")
+    .replace(/\.+(AS|ASA|ENK|NUF|DA|ANS|SA|BA|LTD|LIMITED|LLC|INC|GMBH|OU|OÜ)$/i, "")
+    .trim();
 }
 
 function domainExamplesForCompany(company: OutreachEmailCompany) {
@@ -1216,7 +1232,7 @@ function registeredWebsiteIntro(company: OutreachEmailCompany) {
     return `${website} ser ut til å være brukt som digital flate.`;
   }
   if (isWebsiteCandidateContext(company)) {
-    return `${website} ser ut til å være aktuell nettside for ${company.name}, selv om den ikke er registrert som nettside i BRREG.`;
+    return `${website} kan se ut til å være en aktuell nettside for virksomheten, selv om jeg ikke ser at den er registrert som nettside i BRREG.`;
   }
 
   return `${website} er registrert som nettside i BRREG.`;

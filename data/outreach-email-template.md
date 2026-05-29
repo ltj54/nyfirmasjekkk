@@ -119,7 +119,8 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt.
+Jeg gjorde en enkel, automatisk førstesjekk av siden og fikk noen signaler som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som en kort teknisk indikasjon som bør vurderes manuelt.
+
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
@@ -141,7 +142,7 @@ Hei {{greeting}},
 
 {{registeredWebsiteIntro}}
 
-Jeg gjorde en enkel, automatisk førstesjekk av nettsiden og fant noen punkter som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som signaler som bør vurderes manuelt — særlig for en etablert organisasjon der tillit, tilgjengelighet og personvern er viktig.
+Jeg gjorde en enkel, automatisk førstesjekk av siden og fikk noen signaler som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som en kort teknisk indikasjon som bør vurderes manuelt — særlig for en etablert organisasjon der tillit, tilgjengelighet og personvern er viktig.
 
 Eksempler på områder jeg kan gå gjennom:
 

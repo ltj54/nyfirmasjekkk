@@ -4,15 +4,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 826
-- Sendt: 668
+- Antall hendelser: 857
+- Sendt: 693
 - Angret: 7
-- Aktive kontaktede selskaper: 664
+- Aktive kontaktede selskaper: 689
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-05-29 | 936907733 | BÆRUM BYGG CHUPOLAEV | ENK | email | website-offer |
+| 2026-05-29 | 937467028 | RUSTEM TEMIRKAIAIEV | ENK | email | website-offer |
+| 2026-05-29 | 937473249 | LUKASZ KOLANOWSKI FLIS OG BAD | ENK | email | website-offer |
+| 2026-05-29 | 937383444 | ALTE CONSULT | ENK | email | website-offer |
+| 2026-05-29 | 937296355 | JØNDAL KONSULENTTJENESTER | ENK | email | website-offer |
+| 2026-05-29 | 937484720 | SØMNA DANSEKLUBB | FLI | email | website-offer |
+| 2026-05-29 | 937378416 | HUSH | FLI | email | website-offer |
+| 2026-05-29 | 937487053 | AFROKUBANSK KULTURFORENING | FLI | email | website-offer |
+| 2026-05-29 | 937003889 | UD-BARNA | FLI | email | website-offer |
+| 2026-05-29 | 937480695 | GAMLE SOMAVEI 55 OG 55A | ESEK | email | website-offer |
+| 2026-05-29 | 937501935 | LINØYE ANDERSEN | ENK | email | website-offer |
+| 2026-05-29 | 837490502 | VP SPESIALISTEN POPA | ENK | email | website-offer |
+| 2026-05-29 | 937485611 | FRITSVOLD MUSIKK | ENK | email | website-offer |
+| 2026-05-29 | 937399103 | CARLOS ANDRES ROJAS CENDALES CAFEELDORADOCOLOMBIA | ENK | email | website-offer |
+| 2026-05-29 | 937381689 | JABADABADO AB | NUF | email | website-offer |
+| 2026-05-29 | 937490453 | ZAMANI B.V. | UTLA | email | website-offer |
+| 2026-05-29 | 937484607 | CONSUMABLES APS | UTLA | email | website-offer |
+| 2026-05-29 | 936946844 | C- IDEAL SERVICE AS | AS | email | website-offer |
+| 2026-05-29 | 937381239 | STOCKHOLM SURFBOARD AB | NUF | email | website-offer |
+| 2026-05-29 | 937504322 | KVITESEID FRP | FLI | email | website-offer |
+| 2026-05-29 | 937504365 | KRINGLEBOTN SENIORGRUPPE | FLI | email | website-offer |
+| 2026-05-29 | 935624215 | INDERØY NEI TIL EU | FLI | email | website-offer |
+| 2026-05-29 | 937506864 | ELNESVÅGEN HANDELSFORENING | FLI | email | website-offer |
+| 2026-05-29 | 933968405 | LÆRKENDAL BOLIGSAMEIE | ESEK | email | website-offer |
+| 2026-05-29 | 937475209 | FRIDTJOFSEN PIANOSERVICE | ENK | email | website-offer |
 | 2026-05-28 | 837509572 | TAMANG SAMAJ NORWAY | FLI | email | website-offer |
 | 2026-05-28 | 937511272 | ST. JOSEF STUDENTERHJEM | FLI | email | website-offer |
 | 2026-05-28 | 937533845 | RUNDSÅSEN GAPAHUK | FLI | email | website-offer |
@@ -682,6 +707,37 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-29 11:11 | sent | 936907733 | BÆRUM BYGG CHUPOLAEV | ENK | email | - |
+| 2026-05-29 11:11 | sent | 937467028 | RUSTEM TEMIRKAIAIEV | ENK | email | - |
+| 2026-05-29 11:11 | sent | 937473249 | LUKASZ KOLANOWSKI FLIS OG BAD | ENK | email | - |
+| 2026-05-29 11:11 | sent | 937383444 | ALTE CONSULT | ENK | email | - |
+| 2026-05-29 11:11 | sent | 937296355 | JØNDAL KONSULENTTJENESTER | ENK | email | - |
+| 2026-05-29 11:10 | sent | 937484720 | SØMNA DANSEKLUBB | FLI | email | - |
+| 2026-05-29 11:10 | sent | 937378416 | HUSH | FLI | email | - |
+| 2026-05-29 11:10 | sent | 937487053 | AFROKUBANSK KULTURFORENING | FLI | email | - |
+| 2026-05-29 11:10 | sent | 937003889 | UD-BARNA | FLI | email | - |
+| 2026-05-29 11:10 | sent | 937480695 | GAMLE SOMAVEI 55 OG 55A | ESEK | email | - |
+| 2026-05-29 11:10 | sent | 937501935 | LINØYE ANDERSEN | ENK | email | - |
+| 2026-05-29 11:10 | sent | 837490502 | VP SPESIALISTEN POPA | ENK | email | - |
+| 2026-05-29 11:10 | sent | 937485611 | FRITSVOLD MUSIKK | ENK | email | - |
+| 2026-05-29 11:09 | sent | 937399103 | CARLOS ANDRES ROJAS CENDALES CAFEELDORADOCOLOMBIA | ENK | email | - |
+| 2026-05-29 11:09 | sent | 937381689 | JABADABADO AB | NUF | email | - |
+| 2026-05-29 11:09 | sent | 937490453 | ZAMANI B.V. | UTLA | email | - |
+| 2026-05-29 11:09 | sent | 937484607 | CONSUMABLES APS | UTLA | email | - |
+| 2026-05-29 11:09 | sent | 936946844 | C- IDEAL SERVICE AS | AS | email | - |
+| 2026-05-29 11:09 | sent | 937381239 | STOCKHOLM SURFBOARD AB | NUF | email | - |
+| 2026-05-29 11:07 | sent | 937504322 | KVITESEID FRP | FLI | email | - |
+| 2026-05-29 11:07 | sent | 937504365 | KRINGLEBOTN SENIORGRUPPE | FLI | email | - |
+| 2026-05-29 11:07 | sent | 935624215 | INDERØY NEI TIL EU | FLI | email | - |
+| 2026-05-29 11:07 | sent | 937506864 | ELNESVÅGEN HANDELSFORENING | FLI | email | - |
+| 2026-05-29 11:07 | sent | 933968405 | LÆRKENDAL BOLIGSAMEIE | ESEK | email | - |
+| 2026-05-29 10:51 | sent | 937475209 | FRIDTJOFSEN PIANOSERVICE | ENK | email | mulig nettside svarte: https://fridtjofsenpianoservice.no (Innholdet på siden ligner på selskapsnavnet.) |
+| 2026-05-29 09:55 | not_relevant | 937688113 | PROPATIENTFLOW - COCIRCA | ENK | email | - |
+| 2026-05-29 09:52 | not_relevant | 937752091 | POLI-MAP | FLI | email | - |
+| 2026-05-29 09:49 | not_relevant | 937786948 | ALQUION B.V. | UTLA | email | - |
+| 2026-05-29 09:48 | not_relevant | 937701047 | OU ULTRAMARIN SERVICES NUF | NUF | email | Mulig nettside svarte: https://bhras.no (utledet fra registrert e-postdomene). |
+| 2026-05-29 09:47 | not_relevant | 937454074 | LUMIXAVERO OÜ NUF | NUF | email | Batch-sjekk tok for lang tid. Prøv igjen eller åpne detaljsiden. |
+| 2026-05-29 09:38 | not_relevant | 937693478 | BUCHEN-ICS MOBILE SERVICE LTD. NUF | NUF | email | Batch-sjekk tok for lang tid. Prøv igjen eller åpne detaljsiden. |
 | 2026-05-28 19:25 | sent | 837509572 | TAMANG SAMAJ NORWAY | FLI | email | - |
 | 2026-05-28 19:24 | sent | 937511272 | ST. JOSEF STUDENTERHJEM | FLI | email | - |
 | 2026-05-28 19:24 | sent | 937533845 | RUNDSÅSEN GAPAHUK | FLI | email | - |

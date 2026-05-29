@@ -173,6 +173,7 @@ public class WebsiteContentSnapshotFetcher {
             int targetBlankWithoutNoopenerCount = targetBlankWithoutNoopenerCount(document);
             boolean personalDataGetFormSignal = personalDataGetFormSignal(document);
             boolean externalFormActionSignal = externalFormActionSignal(document, response.url().toString());
+            boolean sensitiveDataFormSignal = sensitiveDataFormSignal(document);
             boolean noIndexSignal = document.selectFirst("meta[name=robots][content*=noindex], meta[name=googlebot][content*=noindex]") != null;
             boolean sitemapSignal = hasSitemap(response.url().toString());
             int inlineEventHandlerCount = inlineEventHandlerCount(document);
@@ -191,6 +192,8 @@ public class WebsiteContentSnapshotFetcher {
             boolean robotsSensitivePathSignal = robotsSensitivePathSignal(response.url().toString());
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
             ExtendedCrawlResult crawlResult = extendedCrawl(document, response.url().toString());
+            boolean healthPlatformSignal = hasAny(htmlSnapshot + " " + crawlResult.bodyText(),
+                    "pasientsky.no", "helseboka.no", "helsenorge.no", "conveniens.no", "pridok.no", "visitlege.no");
             String accessibilityDeclarationUrl = accessibilityDeclarationUrl(document, response.url().toString());
             AccessibilityDeclarationResult accessibilityDeclarationResult = extended
                     ? accessibilityDeclarationResult(accessibilityDeclarationUrl)
@@ -286,6 +289,8 @@ public class WebsiteContentSnapshotFetcher {
                     targetBlankWithoutNoopenerCount,
                     personalDataGetFormSignal,
                     externalFormActionSignal,
+                    sensitiveDataFormSignal,
+                    healthPlatformSignal,
                     noIndexSignal,
                     sitemapSignal,
                     inlineEventHandlerCount,
@@ -541,7 +546,22 @@ public class WebsiteContentSnapshotFetcher {
                 || combined.contains("phone")
                 || combined.contains("mobil")
                 || combined.contains("address")
-                || combined.contains("adresse");
+                || combined.contains("adresse")
+                || isSensitivePersonalDataInput(input);
+    }
+
+    private static boolean isSensitivePersonalDataInput(Element input) {
+        String combined = (
+                input.attr("name") + " "
+                        + input.attr("id") + " "
+                        + input.attr("placeholder") + " "
+                        + input.attr("aria-label")
+        ).toLowerCase();
+        return combined.contains("personnummer")
+                || combined.contains("fodselsnummer")
+                || combined.contains("fødselsnummer")
+                || combined.contains("fnr")
+                || combined.contains("ssn");
     }
 
     private static boolean hasMotionSignalWithoutReducedMotion(String html) {
@@ -784,6 +804,12 @@ public class WebsiteContentSnapshotFetcher {
                 })
                 .flatMap(form -> form.select("input:not([type=hidden]), textarea, select").stream())
                 .anyMatch(WebsiteContentSnapshotFetcher::isPersonalDataInput);
+    }
+
+    private static boolean sensitiveDataFormSignal(Document document) {
+        return document.select("form").stream()
+                .flatMap(form -> form.select("input:not([type=hidden]), textarea, select").stream())
+                .anyMatch(WebsiteContentSnapshotFetcher::isSensitivePersonalDataInput);
     }
 
     private static boolean externalFormActionSignal(Document document, String finalUrl) {

@@ -178,8 +178,14 @@ public class CompanyApiV1Mapper {
             "psykolog",
             "terapi",
             "klinikk",
+            "reiseklinikk",
             "timebestilling",
             "konsultasjon",
+            "behandling",
+            "medisin",
+            "vaksine",
+            "vaksinasjon",
+            "pasientjournal",
             "personopplysninger",
             "sensitive opplysninger",
             "helseopplysninger"
@@ -964,6 +970,14 @@ public class CompanyApiV1Mapper {
                     "MISSING_STRUCTURED_DATA",
                     "Mangler strukturert data",
                     "Siden ser ikke ut til å ha strukturert data. Det kan gjøre det vanskeligere for søkemotorer å forstå virksomhet, kontaktpunkt og innhold.",
+                    "INFO"
+            ));
+        }
+        if (snapshot.healthPlatformSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "HEALTH_PLATFORM",
+                    "Bruker profesjonell helseplattform",
+                    "Siden ser ut til å bruke en etablert tredjepartsløsning (som PatientSky eller Helseboka) for booking eller pasientkontakt. Dette er et positivt tillitssignal for sikker håndtering av helseopplysninger.",
                     "INFO"
             ));
         }
@@ -1981,6 +1995,14 @@ public class CompanyApiV1Mapper {
                     "Skjema kan sende persondata i URL",
                     "Minst ett skjema med persondatafelt ser ut til å bruke GET eller mangler method. Det kan legge navn, e-post eller telefon i URL/logg.",
                     "MEDIUM"
+            ));
+        }
+        if (snapshot.sensitiveDataFormSignal()) {
+            signals.add(new WebsiteQualitySignal(
+                    "SENSITIVE_DATA_FORM",
+                    "Sensitive opplysninger i skjema",
+                    "Siden ser ut til å ha skjemafelt for personnummer eller andre sensitive opplysninger. Personvern og sikkerhet rundt innsending bør vurderes manuelt.",
+                    "HIGH"
             ));
         }
         if (snapshot.externalFormActionSignal()) {
