@@ -800,7 +800,7 @@ public class WebsiteContentSnapshotFetcher {
         return document.select("form").stream()
                 .filter(form -> {
                     String method = form.attr("method");
-                    return method == null || method.isBlank() || "get".equalsIgnoreCase(method);
+                    return method.isBlank() || "get".equalsIgnoreCase(method);
                 })
                 .flatMap(form -> form.select("input:not([type=hidden]), textarea, select").stream())
                 .anyMatch(WebsiteContentSnapshotFetcher::isPersonalDataInput);
@@ -1197,7 +1197,7 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static void appendCrawledBodyText(StringBuilder target, Document document) {
-        if (target.length() >= EXTENDED_CRAWL_TEXT_BYTES || document.body() == null) {
+        if (target.length() >= EXTENDED_CRAWL_TEXT_BYTES) {
             return;
         }
         String text = document.body().text();
