@@ -42,7 +42,7 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-sans);
+    font-family: var(--font-sans), sans-serif;
     background-image: linear-gradient(180deg, #fafbfd 0%, #f5f7fa 100%);
   }
 }
