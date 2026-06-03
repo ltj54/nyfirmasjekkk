@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 49
-- Sendt: 49
+- Antall hendelser: 52
+- Sendt: 51
 - Angret: 0
-- Aktive kontaktede selskaper: 49
+- Aktive kontaktede selskaper: 51
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-03 | 937697600 | TVEIT DRIFT | ENK | email | website-offer |
+| 2026-06-03 | 937714068 | AUNBU KREATIV STRATEGI | ENK | email | website-offer |
 | 2026-06-03 | 837714052 | HAY SVEUM SYKEPLEIERUTLEIE | ENK | email | website-offer |
 | 2026-06-03 | 937703902 | BØSTRAND BAADER SERVICE | ENK | email | website-offer |
 | 2026-06-03 | 937809549 | BJELLAND DRIFT AS | AS | email | website-offer |
@@ -67,6 +69,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-03 11:04 | not_relevant | 937726201 | WESTGASS ENERGY AG NUF | NUF | email | - |
+| 2026-06-03 11:03 | sent | 937697600 | TVEIT DRIFT | ENK | email | - |
+| 2026-06-03 10:57 | sent | 937714068 | AUNBU KREATIV STRATEGI | ENK | email | - |
 | 2026-06-03 10:39 | sent | 837714052 | HAY SVEUM SYKEPLEIERUTLEIE | ENK | email | - |
 | 2026-06-03 10:38 | sent | 937703902 | BØSTRAND BAADER SERVICE | ENK | email | - |
 | 2026-06-03 10:38 | sent | 937809549 | BJELLAND DRIFT AS | AS | email | - |
