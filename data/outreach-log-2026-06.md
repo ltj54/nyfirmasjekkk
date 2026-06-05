@@ -4,15 +4,49 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 52
-- Sendt: 51
+- Antall hendelser: 86
+- Sendt: 85
 - Angret: 0
-- Aktive kontaktede selskaper: 51
+- Aktive kontaktede selskaper: 85
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-05 | 937763050 | AXABYGG AS | AS | email | website-offer |
+| 2026-06-05 | 937756542 | WIIK SVEIS & MEKANISK | ENK | email | website-offer |
+| 2026-06-05 | 937653689 | LARBI | ENK | email | website-offer |
+| 2026-06-05 | 937753748 | LANDMÅLER LORENTZEN | ENK | email | website-offer |
+| 2026-06-05 | 937820011 | HESJEVIK MASKIN OG FIX | ENK | email | website-offer |
+| 2026-06-05 | 937822421 | FERJESTEDSGÅRDEN BAKERIUTSALG AS | AS | email | website-offer |
+| 2026-06-05 | 937835981 | GULBRANDSEN BUDTJENESTE | ENK | email | website-offer |
+| 2026-06-05 | 937816529 | HAUGEN-HUSØY TOLK OG KONTOR | ENK | email | website-offer |
+| 2026-06-05 | 937724853 | TERROIR MONIN | ENK | email | website-offer |
+| 2026-06-05 | 937762275 | SANDRA MILIAUSKAITE | ENK | email | website-offer |
+| 2026-06-05 | 937633580 | ROLF ARNE REIERSØL | ENK | email | website-offer |
+| 2026-06-05 | 937742908 | PRANG PHUTKHAO | ENK | email | website-offer |
+| 2026-06-05 | 937832125 | MIE STEEN | ENK | email | website-offer |
+| 2026-06-05 | 937738331 | KORTKREASJONER AV SKANCKE | ENK | email | website-offer |
+| 2026-06-05 | 937744757 | KIM KORNOR BRIDGE | ENK | email | website-offer |
+| 2026-06-05 | 937689497 | HERSH SIGURD ABEDI | ENK | email | website-offer |
+| 2026-06-05 | 937738765 | FREDRIKKE SOFIE FRØSHAUG POPPE | ENK | email | website-offer |
+| 2026-06-05 | 937734271 | EMILSEN EXPEDITIONS SKIPPER SERVICES | ENK | email | website-offer |
+| 2026-06-05 | 937738978 | BJØRNSTAD EDGE | ENK | email | website-offer |
+| 2026-06-05 | 937747381 | B H CHRISTENSEN TJENESTER | ENK | email | website-offer |
+| 2026-06-05 | 937824874 | ANOTHERSEINE BOSTYN | ENK | email | website-offer |
+| 2026-06-05 | 937758944 | THOMAS LIEN | ENK | email | website-offer |
+| 2026-06-05 | 937762232 | RØNNING GAMES | ENK | email | website-offer |
+| 2026-06-05 | 937690541 | ONE NYHUS | ENK | email | website-offer |
+| 2026-06-05 | 937762224 | LEKTOR FELIX V/ FELIX SIELING | ENK | email | website-offer |
+| 2026-06-05 | 937813287 | TYNGDEN 2 | FLI | email | website-offer |
+| 2026-06-05 | 937819900 | ESPEDALEN FOREDRAG & RÅDGIVNING | ENK | email | website-offer |
+| 2026-06-05 | 937818173 | BENDOR-SAMUEL MEDIA | ENK | email | website-offer |
+| 2026-06-05 | 837821142 | RAPOSO SOLUTIONS | ENK | email | website-offer |
+| 2026-06-05 | 937760957 | VILLFLORA LITLABØ | ENK | email | website-offer |
+| 2026-06-05 | 837833922 | MATKURV AS | AS | email | website-offer |
+| 2026-06-05 | 937820216 | LOGOPED ELLA BØLVIKEN | ENK | email | website-offer |
+| 2026-06-05 | 937821387 | NORSK-UKRAINSK FORENING I SØR | FLI | email | website-offer |
+| 2026-06-05 | 937821212 | TANDBERG MASKINDRIFT | ENK | email | website-offer |
 | 2026-06-03 | 937697600 | TVEIT DRIFT | ENK | email | website-offer |
 | 2026-06-03 | 937714068 | AUNBU KREATIV STRATEGI | ENK | email | website-offer |
 | 2026-06-03 | 837714052 | HAY SVEUM SYKEPLEIERUTLEIE | ENK | email | website-offer |
@@ -69,6 +103,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-05 10:28 | sent | 937763050 | AXABYGG AS | AS | email | - |
+| 2026-06-05 10:28 | sent | 937756542 | WIIK SVEIS & MEKANISK | ENK | email | - |
+| 2026-06-05 10:28 | sent | 937653689 | LARBI | ENK | email | - |
+| 2026-06-05 10:28 | sent | 937753748 | LANDMÅLER LORENTZEN | ENK | email | - |
+| 2026-06-05 10:25 | sent | 937820011 | HESJEVIK MASKIN OG FIX | ENK | email | - |
+| 2026-06-05 10:25 | sent | 937822421 | FERJESTEDSGÅRDEN BAKERIUTSALG AS | AS | email | - |
+| 2026-06-05 10:25 | sent | 937835981 | GULBRANDSEN BUDTJENESTE | ENK | email | - |
+| 2026-06-05 10:25 | sent | 937816529 | HAUGEN-HUSØY TOLK OG KONTOR | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937724853 | TERROIR MONIN | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937762275 | SANDRA MILIAUSKAITE | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937633580 | ROLF ARNE REIERSØL | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937742908 | PRANG PHUTKHAO | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937832125 | MIE STEEN | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937738331 | KORTKREASJONER AV SKANCKE | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937744757 | KIM KORNOR BRIDGE | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937689497 | HERSH SIGURD ABEDI | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937738765 | FREDRIKKE SOFIE FRØSHAUG POPPE | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937734271 | EMILSEN EXPEDITIONS SKIPPER SERVICES | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937738978 | BJØRNSTAD EDGE | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937747381 | B H CHRISTENSEN TJENESTER | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937824874 | ANOTHERSEINE BOSTYN | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937758944 | THOMAS LIEN | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937762232 | RØNNING GAMES | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937690541 | ONE NYHUS | ENK | email | - |
+| 2026-06-05 10:24 | sent | 937762224 | LEKTOR FELIX V/ FELIX SIELING | ENK | email | - |
+| 2026-06-05 10:22 | sent | 937813287 | TYNGDEN 2 | FLI | email | - |
+| 2026-06-05 10:22 | sent | 937819900 | ESPEDALEN FOREDRAG & RÅDGIVNING | ENK | email | - |
+| 2026-06-05 10:22 | sent | 937818173 | BENDOR-SAMUEL MEDIA | ENK | email | - |
+| 2026-06-05 10:22 | sent | 837821142 | RAPOSO SOLUTIONS | ENK | email | - |
+| 2026-06-05 10:22 | sent | 937760957 | VILLFLORA LITLABØ | ENK | email | - |
+| 2026-06-05 10:22 | sent | 837833922 | MATKURV AS | AS | email | - |
+| 2026-06-05 10:21 | sent | 937820216 | LOGOPED ELLA BØLVIKEN | ENK | email | - |
+| 2026-06-05 10:21 | sent | 937821387 | NORSK-UKRAINSK FORENING I SØR | FLI | email | - |
+| 2026-06-05 10:21 | sent | 937821212 | TANDBERG MASKINDRIFT | ENK | email | - |
 | 2026-06-03 11:04 | not_relevant | 937726201 | WESTGASS ENERGY AG NUF | NUF | email | - |
 | 2026-06-03 11:03 | sent | 937697600 | TVEIT DRIFT | ENK | email | - |
 | 2026-06-03 10:57 | sent | 937714068 | AUNBU KREATIV STRATEGI | ENK | email | - |
