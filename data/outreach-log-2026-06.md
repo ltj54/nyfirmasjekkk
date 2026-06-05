@@ -4,15 +4,36 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 86
-- Sendt: 85
+- Antall hendelser: 124
+- Sendt: 106
 - Angret: 0
-- Aktive kontaktede selskaper: 85
+- Aktive kontaktede selskaper: 106
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-05 | 937483163 | ELTDALEN NORDRE BØRKE | ENK | email | website-offer |
+| 2026-06-05 | 937436041 | ELIASSEN SPRÅKHYSA | ENK | email | website-offer |
+| 2026-06-05 | 937475497 | MAIKEN GREAKER DESIGN | ENK | email | website-offer |
+| 2026-06-05 | 937333668 | HAARBERG MYHRE | ENK | email | website-offer |
+| 2026-06-05 | 937464215 | SAMEIET STALLANE 2 | ESEK | email | website-offer |
+| 2026-06-05 | 937681933 | ADRIANSEN MOTOR OG MARINESERVICE | ENK | email | website-offer |
+| 2026-06-05 | 937815794 | AURORA SERVICE NORWAY LIMITED | UTLA | email | website-offer |
+| 2026-06-05 | 937832753 | YEKITI KURD COMMUNITY NORGE | FLI | email | website-offer |
+| 2026-06-05 | 837773342 | VARKADOS SUBSEA SERVICES | ENK | email | website-offer |
+| 2026-06-05 | 937834012 | BÅSTADVEIEN 67C AS | AS | email | website-offer |
+| 2026-06-05 | 937763417 | BERG MULTISERVICE | ENK | email | website-offer |
+| 2026-06-05 | 937772327 | VELA SEBHAN | ENK | email | website-offer |
+| 2026-06-05 | 937765568 | LOPEZ ACEVEDO STUDIO | ENK | email | website-offer |
+| 2026-06-05 | 937769415 | ISAC ROSENGREN VAKTMESTER-SERVICE | ENK | email | website-offer |
+| 2026-06-05 | 937812299 | AMAL - MED ROM FOR ALLE | FLI | email | website-offer |
+| 2026-06-05 | 937765517 | AKTIV LÆRING JOS THEISENS | ENK | email | website-offer |
+| 2026-06-05 | 937834683 | SVIPPS TRANSPORT AS | AS | email | website-offer |
+| 2026-06-05 | 937800266 | AILI AS | AS | email | website-offer |
+| 2026-06-05 | 937797648 | MOEN MASKIN | ENK | email | website-improvement-offer |
+| 2026-06-05 | 937747918 | JMA BYGG AS | AS | email | website-improvement-offer |
+| 2026-06-05 | 937772106 | FREDRIKSEN MALERI | ENK | email | website-offer |
 | 2026-06-05 | 937763050 | AXABYGG AS | AS | email | website-offer |
 | 2026-06-05 | 937756542 | WIIK SVEIS & MEKANISK | ENK | email | website-offer |
 | 2026-06-05 | 937653689 | LARBI | ENK | email | website-offer |
@@ -103,6 +124,44 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-05 14:50 | sent | 937483163 | ELTDALEN NORDRE BØRKE | ENK | email | - |
+| 2026-06-05 14:50 | sent | 937436041 | ELIASSEN SPRÅKHYSA | ENK | email | - |
+| 2026-06-05 14:50 | sent | 937475497 | MAIKEN GREAKER DESIGN | ENK | email | - |
+| 2026-06-05 14:50 | sent | 937333668 | HAARBERG MYHRE | ENK | email | - |
+| 2026-06-05 14:48 | sent | 937464215 | SAMEIET STALLANE 2 | ESEK | email | - |
+| 2026-06-05 14:45 | sent | 937681933 | ADRIANSEN MOTOR OG MARINESERVICE | ENK | email | - |
+| 2026-06-05 14:44 | not_relevant | 937735251 | EMVI HOLDING 2 AS | AS | email | - |
+| 2026-06-05 14:43 | not_relevant | 937716451 | KULJETUS NIKO PENTTILÄ OY | NUF | email | - |
+| 2026-06-05 14:42 | not_relevant | 937725264 | NAEEM COMMERCE LTD NUF | NUF | email | Ikke aktuell fra hovedsiden |
+| 2026-06-05 14:42 | not_relevant | 837807352 | NAEEM COMMERCE LTD | UTLA | email | Ikke aktuell fra hovedsiden |
+| 2026-06-05 14:42 | not_relevant | 937807406 | JIRI CMUGR | UTLA | email | Ikke aktuell fra hovedsiden |
+| 2026-06-05 14:41 | not_relevant | 937839006 | OVERHALLA FRIVILLIGSENTRAL | FLI | email | - |
+| 2026-06-05 14:41 | not_relevant | 937711158 | GIPS SYSTEM GABAR | ENK | email | - |
+| 2026-06-05 14:40 | not_relevant | 937693192 | UAB "SHOPCONCEPT LT" NUF | NUF | email | Ikke aktuell fra hovedsiden |
+| 2026-06-05 14:40 | not_relevant | 937800851 | KVERNELAND GROUP DEUTSCHLAND GMBH NUF | NUF | email | - |
+| 2026-06-05 14:39 | sent | 937815794 | AURORA SERVICE NORWAY LIMITED | UTLA | email | - |
+| 2026-06-05 14:37 | sent | 937832753 | YEKITI KURD COMMUNITY NORGE | FLI | email | - |
+| 2026-06-05 14:37 | sent | 837773342 | VARKADOS SUBSEA SERVICES | ENK | email | - |
+| 2026-06-05 14:37 | not_relevant | 937836872 | MOUNTAIN HOLDING I | UTLA | email | Ikke aktuell fra hovedsiden |
+| 2026-06-05 14:37 | not_relevant | 937836791 | MAMMUT SPORTS GROUP AG | UTLA | email | Ikke aktuell fra hovedsiden |
+| 2026-06-05 14:32 | not_relevant | 837836832 | MOUNTAIN HOLDING II | UTLA | email | - |
+| 2026-06-05 14:31 | not_relevant | 937753004 | SIA WOLF SYSTEM NUF | NUF | email | - |
+| 2026-06-05 14:30 | not_relevant | 937836996 | JACOBS CAPITAL I HOLDING | UTLA | email | - |
+| 2026-06-05 14:28 | sent | 937834012 | BÅSTADVEIEN 67C AS | AS | email | - |
+| 2026-06-05 14:27 | sent | 937763417 | BERG MULTISERVICE | ENK | email | - |
+| 2026-06-05 14:26 | sent | 937772327 | VELA SEBHAN | ENK | email | - |
+| 2026-06-05 14:26 | sent | 937765568 | LOPEZ ACEVEDO STUDIO | ENK | email | - |
+| 2026-06-05 14:26 | sent | 937769415 | ISAC ROSENGREN VAKTMESTER-SERVICE | ENK | email | - |
+| 2026-06-05 14:26 | sent | 937812299 | AMAL - MED ROM FOR ALLE | FLI | email | - |
+| 2026-06-05 14:26 | sent | 937765517 | AKTIV LÆRING JOS THEISENS | ENK | email | - |
+| 2026-06-05 14:24 | sent | 937834683 | SVIPPS TRANSPORT AS | AS | email | - |
+| 2026-06-05 14:24 | not_relevant | 937748752 | GLIDR AS | AS | email | - |
+| 2026-06-05 14:22 | not_relevant | 937815778 | NILSEN INVESTMENT AS | AS | email | - |
+| 2026-06-05 14:21 | not_relevant | 837832012 | LUNDE OG ULEFOSS FRIVILLIGSENTRAL | FLI | email | - |
+| 2026-06-05 14:19 | sent | 937800266 | AILI AS | AS | email | - |
+| 2026-06-05 14:18 | sent | 937797648 | MOEN MASKIN | ENK | email | Sendt fra nettsidesjekk: https://moenmaskin.no |
+| 2026-06-05 14:17 | sent | 937747918 | JMA BYGG AS | AS | email | Sendt fra nettsidesjekk: https://salim.se |
+| 2026-06-05 14:15 | sent | 937772106 | FREDRIKSEN MALERI | ENK | email | - |
 | 2026-06-05 10:28 | sent | 937763050 | AXABYGG AS | AS | email | - |
 | 2026-06-05 10:28 | sent | 937756542 | WIIK SVEIS & MEKANISK | ENK | email | - |
 | 2026-06-05 10:28 | sent | 937653689 | LARBI | ENK | email | - |

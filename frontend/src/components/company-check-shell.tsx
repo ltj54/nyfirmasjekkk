@@ -3764,13 +3764,13 @@ function OutreachCheckbox({
               />
             </span>
           )}
-          {!sentAlready && !markedNotRelevant && !compact ? (
+          {!sentAlready && !markedNotRelevant ? (
             <span className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
                 className="rounded-sm border border-[#7B8794] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={saving}
-                onClick={() => onToggle(false, noteDraft, "not_relevant")}
+                onClick={() => onToggle(false, compact ? "Ikke aktuell fra hovedsiden" : noteDraft, "not_relevant")}
               >
                 Ikke aktuell
               </button>
