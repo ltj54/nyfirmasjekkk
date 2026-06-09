@@ -4,15 +4,68 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 124
-- Sendt: 106
+- Antall hendelser: 182
+- Sendt: 159
 - Angret: 0
-- Aktive kontaktede selskaper: 106
+- Aktive kontaktede selskaper: 159
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-09 | 936971601 | FORELDRERÅDETS ARBEIDSUTVALG (FAU) VED LERBERG BARNEHAGE | FLI | email | website-offer |
+| 2026-06-09 | 937482434 | FORELDREFORENINGEN FOR SKOLETUR 10. TRINN FARSUND UNGDOMSSKOLE (2012-KULLET) | FLI | email | website-offer |
+| 2026-06-09 | 937461151 | AFRICAN SISTERS UNION | FLI | email | website-offer |
+| 2026-06-09 | 937476221 | FÆRSETH MASKIN | ENK | email | website-offer |
+| 2026-06-09 | 937475179 | NESHAT SHIRAZI | ENK | email | website-offer |
+| 2026-06-09 | 937485131 | JETT HOLDING AS | AS | email | website-offer |
+| 2026-06-09 | 937473869 | MACHARIA | ENK | email | website-offer |
+| 2026-06-09 | 937474814 | MARTIN ALSING WENGSTRØM | ENK | email | website-offer |
+| 2026-06-09 | 937474563 | ODD BESTON & CO | ENK | email | website-offer |
+| 2026-06-09 | 937475810 | SANAKER BYGG | ENK | email | website-offer |
+| 2026-06-09 | 937543522 | NÆRMILJØGRUPPEN SLAGEN HELSESTASJON | FLI | email | website-offer |
+| 2026-06-09 | 937497776 | SIIDA KINO | FLI | email | website-offer |
+| 2026-06-09 | 911738678 | AMLAND BEDEHUSLAG | FLI | email | website-offer |
+| 2026-06-09 | 937852355 | BRENNE ENTERTAINMENT | ENK | email | website-offer |
+| 2026-06-09 | 937845812 | VIGGOS BARBERSHOP KURTI | ENK | email | website-offer |
+| 2026-06-09 | 937774656 | THOR DEHNÆS | ENK | email | website-offer |
+| 2026-06-09 | 937767943 | THOMAS TOTLANDSDAL | ENK | email | website-offer |
+| 2026-06-09 | 937797540 | ELISABETH DE LANGE | ENK | email | website-offer |
+| 2026-06-09 | 937852835 | ADOM SOLUTIONS | ENK | email | website-offer |
+| 2026-06-09 | 937842570 | PER O. JOHANSEN | ENK | email | website-offer |
+| 2026-06-09 | 937851537 | MILLAS CATERING | ENK | email | website-offer |
+| 2026-06-09 | 937842228 | TIRILTUNGA MUSIKK - OLSEN LUND | ENK | email | website-offer |
+| 2026-06-09 | 937842813 | STEINSLAND MEDIA | ENK | email | website-offer |
+| 2026-06-09 | 937842619 | NIZAM MALAZADA | ENK | email | website-offer |
+| 2026-06-09 | 937844794 | REN & KLAR AS | AS | email | website-offer |
+| 2026-06-09 | 937842996 | P. KERQELI BYGG& MONTASJE | ENK | email | website-offer |
+| 2026-06-09 | 937842260 | JENS-MARIUS BRANDSTORP | ENK | email | website-offer |
+| 2026-06-09 | 937849397 | ANDRESEN SPORT AND CONSULTING | ENK | email | website-offer |
+| 2026-06-09 | 937841329 | FIRE BEDRIFTSIDRETTSLAG | FLI | email | website-offer |
+| 2026-06-09 | 937769512 | THOMAS STENFELDT | ENK | email | website-offer |
+| 2026-06-09 | 937853122 | OSLOGUIDE P DIETRICHSON | ENK | email | website-offer |
+| 2026-06-09 | 937840179 | NORBIH FUTSAL | FLI | email | website-offer |
+| 2026-06-09 | 937854145 | MOPP INVEST AS | AS | email | website-offer |
+| 2026-06-09 | 837858062 | HELENA LEA SUSANNA WRIGHT | ENK | email | website-offer |
+| 2026-06-09 | 937729839 | FROSTBITE EXPEDITIONS AS | AS | email | website-offer |
+| 2026-06-09 | 937854943 | TALJE AS | AS | email | website-offer |
+| 2026-06-09 | 937793278 | FOGA ADAM | ENK | email | website-offer |
+| 2026-06-09 | 937840527 | BÆRUM FILIPPINSKE FORENING ( BFF ) | FLI | email | website-offer |
+| 2026-06-09 | 937846304 | DRESSEL HOP SERVICE | ENK | email | website-offer |
+| 2026-06-09 | 937845979 | ALF LARSSON | ENK | email | website-offer |
+| 2026-06-09 | 937797109 | REPPEN UTLEIE, OPPLEVELSER OG HANDEL | ENK | email | website-offer |
+| 2026-06-09 | 937803184 | N HOPSTAD LANDBRUKSERVICE | ENK | email | website-offer |
+| 2026-06-09 | 937572808 | MOFLATA MISJONSKIRKES BORTENNISKLUBB | FLI | email | website-offer |
+| 2026-06-09 | 937853998 | LUIS ENRIQUE DE GONGORA CERVANTES | UTLA | email | website-offer |
+| 2026-06-09 | 937626568 | LEGE RUNE SKOGLUND | ENK | email | website-offer |
+| 2026-06-09 | 937855982 | KARLSEN TAK OG MEMBRAN AS | AS | email | website-offer |
+| 2026-06-09 | 937769792 | HEALING SPESIALISTEN DØHLEN | ENK | email | website-offer |
+| 2026-06-09 | 937853858 | FRONTÉRI ARSENAL AS | AS | email | website-offer |
+| 2026-06-06 | 937479743 | SIA RSK NORD NUF | NUF | email | website-offer |
+| 2026-06-06 | 937384823 | SEXOLOG OG PARTERAPEUT GRETE RØBERG | ENK | email | website-offer |
+| 2026-06-06 | 837840252 | STRAND HAIRSTYLE FOR IRINA MANGHIR | ENK | email | website-offer |
+| 2026-06-06 | 937841388 | TSEGAI TJENESTER | ENK | email | website-offer |
+| 2026-06-06 | 937775059 | AXON RESEARCH FOUNDATION STI | STI | email | website-offer |
 | 2026-06-05 | 937483163 | ELTDALEN NORDRE BØRKE | ENK | email | website-offer |
 | 2026-06-05 | 937436041 | ELIASSEN SPRÅKHYSA | ENK | email | website-offer |
 | 2026-06-05 | 937475497 | MAIKEN GREAKER DESIGN | ENK | email | website-offer |
@@ -124,6 +177,64 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-09 15:37 | sent | 936971601 | FORELDRERÅDETS ARBEIDSUTVALG (FAU) VED LERBERG BARNEHAGE | FLI | email | - |
+| 2026-06-09 15:37 | sent | 937482434 | FORELDREFORENINGEN FOR SKOLETUR 10. TRINN FARSUND UNGDOMSSKOLE (2012-KULLET) | FLI | email | - |
+| 2026-06-09 15:37 | sent | 937461151 | AFRICAN SISTERS UNION | FLI | email | - |
+| 2026-06-09 15:37 | sent | 937476221 | FÆRSETH MASKIN | ENK | email | - |
+| 2026-06-09 15:37 | sent | 937475179 | NESHAT SHIRAZI | ENK | email | - |
+| 2026-06-09 15:37 | sent | 937485131 | JETT HOLDING AS | AS | email | - |
+| 2026-06-09 15:37 | sent | 937473869 | MACHARIA | ENK | email | - |
+| 2026-06-09 15:37 | sent | 937474814 | MARTIN ALSING WENGSTRØM | ENK | email | - |
+| 2026-06-09 15:37 | sent | 937474563 | ODD BESTON & CO | ENK | email | - |
+| 2026-06-09 15:37 | sent | 937475810 | SANAKER BYGG | ENK | email | - |
+| 2026-06-09 15:35 | sent | 937543522 | NÆRMILJØGRUPPEN SLAGEN HELSESTASJON | FLI | email | - |
+| 2026-06-09 15:34 | sent | 937497776 | SIIDA KINO | FLI | email | - |
+| 2026-06-09 15:32 | sent | 911738678 | AMLAND BEDEHUSLAG | FLI | email | - |
+| 2026-06-09 15:32 | sent | 937852355 | BRENNE ENTERTAINMENT | ENK | email | - |
+| 2026-06-09 15:32 | sent | 937845812 | VIGGOS BARBERSHOP KURTI | ENK | email | - |
+| 2026-06-09 15:32 | sent | 937774656 | THOR DEHNÆS | ENK | email | - |
+| 2026-06-09 15:32 | sent | 937767943 | THOMAS TOTLANDSDAL | ENK | email | - |
+| 2026-06-09 15:32 | sent | 937797540 | ELISABETH DE LANGE | ENK | email | - |
+| 2026-06-09 15:32 | sent | 937852835 | ADOM SOLUTIONS | ENK | email | - |
+| 2026-06-09 15:30 | sent | 937842570 | PER O. JOHANSEN | ENK | email | - |
+| 2026-06-09 15:29 | sent | 937851537 | MILLAS CATERING | ENK | email | - |
+| 2026-06-09 15:29 | sent | 937842228 | TIRILTUNGA MUSIKK - OLSEN LUND | ENK | email | - |
+| 2026-06-09 15:29 | sent | 937842813 | STEINSLAND MEDIA | ENK | email | - |
+| 2026-06-09 15:28 | sent | 937842619 | NIZAM MALAZADA | ENK | email | - |
+| 2026-06-09 15:28 | sent | 937844794 | REN & KLAR AS | AS | email | - |
+| 2026-06-09 15:28 | sent | 937842996 | P. KERQELI BYGG& MONTASJE | ENK | email | - |
+| 2026-06-09 15:28 | sent | 937842260 | JENS-MARIUS BRANDSTORP | ENK | email | - |
+| 2026-06-09 15:27 | not_relevant | 937846096 | JUEL STEEL WORKS APS | UTLA | email | - |
+| 2026-06-09 15:00 | not_relevant | 937851626 | IT FRIENDLY.DK | UTLA | email | - |
+| 2026-06-09 15:00 | not_relevant | 937793898 | HÅVARD HOLT | ENK | email | - |
+| 2026-06-09 14:59 | not_relevant | 937858299 | BRÅTEN BYGG & SERVICE AB | UTLA | email | Ikke aktuell fra hovedsiden |
+| 2026-06-09 14:58 | sent | 937849397 | ANDRESEN SPORT AND CONSULTING | ENK | email | - |
+| 2026-06-09 14:58 | sent | 937841329 | FIRE BEDRIFTSIDRETTSLAG | FLI | email | - |
+| 2026-06-09 14:57 | sent | 937769512 | THOMAS STENFELDT | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937853122 | OSLOGUIDE P DIETRICHSON | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937840179 | NORBIH FUTSAL | FLI | email | - |
+| 2026-06-09 14:57 | sent | 937854145 | MOPP INVEST AS | AS | email | - |
+| 2026-06-09 14:57 | sent | 837858062 | HELENA LEA SUSANNA WRIGHT | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937729839 | FROSTBITE EXPEDITIONS AS | AS | email | - |
+| 2026-06-09 14:57 | sent | 937854943 | TALJE AS | AS | email | - |
+| 2026-06-09 14:57 | sent | 937793278 | FOGA ADAM | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937840527 | BÆRUM FILIPPINSKE FORENING ( BFF ) | FLI | email | - |
+| 2026-06-09 14:57 | sent | 937846304 | DRESSEL HOP SERVICE | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937845979 | ALF LARSSON | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937797109 | REPPEN UTLEIE, OPPLEVELSER OG HANDEL | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937803184 | N HOPSTAD LANDBRUKSERVICE | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937572808 | MOFLATA MISJONSKIRKES BORTENNISKLUBB | FLI | email | - |
+| 2026-06-09 14:57 | sent | 937853998 | LUIS ENRIQUE DE GONGORA CERVANTES | UTLA | email | - |
+| 2026-06-09 14:57 | sent | 937626568 | LEGE RUNE SKOGLUND | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937855982 | KARLSEN TAK OG MEMBRAN AS | AS | email | - |
+| 2026-06-09 14:57 | sent | 937769792 | HEALING SPESIALISTEN DØHLEN | ENK | email | - |
+| 2026-06-09 14:57 | sent | 937853858 | FRONTÉRI ARSENAL AS | AS | email | - |
+| 2026-06-06 22:37 | sent | 937479743 | SIA RSK NORD NUF | NUF | email | - |
+| 2026-06-06 22:36 | sent | 937384823 | SEXOLOG OG PARTERAPEUT GRETE RØBERG | ENK | email | - |
+| 2026-06-06 22:33 | not_relevant | 937837119 | JACOBS CAPITAL JERSEY | UTLA | email | - |
+| 2026-06-06 22:32 | sent | 837840252 | STRAND HAIRSTYLE FOR IRINA MANGHIR | ENK | email | - |
+| 2026-06-06 22:32 | sent | 937841388 | TSEGAI TJENESTER | ENK | email | - |
+| 2026-06-06 22:32 | sent | 937775059 | AXON RESEARCH FOUNDATION STI | STI | email | - |
 | 2026-06-05 14:50 | sent | 937483163 | ELTDALEN NORDRE BØRKE | ENK | email | - |
 | 2026-06-05 14:50 | sent | 937436041 | ELIASSEN SPRÅKHYSA | ENK | email | - |
 | 2026-06-05 14:50 | sent | 937475497 | MAIKEN GREAKER DESIGN | ENK | email | - |

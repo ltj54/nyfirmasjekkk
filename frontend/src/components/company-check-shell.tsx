@@ -971,14 +971,14 @@ export function CompanyCheckShell() {
   });
 
   const runRefreshRecent = useEffectEvent(() => {
-    if (backendReady && initialResultsReady && !selectedCompany) {
+    if (backendReady && initialResultsReady) {
       void fetchRecent(0);
     }
   });
 
   useEffect(() => {
     runRefreshRecent();
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, selectedCompany]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters]);
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
