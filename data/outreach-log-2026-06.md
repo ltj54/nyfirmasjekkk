@@ -4,15 +4,51 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 182
-- Sendt: 159
+- Antall hendelser: 218
+- Sendt: 195
 - Angret: 0
-- Aktive kontaktede selskaper: 159
+- Aktive kontaktede selskaper: 195
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-11 | 937808291 | ET EKTE AS | AS | email | website-offer |
+| 2026-06-11 | 937773978 | LINDE ENTREPRENAD SVENNA JOHANSSON AB NUF | NUF | email | website-offer |
+| 2026-06-11 | 937821190 | PEREZ CAMPOS | ENK | email | website-offer |
+| 2026-06-11 | 937770103 | HEDDA HELDAL PERFORMANCE | ENK | email | website-offer |
+| 2026-06-11 | 937814119 | CORDOVA EVENSEN NORDIC LANGUAGE & CAREER | ENK | email | website-offer |
+| 2026-06-11 | 937787618 | JAN BONDE FOTO OG FILM | ENK | email | website-offer |
+| 2026-06-11 | 937873034 | NÆSS LANDBRUK OG ANLEGG | ENK | email | website-offer |
+| 2026-06-11 | 937772238 | ANDREASSEN DANS | ENK | email | website-offer |
+| 2026-06-11 | 937776586 | VILDE BERGSTUEN | ENK | email | website-offer |
+| 2026-06-11 | 837860172 | HANA MANSEUR FASHION | ENK | email | website-offer |
+| 2026-06-11 | 937863705 | VESTLANDS V&S LIMITED | UTLA | email | website-offer |
+| 2026-06-11 | 937771827 | TEKSTILFIX RUUTIKAINEN | ENK | email | website-offer |
+| 2026-06-11 | 937762453 | SKYDIVE HORVAT | ENK | email | website-offer |
+| 2026-06-11 | 837833612 | RÅVARELEVERANDØREN FLO | ENK | email | website-offer |
+| 2026-06-11 | 937770162 | RØKKE JR. | ENK | email | website-offer |
+| 2026-06-11 | 937770774 | OLSEN DRONE OG ROV | ENK | email | website-offer |
+| 2026-06-11 | 937465181 | NIPHAPORN KROMVETH | ENK | email | website-offer |
+| 2026-06-11 | 937769806 | MARIUS HALVORSEN BYGG | ENK | email | website-offer |
+| 2026-06-11 | 837771382 | LUKASZ CZAPSKI | ENK | email | website-offer |
+| 2026-06-11 | 837771242 | LARS ANDERSSON MONTAGE | ENK | email | website-offer |
+| 2026-06-11 | 937860870 | SKARPNORD LANDBRUK | ENK | email | website-offer |
+| 2026-06-11 | 937867808 | KENNEL POMCASTLE NILSEN | ENK | email | website-offer |
+| 2026-06-11 | 937873670 | JGC AS | AS | email | website-offer |
+| 2026-06-11 | 937870477 | SARVARI | ENK | email | website-offer |
+| 2026-06-11 | 837870852 | ATELIER THOMASSEN | ENK | email | website-offer |
+| 2026-06-11 | 937770804 | ALDUJAILI LUXE RENHOLD | ENK | email | website-offer |
+| 2026-06-11 | 937791232 | VESTLANDS V&S LIMITED NUF | NUF | email | website-offer |
+| 2026-06-11 | 937770731 | JULIE SKALPE BJØRNLI SERVERING | ENK | email | website-offer |
+| 2026-06-11 | 937771347 | GULDSMEDMOEN MASKIN | ENK | email | website-offer |
+| 2026-06-11 | 937770219 | ET STEG VIDERE - TRINE VERSTAD - LEDELSEUTVIKLING | ENK | email | website-offer |
+| 2026-06-11 | 937816820 | DAVIDSEN CYCLING | ENK | email | website-offer |
+| 2026-06-11 | 937785267 | RANDI MIDTHUN ENK | ENK | email | website-offer |
+| 2026-06-11 | 937840802 | NAZANIN HOSSEINI SKIN & SOUAL | ENK | email | website-offer |
+| 2026-06-11 | 937841590 | LIGHT OF SOUL HEIMTOFT | ENK | email | website-offer |
+| 2026-06-11 | 937780850 | LANDSTAD MASKIN - SANDER MARTINSEN LANDSTAD | ENK | email | website-offer |
+| 2026-06-11 | 937780745 | KAJA SÆBØ | ENK | email | website-offer |
 | 2026-06-09 | 936971601 | FORELDRERÅDETS ARBEIDSUTVALG (FAU) VED LERBERG BARNEHAGE | FLI | email | website-offer |
 | 2026-06-09 | 937482434 | FORELDREFORENINGEN FOR SKOLETUR 10. TRINN FARSUND UNGDOMSSKOLE (2012-KULLET) | FLI | email | website-offer |
 | 2026-06-09 | 937461151 | AFRICAN SISTERS UNION | FLI | email | website-offer |
@@ -177,6 +213,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-11 13:29 | sent | 937808291 | ET EKTE AS | AS | email | - |
+| 2026-06-11 13:29 | sent | 937773978 | LINDE ENTREPRENAD SVENNA JOHANSSON AB NUF | NUF | email | - |
+| 2026-06-11 13:29 | sent | 937821190 | PEREZ CAMPOS | ENK | email | - |
+| 2026-06-11 13:29 | sent | 937770103 | HEDDA HELDAL PERFORMANCE | ENK | email | - |
+| 2026-06-11 13:29 | sent | 937814119 | CORDOVA EVENSEN NORDIC LANGUAGE & CAREER | ENK | email | - |
+| 2026-06-11 13:29 | sent | 937787618 | JAN BONDE FOTO OG FILM | ENK | email | - |
+| 2026-06-11 13:27 | sent | 937873034 | NÆSS LANDBRUK OG ANLEGG | ENK | email | - |
+| 2026-06-11 13:27 | sent | 937772238 | ANDREASSEN DANS | ENK | email | - |
+| 2026-06-11 13:27 | sent | 937776586 | VILDE BERGSTUEN | ENK | email | - |
+| 2026-06-11 13:26 | sent | 837860172 | HANA MANSEUR FASHION | ENK | email | - |
+| 2026-06-11 13:26 | sent | 937863705 | VESTLANDS V&S LIMITED | UTLA | email | - |
+| 2026-06-11 13:26 | sent | 937771827 | TEKSTILFIX RUUTIKAINEN | ENK | email | - |
+| 2026-06-11 13:26 | sent | 937762453 | SKYDIVE HORVAT | ENK | email | - |
+| 2026-06-11 13:26 | sent | 837833612 | RÅVARELEVERANDØREN FLO | ENK | email | - |
+| 2026-06-11 13:26 | sent | 937770162 | RØKKE JR. | ENK | email | - |
+| 2026-06-11 13:26 | sent | 937770774 | OLSEN DRONE OG ROV | ENK | email | - |
+| 2026-06-11 13:26 | sent | 937465181 | NIPHAPORN KROMVETH | ENK | email | - |
+| 2026-06-11 13:26 | sent | 937769806 | MARIUS HALVORSEN BYGG | ENK | email | - |
+| 2026-06-11 13:26 | sent | 837771382 | LUKASZ CZAPSKI | ENK | email | - |
+| 2026-06-11 13:26 | sent | 837771242 | LARS ANDERSSON MONTAGE | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937860870 | SKARPNORD LANDBRUK | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937867808 | KENNEL POMCASTLE NILSEN | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937873670 | JGC AS | AS | email | - |
+| 2026-06-11 13:24 | sent | 937870477 | SARVARI | ENK | email | - |
+| 2026-06-11 13:24 | sent | 837870852 | ATELIER THOMASSEN | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937770804 | ALDUJAILI LUXE RENHOLD | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937791232 | VESTLANDS V&S LIMITED NUF | NUF | email | - |
+| 2026-06-11 13:24 | sent | 937770731 | JULIE SKALPE BJØRNLI SERVERING | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937771347 | GULDSMEDMOEN MASKIN | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937770219 | ET STEG VIDERE - TRINE VERSTAD - LEDELSEUTVIKLING | ENK | email | - |
+| 2026-06-11 13:24 | sent | 937816820 | DAVIDSEN CYCLING | ENK | email | - |
+| 2026-06-11 13:23 | sent | 937785267 | RANDI MIDTHUN ENK | ENK | email | - |
+| 2026-06-11 13:23 | sent | 937840802 | NAZANIN HOSSEINI SKIN & SOUAL | ENK | email | - |
+| 2026-06-11 13:23 | sent | 937841590 | LIGHT OF SOUL HEIMTOFT | ENK | email | - |
+| 2026-06-11 13:23 | sent | 937780850 | LANDSTAD MASKIN - SANDER MARTINSEN LANDSTAD | ENK | email | - |
+| 2026-06-11 13:23 | sent | 937780745 | KAJA SÆBØ | ENK | email | - |
 | 2026-06-09 15:37 | sent | 936971601 | FORELDRERÅDETS ARBEIDSUTVALG (FAU) VED LERBERG BARNEHAGE | FLI | email | - |
 | 2026-06-09 15:37 | sent | 937482434 | FORELDREFORENINGEN FOR SKOLETUR 10. TRINN FARSUND UNGDOMSSKOLE (2012-KULLET) | FLI | email | - |
 | 2026-06-09 15:37 | sent | 937461151 | AFRICAN SISTERS UNION | FLI | email | - |
