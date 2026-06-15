@@ -4,15 +4,52 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 218
-- Sendt: 195
+- Antall hendelser: 255
+- Sendt: 232
 - Angret: 0
-- Aktive kontaktede selskaper: 195
+- Aktive kontaktede selskaper: 232
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | 937881819 | NYTUN INVEST AS | AS | email | website-offer |
+| 2026-06-15 | 937879733 | ZACHRISSON & RISBERG | ENK | email | website-offer |
+| 2026-06-15 | 937776578 | ELI BEENFELDT KONSULENTTJENESTER | ENK | email | website-offer |
+| 2026-06-15 | 937795580 | DITT GAMLE HUS - ANIKA MICHALIK | ENK | email | website-offer |
+| 2026-06-15 | 837815762 | SONTCHOU FOOD & DRINK | ENK | email | website-offer |
+| 2026-06-15 | 937888295 | ØYSTEIN JOMÅS | ENK | email | website-offer |
+| 2026-06-15 | 937888317 | WALØ FISKE | ENK | email | website-offer |
+| 2026-06-15 | 937781105 | HAUGSNES METALLGJENVINNING | ENK | email | website-offer |
+| 2026-06-15 | 937872372 | HEALTH IS WEALTH AS | AS | email | website-offer |
+| 2026-06-15 | 837877512 | SKAUE EIENDOMSSERVICE | ENK | email | website-offer |
+| 2026-06-15 | 937770715 | DØVIKEN HAGE & VANN | ENK | email | website-offer |
+| 2026-06-15 | 937792492 | CHENG CONSULTING | ENK | email | website-offer |
+| 2026-06-15 | 937799934 | TROND MIDTSKOG GRAVSTEINVASK | ENK | email | website-offer |
+| 2026-06-15 | 937795599 | SØRENSEN BYGG | ENK | email | website-offer |
+| 2026-06-15 | 937796536 | SIGURDSEN FYSIOTERAPI | ENK | email | website-offer |
+| 2026-06-15 | 937871368 | SEBBES HOVSLAGERI | UTLA | email | website-offer |
+| 2026-06-15 | 937590253 | HELLEBUST DRIFT | ENK | email | website-offer |
+| 2026-06-15 | 937889488 | MARIUS OTTING MUSIKK | ENK | email | website-offer |
+| 2026-06-15 | 937889003 | LESO YOGA JUAREZ | ENK | email | website-offer |
+| 2026-06-15 | 937890613 | MAHAD SAID HASSAN | ENK | email | website-offer |
+| 2026-06-15 | 937894813 | VIDES INVEST AS | AS | email | website-offer |
+| 2026-06-15 | 937889380 | NAROUEI NOSRATI | ENK | email | website-offer |
+| 2026-06-15 | 937890109 | MATS H. KJELLSTADLI TJENESTER | ENK | email | website-offer |
+| 2026-06-15 | 937884370 | DAWID SZWEDA STUDIO | ENK | email | website-offer |
+| 2026-06-15 | 937890443 | MARIPOSA HEALING MED MARTHE KRISTIN OLSEN | ENK | email | website-offer |
+| 2026-06-15 | 937848927 | HL ENTREPRENØR AS | AS | email | website-offer |
+| 2026-06-15 | 937891350 | TRE OG TONE AS | AS | email | website-offer |
+| 2026-06-15 | 937891725 | HAUGEN ENTREPRENØR | ENK | email | website-offer |
+| 2026-06-15 | 937797931 | PAULSEN ARCTIC DRONE SOLUTIONS | ENK | email | website-offer |
+| 2026-06-15 | 937805209 | MOLUND MARITIME | ENK | email | website-offer |
+| 2026-06-15 | 937885881 | BJERKRHEIM GÅRDSDRIFT | ENK | email | website-offer |
+| 2026-06-15 | 937806248 | UBUNTU UMUTANGUHA | ENK | email | website-offer |
+| 2026-06-15 | 937893612 | TELNESSANDEN CAMPING OG FRILUFTSENTER ELLIS TELNES | ENK | email | website-offer |
+| 2026-06-15 | 937818939 | RODVELT HYBELUTLEIE | ENK | email | website-offer |
+| 2026-06-15 | 937807767 | PATULEA MALERS | ENK | email | website-offer |
+| 2026-06-15 | 937689500 | HANSEN KATTEHOTELL | ENK | email | website-offer |
+| 2026-06-15 | 937880065 | FOREININGA FOR ANSVARLEG BESØKSFORVALTING I LUSTER | FLI | email | website-offer |
 | 2026-06-11 | 937808291 | ET EKTE AS | AS | email | website-offer |
 | 2026-06-11 | 937773978 | LINDE ENTREPRENAD SVENNA JOHANSSON AB NUF | NUF | email | website-offer |
 | 2026-06-11 | 937821190 | PEREZ CAMPOS | ENK | email | website-offer |
@@ -213,6 +250,43 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 13:50 | sent | 937881819 | NYTUN INVEST AS | AS | email | - |
+| 2026-06-15 13:50 | sent | 937879733 | ZACHRISSON & RISBERG | ENK | email | - |
+| 2026-06-15 13:50 | sent | 937776578 | ELI BEENFELDT KONSULENTTJENESTER | ENK | email | - |
+| 2026-06-15 13:50 | sent | 937795580 | DITT GAMLE HUS - ANIKA MICHALIK | ENK | email | - |
+| 2026-06-15 13:50 | sent | 837815762 | SONTCHOU FOOD & DRINK | ENK | email | - |
+| 2026-06-15 13:48 | sent | 937888295 | ØYSTEIN JOMÅS | ENK | email | - |
+| 2026-06-15 13:48 | sent | 937888317 | WALØ FISKE | ENK | email | - |
+| 2026-06-15 13:48 | sent | 937781105 | HAUGSNES METALLGJENVINNING | ENK | email | - |
+| 2026-06-15 13:48 | sent | 937872372 | HEALTH IS WEALTH AS | AS | email | - |
+| 2026-06-15 13:47 | sent | 837877512 | SKAUE EIENDOMSSERVICE | ENK | email | - |
+| 2026-06-15 13:47 | sent | 937770715 | DØVIKEN HAGE & VANN | ENK | email | - |
+| 2026-06-15 13:47 | sent | 937792492 | CHENG CONSULTING | ENK | email | - |
+| 2026-06-15 13:47 | sent | 937799934 | TROND MIDTSKOG GRAVSTEINVASK | ENK | email | - |
+| 2026-06-15 13:47 | sent | 937795599 | SØRENSEN BYGG | ENK | email | - |
+| 2026-06-15 13:47 | sent | 937796536 | SIGURDSEN FYSIOTERAPI | ENK | email | - |
+| 2026-06-15 13:47 | sent | 937871368 | SEBBES HOVSLAGERI | UTLA | email | - |
+| 2026-06-15 13:47 | sent | 937590253 | HELLEBUST DRIFT | ENK | email | - |
+| 2026-06-15 13:44 | sent | 937889488 | MARIUS OTTING MUSIKK | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937889003 | LESO YOGA JUAREZ | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937890613 | MAHAD SAID HASSAN | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937894813 | VIDES INVEST AS | AS | email | - |
+| 2026-06-15 13:43 | sent | 937889380 | NAROUEI NOSRATI | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937890109 | MATS H. KJELLSTADLI TJENESTER | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937884370 | DAWID SZWEDA STUDIO | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937890443 | MARIPOSA HEALING MED MARTHE KRISTIN OLSEN | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937848927 | HL ENTREPRENØR AS | AS | email | - |
+| 2026-06-15 13:43 | sent | 937891350 | TRE OG TONE AS | AS | email | - |
+| 2026-06-15 13:43 | sent | 937891725 | HAUGEN ENTREPRENØR | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937797931 | PAULSEN ARCTIC DRONE SOLUTIONS | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937805209 | MOLUND MARITIME | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937885881 | BJERKRHEIM GÅRDSDRIFT | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937806248 | UBUNTU UMUTANGUHA | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937893612 | TELNESSANDEN CAMPING OG FRILUFTSENTER ELLIS TELNES | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937818939 | RODVELT HYBELUTLEIE | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937807767 | PATULEA MALERS | ENK | email | - |
+| 2026-06-15 13:43 | sent | 937689500 | HANSEN KATTEHOTELL | ENK | email | - |
+| 2026-06-15 13:42 | sent | 937880065 | FOREININGA FOR ANSVARLEG BESØKSFORVALTING I LUSTER | FLI | email | - |
 | 2026-06-11 13:29 | sent | 937808291 | ET EKTE AS | AS | email | - |
 | 2026-06-11 13:29 | sent | 937773978 | LINDE ENTREPRENAD SVENNA JOHANSSON AB NUF | NUF | email | - |
 | 2026-06-11 13:29 | sent | 937821190 | PEREZ CAMPOS | ENK | email | - |
