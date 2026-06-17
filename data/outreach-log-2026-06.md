@@ -4,15 +4,51 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 255
-- Sendt: 232
+- Antall hendelser: 291
+- Sendt: 268
 - Angret: 0
-- Aktive kontaktede selskaper: 232
+- Aktive kontaktede selskaper: 268
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-17 | 837890802 | NGOM FOOTBALL SCOUTING | ENK | email | website-offer |
+| 2026-06-17 | 937848293 | AUDUN COLLECTION AS | AS | email | website-offer |
+| 2026-06-17 | 937832907 | NIEDIELCHEV ENK | ENK | email | website-offer |
+| 2026-06-17 | 937899483 | ERIK FREDHEIM HODNE | ENK | email | website-offer |
+| 2026-06-17 | 837907292 | GJERMUND MINNESJORD | ENK | email | website-offer |
+| 2026-06-17 | 937809816 | BUSTAD & INTERIØR VERONICA MYKLEBUST | ENK | email | website-offer |
+| 2026-06-17 | 837842832 | TEA JANSEN KOMPASS "TRYGGHET, VALG OG UTVIKLING" | ENK | email | website-offer |
+| 2026-06-17 | 837842212 | TANNLEGE AMALIE MIDTTVEIT | ENK | email | website-offer |
+| 2026-06-17 | 937828845 | SLOTTSFJELL ATELIER, HOEN | ENK | email | website-offer |
+| 2026-06-17 | 937842104 | PÅL THEODORSEN | ENK | email | website-offer |
+| 2026-06-17 | 937840330 | NYGÅRD MALING OG TRADISJON | ENK | email | website-offer |
+| 2026-06-17 | 937909780 | JOHANSENS BIER FOR ALLE | ENK | email | website-offer |
+| 2026-06-17 | 937843062 | BEAUTY BY JOHANSEN | ENK | email | website-offer |
+| 2026-06-17 | 937809174 | ASCONTROL SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIAC NUF | NUF | email | website-offer |
+| 2026-06-17 | 937908709 | ASCONTROL SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
+| 2026-06-17 | 937821204 | W STELLBERG WORKS | ENK | email | website-offer |
+| 2026-06-17 | 937898843 | SIRI MULTISERVICE | ENK | email | website-offer |
+| 2026-06-17 | 937825846 | SØVDE BYGG | ENK | email | website-offer |
+| 2026-06-17 | 937821107 | HANSEN VED OG SERVICE | ENK | email | website-offer |
+| 2026-06-17 | 937900570 | HAUGE | ENK | email | website-offer |
+| 2026-06-17 | 937906609 | LINNEA KIERULF | ENK | email | website-offer |
+| 2026-06-17 | 937840314 | ABUBAKER MOHAMMAD | ENK | email | website-offer |
+| 2026-06-17 | 937832591 | KONNEKTLINK GANGULY BISWAL | ENK | email | website-offer |
+| 2026-06-17 | 937841264 | KOMPANETS KING HOME RENHOLD | ENK | email | website-offer |
+| 2026-06-17 | 937414749 | SIMON LUKAS ALBERT HENRIKSEN | ENK | email | website-offer |
+| 2026-06-17 | 937832796 | ROGNLI AGROCONSULT | ENK | email | website-offer |
+| 2026-06-17 | 937839812 | RESILIENCE FILM BY VERONICA ODLAND | ENK | email | website-offer |
+| 2026-06-17 | 937832583 | KRISTINA SCHEI PMU | ENK | email | website-offer |
+| 2026-06-17 | 937832818 | JUNI HJERMANN | ENK | email | website-offer |
+| 2026-06-17 | 937841825 | HELL TIMING GYLLAND | ENK | email | website-offer |
+| 2026-06-17 | 937841108 | GJORT GODT FLØAN - LUNDEMO | ENK | email | website-offer |
+| 2026-06-17 | 937836295 | BLOMME FRISØR,IDA MARIE MØLSTAD SNEKKEVIK | ENK | email | website-offer |
+| 2026-06-17 | 937852991 | VIKDAL LYD OG MUSIKK | ENK | email | website-offer |
+| 2026-06-17 | 937854773 | SEVERINSEN LAG OG FIKS | ENK | email | website-offer |
+| 2026-06-17 | 937909594 | NORDKYN DARTKLUBB | FLI | email | website-offer |
+| 2026-06-17 | 937852568 | ESTHER SIGAUKE PARTICIPATORY FUTURES LAB | ENK | email | website-offer |
 | 2026-06-15 | 937881819 | NYTUN INVEST AS | AS | email | website-offer |
 | 2026-06-15 | 937879733 | ZACHRISSON & RISBERG | ENK | email | website-offer |
 | 2026-06-15 | 937776578 | ELI BEENFELDT KONSULENTTJENESTER | ENK | email | website-offer |
@@ -250,6 +286,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-17 13:30 | sent | 837890802 | NGOM FOOTBALL SCOUTING | ENK | email | - |
+| 2026-06-17 13:28 | sent | 937848293 | AUDUN COLLECTION AS | AS | email | - |
+| 2026-06-17 13:27 | sent | 937832907 | NIEDIELCHEV ENK | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937899483 | ERIK FREDHEIM HODNE | ENK | email | - |
+| 2026-06-17 13:25 | sent | 837907292 | GJERMUND MINNESJORD | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937809816 | BUSTAD & INTERIØR VERONICA MYKLEBUST | ENK | email | - |
+| 2026-06-17 13:25 | sent | 837842832 | TEA JANSEN KOMPASS "TRYGGHET, VALG OG UTVIKLING" | ENK | email | - |
+| 2026-06-17 13:25 | sent | 837842212 | TANNLEGE AMALIE MIDTTVEIT | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937828845 | SLOTTSFJELL ATELIER, HOEN | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937842104 | PÅL THEODORSEN | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937840330 | NYGÅRD MALING OG TRADISJON | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937909780 | JOHANSENS BIER FOR ALLE | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937843062 | BEAUTY BY JOHANSEN | ENK | email | - |
+| 2026-06-17 13:25 | sent | 937809174 | ASCONTROL SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIAC NUF | NUF | email | - |
+| 2026-06-17 13:25 | sent | 937908709 | ASCONTROL SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | - |
+| 2026-06-17 13:23 | sent | 937821204 | W STELLBERG WORKS | ENK | email | - |
+| 2026-06-17 13:23 | sent | 937898843 | SIRI MULTISERVICE | ENK | email | - |
+| 2026-06-17 13:23 | sent | 937825846 | SØVDE BYGG | ENK | email | - |
+| 2026-06-17 13:23 | sent | 937821107 | HANSEN VED OG SERVICE | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937900570 | HAUGE | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937906609 | LINNEA KIERULF | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937840314 | ABUBAKER MOHAMMAD | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937832591 | KONNEKTLINK GANGULY BISWAL | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937841264 | KOMPANETS KING HOME RENHOLD | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937414749 | SIMON LUKAS ALBERT HENRIKSEN | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937832796 | ROGNLI AGROCONSULT | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937839812 | RESILIENCE FILM BY VERONICA ODLAND | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937832583 | KRISTINA SCHEI PMU | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937832818 | JUNI HJERMANN | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937841825 | HELL TIMING GYLLAND | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937841108 | GJORT GODT FLØAN - LUNDEMO | ENK | email | - |
+| 2026-06-17 13:22 | sent | 937836295 | BLOMME FRISØR,IDA MARIE MØLSTAD SNEKKEVIK | ENK | email | - |
+| 2026-06-17 13:21 | sent | 937852991 | VIKDAL LYD OG MUSIKK | ENK | email | - |
+| 2026-06-17 13:21 | sent | 937854773 | SEVERINSEN LAG OG FIKS | ENK | email | - |
+| 2026-06-17 13:21 | sent | 937909594 | NORDKYN DARTKLUBB | FLI | email | - |
+| 2026-06-17 13:21 | sent | 937852568 | ESTHER SIGAUKE PARTICIPATORY FUTURES LAB | ENK | email | - |
 | 2026-06-15 13:50 | sent | 937881819 | NYTUN INVEST AS | AS | email | - |
 | 2026-06-15 13:50 | sent | 937879733 | ZACHRISSON & RISBERG | ENK | email | - |
 | 2026-06-15 13:50 | sent | 937776578 | ELI BEENFELDT KONSULENTTJENESTER | ENK | email | - |
