@@ -17,6 +17,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
 - Domeneeksempel: `{{domainExample}}`
 - Domenelinje: `{{domainLine}}`
+- Pris: `{{priceValue}}`
 - Registrert nettside-intro: `{{registeredWebsiteIntro}}`
 - Forsiktig personvern/UU-linje: `{{websiteComplianceMailLine}}`
 - Eksempel/URL: `{{senderWebsite}}`
@@ -39,42 +40,40 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 
 ## Regler for generering
 
-- Hold e-posten kort, helst 120-180 ord.
+- Hold e-posten kort, helst 6-9 linjer før signatur.
 - Skriv på norsk bokmal.
 - Ikke bruk overdreven salgstone.
 - Ikke påsta ting du ikke vet sikkert.
 - Hvis kontaktperson mangler, skriv til selskapet generelt.
 - Hvis telefon mangler, ikke nevn telefon.
-- Hvis nettside allerede finnes, bruk ikke denne malen uten manuell vurdering.
+- Ikke prøv å overbevise i første e-post. Målet er å få svar.
+- Bruk maks 1-2 konkrete funn i første e-post.
+- Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
 
 ## Emneforslag
 
-- `Nettside for {{companyName}}?`
-- `Nettside for {{companyName}}?`
-- `Forslag til digital start for {{companyName}}`
+- `Nettside for {{companyName}}`
+- `{{companyName}} - nettside/kontaktinfo`
+- `Spørsmål om nettsiden til {{companyName}}`
+- `Kort observasjon om {{registeredWebsite}}`
+- `Fant ikke nettside for {{companyName}}`
 
 ## E-postmal
 
-Emne: `Nettside for {{companyName}}?`
+Emne: `Nettside for {{companyName}}`
 
 Hei {{greeting}},
 
-{{companyName}} ser ut til å mangle en tydelig nettside.
+Jeg kom over {{companyName}}, men fant ikke en tydelig nettside/kontaktside.
 
-{{salesSegmentPitch}}
+Jeg lager enkle nettsider for små og nye virksomheter - med kort presentasjon, kontaktinfo og tydelig kontaktvei.
 
-Jeg lager ryddige nettsider for nye virksomheter, med kontaktinfo, kort presentasjon og en løsning som fungerer godt på mobil.
-
-Du får:
-- En nettside klar til bruk
-{{domainLine}}
-- Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Kontaktskjema eller tydelig kontaktvei
+Pris for en enkel førsteside er fra kr {{priceValue}}.
 
 Eksempel:
 {{senderWebsite}}
 
-Et konkret forslag kan sendes hvis det er interessant.
+Hvis det er aktuelt, kan jeg sende et konkret forslag.
 
 Mvh  
 {{senderName}}  
@@ -83,27 +82,17 @@ Mvh
 
 ## E-postmal - registrert nettside svarer ikke
 
-Emne: `Kort nettsidegjennomgang for {{registeredWebsite}}?`
+Emne: `Kort observasjon om {{registeredWebsite}}`
 
 Hei {{greeting}},
 
-{{companyName}} har {{registeredWebsite}} registrert som nettside i BRREG.
+Jeg så at {{companyName}} har {{registeredWebsite}} registrert som nettside.
 
-Jeg gjorde en enkel førstesjekk, og akkurat da svarte ikke nettsiden. Det kan selvfølgelig være midlertidig, men dersom siden er ustabil eller utilgjengelig over tid, kan det gjøre at kunder, samarbeidspartnere eller søkemotorer ikke får tak i informasjonen de trenger.
+Da jeg sjekket, svarte ikke siden hos meg. Det kan selvfølgelig være midlertidig, men jeg ville bare nevne det i tilfelle dere ikke er klar over det.
 
-Jeg kan gjerne gjøre en kort og konkret gjennomgang av nettsiden og se på:
+Hvis dere ønsker det, kan jeg ta en kort sjekk og sende en enkel vurdering av hva som eventuelt bør rettes.
 
-- om siden svarer stabilt
-- tekniske feil eller videresendinger
-- mobilvisning
-- kontaktinformasjon
-- enkel synlighet og tillitssignaler
-
-Hvis siden faktisk er nede eller mangler fungerende oppsett, kan jeg også ta oppdraget med å få en ryddig og mobilvennlig nettside på plass.
-
-Hvis dere ønsker det, kan jeg sende en kort vurdering med eventuelle funn og forslag til tiltak.
-
-Eksempel:
+Eksempel på nettsidesjekk:
 {{websiteCheckSenderWebsite}}
 
 Mvh  
@@ -113,18 +102,18 @@ Mvh
 
 ## E-postmal - nettside kan forbedres
 
-Emne: `Nettsiden til {{companyName}}?`
+Emne: `Spørsmål om nettsiden til {{companyName}}`
 
 Hei {{greeting}},
 
-{{registeredWebsiteIntro}}
-
-Jeg gjorde en enkel, automatisk førstesjekk av siden og fikk noen signaler som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som en kort teknisk indikasjon som bør vurderes manuelt.
+Jeg tok en enkel førstesjekk av nettsiden til {{companyName}} og så noen punkter som kan være verdt å se nærmere på.
 
 {{websiteQualityMailLine}}
 {{websiteComplianceMailLine}}
 
-Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
+Dette er ikke en full gjennomgang, bare en rask teknisk indikasjon.
+
+Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til enkle forbedringer.
 
 Eksempel:
 {{websiteCheckSenderWebsite}}
@@ -136,24 +125,15 @@ Mvh
 
 ## E-postmal - registrert nettside bør vurderes
 
-Emne: `Kort nettsidegjennomgang for {{registeredWebsite}}?`
+Emne: `Spørsmål om nettsiden til {{companyName}}`
 
 Hei {{greeting}},
 
-{{registeredWebsiteIntro}}
+Jeg tok en enkel førstesjekk av nettsiden til {{companyName}} og så noen punkter som kan være verdt å se nærmere på.
 
-Jeg gjorde en enkel, automatisk førstesjekk av siden og fikk noen signaler som kan være verdt å se nærmere på. Dette er ikke ment som en konklusjon, men som en kort teknisk indikasjon som bør vurderes manuelt — særlig for en etablert organisasjon der tillit, tilgjengelighet og personvern er viktig.
+Dette er ikke en full gjennomgang, bare en rask teknisk indikasjon.
 
-Eksempler på områder jeg kan gå gjennom:
-
-- tilgjengelighet / universell utforming
-- knapper, bilder og struktur for skjermleser og mobil
-- cookies, analyse og samtykkeflyt
-- sikkerhetsheadere og tekniske eksponeringer
-- eksterne scripts og innebygd tredjepartsinnhold
-- e-postdomene / DMARC, SPF og DKIM på overordnet nivå
-
-Hvis det er interessant, kan jeg sende en kort og ryddig gjennomgang med konkrete funn, vurdering av alvorlighet og forslag til tiltak.
+Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til enkle forbedringer.
 
 Eksempel:
 {{websiteCheckSenderWebsite}}
@@ -167,40 +147,36 @@ Mvh
 
 Hei {{greeting}},
 
-{{companyName}} ser ut til å mangle en tydelig nettside.
+Jeg kom over {{companyName}}, men fant ikke en tydelig nettside/kontaktside.
 
-Et konkret forslag til en ryddig nettside med kontaktinfo, kort presentasjon og tydelig kontaktvei kan sendes hvis det er interessant.
+Jeg lager enkle nettsider for små og nye virksomheter. Pris for en enkel førsteside er fra kr {{priceValue}}.
 
 Eksempel:
 {{senderWebsite}}
 
-Forslaget er helt uforpliktende.
+Hvis det er aktuelt, kan jeg sende et konkret forslag.
 
 Mvh  
-{{senderName}}
+{{senderName}}  
+{{senderPhone}}  
+{{senderEmail}}
 
 ## Generert eksempel
 
-Emne: `Nettside for Eksempel AS?`
+Emne: `Nettside for Eksempel AS`
 
 Hei dere i Eksempel AS,
 
-Eksempel AS ser ut til å mangle en tydelig nettside.
+Jeg kom over Eksempel AS, men fant ikke en tydelig nettside/kontaktside.
 
-For bygg- og håndverksbedrifter er det ofte viktig at kunder raskt ser hvilke tjenester dere tilbyr, hvilket område dere dekker og hvordan de kan ta kontakt.
+Jeg lager enkle nettsider for små og nye virksomheter - med kort presentasjon, kontaktinfo og tydelig kontaktvei.
 
-Jeg lager ryddige nettsider for nye virksomheter, med kontaktinfo, kort presentasjon og en løsning som fungerer godt på mobil.
-
-Du får:
-- En nettside klar til bruk
-- Egen nettadresse, for eksempel eksempel.no
-- Kontaktinfo og kort presentasjon av tjenester/aktivitet
-- Kontaktskjema eller tydelig kontaktvei
+Pris for en enkel førsteside er fra kr 1.990.
 
 Eksempel:
 https://ltj-production.no/
 
-Et konkret forslag kan sendes hvis det er interessant.
+Hvis det er aktuelt, kan jeg sende et konkret forslag.
 
 Mvh  
 Lars Johannessen  

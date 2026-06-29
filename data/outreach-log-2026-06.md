@@ -4,15 +4,75 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 291
-- Sendt: 268
+- Antall hendelser: 351
+- Sendt: 328
 - Angret: 0
-- Aktive kontaktede selskaper: 268
+- Aktive kontaktede selskaper: 328
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-29 | 937948921 | LANDE NATURTJENESTER | ENK | email | website-offer |
+| 2026-06-29 | 937929242 | OLIVER HANSEN MEDIA | ENK | email | website-offer |
+| 2026-06-29 | 937973810 | NIKLAS LOHNE-HANSEN | ENK | email | website-offer |
+| 2026-06-29 | 937972288 | AVA INTERIORS ANIABELL VALDÉS OCHOA | ENK | email | website-offer |
+| 2026-06-29 | 937885458 | VERHIEST ENTERTAINMENT | ENK | email | website-offer |
+| 2026-06-29 | 937945876 | SPJELD KAJAKK - KURS OG TURER | ENK | email | website-offer |
+| 2026-06-29 | 937929595 | SIRADA NAKOK KAI YANG DAENG | ENK | email | website-offer |
+| 2026-06-29 | 937941366 | GT GREGERSEN MOTOR CROSS NORGE | ENK | email | website-offer |
+| 2026-06-29 | 837944422 | EMMA STAKSTON | ENK | email | website-offer |
+| 2026-06-29 | 937941269 | ELLEN MYRMO-SILSET | ENK | email | website-offer |
+| 2026-06-29 | 937949081 | DN KRISTIANSEN MULTITJENESTER | ENK | email | website-offer |
+| 2026-06-29 | 937949030 | STAVANGER BILBERGING HENRIKSEN | ENK | email | website-offer |
+| 2026-06-29 | 937949138 | KALINAUSKAS BYGGSERVICE | ENK | email | website-offer |
+| 2026-06-29 | 937967063 | BURMONAS BETONG | ENK | email | website-offer |
+| 2026-06-29 | 837990432 | PSYKOLOG LAILA HAGEN | ENK | email | website-offer |
+| 2026-06-29 | 937975821 | PROMENADEN KINO ULVIK | FLI | email | website-offer |
+| 2026-06-29 | 937975465 | PANDAV HARMONIES | ENK | email | website-offer |
+| 2026-06-29 | 937867158 | NATALI DA SILVA | ENK | email | website-offer |
+| 2026-06-29 | 937973829 | MATIUKHOVA HYTTEVASK OG MALING | ENK | email | website-offer |
+| 2026-06-29 | 937972520 | MARIA BERTELSEN | ENK | email | website-offer |
+| 2026-06-29 | 937967411 | JAWAD MOSAWI | ENK | email | website-offer |
+| 2026-06-29 | 937975910 | GRANLI NATUR, MILJØ OG BEREDSKAP | ENK | email | website-offer |
+| 2026-06-29 | 937866577 | MÅTE ARKITEKTUR AS | AS | email | website-offer |
+| 2026-06-29 | 937995652 | LILLMANN NORHEIM DRIFT & VEDLIKEHOLD | ENK | email | website-offer |
+| 2026-06-29 | 937939167 | VOTRUBA ANLEGG OG VA | ENK | email | website-offer |
+| 2026-06-29 | 937743343 | SØLVULVEN | FLI | email | website-offer |
+| 2026-06-29 | 937983999 | SELMA L. W. MOSSEFIN ENK | ENK | email | website-offer |
+| 2026-06-29 | 837995922 | SEBASTIAN ØSTERMANN UTLEIE | ENK | email | website-offer |
+| 2026-06-29 | 938000328 | S FIRE | FLI | email | website-offer |
+| 2026-06-29 | 937991266 | PLACIDE GNALY "PGN ATTITUDE" | ENK | email | website-offer |
+| 2026-06-29 | 937991371 | NAUDEER | ENK | email | website-offer |
+| 2026-06-29 | 937948972 | MIRARI- GRY ANITA HANSEN | ENK | email | website-offer |
+| 2026-06-29 | 937754019 | KOMPANETS | ENK | email | website-offer |
+| 2026-06-29 | 937996055 | HANG AIRBNB ANTAM | ENK | email | website-offer |
+| 2026-06-29 | 937996365 | AFRO FUSION KACHUNGA | ENK | email | website-offer |
+| 2026-06-29 | 937995571 | JULIJA BAKKEVOLD | ENK | email | website-offer |
+| 2026-06-29 | 937991118 | JONAS KRISTIANSEN WOLFGANG | ENK | email | website-offer |
+| 2026-06-29 | 937991274 | HOGNESTAD MEKANISK | ENK | email | website-offer |
+| 2026-06-29 | 937983514 | HARTVIGSEN TREFELLING | ENK | email | website-offer |
+| 2026-06-29 | 937990464 | FUGLEHAUG FALLSEN MEDIA | ENK | email | website-offer |
+| 2026-06-29 | 937995326 | FREMSTAD AKA IDRETTSLÆREREN ENK | ENK | email | website-offer |
+| 2026-06-29 | 937998686 | ERLEND BJØRNHJELL | ENK | email | website-offer |
+| 2026-06-29 | 937994850 | CLINIC BY MIRIAM HØGSTØ | ENK | email | website-offer |
+| 2026-06-29 | 937993501 | BØLLA OG BJØRN LYDIG SNUTE INGER-LISE NIELSEN | ENK | email | website-offer |
+| 2026-06-29 | 936116671 | ANDERSSONS ELEKTRISKA I MJØLBY AB | NUF | email | website-offer |
+| 2026-06-29 | 837496942 | VÅRT HUSET | ESEK | email | website-offer |
+| 2026-06-29 | 937996373 | FJELLBORG - ROSENDALSVEIEN 9B | ESEK | email | website-offer |
+| 2026-06-29 | 937990510 | LANGSTRAND SERVICE AS | AS | email | website-offer |
+| 2026-06-29 | 937995229 | HALVORSEN KREATIV | ENK | email | website-offer |
+| 2026-06-29 | 937898290 | BIRKELUND MUSIKKSERVICE | ENK | email | website-offer |
+| 2026-06-29 | 936547516 | SOLBAKKEN VEGLAG | FLI | email | website-offer |
+| 2026-06-29 | 937975430 | KENTH K KRISTOFFERSEN | ENK | email | website-offer |
+| 2026-06-29 | 937991312 | TAHIR MOBILITY | ENK | email | website-offer |
+| 2026-06-29 | 937998163 | CTS REGNSKAP SOLEMSLIE | ENK | email | website-offer |
+| 2026-06-29 | 937988281 | FRISØR DOBYCHA | ENK | email | website-offer |
+| 2026-06-29 | 937994990 | DANTE NAILS STUDIO WERONIKA WIJAS | ENK | email | website-offer |
+| 2026-06-29 | 937945892 | EXOUSIA CLEANING SERVICE DAVID | ENK | email | website-offer |
+| 2026-06-29 | 937976240 | BRØDRENE MARTILA | ENK | email | website-offer |
+| 2026-06-29 | 937995032 | LENNART LAUVE | ENK | email | website-offer |
+| 2026-06-29 | 937995008 | HÅNDVERKER ERIKSEN | ENK | email | website-offer |
 | 2026-06-17 | 837890802 | NGOM FOOTBALL SCOUTING | ENK | email | website-offer |
 | 2026-06-17 | 937848293 | AUDUN COLLECTION AS | AS | email | website-offer |
 | 2026-06-17 | 937832907 | NIEDIELCHEV ENK | ENK | email | website-offer |
@@ -286,6 +346,66 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-29 12:57 | sent | 937948921 | LANDE NATURTJENESTER | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937929242 | OLIVER HANSEN MEDIA | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937973810 | NIKLAS LOHNE-HANSEN | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937972288 | AVA INTERIORS ANIABELL VALDÉS OCHOA | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937885458 | VERHIEST ENTERTAINMENT | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937945876 | SPJELD KAJAKK - KURS OG TURER | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937929595 | SIRADA NAKOK KAI YANG DAENG | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937941366 | GT GREGERSEN MOTOR CROSS NORGE | ENK | email | - |
+| 2026-06-29 12:57 | sent | 837944422 | EMMA STAKSTON | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937941269 | ELLEN MYRMO-SILSET | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937949081 | DN KRISTIANSEN MULTITJENESTER | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937949030 | STAVANGER BILBERGING HENRIKSEN | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937949138 | KALINAUSKAS BYGGSERVICE | ENK | email | - |
+| 2026-06-29 12:57 | sent | 937967063 | BURMONAS BETONG | ENK | email | - |
+| 2026-06-29 12:57 | sent | 837990432 | PSYKOLOG LAILA HAGEN | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937975821 | PROMENADEN KINO ULVIK | FLI | email | - |
+| 2026-06-29 12:55 | sent | 937975465 | PANDAV HARMONIES | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937867158 | NATALI DA SILVA | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937973829 | MATIUKHOVA HYTTEVASK OG MALING | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937972520 | MARIA BERTELSEN | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937967411 | JAWAD MOSAWI | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937975910 | GRANLI NATUR, MILJØ OG BEREDSKAP | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937866577 | MÅTE ARKITEKTUR AS | AS | email | - |
+| 2026-06-29 12:55 | sent | 937995652 | LILLMANN NORHEIM DRIFT & VEDLIKEHOLD | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937939167 | VOTRUBA ANLEGG OG VA | ENK | email | - |
+| 2026-06-29 12:55 | sent | 937743343 | SØLVULVEN | FLI | email | - |
+| 2026-06-29 12:55 | sent | 937983999 | SELMA L. W. MOSSEFIN ENK | ENK | email | - |
+| 2026-06-29 12:55 | sent | 837995922 | SEBASTIAN ØSTERMANN UTLEIE | ENK | email | - |
+| 2026-06-29 12:54 | sent | 938000328 | S FIRE | FLI | email | - |
+| 2026-06-29 12:54 | sent | 937991266 | PLACIDE GNALY "PGN ATTITUDE" | ENK | email | - |
+| 2026-06-29 12:54 | sent | 937991371 | NAUDEER | ENK | email | - |
+| 2026-06-29 12:54 | sent | 937948972 | MIRARI- GRY ANITA HANSEN | ENK | email | - |
+| 2026-06-29 12:54 | sent | 937754019 | KOMPANETS | ENK | email | - |
+| 2026-06-29 12:54 | sent | 937996055 | HANG AIRBNB ANTAM | ENK | email | - |
+| 2026-06-29 12:54 | sent | 937996365 | AFRO FUSION KACHUNGA | ENK | email | - |
+| 2026-06-29 12:26 | sent | 937995571 | JULIJA BAKKEVOLD | ENK | email | - |
+| 2026-06-29 12:26 | sent | 937991118 | JONAS KRISTIANSEN WOLFGANG | ENK | email | - |
+| 2026-06-29 12:26 | sent | 937991274 | HOGNESTAD MEKANISK | ENK | email | - |
+| 2026-06-29 12:26 | sent | 937983514 | HARTVIGSEN TREFELLING | ENK | email | - |
+| 2026-06-29 12:26 | sent | 937990464 | FUGLEHAUG FALLSEN MEDIA | ENK | email | - |
+| 2026-06-29 12:25 | sent | 937995326 | FREMSTAD AKA IDRETTSLÆREREN ENK | ENK | email | - |
+| 2026-06-29 12:25 | sent | 937998686 | ERLEND BJØRNHJELL | ENK | email | - |
+| 2026-06-29 12:25 | sent | 937994850 | CLINIC BY MIRIAM HØGSTØ | ENK | email | - |
+| 2026-06-29 12:25 | sent | 937993501 | BØLLA OG BJØRN LYDIG SNUTE INGER-LISE NIELSEN | ENK | email | - |
+| 2026-06-29 12:25 | sent | 936116671 | ANDERSSONS ELEKTRISKA I MJØLBY AB | NUF | email | - |
+| 2026-06-29 12:23 | sent | 837496942 | VÅRT HUSET | ESEK | email | - |
+| 2026-06-29 12:23 | sent | 937996373 | FJELLBORG - ROSENDALSVEIEN 9B | ESEK | email | - |
+| 2026-06-29 12:23 | sent | 937990510 | LANGSTRAND SERVICE AS | AS | email | - |
+| 2026-06-29 12:23 | sent | 937995229 | HALVORSEN KREATIV | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937898290 | BIRKELUND MUSIKKSERVICE | ENK | email | - |
+| 2026-06-29 12:22 | sent | 936547516 | SOLBAKKEN VEGLAG | FLI | email | - |
+| 2026-06-29 12:22 | sent | 937975430 | KENTH K KRISTOFFERSEN | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937991312 | TAHIR MOBILITY | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937998163 | CTS REGNSKAP SOLEMSLIE | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937988281 | FRISØR DOBYCHA | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937994990 | DANTE NAILS STUDIO WERONIKA WIJAS | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937945892 | EXOUSIA CLEANING SERVICE DAVID | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937976240 | BRØDRENE MARTILA | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937995032 | LENNART LAUVE | ENK | email | - |
+| 2026-06-29 12:22 | sent | 937995008 | HÅNDVERKER ERIKSEN | ENK | email | - |
 | 2026-06-17 13:30 | sent | 837890802 | NGOM FOOTBALL SCOUTING | ENK | email | - |
 | 2026-06-17 13:28 | sent | 937848293 | AUDUN COLLECTION AS | AS | email | - |
 | 2026-06-17 13:27 | sent | 937832907 | NIEDIELCHEV ENK | ENK | email | - |
