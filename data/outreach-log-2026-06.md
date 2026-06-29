@@ -4,15 +4,35 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 351
-- Sendt: 328
+- Antall hendelser: 371
+- Sendt: 348
 - Angret: 0
-- Aktive kontaktede selskaper: 328
+- Aktive kontaktede selskaper: 348
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-29 | 937938837 | NORSK UKRAINSK PLATTFORM FOR SAMARBEID | FLI | email | website-offer |
+| 2026-06-29 | 937899173 | JUNKERS GUIDE SERVICES | ENK | email | website-offer |
+| 2026-06-29 | 937895585 | ELIASSEN PSYKOLOGTJENESTER | ENK | email | website-offer |
+| 2026-06-29 | 937945167 | CLOUDSAVE ROSSI | ENK | email | website-offer |
+| 2026-06-29 | 937899343 | ARNES TROLLSTØLS BIER | ENK | email | website-offer |
+| 2026-06-29 | 937975368 | PT JOHNSEN | ENK | email | website-offer |
+| 2026-06-29 | 937973012 | LIABØ OLE M | ENK | email | website-offer |
+| 2026-06-29 | 937967454 | ELEFSKAAS TRANSPORT | ENK | email | website-offer |
+| 2026-06-29 | 937957556 | CONSULT MAGNUSSEN-KYSETH | ENK | email | website-offer |
+| 2026-06-29 | 937915330 | ATELIER FURELID | ENK | email | website-offer |
+| 2026-06-29 | 937975279 | PIZARRO ROJAS BYGG | ENK | email | website-offer |
+| 2026-06-29 | 937938691 | S THOMASSEN CONSULTING | ENK | email | website-offer |
+| 2026-06-29 | 937860919 | RE SLYDAHL | ENK | email | website-offer |
+| 2026-06-29 | 937928874 | PHILIP MARTINUSSEN GOLF | ENK | email | website-offer |
+| 2026-06-29 | 937937873 | LANGEVOLL OMESTAD GÅRD | ENK | email | website-offer |
+| 2026-06-29 | 837825652 | BERGENSPIKENE 2027 | FLI | email | website-offer |
+| 2026-06-29 | 937947666 | CHUKHNII MASSASJE & HARMONI | ENK | email | website-offer |
+| 2026-06-29 | 937947348 | BEAUTY BY DAIVA DAIVA DACIENE | ENK | email | website-offer |
+| 2026-06-29 | 937983611 | THOMAS BU WAHL OSTEOPATI | ENK | email | website-offer |
+| 2026-06-29 | 937998678 | NOJUS APYNIS | ENK | email | website-offer |
 | 2026-06-29 | 937948921 | LANDE NATURTJENESTER | ENK | email | website-offer |
 | 2026-06-29 | 937929242 | OLIVER HANSEN MEDIA | ENK | email | website-offer |
 | 2026-06-29 | 937973810 | NIKLAS LOHNE-HANSEN | ENK | email | website-offer |
@@ -346,6 +366,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-29 13:32 | sent | 937938837 | NORSK UKRAINSK PLATTFORM FOR SAMARBEID | FLI | email | - |
+| 2026-06-29 13:32 | sent | 937899173 | JUNKERS GUIDE SERVICES | ENK | email | - |
+| 2026-06-29 13:31 | sent | 937895585 | ELIASSEN PSYKOLOGTJENESTER | ENK | email | - |
+| 2026-06-29 13:31 | sent | 937945167 | CLOUDSAVE ROSSI | ENK | email | - |
+| 2026-06-29 13:31 | sent | 937899343 | ARNES TROLLSTØLS BIER | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937975368 | PT JOHNSEN | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937973012 | LIABØ OLE M | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937967454 | ELEFSKAAS TRANSPORT | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937957556 | CONSULT MAGNUSSEN-KYSETH | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937915330 | ATELIER FURELID | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937975279 | PIZARRO ROJAS BYGG | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937938691 | S THOMASSEN CONSULTING | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937860919 | RE SLYDAHL | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937928874 | PHILIP MARTINUSSEN GOLF | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937937873 | LANGEVOLL OMESTAD GÅRD | ENK | email | - |
+| 2026-06-29 13:27 | sent | 837825652 | BERGENSPIKENE 2027 | FLI | email | - |
+| 2026-06-29 13:27 | sent | 937947666 | CHUKHNII MASSASJE & HARMONI | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937947348 | BEAUTY BY DAIVA DAIVA DACIENE | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937983611 | THOMAS BU WAHL OSTEOPATI | ENK | email | - |
+| 2026-06-29 13:27 | sent | 937998678 | NOJUS APYNIS | ENK | email | - |
 | 2026-06-29 12:57 | sent | 937948921 | LANDE NATURTJENESTER | ENK | email | - |
 | 2026-06-29 12:57 | sent | 937929242 | OLIVER HANSEN MEDIA | ENK | email | - |
 | 2026-06-29 12:57 | sent | 937973810 | NIKLAS LOHNE-HANSEN | ENK | email | - |
