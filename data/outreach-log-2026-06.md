@@ -4,15 +4,48 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 371
-- Sendt: 348
+- Antall hendelser: 404
+- Sendt: 381
 - Angret: 0
-- Aktive kontaktede selskaper: 348
+- Aktive kontaktede selskaper: 381
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-30 | 937939353 | HEXAN MULTISERVICE | ENK | email | website-offer |
+| 2026-06-30 | 937888090 | ALFAS TRADING | ENK | email | website-offer |
+| 2026-06-30 | 937910304 | TOLKEN HAKIM ISMAIL | ENK | email | website-offer |
+| 2026-06-30 | 937763379 | RYTZ RASMUSSEN GUIDING AND ADVENTURE | ENK | email | website-offer |
+| 2026-06-30 | 937933959 | NERMOFAMILIEN | FLI | email | website-offer |
+| 2026-06-30 | 937939396 | MARTIN GILLESHAMMER | ENK | email | website-offer |
+| 2026-06-30 | 937932804 | MALLGRIP ASLAKSEN | ENK | email | website-offer |
+| 2026-06-30 | 937937369 | LA MEK & KONSULT AB | UTLA | email | website-offer |
+| 2026-06-30 | 937930690 | ARTURS KONSTANTINOVS | UTLA | email | website-offer |
+| 2026-06-30 | 937941102 | SKJØNHAUG TRENDS | ENK | email | website-offer |
+| 2026-06-30 | 937940513 | SIGRI - AV SIRI SIQVELAND | ENK | email | website-offer |
+| 2026-06-30 | 937945221 | UMA KIWE | FLI | email | website-offer |
+| 2026-06-30 | 937896352 | TRUDE ANDRESEN LEDERBEVEGELSER | ENK | email | website-offer |
+| 2026-06-30 | 937949154 | ODA MARIE RØSHOL | ENK | email | website-offer |
+| 2026-06-30 | 937966709 | H. HELLESNES | ENK | email | website-offer |
+| 2026-06-30 | 937957882 | FRØYLAND BYGGTJENESTER | ENK | email | website-offer |
+| 2026-06-30 | 837919932 | TRIKESHOW MED JOACHIM NÆSS | ENK | email | website-offer |
+| 2026-06-30 | 937957033 | THANG BILSERVICE | ENK | email | website-offer |
+| 2026-06-30 | 937949073 | STENEVIK INTERIØR & DESIGN | ENK | email | website-offer |
+| 2026-06-30 | 937966636 | LOMELI PAPAS | ENK | email | website-offer |
+| 2026-06-30 | 937910347 | JANCZEWSKI INLINE | ENK | email | website-offer |
+| 2026-06-30 | 937910266 | INNAFOR KRISTIANSEN | ENK | email | website-offer |
+| 2026-06-30 | 937994834 | FORENING NYTT LIV | FLI | email | website-offer |
+| 2026-06-30 | 937984081 | KJETIL TRONES | ENK | email | website-offer |
+| 2026-06-30 | 938005850 | GRAHL-MADSEN TAKST OG EIENDOMSRÅDGIVING | ENK | email | website-offer |
+| 2026-06-30 | 938004943 | HARALDSEN SKOG | ENK | email | website-offer |
+| 2026-06-30 | 838004342 | HALVARD SØRENSEN BYGG | ENK | email | website-offer |
+| 2026-06-30 | 937995733 | RYKKJE - AAR AKTIV | ENK | email | website-offer |
+| 2026-06-30 | 938000999 | BEAUTY LOUNGE-ANDREA SELLI GRØSETH | ENK | email | website-offer |
+| 2026-06-30 | 937934742 | BAREEN APS | NUF | email | website-offer |
+| 2026-06-30 | 937998937 | TRYM NORBERG ENOKSEN KONSULENTTJENESTER | ENK | email | website-offer |
+| 2026-06-30 | 938009074 | LAN PROCES PARTNER APS | UTLA | email | website-offer |
+| 2026-06-30 | 937876386 | AYBARSM AYBARS | ENK | email | website-offer |
 | 2026-06-29 | 937938837 | NORSK UKRAINSK PLATTFORM FOR SAMARBEID | FLI | email | website-offer |
 | 2026-06-29 | 937899173 | JUNKERS GUIDE SERVICES | ENK | email | website-offer |
 | 2026-06-29 | 937895585 | ELIASSEN PSYKOLOGTJENESTER | ENK | email | website-offer |
@@ -366,6 +399,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-30 12:46 | sent | 937939353 | HEXAN MULTISERVICE | ENK | email | - |
+| 2026-06-30 12:46 | sent | 937888090 | ALFAS TRADING | ENK | email | - |
+| 2026-06-30 12:46 | sent | 937910304 | TOLKEN HAKIM ISMAIL | ENK | email | - |
+| 2026-06-30 12:46 | sent | 937763379 | RYTZ RASMUSSEN GUIDING AND ADVENTURE | ENK | email | - |
+| 2026-06-30 12:46 | sent | 937933959 | NERMOFAMILIEN | FLI | email | - |
+| 2026-06-30 12:46 | sent | 937939396 | MARTIN GILLESHAMMER | ENK | email | - |
+| 2026-06-30 12:46 | sent | 937932804 | MALLGRIP ASLAKSEN | ENK | email | - |
+| 2026-06-30 12:46 | sent | 937937369 | LA MEK & KONSULT AB | UTLA | email | - |
+| 2026-06-30 12:46 | sent | 937930690 | ARTURS KONSTANTINOVS | UTLA | email | - |
+| 2026-06-30 12:46 | sent | 937941102 | SKJØNHAUG TRENDS | ENK | email | - |
+| 2026-06-30 12:45 | sent | 937940513 | SIGRI - AV SIRI SIQVELAND | ENK | email | - |
+| 2026-06-30 12:45 | sent | 937945221 | UMA KIWE | FLI | email | - |
+| 2026-06-30 12:45 | sent | 937896352 | TRUDE ANDRESEN LEDERBEVEGELSER | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937949154 | ODA MARIE RØSHOL | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937966709 | H. HELLESNES | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937957882 | FRØYLAND BYGGTJENESTER | ENK | email | - |
+| 2026-06-30 12:44 | sent | 837919932 | TRIKESHOW MED JOACHIM NÆSS | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937957033 | THANG BILSERVICE | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937949073 | STENEVIK INTERIØR & DESIGN | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937966636 | LOMELI PAPAS | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937910347 | JANCZEWSKI INLINE | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937910266 | INNAFOR KRISTIANSEN | ENK | email | - |
+| 2026-06-30 12:44 | sent | 937994834 | FORENING NYTT LIV | FLI | email | - |
+| 2026-06-30 12:42 | sent | 937984081 | KJETIL TRONES | ENK | email | - |
+| 2026-06-30 12:42 | sent | 938005850 | GRAHL-MADSEN TAKST OG EIENDOMSRÅDGIVING | ENK | email | - |
+| 2026-06-30 12:42 | sent | 938004943 | HARALDSEN SKOG | ENK | email | - |
+| 2026-06-30 12:42 | sent | 838004342 | HALVARD SØRENSEN BYGG | ENK | email | - |
+| 2026-06-30 12:42 | sent | 937995733 | RYKKJE - AAR AKTIV | ENK | email | - |
+| 2026-06-30 12:41 | sent | 938000999 | BEAUTY LOUNGE-ANDREA SELLI GRØSETH | ENK | email | - |
+| 2026-06-30 12:41 | sent | 937934742 | BAREEN APS | NUF | email | - |
+| 2026-06-30 12:41 | sent | 937998937 | TRYM NORBERG ENOKSEN KONSULENTTJENESTER | ENK | email | - |
+| 2026-06-30 12:41 | sent | 938009074 | LAN PROCES PARTNER APS | UTLA | email | - |
+| 2026-06-30 12:41 | sent | 937876386 | AYBARSM AYBARS | ENK | email | - |
 | 2026-06-29 13:32 | sent | 937938837 | NORSK UKRAINSK PLATTFORM FOR SAMARBEID | FLI | email | - |
 | 2026-06-29 13:32 | sent | 937899173 | JUNKERS GUIDE SERVICES | ENK | email | - |
 | 2026-06-29 13:31 | sent | 937895585 | ELIASSEN PSYKOLOGTJENESTER | ENK | email | - |
