@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 39
-- Sendt: 39
+- Antall hendelser: 63
+- Sendt: 63
 - Angret: 0
-- Aktive kontaktede selskaper: 39
+- Aktive kontaktede selskaper: 63
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-04 | 937847882 | COLLECTION HOLDCO AS | AS | email | website-offer |
+| 2026-07-04 | 937853017 | ROBERTS SOLUTIONS | ENK | email | website-offer |
+| 2026-07-04 | 937888112 | NOTØY SLIT & SJAU | ENK | email | website-offer |
+| 2026-07-04 | 937797028 | TIME BETONG | ENK | email | website-offer |
+| 2026-07-04 | 937807961 | SURFBOARD PAYMENTS AB | NUF | email | website-offer |
+| 2026-07-04 | 937919905 | AAS SKOG OG TJENESTER | ENK | email | website-offer |
+| 2026-07-04 | 937947801 | ISAK MACODY FALCK | ENK | email | website-offer |
+| 2026-07-04 | 937946406 | HYPAK AS | AS | email | website-offer |
+| 2026-07-04 | 919982276 | SAMEIGET LONA-NYSTRANDVEGEN | SAM | email | website-offer |
+| 2026-07-04 | 937889771 | NAKAYIMA HEALTH CONSULTING | ENK | email | website-offer |
+| 2026-07-04 | 937920008 | GEDVILAITE DIANA DIN GLØD HUDPLEIE OG MASSASJE | ENK | email | website-offer |
+| 2026-07-04 | 937889194 | SKARSEM HYNNE KREATIV VIRKSOMHET | ENK | email | website-offer |
+| 2026-07-04 | 937919751 | SILVAE | FLI | email | website-offer |
+| 2026-07-04 | 937890079 | MURPHY ØKOLOGI | ENK | email | website-offer |
+| 2026-07-04 | 937874030 | MORTVEDT KONSULENTVIRKSOMHET | ENK | email | website-offer |
+| 2026-07-04 | 938029865 | PIANO MED JORDAN WETT | ENK | email | website-offer |
+| 2026-07-04 | 937934645 | UAB BM SERVICE NUF | NUF | email | website-offer |
+| 2026-07-04 | 938031878 | RØYKEN GRAVSTEIN - OLIVER | ENK | email | website-offer |
+| 2026-07-04 | 937764669 | PE KROSSER GJERBERG | ENK | email | website-offer |
+| 2026-07-04 | 938031851 | MORENA BEAUTY EESHA ESTABILLO | ENK | email | website-offer |
+| 2026-07-04 | 937971680 | MODESTA CERNECKAITE | ENK | email | website-offer |
+| 2026-07-04 | 938031908 | JUNE THOMAS - BARNEFAGLIG SAKKYNDIG | ENK | email | website-offer |
+| 2026-07-04 | 938018596 | DIMITRIOS KONTES | UTLA | email | website-offer |
+| 2026-07-04 | 937897502 | BERGEN MEREDAJA EDIR | ANNA | email | website-offer |
 | 2026-07-02 | 937931662 | REIDAR ULVØY SUBSEA INTERVENTION AS | AS | email | website-offer |
 | 2026-07-02 | 937939515 | SIMONSEN ASIMON MUSIKK | ENK | email | website-offer |
 | 2026-07-02 | 937939752 | ALLAN TOLNÆS | ENK | email | website-offer |
@@ -57,6 +81,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-04 14:24 | sent | 937847882 | COLLECTION HOLDCO AS | AS | email | - |
+| 2026-07-04 14:24 | sent | 937853017 | ROBERTS SOLUTIONS | ENK | email | - |
+| 2026-07-04 14:23 | sent | 937888112 | NOTØY SLIT & SJAU | ENK | email | - |
+| 2026-07-04 14:23 | sent | 937797028 | TIME BETONG | ENK | email | - |
+| 2026-07-04 14:22 | sent | 937807961 | SURFBOARD PAYMENTS AB | NUF | email | - |
+| 2026-07-04 14:21 | sent | 937919905 | AAS SKOG OG TJENESTER | ENK | email | - |
+| 2026-07-04 14:21 | sent | 937947801 | ISAK MACODY FALCK | ENK | email | - |
+| 2026-07-04 14:21 | sent | 937946406 | HYPAK AS | AS | email | - |
+| 2026-07-04 14:21 | sent | 919982276 | SAMEIGET LONA-NYSTRANDVEGEN | SAM | email | - |
+| 2026-07-04 14:21 | sent | 937889771 | NAKAYIMA HEALTH CONSULTING | ENK | email | - |
+| 2026-07-04 14:21 | sent | 937920008 | GEDVILAITE DIANA DIN GLØD HUDPLEIE OG MASSASJE | ENK | email | - |
+| 2026-07-04 14:21 | sent | 937889194 | SKARSEM HYNNE KREATIV VIRKSOMHET | ENK | email | - |
+| 2026-07-04 14:20 | sent | 937919751 | SILVAE | FLI | email | - |
+| 2026-07-04 14:20 | sent | 937890079 | MURPHY ØKOLOGI | ENK | email | - |
+| 2026-07-04 14:20 | sent | 937874030 | MORTVEDT KONSULENTVIRKSOMHET | ENK | email | - |
+| 2026-07-04 14:18 | sent | 938029865 | PIANO MED JORDAN WETT | ENK | email | - |
+| 2026-07-04 14:18 | sent | 937934645 | UAB BM SERVICE NUF | NUF | email | - |
+| 2026-07-04 14:18 | sent | 938031878 | RØYKEN GRAVSTEIN - OLIVER | ENK | email | - |
+| 2026-07-04 14:18 | sent | 937764669 | PE KROSSER GJERBERG | ENK | email | - |
+| 2026-07-04 14:18 | sent | 938031851 | MORENA BEAUTY EESHA ESTABILLO | ENK | email | - |
+| 2026-07-04 14:18 | sent | 937971680 | MODESTA CERNECKAITE | ENK | email | - |
+| 2026-07-04 14:18 | sent | 938031908 | JUNE THOMAS - BARNEFAGLIG SAKKYNDIG | ENK | email | - |
+| 2026-07-04 14:18 | sent | 938018596 | DIMITRIOS KONTES | UTLA | email | - |
+| 2026-07-04 14:18 | sent | 937897502 | BERGEN MEREDAJA EDIR | ANNA | email | - |
 | 2026-07-02 13:32 | sent | 937931662 | REIDAR ULVØY SUBSEA INTERVENTION AS | AS | email | - |
 | 2026-07-02 13:32 | sent | 937939515 | SIMONSEN ASIMON MUSIKK | ENK | email | - |
 | 2026-07-02 13:32 | sent | 937939752 | ALLAN TOLNÆS | ENK | email | - |
