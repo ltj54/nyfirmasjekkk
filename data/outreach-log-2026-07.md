@@ -4,15 +4,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 63
-- Sendt: 63
+- Antall hendelser: 102
+- Sendt: 102
 - Angret: 0
-- Aktive kontaktede selskaper: 63
+- Aktive kontaktede selskaper: 102
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-07 | 937917813 | ET NORDLIG TRE M. ZOCZEK | ENK | email | website-offer |
+| 2026-07-07 | 837848172 | SERVICETEAM BYGG OG ANLEGG AS | AS | email | website-offer |
+| 2026-07-07 | 937847572 | BLOOM CAPITAL AS | AS | email | website-offer |
+| 2026-07-07 | 937881150 | MAGNAR STIEN AI | ENK | email | website-offer |
+| 2026-07-07 | 937918461 | KVINNESLAND SERVICE | ENK | email | website-offer |
+| 2026-07-07 | 937918321 | UAB AUTOMOBIL LT | UTLA | email | website-offer |
+| 2026-07-07 | 937919204 | RUNE OLSEN | ENK | email | website-offer |
+| 2026-07-07 | 937855168 | RENBIL BODNAR | ENK | email | website-offer |
+| 2026-07-07 | 937756577 | JOHANNE HAMMEREN | ENK | email | website-offer |
+| 2026-07-07 | 837888492 | TANNLEGE NAVALAN MURUGASIMMAN | ENK | email | website-offer |
+| 2026-07-07 | 937970323 | RUSSEGRUPPE NYDALEN 2027 | FLI | email | website-offer |
+| 2026-07-07 | 938052514 | SHVETS NORDIC SERVICE | ENK | email | website-offer |
+| 2026-07-07 | 838060382 | SOLVEIG KAVLI DESIGN | ENK | email | website-offer |
+| 2026-07-07 | 838047122 | VETERINÆR MARTHE MAGNUSHOMMEN AS | AS | email | website-offer |
+| 2026-07-07 | 938031622 | ROKSVAAG SNEKKERSERVICE | ENK | email | website-offer |
+| 2026-07-07 | 938030405 | ILCHENKO DESSERT | ENK | email | website-offer |
+| 2026-07-07 | 938045232 | VALHALLA AL-KALO | ENK | email | website-offer |
+| 2026-07-07 | 838051332 | GBK SERVICES LTD | UTLA | email | website-offer |
+| 2026-07-07 | 838045642 | BERGET BRUK NYGÅRD | ENK | email | website-offer |
+| 2026-07-07 | 938036713 | DÅFJORD SYD/VEST ELGVALD | FLI | email | website-offer |
+| 2026-07-07 | 937472722 | DAVID OLAFSRUD | ENK | email | website-offer |
+| 2026-07-07 | 938057273 | MORTEN DAHL | ENK | email | website-offer |
+| 2026-07-07 | 938052360 | CHARLOTTE SMITH OLSEN | ENK | email | website-offer |
+| 2026-07-07 | 938056889 | KAISEN SPRÅK | ENK | email | website-offer |
+| 2026-07-07 | 938044732 | SANDRA PICHOLA RENHOLD | ENK | email | website-offer |
+| 2026-07-07 | 938039852 | HOLMS AERIAL DRONE SERVICE | ENK | email | website-offer |
+| 2026-07-07 | 938039925 | REZAI HJELPSOM PARTNER | ENK | email | website-offer |
+| 2026-07-07 | 938049564 | OG BERGTEKNIKK DA | DA | email | website-offer |
+| 2026-07-07 | 838049702 | OBRECHT INTERNATIONAL CONSULTING | UTLA | email | website-offer |
+| 2026-07-07 | 937938977 | GONZALEZ LOPEZ GECKOWORKS | ENK | email | website-offer |
+| 2026-07-07 | 938045909 | GALEANO BEDOYA SERVICES&SOLUTIONS | ENK | email | website-offer |
+| 2026-07-07 | 938057974 | YGRANES RETAIL | ENK | email | website-offer |
+| 2026-07-07 | 938052182 | TYRA JOHANNE SAND SNIPSTAD | ENK | email | website-offer |
+| 2026-07-07 | 938055580 | OLSVIK INSTRUKSJON & UNDERVISNINGSTJENESTER | ENK | email | website-offer |
+| 2026-07-07 | 938051895 | LILLESTRØM STUDENTBY BEBOERFORENING | FLI | email | website-offer |
+| 2026-07-07 | 938056757 | KARINA SIWY | ENK | email | website-offer |
+| 2026-07-07 | 838051642 | HÅKENSTAD MASKIN | ENK | email | website-offer |
+| 2026-07-07 | 937759142 | ESPELAND FORSAMLINGSHUS | FLI | email | website-offer |
+| 2026-07-07 | 938058512 | DERVISHI | ENK | email | website-offer |
 | 2026-07-04 | 937847882 | COLLECTION HOLDCO AS | AS | email | website-offer |
 | 2026-07-04 | 937853017 | ROBERTS SOLUTIONS | ENK | email | website-offer |
 | 2026-07-04 | 937888112 | NOTØY SLIT & SJAU | ENK | email | website-offer |
@@ -81,6 +120,45 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-07 21:17 | sent | 937917813 | ET NORDLIG TRE M. ZOCZEK | ENK | email | - |
+| 2026-07-07 21:15 | sent | 837848172 | SERVICETEAM BYGG OG ANLEGG AS | AS | email | - |
+| 2026-07-07 21:15 | sent | 937847572 | BLOOM CAPITAL AS | AS | email | - |
+| 2026-07-07 21:13 | sent | 937881150 | MAGNAR STIEN AI | ENK | email | - |
+| 2026-07-07 21:13 | sent | 937918461 | KVINNESLAND SERVICE | ENK | email | - |
+| 2026-07-07 21:12 | sent | 937918321 | UAB AUTOMOBIL LT | UTLA | email | - |
+| 2026-07-07 21:12 | sent | 937919204 | RUNE OLSEN | ENK | email | - |
+| 2026-07-07 21:12 | sent | 937855168 | RENBIL BODNAR | ENK | email | - |
+| 2026-07-07 21:12 | sent | 937756577 | JOHANNE HAMMEREN | ENK | email | - |
+| 2026-07-07 21:10 | sent | 837888492 | TANNLEGE NAVALAN MURUGASIMMAN | ENK | email | - |
+| 2026-07-07 21:09 | sent | 937970323 | RUSSEGRUPPE NYDALEN 2027 | FLI | email | - |
+| 2026-07-07 21:08 | sent | 938052514 | SHVETS NORDIC SERVICE | ENK | email | - |
+| 2026-07-07 21:07 | sent | 838060382 | SOLVEIG KAVLI DESIGN | ENK | email | - |
+| 2026-07-07 21:07 | sent | 838047122 | VETERINÆR MARTHE MAGNUSHOMMEN AS | AS | email | - |
+| 2026-07-07 21:06 | sent | 938031622 | ROKSVAAG SNEKKERSERVICE | ENK | email | - |
+| 2026-07-07 21:06 | sent | 938030405 | ILCHENKO DESSERT | ENK | email | - |
+| 2026-07-07 21:06 | sent | 938045232 | VALHALLA AL-KALO | ENK | email | - |
+| 2026-07-07 21:06 | sent | 838051332 | GBK SERVICES LTD | UTLA | email | - |
+| 2026-07-07 21:06 | sent | 838045642 | BERGET BRUK NYGÅRD | ENK | email | - |
+| 2026-07-07 21:05 | sent | 938036713 | DÅFJORD SYD/VEST ELGVALD | FLI | email | - |
+| 2026-07-07 21:04 | sent | 937472722 | DAVID OLAFSRUD | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938057273 | MORTEN DAHL | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938052360 | CHARLOTTE SMITH OLSEN | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938056889 | KAISEN SPRÅK | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938044732 | SANDRA PICHOLA RENHOLD | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938039852 | HOLMS AERIAL DRONE SERVICE | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938039925 | REZAI HJELPSOM PARTNER | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938049564 | OG BERGTEKNIKK DA | DA | email | - |
+| 2026-07-07 21:04 | sent | 838049702 | OBRECHT INTERNATIONAL CONSULTING | UTLA | email | - |
+| 2026-07-07 21:04 | sent | 937938977 | GONZALEZ LOPEZ GECKOWORKS | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938045909 | GALEANO BEDOYA SERVICES&SOLUTIONS | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938057974 | YGRANES RETAIL | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938052182 | TYRA JOHANNE SAND SNIPSTAD | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938055580 | OLSVIK INSTRUKSJON & UNDERVISNINGSTJENESTER | ENK | email | - |
+| 2026-07-07 21:04 | sent | 938051895 | LILLESTRØM STUDENTBY BEBOERFORENING | FLI | email | - |
+| 2026-07-07 21:04 | sent | 938056757 | KARINA SIWY | ENK | email | - |
+| 2026-07-07 21:04 | sent | 838051642 | HÅKENSTAD MASKIN | ENK | email | - |
+| 2026-07-07 21:04 | sent | 937759142 | ESPELAND FORSAMLINGSHUS | FLI | email | - |
+| 2026-07-07 21:03 | sent | 938058512 | DERVISHI | ENK | email | - |
 | 2026-07-04 14:24 | sent | 937847882 | COLLECTION HOLDCO AS | AS | email | - |
 | 2026-07-04 14:24 | sent | 937853017 | ROBERTS SOLUTIONS | ENK | email | - |
 | 2026-07-04 14:23 | sent | 937888112 | NOTØY SLIT & SJAU | ENK | email | - |
