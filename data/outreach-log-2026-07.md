@@ -4,15 +4,34 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 102
-- Sendt: 102
+- Antall hendelser: 121
+- Sendt: 121
 - Angret: 0
-- Aktive kontaktede selskaper: 102
+- Aktive kontaktede selskaper: 121
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-11 | 938076162 | ERLEND WILLMANN | ENK | email | website-offer |
+| 2026-07-11 | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | website-offer |
+| 2026-07-11 | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | website-offer |
+| 2026-07-11 | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | website-offer |
+| 2026-07-11 | 938061092 | BARE KAFFE NYGAARD | ENK | email | website-offer |
+| 2026-07-11 | 938068364 | RØST HUSFLIDSLAG | FLI | email | website-offer |
+| 2026-07-11 | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | website-offer |
+| 2026-07-11 | 938068763 | MUSIKK MED MENING | FLI | email | website-offer |
+| 2026-07-11 | 938071896 | LEIA ELLINOR MOEN DESIGN & CREATE | ENK | email | website-offer |
+| 2026-07-11 | 838072682 | HEGGENES GÅRD ANS | ANS | email | website-offer |
+| 2026-07-11 | 937903359 | FEIE AS | AS | email | website-offer |
+| 2026-07-11 | 937969635 | ELLA AALTONEN LEGETJENESTER | ENK | email | website-offer |
+| 2026-07-11 | 937944500 | COPE GUIDES AS | AS | email | website-offer |
+| 2026-07-11 | 938019606 | ZUBE VEDLIKEHOLD | ENK | email | website-offer |
+| 2026-07-11 | 938080216 | PETROSERVICE | UTLA | email | website-offer |
+| 2026-07-11 | 938085013 | MELAND KOMPETANSE OG SERVICE | ENK | email | website-offer |
+| 2026-07-11 | 938077053 | MARCEL WETEMANS BEHEER BV | UTLA | email | website-offer |
+| 2026-07-11 | 938082227 | LCOM AB | UTLA | email | website-offer |
+| 2026-07-11 | 938075174 | ELREMEHI RENHOLD | ENK | email | website-offer |
 | 2026-07-07 | 937917813 | ET NORDLIG TRE M. ZOCZEK | ENK | email | website-offer |
 | 2026-07-07 | 837848172 | SERVICETEAM BYGG OG ANLEGG AS | AS | email | website-offer |
 | 2026-07-07 | 937847572 | BLOOM CAPITAL AS | AS | email | website-offer |
@@ -120,6 +139,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-11 14:36 | sent | 938076162 | ERLEND WILLMANN | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938061092 | BARE KAFFE NYGAARD | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938068364 | RØST HUSFLIDSLAG | FLI | email | - |
+| 2026-07-11 14:35 | sent | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938068763 | MUSIKK MED MENING | FLI | email | - |
+| 2026-07-11 14:35 | sent | 938071896 | LEIA ELLINOR MOEN DESIGN & CREATE | ENK | email | - |
+| 2026-07-11 14:35 | sent | 838072682 | HEGGENES GÅRD ANS | ANS | email | - |
+| 2026-07-11 14:35 | sent | 937903359 | FEIE AS | AS | email | - |
+| 2026-07-11 14:35 | sent | 937969635 | ELLA AALTONEN LEGETJENESTER | ENK | email | - |
+| 2026-07-11 14:35 | sent | 937944500 | COPE GUIDES AS | AS | email | - |
+| 2026-07-11 14:35 | sent | 938019606 | ZUBE VEDLIKEHOLD | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938080216 | PETROSERVICE | UTLA | email | - |
+| 2026-07-11 14:35 | sent | 938085013 | MELAND KOMPETANSE OG SERVICE | ENK | email | - |
+| 2026-07-11 14:35 | sent | 938077053 | MARCEL WETEMANS BEHEER BV | UTLA | email | - |
+| 2026-07-11 14:35 | sent | 938082227 | LCOM AB | UTLA | email | - |
+| 2026-07-11 14:35 | sent | 938075174 | ELREMEHI RENHOLD | ENK | email | - |
 | 2026-07-07 21:17 | sent | 937917813 | ET NORDLIG TRE M. ZOCZEK | ENK | email | - |
 | 2026-07-07 21:15 | sent | 837848172 | SERVICETEAM BYGG OG ANLEGG AS | AS | email | - |
 | 2026-07-07 21:15 | sent | 937847572 | BLOOM CAPITAL AS | AS | email | - |
