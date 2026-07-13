@@ -4,15 +4,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 121
-- Sendt: 121
+- Antall hendelser: 144
+- Sendt: 144
 - Angret: 0
-- Aktive kontaktede selskaper: 121
+- Aktive kontaktede selskaper: 144
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-13 | 937848749 | ÅSEN HOLDING AS | AS | email | website-offer |
+| 2026-07-13 | 937848420 | TENSIONE AS | AS | email | website-offer |
+| 2026-07-13 | 937848455 | ISLANDSTONE VENTURES AS | AS | email | website-offer |
+| 2026-07-13 | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | website-offer |
+| 2026-07-13 | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | website-offer |
+| 2026-07-13 | 937886950 | BOLIGLØFT AS | AS | email | website-offer |
+| 2026-07-13 | 937848447 | GREEN DIGITAL OP AS | AS | email | website-offer |
+| 2026-07-13 | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | website-offer |
+| 2026-07-13 | 838066372 | ALFRED DOKKEN FILM | ENK | email | website-offer |
+| 2026-07-13 | 938086478 | MICHAEL TESFAZGI | ENK | email | website-offer |
+| 2026-07-13 | 938085064 | ISMAEIL TAXI | ENK | email | website-offer |
+| 2026-07-13 | 938066604 | SARA WRIGHTOVA - SARA WRIGHT VISUALS | ENK | email | website-offer |
+| 2026-07-13 | 938061297 | MORTENSEN AI & DATA | ENK | email | website-offer |
+| 2026-07-13 | 938065861 | ELISABETH JACOBSEN | ENK | email | website-offer |
+| 2026-07-13 | 938067872 | EDGEON AS | AS | email | website-offer |
+| 2026-07-13 | 938067260 | SYLAIEV SERVICE PRO | ENK | email | website-offer |
+| 2026-07-13 | 938050724 | ANDREAS FURU | ENK | email | website-offer |
+| 2026-07-13 | 938066787 | YOGA ANNA GORSKA | ENK | email | website-offer |
+| 2026-07-13 | 938061076 | MC BALTZERSEN ASSIST | ENK | email | website-offer |
+| 2026-07-13 | 938068941 | JACOBSENS GATEKJØKKEN | ENK | email | website-offer |
+| 2026-07-13 | 938083576 | DELEAN AB | UTLA | email | website-offer |
+| 2026-07-13 | 938085412 | JELLE APOSTEL | ENK | email | website-offer |
+| 2026-07-13 | 938085749 | LEGE ØRJAN WALDENSTRØM | ENK | email | website-offer |
 | 2026-07-11 | 938076162 | ERLEND WILLMANN | ENK | email | website-offer |
 | 2026-07-11 | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | website-offer |
 | 2026-07-11 | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | website-offer |
@@ -139,6 +162,29 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-13 09:38 | sent | 937848749 | ÅSEN HOLDING AS | AS | email | - |
+| 2026-07-13 09:38 | sent | 937848420 | TENSIONE AS | AS | email | - |
+| 2026-07-13 09:38 | sent | 937848455 | ISLANDSTONE VENTURES AS | AS | email | - |
+| 2026-07-13 09:37 | sent | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | - |
+| 2026-07-13 09:37 | sent | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | - |
+| 2026-07-13 09:37 | sent | 937886950 | BOLIGLØFT AS | AS | email | - |
+| 2026-07-13 09:37 | sent | 937848447 | GREEN DIGITAL OP AS | AS | email | - |
+| 2026-07-13 09:37 | sent | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | - |
+| 2026-07-13 09:33 | sent | 838066372 | ALFRED DOKKEN FILM | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938086478 | MICHAEL TESFAZGI | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938085064 | ISMAEIL TAXI | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938066604 | SARA WRIGHTOVA - SARA WRIGHT VISUALS | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938061297 | MORTENSEN AI & DATA | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938065861 | ELISABETH JACOBSEN | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938067872 | EDGEON AS | AS | email | - |
+| 2026-07-13 09:27 | sent | 938067260 | SYLAIEV SERVICE PRO | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938050724 | ANDREAS FURU | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938066787 | YOGA ANNA GORSKA | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938061076 | MC BALTZERSEN ASSIST | ENK | email | - |
+| 2026-07-13 09:27 | sent | 938068941 | JACOBSENS GATEKJØKKEN | ENK | email | - |
+| 2026-07-13 09:26 | sent | 938083576 | DELEAN AB | UTLA | email | - |
+| 2026-07-13 09:26 | sent | 938085412 | JELLE APOSTEL | ENK | email | - |
+| 2026-07-13 09:25 | sent | 938085749 | LEGE ØRJAN WALDENSTRØM | ENK | email | - |
 | 2026-07-11 14:36 | sent | 938076162 | ERLEND WILLMANN | ENK | email | - |
 | 2026-07-11 14:35 | sent | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | - |
 | 2026-07-11 14:35 | sent | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | - |
