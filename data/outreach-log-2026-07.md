@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 174
-- Sendt: 174
+- Antall hendelser: 176
+- Sendt: 176
 - Angret: 0
-- Aktive kontaktede selskaper: 174
+- Aktive kontaktede selskaper: 176
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-14 | 938094098 | SINNES FLIS&SJØMAT | ENK | email | website-offer |
+| 2026-07-14 | 938093784 | IVAN HUMENIUK BILPLEIE | ENK | email | website-offer |
 | 2026-07-14 | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | website-offer |
 | 2026-07-14 | 937315171 | SUNDESKOGEN FIBERLAG | FLI | email | website-offer |
 | 2026-07-14 | 936433731 | MALVIK SANITETSFORENING | FLI | email | website-offer |
@@ -192,6 +194,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-14 09:33 | sent | 938094098 | SINNES FLIS&SJØMAT | ENK | email | - |
+| 2026-07-14 09:33 | sent | 938093784 | IVAN HUMENIUK BILPLEIE | ENK | email | - |
 | 2026-07-14 08:44 | sent | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | - |
 | 2026-07-14 08:44 | sent | 937315171 | SUNDESKOGEN FIBERLAG | FLI | email | - |
 | 2026-07-14 08:43 | sent | 936433731 | MALVIK SANITETSFORENING | FLI | email | - |
