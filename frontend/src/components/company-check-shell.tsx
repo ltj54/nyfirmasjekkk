@@ -4,15 +4,23 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import {
   Building2,
   CalendarDays,
+  ChevronDown,
+  ChevronRight,
   Globe,
+  LayoutList,
   Mail,
   Phone,
   Landmark,
   MapPin,
+  MonitorCheck,
+  Search,
+  Send,
+  SlidersHorizontal,
   AlertCircle,
   CheckCircle2,
   AlertTriangle,
   ArrowLeft,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -31,12 +39,9 @@ import type {
 import {
   applyLeadQuickFilters,
   compareLeadPriority,
-  describeListStructureSummary,
   getBestContactPoint,
   getCommercialOpportunity,
-  getContactability,
   getLeadPriority,
-  prioritizedListStructureSignals,
   type LeadQuickFilter,
 } from "@/lib/company-lead-scoring";
 import {
@@ -60,10 +65,8 @@ import {
   formatStructureSignalSeverity,
   formatWebsiteCandidateStatus,
   formatWebsiteConfidence,
-  formatWebsiteContentMatch,
   formatWebsiteVerification,
   getLatestOutreachEntriesByOrg,
-  listStructureSignalClassName,
   normalizeWebsiteUrl,
   outreachOfferTypeForCompany,
   formatOutreachOfferType,
@@ -79,6 +82,29 @@ import { Separator } from "@/components/ui/separator";
 import { OutreachOverview } from "@/components/outreach-overview";
 
 const dayOptions = ["5", "10", "30", "60", "180", "365", "0"];
+const countyOptions = [
+  "Agder",
+  "Akershus",
+  "Buskerud",
+  "Finnmark",
+  "Innlandet",
+  "Møre og Romsdal",
+  "Nordland",
+  "Oslo",
+  "Rogaland",
+  "Telemark",
+  "Troms",
+  "Trøndelag",
+  "Vestfold",
+  "Vestland",
+  "Østfold",
+];
+type WorkspaceTab = "leads" | "website" | "outreach";
+type BatchValidation = {
+  status: "checking" | "blocked" | "ready";
+  reason?: string;
+  startedAt?: number;
+};
 const legend = [
   { status: "GREEN", label: "Ryddig registerstatus", color: "bg-emerald-500" },
   { status: "YELLOW", label: "Begrenset registerinfo", color: "bg-amber-500" },
@@ -173,6 +199,10 @@ function wait(ms: number) {
   });
 }
 
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
   const discovery = company.websiteDiscovery;
   if (company.website) {
@@ -260,6 +290,7 @@ function paginationItems(currentPage: number, totalPages: number): Array<number 
 }
 
 export function CompanyCheckShell() {
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>("leads");
   const [backendReady, setBackendReady] = useState(false);
   const [initialResultsReady, setInitialResultsReady] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
@@ -275,12 +306,16 @@ export function CompanyCheckShell() {
   const [daysFilter, setDaysFilter] = useState("5");
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("");
-  const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>("GREEN");
+  const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
+  const [nameFilter, setNameFilter] = useState("");
+  const [debouncedNameFilter, setDebouncedNameFilter] = useState("");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [showBatchExcluded, setShowBatchExcluded] = useState(true);
   const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([]);
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
-  const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, { status: "checking" | "blocked" | "ready"; reason?: string; startedAt?: number }>>({});
+  const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, BatchValidation>>({});
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
   const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
@@ -300,6 +335,8 @@ export function CompanyCheckShell() {
   const [totalPages, setTotalPages] = useState(0);
   const latestListRequestId = useRef(0);
   const hasDetailHistoryEntryRef = useRef(false);
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const dialogTriggerRef = useRef<HTMLElement | null>(null);
 
   async function fetchOutreachStatuses(orgNumbers: string[]) {
     const uniqueOrgNumbers = Array.from(new Set(orgNumbers.filter(Boolean)));
@@ -774,7 +811,7 @@ export function CompanyCheckShell() {
     setIsWebsiteInspectionLoading(true);
     setWebsiteInspectionError(null);
     try {
-      const response = await fetch(`/api/company-check/website-inspection?url=${encodeURIComponent(url)}`, {
+      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(url)}`, {
         cache: "no-store",
       });
       if (!response.ok) {
@@ -798,8 +835,12 @@ export function CompanyCheckShell() {
     await inspectWebsiteUrl(websiteInspectionUrl);
   }
 
-  const handleCloseDetail = useEffectEvent(() => {
-    closeDetailView();
+  const handleCloseActiveDialog = useEffectEvent(() => {
+    if (selectedCompany) {
+      closeDetailView();
+      return;
+    }
+    setSelectedWebsiteInspection(null);
   });
 
   useEffect(() => {
@@ -913,6 +954,7 @@ export function CompanyCheckShell() {
       countyFilter?: string;
       organizationFormFilter?: string;
       selectedLegend?: keyof typeof legendDetails | null;
+      nameFilter?: string;
     }
   ) {
     if (!backendReady) {
@@ -925,12 +967,14 @@ export function CompanyCheckShell() {
     const effectiveCountyFilter = overrides?.countyFilter ?? countyFilter;
     const effectiveOrganizationFormFilter = overrides?.organizationFormFilter ?? organizationFormFilter;
     const effectiveSelectedLegend = overrides?.selectedLegend === undefined ? selectedLegend : overrides.selectedLegend;
+    const effectiveNameFilter = overrides?.nameFilter ?? debouncedNameFilter;
     const params = new URLSearchParams();
     params.set("dager", effectiveDaysFilter);
     params.set("page", pageNum.toString());
-    if (effectiveCountyFilter) params.set("county", effectiveCountyFilter);
+    if (effectiveCountyFilter) params.set("fylke", effectiveCountyFilter);
     if (effectiveOrganizationFormFilter) params.set("organizationForm", effectiveOrganizationFormFilter);
     if (effectiveSelectedLegend) params.set("score", effectiveSelectedLegend);
+    if (effectiveNameFilter) params.set("navn", effectiveNameFilter);
     if (leadQuickFilters.includes("HAS_EMAIL")) params.set("hasEmail", "true");
     if (leadQuickFilters.includes("HAS_WEBSITE")) params.set("hasWebsite", "true");
     if (leadQuickFilters.includes("MISSING_WEBSITE")) params.set("missingWebsite", "true");
@@ -978,7 +1022,15 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     runRefreshRecent();
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters]);
+  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, debouncedNameFilter]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedNameFilter(nameFilter.trim());
+    }, 350);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [nameFilter]);
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
@@ -1039,14 +1091,44 @@ export function CompanyCheckShell() {
   }, [backendReady, selectedWebsiteInspection]);
 
   useEffect(() => {
-    if (!selectedCompany) {
+    if (!selectedCompany && !selectedWebsiteInspection) {
       document.body.style.overflow = "";
       return;
     }
 
+    dialogTriggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+    }
+    window.requestAnimationFrame(() => dialog?.focus());
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        handleCloseDetail();
+        event.preventDefault();
+        handleCloseActiveDialog();
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) {
+        return;
+      }
+
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable.at(-1)!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
@@ -1056,8 +1138,12 @@ export function CompanyCheckShell() {
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
+      if (dialog?.open) {
+        dialog.close();
+      }
+      dialogTriggerRef.current?.focus();
     };
-  }, [selectedCompany]);
+  }, [selectedCompany, selectedWebsiteInspection]);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -1102,27 +1188,36 @@ export function CompanyCheckShell() {
     }
   }
 
-  function scrollToSection(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
   function resetToLanding() {
     if (selectedCompany && hasDetailHistoryEntryRef.current) {
       closeDetailView();
       return;
     }
     setSelectedCompany(null);
+    setActiveTab("leads");
     setSelectedLegend(null);
     setDaysFilter("5");
     setCountyFilter("");
     setOrganizationFormFilter("");
+    setNameFilter("");
+    setDebouncedNameFilter("");
     setLeadQuickFilters([]);
     void fetchRecent(0, {
       daysFilter: "5",
       countyFilter: "",
       organizationFormFilter: "",
       selectedLegend: null,
+      nameFilter: "",
     });
+  }
+
+  function submitCompanySearch() {
+    const value = nameFilter.trim();
+    if (/^\d{9}$/.test(value)) {
+      void openCompanyDetails(value);
+      return;
+    }
+    setDebouncedNameFilter(value);
   }
 
   function closeDetailView() {
@@ -1143,15 +1238,18 @@ export function CompanyCheckShell() {
   }
 
   const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL") && leadQuickFilters.includes("MISSING_WEBSITE");
+  const listQuickFilters = leadQuickFilters.filter((filter) => filter !== "NOT_SENT");
   const filteredCompanies = applyLeadQuickFilters((selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
     : recentCompanies
-  ), outreachStatusByOrg, leadQuickFilters).sort(canUseEmailBatch ? compareEmailBatchPriority : compareLeadPriority);
+  ), outreachStatusByOrg, listQuickFilters).sort(canUseEmailBatch ? compareEmailBatchPriority : compareLeadPriority);
   const visibleSearchCompanies = filteredCompanies.filter((company) => {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
+    const batchBlocked = outreachStatus?.status === "batch_excluded"
+      || batchValidationByOrg[company.orgNumber]?.status === "blocked";
     return !outreachStatus?.sent
       && outreachStatus?.status !== "not_relevant"
-      && outreachStatus?.status !== "batch_excluded";
+      && ((canUseEmailBatch && showBatchExcluded) || !batchBlocked);
   });
   const selectedBatchCompanies = canUseEmailBatch
     ? visibleSearchCompanies.filter((company) =>
@@ -1222,6 +1320,8 @@ export function CompanyCheckShell() {
     return () => {
       cancelled = true;
     };
+  // Validation is intentionally keyed by the serialized visible candidate set.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canUseEmailBatch, visibleBatchValidationKey]);
 
   useEffect(() => {
@@ -1259,7 +1359,7 @@ export function CompanyCheckShell() {
       </button>
 
       <header className="sticky top-0 z-30 border-b border-[#D9E2EC] bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
           <button
             className="flex items-center gap-3 text-left"
             onClick={resetToLanding}
@@ -1277,21 +1377,101 @@ export function CompanyCheckShell() {
               </p>
             </div>
           </button>
-
+          <nav aria-label="Arbeidsflater" className="flex min-w-0 items-center gap-1 overflow-x-auto">
+            <WorkspaceTabButton
+              active={activeTab === "leads"}
+              icon={LayoutList}
+              label="Leads"
+              onClick={() => setActiveTab("leads")}
+            />
+            <WorkspaceTabButton
+              active={activeTab === "website"}
+              icon={MonitorCheck}
+              label="Nettsidesjekk"
+              onClick={() => setActiveTab("website")}
+            />
+            <WorkspaceTabButton
+              active={activeTab === "outreach"}
+              count={getLatestOutreachEntriesByOrg(outreachEntries).length}
+              icon={Send}
+              label="Utsendelser"
+              onClick={() => setActiveTab("outreach")}
+            />
+          </nav>
         </div>
       </header>
 
       <main id="main-content" className="pb-16">
         <div className={selectedCompany || selectedWebsiteInspection ? "pointer-events-none select-none blur-[3px] transition-all duration-200" : "transition-all duration-200"}>
+          {activeTab === "leads" ? (
           <section id="search" className="mx-auto max-w-7xl px-6 pt-6 sm:pt-8">
             <div className="grid gap-4">
-              <div className="border border-[#D9E2EC] bg-white px-5 py-6 sm:px-7 sm:py-7">
-                <div className="mt-3 max-w-3xl">
+              <div className="border border-[#D9E2EC] bg-white px-5 py-5 sm:px-6">
+                <div className="max-w-3xl">
                   <h1 className="text-2xl font-semibold tracking-tight text-[#1F2933] sm:text-3xl">
-                    Finn nye virksomheter
+                    Finn og prioriter nye virksomheter
                   </h1>
+                  <p className="mt-2 text-[14px] text-[#52606D]">Søk, vurder og velg neste handling fra samme arbeidsflate.</p>
                 </div>
 
+                <div className="mt-5 flex flex-col gap-2 lg:flex-row">
+                  <form
+                    className="relative flex min-w-0 flex-1"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      submitCompanySearch();
+                    }}
+                  >
+                    <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#829AB1]" />
+                    <input
+                      aria-label="Søk etter virksomhet"
+                      className="h-10 w-full rounded-sm border border-[#BCCCDC] bg-white pl-10 pr-10 text-[14px] text-[#1F2933] outline-none placeholder:text-[#829AB1] focus:border-[#1F5FA9] focus:ring-2 focus:ring-[#1F5FA9]/15"
+                      onChange={(event) => setNameFilter(event.target.value)}
+                      placeholder="Søk på navn eller organisasjonsnummer"
+                      value={nameFilter}
+                    />
+                    {nameFilter ? (
+                      <button
+                        aria-label="Tøm søk"
+                        className="absolute right-1 top-1 flex size-8 items-center justify-center text-[#52606D] hover:text-[#1F2933]"
+                        onClick={() => {
+                          setNameFilter("");
+                          setDebouncedNameFilter("");
+                        }}
+                        title="Tøm søk"
+                        type="button"
+                      >
+                        <X className="size-4" />
+                      </button>
+                    ) : null}
+                  </form>
+                  <div className="flex gap-2">
+                    <select
+                      aria-label="Filtrer på fylke"
+                      className="h-10 min-w-44 flex-1 rounded-sm border border-[#BCCCDC] bg-white px-3 text-[13px] font-medium text-[#52606D] outline-none focus:border-[#1F5FA9] lg:flex-none"
+                      disabled={filterButtonDisabled}
+                      onChange={(event) => setCountyFilter(event.target.value)}
+                      value={countyFilter}
+                    >
+                      <option value="">Hele landet</option>
+                      {countyOptions.map((county) => <option key={county} value={county}>{county}</option>)}
+                    </select>
+                    <Button
+                      aria-expanded={showAdvancedFilters}
+                      className="h-10 rounded-sm border-[#BCCCDC] px-3"
+                      onClick={() => setShowAdvancedFilters((current) => !current)}
+                      type="button"
+                      variant="outline"
+                    >
+                      <SlidersHorizontal className="size-4" />
+                      Filtre
+                      <ChevronDown className={`size-4 transition-transform ${showAdvancedFilters ? "rotate-180" : ""}`} />
+                    </Button>
+                  </div>
+                </div>
+
+                {showAdvancedFilters ? (
+                <div className="mt-5 border-t border-[#E4E7EB] pt-4">
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="text-[#52606D]">Selskapsform:</span>
                   {visibleOrganizationForms.map((code) => (
@@ -1387,6 +1567,8 @@ export function CompanyCheckShell() {
                     setCountyFilter("");
                     setOrganizationFormFilter("");
                     setSelectedLegend(null);
+                    setNameFilter("");
+                    setDebouncedNameFilter("");
                     setLeadQuickFilters([]);
                     scrollToSection("search");
                   }}
@@ -1395,82 +1577,57 @@ export function CompanyCheckShell() {
                     Nullstill filtre
                   </button>
                 </div>
+                </div>
+                ) : null}
 
               </div>
 
-              <div className="border border-[#D9E2EC] bg-white p-5 sm:p-6">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                  <div className="max-w-2xl">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#52606D]">
-                      Nettsidesjekk
-                    </p>
-                    <h2 className="mt-1 text-[18px] font-semibold text-[#1F2933]">
-                      Sjekk en vilkårlig URL
-                    </h2>
-                    <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
-                      Bruk samme kvalitetsmotor som detaljvisningen: teknisk trygghet, UU/WCAG-signaler, personvern, innhold, skjema og sikkerhetsheadere.
-                    </p>
-                  </div>
-                  <form
-                    className="flex w-full flex-col gap-2 sm:flex-row lg:max-w-xl"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      void inspectStandaloneWebsite();
-                    }}
-                  >
+            </div>
+          </section>
+          ) : null}
+
+          {activeTab === "website" ? (
+            <section className="mx-auto max-w-7xl px-6 py-8" id="website-workspace">
+              <div className="border border-[#D9E2EC] bg-white p-5 sm:p-7">
+                <div className="max-w-2xl">
+                  <p className="text-[12px] font-semibold uppercase text-[#52606D]">Nettsidesjekk</p>
+                  <h1 className="mt-1 text-2xl font-semibold text-[#1F2933]">Vurder en nettside</h1>
+                  <p className="mt-2 text-[14px] leading-6 text-[#52606D]">
+                    Kontroller teknisk trygghet, tilgjengelighet, personvern, innhold, skjema og sikkerhetsheadere.
+                  </p>
+                </div>
+                <form
+                  className="mt-6 flex max-w-3xl flex-col gap-2 sm:flex-row"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    void inspectStandaloneWebsite();
+                  }}
+                >
+                  <div className="relative flex-1">
+                    <Globe className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#829AB1]" />
                     <input
-                      className="min-h-10 flex-1 rounded-sm border border-[#D9E2EC] bg-white px-3 text-[14px] text-[#1F2933] outline-none transition-colors placeholder:text-[#9AA5B1] focus:border-[#2F6FB2]"
+                      aria-label="URL som skal sjekkes"
+                      className="h-11 w-full rounded-sm border border-[#BCCCDC] bg-white pl-10 pr-3 text-[14px] text-[#1F2933] outline-none placeholder:text-[#829AB1] focus:border-[#1F5FA9] focus:ring-2 focus:ring-[#1F5FA9]/15"
                       inputMode="url"
                       onChange={(event) => setWebsiteInspectionUrl(event.target.value)}
                       placeholder="https://eksempel.no"
                       type="text"
                       value={websiteInspectionUrl}
                     />
-                    <Button
-                      className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
-                      disabled={isWebsiteInspectionLoading}
-                      type="submit"
-                    >
-                      {isWebsiteInspectionLoading ? "Sjekker..." : "Sjekk nettside"}
-                    </Button>
-                  </form>
-                </div>
+                  </div>
+                  <Button className="h-11 rounded-sm bg-[#1F5FA9] px-5 text-white hover:bg-[#2F6FB2]" disabled={isWebsiteInspectionLoading} type="submit">
+                    <MonitorCheck className="size-4" />
+                    {isWebsiteInspectionLoading ? "Sjekker..." : "Sjekk nettside"}
+                  </Button>
+                </form>
                 {websiteInspectionError ? (
-                  <p className="mt-3 border border-rose-100 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">
-                    {websiteInspectionError}
-                  </p>
+                  <p className="mt-3 border border-rose-100 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">{websiteInspectionError}</p>
                 ) : null}
               </div>
+            </section>
+          ) : null}
 
-              <div id="offer" className="border border-[#D9E2EC] bg-[#F8FBFF] p-6 text-[#1F2933] sm:p-8">
-                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#52606D]">
-                  Lead-kriterier
-                </p>
-                <div className="mt-5 grid gap-5 md:grid-cols-3">
-                  <CommercialOfferPoint
-                    label="Sterkt lead"
-                    text="Mangler nettside og har e-post eller telefon registrert."
-                  />
-                  <CommercialOfferPoint
-                    label="Mulig lead"
-                    text="Mangler digital flate, men krever litt mer manuell research."
-                  />
-                  <CommercialOfferPoint
-                    label="Svakt lead"
-                    text="Har eksisterende flate, røde registerspor eller svak kontaktbarhet."
-                  />
-                </div>
-                <div className="mt-7 border border-[#D9E2EC] bg-white p-4">
-                  <p className="text-[13px] font-semibold text-[#1F2933]">Flyt</p>
-                  <p className="mt-2 text-[13px] leading-6 text-[#52606D]">
-                    Filtrer, åpne hurtigsjekk og kontakt via registrert e-post eller telefon.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
+          {activeTab === "outreach" ? (
           <OutreachOverview
             entries={outreachEntries}
             error={outreachListError}
@@ -1481,8 +1638,10 @@ export function CompanyCheckShell() {
             onOpenCompanyAction={(orgNumber) => void openCompanyDetails(orgNumber)}
             onRefreshAction={() => void fetchOutreachEntries()}
           />
+          ) : null}
 
           {/* Dynamic Content */}
+          {activeTab === "leads" ? (
           <section id="results" className="mx-auto max-w-7xl px-6 pb-24 pt-10">
           {error && (
             <div className="mx-auto mb-12 max-w-2xl border border-rose-100/60 bg-rose-50/50 p-7 text-center animate-in zoom-in duration-300">
@@ -1626,6 +1785,37 @@ export function CompanyCheckShell() {
                       Nullstill hurtigfilter
                     </button>
                   ) : null}
+                  <label
+                    className={`ml-1 inline-flex h-8 items-center gap-2 whitespace-nowrap text-[12px] font-semibold ${
+                      canUseEmailBatch ? "cursor-pointer text-[#52606D]" : "cursor-not-allowed text-[#9FB3C8]"
+                    }`}
+                    title={canUseEmailBatch ? undefined : "Velg Har e-post og Mangler nettside for å vise batch-sperrede rader."}
+                  >
+                    <input
+                      checked={showBatchExcluded}
+                      className="peer sr-only"
+                      disabled={!canUseEmailBatch}
+                      onChange={(event) => setShowBatchExcluded(event.target.checked)}
+                      role="switch"
+                      type="checkbox"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`relative inline-flex h-5 w-9 shrink-0 rounded-full border transition-colors ${
+                        showBatchExcluded
+                          ? "border-[#1F5FA9] bg-[#1F5FA9]"
+                          : "border-[#BCCCDC] bg-[#E4E7EB]"
+                      } ${canUseEmailBatch ? "" : "opacity-50"}`}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`absolute left-0.5 top-0.5 size-3.5 rounded-full bg-white shadow-sm transition-transform ${
+                          showBatchExcluded ? "translate-x-4" : "translate-x-0"
+                        }`}
+                      />
+                    </span>
+                    Vis batch-sperret
+                  </label>
                   <Button
                     className="ml-auto rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
                     disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || overEmailBatchLimit || isBatchSending}
@@ -1651,35 +1841,39 @@ export function CompanyCheckShell() {
                   ) : null}
                 </div>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="overflow-hidden border border-[#D9E2EC] bg-white">
+                {!isListLoading && visibleSearchCompanies.length > 0 ? (
+                  <div className="hidden grid-cols-[minmax(240px,1.5fr)_minmax(170px,1fr)_minmax(190px,1fr)_minmax(150px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
+                    <span>Virksomhet</span>
+                    <span>Prioritet</span>
+                    <span>Kontakt</span>
+                    <span>Registerrisiko</span>
+                    <span className="sr-only">Handling</span>
+                  </div>
+                ) : null}
               {isListLoading && recentCompanies.length === 0 ? (
-                Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="animate-pulse rounded-[18px] border border-[#E4E7EB] bg-white p-5">
-                    <div className="mb-4 flex items-start justify-between">
-                      <div className="size-3 rounded-full bg-[#E4E7EB]" />
-                      <div className="h-4 w-16 rounded bg-[#E4E7EB]" />
-                    </div>
-                    <div className="mb-2 h-5 w-3/4 rounded bg-[#E4E7EB]" />
-                    <div className="mb-4 h-4 w-1/2 rounded bg-[#E4E7EB]" />
+                ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"].map((skeletonKey) => (
+                  <div key={skeletonKey} className="grid animate-pulse gap-3 border-b border-[#E4E7EB] p-4 last:border-b-0 lg:grid-cols-4">
                     <div className="space-y-2">
-                      <div className="h-3 w-1/3 rounded bg-[#E4E7EB]" />
-                      <div className="h-3 w-1/4 rounded bg-[#E4E7EB]" />
+                      <div className="h-4 w-3/4 bg-[#E4E7EB]" />
+                      <div className="h-3 w-1/2 bg-[#E4E7EB]" />
                     </div>
+                    <div className="h-4 w-24 bg-[#E4E7EB]" />
+                    <div className="h-4 w-36 bg-[#E4E7EB]" />
+                    <div className="h-4 w-20 bg-[#E4E7EB]" />
                   </div>
                 ))
               ) : visibleSearchCompanies.length > 0 ? (
-                visibleSearchCompanies.map((company, i) => (
-                  <CompanyCard
-                    key={`${company.orgNumber}-${i}`}
+                visibleSearchCompanies.map((company) => (
+                  <LeadResultRow
+                    key={company.orgNumber}
                     company={company}
                     onClick={() => void openCompanyDetails(company.orgNumber)}
-                    outreachSaving={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
                     batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !isBatchExcluded(outreachStatusByOrg[company.orgNumber])}
                     batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
                     batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
                     onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
-                    onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(company, sent, note, statusOverride)}
                   />
                 ))
               ) : (
@@ -1711,65 +1905,56 @@ export function CompanyCheckShell() {
               </div>
             </div>
           </section>
+          ) : null}
         </div>
 
         {selectedCompany ? (
-          <div
-            className="fixed inset-0 z-50 bg-[#102A4314] backdrop-blur-sm"
-            onClick={resetToLanding}
+          <dialog
+            ref={dialogRef}
+            aria-label={`Virksomhetsdetaljer for ${selectedCompany.name}`}
+            className="m-auto max-h-[88vh] w-[calc(100%-2rem)] max-w-7xl overflow-y-auto border border-[#BCCCDC] bg-white p-0 text-[#1F2933] shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)] backdrop:bg-[#102A4314] backdrop:backdrop-blur-sm sm:w-[calc(100%-3rem)]"
+            tabIndex={-1}
           >
-            <div className="flex min-h-full items-start justify-center px-4 py-8 sm:px-6 sm:py-12">
-              <div
-                className="max-h-[88vh] w-full max-w-7xl overflow-y-auto border border-[#BCCCDC] bg-white shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)]"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <CompanyDetailView
-                  company={selectedCompany}
-                  events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
-                  generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
-                  generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
-                  emailSendError={emailSendErrorByOrg[selectedCompany.orgNumber] ?? null}
-                  emailSentRecipient={emailSentRecipientByOrg[selectedCompany.orgNumber] ?? null}
-                  sendingEmail={Boolean(sendingEmailByOrg[selectedCompany.orgNumber])}
-                  outreachSaving={Boolean(savingOutreachByOrg[selectedCompany.orgNumber])}
-                  outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
-                  onBack={resetToLanding}
-                  onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
-                  onSendEmail={() => void sendGeneratedOutreachEmail(selectedCompany, generatedEmailByOrg[selectedCompany.orgNumber] ?? null)}
-                  onUpdateGeneratedEmail={(text) => updateGeneratedEmail(selectedCompany.orgNumber, text)}
-                  onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(selectedCompany, sent, note, statusOverride)}
-                  onInspectWebsite={(url) => void inspectWebsiteUrl(url, brregWebsiteMatchFromCompany(selectedCompany, url))}
-                />
-              </div>
-            </div>
-          </div>
+            <CompanyDetailView
+              company={selectedCompany}
+              events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
+              generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
+              generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
+              emailSendError={emailSendErrorByOrg[selectedCompany.orgNumber] ?? null}
+              emailSentRecipient={emailSentRecipientByOrg[selectedCompany.orgNumber] ?? null}
+              sendingEmail={Boolean(sendingEmailByOrg[selectedCompany.orgNumber])}
+              outreachSaving={Boolean(savingOutreachByOrg[selectedCompany.orgNumber])}
+              outreachStatus={outreachStatusByOrg[selectedCompany.orgNumber] ?? null}
+              onBack={resetToLanding}
+              onGenerateEmail={() => void generateOutreachEmail(selectedCompany)}
+              onSendEmail={() => void sendGeneratedOutreachEmail(selectedCompany, generatedEmailByOrg[selectedCompany.orgNumber] ?? null)}
+              onUpdateGeneratedEmail={(text) => updateGeneratedEmail(selectedCompany.orgNumber, text)}
+              onToggleOutreach={(sent, note, statusOverride) => void updateOutreachStatus(selectedCompany, sent, note, statusOverride)}
+              onInspectWebsite={(url) => void inspectWebsiteUrl(url, brregWebsiteMatchFromCompany(selectedCompany, url))}
+            />
+          </dialog>
         ) : null}
 
         {selectedWebsiteInspection ? (
-          <div
-            className="fixed inset-0 z-50 bg-[#102A4314] backdrop-blur-sm"
-            onClick={() => setSelectedWebsiteInspection(null)}
+          <dialog
+            ref={dialogRef}
+            aria-label={`Nettsidesjekk for ${selectedWebsiteInspection.normalizedUrl}`}
+            className="m-auto max-h-[88vh] w-[calc(100%-2rem)] max-w-5xl overflow-y-auto border border-[#BCCCDC] bg-white p-0 text-[#1F2933] shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)] backdrop:bg-[#102A4314] backdrop:backdrop-blur-sm sm:w-[calc(100%-3rem)]"
+            tabIndex={-1}
           >
-            <div className="flex min-h-full items-start justify-center px-4 py-8 sm:px-6 sm:py-12">
-              <div
-                className="max-h-[88vh] w-full max-w-5xl overflow-y-auto border border-[#BCCCDC] bg-white shadow-[0_24px_80px_-32px_rgba(16,42,67,0.35)]"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <WebsiteInspectionDetail
-                  inspection={selectedWebsiteInspection}
-                  outreachStatusByOrg={outreachStatusByOrg}
-                  onBack={() => setSelectedWebsiteInspection(null)}
-                  onOutreachEmailSent={(status) => {
-                    setOutreachStatusByOrg((current) => ({
-                      ...current,
-                      [status.orgNumber]: status,
-                    }));
-                    setOutreachEntries((current) => [status, ...current]);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+            <WebsiteInspectionDetail
+              inspection={selectedWebsiteInspection}
+              outreachStatusByOrg={outreachStatusByOrg}
+              onBack={() => setSelectedWebsiteInspection(null)}
+              onOutreachEmailSent={(status) => {
+                setOutreachStatusByOrg((current) => ({
+                  ...current,
+                  [status.orgNumber]: status,
+                }));
+                setOutreachEntries((current) => [status, ...current]);
+              }}
+            />
+          </dialog>
         ) : null}
       </main>
     </div>
@@ -1781,47 +1966,17 @@ function WebsiteInspectionDetail({
   outreachStatusByOrg,
   onBack,
   onOutreachEmailSent,
-}: {
+}: Readonly<{
   inspection: WebsiteInspectionResponse;
   outreachStatusByOrg: Record<string, OutreachStatus>;
   onBack: () => void;
   onOutreachEmailSent: (status: OutreachStatus) => void;
-}) {
+}>) {
   const [currentInspection, setCurrentInspection] = useState(inspection);
-  const [extendedLoading, setExtendedLoading] = useState(false);
-  const [extendedError, setExtendedError] = useState<string | null>(null);
-  const hasExtendedAccessibilityDeclaration = currentInspection.websiteQuality.signals.some(
-    (signal) => signal.code === "ACCESSIBILITY_DECLARATION_VIOLATIONS"
-  );
 
   useEffect(() => {
     setCurrentInspection(inspection);
-    setExtendedError(null);
-    setExtendedLoading(false);
   }, [inspection]);
-
-  async function runExtendedWebsiteInspection() {
-    setExtendedLoading(true);
-    setExtendedError(null);
-    try {
-      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(currentInspection.normalizedUrl)}`, {
-        cache: "no-store",
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to run extended website inspection", errorText);
-        setExtendedError("Klarte ikke kjøre utvidet sjekk. Prøv igjen senere.");
-        return;
-      }
-      const payload = (await response.json()) as WebsiteInspectionResponse;
-      setCurrentInspection((current) => mergeInspectionMatches(payload, current.brregMatches));
-    } catch (error) {
-      console.error("Failed to run extended website inspection", error);
-      setExtendedError("Klarte ikke kjøre utvidet sjekk. Backend kan være opptatt.");
-    } finally {
-      setExtendedLoading(false);
-    }
-  }
 
   return (
     <article className="bg-white">
@@ -1857,19 +2012,10 @@ function WebsiteInspectionDetail({
             >
               Åpne nettside
             </a>
-            <button
-              className="inline-flex w-fit rounded-sm border border-[#BCCCDC] bg-[#102A43] px-3 py-2 text-[12px] font-semibold text-white hover:bg-[#243B53] disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={extendedLoading}
-              onClick={() => void runExtendedWebsiteInspection()}
-              type="button"
-            >
-              {extendedLoading ? "Kjører utvidet sjekk..." : hasExtendedAccessibilityDeclaration ? "Kjør utvidet sjekk på nytt" : "Kjør utvidet nettsidesjekk"}
-            </button>
           </div>
         </div>
         <div className="mt-4 border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3 text-[12px] leading-5 text-[#52606D]">
-          Utvidet sjekk kjøres bare manuelt. Den henter blant annet publisert tilgjengelighetserklæring fra uustatus.no når siden lenker dit.
-          {extendedError ? <p className="mt-2 font-semibold text-[#BA2525]">{extendedError}</p> : null}
+          Sjekken inkluderer teknisk trygghet, UU/WCAG-signaler, personvern, innhold, skjema, sikkerhetsheadere og publisert tilgjengelighetserklæring fra uustatus.no når siden lenker dit.
         </div>
         <WebsiteQualityPanel className="mt-6" quality={currentInspection.websiteQuality} />
         <BrregWebsiteMatchesPanel
@@ -1888,12 +2034,12 @@ function BrregWebsiteMatchesPanel({
   matches,
   outreachStatusByOrg,
   onOutreachEmailSent,
-}: {
+}: Readonly<{
   inspection: WebsiteInspectionResponse;
   matches: WebsiteInspectionResponse["brregMatches"];
   outreachStatusByOrg: Record<string, OutreachStatus>;
   onOutreachEmailSent: (status: OutreachStatus) => void;
-}) {
+}>) {
   const [generatedEmailByOrg, setGeneratedEmailByOrg] = useState<Record<string, { subject: string; body: string }>>({});
   const [generatingByOrg, setGeneratingByOrg] = useState<Record<string, boolean>>({});
   const [sendingByOrg, setSendingByOrg] = useState<Record<string, boolean>>({});
@@ -2008,12 +2154,12 @@ function BrregWebsiteMatchesPanel({
                 </button>
               </div>
               <div className="mt-3 grid gap-2 text-[12px] text-[#52606D] sm:grid-cols-2">
-                <p><span className="font-semibold text-[#1F2933]">E-post:</span> {match.email || "Ikke registrert"}</p>
-                <p><span className="font-semibold text-[#1F2933]">Telefon:</span> {match.phone || match.mobile || "Ikke registrert"}</p>
-                <p><span className="font-semibold text-[#1F2933]">Nettside:</span> {match.website || "Ikke registrert"}</p>
-                <p><span className="font-semibold text-[#1F2933]">Sted:</span> {[match.municipality, match.county].filter(Boolean).join(", ") || "Ikke registrert"}</p>
-                <p><span className="font-semibold text-[#1F2933]">Bransje:</span> {match.naceDescription || "Ikke registrert"}</p>
-                <p><span className="font-semibold text-[#1F2933]">Registrert:</span> {match.registrationDate || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">E-post:</span>{" "}{match.email || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Telefon:</span>{" "}{match.phone || match.mobile || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Nettside:</span>{" "}{match.website || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Sted:</span>{" "}{[match.municipality, match.county].filter(Boolean).join(", ") || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Bransje:</span>{" "}{match.naceDescription || "Ikke registrert"}</p>
+                <p><span className="font-semibold text-[#1F2933]">Registrert:</span>{" "}{match.registrationDate || "Ikke registrert"}</p>
               </div>
               <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
                 {match.matchReason}
@@ -2086,13 +2232,26 @@ function BrregWebsiteMatchesPanel({
   );
 }
 
+async function copyWebsiteReport(text: string, onCopied: (value: boolean) => void) {
+  if (!text) {
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    onCopied(true);
+    window.setTimeout(() => onCopied(false), 1800);
+  } catch (error) {
+    console.error("Failed to copy website report", error);
+  }
+}
+
 function WebsiteQualityPanel({
   quality,
   className = "",
-}: {
+}: Readonly<{
   quality: WebsiteQualityAssessment;
   className?: string;
-}) {
+}>) {
   const visibleSignals = prioritizedWebsiteQualitySignals(quality.signals, 10);
   const visibleSignalCodes = new Set(visibleSignals.map((signal) => signal.code));
   const hiddenSignals = quality.signals.filter((signal) => !visibleSignalCodes.has(signal.code));
@@ -2110,19 +2269,6 @@ function WebsiteQualityPanel({
   const [copiedCustomerReport, setCopiedCustomerReport] = useState(false);
   const shortReport = buildWebsiteShortReport(quality);
   const customerReport = buildWebsiteCustomerReport(quality);
-
-  async function copyReport(text: string, onCopied: (value: boolean) => void) {
-    if (!text) {
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      onCopied(true);
-      window.setTimeout(() => onCopied(false), 1800);
-    } catch (error) {
-      console.error("Failed to copy website report", error);
-    }
-  }
 
   return (
     <div className={`border border-[#D9E2EC] bg-white p-5 ${className}`}>
@@ -2155,7 +2301,7 @@ function WebsiteQualityPanel({
           </Button>
           <Button
             className="rounded-sm text-[12px] font-semibold"
-            onClick={() => void copyReport(shortReport, setCopiedShortReport)}
+            onClick={() => void copyWebsiteReport(shortReport, setCopiedShortReport)}
             size="sm"
             type="button"
             variant="outline"
@@ -2164,7 +2310,7 @@ function WebsiteQualityPanel({
           </Button>
           <Button
             className="rounded-sm text-[12px] font-semibold"
-            onClick={() => void copyReport(customerReport, setCopiedCustomerReport)}
+            onClick={() => void copyWebsiteReport(customerReport, setCopiedCustomerReport)}
             size="sm"
             type="button"
             variant="outline"
@@ -2443,7 +2589,13 @@ function customerFriendlySignalPhrase(signal: WebsiteQualitySignal) {
     case "FORM_LABEL_RISK":
       return "å gjøre skjemaene enklere å bruke";
     case "EMPTY_BUTTON_RISK":
-      return "å gjøre knapper og kontaktpunkter tydeligere";
+      return "å kontrollere at knapper har tydelig tekst eller tilgjengelig navn";
+    case "IFRAME_TITLE_RISK":
+      return "å gi innebygd innhold tydelig tittel for skjermlesere";
+    case "WEAK_TITLE":
+    case "MISSING_META_DESCRIPTION":
+    case "WEAK_SHARE_PREVIEW":
+      return "å rydde sidetittel, metadata og delingsvisning";
     case "IMAGE_ALT_RISK":
       return "å rydde noen tilgjengelighetspunkter rundt bilder";
     case "MISSING_CSP_HEADER":
@@ -2476,8 +2628,13 @@ function prioritizeWebsiteReportSignals(signals: WebsiteQualitySignal[]) {
     "AI_LIKE_PRESENTATION_RISK",
     "GENERIC_PRESENTATION_TRUST_RISK",
     "GENERIC_OR_AI_IMAGE_RISK",
+    "WEAK_TITLE",
+    "MISSING_META_DESCRIPTION",
+    "WEAK_SHARE_PREVIEW",
     "FORM_LABEL_RISK",
     "EMPTY_BUTTON_RISK",
+    "IFRAME_TITLE_RISK",
+    "MISSING_MAIN_LANDMARK",
     "MISSING_PRIVACY_NOTICE",
     "COOKIE_CONSENT_RISK",
     "MISSING_HTTPS",
@@ -2510,7 +2667,10 @@ function websiteReportScopeSummary(signalCodes: Set<string>) {
     items.push("gjøre innholdet mer konkret, tydelig og tillitvekkende");
   }
   if (signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK") || signalCodes.has("IMAGE_ALT_RISK")) {
-    items.push("rydde UU-punkter i skjema, knapper og bilder");
+    items.push("kontrollere UU-punkter i skjema, knapper og bilder");
+  }
+  if (signalCodes.has("WEAK_TITLE") || signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_SHARE_PREVIEW")) {
+    items.push("rydde sidetittel, metadata og delingsvisning");
   }
   if (signalCodes.has("MISSING_CSP_HEADER") || signalCodes.has("MISSING_HSTS_HEADER") || signalCodes.has("MISSING_REFERRER_POLICY")) {
     items.push("vurdere tekniske sikkerhetsheadere hvis hosting/CMS gir tilgang");
@@ -2552,8 +2712,14 @@ function firstWebsiteQualityAction(signalCodes: Set<string>) {
   if (signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK") || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")) {
     return "Gjør siden mer konkret med ekte bilder, faglig profil og etterprøvbare tillitssignaler.";
   }
+  if (signalCodes.has("WEAK_TITLE") || signalCodes.has("MISSING_META_DESCRIPTION") || signalCodes.has("WEAK_SHARE_PREVIEW")) {
+    return "Kontroller sidetittel, metadata og delingsvisning først.";
+  }
   if (signalCodes.has("FORM_LABEL_RISK") || signalCodes.has("EMPTY_BUTTON_RISK")) {
-    return "Rydd skjema, knapper og kontaktflyt først.";
+    return "Kontroller tilgjengelig navn på skjemafelt, knapper og innebygd innhold.";
+  }
+  if (signalCodes.has("IFRAME_TITLE_RISK") || signalCodes.has("MISSING_MAIN_LANDMARK") || signalCodes.has("MOTION_ACCESSIBILITY_RISK")) {
+    return "Kontroller landemerker, iframe-titler og støtte for redusert bevegelse.";
   }
   if (signalCodes.has("WEAK_HOMEPAGE_STRUCTURE") || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")) {
     return "Gjør førstesiden tydeligere på hva virksomheten tilbyr.";
@@ -2605,7 +2771,7 @@ function manualWebsiteQualityReview(signalCodes: Set<string>) {
   return "Automatiske signaler bør bekreftes manuelt før konkrete påstander sendes til kunden.";
 }
 
-function WebsiteSignalReportItem({ label, value }: { label: string; value: string }) {
+function WebsiteSignalReportItem({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
     <div>
       <p className="text-[10px] font-semibold uppercase tracking-[0.05em] text-[#829AB1]">{label}</p>
@@ -3251,7 +3417,7 @@ function groupWebsiteQualitySignals(signals: WebsiteQualitySignal[]) {
   return grouped;
 }
 
-function InfoMetric({ label, value }: { label: string; value: string }) {
+function InfoMetric({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
     <div className="rounded-[16px] border border-[#D9E2EC] bg-[#F0F4F8] px-4 py-3">
       <p className="text-[11px] font-medium text-[#52606D]">{label}</p>
@@ -3261,8 +3427,8 @@ function InfoMetric({ label, value }: { label: string; value: string }) {
 }
 
 function parseGeneratedEmailText(text: string) {
-  const normalized = text.replace(/\r\n/g, "\n");
-  const match = normalized.match(/^Emne:\s*(.*?)(?:\n{2,}([\s\S]*))?$/);
+  const normalized = text.replaceAll("\r\n", "\n");
+  const match = /^Emne:\s*(.*?)(?:\n{2,}([\s\S]*))?$/.exec(normalized);
   if (!match) {
     return {
       subject: "",
@@ -3298,25 +3464,6 @@ function withInspectionContextMatch(
   return {
     ...inspection,
     brregMatches: [contextMatch, ...existingMatches],
-  };
-}
-
-function mergeInspectionMatches(
-  inspection: WebsiteInspectionResponse,
-  previousMatches: BrregWebsiteMatch[]
-): WebsiteInspectionResponse {
-  if (!previousMatches.length) {
-    return inspection;
-  }
-  const nextMatches = [...(inspection.brregMatches ?? [])];
-  for (const previousMatch of previousMatches) {
-    if (!nextMatches.some((match) => match.orgNumber === previousMatch.orgNumber)) {
-      nextMatches.unshift(previousMatch);
-    }
-  }
-  return {
-    ...inspection,
-    brregMatches: nextMatches,
   };
 }
 
@@ -3375,281 +3522,119 @@ function companyFromBrregWebsiteMatch(
   };
 }
 
-function CommercialOfferPoint({ label, text }: { label: string; text: string }) {
+function WorkspaceTabButton({
+  active,
+  count,
+  icon: Icon,
+  label,
+  onClick,
+}: Readonly<{
+  active: boolean;
+  count?: number;
+  icon: LucideIcon;
+  label: string;
+  onClick: () => void;
+}>) {
   return (
-    <div className="border-l-4 border-[#C7DFF8] pl-4">
-      <p className="text-[14px] font-semibold text-[#1F2933]">{label}</p>
-      <p className="mt-1 text-[13px] leading-6 text-[#52606D]">{text}</p>
-    </div>
+    <button
+      aria-pressed={active}
+      className={`flex h-9 shrink-0 items-center gap-2 border px-3 text-[13px] font-semibold transition-colors ${
+        active
+          ? "border-[#1F5FA9] bg-[#E6F0FA] text-[#1F5FA9]"
+          : "border-transparent bg-white text-[#52606D] hover:bg-[#F0F4F8] hover:text-[#1F2933]"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      <Icon className="size-4" />
+      <span>{label}</span>
+      {count !== undefined ? <span className="bg-white px-1.5 py-0.5 text-[10px] text-[#52606D]">{count}</span> : null}
+    </button>
   );
 }
 
-function CompanyCard({
-  company,
-  onClick,
-  outreachStatus,
-  outreachSaving,
+function LeadResultRow({
   batchSelectable,
   batchSelected,
   batchValidation,
+  company,
+  onClick,
   onToggleBatch,
-  onToggleOutreach,
-}: {
-  company: CompanySummary;
-  onClick: () => void;
-  outreachStatus: OutreachStatus | null;
-  outreachSaving: boolean;
+  outreachStatus,
+}: Readonly<{
   batchSelectable: boolean;
   batchSelected: boolean;
-  batchValidation: { status: "checking" | "blocked" | "ready"; reason?: string } | null;
+  batchValidation: BatchValidation | null;
+  company: CompanySummary;
+  onClick: () => void;
   onToggleBatch: (selected: boolean) => void;
-  onToggleOutreach: (sent: boolean, note?: string, statusOverride?: OutreachStatusOverride) => void;
-}) {
-  const scoreColors = {
-    GREEN: "bg-emerald-500",
-    YELLOW: "bg-amber-500",
-    RED: "bg-rose-500",
-  };
-  const leadPriority = getLeadPriority(company);
-  const contactability = getContactability(company);
-  const bestContactPoint = getBestContactPoint(company);
-  const batchExcluded = isBatchExcluded(outreachStatus);
-  const structureSignals = company.structureSignals || [];
-  const highlightedStructureSignals = prioritizedListStructureSignals(structureSignals);
-  const structureSummary = describeListStructureSummary(highlightedStructureSignals);
+  outreachStatus: OutreachStatus | null;
+}>) {
+  const priority = getLeadPriority(company);
   const commercialOpportunity = getCommercialOpportunity(company);
-  const colorClass = scoreColors[company.scoreColor] || scoreColors.YELLOW;
-  const cardToneClass = outreachStatus?.status === "not_relevant"
-    ? "border-[#1F2933] bg-[#F5F5F5] grayscale hover:border-[#111827]"
-    : outreachStatus?.sent
-      ? "border-[#C7D7EA] bg-[#F4F8FC] hover:border-[#9FB3C8]"
-      : "border-[#D9E2EC] bg-white hover:border-[#2F6FB2]";
+  const contact = getBestContactPoint(company);
+  const batchExcluded = isBatchExcluded(outreachStatus);
+  const risk = {
+    GREEN: { label: "Lav", detail: "Ryddig registerstatus", className: "bg-emerald-50 text-emerald-700" },
+    YELLOW: { label: "Bør vurderes", detail: "Begrenset registerinfo", className: "bg-amber-50 text-amber-700" },
+    RED: { label: "Høy", detail: "Alvorlige registerspor", className: "bg-rose-50 text-rose-700" },
+  }[company.scoreColor];
 
   return (
-    <div
-      className={`group cursor-pointer border p-4 transition-colors ${cardToneClass}`}
-      onClick={onClick}
-    >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className={`size-3 rounded-full ${colorClass} shadow-sm`} />
-          <Badge className={leadPriority.badgeClass}>
-            {leadPriority.label}
-          </Badge>
-        </div>
-        <div className="flex flex-wrap justify-end gap-2">
-          {company.salesSegment ? (
-            <Badge variant="outline" className="rounded-sm border-[#C7DFF8] bg-[#F8FBFF] px-2 py-0 text-[10px] font-semibold text-[#1F5FA9]">
-              {company.salesSegment.label}
-            </Badge>
-          ) : null}
-          <Badge variant="outline" className="rounded-sm border-[#D9E2EC] bg-[#F0F4F8] px-2 py-0 text-[10px] font-medium text-[#52606D]">
-            {company.organizationForm}
-          </Badge>
-        </div>
-      </div>
-      <h3 className="mb-1 line-clamp-1 text-[15px] font-semibold text-[#1F2933] transition-colors group-hover:text-[#1F5FA9]">
-        {company.name}
-      </h3>
-      <p className="mb-3 text-[12px] font-mono font-medium text-[#52606D]">{company.orgNumber}</p>
-
-      <div className="mb-4 border border-[#E4E7EB] bg-[#F8FBFF] p-3">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Leadvurdering</p>
-            <p className="mt-1 text-[13px] font-semibold text-[#1F2933]">{bestContactPoint.label}</p>
-            <p className="mt-1 text-[12px] text-[#52606D]">{contactability.label}</p>
-          </div>
-          <Badge className={contactability.badgeClass}>{contactability.shortLabel}</Badge>
-        </div>
+    <div className="grid gap-3 border-b border-[#E4E7EB] px-4 py-3.5 transition-colors last:border-b-0 hover:bg-[#F8FBFF] lg:grid-cols-[minmax(240px,1.5fr)_minmax(170px,1fr)_minmax(190px,1fr)_minmax(150px,.8fr)_44px] lg:items-center lg:gap-4">
+      <div className="flex min-w-0 items-start gap-3">
+        {batchSelectable || batchValidation?.status === "checking" ? (
+          <input
+            aria-label={`Velg ${company.name} for e-postbatch`}
+            checked={batchSelectable && batchSelected}
+            className="mt-1 size-4 shrink-0 accent-[#1F5FA9]"
+            disabled={!batchSelectable || batchValidation?.status === "checking"}
+            onChange={(event) => onToggleBatch(event.target.checked)}
+            type="checkbox"
+          />
+        ) : (
+          <span aria-hidden="true" className="mt-1 size-3 shrink-0 rounded-full bg-[#BCCCDC]" />
+        )}
+        <button className="min-w-0 text-left" onClick={onClick} type="button">
+          <span className="block truncate text-[14px] font-semibold text-[#1F2933] hover:text-[#1F5FA9]">{company.name}</span>
+          <span className="mt-1 block truncate text-[11px] text-[#52606D]">
+            {company.orgNumber} · {company.organizationForm || "Ukjent form"} · {company.municipality || "Ukjent sted"}
+          </span>
+          {company.naceDescription ? <span className="mt-1 block truncate text-[11px] text-[#829AB1]">{company.naceDescription}</span> : null}
+        </button>
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-          <MapPin className="size-3.5" />
-          <span>{company.municipality || "Ukjent sted"}</span>
-        </div>
-        <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-          <CalendarDays className="size-3.5" />
-          <span>{company.registrationDate ? `Registrert: ${company.registrationDate}` : "Registrert: ukjent"}</span>
-        </div>
-        {company.naceCode || company.naceDescription ? (
-          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-            <Landmark className="size-3.5" />
-            <span className="truncate">
-              {[company.naceCode, company.naceDescription].filter(Boolean).join(" · ")}
-            </span>
-          </div>
-        ) : null}
-        {company.email ? (
-          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-            <Mail className="size-3.5" />
-            <span className="truncate font-semibold text-[#52606D]">
-              {company.email}
-            </span>
-          </div>
-        ) : null}
-        {company.website ? (
-          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-            <Globe className="size-3.5" />
-            <span className="truncate text-[#52606D]">
-              {company.website}
-            </span>
-          </div>
-        ) : null}
-        {!company.website && company.websiteDiscovery?.status === "POSSIBLE_MATCH" && company.websiteDiscovery.candidates.length > 0 ? (
-          <div className="flex items-start gap-2 text-[12px] font-medium text-[#52606D]">
-            <Globe className="mt-0.5 size-3.5" />
-            <div>
-              <p className="text-[#1F2933]">
-                {company.websiteDiscovery.contentMatched ? "Sannsynlig nettside funnet" : company.websiteDiscovery.verifiedReachable ? "Mulig nettside må vurderes" : "Mulig nettside funnet"}
-              </p>
-              <p className="mt-1 text-[#1F5FA9]">
-                {stripWebsiteProtocol(company.websiteDiscovery.verifiedCandidate ?? company.websiteDiscovery.candidates[0])}
-              </p>
-              <p className="mt-1 text-[11px] text-[#52606D]">
-                {formatWebsiteVerification(company.websiteDiscovery)} · {formatWebsiteContentMatch(company.websiteDiscovery)} · sikkerhet: {formatWebsiteConfidence(company.websiteDiscovery.confidence).toLowerCase()} · må bekreftes manuelt
-              </p>
-            </div>
-          </div>
-        ) : null}
-        {company.contactPersonName ? (
-          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-            <Building2 className="size-3.5" />
-            <span className="truncate">
-              {company.contactPersonName}
-              {company.contactPersonRole ? ` · ${formatRoleType(company.contactPersonRole)}` : ""}
-            </span>
-          </div>
-        ) : null}
-        {company.phone ? (
-          <div className="flex items-center gap-2 text-[12px] font-medium text-[#52606D]">
-            <Phone className="size-3.5" />
-            <span className="truncate text-[#52606D]">
-              {company.phone}
-            </span>
-          </div>
-        ) : null}
-        <div className="mt-3 flex flex-wrap gap-2 pt-1">
-          <Badge variant="outline" className="border-[#D9E2EC] bg-white text-[10px] font-semibold text-[#52606D]">
-            {company.vatRegistered ? "MVA registrert" : "Ikke MVA registrert"}
-          </Badge>
-          <Badge variant="outline" className="border-[#D9E2EC] bg-white text-[10px] font-semibold text-[#52606D]">
-            {company.registeredInBusinessRegistry ? "Foretaksregisteret" : "Ikke i Foretaksregisteret"}
-          </Badge>
-          {company.events.slice(0, 3).map((event) => (
-            <Badge
-              key={`${company.orgNumber}-${event.type}-${event.title}`}
-              variant="outline"
-              className={`border-transparent text-[10px] font-semibold ${eventSeverityClassName(event.severity)}`}
-            >
-              {formatEventType(event.type)}
-            </Badge>
-          ))}
-        </div>
-        {highlightedStructureSignals.length > 0 ? (
-          <div className="mt-3 space-y-2">
-            <div className="flex flex-wrap gap-2">
-            {highlightedStructureSignals.map((signal) => (
-              <Badge
-                key={`${company.orgNumber}-${signal.code}`}
-                variant="outline"
-                className={`border-transparent text-[10px] font-semibold ${listStructureSignalClassName(signal.severity)}`}
-              >
-                {signal.title}
-              </Badge>
-            ))}
-            </div>
-            {structureSummary ? (
-              <p className="text-[12px] font-medium leading-relaxed text-[#52606D]">{structureSummary}</p>
-            ) : null}
-          </div>
-        ) : null}
-      </div>
-      <div className={`mt-4 border p-3 ${commercialOpportunity.cardClass}`}>
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">Kommersiell mulighet</p>
-            <p className="mt-1 text-[13px] font-bold text-[#1F2933]">{commercialOpportunity.title}</p>
-            <p className="mt-1 text-[12px] leading-relaxed text-[#52606D]">{commercialOpportunity.summary}</p>
-          </div>
-          <button
-            type="button"
-            className="shrink-0 rounded-sm border border-[#1F5FA9] bg-[#1F5FA9] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#2F6FB2]"
-            onClick={(event) => {
-              event.stopPropagation();
-              onClick();
-            }}
-          >
-            {commercialOpportunity.actionLabel}
-          </button>
-        </div>
-      </div>
-      <label
-        className={`mt-4 flex items-center gap-3 border border-[#D9E2EC] bg-white px-4 py-3 text-[12px] font-semibold ${
-          batchSelectable ? "cursor-pointer text-[#1F2933]" : "cursor-not-allowed text-[#9FB3C8]"
-        }`}
-        onClick={(event) => event.stopPropagation()}
-        title={batchSelectable ? undefined : "Krever Har e-post og Mangler nettside. Eventuelle nettsidekandidater sjekkes før sending."}
-      >
-        <input
-          checked={batchSelectable && batchSelected}
-          className="size-4 rounded-none border border-[#9FB3C8] accent-[#1F5FA9]"
-          disabled={!batchSelectable || batchValidation?.status === "checking"}
-          onChange={(event) => {
-            if (batchSelectable) {
-              onToggleBatch(event.target.checked);
-            }
-          }}
-          type="checkbox"
-        />
-        <span>
-          {batchValidation?.status === "checking"
-            ? "Sjekker batch-krav..."
-            : batchValidation?.status === "blocked"
-              ? "Kan ikke batch-sendes"
-              : "Send e-post i batch"}
-        </span>
-      </label>
-      {batchValidation?.status === "blocked" && batchValidation.reason ? (
-        <div className="mt-2 border border-[#F7D9A8] bg-[#FFF8E8] px-3 py-2 text-[11px] font-medium leading-5 text-[#8A5A00]">
-          <p>{batchValidation.reason}</p>
-          {!batchExcluded ? (
-            <button
-              type="button"
-              className="mt-2 rounded-sm border border-[#C78419] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#8A5A00] transition-colors hover:bg-[#FFF3D0]"
-              onClick={(event) => {
-                event.stopPropagation();
-                onToggleOutreach(false, batchValidation.reason, "batch_excluded");
-              }}
-            >
-              Sperr fra batch
-            </button>
+      <div className="min-w-0">
+        <span className="mb-1 block text-[10px] font-semibold uppercase text-[#829AB1] lg:hidden">Salgsmulighet</span>
+        <div className="flex flex-wrap gap-1.5">
+          <Badge className={priority.badgeClass}>{priority.label}</Badge>
+          {batchExcluded ? (
+            <Badge className="rounded-sm bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">Batch-sperret</Badge>
           ) : null}
         </div>
+        <p className="mt-1 truncate text-[11px] text-[#52606D]">{commercialOpportunity.title}</p>
+      </div>
+
+      <div className="min-w-0">
+        <span className="mb-1 block text-[10px] font-semibold uppercase text-[#829AB1] lg:hidden">Kontakt</span>
+        <p className="truncate text-[12px] font-semibold text-[#1F2933]">{company.email || company.phone || "Mangler kontaktpunkt"}</p>
+        <p className="mt-1 truncate text-[11px] text-[#52606D]">{contact.label}</p>
+      </div>
+
+      <div>
+        <span className="mb-1 block text-[10px] font-semibold uppercase text-[#829AB1] lg:hidden">Registerrisiko</span>
+        <span className={`inline-flex px-2 py-1 text-[11px] font-semibold ${risk.className}`}>{risk.label}</span>
+        <p className="mt-1 text-[10px] text-[#52606D]">{risk.detail}</p>
+      </div>
+
+      <Button aria-label={`Åpne ${company.name}`} className="justify-self-end rounded-sm" onClick={onClick} size="icon" title="Åpne virksomhet" type="button" variant="ghost">
+        <ChevronRight className="size-4" />
+      </Button>
+      {(batchValidation?.status === "blocked" && batchValidation.reason) || (batchExcluded && outreachStatus?.note) ? (
+        <p className="text-[11px] text-amber-700 lg:col-span-5">
+          Batch-sperret: {batchValidation?.reason || outreachStatus?.note}
+        </p>
       ) : null}
-      {batchExcluded ? (
-        <div className="mt-2 border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[11px] font-medium leading-5 text-[#52606D]">
-          <p>Batch-sperret{outreachStatus?.note ? `: ${outreachStatus.note}` : "."}</p>
-          <button
-            type="button"
-            className="mt-2 rounded-sm border border-[#BCCCDC] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleOutreach(false, outreachStatus?.note ?? "", "reverted");
-            }}
-          >
-            Angre batch-sperre
-          </button>
-        </div>
-      ) : null}
-      <OutreachCheckbox
-        key={`${company.orgNumber}-${outreachStatus?.sentAt ?? "draft"}-${outreachStatus?.note ?? ""}`}
-        compact
-        saving={outreachSaving}
-        status={outreachStatus}
-        onToggle={onToggleOutreach}
-      />
     </div>
   );
 }
@@ -3660,13 +3645,13 @@ function OutreachCheckbox({
   onToggle,
   className,
   compact = false,
-}: {
+}: Readonly<{
   status: OutreachStatus | null;
   saving: boolean;
   onToggle: (sent: boolean, note?: string, statusOverride?: OutreachStatusOverride) => void;
   className?: string;
   compact?: boolean;
-}) {
+}>) {
   const sentAlready = status?.sent ?? false;
   const markedNotRelevant = status?.status === "not_relevant";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
@@ -3683,7 +3668,11 @@ function OutreachCheckbox({
     : sentAlready
       ? "Registrert som sendt. Ny utsendelse krever eksplisitt overstyring."
       : "Marker når første e-post er sendt, så unngår du dobbelt henvendelse.";
-  const wrapperClassName = `${className ? `${className} ` : ""}${compact ? "mt-4 " : ""}border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3`;
+  const wrapperClassName = [
+    className,
+    compact ? "mt-4" : "",
+    "border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3",
+  ].filter(Boolean).join(" ");
 
   function persistNote(nextNote: string) {
     setNoteDraft(nextNote);
@@ -3700,10 +3689,7 @@ function OutreachCheckbox({
   }
 
   return (
-    <div
-      className={wrapperClassName}
-      onClick={(event) => event.stopPropagation()}
-    >
+    <div className={wrapperClassName}>
       <label className="flex items-start gap-3">
         <input
           checked={sentAlready}
@@ -3838,7 +3824,7 @@ function CompanyDetailView({
   onUpdateGeneratedEmail,
   onToggleOutreach,
   onInspectWebsite,
-}: {
+}: Readonly<{
   company: CompanyDetails;
   events: CompanyEvent[];
   generatedEmail: { subject: string; body: string } | null;
@@ -3854,7 +3840,7 @@ function CompanyDetailView({
   onUpdateGeneratedEmail: (text: string) => void;
   onToggleOutreach: (sent: boolean, note?: string, statusOverride?: OutreachStatusOverride) => void;
   onInspectWebsite: (url: string) => void;
-}) {
+}>) {
   const leadPriority = getLeadPriority(company);
   const config = detailLeadSignalConfig(leadPriority.label);
   const StatusIcon = config.icon;
@@ -3863,6 +3849,7 @@ function CompanyDetailView({
   const [currentWebsiteQuality, setCurrentWebsiteQuality] = useState(company.websiteQuality);
   const [extendedWebsiteQualityLoading, setExtendedWebsiteQualityLoading] = useState(false);
   const [extendedWebsiteQualityError, setExtendedWebsiteQualityError] = useState<string | null>(null);
+  const extendedWebsiteQualityRequestKeyRef = useRef<string | null>(null);
 
   const scoreLabel = leadPriority.label;
   const scoreReasons = company.score?.reasons || [];
@@ -3881,25 +3868,30 @@ function CompanyDetailView({
   const generatedEmailHref = generatedEmail && company.email
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
-  const hasExtendedWebsiteQuality = currentWebsiteQuality?.signals.some(
-    (signal) => signal.code === "ACCESSIBILITY_DECLARATION_VIOLATIONS"
-  ) ?? false;
-
   useEffect(() => {
     setCurrentWebsiteQuality(company.websiteQuality);
     setExtendedWebsiteQualityError(null);
     setExtendedWebsiteQualityLoading(false);
-  }, [company.orgNumber, company.websiteQuality]);
 
-  async function runExtendedCompanyWebsiteInspection() {
     if (!company.website) {
+      extendedWebsiteQualityRequestKeyRef.current = null;
       return;
     }
 
+    const requestKey = `${company.orgNumber}:${normalizeWebsiteUrl(company.website)}`;
+    if (extendedWebsiteQualityRequestKeyRef.current === requestKey) {
+      return;
+    }
+
+    extendedWebsiteQualityRequestKeyRef.current = requestKey;
+    void runExtendedCompanyWebsiteInspection(company.website);
+  }, [company.orgNumber, company.website, company.websiteQuality]);
+
+  async function runExtendedCompanyWebsiteInspection(website: string) {
     setExtendedWebsiteQualityLoading(true);
     setExtendedWebsiteQualityError(null);
     try {
-      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(normalizeWebsiteUrl(company.website))}`, {
+      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(normalizeWebsiteUrl(website))}`, {
         cache: "no-store",
       });
       if (!response.ok) {
@@ -4168,19 +4160,13 @@ function CompanyDetailView({
                       <div>
                         <p className="text-[12px] font-semibold text-[#1F2933]">Utvidet nettsidekvalitet</p>
                         <p className="mt-1 text-[12px] leading-5 text-[#52606D]">
-                          Kjøres manuelt. Henter blant annet publisert tilgjengelighetserklæring fra uustatus.no når nettsiden lenker dit.
+                          Kjøres sammen med nettsidesjekken og henter blant annet publisert tilgjengelighetserklæring fra uustatus.no når nettsiden lenker dit.
                         </p>
                       </div>
-                      <Button
-                        className="w-fit rounded-sm bg-[#102A43] px-4 text-white hover:bg-[#243B53]"
-                        disabled={extendedWebsiteQualityLoading}
-                        onClick={() => void runExtendedCompanyWebsiteInspection()}
-                        size="sm"
-                        type="button"
-                      >
-                        {extendedWebsiteQualityLoading ? "Kjører utvidet sjekk..." : hasExtendedWebsiteQuality ? "Kjør utvidet sjekk på nytt" : "Kjør utvidet nettsidesjekk"}
-                      </Button>
                     </div>
+                    {extendedWebsiteQualityLoading ? (
+                      <p className="mt-3 text-[12px] font-semibold text-[#52606D]">Kjører samlet nettsidesjekk...</p>
+                    ) : null}
                     {extendedWebsiteQualityError ? (
                       <p className="mt-3 text-[12px] font-semibold text-[#BA2525]">{extendedWebsiteQualityError}</p>
                     ) : null}
@@ -4507,12 +4493,12 @@ function DetailDataPoint({
   label,
   value,
   href,
-}: {
+}: Readonly<{
   icon: LucideIcon;
   label: string;
   value: string;
   href?: string;
-}) {
+}>) {
   return (
     <div className="border border-[#D9E2EC] bg-white p-4">
       <div className="flex items-start gap-3.5">
@@ -4547,13 +4533,13 @@ function ContactLine({
   value,
   subvalue,
   href,
-}: {
+}: Readonly<{
   icon: LucideIcon;
   label: string;
   value: string | null;
   subvalue?: string | null;
   href?: string;
-}) {
+}>) {
   return (
     <div className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
       <div className="flex items-start gap-3">

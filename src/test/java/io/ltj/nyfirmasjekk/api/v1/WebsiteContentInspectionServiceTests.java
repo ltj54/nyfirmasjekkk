@@ -58,6 +58,18 @@ class WebsiteContentInspectionServiceTests {
         assertThat(WebsiteContentSnapshotFetcher.detectBuilder(null, html)).isEqualTo("Emergent");
     }
 
+    @Test
+    void teknologisporTolkerIkkeTilfeldigViteTekstSomByggverktoy() {
+        String html = """
+                <html>
+                <head><title>Kontakt oss</title></head>
+                <body>Vi inviterer kunder til videre dialog og aktiviteter.</body>
+                </html>
+                """;
+
+        assertThat(WebsiteContentSnapshotFetcher.detectBuilder(null, html)).isNull();
+    }
+
     private static final class StubWebsiteContentInspectionService extends WebsiteContentInspectionService {
         private final WebsiteContentSnapshot snapshot;
 

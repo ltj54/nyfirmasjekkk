@@ -27,7 +27,35 @@ public class WebsiteContentSnapshotFetcher {
     private static final int EXTENDED_CRAWL_TIMEOUT_MS = 900;
     private static final int EXTENDED_CRAWL_BYTES = 12_000;
     private static final int EXTENDED_CRAWL_TEXT_BYTES = 16_000;
-    private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s+p[åa]\\s*<[^>]*>\\s*(\\d+)\\s*</[^>]+>\\s*av\\s*<[^>]*>\\s*(\\d+)\\s*</[^>]+>", Pattern.CASE_INSENSITIVE);
+    private static final String SELECTOR_FORM_CONTROLS = "input:not([type=hidden]), textarea, select";
+    private static final String SELECTOR_EXTERNAL_SCRIPTS = "script[src^=http]";
+    private static final String SELECTOR_URL_ATTRIBUTES = "[href], [src], form[action]";
+    private static final String SELECTOR_LINKS = "a[href]";
+    private static final String HEADER_USER_AGENT = "User-Agent";
+    private static final String USER_AGENT_VALUE = "Nyfirmasjekk-App";
+    private static final String ATTRIBUTE_ARIA_LABEL = "aria-label";
+    private static final String ATTRIBUTE_PLACEHOLDER = "placeholder";
+    private static final String ATTRIBUTE_ACTION = "action";
+    private static final String ATTRIBUTE_CONTENT = "content";
+    private static final String HTTPS_PREFIX = "https://";
+    private static final String TERM_PRIVACY = "privacy";
+    private static final String TERM_PERSONVERN = "personvern";
+    private static final String TERM_POLICY = "policy";
+    private static final String TERM_RETUR = "retur";
+    private static final String TERM_VILLKOR = "villkor";
+    private static final String TERM_VILKAR = "vilkår";
+    private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s+p[åa]\\s+(\\d+)\\s+av\\s+(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+    private static final Pattern FIXED_WIDTH_LAYOUT_PATTERN = Pattern.compile("\\b(?:width|min-width)\\s*:\\s*(?:9\\d{2}|[1-9]\\d{3,})px", Pattern.CASE_INSENSITIVE);
+    private static final Pattern OUTLINE_NONE_PATTERN = Pattern.compile("outline\\s*:\\s*(?:0|none)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CSP_WILDCARD_SCRIPT_PATTERN = Pattern.compile("(?:^|;)\\s*script-src[^;]*\\*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CMS_VERSION_PATTERN = Pattern.compile(
+            "wordpress\\s+\\d+\\.\\d|wp-(?:includes|content)/[^?\\s]+\\?ver=\\d+\\.\\d|joomla!?(?:\\s+\\d+\\.\\d)?|drupal\\s+\\d+\\.\\d",
+            Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern OUTDATED_JAVASCRIPT_PATTERN = Pattern.compile(
+            "jquery[-.][12]\\.\\d\\D|bootstrap[-.]3\\.\\d\\D|angular(?:\\.min)?\\.js\\?ver=1\\.[0-7]|angular[-.]1\\.[0-7]\\D",
+            Pattern.CASE_INSENSITIVE
+    );
     private static final java.util.List<String> STANDARD_REVIEW_PATHS = java.util.List.of(
             "/kontakt",
             "/contact",
@@ -61,7 +89,7 @@ public class WebsiteContentSnapshotFetcher {
 
         try {
             Connection.Response response = Jsoup.connect(url)
-                    .userAgent("Nyfirmasjekk-App")
+                    .userAgent(USER_AGENT_VALUE)
                     .timeout(4000)
                     .followRedirects(true)
                     .execute();
@@ -83,12 +111,12 @@ public class WebsiteContentSnapshotFetcher {
             int headingCount = document.select("h1, h2, h3").size();
             int h1Count = document.select("h1").size();
             boolean navigation = document.selectFirst("nav, header a[href], [role=navigation], .nav, .navbar, .menu") != null;
-            String generator = attrOrNull(document.selectFirst("meta[name=generator]"), "content");
+            String generator = attrOrNull(document.selectFirst("meta[name=generator]"), ATTRIBUTE_CONTENT);
             String htmlSnapshot = document.outerHtml();
             String detectedBuilder = detectBuilder(generator, htmlSnapshot);
             int imageCount = document.select("img").size();
             int imagesWithoutAlt = document.select("img:not([alt]), img[alt=\"\"]").size();
-            int formControlCount = document.select("input:not([type=hidden]), textarea, select").size();
+            int formControlCount = document.select(SELECTOR_FORM_CONTROLS).size();
             int unlabeledFormControlCount = document.select("input:not([type=hidden]):not([aria-label]):not([aria-labelledby]), textarea:not([aria-label]):not([aria-labelledby]), select:not([aria-label]):not([aria-labelledby])")
                     .stream()
                     .filter(element -> {
@@ -98,17 +126,17 @@ public class WebsiteContentSnapshotFetcher {
                     .toList()
                     .size();
             int emptyButtonCount = document.select("button, a[role=button]").stream()
-                    .filter(element -> element.text().isBlank() && attrOrNull(element, "aria-label") == null)
+                    .filter(element -> element.text().isBlank() && attrOrNull(element, ATTRIBUTE_ARIA_LABEL) == null)
                     .toList()
                     .size();
-            boolean fixedWidthLayoutSignal = htmlSnapshot.matches("(?is).*\\b(width|min-width)\\s*:\\s*(9\\d{2}|[1-9]\\d{3,})px.*");
+            boolean fixedWidthLayoutSignal = FIXED_WIDTH_LAYOUT_PATTERN.matcher(htmlSnapshot).find();
             boolean mixedContentSignal = !document.select("[src^=http://], [href^=http://]").isEmpty();
             boolean privacyLink = !document.select("a[href*=personvern], a[href*=privacy], a[href*=gdpr], a[href*=datenschutz]").isEmpty()
-                    || bodyText.toLowerCase().contains("personvern")
-                    || bodyText.toLowerCase().contains("privacy");
+                    || bodyText.toLowerCase().contains(TERM_PERSONVERN)
+                    || bodyText.toLowerCase().contains(TERM_PRIVACY);
             boolean cookieOrTrackingSignal = hasCookieOrTrackingSignal(htmlSnapshot);
             boolean cookieConsentSignal = hasCookieConsentSignal(htmlSnapshot);
-            int externalScriptCount = document.select("script[src^=http]").size();
+            int externalScriptCount = document.select(SELECTOR_EXTERNAL_SCRIPTS).size();
             int externalIframeCount = document.select("iframe[src^=http]").size();
             boolean mainLandmark = document.selectFirst("main, [role=main]") != null;
             boolean headerLandmark = document.selectFirst("header, [role=banner]") != null;
@@ -121,7 +149,7 @@ public class WebsiteContentSnapshotFetcher {
             int inputsWithoutAutocompleteCount = inputsWithoutAutocompleteCount(document);
             int wrongEmailInputTypeCount = wrongInputTypeCount(document, "email", "epost", "e-post");
             int wrongPhoneInputTypeCount = wrongInputTypeCount(document, "tel", "telefon", "phone", "mobil");
-            boolean outlineNoneSignal = htmlSnapshot.matches("(?is).*outline\\s*:\\s*(0|none).*");
+            boolean outlineNoneSignal = OUTLINE_NONE_PATTERN.matcher(htmlSnapshot).find();
             boolean autoplayMediaSignal = document.selectFirst("video[autoplay], audio[autoplay], iframe[src*=autoplay=1]") != null;
             boolean motionWithoutReducedMotionSignal = hasMotionSignalWithoutReducedMotion(htmlSnapshot);
             int videoCount = document.select("video").size();
@@ -148,8 +176,8 @@ public class WebsiteContentSnapshotFetcher {
             boolean youtubeEmbedSignal = hasAny(htmlSnapshot, "youtube.com/embed", "youtu.be", "youtube-nocookie.com", "vimeo.com");
             boolean thirdPartyFormSignal = hasAny(htmlSnapshot, "typeform.com", "jotform", "hubspot", "mailchimp", "calendly", "forms.gle");
             boolean ecommerceSignal = hasEcommerceSignal(document, htmlSnapshot);
-            boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", "vilkår", "villkor", "terms", "policy", "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår", "kopvillkor", "köpvillkor", "allmanna villkor", "allmänna villkor");
-            boolean returnInfo = hasLinkOrText(document, bodyText, "retur", "angrerett", "angerratt", "ångerrätt", "reklamasjon", "reklamation", "return", "refund", "aterbetalning", "återbetalning", "byte");
+            boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", TERM_POLICY, "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår", "kopvillkor", "köpvillkor", "allmanna villkor", "allmänna villkor");
+            boolean returnInfo = hasLinkOrText(document, bodyText, TERM_RETUR, "angrerett", "angerratt", "ångerrätt", "reklamasjon", "reklamation", "return", "refund", "aterbetalning", "återbetalning", "byte");
             boolean deliveryInfo = hasLinkOrText(document, bodyText, "frakt", "levering", "leverans", "shipping", "delivery");
             boolean cartOrCheckoutSignal = hasCartOrCheckoutSignal(document, htmlSnapshot);
             boolean platformDomainSignal = hasPlatformDomainSignal(response.url().toString());
@@ -204,8 +232,8 @@ public class WebsiteContentSnapshotFetcher {
                     bodyText,
                     crawlResult.bodyText(),
                     document.outerHtml(),
-                    attrOrNull(description, "content"),
-                    attrOrNull(viewport, "content"),
+                    attrOrNull(description, ATTRIBUTE_CONTENT),
+                    attrOrNull(viewport, ATTRIBUTE_CONTENT),
                     attrOrNull(html, "lang"),
                     textOrNull(h1),
                     openGraphTitle,
@@ -361,7 +389,7 @@ public class WebsiteContentSnapshotFetcher {
     private static int placeholderImageCount(Document document) {
         return document.select("img").stream()
                 .filter(image -> hasAny((image.attr("src") + " " + image.attr("alt") + " " + image.attr("class") + " " + image.attr("id")).toLowerCase(Locale.ROOT),
-                        "placeholder", "placeholder_img", "dummy", "avatar-placeholder", "profile-placeholder"))
+                        ATTRIBUTE_PLACEHOLDER, "placeholder_img", "dummy", "avatar-placeholder", "profile-placeholder"))
                 .toList()
                 .size();
     }
@@ -402,7 +430,7 @@ public class WebsiteContentSnapshotFetcher {
                     .timeout(2500)
                     .followRedirects(true)
                     .execute();
-            Matcher matcher = ACCESSIBILITY_VIOLATION_PATTERN.matcher(response.body());
+            Matcher matcher = ACCESSIBILITY_VIOLATION_PATTERN.matcher(Jsoup.parse(response.body()).text());
             if (matcher.find()) {
                 return new AccessibilityDeclarationResult(
                         Integer.parseInt(matcher.group(1)),
@@ -441,7 +469,14 @@ public class WebsiteContentSnapshotFetcher {
         if (combined.contains("next/static") || combined.contains("__next")) {
             return "Next.js";
         }
-        if (combined.contains("vite") || combined.contains("/assets/index-")) {
+        if ((generator != null && generator.toLowerCase(Locale.ROOT).contains("vite"))
+                || combined.contains("/@vite/")
+                || combined.contains("/vite.svg")
+                || combined.contains("type=\"module\" crossorigin src=\"/assets/")
+                || combined.contains("type='module' crossorigin src='/assets/")
+                || combined.contains("type=\"module\" src=\"/assets/")
+                || combined.contains("type='module' src='/assets/")
+                || combined.contains("/assets/index-")) {
             return "Vite";
         }
         return generator == null || generator.isBlank() ? null : generator.trim();
@@ -483,7 +518,7 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static int vagueLinkTextCount(Document document) {
-        return (int) document.select("a[href]").stream()
+        return (int) document.select(SELECTOR_LINKS).stream()
                 .filter(link -> {
                     String text = link.text().trim().toLowerCase();
                     return "her".equals(text)
@@ -515,8 +550,8 @@ public class WebsiteContentSnapshotFetcher {
                     String combined = (
                             input.attr("name") + " "
                                     + input.attr("id") + " "
-                                    + input.attr("placeholder") + " "
-                                    + input.attr("aria-label")
+                                    + input.attr(ATTRIBUTE_PLACEHOLDER) + " "
+                                    + input.attr(ATTRIBUTE_ARIA_LABEL)
                     ).toLowerCase();
                     for (String identifier : identifiers) {
                         if (combined.contains(identifier)) {
@@ -533,8 +568,8 @@ public class WebsiteContentSnapshotFetcher {
         String combined = (
                 input.attr("name") + " "
                         + input.attr("id") + " "
-                        + input.attr("placeholder") + " "
-                        + input.attr("aria-label")
+                        + input.attr(ATTRIBUTE_PLACEHOLDER) + " "
+                        + input.attr(ATTRIBUTE_ARIA_LABEL)
         ).toLowerCase();
         return combined.contains("name")
                 || combined.contains("navn")
@@ -554,8 +589,8 @@ public class WebsiteContentSnapshotFetcher {
         String combined = (
                 input.attr("name") + " "
                         + input.attr("id") + " "
-                        + input.attr("placeholder") + " "
-                        + input.attr("aria-label")
+                        + input.attr(ATTRIBUTE_PLACEHOLDER) + " "
+                        + input.attr(ATTRIBUTE_ARIA_LABEL)
         ).toLowerCase();
         return combined.contains("personnummer")
                 || combined.contains("fodselsnummer")
@@ -605,7 +640,7 @@ public class WebsiteContentSnapshotFetcher {
         String normalized = csp.toLowerCase(Locale.ROOT);
         return normalized.contains("'unsafe-inline'")
                 || normalized.contains("'unsafe-eval'")
-                || normalized.matches("(?s).*(^|;)\\s*script-src[^;]*\\*.*")
+                || CSP_WILDCARD_SCRIPT_PATTERN.matcher(normalized).find()
                 || !normalized.contains("frame-ancestors");
     }
 
@@ -620,26 +655,26 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static boolean hasLinkOrText(Document document, String bodyText, String... needles) {
-        String combined = (bodyText == null ? "" : bodyText) + " " + document.select("a[href]").eachAttr("href");
+        String combined = (bodyText == null ? "" : bodyText) + " " + document.select(SELECTOR_LINKS).eachAttr("href");
         return hasAny(combined, needles);
     }
 
     private static boolean hasFooterContentSignal(Document document, String bodyText) {
         String combined = (bodyText == null ? "" : bodyText)
-                + " " + document.select("a[href]").eachText()
-                + " " + document.select("a[href]").eachAttr("href");
+                + " " + document.select(SELECTOR_LINKS).eachText()
+                + " " + document.select(SELECTOR_LINKS).eachAttr("href");
         return hasAny(combined,
                 "copyright",
                 "kontakt",
                 "contact",
-                "personvern",
-                "privacy",
-                "villkor",
-                "vilkår",
-                "policy",
+                TERM_PERSONVERN,
+                TERM_PRIVACY,
+                TERM_VILLKOR,
+                TERM_VILKAR,
+                TERM_POLICY,
                 "frakt",
                 "leverans",
-                "retur",
+                TERM_RETUR,
                 "visa",
                 "mastercard",
                 "apple pay");
@@ -672,7 +707,7 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static int placeholderSocialLinkCount(Document document) {
-        return (int) document.select("a[href]").stream()
+        return (int) document.select(SELECTOR_LINKS).stream()
                 .filter(link -> {
                     String href = link.attr("href").toLowerCase(Locale.ROOT);
                     boolean socialHost = href.contains("facebook.com")
@@ -715,7 +750,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean hasAdminOrLoginPathSignal(Document document, String html) {
         String links = String.join(" ", document.select("a[href], form[action]").eachAttr("href"))
-                + " " + String.join(" ", document.select("form[action]").eachAttr("action"))
+                + " " + String.join(" ", document.select("form[action]").eachAttr(ATTRIBUTE_ACTION))
                 + " " + html;
         return hasAny(links,
                 "/wp-admin",
@@ -730,10 +765,10 @@ public class WebsiteContentSnapshotFetcher {
 
     private static int apiEndpointReferenceCount(Document document, String html) {
         Set<String> references = new java.util.LinkedHashSet<>();
-        document.select("[href], [src], form[action]").forEach(element -> {
+        document.select(SELECTOR_URL_ATTRIBUTES).forEach(element -> {
             addIfApiReference(references, element.attr("href"));
             addIfApiReference(references, element.attr("src"));
-            addIfApiReference(references, element.attr("action"));
+            addIfApiReference(references, element.attr(ATTRIBUTE_ACTION));
         });
         java.util.regex.Matcher matcher = java.util.regex.Pattern
                 .compile("['\"]([^'\"]*(?:/api/|/wp-json/|graphql|rest/)[^'\"]*)['\"]", java.util.regex.Pattern.CASE_INSENSITIVE)
@@ -759,17 +794,14 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean hasExposedCmsVersionSignal(String generator, String html) {
         String combined = ((generator == null ? "" : generator) + " " + (html == null ? "" : html)).toLowerCase(Locale.ROOT);
-        return combined.matches("(?s).*wordpress\\s+[0-9]+\\.[0-9].*")
-                || combined.matches("(?s).*wp-(?:includes|content)/[^?]+\\?ver=[0-9]+\\.[0-9].*")
-                || combined.matches("(?s).*joomla!?(?:\\s+[0-9]+\\.[0-9])?.*")
-                || combined.matches("(?s).*drupal\\s+[0-9]+\\.[0-9].*");
+        return CMS_VERSION_PATTERN.matcher(combined).find();
     }
 
     private static boolean hasDevelopmentReferenceSignal(Document document, String html) {
         String combined = (html == null ? "" : html).toLowerCase(Locale.ROOT)
-                + " " + document.select("[href], [src], form[action]").eachAttr("href")
-                + " " + document.select("[href], [src], form[action]").eachAttr("src")
-                + " " + document.select("[href], [src], form[action]").eachAttr("action");
+                + " " + document.select(SELECTOR_URL_ATTRIBUTES).eachAttr("href")
+                + " " + document.select(SELECTOR_URL_ATTRIBUTES).eachAttr("src")
+                + " " + document.select(SELECTOR_URL_ATTRIBUTES).eachAttr(ATTRIBUTE_ACTION);
         return hasAny(combined,
                 "localhost:",
                 "127.0.0.1",
@@ -802,13 +834,13 @@ public class WebsiteContentSnapshotFetcher {
                     String method = form.attr("method");
                     return method.isBlank() || "get".equalsIgnoreCase(method);
                 })
-                .flatMap(form -> form.select("input:not([type=hidden]), textarea, select").stream())
+                .flatMap(form -> form.select(SELECTOR_FORM_CONTROLS).stream())
                 .anyMatch(WebsiteContentSnapshotFetcher::isPersonalDataInput);
     }
 
     private static boolean sensitiveDataFormSignal(Document document) {
         return document.select("form").stream()
-                .flatMap(form -> form.select("input:not([type=hidden]), textarea, select").stream())
+                .flatMap(form -> form.select(SELECTOR_FORM_CONTROLS).stream())
                 .anyMatch(WebsiteContentSnapshotFetcher::isSensitivePersonalDataInput);
     }
 
@@ -820,7 +852,7 @@ public class WebsiteContentSnapshotFetcher {
             return false;
         }
         return document.select("form[action^=http]").stream()
-                .map(form -> form.attr("action"))
+                .map(form -> form.attr(ATTRIBUTE_ACTION))
                 .anyMatch(action -> !sameHost(baseUri, action));
     }
 
@@ -854,7 +886,7 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static int externalScriptsWithoutIntegrityCount(Document document) {
-        return (int) document.select("script[src^=http]").stream()
+        return (int) document.select(SELECTOR_EXTERNAL_SCRIPTS).stream()
                 .filter(script -> attrOrNull(script, "integrity") == null)
                 .count();
     }
@@ -867,7 +899,7 @@ public class WebsiteContentSnapshotFetcher {
             return 0;
         }
         Set<String> hosts = new java.util.LinkedHashSet<>();
-        document.select("script[src^=http]").stream()
+        document.select(SELECTOR_EXTERNAL_SCRIPTS).stream()
                 .map(script -> script.attr("src"))
                 .forEach(src -> {
                     try {
@@ -903,11 +935,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean hasOutdatedJavascriptLibrarySignal(String html) {
         String normalized = html == null ? "" : html.toLowerCase(Locale.ROOT);
-        return normalized.matches("(?s).*jquery[-.]1\\.[0-9][^0-9].*")
-                || normalized.matches("(?s).*jquery[-.]2\\.[0-9][^0-9].*")
-                || normalized.matches("(?s).*bootstrap[-.]3\\.[0-9][^0-9].*")
-                || normalized.matches("(?s).*angular(?:\\.min)?\\.js\\?ver=1\\.[0-7].*")
-                || normalized.matches("(?s).*angular[-.]1\\.[0-7][^0-9].*");
+        return OUTDATED_JAVASCRIPT_PATTERN.matcher(normalized).find();
     }
 
     private static DnsSecurityResult dnsSecurityResult(String host) {
@@ -916,10 +944,10 @@ public class WebsiteContentSnapshotFetcher {
             return new DnsSecurityResult(false, false, false, false, false, false, false, false, false, false);
         }
         java.util.List<String> spfRecords = txtRecords(domain).stream()
-                .filter(record -> record.toLowerCase(Locale.ROOT).contains("v=spf1"))
+                .filter(dnsRecord -> dnsRecord.toLowerCase(Locale.ROOT).contains("v=spf1"))
                 .toList();
         java.util.List<String> dmarcRecords = txtRecords("_dmarc." + domain).stream()
-                .filter(record -> record.toLowerCase(Locale.ROOT).contains("v=dmarc1"))
+                .filter(dnsRecord -> dnsRecord.toLowerCase(Locale.ROOT).contains("v=dmarc1"))
                 .toList();
         String combinedSpf = String.join(" ", spfRecords).toLowerCase(Locale.ROOT);
         String combinedDmarc = String.join(" ", dmarcRecords).toLowerCase(Locale.ROOT);
@@ -929,7 +957,7 @@ public class WebsiteContentSnapshotFetcher {
                 !dmarcRecords.isEmpty(),
                 hasMxRecord(domain),
                 hasCaaRecord(domain),
-                spfRecords.stream().anyMatch(record -> record.contains("~all") || record.contains("?all")),
+                spfRecords.stream().anyMatch(dnsRecord -> dnsRecord.contains("~all") || dnsRecord.contains("?all")),
                 spfLookupTokenCount(combinedSpf) > 8,
                 spfRecords.size() > 1,
                 combinedDmarc.contains("p=none"),
@@ -972,7 +1000,7 @@ public class WebsiteContentSnapshotFetcher {
                 .map(selector -> selector + "._domainkey." + domain)
                 .map(WebsiteContentSnapshotFetcher::txtRecords)
                 .flatMap(java.util.Collection::stream)
-                .anyMatch(record -> record.toLowerCase(Locale.ROOT).contains("v=dkim1") || record.toLowerCase(Locale.ROOT).contains("p="));
+                .anyMatch(dnsRecord -> dnsRecord.toLowerCase(Locale.ROOT).contains("v=dkim1") || dnsRecord.toLowerCase(Locale.ROOT).contains("p="));
     }
 
     private static String registrableDomain(String host) {
@@ -1005,7 +1033,7 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static TlsCertificateResult tlsCertificateResult(String url) {
-        if (url == null || !url.toLowerCase(Locale.ROOT).startsWith("https://")) {
+        if (url == null || !url.toLowerCase(Locale.ROOT).startsWith(HTTPS_PREFIX)) {
             return new TlsCertificateResult(false, null);
         }
         try {
@@ -1014,7 +1042,7 @@ public class WebsiteContentSnapshotFetcher {
             connection.setInstanceFollowRedirects(true);
             connection.setConnectTimeout(1500);
             connection.setReadTimeout(1500);
-            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             connection.connect();
             X509Certificate certificate = (X509Certificate) connection.getServerCertificates()[0];
             certificate.checkValidity();
@@ -1035,10 +1063,10 @@ public class WebsiteContentSnapshotFetcher {
             connection.setInstanceFollowRedirects(false);
             connection.setConnectTimeout(1200);
             connection.setReadTimeout(1200);
-            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             int status = connection.getResponseCode();
             String location = connection.getHeaderField("Location");
-            return status >= 300 && status < 400 && location != null && location.toLowerCase(Locale.ROOT).startsWith("https://");
+            return status >= 300 && status < 400 && location != null && location.toLowerCase(Locale.ROOT).startsWith(HTTPS_PREFIX);
         } catch (IOException | IllegalArgumentException exception) {
             return false;
         }
@@ -1079,7 +1107,7 @@ public class WebsiteContentSnapshotFetcher {
             connection.setInstanceFollowRedirects(true);
             connection.setConnectTimeout(1200);
             connection.setReadTimeout(1200);
-            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             int status = connection.getResponseCode();
             if (status < 200 || status >= 300) {
                 return "";
@@ -1108,7 +1136,7 @@ public class WebsiteContentSnapshotFetcher {
         STANDARD_REVIEW_PATHS.stream()
                 .map(path -> origin + path)
                 .forEach(candidates::add);
-        document.select("a[href]").stream()
+        document.select(SELECTOR_LINKS).stream()
                 .map(link -> link.attr("abs:href"))
                 .filter(java.util.function.Predicate.not(String::isBlank))
                 .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
@@ -1136,10 +1164,8 @@ public class WebsiteContentSnapshotFetcher {
                 break;
             }
             String html = readSmallHtmlResource(candidate);
-            if (html.isBlank()) {
-                continue;
-            }
-            crawled++;
+            if (!html.isBlank()) {
+                crawled++;
             String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
             String normalizedContent = html.toLowerCase(Locale.ROOT);
             Document crawledDocument = Jsoup.parse(html, candidate);
@@ -1151,13 +1177,13 @@ public class WebsiteContentSnapshotFetcher {
                 repeatedMetaDescriptionCount++;
             }
             privacyPageFound = privacyPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    "personvern", "privacy", "gdpr", "datenschutz", "integritetspolicy");
+                    TERM_PERSONVERN, TERM_PRIVACY, "gdpr", "datenschutz", "integritetspolicy");
             contactPageFound = contactPageFound || hasAny(normalizedUrl + " " + normalizedContent,
                     "kontakt", "contact", "kundeservice", "support");
             aboutPageFound = aboutPageFound || hasAny(normalizedUrl + " " + normalizedContent,
                     "om-oss", "about", "om oss", "hvem vi er", "about us");
             termsPageFound = termsPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    "vilkar", "vilkår", "villkor", "terms", "conditions", "policy", "retur", "refund");
+                    "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", "conditions", TERM_POLICY, TERM_RETUR, "refund");
             faqPageFound = faqPageFound || hasAny(normalizedUrl + " " + normalizedContent,
                     "faq", "ofte stilte", "sporsmal", "spørsmål", "questions");
             pricingSignal = pricingSignal || hasAny(normalizedContent,
@@ -1169,14 +1195,15 @@ public class WebsiteContentSnapshotFetcher {
             }
             if (hasAny(normalizedContent,
                     "personopplysninger",
-                    "personvern",
-                    "privacy",
+                    TERM_PERSONVERN,
+                    TERM_PRIVACY,
                     "gdpr",
                     "databehandler",
                     "cookies",
                     "informasjonskapsler",
                     "integritetspolicy")) {
                 privacyTextPages++;
+            }
             }
         }
 
@@ -1217,7 +1244,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static String normalizedMetaDescription(Document document) {
         Element description = document.selectFirst("meta[name=description]");
-        String value = attrOrNull(description, "content");
+        String value = attrOrNull(description, ATTRIBUTE_CONTENT);
         return value == null ? "" : value.trim().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
     }
 
@@ -1270,7 +1297,7 @@ public class WebsiteContentSnapshotFetcher {
             connection.setInstanceFollowRedirects(true);
             connection.setConnectTimeout(EXTENDED_CRAWL_TIMEOUT_MS);
             connection.setReadTimeout(EXTENDED_CRAWL_TIMEOUT_MS);
-            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             int status = connection.getResponseCode();
             if (status < 200 || status >= 300) {
                 return "";
@@ -1289,7 +1316,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static LinkCheckResult checkInternalLinks(Document document, String baseUrl) {
         URI baseUri = URI.create(baseUrl);
-        Set<String> links = document.select("a[href]").stream()
+        Set<String> links = document.select(SELECTOR_LINKS).stream()
                 .map(link -> link.attr("abs:href"))
                 .filter(java.util.function.Predicate.not(String::isBlank))
                 .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
@@ -1308,7 +1335,7 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static boolean isHttpUrl(String href) {
-        return href.startsWith("http://") || href.startsWith("https://");
+        return href.startsWith("http://") || href.startsWith(HTTPS_PREFIX);
     }
 
     private static boolean sameHost(URI baseUri, String href) {
@@ -1327,7 +1354,7 @@ public class WebsiteContentSnapshotFetcher {
             connection.setInstanceFollowRedirects(true);
             connection.setConnectTimeout(1200);
             connection.setReadTimeout(1200);
-            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             int status = connection.getResponseCode();
             if (status == HttpURLConnection.HTTP_BAD_METHOD) {
                 return isBrokenLinkWithGet(url);
@@ -1345,7 +1372,7 @@ public class WebsiteContentSnapshotFetcher {
             connection.setInstanceFollowRedirects(true);
             connection.setConnectTimeout(1200);
             connection.setReadTimeout(1200);
-            connection.setRequestProperty("User-Agent", "Nyfirmasjekk-App");
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             return connection.getResponseCode() >= 400;
         } catch (IOException | IllegalArgumentException exception) {
             return false;

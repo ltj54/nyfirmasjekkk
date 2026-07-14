@@ -1,17 +1,18 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Download, FileUp, RefreshCw, Settings2 } from "lucide-react";
 
 import type { OutreachStatus } from "@/lib/company-check";
 import {
-  formatLogDate,
   formatLogDateTime,
   formatOutreachOfferType,
-  getActiveContactedOutreachEntries,
-  getNotRelevantOutreachEntries,
+  getLatestOutreachEntriesByOrg,
   getOutreachSortValue,
 } from "@/lib/company-formatters";
 import { Button } from "@/components/ui/button";
+
+type PipelineTone = "review" | "contacted" | "followup" | "inactive";
 
 export function OutreachOverview({
   entries,
@@ -22,7 +23,7 @@ export function OutreachOverview({
   onImportAction,
   onOpenCompanyAction,
   onRefreshAction,
-}: {
+}: Readonly<{
   entries: OutreachStatus[];
   error: string | null;
   importMessage: string | null;
@@ -31,308 +32,158 @@ export function OutreachOverview({
   onImportAction: (file: File) => void;
   onOpenCompanyAction: (orgNumber: string) => void;
   onRefreshAction: () => void;
-}) {
+}>) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
-  const [activeContactedLimit, setActiveContactedLimit] = useState(10);
-  const [notRelevantLimit, setNotRelevantLimit] = useState(10);
-  const [noteLimit, setNoteLimit] = useState(10);
+  const [showAdministration, setShowAdministration] = useState(false);
+  const [eventLimit, setEventLimit] = useState(20);
   const logEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
-  const activeContactedEntries = getActiveContactedOutreachEntries(logEntries);
-  const notRelevantEntries = getNotRelevantOutreachEntries(logEntries);
-  const noteEntries = logEntries.filter((entry) => Boolean(entry.note?.trim()));
-  const visibleActiveContactedEntries = activeContactedEntries.slice(0, activeContactedLimit);
-  const visibleNotRelevantEntries = notRelevantEntries.slice(0, notRelevantLimit);
-  const visibleNoteEntries = noteEntries.slice(0, noteLimit);
-  const revertedCount = logEntries.filter((entry) => entry.status === "reverted").length;
-  const sentCount = logEntries.filter((entry) => entry.status === "sent").length;
+  const latestEntries = getLatestOutreachEntriesByOrg(logEntries);
+  const needsFollowUp = (entry: OutreachStatus) => /følg|svar|ring|senere/i.test(entry.note ?? "");
+  const reviewEntries = latestEntries.filter((entry) => entry.status === "reverted" || entry.status === "batch_excluded");
+  const followUpEntries = latestEntries.filter((entry) => entry.status === "sent" && needsFollowUp(entry));
+  const contactedEntries = latestEntries.filter((entry) => entry.status === "sent" && !needsFollowUp(entry));
+  const notRelevantEntries = latestEntries.filter((entry) => entry.status === "not_relevant");
 
   return (
-    <section id="outreach" className="mx-auto max-w-7xl px-6 pt-10">
-      <div className="border border-[#D9E2EC] bg-white">
-        <div className="flex flex-col gap-4 border-b border-[#D9E2EC] px-5 py-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-[12px] font-medium text-[#52606D]">Utsendelseslogg</p>
-            <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-[#1F2933]">Komplett logg</h2>
-            <p className="mt-2 text-[13px] font-medium text-[#52606D]">{logEntries.length} hendelser med status eller notat</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
-              disabled={isLoading}
-              onClick={onRefreshAction}
-              type="button"
-              variant="outline"
-            >
-              {isLoading ? "Oppdaterer..." : "Oppdater liste"}
-            </Button>
-            <button
-              className="inline-flex h-8 items-center rounded-sm border border-[#D9E2EC] bg-white px-4 text-sm font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
-              onClick={() => {
-                window.location.href = "/api/company-check/outreach/export";
-              }}
-              type="button"
-            >
-              Last ned logg
-            </button>
-            <input
-              ref={importInputRef}
-              accept=".jsonl,application/x-ndjson,text/plain"
-              className="hidden"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                event.target.value = "";
-                if (file) {
-                  onImportAction(file);
-                }
-              }}
-              type="file"
-            />
-            <button
-              className="inline-flex h-8 items-center rounded-sm border border-[#D9E2EC] bg-white px-4 text-sm font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8] disabled:opacity-50"
-              disabled={isImporting}
-              onClick={() => importInputRef.current?.click()}
-              type="button"
-            >
-              {isImporting ? "Importerer..." : "Importer logg"}
-            </button>
-          </div>
+    <section className="mx-auto max-w-7xl px-6 py-8" id="outreach">
+      <div className="flex flex-col gap-4 border-b border-[#D9E2EC] pb-5 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-[12px] font-semibold uppercase text-[#52606D]">Utsendelser</p>
+          <h1 className="mt-1 text-2xl font-semibold text-[#1F2933]">Arbeidskø og oppfølging</h1>
+          <p className="mt-2 text-[13px] text-[#52606D]">Siste lagrede status per virksomhet. Oppfølging identifiseres fra notater.</p>
         </div>
-
-        {importMessage ? (
-          <div className="border-b border-[#D9E2EC] bg-[#F8FBFF] px-5 py-4 text-[13px] font-medium text-[#1F5FA9]">{importMessage}</div>
-        ) : null}
-
-        {error ? (
-          <div className="border-b border-[#D9E2EC] bg-rose-50 px-5 py-4 text-[13px] font-medium text-rose-700">{error}</div>
-        ) : null}
-
-        {logEntries.length === 0 ? (
-          <div className="px-5 py-10 text-[14px] font-medium text-[#52606D]">Ingen selskaper har registrert status eller notat ennå.</div>
-        ) : (
-          <div className="space-y-8 px-5 py-5">
-            <div>
-              <h3 className="text-[16px] font-semibold text-[#1F2933]">Oppsummering</h3>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <InfoMetric label="Antall hendelser" value={`${logEntries.length}`} />
-                <InfoMetric label="Sendt" value={`${sentCount}`} />
-                <InfoMetric label="Angret" value={`${revertedCount}`} />
-                <InfoMetric label="Aktive kontaktede selskaper" value={`${activeContactedEntries.length}`} />
-                <InfoMetric label="Ikke aktuell" value={`${notRelevantEntries.length}`} />
-              </div>
-            </div>
-
-            <OutreachTable
-              columns={["Dato", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Tilbud"]}
-              emptyText="Ingen aktive kontaktede selskaper."
-              entries={visibleActiveContactedEntries}
-              heading="Aktive kontaktede selskaper"
-              onOpenCompany={onOpenCompanyAction}
-              renderDate={(entry) => formatLogDate(entry.sentAt ?? entry.timestamp)}
-              totalCount={activeContactedEntries.length}
-              visibleCount={visibleActiveContactedEntries.length}
-              onCollapse={() => setActiveContactedLimit(10)}
-              onShowMore={() => setActiveContactedLimit((current) => current + 10)}
-            />
-
-            <OutreachTable
-              columns={["Dato", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Tilbud"]}
-              emptyText="Ingen selskaper er markert som ikke aktuell."
-              entries={visibleNotRelevantEntries}
-              heading="Ikke aktuell"
-              onOpenCompany={onOpenCompanyAction}
-              renderDate={(entry) => formatLogDate(entry.timestamp ?? entry.sentAt)}
-              totalCount={notRelevantEntries.length}
-              visibleCount={visibleNotRelevantEntries.length}
-              onCollapse={() => setNotRelevantLimit(10)}
-              onShowMore={() => setNotRelevantLimit((current) => current + 10)}
-            />
-
-            <NotesTable
-              entries={visibleNoteEntries}
-              onOpenCompany={onOpenCompanyAction}
-              totalCount={noteEntries.length}
-              visibleCount={visibleNoteEntries.length}
-              onCollapse={() => setNoteLimit(10)}
-              onShowMore={() => setNoteLimit((current) => current + 10)}
-            />
-          </div>
-        )}
+        <div className="flex gap-2">
+          <Button className="rounded-sm" disabled={isLoading} onClick={onRefreshAction} type="button" variant="outline">
+            <RefreshCw className={`size-4 ${isLoading ? "animate-spin" : ""}`} />
+            Oppdater
+          </Button>
+          <Button
+            aria-expanded={showAdministration}
+            className="rounded-sm"
+            onClick={() => setShowAdministration((current) => !current)}
+            type="button"
+            variant="outline"
+          >
+            <Settings2 className="size-4" />
+            Administrasjon
+          </Button>
+        </div>
       </div>
+
+      {importMessage ? <p className="mt-4 border border-[#C7DFF8] bg-[#F8FBFF] px-4 py-3 text-[13px] font-medium text-[#1F5FA9]">{importMessage}</p> : null}
+      {error ? <p className="mt-4 border border-rose-100 bg-rose-50 px-4 py-3 text-[13px] font-medium text-rose-700">{error}</p> : null}
+
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <PipelineColumn emptyText="Ingen virksomheter til ny vurdering." entries={reviewEntries} heading="Til vurdering" onOpenCompany={onOpenCompanyAction} tone="review" />
+        <PipelineColumn emptyText="Ingen kontaktede virksomheter." entries={contactedEntries} heading="Kontaktet" onOpenCompany={onOpenCompanyAction} tone="contacted" />
+        <PipelineColumn emptyText="Ingen markert for oppfølging." entries={followUpEntries} heading="Følg opp" onOpenCompany={onOpenCompanyAction} tone="followup" />
+        <PipelineColumn emptyText="Ingen er markert som ikke aktuell." entries={notRelevantEntries} heading="Ikke aktuell" onOpenCompany={onOpenCompanyAction} tone="inactive" />
+      </div>
+
+      {showAdministration ? (
+        <div className="mt-8 border-t border-[#D9E2EC] pt-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-[18px] font-semibold text-[#1F2933]">Komplett hendelseslogg</h2>
+              <p className="mt-1 text-[13px] text-[#52606D]">{logEntries.length} lagrede hendelser. Import og eksport endrer den underliggende loggen.</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button className="rounded-sm" onClick={() => { window.location.href = "/api/company-check/outreach/export"; }} type="button" variant="outline">
+                <Download className="size-4" />
+                Eksporter
+              </Button>
+              <input
+                ref={importInputRef}
+                accept=".jsonl,application/x-ndjson,text/plain"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+                  if (file) onImportAction(file);
+                }}
+                type="file"
+              />
+              <Button className="rounded-sm" disabled={isImporting} onClick={() => importInputRef.current?.click()} type="button" variant="outline">
+                <FileUp className="size-4" />
+                {isImporting ? "Importerer..." : "Importer"}
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-4 overflow-x-auto border border-[#D9E2EC]">
+            <table className="w-full min-w-[900px] border-collapse text-left text-[12px]">
+              <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase text-[#52606D]">
+                <tr>{["Tidspunkt", "Status", "Virksomhet", "Org.nr", "Kanal", "Tilbud", "Notat"].map((column) => <th className="border-b border-[#D9E2EC] px-3 py-2.5" key={column}>{column}</th>)}</tr>
+              </thead>
+              <tbody>
+                {logEntries.slice(0, eventLimit).map((entry) => (
+                  <tr className="border-b border-[#E4E7EB] last:border-b-0" key={`${entry.orgNumber}-${entry.timestamp ?? entry.sentAt}-${entry.status}-${entry.note ?? ""}`}>
+                    <td className="whitespace-nowrap px-3 py-2.5 text-[#52606D]">{formatLogDateTime(entry.timestamp ?? entry.sentAt)}</td>
+                    <td className="px-3 py-2.5 text-[#52606D]">{formatPipelineStatus(entry)}</td>
+                    <td className="px-3 py-2.5"><button className="font-semibold text-[#1F5FA9] hover:underline" onClick={() => onOpenCompanyAction(entry.orgNumber)} type="button">{entry.companyName || "Ukjent selskap"}</button></td>
+                    <td className="px-3 py-2.5 font-mono text-[#52606D]">{entry.orgNumber}</td>
+                    <td className="px-3 py-2.5 text-[#52606D]">{entry.channel || "-"}</td>
+                    <td className="px-3 py-2.5 text-[#52606D]">{formatOutreachOfferType(entry.offerType)}</td>
+                    <td className="max-w-sm px-3 py-2.5 text-[#52606D]">{entry.note || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {eventLimit < logEntries.length ? (
+            <Button className="mt-3 rounded-sm" onClick={() => setEventLimit((current) => current + 20)} type="button" variant="outline">Vis 20 til</Button>
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 }
 
-function InfoMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3">
-      <p className="text-[11px] font-medium text-[#52606D]">{label}</p>
-      <p className="mt-1 text-[20px] font-semibold text-[#1F2933]">{value}</p>
-    </div>
-  );
-}
-
-function OutreachTable({
-  columns,
+function PipelineColumn({
   emptyText,
   entries,
   heading,
-  onCollapse,
   onOpenCompany,
-  onShowMore,
-  renderDate,
-  totalCount,
-  visibleCount,
-}: {
-  columns: string[];
+  tone,
+}: Readonly<{
   emptyText: string;
   entries: OutreachStatus[];
   heading: string;
-  onCollapse: () => void;
   onOpenCompany: (orgNumber: string) => void;
-  onShowMore: () => void;
-  renderDate: (entry: OutreachStatus) => string;
-  totalCount: number;
-  visibleCount: number;
-}) {
+  tone: PipelineTone;
+}>) {
+  const toneClass = {
+    review: "border-t-amber-400",
+    contacted: "border-t-emerald-500",
+    followup: "border-t-[#1F5FA9]",
+    inactive: "border-t-[#9FB3C8]",
+  }[tone];
+
   return (
-    <div>
-      <h3 className="text-[16px] font-semibold text-[#1F2933]">{heading}</h3>
-      {totalCount === 0 ? (
-        <p className="mt-3 text-[13px] font-medium text-[#52606D]">{emptyText}</p>
-      ) : (
-        <div className="mt-3 overflow-x-auto border border-[#D9E2EC]">
-          <table className="w-full min-w-[760px] border-collapse text-left text-[13px]">
-            <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
-              <tr>
-                {columns.map((column) => (
-                  <th key={column} className="border-b border-[#D9E2EC] px-4 py-3">{column}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {entries.map((entry) => (
-                <tr key={entry.orgNumber} className="border-b border-[#E4E7EB] last:border-b-0">
-                  <td className="px-4 py-3 text-[#52606D]">{renderDate(entry)}</td>
-                  <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
-                  <td className="px-4 py-3">
-                    <OpenCompanyButton entry={entry} onOpenCompany={onOpenCompany} />
-                  </td>
-                  <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">{formatOutreachOfferType(entry.offerType)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <LogListActions currentCount={visibleCount} totalCount={totalCount} onCollapse={onCollapse} onShowMore={onShowMore} />
+    <div className={`min-h-56 border border-[#D9E2EC] border-t-4 bg-[#F8FBFF] ${toneClass}`}>
+      <div className="flex items-center justify-between border-b border-[#D9E2EC] px-4 py-3">
+        <h2 className="text-[14px] font-semibold text-[#1F2933]">{heading}</h2>
+        <span className="bg-white px-2 py-0.5 text-[11px] font-semibold text-[#52606D]">{entries.length}</span>
+      </div>
+      <div className="space-y-2 p-3">
+        {entries.length === 0 ? <p className="px-1 py-5 text-[12px] leading-5 text-[#829AB1]">{emptyText}</p> : entries.slice(0, 12).map((entry) => (
+          <button className="block w-full border border-[#D9E2EC] bg-white p-3 text-left transition-colors hover:border-[#2F6FB2]" key={entry.orgNumber} onClick={() => onOpenCompany(entry.orgNumber)} type="button">
+            <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
+            <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
+            {entry.note ? <span className="mt-2 line-clamp-2 block text-[11px] leading-4 text-[#52606D]">{entry.note}</span> : null}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-function NotesTable({
-  entries,
-  onCollapse,
-  onOpenCompany,
-  onShowMore,
-  totalCount,
-  visibleCount,
-}: {
-  entries: OutreachStatus[];
-  onCollapse: () => void;
-  onOpenCompany: (orgNumber: string) => void;
-  onShowMore: () => void;
-  totalCount: number;
-  visibleCount: number;
-}) {
-  return (
-    <div>
-      <h3 className="text-[16px] font-semibold text-[#1F2933]">Hendelser</h3>
-      {totalCount === 0 ? (
-        <p className="mt-3 text-[13px] font-medium text-[#52606D]">Ingen notater registrert ennå.</p>
-      ) : (
-        <div className="mt-3 overflow-x-auto border border-[#D9E2EC]">
-          <table className="w-full min-w-[900px] border-collapse text-left text-[13px]">
-            <thead className="bg-[#F8FBFF] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#52606D]">
-              <tr>
-                {["Tidspunkt", "Status", "Org.nr", "Selskap", "Selskapsform", "Kanal", "Notat"].map((column) => (
-                  <th key={column} className="border-b border-[#D9E2EC] px-4 py-3">{column}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {entries.map((entry) => (
-                <tr key={`${entry.orgNumber}-${entry.timestamp ?? entry.sentAt ?? entry.status ?? "event"}`} className="border-b border-[#E4E7EB] last:border-b-0">
-                  <td className="px-4 py-3 text-[#52606D]">{formatLogDateTime(entry.timestamp ?? entry.sentAt)}</td>
-                  <td className="px-4 py-3 text-[#52606D]">{entry.status || "-"}</td>
-                  <td className="px-4 py-3 font-mono text-[12px] text-[#52606D]">{entry.orgNumber}</td>
-                  <td className="px-4 py-3">
-                    <OpenCompanyButton entry={entry} onOpenCompany={onOpenCompany} />
-                  </td>
-                  <td className="px-4 py-3 text-[#52606D]">{entry.organizationForm || "-"}</td>
-                  <td className="px-4 py-3 text-[#52606D]">{entry.channel || "-"}</td>
-                  <td className="max-w-sm px-4 py-3 text-[#52606D]">{entry.note || "-"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <LogListActions currentCount={visibleCount} totalCount={totalCount} onCollapse={onCollapse} onShowMore={onShowMore} />
-    </div>
-  );
-}
-
-function OpenCompanyButton({ entry, onOpenCompany }: { entry: OutreachStatus; onOpenCompany: (orgNumber: string) => void }) {
-  return (
-    <button
-      className="font-semibold text-[#1F5FA9] underline-offset-4 hover:underline"
-      onClick={() => onOpenCompany(entry.orgNumber)}
-      type="button"
-    >
-      {entry.companyName || "Ukjent selskap"}
-    </button>
-  );
-}
-
-function LogListActions({
-  currentCount,
-  totalCount,
-  onShowMore,
-  onCollapse,
-}: {
-  currentCount: number;
-  totalCount: number;
-  onShowMore: () => void;
-  onCollapse: () => void;
-}) {
-  if (totalCount <= 10) {
-    return null;
+function formatPipelineStatus(entry: OutreachStatus) {
+  switch (entry.status) {
+    case "sent": return "Kontaktet";
+    case "not_relevant": return "Ikke aktuell";
+    case "batch_excluded": return "Batch-sperret";
+    case "reverted": return "Til vurdering";
+    default: return "Uten status";
   }
-
-  const remainingCount = totalCount - currentCount;
-
-  return (
-    <div className="mt-3 flex flex-wrap gap-2">
-      {remainingCount > 0 ? (
-        <button
-          className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
-          onClick={onShowMore}
-          type="button"
-        >
-          Vis mer ({Math.min(10, remainingCount)} til)
-        </button>
-      ) : null}
-      {currentCount > 10 ? (
-        <button
-          className="rounded-sm border border-[#D9E2EC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#52606D] hover:bg-[#F0F4F8]"
-          onClick={onCollapse}
-          type="button"
-        >
-          Skjul
-        </button>
-      ) : null}
-    </div>
-  );
 }

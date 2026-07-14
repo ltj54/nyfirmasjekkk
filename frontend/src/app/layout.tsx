@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "nyfirmasjekk — virksomhetssøk",
-  description: "Søk i norske virksomheter med åpne BRREG-data, filtre og forklarbar score.",
+  title: "NyFirmasjekk | Leads og virksomhetsanalyse",
+  description: "Finn, vurder og følg opp norske virksomheter med åpne registerdata og forklarbare signaler.",
 };
 
 export default function RootLayout({

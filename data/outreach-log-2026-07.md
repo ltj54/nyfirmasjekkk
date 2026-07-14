@@ -4,15 +4,45 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 144
-- Sendt: 144
+- Antall hendelser: 174
+- Sendt: 174
 - Angret: 0
-- Aktive kontaktede selskaper: 144
+- Aktive kontaktede selskaper: 174
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-14 | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | website-offer |
+| 2026-07-14 | 937315171 | SUNDESKOGEN FIBERLAG | FLI | email | website-offer |
+| 2026-07-14 | 936433731 | MALVIK SANITETSFORENING | FLI | email | website-offer |
+| 2026-07-14 | 937471203 | ALFRED AAMODT-BORGERSEN | ENK | email | website-offer |
+| 2026-07-14 | 937466684 | DEEPSKIN VADIVELU | ENK | email | website-offer |
+| 2026-07-14 | 837461332 | MATELIS BYGG OG SERVICE | ENK | email | website-offer |
+| 2026-07-14 | 937460368 | BREBENEL BYGG PROFF | ENK | email | website-offer |
+| 2026-07-14 | 937503210 | SAMEIET PERSAUNVEGEN 43 | ESEK | email | website-offer |
+| 2026-07-14 | 937391218 | STEIN AKERS IDRETTSSERVICE | ENK | email | website-offer |
+| 2026-07-14 | 937536461 | MAGNUS SØRNES | ENK | email | website-offer |
+| 2026-07-14 | 937403240 | VERBAAN MUSIKK AS | AS | email | website-offer |
+| 2026-07-14 | 837440742 | TRYGBO AS | AS | email | website-offer |
+| 2026-07-14 | 937537662 | NIDA KAPITAL AS | AS | email | website-offer |
+| 2026-07-14 | 937537573 | AVANTI HOSPITALS DK AS | AS | email | website-offer |
+| 2026-07-14 | 937467281 | OSLO NÆRINGSMEGLING AS | AS | email | website-offer |
+| 2026-07-14 | 937608527 | NORKOSMETISK AS | AS | email | website-offer |
+| 2026-07-14 | 937537697 | FEMTECH AS | AS | email | website-offer |
+| 2026-07-14 | 937456395 | BJØRNSTAD TJENESTER AS | AS | email | website-offer |
+| 2026-07-14 | 837459052 | ELLINGSEN BETONG AS | AS | email | website-offer |
+| 2026-07-14 | 937706014 | VETERINÆR KRISTIN LEIN AS | AS | email | website-offer |
+| 2026-07-14 | 937886977 | LILLEGULL HØILI AS | AS | email | website-offer |
+| 2026-07-14 | 937887000 | ABR HOLDCO AS | AS | email | website-offer |
+| 2026-07-14 | 838076262 | FIREFLY TECHNOLOGY BALSNES | ENK | email | website-offer |
+| 2026-07-14 | 938090688 | KRISTIANE AAVIK MASSASJE | ENK | email | website-offer |
+| 2026-07-14 | 938094128 | MOBIL BILVASK NORDLAND DANCHENKO | ENK | email | website-offer |
+| 2026-07-14 | 938089094 | SUNDE BYGG OG MONTERING | ENK | email | website-offer |
+| 2026-07-14 | 938085390 | VESTNES SPRÅK- OG INTEGRERINGSTJENESTER | ENK | email | website-offer |
+| 2026-07-14 | 938092966 | TOMMY LEE RUDQVIST | ENK | email | website-offer |
+| 2026-07-14 | 838086322 | TOFTAKER CONTENT | ENK | email | website-offer |
+| 2026-07-14 | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | website-offer |
 | 2026-07-13 | 937848749 | ÅSEN HOLDING AS | AS | email | website-offer |
 | 2026-07-13 | 937848420 | TENSIONE AS | AS | email | website-offer |
 | 2026-07-13 | 937848455 | ISLANDSTONE VENTURES AS | AS | email | website-offer |
@@ -162,6 +192,36 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-14 08:44 | sent | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | - |
+| 2026-07-14 08:44 | sent | 937315171 | SUNDESKOGEN FIBERLAG | FLI | email | - |
+| 2026-07-14 08:43 | sent | 936433731 | MALVIK SANITETSFORENING | FLI | email | - |
+| 2026-07-14 08:43 | sent | 937471203 | ALFRED AAMODT-BORGERSEN | ENK | email | - |
+| 2026-07-14 08:43 | sent | 937466684 | DEEPSKIN VADIVELU | ENK | email | - |
+| 2026-07-14 08:43 | sent | 837461332 | MATELIS BYGG OG SERVICE | ENK | email | - |
+| 2026-07-14 08:43 | sent | 937460368 | BREBENEL BYGG PROFF | ENK | email | - |
+| 2026-07-14 08:42 | sent | 937503210 | SAMEIET PERSAUNVEGEN 43 | ESEK | email | - |
+| 2026-07-14 08:42 | sent | 937391218 | STEIN AKERS IDRETTSSERVICE | ENK | email | - |
+| 2026-07-14 08:24 | sent | 937536461 | MAGNUS SØRNES | ENK | email | - |
+| 2026-07-14 08:20 | sent | 937403240 | VERBAAN MUSIKK AS | AS | email | - |
+| 2026-07-14 08:20 | sent | 837440742 | TRYGBO AS | AS | email | - |
+| 2026-07-14 08:20 | sent | 937537662 | NIDA KAPITAL AS | AS | email | - |
+| 2026-07-14 08:20 | sent | 937537573 | AVANTI HOSPITALS DK AS | AS | email | - |
+| 2026-07-14 08:19 | sent | 937467281 | OSLO NÆRINGSMEGLING AS | AS | email | - |
+| 2026-07-14 08:19 | sent | 937608527 | NORKOSMETISK AS | AS | email | - |
+| 2026-07-14 08:19 | sent | 937537697 | FEMTECH AS | AS | email | - |
+| 2026-07-14 08:19 | sent | 937456395 | BJØRNSTAD TJENESTER AS | AS | email | - |
+| 2026-07-14 08:19 | sent | 837459052 | ELLINGSEN BETONG AS | AS | email | - |
+| 2026-07-14 08:18 | sent | 937706014 | VETERINÆR KRISTIN LEIN AS | AS | email | - |
+| 2026-07-14 08:18 | sent | 937886977 | LILLEGULL HØILI AS | AS | email | - |
+| 2026-07-14 08:18 | sent | 937887000 | ABR HOLDCO AS | AS | email | - |
+| 2026-07-14 08:14 | sent | 838076262 | FIREFLY TECHNOLOGY BALSNES | ENK | email | - |
+| 2026-07-14 08:13 | sent | 938090688 | KRISTIANE AAVIK MASSASJE | ENK | email | - |
+| 2026-07-14 08:13 | sent | 938094128 | MOBIL BILVASK NORDLAND DANCHENKO | ENK | email | - |
+| 2026-07-14 08:13 | sent | 938089094 | SUNDE BYGG OG MONTERING | ENK | email | - |
+| 2026-07-14 08:12 | sent | 938085390 | VESTNES SPRÅK- OG INTEGRERINGSTJENESTER | ENK | email | - |
+| 2026-07-14 08:12 | sent | 938092966 | TOMMY LEE RUDQVIST | ENK | email | - |
+| 2026-07-14 08:12 | sent | 838086322 | TOFTAKER CONTENT | ENK | email | - |
+| 2026-07-14 08:12 | sent | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | - |
 | 2026-07-13 09:38 | sent | 937848749 | ÅSEN HOLDING AS | AS | email | - |
 | 2026-07-13 09:38 | sent | 937848420 | TENSIONE AS | AS | email | - |
 | 2026-07-13 09:38 | sent | 937848455 | ISLANDSTONE VENTURES AS | AS | email | - |

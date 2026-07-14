@@ -41,6 +41,80 @@ public class CompanyApiV1Mapper {
     private static final String SOURCE_BRREG_BASE_DATA = "BRREG grunndata";
     private static final String SOURCE_INTERNAL_NETWORK_SNAPSHOT = "Intern nettverkssnapshot / BRREG";
     private static final String CONFIDENCE_MEDIUM = "MEDIUM";
+    private static final String DISCOVERY_POSSIBLE_MATCH = "POSSIBLE_MATCH";
+    private static final String SIGNAL_TECHNICAL_FAILURE = "TECHNICAL_FAILURE";
+    private static final String SIGNAL_MISSING_HTTPS = "MISSING_HTTPS";
+    private static final String LABEL_WEBSITE_UNREACHABLE = "Nettsiden svarer ikke";
+    private static final String LABEL_MISSING_HTTPS = "Mangler HTTPS";
+    private static final String REGISTERED_WEBSITE_REASON = "Nettsiden er registrert i BRREG.";
+    private static final String EVIDENCE_BANKRUPTCY_REGISTERED = "Konkurs registrert";
+    private static final String WEBSITE_STATUS_WEAK = "WEAK";
+    private static final String WEBSITE_STATUS_NEEDS_REVIEW = "NEEDS_REVIEW";
+    private static final String WEBSITE_STATUS_OK = "OK";
+    private static final String SIGNAL_FORM_AUTOCOMPLETE_MISSING = "FORM_AUTOCOMPLETE_MISSING";
+    private static final String SIGNAL_ADMIN_OR_LOGIN_PATH_EXPOSED = "ADMIN_OR_LOGIN_PATH_EXPOSED";
+    private static final String SIGNAL_SECURITY_TXT_MISSING = "SECURITY_TXT_MISSING";
+    private static final String SIGNAL_WEAK_HSTS_HEADER = "WEAK_HSTS_HEADER";
+    private static final String SIGNAL_WEAK_CSP_HEADER = "WEAK_CSP_HEADER";
+    private static final String SIGNAL_API_ENDPOINTS_VISIBLE = "API_ENDPOINTS_VISIBLE";
+    private static final String SIGNAL_DUPLICATE_META_DESCRIPTIONS = "DUPLICATE_META_DESCRIPTIONS";
+    private static final String SIGNAL_FORM_LABEL_RISK = "FORM_LABEL_RISK";
+    private static final String SIGNAL_MISSING_CSP_HEADER = "MISSING_CSP_HEADER";
+    private static final String SIGNAL_WEAK_PAGE_LANDMARKS = "WEAK_PAGE_LANDMARKS";
+    private static final String SIGNAL_MOTION_ACCESSIBILITY_RISK = "MOTION_ACCESSIBILITY_RISK";
+    private static final String SIGNAL_WEAK_NAVIGATION = "WEAK_NAVIGATION";
+    private static final String SIGNAL_GENERIC_SERVICE_TEXT = "GENERIC_SERVICE_TEXT";
+    private static final String SIGNAL_MISSING_META_DESCRIPTION = "MISSING_META_DESCRIPTION";
+    private static final String SIGNAL_IMAGE_ALT_RISK = "IMAGE_ALT_RISK";
+    private static final String SIGNAL_COOKIE_SAMESITE_REVIEW = "COOKIE_SAMESITE_REVIEW";
+    private static final String SIGNAL_LEGAL_NAME_NOT_VISIBLE = "LEGAL_NAME_NOT_VISIBLE";
+    private static final String SIGNAL_MISSING_STRUCTURED_DATA = "MISSING_STRUCTURED_DATA";
+    private static final String SIGNAL_INSECURE_FORM_ACTION = "INSECURE_FORM_ACTION";
+    private static final String SIGNAL_MIXED_CONTENT_RISK = "MIXED_CONTENT_RISK";
+    private static final String SIGNAL_WEAK_HOMEPAGE_STRUCTURE = "WEAK_HOMEPAGE_STRUCTURE";
+    private static final String SIGNAL_TARGET_BLANK_NOOPENER_MISSING = "TARGET_BLANK_NOOPENER_MISSING";
+    private static final String SIGNAL_COOKIE_SECURE_FLAG_MISSING = "COOKIE_SECURE_FLAG_MISSING";
+    private static final String SIGNAL_DNS_CAA_MISSING = "DNS_CAA_MISSING";
+    private static final String SIGNAL_MISSING_HSTS_HEADER = "MISSING_HSTS_HEADER";
+    private static final String SIGNAL_MANY_THIRD_PARTY_SCRIPT_HOSTS = "MANY_THIRD_PARTY_SCRIPT_HOSTS";
+    private static final String SIGNAL_INLINE_EVENT_HANDLER_REVIEW = "INLINE_EVENT_HANDLER_REVIEW";
+    private static final String SIGNAL_CMS_VERSION_EXPOSED = "CMS_VERSION_EXPOSED";
+    private static final String SIGNAL_JAVASCRIPT_HREF_REVIEW = "JAVASCRIPT_HREF_REVIEW";
+    private static final String SIGNAL_SERVER_TECH_HEADER_EXPOSED = "SERVER_TECH_HEADER_EXPOSED";
+    private static final String SIGNAL_WEAK_TITLE = "WEAK_TITLE";
+    private static final String SIGNAL_MISSING_ADDRESS_OR_AREA = "MISSING_ADDRESS_OR_AREA";
+    private static final String SIGNAL_COOKIE_CONSENT_RISK = "COOKIE_CONSENT_RISK";
+    private static final String SIGNAL_IFRAME_TITLE_RISK = "IFRAME_TITLE_RISK";
+    private static final String SIGNAL_MANY_INLINE_SCRIPTS_WITHOUT_CSP = "MANY_INLINE_SCRIPTS_WITHOUT_CSP";
+    private static final String SIGNAL_MISSING_ORG_NUMBER = "MISSING_ORG_NUMBER";
+    private static final String SIGNAL_ROBOTS_SENSITIVE_PATHS = "ROBOTS_SENSITIVE_PATHS";
+    private static final String SIGNAL_MISSING_ABOUT_SECTION = "MISSING_ABOUT_SECTION";
+    private static final String SIGNAL_WEAK_SHARE_PREVIEW = "WEAK_SHARE_PREVIEW";
+    private static final String SIGNAL_SENSITIVE_HEALTH_CONTEXT = "SENSITIVE_HEALTH_CONTEXT";
+    private static final String SIGNAL_WEAK_INDUSTRY_RELEVANCE = "WEAK_INDUSTRY_RELEVANCE";
+    private static final String SIGNAL_MISSING_MAIN_LANDMARK = "MISSING_MAIN_LANDMARK";
+    private static final String SIGNAL_SOURCE_MAP_EXPOSED = "SOURCE_MAP_EXPOSED";
+    private static final String SIGNAL_EXTERNAL_FORM_ACTION = "EXTERNAL_FORM_ACTION";
+    private static final String SIGNAL_PERSONAL_DATA_GET_FORM = "PERSONAL_DATA_GET_FORM";
+    private static final String SIGNAL_MISSING_FRAME_PROTECTION = "MISSING_FRAME_PROTECTION";
+    private static final String SIGNAL_MISSING_REFERRER_POLICY = "MISSING_REFERRER_POLICY";
+    private static final String SIGNAL_OUTDATED_JS_LIBRARY_REVIEW = "OUTDATED_JS_LIBRARY_REVIEW";
+    private static final String SIGNAL_DEVELOPMENT_REFERENCE_EXPOSED = "DEVELOPMENT_REFERENCE_EXPOSED";
+    private static final String SIGNAL_INCOMPLETE_MARKET_OR_CHECKOUT = "INCOMPLETE_MARKET_OR_CHECKOUT";
+    private static final String SIGNAL_THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW = "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW";
+    private static final String SIGNAL_VAGUE_LINK_TEXT = "VAGUE_LINK_TEXT";
+    private static final String SIGNAL_THIN_CONTENT = "THIN_CONTENT";
+    private static final String SIGNAL_COOKIE_HTTPONLY_REVIEW = "COOKIE_HTTPONLY_REVIEW";
+    private static final String SIGNAL_SKIPPED_HEADING_LEVELS = "SKIPPED_HEADING_LEVELS";
+    private static final String SIGNAL_LOGIN_FORM_SECURITY_REVIEW = "LOGIN_FORM_SECURITY_REVIEW";
+    private static final String SIGNAL_POST_FORM_CSRF_REVIEW = "POST_FORM_CSRF_REVIEW";
+    private static final String SIGNAL_MISSING_PERMISSIONS_POLICY = "MISSING_PERMISSIONS_POLICY";
+    private static final String SIGNAL_EMPTY_BUTTON_RISK = "EMPTY_BUTTON_RISK";
+    private static final String SIGNAL_DOM_XSS_SURFACE_REVIEW = "DOM_XSS_SURFACE_REVIEW";
+    private static final String SIGNAL_DANGEROUS_JS_SINK_REVIEW = "DANGEROUS_JS_SINK_REVIEW";
+    private static final String SIGNAL_GENERIC_OR_AI_IMAGE_RISK = "GENERIC_OR_AI_IMAGE_RISK";
+    private static final String SIGNAL_AI_LIKE_PRESENTATION_RISK = "AI_LIKE_PRESENTATION_RISK";
+    private static final String SIGNAL_GENERIC_PRESENTATION_TRUST_RISK = "GENERIC_PRESENTATION_TRUST_RISK";
     private static final String EVENT_REGISTRATION = "REGISTRATION";
     private static final String EVENT_BANKRUPTCY = "BANKRUPTCY";
     private static final String EVENT_DISSOLUTION = "DISSOLUTION";
@@ -77,16 +151,18 @@ public class CompanyApiV1Mapper {
             "byggservice", SERVICE_SUFFIX,
             "vaktmesterservice", SERVICE_SUFFIX
     );
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", Pattern.CASE_INSENSITIVE);
-    private static final Pattern PHONE_PATTERN = Pattern.compile("(\\+47\\s*)?(\\d\\s*){8}");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,63}\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PHONE_PATTERN = Pattern.compile("(?:\\+47\\s*)?(?:\\d[\\s-]?){7}\\d");
     private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*(20\\d{2})");
     private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]+\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FOREIGN_ORGANIZATION_NUMBER_PATTERN = Pattern.compile("\\b(?:\\d{6}\\s\\d{4}|se\\d{10,12})\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern NON_ALPHANUMERIC_SPACE_PATTERN = Pattern.compile("[^a-z0-9 ]");
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
     private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
             "kontakt", "contact", "ring", "bestill", "booking", "book", "send forespørsel", "be om tilbud", "få tilbud", "ta kontakt"
     );
     private static final Set<String> GENERIC_MARKETING_WORDS = Set.of(
-            "kvalitet", "service", "profesjonell", "skreddersydd", "losninger", "løsninger", "erfaring", "dyktige", "trygg", "effektiv"
+            "kvalitet", SERVICE_SUFFIX, "profesjonell", "skreddersydd", "losninger", "løsninger", "erfaring", "dyktige", "trygg", "effektiv"
     );
     private static final Set<String> GENERIC_PRESENTATION_PHRASES = Set.of(
             "skaper leads",
@@ -376,16 +452,16 @@ public class CompanyApiV1Mapper {
                     website,
                     true,
                     true,
-                    "Nettsiden er registrert i BRREG.",
+                    REGISTERED_WEBSITE_REASON,
                     null,
                     List.of(new WebsiteCandidateCheck(
                             website,
                             true,
                             true,
                             null,
-                            "Nettsiden er registrert i BRREG."
+                            REGISTERED_WEBSITE_REASON
                     )),
-                    "Nettsiden er registrert i BRREG.",
+                    REGISTERED_WEBSITE_REASON,
                     SOURCE_BRREG
             );
         }
@@ -395,7 +471,7 @@ public class CompanyApiV1Mapper {
             String candidate = HTTPS_PREFIX + emailDomain;
             if (!inspectAllCandidates) {
                 return new WebsiteDiscovery(
-                        "POSSIBLE_MATCH",
+                        DISCOVERY_POSSIBLE_MATCH,
                         CONFIDENCE_MEDIUM,
                         List.of(candidate),
                         null,
@@ -412,10 +488,14 @@ public class CompanyApiV1Mapper {
             WebsiteContentMatch contentMatch = reachable
                     ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), emailDomain)
                     : new WebsiteContentMatch(false, "Domene svarte ikke ved sjekk.", null);
+            String confidence = "LOW";
+            if (reachable) {
+                confidence = contentMatch.matched() ? "HIGH" : CONFIDENCE_MEDIUM;
+            }
             List<WebsiteCandidateCheck> candidateChecks = List.of(toWebsiteCandidateCheck(candidate, reachable, contentMatch));
             return new WebsiteDiscovery(
-                    "POSSIBLE_MATCH",
-                    reachable && contentMatch.matched() ? "HIGH" : reachable ? CONFIDENCE_MEDIUM : "LOW",
+                    DISCOVERY_POSSIBLE_MATCH,
+                    confidence,
                     List.of(candidate),
                     reachable ? candidate : null,
                     reachable,
@@ -434,7 +514,7 @@ public class CompanyApiV1Mapper {
         if (!nameCandidates.isEmpty()) {
             if (!inspectAllCandidates) {
                 return new WebsiteDiscovery(
-                        "POSSIBLE_MATCH",
+                        DISCOVERY_POSSIBLE_MATCH,
                         "LOW",
                         nameCandidates,
                         null,
@@ -454,17 +534,14 @@ public class CompanyApiV1Mapper {
                     .findFirst()
                     .orElse(null);
             boolean reachable = reachableCandidate != null;
-            WebsiteContentMatch contentMatch = preferredCheck != null
-                    ? new WebsiteContentMatch(
-                    Boolean.TRUE.equals(preferredCheck.contentMatched()),
-                    preferredCheck.reason(),
-                    preferredCheck.pageTitle()
-            )
-                    : reachable
-                    ? websiteContentInspectionService.inspect(reachableCandidate, companyCheck.navn(), emailDomain)
-                    : new WebsiteContentMatch(false, "Ingen av kandidatene svarte ved sjekk.", null);
+            WebsiteContentMatch contentMatch = contentMatchForPreferredCandidate(
+                    preferredCheck,
+                    reachableCandidate,
+                    companyCheck.navn(),
+                    emailDomain
+            );
             return new WebsiteDiscovery(
-                    "POSSIBLE_MATCH",
+                    DISCOVERY_POSSIBLE_MATCH,
                     reachable && contentMatch.matched() ? CONFIDENCE_MEDIUM : "LOW",
                     nameCandidates,
                     reachableCandidate,
@@ -495,6 +572,25 @@ public class CompanyApiV1Mapper {
         );
     }
 
+    private WebsiteContentMatch contentMatchForPreferredCandidate(
+            WebsiteCandidateCheck preferredCheck,
+            String reachableCandidate,
+            String companyName,
+            String emailDomain
+    ) {
+        if (preferredCheck != null) {
+            return new WebsiteContentMatch(
+                    Boolean.TRUE.equals(preferredCheck.contentMatched()),
+                    preferredCheck.reason(),
+                    preferredCheck.pageTitle()
+            );
+        }
+        if (reachableCandidate != null) {
+            return websiteContentInspectionService.inspect(reachableCandidate, companyName, emailDomain);
+        }
+        return new WebsiteContentMatch(false, "Ingen av kandidatene svarte ved sjekk.", null);
+    }
+
     private WebsiteQualityAssessment websiteQuality(CompanyCheck companyCheck, EnhetResponse enhet) {
         if (!hasText(enhet.hjemmeside())) {
             return null;
@@ -521,8 +617,8 @@ public class CompanyApiV1Mapper {
         }
         if (!website.startsWith(HTTPS_PREFIX)) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_HTTPS",
-                    "Mangler HTTPS",
+                    SIGNAL_MISSING_HTTPS,
+                    LABEL_MISSING_HTTPS,
                     "Nettsiden er registrert uten HTTPS. Det kan gi svakere tillit og nettleservarsler.",
                     "MEDIUM"
             ));
@@ -531,14 +627,14 @@ public class CompanyApiV1Mapper {
         boolean reachable = websiteReachabilityService.isReachable(website);
         if (!reachable) {
             signals.add(new WebsiteQualitySignal(
-                    "TECHNICAL_FAILURE",
+                    SIGNAL_TECHNICAL_FAILURE,
                     "Teknisk feil",
                     "Nettsiden svarte ikke ved teknisk sjekk. Dette kan skyldes DNS, timeout, SSL-feil, 404/5xx eller midlertidig nedetid.",
                     "HIGH"
             ));
             return new WebsiteQualityAssessment(
-                    "WEAK",
-                    "Nettsiden svarer ikke",
+                    WEBSITE_STATUS_WEAK,
+                    LABEL_WEBSITE_UNREACHABLE,
                     "BRREG har registrert nettside, men den svarte ikke ved teknisk sjekk.",
                     signals
             );
@@ -608,8 +704,8 @@ public class CompanyApiV1Mapper {
         }
         if (!website.startsWith(HTTPS_PREFIX)) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_HTTPS",
-                    "Mangler HTTPS",
+                    SIGNAL_MISSING_HTTPS,
+                    LABEL_MISSING_HTTPS,
                     "Nettsiden bruker ikke HTTPS i oppgitt adresse. Det kan gi svakere tillit og nettleservarsler.",
                     "MEDIUM"
             ));
@@ -618,7 +714,7 @@ public class CompanyApiV1Mapper {
         boolean reachable = websiteReachabilityService.isReachable(website);
         if (!reachable) {
             signals.add(new WebsiteQualitySignal(
-                    "TECHNICAL_FAILURE",
+                    SIGNAL_TECHNICAL_FAILURE,
                     "Teknisk feil",
                     "Nettsiden svarte ikke ved teknisk sjekk. Dette kan skyldes DNS, timeout, SSL-feil, 404/5xx eller midlertidig nedetid.",
                     "HIGH"
@@ -627,8 +723,8 @@ public class CompanyApiV1Mapper {
                     rawUrl,
                     website,
                     new WebsiteQualityAssessment(
-                            "WEAK",
-                            "Nettsiden svarer ikke",
+                            WEBSITE_STATUS_WEAK,
+                            LABEL_WEBSITE_UNREACHABLE,
                             "Nettsiden svarte ikke ved teknisk sjekk.",
                             signals
                     ),
@@ -698,7 +794,7 @@ public class CompanyApiV1Mapper {
 
     private WebsiteQualityAssessment contentUnreadableAssessment(List<WebsiteQualitySignal> signals) {
         boolean hasHigh = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()));
-        String status = hasHigh ? "WEAK" : "NEEDS_REVIEW";
+        String status = hasHigh ? WEBSITE_STATUS_WEAK : WEBSITE_STATUS_NEEDS_REVIEW;
         String label = hasHigh ? "Svak nettsideflate" : "Bør vurderes";
         return new WebsiteQualityAssessment(
                 status,
@@ -709,20 +805,36 @@ public class CompanyApiV1Mapper {
     }
 
     private WebsiteQualityAssessment assessmentFromSignals(List<WebsiteQualitySignal> signals, String summary, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        Objects.requireNonNull(snapshot, "snapshot must be present when assessing website signals");
         boolean ecommerce = isEffectiveEcommerceWebsite(snapshot);
         boolean hasCriticalWeak = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()) && isCriticalWeakWebsiteSignal(signal.code()));
-        boolean hasHigh = signals.stream().anyMatch(signal -> "HIGH".equals(signal.severity()));
-        boolean hasMedium = signals.stream().anyMatch(signal -> "MEDIUM".equals(signal.severity()));
-        String status = hasCriticalWeak ? "WEAK" : hasMedium || hasHigh ? "NEEDS_REVIEW" : "OK";
+        boolean hasReviewDrivingSignal = signals.stream().anyMatch(signal -> ("HIGH".equals(signal.severity()) || "MEDIUM".equals(signal.severity()))
+                && isReviewDrivingWebsiteSignal(signal.code()));
+        boolean hasConfirmedMinorSignal = signals.stream().anyMatch(signal -> isConfirmedMinorWebsiteSignal(signal.code()));
+        String status = websiteStatus(hasCriticalWeak, hasReviewDrivingSignal);
         String effectiveSummary = websiteQualitySummary(signals, summary, snapshot, status);
-        String label = switch (status) {
-            case "WEAK" -> hasSignal(signals, "TECHNICAL_FAILURE")
-                    ? "Nettsiden svarer ikke"
-                    : "Kritisk teknisk punkt";
-            case "NEEDS_REVIEW" -> ecommerce ? "Nettside med forbedringspunkter" : "Bør vurderes";
-            default -> "Ser grei ut";
-        };
+        String label = websiteStatusLabel(status, signals, ecommerce, hasConfirmedMinorSignal);
         return new WebsiteQualityAssessment(status, label, effectiveSummary, signals);
+    }
+
+    private String websiteStatus(boolean hasCriticalWeak, boolean hasReviewDrivingSignal) {
+        if (hasCriticalWeak) {
+            return WEBSITE_STATUS_WEAK;
+        }
+        if (hasReviewDrivingSignal) {
+            return WEBSITE_STATUS_NEEDS_REVIEW;
+        }
+        return WEBSITE_STATUS_OK;
+    }
+
+    private String websiteStatusLabel(String status, List<WebsiteQualitySignal> signals, boolean ecommerce, boolean hasConfirmedMinorSignal) {
+        if (WEBSITE_STATUS_WEAK.equals(status)) {
+            return hasSignal(signals, SIGNAL_TECHNICAL_FAILURE) ? LABEL_WEBSITE_UNREACHABLE : "Kritisk teknisk punkt";
+        }
+        if (WEBSITE_STATUS_NEEDS_REVIEW.equals(status)) {
+            return ecommerce ? "Nettside med forbedringspunkter" : "Bør vurderes";
+        }
+        return hasConfirmedMinorSignal ? "Generelt god nettside - enkelte forbedringspunkter" : "Ser grei ut";
     }
 
     private String websiteQualitySummary(
@@ -731,7 +843,14 @@ public class CompanyApiV1Mapper {
             WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
             String status
     ) {
-        if ("OK".equals(status)) {
+        Objects.requireNonNull(snapshot, "snapshot must be present when summarizing website quality");
+        if (WEBSITE_STATUS_OK.equals(status)) {
+            if (hasConfirmedMinorWebsiteSignals(signals)) {
+                return "Nettsiden fremstår i hovedsak god og gir tydelig informasjon om virksomheten. Analysen fant enkelte mulige forbedringer innen metadata og universell utforming som bør kontrolleres manuelt.";
+            }
+            if (hasOnlyTechnicalHardeningSignals(signals)) {
+                return "Nettsiden fremstår i hovedsak grei. Analysen fant tekniske hardening- og konfigurasjonspunkter som kan vurderes ved en teknisk gjennomgang, men som ikke alene sier at siden er svak for vanlige besøkende.";
+            }
             return fallback;
         }
         if (hasSignal(signals, "PUBLIC_SECTOR_CONTEXT")) {
@@ -739,22 +858,25 @@ public class CompanyApiV1Mapper {
         }
         boolean ecommerce = isEffectiveEcommerceWebsite(snapshot);
         if (ecommerce) {
-            if (hasSignal(signals, "INCOMPLETE_MARKET_OR_CHECKOUT")) {
+            if (hasSignal(signals, SIGNAL_INCOMPLETE_MARKET_OR_CHECKOUT)) {
                 return "Siden fremstår som en aktiv nettbutikk, men analysen fant tegn på uferdig markedstilpasning eller checkout. Det bør sjekkes før kundedialog.";
             }
             return "Siden fremstår som en aktiv nettbutikk, ikke en tom eller svak side. Muligheten ligger i tydeligere tillit, tilgjengelighet, personvern, kjøpsinformasjon og teknisk kvalitet.";
         }
-        if (hasSignal(signals, "SENSITIVE_HEALTH_CONTEXT")
+        if (hasSignal(signals, SIGNAL_SENSITIVE_HEALTH_CONTEXT)
                 || hasSignal(signals, "MEDICAL_REGULATORY_STATUS")
                 || hasSignal(signals, "MEDICAL_REGULATORY_CONTEXT_MISSING")) {
             return "Siden berører et mer tillitsbasert eller sensitivt fagområde. Personvern, skjema, dokumentasjon og tilgjengelighet bør vurderes ekstra nøye.";
         }
-        if (hasSignal(signals, "AI_LIKE_PRESENTATION_RISK")) {
+        if (hasSignal(signals, SIGNAL_AI_LIKE_PRESENTATION_RISK)) {
             return "Nettsiden svarer, men førsteinntrykket kan virke AI-lignende eller mønsterpreget. Mer konkret innhold, ekte virksomhetsspesifikke detaljer og tydelige tillitssignaler bør vurderes.";
         }
-        if (hasSignal(signals, "GENERIC_PRESENTATION_TRUST_RISK")
-                || hasSignal(signals, "GENERIC_OR_AI_IMAGE_RISK")) {
+        if (hasSignal(signals, SIGNAL_GENERIC_PRESENTATION_TRUST_RISK)
+                || hasSignal(signals, SIGNAL_GENERIC_OR_AI_IMAGE_RISK)) {
             return "Nettsiden svarer, men førsteinntrykket kan virke generisk. Ekte bilder, konkrete tjenester og tydelige tillitssignaler bør vurderes.";
+        }
+        if (hasMetadataOrAccessibilityControlSignals(signals) && !hasSubstantialContentWeakness(signals)) {
+            return "Nettsiden fremstår aktiv og informativ, men analysen fant mulige forbedringer innen metadata og universell utforming som bør kontrolleres manuelt.";
         }
         if (hasContentFocusedSignals(signals)) {
             return "Nettsiden svarer, men analysen fant innholds- og tillitssignaler som kan gjøre det vanskeligere å forstå hva virksomheten tilbyr.";
@@ -765,76 +887,207 @@ public class CompanyApiV1Mapper {
         return fallback;
     }
 
+    private boolean isReviewDrivingWebsiteSignal(String code) {
+        return Set.of(
+                SIGNAL_TECHNICAL_FAILURE,
+                SIGNAL_MISSING_HTTPS,
+                SIGNAL_INSECURE_FORM_ACTION,
+                SIGNAL_INCOMPLETE_MARKET_OR_CHECKOUT,
+                "TEMPLATE_PLACEHOLDER_CONTENT",
+                SIGNAL_THIN_CONTENT,
+                SIGNAL_WEAK_HOMEPAGE_STRUCTURE,
+                SIGNAL_WEAK_NAVIGATION,
+                SIGNAL_WEAK_INDUSTRY_RELEVANCE,
+                SIGNAL_GENERIC_SERVICE_TEXT,
+                SIGNAL_GENERIC_PRESENTATION_TRUST_RISK,
+                SIGNAL_GENERIC_OR_AI_IMAGE_RISK,
+                SIGNAL_AI_LIKE_PRESENTATION_RISK,
+                SIGNAL_MISSING_ORG_NUMBER,
+                SIGNAL_LEGAL_NAME_NOT_VISIBLE,
+                SIGNAL_MISSING_ADDRESS_OR_AREA,
+                SIGNAL_MISSING_ABOUT_SECTION,
+                "MISSING_PRIVACY_NOTICE",
+                SIGNAL_COOKIE_CONSENT_RISK,
+                SIGNAL_FORM_LABEL_RISK,
+                "TABLE_HEADERS_MISSING",
+                "FORM_INPUT_TYPE_RISK",
+                "FOCUS_STYLE_RISK",
+                "AUTOPLAY_MEDIA_RISK",
+                "ACCESSIBILITY_DECLARATION_VIOLATIONS",
+                SIGNAL_MIXED_CONTENT_RISK,
+                SIGNAL_PERSONAL_DATA_GET_FORM,
+                SIGNAL_EXTERNAL_FORM_ACTION,
+                "THIRD_PARTY_FORM_RISK",
+                SIGNAL_SENSITIVE_HEALTH_CONTEXT,
+                "HEALTH_TRACKING_CONTEXT"
+        ).contains(code);
+    }
+
+    private boolean hasConfirmedMinorWebsiteSignals(List<WebsiteQualitySignal> signals) {
+        return signals.stream().anyMatch(signal -> isConfirmedMinorWebsiteSignal(signal.code()));
+    }
+
+    private boolean isConfirmedMinorWebsiteSignal(String code) {
+        return Set.of(
+                SIGNAL_WEAK_TITLE,
+                SIGNAL_MISSING_META_DESCRIPTION,
+                SIGNAL_DUPLICATE_META_DESCRIPTIONS,
+                SIGNAL_WEAK_SHARE_PREVIEW,
+                SIGNAL_MISSING_STRUCTURED_DATA,
+                SIGNAL_EMPTY_BUTTON_RISK,
+                SIGNAL_IMAGE_ALT_RISK,
+                SIGNAL_MISSING_MAIN_LANDMARK,
+                SIGNAL_WEAK_PAGE_LANDMARKS,
+                SIGNAL_SKIPPED_HEADING_LEVELS,
+                SIGNAL_VAGUE_LINK_TEXT,
+                SIGNAL_IFRAME_TITLE_RISK,
+                SIGNAL_MOTION_ACCESSIBILITY_RISK,
+                SIGNAL_FORM_AUTOCOMPLETE_MISSING
+        ).contains(code);
+    }
+
+    private boolean hasOnlyTechnicalHardeningSignals(List<WebsiteQualitySignal> signals) {
+        return !signals.isEmpty()
+                && signals.stream().allMatch(signal -> isTechnicalHardeningWebsiteSignal(signal.code()) || isConfirmedMinorWebsiteSignal(signal.code()));
+    }
+
+    private boolean isTechnicalHardeningWebsiteSignal(String code) {
+        return Set.of(
+                SIGNAL_SECURITY_TXT_MISSING,
+                SIGNAL_DNS_CAA_MISSING,
+                SIGNAL_SERVER_TECH_HEADER_EXPOSED,
+                "TECHNOLOGY_STACK_DETECTED",
+                SIGNAL_CMS_VERSION_EXPOSED,
+                SIGNAL_ROBOTS_SENSITIVE_PATHS,
+                SIGNAL_ADMIN_OR_LOGIN_PATH_EXPOSED,
+                SIGNAL_LOGIN_FORM_SECURITY_REVIEW,
+                SIGNAL_API_ENDPOINTS_VISIBLE,
+                SIGNAL_SOURCE_MAP_EXPOSED,
+                SIGNAL_DEVELOPMENT_REFERENCE_EXPOSED,
+                SIGNAL_TARGET_BLANK_NOOPENER_MISSING,
+                SIGNAL_DOM_XSS_SURFACE_REVIEW,
+                SIGNAL_DANGEROUS_JS_SINK_REVIEW,
+                SIGNAL_INLINE_EVENT_HANDLER_REVIEW,
+                SIGNAL_JAVASCRIPT_HREF_REVIEW,
+                SIGNAL_THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW,
+                SIGNAL_MANY_THIRD_PARTY_SCRIPT_HOSTS,
+                SIGNAL_MANY_INLINE_SCRIPTS_WITHOUT_CSP,
+                SIGNAL_POST_FORM_CSRF_REVIEW,
+                SIGNAL_OUTDATED_JS_LIBRARY_REVIEW,
+                SIGNAL_MISSING_PERMISSIONS_POLICY,
+                "MISSING_CONTENT_TYPE_OPTIONS",
+                SIGNAL_MISSING_FRAME_PROTECTION,
+                SIGNAL_MISSING_REFERRER_POLICY,
+                SIGNAL_MISSING_HSTS_HEADER,
+                SIGNAL_WEAK_HSTS_HEADER,
+                SIGNAL_MISSING_CSP_HEADER,
+                SIGNAL_WEAK_CSP_HEADER,
+                SIGNAL_COOKIE_SECURE_FLAG_MISSING,
+                SIGNAL_COOKIE_HTTPONLY_REVIEW,
+                SIGNAL_COOKIE_SAMESITE_REVIEW
+        ).contains(code);
+    }
+
     private boolean hasContentFocusedSignals(List<WebsiteQualitySignal> signals) {
         return signals.stream().map(WebsiteQualitySignal::code).anyMatch(code -> Set.of(
-                "THIN_CONTENT",
-                "WEAK_HOMEPAGE_STRUCTURE",
-                "WEAK_NAVIGATION",
-                "WEAK_INDUSTRY_RELEVANCE",
-                "GENERIC_SERVICE_TEXT",
+                SIGNAL_THIN_CONTENT,
+                SIGNAL_WEAK_HOMEPAGE_STRUCTURE,
+                SIGNAL_WEAK_NAVIGATION,
+                SIGNAL_WEAK_INDUSTRY_RELEVANCE,
+                SIGNAL_GENERIC_SERVICE_TEXT,
                 "MISSING_LOCAL_RELEVANCE",
-                "MISSING_STRUCTURED_DATA",
-                "MISSING_ORG_NUMBER",
-                "LEGAL_NAME_NOT_VISIBLE",
-                "MISSING_ADDRESS_OR_AREA",
-                "MISSING_ABOUT_SECTION",
-                "AI_LIKE_PRESENTATION_RISK",
+                SIGNAL_MISSING_STRUCTURED_DATA,
+                SIGNAL_MISSING_ORG_NUMBER,
+                SIGNAL_LEGAL_NAME_NOT_VISIBLE,
+                SIGNAL_MISSING_ADDRESS_OR_AREA,
+                SIGNAL_MISSING_ABOUT_SECTION,
+                SIGNAL_AI_LIKE_PRESENTATION_RISK,
                 "DOMAIN_NAME_MISMATCH",
-                "EMAIL_DOMAIN_MISMATCH",
-                "MISSING_META_DESCRIPTION",
-                "WEAK_SHARE_PREVIEW",
-                "WEAK_TITLE"
+                "EMAIL_DOMAIN_MISMATCH"
+        ).contains(code));
+    }
+
+    private boolean hasSubstantialContentWeakness(List<WebsiteQualitySignal> signals) {
+        return signals.stream().map(WebsiteQualitySignal::code).anyMatch(code -> Set.of(
+                SIGNAL_THIN_CONTENT,
+                SIGNAL_WEAK_HOMEPAGE_STRUCTURE,
+                SIGNAL_WEAK_NAVIGATION,
+                SIGNAL_WEAK_INDUSTRY_RELEVANCE,
+                SIGNAL_GENERIC_SERVICE_TEXT,
+                SIGNAL_GENERIC_PRESENTATION_TRUST_RISK,
+                SIGNAL_GENERIC_OR_AI_IMAGE_RISK,
+                SIGNAL_AI_LIKE_PRESENTATION_RISK
+        ).contains(code));
+    }
+
+    private boolean hasMetadataOrAccessibilityControlSignals(List<WebsiteQualitySignal> signals) {
+        return signals.stream().map(WebsiteQualitySignal::code).anyMatch(code -> Set.of(
+                SIGNAL_WEAK_TITLE,
+                SIGNAL_MISSING_META_DESCRIPTION,
+                SIGNAL_DUPLICATE_META_DESCRIPTIONS,
+                SIGNAL_WEAK_SHARE_PREVIEW,
+                SIGNAL_MISSING_STRUCTURED_DATA,
+                SIGNAL_FORM_LABEL_RISK,
+                SIGNAL_EMPTY_BUTTON_RISK,
+                SIGNAL_IMAGE_ALT_RISK,
+                SIGNAL_MISSING_MAIN_LANDMARK,
+                SIGNAL_WEAK_PAGE_LANDMARKS,
+                SIGNAL_SKIPPED_HEADING_LEVELS,
+                SIGNAL_VAGUE_LINK_TEXT,
+                SIGNAL_IFRAME_TITLE_RISK,
+                SIGNAL_MOTION_ACCESSIBILITY_RISK,
+                SIGNAL_FORM_AUTOCOMPLETE_MISSING
         ).contains(code));
     }
 
     private boolean hasSecurityFocusedSignals(List<WebsiteQualitySignal> signals) {
         return signals.stream().map(WebsiteQualitySignal::code).anyMatch(code -> Set.of(
-                "MISSING_HTTPS",
+                SIGNAL_MISSING_HTTPS,
                 "TLS_CERTIFICATE_REVIEW",
                 "TLS_CERTIFICATE_EXPIRING",
                 "HTTP_TO_HTTPS_REDIRECT_REVIEW",
-                "MIXED_CONTENT_RISK",
-                "MISSING_HSTS_HEADER",
-                "WEAK_HSTS_HEADER",
-                "MISSING_CSP_HEADER",
-                "WEAK_CSP_HEADER",
-                "MISSING_REFERRER_POLICY",
-                "MISSING_PERMISSIONS_POLICY",
-                "MISSING_FRAME_PROTECTION",
-                "SERVER_TECH_HEADER_EXPOSED",
-                "SECURITY_TXT_MISSING",
-                "ROBOTS_SENSITIVE_PATHS",
-                "ADMIN_OR_LOGIN_PATH_EXPOSED",
-                "LOGIN_FORM_SECURITY_REVIEW",
+                SIGNAL_MIXED_CONTENT_RISK,
+                SIGNAL_MISSING_HSTS_HEADER,
+                SIGNAL_WEAK_HSTS_HEADER,
+                SIGNAL_MISSING_CSP_HEADER,
+                SIGNAL_WEAK_CSP_HEADER,
+                SIGNAL_MISSING_REFERRER_POLICY,
+                SIGNAL_MISSING_PERMISSIONS_POLICY,
+                SIGNAL_MISSING_FRAME_PROTECTION,
+                SIGNAL_SERVER_TECH_HEADER_EXPOSED,
+                SIGNAL_SECURITY_TXT_MISSING,
+                SIGNAL_ROBOTS_SENSITIVE_PATHS,
+                SIGNAL_ADMIN_OR_LOGIN_PATH_EXPOSED,
+                SIGNAL_LOGIN_FORM_SECURITY_REVIEW,
                 "FILE_UPLOAD_REVIEW",
-                "API_ENDPOINTS_VISIBLE",
-                "CMS_VERSION_EXPOSED",
+                SIGNAL_API_ENDPOINTS_VISIBLE,
+                SIGNAL_CMS_VERSION_EXPOSED,
                 "EMAIL_SECURITY_DNS_REVIEW",
                 "EMAIL_MX_MISSING",
-                "DNS_CAA_MISSING",
+                SIGNAL_DNS_CAA_MISSING,
                 "SPF_LOOKUP_RISK",
                 "DUPLICATE_SPF_RECORDS",
                 "DMARC_RUA_MISSING",
-                "SOURCE_MAP_EXPOSED",
-                "DEVELOPMENT_REFERENCE_EXPOSED",
-                "TARGET_BLANK_NOOPENER_MISSING",
-                "PERSONAL_DATA_GET_FORM",
-                "EXTERNAL_FORM_ACTION",
-                "DOM_XSS_SURFACE_REVIEW",
-                "DANGEROUS_JS_SINK_REVIEW",
-                "INLINE_EVENT_HANDLER_REVIEW",
-                "JAVASCRIPT_HREF_REVIEW",
-                "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
-                "MANY_THIRD_PARTY_SCRIPT_HOSTS",
-                "MANY_INLINE_SCRIPTS_WITHOUT_CSP",
-                "POST_FORM_CSRF_REVIEW",
-                "OUTDATED_JS_LIBRARY_REVIEW",
-                "COOKIE_SECURE_FLAG_MISSING",
-                "COOKIE_HTTPONLY_REVIEW",
-                "COOKIE_SAMESITE_REVIEW",
+                SIGNAL_SOURCE_MAP_EXPOSED,
+                SIGNAL_DEVELOPMENT_REFERENCE_EXPOSED,
+                SIGNAL_TARGET_BLANK_NOOPENER_MISSING,
+                SIGNAL_PERSONAL_DATA_GET_FORM,
+                SIGNAL_EXTERNAL_FORM_ACTION,
+                SIGNAL_DOM_XSS_SURFACE_REVIEW,
+                SIGNAL_DANGEROUS_JS_SINK_REVIEW,
+                SIGNAL_INLINE_EVENT_HANDLER_REVIEW,
+                SIGNAL_JAVASCRIPT_HREF_REVIEW,
+                SIGNAL_THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW,
+                SIGNAL_MANY_THIRD_PARTY_SCRIPT_HOSTS,
+                SIGNAL_MANY_INLINE_SCRIPTS_WITHOUT_CSP,
+                SIGNAL_POST_FORM_CSRF_REVIEW,
+                SIGNAL_OUTDATED_JS_LIBRARY_REVIEW,
+                SIGNAL_COOKIE_SECURE_FLAG_MISSING,
+                SIGNAL_COOKIE_HTTPONLY_REVIEW,
+                SIGNAL_COOKIE_SAMESITE_REVIEW,
                 "CRAWL_PRIVACY_PAGE_NOT_FOUND",
                 "CRAWL_FORM_PRIVACY_REVIEW",
-                "COOKIE_CONSENT_RISK"
+                SIGNAL_COOKIE_CONSENT_RISK
         ).contains(code));
     }
 
@@ -894,9 +1147,9 @@ public class CompanyApiV1Mapper {
 
     private boolean isCriticalWeakWebsiteSignal(String code) {
         return Set.of(
-                "TECHNICAL_FAILURE",
-                "MISSING_HTTPS",
-                "INSECURE_FORM_ACTION"
+                SIGNAL_TECHNICAL_FAILURE,
+                SIGNAL_MISSING_HTTPS,
+                SIGNAL_INSECURE_FORM_ACTION
         ).contains(code);
     }
 
@@ -904,7 +1157,7 @@ public class CompanyApiV1Mapper {
         String title = snapshot.title() == null ? "" : snapshot.title().trim();
         if (title.isBlank() || WEAK_PAGE_TITLES.contains(title.toLowerCase(Locale.ROOT))) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_TITLE",
+                    SIGNAL_WEAK_TITLE,
                     "Svak sidetittel",
                     "Sidetittelen er tom eller svært generisk. Det gjør siden svakere i søk og deling.",
                     "MEDIUM"
@@ -912,7 +1165,7 @@ public class CompanyApiV1Mapper {
         }
         if (!hasText(snapshot.h1())) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_HOMEPAGE_STRUCTURE",
+                    SIGNAL_WEAK_HOMEPAGE_STRUCTURE,
                     "Mangler tydelig hovedoverskrift",
                     "Siden ser ut til å mangle tydelig hovedoverskrift. Det kan gjøre det mindre klart hva virksomheten tilbyr.",
                     "MEDIUM"
@@ -928,7 +1181,7 @@ public class CompanyApiV1Mapper {
         }
         if (!hasText(snapshot.metaDescription())) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_META_DESCRIPTION",
+                    SIGNAL_MISSING_META_DESCRIPTION,
                     "Mangler beskrivelse",
                     "Siden mangler meta description. Det kan gi svakere presentasjon i søkeresultater.",
                     "INFO"
@@ -936,7 +1189,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.repeatedMetaDescriptionCount() >= 2) {
             signals.add(new WebsiteQualitySignal(
-                    "DUPLICATE_META_DESCRIPTIONS",
+                    SIGNAL_DUPLICATE_META_DESCRIPTIONS,
                     "Like meta-beskrivelser på flere sider",
                     snapshot.repeatedMetaDescriptionCount() + " undersider ser ut til å bruke samme meta description som forsiden. Det kan gi svakere og mindre presis visning i søk og deling.",
                     "INFO"
@@ -945,7 +1198,7 @@ public class CompanyApiV1Mapper {
         String bodyText = snapshot.bodyText() == null ? "" : snapshot.bodyText().trim();
         if (bodyText.length() < 300) {
             signals.add(new WebsiteQualitySignal(
-                    "THIN_CONTENT",
+                    SIGNAL_THIN_CONTENT,
                     "Svak tekstmengde",
                     "Førstesiden har lite tekstinnhold. Det kan gjøre det vanskelig for kunder og søkemotorer å forstå hva virksomheten tilbyr.",
                     "MEDIUM"
@@ -956,7 +1209,7 @@ public class CompanyApiV1Mapper {
     private void addSharePreviewSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!snapshot.openGraphTitle() || !snapshot.openGraphDescription()) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_SHARE_PREVIEW",
+                    SIGNAL_WEAK_SHARE_PREVIEW,
                     "Svak delingsvisning",
                     "Siden mangler trolig Open Graph/Twitter-tittel eller beskrivelse. Lenken kan derfor se svakere ut når den deles i e-post, sosiale medier eller meldinger.",
                     "INFO"
@@ -967,7 +1220,7 @@ public class CompanyApiV1Mapper {
     private void addStructuredDataSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!snapshot.structuredData()) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_STRUCTURED_DATA",
+                    SIGNAL_MISSING_STRUCTURED_DATA,
                     "Mangler strukturert data",
                     "Siden ser ikke ut til å ha strukturert data. Det kan gjøre det vanskeligere for søkemotorer å forstå virksomhet, kontaktpunkt og innhold.",
                     "INFO"
@@ -1002,7 +1255,7 @@ public class CompanyApiV1Mapper {
     private void addNavigationSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!snapshot.navigation() && snapshot.linkCount() < 2 && snapshot.headingCount() < 2) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_NAVIGATION",
+                    SIGNAL_WEAK_NAVIGATION,
                     "Svak struktur",
                     "Siden ser ut til å ha lite navigasjon eller få seksjoner. Det kan gjøre det vanskeligere å orientere seg i tjenester, kontakt og informasjon.",
                     "INFO"
@@ -1076,7 +1329,7 @@ public class CompanyApiV1Mapper {
         boolean hasIndustryToken = tokens.stream().anyMatch(text::contains);
         if (!hasIndustryToken) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_INDUSTRY_RELEVANCE",
+                    SIGNAL_WEAK_INDUSTRY_RELEVANCE,
                     "Svak tjenestebeskrivelse",
                     "BRREG-bransjen ser ikke tydelig igjen i nettsideteksten. Det kan gjøre det uklart hva kunden faktisk kan bestille.",
                     "INFO"
@@ -1097,7 +1350,7 @@ public class CompanyApiV1Mapper {
         boolean hasConcreteIndustryText = industryTokens.stream().anyMatch(bodyText::contains);
         if (genericWords >= 3 && !hasConcreteIndustryText) {
             signals.add(new WebsiteQualitySignal(
-                    "GENERIC_SERVICE_TEXT",
+                    SIGNAL_GENERIC_SERVICE_TEXT,
                     "For generell tekst",
                     "Teksten virker generell og lite knyttet til konkrete tjenester, sted eller bransje. Mer konkret innhold kan gjøre siden mer troverdig.",
                     "INFO"
@@ -1110,7 +1363,7 @@ public class CompanyApiV1Mapper {
         String orgNumber = companyCheck.organisasjonsnummer();
         if (hasText(orgNumber) && !hasVisibleOrganizationIdentifier(text, orgNumber, companyCheck, enhet)) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_ORG_NUMBER",
+                    SIGNAL_MISSING_ORG_NUMBER,
                     "Mangler org.nr. på siden",
                     "Siden ser ikke ut til å vise organisasjonsnummer. Det er et konkret tillitssignal som ofte bør være synlig for nye virksomheter.",
                     "INFO"
@@ -1120,7 +1373,7 @@ public class CompanyApiV1Mapper {
         if (legalName.length() >= 5 && !text.contains(legalName)) {
             boolean ecommerce = isEffectiveEcommerceWebsite(snapshot);
             signals.add(new WebsiteQualitySignal(
-                    "LEGAL_NAME_NOT_VISIBLE",
+                    SIGNAL_LEGAL_NAME_NOT_VISIBLE,
                     ecommerce ? "Mangler tydelig juridisk avsender" : "Mangler juridisk firmanavn",
                     ecommerce
                             ? "Siden viser merkevaren, men juridisk selskap/organisasjonsnummer fremstår ikke tydelig i innholdet vi sjekket. For nettbutikk bør selger og kontaktinformasjon være lett å verifisere."
@@ -1136,7 +1389,7 @@ public class CompanyApiV1Mapper {
         if (!hasAddressOrAreaEvidence(text, enhet)) {
             boolean ecommerce = isEffectiveEcommerceWebsite(snapshot);
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_ADDRESS_OR_AREA",
+                    SIGNAL_MISSING_ADDRESS_OR_AREA,
                     ecommerce ? "Kontakt-/selskapsinfo bør verifiseres" : "Mangler adresse eller områdeinfo",
                     ecommerce
                             ? "Vi fant ikke tydelig adresse eller selskapsinfo i innholdet vi sjekket. For nettbutikk bør kunde lett finne juridisk selger, kontaktinformasjon, vilkår og returinfo."
@@ -1165,7 +1418,7 @@ public class CompanyApiV1Mapper {
                 Set.of("checkout er dessverre ikke tilgjengelig", "vi apner snart", "vi åpner snart", "opens soon", "opening soon"));
         if (incompleteMarketSignal) {
             signals.add(new WebsiteQualitySignal(
-                    "INCOMPLETE_MARKET_OR_CHECKOUT",
+                    SIGNAL_INCOMPLETE_MARKET_OR_CHECKOUT,
                     "Spor av uferdig markedstilpasning",
                     "Siden inneholder tekst om at marked eller checkout ikke er tilgjengelig ennå. Det kan gi inntrykk av at deler av nettbutikken eller enkelte markeder ikke er ferdig lansert.",
                     "HIGH"
@@ -1181,7 +1434,7 @@ public class CompanyApiV1Mapper {
 
         if (!containsAny(text, ABOUT_TRUST_WORDS) && !snapshot.crawlAboutPageFound()) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_ABOUT_SECTION",
+                    SIGNAL_MISSING_ABOUT_SECTION,
                     "Mangler tydelig om-oss",
                     "Vi fant ikke tydelig om-oss-, team- eller personpresentasjon. For små virksomheter kan en kort presentasjon av hvem kunden møter gi mer tillit.",
                     localOrConsumer ? "MEDIUM" : "INFO"
@@ -1280,7 +1533,7 @@ public class CompanyApiV1Mapper {
 
         if (containsAny(rawHtml.toLowerCase(Locale.ROOT), GENERIC_IMAGE_SOURCE_WORDS)) {
             signals.add(new WebsiteQualitySignal(
-                    "GENERIC_OR_AI_IMAGE_RISK",
+                    SIGNAL_GENERIC_OR_AI_IMAGE_RISK,
                     "Mulig generisk bildebruk",
                     "Bildespor peker mot stock-, AI- eller generiske visualiseringer. Det er ikke nødvendigvis feil, men kan svekke tillit hvis bildene ikke tydelig viser virksomheten, produktet eller arbeidet.",
                     isHealthOrMedicalSegment(enhet) ? "MEDIUM" : "INFO"
@@ -1372,8 +1625,8 @@ public class CompanyApiV1Mapper {
             WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
             boolean stricterContext
     ) {
-        if (signals.stream().anyMatch(signal -> "GENERIC_PRESENTATION_TRUST_RISK".equals(signal.code())
-                || "AI_LIKE_PRESENTATION_RISK".equals(signal.code()))) {
+        if (signals.stream().anyMatch(signal -> SIGNAL_GENERIC_PRESENTATION_TRUST_RISK.equals(signal.code())
+                || SIGNAL_AI_LIKE_PRESENTATION_RISK.equals(signal.code()))) {
             return;
         }
 
@@ -1407,14 +1660,14 @@ public class CompanyApiV1Mapper {
 
         if (textLooksAiLike) {
             signals.add(new WebsiteQualitySignal(
-                    "AI_LIKE_PRESENTATION_RISK",
+                    SIGNAL_AI_LIKE_PRESENTATION_RISK,
                     "Mulig AI-lignende eller mønsterpreget tekst",
                     "Teksten har mange brede, mønsterpregede formuleringer og lite konkret virksomhetsspesifikt innhold. Det er ikke et bevis på AI-bruk, men et signal om at teksten bør vurderes manuelt.",
                     stricterContext ? "MEDIUM" : "INFO"
             ));
         } else if (textLooksGeneric) {
             signals.add(new WebsiteQualitySignal(
-                    "GENERIC_PRESENTATION_TRUST_RISK",
+                    SIGNAL_GENERIC_PRESENTATION_TRUST_RISK,
                     "Mulig generisk uttrykk",
                     "Teksten virker lite konkret for virksomheten. Det er ikke nødvendigvis feil, men kan svekke tillit hvis siden mangler ekte bilder, referanser, personer, prosjekter eller tydelig faglig dokumentasjon.",
                     stricterContext ? "MEDIUM" : "INFO"
@@ -1422,7 +1675,7 @@ public class CompanyApiV1Mapper {
         }
         if (visualLooksGeneric) {
             signals.add(new WebsiteQualitySignal(
-                    "GENERIC_OR_AI_IMAGE_RISK",
+                    SIGNAL_GENERIC_OR_AI_IMAGE_RISK,
                     "Mulig generisk bildebruk",
                     "Bildespor peker mot stock-, AI- eller generiske visualiseringer. Det er ikke nødvendigvis feil, men kan svekke tillit hvis bildene ikke tydelig viser virksomheten, produktet eller arbeidet.",
                     stricterContext ? "MEDIUM" : "INFO"
@@ -1637,7 +1890,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.imageCount() > 0 && snapshot.imagesWithoutAlt() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "IMAGE_ALT_RISK",
+                    SIGNAL_IMAGE_ALT_RISK,
                     "Mulig UU-risiko på bilder",
                     snapshot.imagesWithoutAlt() + " av " + snapshot.imageCount() + " bilder mangler eller har tom alt-tekst. Det kan være riktig for dekorbilder, men bør sjekkes.",
                     "INFO"
@@ -1645,7 +1898,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.formControlCount() > 0 && snapshot.unlabeledFormControlCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "FORM_LABEL_RISK",
+                    SIGNAL_FORM_LABEL_RISK,
                     "Mulig UU-risiko i skjema",
                     snapshot.unlabeledFormControlCount() + " av " + snapshot.formControlCount() + " skjemafelt ser ut til å mangle tydelig label eller aria-label.",
                     "MEDIUM"
@@ -1653,7 +1906,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.emptyButtonCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "EMPTY_BUTTON_RISK",
+                    SIGNAL_EMPTY_BUTTON_RISK,
                     "Mulig UU-risiko på knapper",
                     "Minst én knapp eller knappelenke ser ut til å mangle synlig tekst eller aria-label.",
                     "MEDIUM"
@@ -1661,7 +1914,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.mainLandmark()) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_MAIN_LANDMARK",
+                    SIGNAL_MISSING_MAIN_LANDMARK,
                     "Mangler main-landemerke",
                     "Siden ser ikke ut til å ha tydelig main-landemerke. Det kan gjøre navigasjon vanskeligere for skjermleser og tastaturbrukere.",
                     "INFO"
@@ -1669,7 +1922,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.headerLandmark() || !snapshot.footerLandmark()) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_PAGE_LANDMARKS",
+                    SIGNAL_WEAK_PAGE_LANDMARKS,
                     "Mangler semantiske landemerker",
                     "Siden kan ha visuell header eller footer, men HTML-en ser ut til å mangle tydelige semantiske header-/footer-landemerker. Slike landemerker gjør siden enklere å orientere seg i for skjermleser og tastaturbrukere.",
                     "INFO"
@@ -1677,7 +1930,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.skippedHeadingLevelCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "SKIPPED_HEADING_LEVELS",
+                    SIGNAL_SKIPPED_HEADING_LEVELS,
                     "Uryddig overskriftsstruktur",
                     "Overskriftsnivå hopper over nivå " + snapshot.skippedHeadingLevelCount() + " gang(er). Det kan gjøre innholdet vanskeligere å forstå med hjelpeteknologi.",
                     snapshot.skippedHeadingLevelCount() > 2 ? "MEDIUM" : "INFO"
@@ -1685,7 +1938,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.vagueLinkTextCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "VAGUE_LINK_TEXT",
+                    SIGNAL_VAGUE_LINK_TEXT,
                     "Utydelige lenketekster",
                     snapshot.vagueLinkTextCount() + " lenke(r) har generisk tekst som \"les mer\" eller \"her\". Lenketekster bør beskrive hvor de leder.",
                     "INFO"
@@ -1701,7 +1954,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.inputsWithoutAutocompleteCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "FORM_AUTOCOMPLETE_MISSING",
+                    SIGNAL_FORM_AUTOCOMPLETE_MISSING,
                     "Skjema mangler autocomplete",
                     snapshot.inputsWithoutAutocompleteCount() + " felt for kontakt- eller personopplysninger ser ut til å mangle autocomplete. Det kan gjøre skjema tyngre å bruke.",
                     "INFO"
@@ -1733,7 +1986,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.motionWithoutReducedMotionSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "MOTION_ACCESSIBILITY_RISK",
+                    SIGNAL_MOTION_ACCESSIBILITY_RISK,
                     "Bevegelse uten redusert-motion signal",
                     "HTML/CSS har spor av animasjon eller scroll-effekter, men vi fant ikke tydelig støtte for prefers-reduced-motion.",
                     "INFO"
@@ -1741,7 +1994,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.iframeWithoutTitleCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "IFRAME_TITLE_RISK",
+                    SIGNAL_IFRAME_TITLE_RISK,
                     "Iframe mangler tittel",
                     snapshot.iframeWithoutTitleCount() + " iframe-element(er) ser ut til å mangle tittel. Innebygd innhold bør beskrives for skjermleser.",
                     "INFO"
@@ -1752,8 +2005,8 @@ public class CompanyApiV1Mapper {
     private void addSecuritySignals(List<WebsiteQualitySignal> signals, String website, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!website.startsWith(HTTPS_PREFIX) && (snapshot.finalUrl() == null || !snapshot.finalUrl().startsWith(HTTPS_PREFIX))) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_HTTPS",
-                    "Mangler HTTPS",
+                    SIGNAL_MISSING_HTTPS,
+                    LABEL_MISSING_HTTPS,
                     "Siden bruker ikke sikker HTTPS-forbindelse. Dette kan gi dårligere tillit og varsler i nettleseren.",
                     "HIGH"
             ));
@@ -1784,7 +2037,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.weakHstsHeaderSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_HSTS_HEADER",
+                    SIGNAL_WEAK_HSTS_HEADER,
                     "Svak HSTS-header",
                     "Siden har HSTS-header, men verdien ser kort eller ufullstendig ut. Dette bør vurderes hvis domenet skal fremstå teknisk robust.",
                     "INFO"
@@ -1792,7 +2045,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.weakContentSecurityPolicySignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "WEAK_CSP_HEADER",
+                    SIGNAL_WEAK_CSP_HEADER,
                     "Svak Content Security Policy",
                     "Siden har CSP, men den ser ut til å tillate svake mønstre som unsafe-inline/unsafe-eval, wildcard eller manglende frame-ancestors.",
                     "INFO"
@@ -1800,7 +2053,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.serverTechnologyHeaderSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "SERVER_TECH_HEADER_EXPOSED",
+                    SIGNAL_SERVER_TECH_HEADER_EXPOSED,
                     "Serverteknologi eksponeres",
                     "HTTP-headerne ser ut til å eksponere server- eller applikasjonsteknologi. Det er ikke nødvendigvis feil, men kan reduseres for mindre teknisk støy.",
                     "INFO"
@@ -1808,7 +2061,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.securityTxtSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "SECURITY_TXT_MISSING",
+                    SIGNAL_SECURITY_TXT_MISSING,
                     "Mangler security.txt",
                     "Vi fant ikke security.txt. Det er ikke påkrevd for små nettsteder, men gir en ryddig kanal for sikkerhetshenvendelser.",
                     "INFO"
@@ -1816,7 +2069,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.robotsSensitivePathSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "ROBOTS_SENSITIVE_PATHS",
+                    SIGNAL_ROBOTS_SENSITIVE_PATHS,
                     "Robots.txt nevner sensitive stier",
                     "Robots.txt peker mot admin-, API-, backup- eller private stier. Dette er ikke en sårbarhet alene, men kan gi unødvendig informasjon.",
                     "INFO"
@@ -1824,7 +2077,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.mixedContentSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "MIXED_CONTENT_RISK",
+                    SIGNAL_MIXED_CONTENT_RISK,
                     "Mulig mixed content",
                     "Siden bruker HTTPS, men HTML-en peker også til ressurser over HTTP. Det kan gi sikkerhetsvarsler eller blokkert innhold i nettleseren.",
                     "MEDIUM"
@@ -1856,7 +2109,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.adminOrLoginPathSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "ADMIN_OR_LOGIN_PATH_EXPOSED",
+                    SIGNAL_ADMIN_OR_LOGIN_PATH_EXPOSED,
                     "Admin-/innloggingsspor synlig",
                     "HTML eller lenker peker mot admin-, login- eller dashboard-stier. Det er ikke nødvendigvis en feil, men slike innganger bør sikres med sterke passord, 2FA og rate limiting.",
                     "INFO"
@@ -1864,7 +2117,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.loginFormSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "LOGIN_FORM_SECURITY_REVIEW",
+                    SIGNAL_LOGIN_FORM_SECURITY_REVIEW,
                     "Innlogging bør sikkerhetssjekkes",
                     "Siden ser ut til å ha innlogging eller passordfelt. Passord-reset, session cookies, rate limiting og 2FA bør vurderes manuelt.",
                     "MEDIUM"
@@ -1880,7 +2133,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.apiEndpointReferenceCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "API_ENDPOINTS_VISIBLE",
+                    SIGNAL_API_ENDPOINTS_VISIBLE,
                     "API-endepunkter synlige",
                     "Vi fant " + snapshot.apiEndpointReferenceCount() + " synlige API-/REST-/GraphQL-spor i HTML-en. Tilgangsstyring, CORS og rate limiting bør vurderes manuelt.",
                     "INFO"
@@ -1888,7 +2141,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.exposedCmsVersionSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "CMS_VERSION_EXPOSED",
+                    SIGNAL_CMS_VERSION_EXPOSED,
                     "CMS-versjon eksponert",
                     "HTML-en ser ut til å eksponere CMS- eller pluginversjoner. Det kan gjøre kjente sårbarheter lettere å kartlegge.",
                     "INFO"
@@ -1919,7 +2172,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.caaRecord()) {
             signals.add(new WebsiteQualitySignal(
-                    "DNS_CAA_MISSING",
+                    SIGNAL_DNS_CAA_MISSING,
                     "CAA-record mangler",
                     "Vi fant ikke CAA-record i DNS. Det er ikke påkrevd, men kan begrense hvilke sertifikatutstedere som får utstede TLS-sertifikat for domenet.",
                     "INFO"
@@ -1967,7 +2220,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.sourceMapReferenceSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "SOURCE_MAP_EXPOSED",
+                    SIGNAL_SOURCE_MAP_EXPOSED,
                     "Kildekart eksponert",
                     "HTML-en peker mot JavaScript- eller CSS-sourcemaps. Det er ikke nødvendigvis kritisk, men kan gjøre kildekode og interne filstier lettere å kartlegge.",
                     "INFO"
@@ -1975,7 +2228,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.developmentReferenceSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "DEVELOPMENT_REFERENCE_EXPOSED",
+                    SIGNAL_DEVELOPMENT_REFERENCE_EXPOSED,
                     "Utviklingsspor synlig",
                     "HTML eller lenker inneholder spor av staging, debug, backup, .env eller lokale adresser. Dette bør ryddes før siden brukes aktivt.",
                     "MEDIUM"
@@ -1983,7 +2236,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.targetBlankWithoutNoopenerCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "TARGET_BLANK_NOOPENER_MISSING",
+                    SIGNAL_TARGET_BLANK_NOOPENER_MISSING,
                     "Eksterne lenker mangler noopener",
                     snapshot.targetBlankWithoutNoopenerCount() + " ekstern lenke åpnes i ny fane uten tydelig rel=\"noopener\" eller rel=\"noreferrer\". Dette er en enkel nettlesersikkerhetsforbedring.",
                     "INFO"
@@ -1991,7 +2244,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.personalDataGetFormSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "PERSONAL_DATA_GET_FORM",
+                    SIGNAL_PERSONAL_DATA_GET_FORM,
                     "Skjema kan sende persondata i URL",
                     "Minst ett skjema med persondatafelt ser ut til å bruke GET eller mangler method. Det kan legge navn, e-post eller telefon i URL/logg.",
                     "MEDIUM"
@@ -2007,7 +2260,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.externalFormActionSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "EXTERNAL_FORM_ACTION",
+                    SIGNAL_EXTERNAL_FORM_ACTION,
                     "Skjema sender til ekstern tjeneste",
                     "Minst ett skjema ser ut til å sende data til et annet domene. Databehandler, personvern og formål bør verifiseres manuelt.",
                     "MEDIUM"
@@ -2015,14 +2268,14 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.domXssSinkSignal() && snapshot.clientUrlInputSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "DOM_XSS_SURFACE_REVIEW",
+                    SIGNAL_DOM_XSS_SURFACE_REVIEW,
                     "Mulig DOM-XSS-angrepsflate",
                     "JavaScript ser ut til å lese fra URL/hash og bruke mønstre som kan skrive HTML eller kjøre dynamisk kode. Dette beviser ikke XSS, men bør vurderes manuelt.",
                     "MEDIUM"
             ));
         } else if (snapshot.domXssSinkSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "DANGEROUS_JS_SINK_REVIEW",
+                    SIGNAL_DANGEROUS_JS_SINK_REVIEW,
                     "JavaScript-mønstre bør sjekkes",
                     "HTML/JavaScript inneholder mønstre som innerHTML, document.write, eval eller lignende. Det er ikke nødvendigvis feil, men bør vurderes hvis brukerinput kan nå koden.",
                     "INFO"
@@ -2030,7 +2283,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.inlineEventHandlerCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "INLINE_EVENT_HANDLER_REVIEW",
+                    SIGNAL_INLINE_EVENT_HANDLER_REVIEW,
                     "Inline JavaScript-hendelser",
                     snapshot.inlineEventHandlerCount() + " element(er) ser ut til å bruke inline event handlers som onclick/onload. Det kan gjøre CSP vanskeligere og bør vurderes ved sikkerhetsherding.",
                     "INFO"
@@ -2038,7 +2291,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.javascriptHrefCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "JAVASCRIPT_HREF_REVIEW",
+                    SIGNAL_JAVASCRIPT_HREF_REVIEW,
                     "javascript:-lenker funnet",
                     snapshot.javascriptHrefCount() + " lenke(r) bruker javascript: i href. Dette kan være legitimt, men bør ryddes eller erstattes med vanlig knappelogikk.",
                     "INFO"
@@ -2046,7 +2299,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.externalScriptsWithoutIntegrityCount() > 0 && snapshot.thirdPartyScriptHostCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW",
+                    SIGNAL_THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW,
                     "Tredjeparts-script uten integritetssjekk",
                     snapshot.externalScriptsWithoutIntegrityCount() + " eksterne script ser ut til å mangle Subresource Integrity. Dette er ikke alltid praktisk mulig, men bør vurderes for statiske tredjepartsressurser.",
                     "INFO"
@@ -2054,7 +2307,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.thirdPartyScriptHostCount() >= 4) {
             signals.add(new WebsiteQualitySignal(
-                    "MANY_THIRD_PARTY_SCRIPT_HOSTS",
+                    SIGNAL_MANY_THIRD_PARTY_SCRIPT_HOSTS,
                     "Mange script-leverandører",
                     "Siden laster scripts fra " + snapshot.thirdPartyScriptHostCount() + " eksterne domener. Det øker avhengigheter, personvernflate og feilkilder.",
                     "INFO"
@@ -2062,7 +2315,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.inlineScriptCount() >= 8 && !snapshot.contentSecurityPolicyHeader()) {
             signals.add(new WebsiteQualitySignal(
-                    "MANY_INLINE_SCRIPTS_WITHOUT_CSP",
+                    SIGNAL_MANY_INLINE_SCRIPTS_WITHOUT_CSP,
                     "Mange inline scripts uten CSP",
                     "Siden har mange inline scripts og mangler Content Security Policy. Det gjør det vanskeligere å begrense skade ved script-injeksjon.",
                     "INFO"
@@ -2070,7 +2323,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.postFormsWithoutCsrfTokenCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "POST_FORM_CSRF_REVIEW",
+                    SIGNAL_POST_FORM_CSRF_REVIEW,
                     "POST-skjema bør sjekkes for CSRF",
                     snapshot.postFormsWithoutCsrfTokenCount() + " POST-skjema ser ikke ut til å ha tydelig CSRF-token i HTML-en. Dette bør vurderes manuelt for skjema som endrer data eller sender sensitive opplysninger.",
                     "INFO"
@@ -2078,7 +2331,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.outdatedJavascriptLibrarySignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "OUTDATED_JS_LIBRARY_REVIEW",
+                    SIGNAL_OUTDATED_JS_LIBRARY_REVIEW,
                     "Mulig gammel JavaScript-avhengighet",
                     "HTML-en peker mot en kjent eldre JavaScript-bibliotekversjon. Gamle frontend-avhengigheter kan ha kjente svakheter og bør verifiseres.",
                     "INFO"
@@ -2090,7 +2343,7 @@ public class CompanyApiV1Mapper {
     private void addSecurityHeaderSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!snapshot.hstsHeader()) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_HSTS_HEADER",
+                    SIGNAL_MISSING_HSTS_HEADER,
                     "Mangler HSTS-header",
                     "Siden bruker HTTPS, men vi fant ikke Strict-Transport-Security-header. Det er et teknisk trygghetssignal som bør vurderes.",
                     "INFO"
@@ -2098,7 +2351,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.contentSecurityPolicyHeader()) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_CSP_HEADER",
+                    SIGNAL_MISSING_CSP_HEADER,
                     "Mangler Content Security Policy",
                     "Vi fant ikke Content-Security-Policy-header. En ryddig CSP kan redusere risiko fra uønskede scripts og tredjepartsinnhold.",
                     "INFO"
@@ -2114,7 +2367,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.referrerPolicyHeader() && (snapshot.googleAnalyticsSignal() || snapshot.metaPixelSignal() || snapshot.externalScriptCount() > 0)) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_REFERRER_POLICY",
+                    SIGNAL_MISSING_REFERRER_POLICY,
                     "Mangler Referrer-Policy",
                     "Siden bruker eksterne ressurser eller måling, men vi fant ikke Referrer-Policy-header. Dette bør vurderes av personvern- og sikkerhetshensyn.",
                     "INFO"
@@ -2122,7 +2375,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.permissionsPolicyHeader() && (snapshot.youtubeEmbedSignal() || snapshot.mapsEmbedSignal() || snapshot.externalIframeCount() > 0)) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_PERMISSIONS_POLICY",
+                    SIGNAL_MISSING_PERMISSIONS_POLICY,
                     "Mangler Permissions-Policy",
                     "Siden har innebygd eller ekstern funksjonalitet, men vi fant ikke Permissions-Policy-header. Det kan være nyttig for å begrense nettleserfunksjoner.",
                     "INFO"
@@ -2130,7 +2383,7 @@ public class CompanyApiV1Mapper {
         }
         if (!snapshot.frameOptionsHeader() && !snapshot.contentSecurityPolicyHeader()) {
             signals.add(new WebsiteQualitySignal(
-                    "MISSING_FRAME_PROTECTION",
+                    SIGNAL_MISSING_FRAME_PROTECTION,
                     "Mangler enkel frame-beskyttelse",
                     "Vi fant verken X-Frame-Options eller Content-Security-Policy. Det kan gjøre siden svakere beskyttet mot innbygging på andre sider.",
                     "INFO"
@@ -2158,7 +2411,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.cookieOrTrackingSignal() && !snapshot.cookieConsentSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "COOKIE_CONSENT_RISK",
+                    SIGNAL_COOKIE_CONSENT_RISK,
                     "Mulig cookie-/samtykkerisiko",
                     "HTML-en har spor av cookies, analyse eller tracking, men vi fant ikke tydelig samtykkemekanisme. Dette bør sjekkes manuelt.",
                     "MEDIUM"
@@ -2166,7 +2419,7 @@ public class CompanyApiV1Mapper {
         }
         if (hasSensitiveHealthContext(text)) {
             signals.add(new WebsiteQualitySignal(
-                    "SENSITIVE_HEALTH_CONTEXT",
+                    SIGNAL_SENSITIVE_HEALTH_CONTEXT,
                     "Mulig sensitivt fagområde",
                     "Nettsideteksten peker mot helse, journal, pasient eller behandling. Personvern, skjema og databehandling bør vurderes ekstra nøye.",
                     "MEDIUM"
@@ -2214,7 +2467,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.insecureFormActionSignal()) {
             signals.add(new WebsiteQualitySignal(
-                    "INSECURE_FORM_ACTION",
+                    SIGNAL_INSECURE_FORM_ACTION,
                     "Skjema sender til usikker adresse",
                     "Minst ett skjema ser ut til å sende data til HTTP-adresse. Skjemadata bør normalt sendes over HTTPS.",
                     "HIGH"
@@ -2230,7 +2483,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.insecureCookieCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "COOKIE_SECURE_FLAG_MISSING",
+                    SIGNAL_COOKIE_SECURE_FLAG_MISSING,
                     "Cookie mangler Secure",
                     snapshot.insecureCookieCount() + " cookie(r) ser ut til å mangle Secure-flagget. Cookies på HTTPS-sider bør normalt begrenses til sikker transport.",
                     "MEDIUM"
@@ -2238,7 +2491,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.cookieWithoutHttpOnlyCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "COOKIE_HTTPONLY_REVIEW",
+                    SIGNAL_COOKIE_HTTPONLY_REVIEW,
                     "Cookie mangler HttpOnly",
                     snapshot.cookieWithoutHttpOnlyCount() + " cookie(r) ser ut til å mangle HttpOnly. Det bør vurderes hvis cookien brukes til innlogging eller sesjon.",
                     "INFO"
@@ -2246,7 +2499,7 @@ public class CompanyApiV1Mapper {
         }
         if (snapshot.cookieWithoutSameSiteCount() > 0) {
             signals.add(new WebsiteQualitySignal(
-                    "COOKIE_SAMESITE_REVIEW",
+                    SIGNAL_COOKIE_SAMESITE_REVIEW,
                     "Cookie mangler SameSite",
                     snapshot.cookieWithoutSameSiteCount() + " cookie(r) ser ut til å mangle SameSite. Det bør vurderes for å redusere risiko ved kryssnettstedsforespørsler.",
                     "INFO"
@@ -2455,6 +2708,9 @@ public class CompanyApiV1Mapper {
     }
 
     private String host(String website) {
+        if (!hasText(website)) {
+            return null;
+        }
         try {
             String host = URI.create(website).getHost();
             if (host == null) {
@@ -2484,8 +2740,7 @@ public class CompanyApiV1Mapper {
         if (!isForeignRegisteredUnit(companyCheck, enhet)) {
             return false;
         }
-        return text.matches("(?s).*\\b\\d{6}\\s\\d{4}\\b.*")
-                || text.matches("(?s).*\\bse\\d{10,12}\\b.*")
+        return FOREIGN_ORGANIZATION_NUMBER_PATTERN.matcher(text).find()
                 || text.contains("organisationsnummer")
                 || text.contains("organisasjonsnummer")
                 || text.contains("mva")
@@ -2519,7 +2774,7 @@ public class CompanyApiV1Mapper {
                 .replace('æ', 'a')
                 .replace('ø', 'o')
                 .replace('å', 'a')
-                .replaceAll("[^a-z0-9 ]", " ")
+                .transform(normalized -> NON_ALPHANUMERIC_SPACE_PATTERN.matcher(normalized).replaceAll(" "))
                 .replaceAll("\\s+", " ")
                 .trim();
     }
@@ -2685,7 +2940,7 @@ public class CompanyApiV1Mapper {
                 .replace('å', 'a');
 
         cleaned = cleaned.replace("&", " og ").replace("+", " og ");
-        cleaned = cleaned.replaceAll("[^a-z0-9 ]", " ");
+        cleaned = NON_ALPHANUMERIC_SPACE_PATTERN.matcher(cleaned).replaceAll(" ");
         List<String> tokens = Arrays.stream(cleaned.trim().split("\\s+"))
                 .filter(part -> !part.isBlank())
                 .filter(part -> !DOMAIN_STOP_WORDS.contains(part))
@@ -2805,7 +3060,7 @@ public class CompanyApiV1Mapper {
                 .replace('å', 'a')
                 .replace("&", " og ")
                 .replace("+", " og ")
-                .replaceAll("[^a-z0-9 ]", " ");
+                .transform(normalized -> NON_ALPHANUMERIC_SPACE_PATTERN.matcher(normalized).replaceAll(" "));
 
         return Arrays.stream(cleaned.trim().split("\\s+"))
                 .filter(part -> !part.isBlank())
@@ -2842,7 +3097,7 @@ public class CompanyApiV1Mapper {
 
     private String normalizeWebsiteCandidate(String website) {
         if (!hasText(website)) {
-            return website;
+            throw new IllegalArgumentException("URL mangler.");
         }
         String normalized = website.trim();
         if (normalized.startsWith("http://") || normalized.startsWith(HTTPS_PREFIX)) {
@@ -2870,8 +3125,8 @@ public class CompanyApiV1Mapper {
                 });
 
         if (events.stream().anyMatch(event -> EVENT_BANKRUPTCY.equals(event.type()))) {
-            evidence.putIfAbsent("Konkurs registrert",
-                    new ScoreEvidence("Konkurs registrert", "Åpne registerdata viser konkursrelatert hendelse for virksomheten.", SOURCE_BRREG_ANNOUNCEMENTS));
+            evidence.putIfAbsent(EVIDENCE_BANKRUPTCY_REGISTERED,
+                    new ScoreEvidence(EVIDENCE_BANKRUPTCY_REGISTERED, "Åpne registerdata viser konkursrelatert hendelse for virksomheten.", SOURCE_BRREG_ANNOUNCEMENTS));
         }
         if (events.stream().anyMatch(event -> EVENT_DISSOLUTION.equals(event.type()))) {
             evidence.putIfAbsent("Tvangsoppløsning registrert",
@@ -2949,7 +3204,7 @@ public class CompanyApiV1Mapper {
         if (events.stream().anyMatch(event -> EVENT_BANKRUPTCY.equals(event.type()))) {
             signals.put(SIGNAL_BANKRUPTCY, new StructureSignal(
                     SIGNAL_BANKRUPTCY,
-                    "Konkurs registrert",
+                    EVIDENCE_BANKRUPTCY_REGISTERED,
                     "Åpne registerspor viser konkursrelatert hendelse for selskapet.",
                     "HIGH",
                     SOURCE_BRREG_ANNOUNCEMENTS
@@ -3296,7 +3551,8 @@ public class CompanyApiV1Mapper {
                 .replace('Ø', 'O')
                 .replace('Å', 'A')
                 .replaceAll("[^A-Z0-9]+", "_")
-                .replaceAll("^_+|_+$", "");
+                .replaceAll("^_++", "")
+                .replaceAll("_++$", "");
     }
 
     private List<String> flags(EnhetResponse enhet, CompanyFacts facts) {
@@ -3430,7 +3686,7 @@ public class CompanyApiV1Mapper {
         if (normalized.contains("DAGLIG")) {
             return ROLE_DAGLIG_LEDER;
         }
-        if (normalized.contains("STYRELEDER")) {
+        if (normalized.contains(ROLE_STYRELEDER)) {
             return ROLE_STYRELEDER;
         }
         if (normalized.contains("STYRE")) {

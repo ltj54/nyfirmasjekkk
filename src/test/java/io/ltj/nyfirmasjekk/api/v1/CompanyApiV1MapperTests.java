@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -29,7 +30,7 @@ class CompanyApiV1MapperTests {
         );
         var facts = new CompanyFacts(
                 "Aksjeselskap",
-                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2025, Month.JANUARY, 1),
                 "Etablert selskap",
                 "62.010",
                 "Utvikling",
@@ -43,7 +44,7 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 "2024",
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 true,
                 true,
                 false,
@@ -79,8 +80,8 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 null,
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2025, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         );
@@ -155,7 +156,7 @@ class CompanyApiV1MapperTests {
         );
         var facts = new CompanyFacts(
                 "AS",
-                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
                 "Nytt selskap",
                 "62.010",
                 "Utvikling",
@@ -169,7 +170,7 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 null,
-                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
                 true,
                 true,
                 false,
@@ -205,8 +206,8 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 null,
-                LocalDate.of(2026, 4, 20),
-                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
                 null,
                 null
         );
@@ -227,6 +228,37 @@ class CompanyApiV1MapperTests {
                         "MISSING_VIEWPORT",
                         "MISSING_LANGUAGE"
                 );
+    }
+
+    @Test
+    void etablertNettsideMedMetadataOgUuKontrollpunkterFaarMildTotalvurdering() {
+        var mapper = new CompanyApiV1Mapper(
+                null,
+                new StubWebsiteReachabilityService(true),
+                new StubWebsiteContentInspectionService(new WebsiteContentInspectionService.WebsiteContentSnapshot(
+                        "Hjem",
+                        "Etablert Dataselskap tilbyr foretaksdata, kredittinformasjon, risikoanalyse, markedsinnsikt og datadrevne vurderinger for norske virksomheter. Siden beskriver løsninger for kreditt, compliance, salg, leverandøroppfølging og analyse. Den har flere innganger til tjenester, fagartikler og kundestøtte, og fremstår som en etablert konsernside med mye innhold. Lær mer om hvordan virksomhetsdata kan brukes til bedre beslutninger.",
+                        "<html lang=\"nb\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body><main><h1>Foretaksdata og risikoanalyse</h1><a href=\"/produkter\">Lær mer</a></main></body></html>",
+                        "",
+                        "width=device-width, initial-scale=1",
+                        "nb",
+                        "Foretaksdata og risikoanalyse"
+                ))
+        );
+
+        var inspection = mapper.inspectWebsiteExtended("https://www.etablertdataselskap.no/");
+
+        assertThat(inspection.websiteQuality().status())
+                .as("signals: %s", inspection.websiteQuality().signals())
+                .isEqualTo("OK");
+        assertThat(inspection.websiteQuality().label()).isEqualTo("Generelt god nettside - enkelte forbedringspunkter");
+        assertThat(inspection.websiteQuality().summary())
+                .contains("i hovedsak god")
+                .contains("metadata")
+                .contains("universell utforming");
+        assertThat(inspection.websiteQuality().summary()).doesNotContain("vanskeligere å forstå hva virksomheten tilbyr");
+        assertThat(inspection.websiteQuality().signals()).extracting(WebsiteQualitySignal::code)
+                .contains("WEAK_TITLE", "MISSING_META_DESCRIPTION", "WEAK_SHARE_PREVIEW");
     }
 
     @Test
@@ -255,8 +287,8 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 null,
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2025, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         ));
@@ -277,7 +309,7 @@ class CompanyApiV1MapperTests {
         )), new StubWebsiteReachabilityService(), new StubWebsiteContentInspectionService());
         var facts = new CompanyFacts(
                 "AS",
-                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2025, Month.JANUARY, 1),
                 "Etablert selskap",
                 "62.010",
                 "Utvikling",
@@ -291,7 +323,7 @@ class CompanyApiV1MapperTests {
                 4,
                 true,
                 "2024",
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 true,
                 true,
                 false,
@@ -327,8 +359,8 @@ class CompanyApiV1MapperTests {
                 4,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2025, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         );
@@ -350,7 +382,7 @@ class CompanyApiV1MapperTests {
         );
         var facts = new CompanyFacts(
                 "AS",
-                LocalDate.of(2026, 3, 15),
+                LocalDate.of(2026, Month.MARCH, 15),
                 "Nytt selskap",
                 "62.010",
                 "Utvikling",
@@ -364,7 +396,7 @@ class CompanyApiV1MapperTests {
                 1,
                 true,
                 "2025",
-                LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, Month.MARCH, 1),
                 true,
                 true,
                 false,
@@ -400,8 +432,8 @@ class CompanyApiV1MapperTests {
                 1,
                 true,
                 "2025",
-                LocalDate.of(2026, 3, 15),
-                LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, Month.MARCH, 15),
+                LocalDate.of(2026, Month.MARCH, 1),
                 null,
                 null
         );
@@ -421,10 +453,10 @@ class CompanyApiV1MapperTests {
                         null,
                         null,
                         List.of(
-                                new NetworkCompanyLink("123456789", "Test AS", List.of("DAGLIG_LEDER"), TrafficLight.YELLOW, false, false, LocalDate.of(2026, 3, 15), null),
-                                new NetworkCompanyLink("987654321", "Old Beta AS", List.of("STYREMEDLEM"), TrafficLight.RED, true, false, LocalDate.of(2025, 12, 20), null),
-                                new NetworkCompanyLink("111111111", "Closed Gamma AS", List.of("STYREMEDLEM"), TrafficLight.YELLOW, false, true, LocalDate.of(2026, 1, 10), null),
-                                new NetworkCompanyLink("222222222", "Fresh Delta AS", List.of("STYREMEDLEM"), TrafficLight.GREEN, false, false, LocalDate.of(2026, 4, 1), null)
+                                new NetworkCompanyLink("123456789", "Test AS", List.of("DAGLIG_LEDER"), TrafficLight.YELLOW, false, false, LocalDate.of(2026, Month.MARCH, 15), null),
+                                new NetworkCompanyLink("987654321", "Old Beta AS", List.of("STYREMEDLEM"), TrafficLight.RED, true, false, LocalDate.of(2025, Month.DECEMBER, 20), null),
+                                new NetworkCompanyLink("111111111", "Closed Gamma AS", List.of("STYREMEDLEM"), TrafficLight.YELLOW, false, true, LocalDate.of(2026, Month.JANUARY, 10), null),
+                                new NetworkCompanyLink("222222222", "Fresh Delta AS", List.of("STYREMEDLEM"), TrafficLight.GREEN, false, false, LocalDate.of(2026, Month.APRIL, 1), null)
                         )
                 )
         );
@@ -454,7 +486,7 @@ class CompanyApiV1MapperTests {
         );
         var facts = new CompanyFacts(
                 "AS",
-                LocalDate.of(2026, 4, 1),
+                LocalDate.of(2026, Month.APRIL, 1),
                 "Nytt selskap",
                 "62.010",
                 "Utvikling",
@@ -468,7 +500,7 @@ class CompanyApiV1MapperTests {
                 1,
                 true,
                 "2025",
-                LocalDate.of(2026, 4, 1),
+                LocalDate.of(2026, Month.APRIL, 1),
                 true,
                 true,
                 false,
@@ -507,8 +539,8 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 null,
-                LocalDate.of(2026, 4, 1),
-                LocalDate.of(2026, 4, 1),
+                LocalDate.of(2026, Month.APRIL, 1),
+                LocalDate.of(2026, Month.APRIL, 1),
                 null,
                 null
         );
@@ -545,7 +577,7 @@ class CompanyApiV1MapperTests {
         );
         var facts = new CompanyFacts(
                 "AS",
-                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
                 "Begrenset info.",
                 "50.000",
                 "Sjøtransport",
@@ -595,8 +627,8 @@ class CompanyApiV1MapperTests {
                 0,
                 false,
                 null,
-                LocalDate.of(2026, 4, 20),
-                LocalDate.of(2026, 4, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
+                LocalDate.of(2026, Month.APRIL, 20),
                 null,
                 null
         );
@@ -646,6 +678,11 @@ class CompanyApiV1MapperTests {
 
         @Override
         public WebsiteContentSnapshot fetchSnapshot(String url) {
+            return snapshot;
+        }
+
+        @Override
+        public WebsiteContentSnapshot fetchExtendedSnapshot(String url) {
             return snapshot;
         }
     }

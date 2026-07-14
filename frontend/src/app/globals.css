@@ -54,6 +54,17 @@
   animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .pill-search-container {
   box-shadow: 0 0 0 1px rgba(31, 41, 51, 0.04), 0 10px 30px -10px rgba(31, 95, 169, 0.12);
 }
