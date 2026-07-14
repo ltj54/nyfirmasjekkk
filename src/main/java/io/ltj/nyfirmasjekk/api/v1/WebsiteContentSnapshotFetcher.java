@@ -45,16 +45,23 @@ public class WebsiteContentSnapshotFetcher {
     private static final String TERM_VILLKOR = "villkor";
     private static final String TERM_VILKAR = "vilkår";
     private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s+p[åa]\\s+(\\d+)\\s+av\\s+(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-    private static final Pattern FIXED_WIDTH_LAYOUT_PATTERN = Pattern.compile("\\b(?:width|min-width)\\s*:\\s*(?:9\\d{2}|[1-9]\\d{3,})px", Pattern.CASE_INSENSITIVE);
-    private static final Pattern OUTLINE_NONE_PATTERN = Pattern.compile("outline\\s*:\\s*(?:0|none)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern CSP_WILDCARD_SCRIPT_PATTERN = Pattern.compile("(?:^|;)\\s*script-src[^;]*\\*", Pattern.CASE_INSENSITIVE);
-    private static final Pattern CMS_VERSION_PATTERN = Pattern.compile(
-            "wordpress\\s+\\d+\\.\\d|wp-(?:includes|content)/[^?\\s]+\\?ver=\\d+\\.\\d|joomla!?(?:\\s+\\d+\\.\\d)?|drupal\\s+\\d+\\.\\d",
-            Pattern.CASE_INSENSITIVE
+    private static final java.util.List<Pattern> FIXED_WIDTH_LAYOUT_PATTERNS = java.util.List.of(
+            Pattern.compile("\\b(?:width|min-width)\\s*+:\\s*+9\\d{2}px", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("\\b(?:width|min-width)\\s*+:\\s*+[1-9]\\d{3,}+px", Pattern.CASE_INSENSITIVE)
     );
-    private static final Pattern OUTDATED_JAVASCRIPT_PATTERN = Pattern.compile(
-            "jquery[-.][12]\\.\\d\\D|bootstrap[-.]3\\.\\d\\D|angular(?:\\.min)?\\.js\\?ver=1\\.[0-7]|angular[-.]1\\.[0-7]\\D",
-            Pattern.CASE_INSENSITIVE
+    private static final Pattern OUTLINE_NONE_PATTERN = Pattern.compile("outline\\s*:\\s*(?:0|none)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CSP_WILDCARD_SCRIPT_PATTERN = Pattern.compile("(?:^|;)\\s*+script-src[^;*]*+\\*", Pattern.CASE_INSENSITIVE);
+    private static final java.util.List<Pattern> CMS_VERSION_PATTERNS = java.util.List.of(
+            Pattern.compile("wordpress\\s+\\d+\\.\\d", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("wp-(?:includes|content)/[^?\\s]++\\?ver=\\d+\\.\\d", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("joomla!?(?:\\s+\\d+\\.\\d)?", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("drupal\\s+\\d+\\.\\d", Pattern.CASE_INSENSITIVE)
+    );
+    private static final java.util.List<Pattern> OUTDATED_JAVASCRIPT_PATTERNS = java.util.List.of(
+            Pattern.compile("jquery[-.][12]\\.\\d\\D", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("bootstrap[-.]3\\.\\d\\D", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("angular(?:\\.min)?\\.js\\?ver=1\\.[0-7]", Pattern.CASE_INSENSITIVE),
+            Pattern.compile("angular[-.]1\\.[0-7]\\D", Pattern.CASE_INSENSITIVE)
     );
     private static final java.util.List<String> STANDARD_REVIEW_PATHS = java.util.List.of(
             "/kontakt",
@@ -129,7 +136,8 @@ public class WebsiteContentSnapshotFetcher {
                     .filter(element -> element.text().isBlank() && attrOrNull(element, ATTRIBUTE_ARIA_LABEL) == null)
                     .toList()
                     .size();
-            boolean fixedWidthLayoutSignal = FIXED_WIDTH_LAYOUT_PATTERN.matcher(htmlSnapshot).find();
+            boolean fixedWidthLayoutSignal = FIXED_WIDTH_LAYOUT_PATTERNS.stream()
+                    .anyMatch(pattern -> pattern.matcher(htmlSnapshot).find());
             boolean mixedContentSignal = !document.select("[src^=http://], [href^=http://]").isEmpty();
             boolean privacyLink = !document.select("a[href*=personvern], a[href*=privacy], a[href*=gdpr], a[href*=datenschutz]").isEmpty()
                     || bodyText.toLowerCase().contains(TERM_PERSONVERN)
@@ -794,7 +802,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean hasExposedCmsVersionSignal(String generator, String html) {
         String combined = ((generator == null ? "" : generator) + " " + (html == null ? "" : html)).toLowerCase(Locale.ROOT);
-        return CMS_VERSION_PATTERN.matcher(combined).find();
+        return CMS_VERSION_PATTERNS.stream().anyMatch(pattern -> pattern.matcher(combined).find());
     }
 
     private static boolean hasDevelopmentReferenceSignal(Document document, String html) {
@@ -935,7 +943,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean hasOutdatedJavascriptLibrarySignal(String html) {
         String normalized = html == null ? "" : html.toLowerCase(Locale.ROOT);
-        return OUTDATED_JAVASCRIPT_PATTERN.matcher(normalized).find();
+        return OUTDATED_JAVASCRIPT_PATTERNS.stream().anyMatch(pattern -> pattern.matcher(normalized).find());
     }
 
     private static DnsSecurityResult dnsSecurityResult(String host) {
@@ -1145,82 +1153,22 @@ public class WebsiteContentSnapshotFetcher {
                 .filter(WebsiteContentSnapshotFetcher::isLikelyReviewPage)
                 .forEach(candidates::add);
 
-        int crawled = 0;
-        boolean privacyPageFound = false;
-        boolean contactPageFound = false;
-        boolean aboutPageFound = false;
-        boolean termsPageFound = false;
-        int formPages = 0;
-        int privacyTextPages = 0;
-        int repeatedMetaDescriptionCount = 0;
-        boolean faqPageFound = false;
-        boolean pricingSignal = false;
-        boolean dataHandlingPageFound = false;
-        StringBuilder crawledBodyText = new StringBuilder();
-        String frontPageMetaDescription = normalizedMetaDescription(document);
+        ExtendedCrawlAccumulator accumulator = new ExtendedCrawlAccumulator(
+                baseUrl,
+                normalizedMetaDescription(document)
+        );
 
         for (String candidate : candidates) {
-            if (crawled >= EXTENDED_CRAWL_LIMIT) {
+            if (accumulator.limitReached()) {
                 break;
             }
             String html = readSmallHtmlResource(candidate);
             if (!html.isBlank()) {
-                crawled++;
-            String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
-            String normalizedContent = html.toLowerCase(Locale.ROOT);
-            Document crawledDocument = Jsoup.parse(html, candidate);
-            appendCrawledBodyText(crawledBodyText, crawledDocument);
-            String crawledMetaDescription = normalizedMetaDescription(crawledDocument);
-            if (!frontPageMetaDescription.isBlank()
-                    && frontPageMetaDescription.equals(crawledMetaDescription)
-                    && !candidate.equals(baseUrl)) {
-                repeatedMetaDescriptionCount++;
-            }
-            privacyPageFound = privacyPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    TERM_PERSONVERN, TERM_PRIVACY, "gdpr", "datenschutz", "integritetspolicy");
-            contactPageFound = contactPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    "kontakt", "contact", "kundeservice", "support");
-            aboutPageFound = aboutPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    "om-oss", "about", "om oss", "hvem vi er", "about us");
-            termsPageFound = termsPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", "conditions", TERM_POLICY, TERM_RETUR, "refund");
-            faqPageFound = faqPageFound || hasAny(normalizedUrl + " " + normalizedContent,
-                    "faq", "ofte stilte", "sporsmal", "spørsmål", "questions");
-            pricingSignal = pricingSignal || hasAny(normalizedContent,
-                    "pris", "priser", "pricing", "abonnement", "subscription", "gratis prøve", "free trial", "demo");
-            dataHandlingPageFound = dataHandlingPageFound || hasAny(normalizedContent,
-                    "datahåndtering", "datahandtering", "databehandling", "databehandler", "personopplysninger", "arbeidsmiljødata", "arbeidsmiljodata");
-            if (normalizedContent.contains("<form")) {
-                formPages++;
-            }
-            if (hasAny(normalizedContent,
-                    "personopplysninger",
-                    TERM_PERSONVERN,
-                    TERM_PRIVACY,
-                    "gdpr",
-                    "databehandler",
-                    "cookies",
-                    "informasjonskapsler",
-                    "integritetspolicy")) {
-                privacyTextPages++;
-            }
+                accumulator.capture(candidate, html);
             }
         }
 
-        return new ExtendedCrawlResult(
-                crawled,
-                privacyPageFound,
-                contactPageFound,
-                aboutPageFound,
-                termsPageFound,
-                formPages,
-                privacyTextPages,
-                repeatedMetaDescriptionCount,
-                faqPageFound,
-                pricingSignal,
-                dataHandlingPageFound,
-                crawledBodyText.toString().trim()
-        );
+        return accumulator.result();
     }
 
     private static void appendCrawledBodyText(StringBuilder target, Document document) {
@@ -1380,6 +1328,67 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private record LinkCheckResult(int checkedCount, int brokenCount) {
+    }
+
+    private static final class ExtendedCrawlAccumulator {
+        private final String baseUrl;
+        private final String frontPageMetaDescription;
+        private final StringBuilder crawledBodyText = new StringBuilder();
+        private int crawled;
+        private boolean privacyPageFound;
+        private boolean contactPageFound;
+        private boolean aboutPageFound;
+        private boolean termsPageFound;
+        private int formPages;
+        private int privacyTextPages;
+        private int repeatedMetaDescriptionCount;
+        private boolean faqPageFound;
+        private boolean pricingSignal;
+        private boolean dataHandlingPageFound;
+
+        private ExtendedCrawlAccumulator(String baseUrl, String frontPageMetaDescription) {
+            this.baseUrl = baseUrl;
+            this.frontPageMetaDescription = frontPageMetaDescription;
+        }
+
+        private boolean limitReached() {
+            return crawled >= EXTENDED_CRAWL_LIMIT;
+        }
+
+        private void capture(String candidate, String html) {
+            crawled++;
+            String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
+            String normalizedContent = html.toLowerCase(Locale.ROOT);
+            String searchableContent = normalizedUrl + " " + normalizedContent;
+            Document crawledDocument = Jsoup.parse(html, candidate);
+            appendCrawledBodyText(crawledBodyText, crawledDocument);
+            captureMetaDescription(candidate, crawledDocument);
+            privacyPageFound |= hasAny(searchableContent, TERM_PERSONVERN, TERM_PRIVACY, "gdpr", "datenschutz", "integritetspolicy");
+            contactPageFound |= hasAny(searchableContent, "kontakt", "contact", "kundeservice", "support");
+            aboutPageFound |= hasAny(searchableContent, "om-oss", "about", "om oss", "hvem vi er", "about us");
+            termsPageFound |= hasAny(searchableContent, "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", "conditions", TERM_POLICY, TERM_RETUR, "refund");
+            faqPageFound |= hasAny(searchableContent, "faq", "ofte stilte", "sporsmal", "spørsmål", "questions");
+            pricingSignal |= hasAny(normalizedContent, "pris", "priser", "pricing", "abonnement", "subscription", "gratis prøve", "free trial", "demo");
+            dataHandlingPageFound |= hasAny(normalizedContent, "datahåndtering", "datahandtering", "databehandling", "databehandler", "personopplysninger", "arbeidsmiljødata", "arbeidsmiljodata");
+            formPages += normalizedContent.contains("<form") ? 1 : 0;
+            privacyTextPages += hasAny(normalizedContent, "personopplysninger", TERM_PERSONVERN, TERM_PRIVACY,
+                    "gdpr", "databehandler", "cookies", "informasjonskapsler", "integritetspolicy") ? 1 : 0;
+        }
+
+        private void captureMetaDescription(String candidate, Document crawledDocument) {
+            String crawledMetaDescription = normalizedMetaDescription(crawledDocument);
+            if (!frontPageMetaDescription.isBlank()
+                    && frontPageMetaDescription.equals(crawledMetaDescription)
+                    && !candidate.equals(baseUrl)) {
+                repeatedMetaDescriptionCount++;
+            }
+        }
+
+        private ExtendedCrawlResult result() {
+            return new ExtendedCrawlResult(crawled, privacyPageFound, contactPageFound, aboutPageFound,
+                    termsPageFound, formPages, privacyTextPages, repeatedMetaDescriptionCount, faqPageFound,
+                    pricingSignal, dataHandlingPageFound, crawledBodyText.toString().trim());
+        }
     }
 
     private record ExtendedCrawlResult(

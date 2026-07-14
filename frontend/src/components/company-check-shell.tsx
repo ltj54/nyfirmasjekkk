@@ -255,7 +255,8 @@ function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website"
 
   const reachableCandidate = discovery.candidateChecks?.find((candidate) => candidate.reachable);
   if (reachableCandidate) {
-    return `mulig nettside svarte: ${reachableCandidate.url}${reachableCandidate.reason ? ` (${reachableCandidate.reason})` : ""}`;
+    const reasonSuffix = reachableCandidate.reason ? ` (${reachableCandidate.reason})` : "";
+    return `mulig nettside svarte: ${reachableCandidate.url}${reasonSuffix}`;
   }
   if (discovery.verifiedReachable === true && discovery.verifiedCandidate) {
     return `mulig nettside svarte: ${discovery.verifiedCandidate}`;
@@ -273,7 +274,9 @@ function compareEmailBatchPriority(left: CompanySummary, right: CompanySummary) 
   return compareLeadPriority(left, right);
 }
 
-function paginationItems(currentPage: number, totalPages: number): Array<number | "..."> {
+type PaginationItem = number | "ellipsis-left" | "ellipsis-right";
+
+function paginationItems(currentPage: number, totalPages: number): PaginationItem[] {
   if (totalPages <= 0) {
     return [];
   }
@@ -281,12 +284,29 @@ function paginationItems(currentPage: number, totalPages: number): Array<number 
     return Array.from({ length: totalPages }, (_, index) => index);
   }
   if (currentPage <= 4) {
-    return [0, 1, 2, 3, 4, 5, 6, "...", totalPages - 1];
+    return [0, 1, 2, 3, 4, 5, 6, "ellipsis-right", totalPages - 1];
   }
   if (currentPage >= totalPages - 5) {
-    return [0, "...", totalPages - 7, totalPages - 6, totalPages - 5, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1];
+    return [0, "ellipsis-left", totalPages - 7, totalPages - 6, totalPages - 5, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1];
   }
-  return [0, "...", currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, "...", totalPages - 1];
+  return [0, "ellipsis-left", currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, "ellipsis-right", totalPages - 1];
+}
+
+function outreachStatus(sent: boolean, statusOverride?: OutreachStatusOverride) {
+  if (statusOverride) {
+    return statusOverride;
+  }
+  return sent ? "sent" : "reverted";
+}
+
+function websiteSignalSeverityLabel(severity: WebsiteQualitySignal["severity"]) {
+  if (severity === "HIGH") {
+    return "Høy";
+  }
+  if (severity === "MEDIUM") {
+    return "Middels";
+  }
+  return "Info";
 }
 
 export function CompanyCheckShell() {
@@ -454,7 +474,7 @@ export function CompanyCheckShell() {
           companyName: company.name,
           organizationForm: company.organizationForm,
           sent,
-          status: statusOverride ?? (sent ? "sent" : "reverted"),
+          status: outreachStatus(sent, statusOverride),
           price: null,
           channel: "email",
           offerType: outreachOfferTypeForCompany(company),
@@ -987,7 +1007,10 @@ export function CompanyCheckShell() {
           return;
         }
         const items = Array.isArray(data) ? data : data.items || [];
-        const nextTotalPages = Array.isArray(data) ? (items.length > 0 ? 1 : 0) : (data.totalPages ?? 0);
+        let nextTotalPages = data.totalPages ?? 0;
+        if (Array.isArray(data)) {
+          nextTotalPages = items.length > 0 ? 1 : 0;
+        }
         setRecentCompanies(items);
         setPage(pageNum);
         setTotalPages(nextTotalPages);
@@ -1725,10 +1748,10 @@ export function CompanyCheckShell() {
                     </div>
                     {totalPages > 1 ? (
                       <div className="flex max-w-[360px] flex-wrap justify-center gap-1">
-                        {paginationItems(page, totalPages).map((item, index) =>
-                          item === "..." ? (
+                        {paginationItems(page, totalPages).map((item) =>
+                          typeof item === "string" ? (
                             <span
-                              key={`ellipsis-${index}`}
+                              key={item}
                               className="flex h-8 min-w-8 items-center justify-center px-1 text-[12px] font-medium text-[#829AB1]"
                             >
                               ...
@@ -2173,8 +2196,7 @@ function BrregWebsiteMatchesPanel({
               />
               <div className="mt-4 border-t border-[#D9E2EC] pt-4">
                 <p className="mb-3 text-[12px] leading-5 text-[#52606D]">
-                  Utsending loggføres på <span className="font-semibold text-[#1F2933]">{match.name}</span>
-                  {" "}({match.orgNumber}). Mottaker: {match.email || "ingen e-post registrert"}.
+                  Utsending loggføres på <span className="font-semibold text-[#1F2933]">{match.name}</span>{" ("}{match.orgNumber}). Mottaker: {match.email || "ingen e-post registrert"}.
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
@@ -2345,7 +2367,7 @@ function WebsiteQualityPanel({
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
                       <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
-                        {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
+                        {websiteSignalSeverityLabel(signal.severity)}
                       </span>
                     </div>
                     <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
@@ -2385,7 +2407,7 @@ function WebsiteQualityPanel({
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
                           <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
-                            {signal.severity === "HIGH" ? "Høy" : signal.severity === "MEDIUM" ? "Middels" : "Info"}
+                            {websiteSignalSeverityLabel(signal.severity)}
                           </span>
                         </div>
                         <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
@@ -2494,7 +2516,12 @@ function websiteSignalPriority(signal: WebsiteQualitySignal) {
   if (typeof codePriority === "number") {
     return codePriority;
   }
-  const severityPriority = signal.severity === "HIGH" ? 20 : signal.severity === "MEDIUM" ? 45 : 80;
+  let severityPriority = 80;
+  if (signal.severity === "HIGH") {
+    severityPriority = 20;
+  } else if (signal.severity === "MEDIUM") {
+    severityPriority = 45;
+  }
   return severityPriority + (isAdvancedWebsiteSignal(signal) ? 80 : 0);
 }
 
@@ -2649,7 +2676,12 @@ function prioritizeWebsiteReportSignals(signals: WebsiteQualitySignal[]) {
   ];
 
   return [...signals].sort((a, b) => {
-    const severityScore = (signal: WebsiteQualitySignal) => signal.severity === "HIGH" ? 0 : signal.severity === "MEDIUM" ? 1 : 2;
+    const severityScore = (signal: WebsiteQualitySignal) => {
+      if (signal.severity === "HIGH") {
+        return 0;
+      }
+      return signal.severity === "MEDIUM" ? 1 : 2;
+    };
     const priorityScore = (signal: WebsiteQualitySignal) => {
       const index = priorityCodes.indexOf(signal.code);
       return index === -1 ? 999 : index;
@@ -3428,17 +3460,21 @@ function InfoMetric({ label, value }: Readonly<{ label: string; value: string }>
 
 function parseGeneratedEmailText(text: string) {
   const normalized = text.replaceAll("\r\n", "\n");
-  const match = /^Emne:\s*(.*?)(?:\n{2,}([\s\S]*))?$/.exec(normalized);
-  if (!match) {
+  if (!normalized.startsWith("Emne:")) {
     return {
       subject: "",
       body: normalized.trim(),
     };
   }
 
+  const separatorIndex = normalized.indexOf("\n\n");
+  const subjectEnd = separatorIndex >= 0 ? separatorIndex : normalized.indexOf("\n");
+  const subjectLine = subjectEnd >= 0 ? normalized.slice(0, subjectEnd) : normalized;
+  const body = separatorIndex >= 0 ? normalized.slice(separatorIndex + 2) : "";
+
   return {
-    subject: (match[1] ?? "").trim(),
-    body: (match[2] ?? "").trim(),
+    subject: subjectLine.slice("Emne:".length).trim(),
+    body: body.trim(),
   };
 }
 
@@ -4370,8 +4406,8 @@ function CompanyDetailView({
               </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {company.roles && company.roles.length > 0 ? (
-                  company.roles.map((role, i) => (
-                    <div key={`${role.type}-${role.name}-${i}`} className="border border-[#D9E2EC] bg-white px-4 py-3">
+                  company.roles.map((role) => (
+                    <div key={`${role.type}-${role.name}-${role.title ?? ""}`} className="border border-[#D9E2EC] bg-white px-4 py-3">
                       <p className="mb-1 text-[11px] font-medium text-[#52606D]">{role.type}</p>
                       <p className="text-[14px] font-bold text-[#1F2933]">{role.name}</p>
                     </div>
@@ -4385,8 +4421,8 @@ function CompanyDetailView({
 
       <div className="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-200 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
           <div className="grid gap-4 md:grid-cols-2">
-            {extendedEvidence.map((item, i) => (
-              <div key={`evidence-${item.label}-${i}`} className="insight-card border border-[#D9E2EC] bg-white p-5">
+            {extendedEvidence.map((item) => (
+              <div key={`evidence-${item.label}-${item.source}-${item.detail}`} className="insight-card border border-[#D9E2EC] bg-white p-5">
                 <div className="mb-3 flex items-center gap-2">
                   <div className={`size-2 rounded-full ${scoreColors[company.scoreColor] || scoreColors.YELLOW}`} />
                   <h4 className="text-[14px] font-semibold text-[#1F2933]">{item.label}</h4>
@@ -4429,8 +4465,8 @@ function CompanyDetailView({
               <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registrerte hendelser</h4>
               <div className="space-y-3">
                 {events.length > 0 ? (
-                  events.slice(0, 8).map((event, index) => (
-                    <div key={`${event.type}-${event.date}-${index}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
+                  events.slice(0, 8).map((event) => (
+                    <div key={`${event.type}-${event.date}-${event.title}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="text-[13px] font-bold text-[#1F2933]">{event.title}</p>
