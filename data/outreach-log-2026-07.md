@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 176
-- Sendt: 176
+- Antall hendelser: 200
+- Sendt: 200
 - Angret: 0
-- Aktive kontaktede selskaper: 176
+- Aktive kontaktede selskaper: 200
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-16 | 938098352 | MICHAL WITEMBERG | UTLA | email | website-offer |
+| 2026-07-16 | 938098395 | FROMREIDE LANDBRUK OG MASKIN | ENK | email | website-offer |
+| 2026-07-16 | 938097097 | FEMLONE ACADEMY AS | AS | email | website-offer |
+| 2026-07-16 | 938102686 | BRATTABØ RACING | ENK | email | website-offer |
+| 2026-07-16 | 938103615 | HOX KAPITAL AS | AS | email | website-offer |
+| 2026-07-16 | 938109583 | BOHDAN BORYSOV | ENK | email | website-offer |
+| 2026-07-16 | 938108676 | BELKACEM HEDIDI | ENK | email | website-offer |
+| 2026-07-16 | 938102805 | HOGNE MÆRDE | ENK | email | website-offer |
+| 2026-07-16 | 937977832 | STÅLKRAFT MEDIA AS | AS | email | website-offer |
+| 2026-07-16 | 938106258 | A. LINDVIK | ENK | email | website-offer |
+| 2026-07-16 | 938101876 | OTERHOLT MASKINTJENESTER | ENK | email | website-offer |
+| 2026-07-16 | 938100411 | FYSIOTERAPEUT RUBEN NORD-VARHAUG | ENK | email | website-offer |
+| 2026-07-16 | 938094144 | DRENG HISDAL JORTVEIT MASKINSERVICE | ENK | email | website-offer |
+| 2026-07-16 | 938087679 | ARENACONSULTAGENCY TREIDER | ENK | email | website-offer |
+| 2026-07-16 | 838103162 | RAOUFI ARKITEKTUR | ENK | email | website-offer |
+| 2026-07-16 | 938108382 | PSYKIATRITJENESTER, GRETE LARSEN | ENK | email | website-offer |
+| 2026-07-16 | 937982976 | PER-OLOF LUDVIG SAMUELSSON | UTLA | email | website-offer |
+| 2026-07-16 | 938105553 | MYRONENKO BEAUTY STUDIO | ENK | email | website-offer |
+| 2026-07-16 | 937816588 | ING. LUBOMIR OVCIARIK NUF | NUF | email | website-offer |
+| 2026-07-16 | 937921691 | ING. LUBOMIR OVCIARIK | UTLA | email | website-offer |
+| 2026-07-16 | 937943652 | CAMPING RØDREV DE BOER | ENK | email | website-offer |
+| 2026-07-16 | 938104921 | ANGUS REKRUTTERING AS | AS | email | website-offer |
+| 2026-07-16 | 938105278 | AIMEI AB | UTLA | email | website-offer |
+| 2026-07-16 | 938109885 | VILDESIGN BY VILDE HELMERSEN | ENK | email | website-offer |
 | 2026-07-14 | 938094098 | SINNES FLIS&SJØMAT | ENK | email | website-offer |
 | 2026-07-14 | 938093784 | IVAN HUMENIUK BILPLEIE | ENK | email | website-offer |
 | 2026-07-14 | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | website-offer |
@@ -194,6 +218,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-16 12:32 | sent | 938098352 | MICHAL WITEMBERG | UTLA | email | - |
+| 2026-07-16 12:32 | sent | 938098395 | FROMREIDE LANDBRUK OG MASKIN | ENK | email | - |
+| 2026-07-16 12:31 | sent | 938097097 | FEMLONE ACADEMY AS | AS | email | - |
+| 2026-07-16 12:31 | sent | 938102686 | BRATTABØ RACING | ENK | email | - |
+| 2026-07-16 12:31 | sent | 938103615 | HOX KAPITAL AS | AS | email | - |
+| 2026-07-16 12:31 | sent | 938109583 | BOHDAN BORYSOV | ENK | email | - |
+| 2026-07-16 12:31 | sent | 938108676 | BELKACEM HEDIDI | ENK | email | - |
+| 2026-07-16 12:31 | sent | 938102805 | HOGNE MÆRDE | ENK | email | - |
+| 2026-07-16 12:31 | sent | 937977832 | STÅLKRAFT MEDIA AS | AS | email | - |
+| 2026-07-16 12:30 | sent | 938106258 | A. LINDVIK | ENK | email | - |
+| 2026-07-16 12:30 | sent | 938101876 | OTERHOLT MASKINTJENESTER | ENK | email | - |
+| 2026-07-16 12:30 | sent | 938100411 | FYSIOTERAPEUT RUBEN NORD-VARHAUG | ENK | email | - |
+| 2026-07-16 12:30 | sent | 938094144 | DRENG HISDAL JORTVEIT MASKINSERVICE | ENK | email | - |
+| 2026-07-16 12:30 | sent | 938087679 | ARENACONSULTAGENCY TREIDER | ENK | email | - |
+| 2026-07-16 12:30 | sent | 838103162 | RAOUFI ARKITEKTUR | ENK | email | - |
+| 2026-07-16 12:30 | sent | 938108382 | PSYKIATRITJENESTER, GRETE LARSEN | ENK | email | - |
+| 2026-07-16 12:30 | sent | 937982976 | PER-OLOF LUDVIG SAMUELSSON | UTLA | email | - |
+| 2026-07-16 12:30 | sent | 938105553 | MYRONENKO BEAUTY STUDIO | ENK | email | - |
+| 2026-07-16 12:30 | sent | 937816588 | ING. LUBOMIR OVCIARIK NUF | NUF | email | - |
+| 2026-07-16 12:30 | sent | 937921691 | ING. LUBOMIR OVCIARIK | UTLA | email | - |
+| 2026-07-16 12:30 | sent | 937943652 | CAMPING RØDREV DE BOER | ENK | email | - |
+| 2026-07-16 12:30 | sent | 938104921 | ANGUS REKRUTTERING AS | AS | email | - |
+| 2026-07-16 12:30 | sent | 938105278 | AIMEI AB | UTLA | email | - |
+| 2026-07-16 12:30 | sent | 938109885 | VILDESIGN BY VILDE HELMERSEN | ENK | email | - |
 | 2026-07-14 09:33 | sent | 938094098 | SINNES FLIS&SJØMAT | ENK | email | - |
 | 2026-07-14 09:33 | sent | 938093784 | IVAN HUMENIUK BILPLEIE | ENK | email | - |
 | 2026-07-14 08:44 | sent | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | - |
