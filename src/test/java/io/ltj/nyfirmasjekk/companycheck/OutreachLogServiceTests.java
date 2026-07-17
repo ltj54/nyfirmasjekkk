@@ -68,6 +68,27 @@ class OutreachLogServiceTests {
         assertThat(response.status()).isEqualTo("reverted");
         assertThat(response.sentAt()).isNull();
         assertThat(response.note()).isNull();
+        assertThat(response.everSent()).isTrue();
+        assertThat(service.hasEverSent("123456789")).isTrue();
+    }
+
+    @Test
+    void neverSentCompanyIsNotMarkedAsEverSent() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        OutreachStatusResponse response = service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, "not_relevant", null,
+                "email", "website-offer", null
+        ));
+
+        assertThat(response.everSent()).isFalse();
+        assertThat(service.hasEverSent("123456789")).isFalse();
     }
 
     @Test

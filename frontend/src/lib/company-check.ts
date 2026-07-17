@@ -166,6 +166,7 @@ export interface OutreachStatus {
   timestamp: string | null;
   sentAt: string | null;
   note: string | null;
+  everSent?: boolean;
 }
 
 export interface OutreachImportResponse {

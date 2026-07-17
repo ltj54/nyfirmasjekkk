@@ -3,6 +3,7 @@ import { backendHeaders } from "../../_lib/backend-fetch";
 
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
+const BACKEND_TIMEOUT_MS = 8_000;
 
 export async function GET(
   request: Request,
@@ -11,7 +12,7 @@ export async function GET(
   const { organisasjonsnummer } = await context.params;
   const url = `${backendBaseUrl}/api/company-check/${organisasjonsnummer}/batch-eligibility`;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10_000);
+  const timeoutId = setTimeout(() => controller.abort(), BACKEND_TIMEOUT_MS);
 
   try {
     const response = await fetch(url, {
@@ -28,6 +29,16 @@ export async function GET(
 
     return NextResponse.json(await response.json());
   } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      console.warn(`[company-check/batch-eligibility] Timeout etter ${BACKEND_TIMEOUT_MS} ms for ${organisasjonsnummer}`);
+      return NextResponse.json(
+        {
+          title: "Batch-sjekk tok for lang tid",
+          detail: "Nettsidekontrollen ble ikke ferdig innen tidsgrensen.",
+        },
+        { status: 504 },
+      );
+    }
     console.error("Fetch error:", err);
     return NextResponse.json(
       {

@@ -203,26 +203,6 @@ function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function hasOnlyUnreachablePossibleWebsiteCandidates(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
-  const discovery = company.websiteDiscovery;
-  if (company.website) {
-    return false;
-  }
-
-  if (discovery?.status === "NONE") {
-    return true;
-  }
-  if (discovery?.status !== "POSSIBLE_MATCH" || discovery.candidates.length === 0) {
-    return false;
-  }
-  if (!discovery.candidateChecks?.length) {
-    return discovery.verifiedReachable === false;
-  }
-
-  const candidates = websiteCandidateRows(discovery);
-  return candidates.length > 0 && candidates.every((candidate) => candidate.reachable === false);
-}
-
 function canSelectEmailBatchCandidate(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
   return !company.website && (
     company.websiteDiscovery?.status === "NONE"
@@ -232,6 +212,10 @@ function canSelectEmailBatchCandidate(company: Pick<CompanySummary, "website" | 
 
 function isBatchExcluded(status: OutreachStatus | null | undefined) {
   return status?.status === "batch_excluded";
+}
+
+function hasEverSentOutreach(status: OutreachStatus | null | undefined) {
+  return status?.everSent ?? status?.sent ?? false;
 }
 
 function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website" | "websiteDiscovery">) {
@@ -253,13 +237,15 @@ function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website"
     return "har ikke status som manglende nettside";
   }
 
-  const reachableCandidate = discovery.candidateChecks?.find((candidate) => candidate.reachable);
+  const reachableCandidate = discovery.candidateChecks?.find(
+    (candidate) => candidate.reachable && candidate.contentMatched,
+  );
   if (reachableCandidate) {
     const reasonSuffix = reachableCandidate.reason ? ` (${reachableCandidate.reason})` : "";
-    return `mulig nettside svarte: ${reachableCandidate.url}${reasonSuffix}`;
+    return `nettsiden ${reachableCandidate.url} har innhold som matcher virksomheten${reasonSuffix}`;
   }
-  if (discovery.verifiedReachable === true && discovery.verifiedCandidate) {
-    return `mulig nettside svarte: ${discovery.verifiedCandidate}`;
+  if (discovery.verifiedReachable === true && discovery.contentMatched === true && discovery.verifiedCandidate) {
+    return `nettsiden ${discovery.verifiedCandidate} har innhold som matcher virksomheten`;
   }
 
   return null;
@@ -547,6 +533,13 @@ export function CompanyCheckShell() {
     if (!company.email || !generatedEmail) {
       return false;
     }
+    if (hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])) {
+      setEmailSendErrorByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.",
+      }));
+      return false;
+    }
 
     setSendingEmailByOrg((current) => ({
       ...current,
@@ -587,9 +580,11 @@ export function CompanyCheckShell() {
         console.error("Failed to send outreach email", errorText);
         setEmailSendErrorByOrg((current) => ({
           ...current,
-          [company.orgNumber]: response.status === 429
-            ? "For mange e-postforsøk på kort tid. Vent før du prøver igjen."
-            : "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
+          [company.orgNumber]: response.status === 409
+            ? "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten."
+            : response.status === 429
+              ? "For mange e-postforsøk på kort tid. Vent før du prøver igjen."
+              : "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
         }));
         return false;
       }
@@ -625,7 +620,10 @@ export function CompanyCheckShell() {
       return;
     }
 
-    const eligibleCompanies = companies.filter(canSelectEmailBatchCandidate);
+    const eligibleCompanies = companies.filter(
+      (company) => canSelectEmailBatchCandidate(company)
+        && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber]),
+    );
     const sendableCompanies = eligibleCompanies.filter((company) => Boolean(company.email));
     if (sendableCompanies.length === 0) {
       window.alert("Ingen av de valgte treffene har både e-post og manglende registrert nettside.");
@@ -679,11 +677,11 @@ export function CompanyCheckShell() {
           continue;
         }
         const blockReason = emailBatchBlockReason(detailedCompany);
-        if (blockReason || !hasOnlyUnreachablePossibleWebsiteCandidates(detailedCompany)) {
+        if (blockReason) {
           skippedDuringRunCount += 1;
           setBatchValidationByOrg((current) => ({
             ...current,
-            [detailedCompany.orgNumber]: { status: "blocked", reason: blockReason ?? "Mulig nettside må sjekkes manuelt." },
+            [detailedCompany.orgNumber]: { status: "blocked", reason: blockReason },
           }));
           setBatchSelectionByOrg((current) => ({
             ...current,
@@ -779,6 +777,9 @@ export function CompanyCheckShell() {
         }),
       ]);
       if (!response.ok) {
+        if (response.status === 504) {
+          return { reason: "Batch-sjekk tok for lang tid. Prøv igjen eller åpne detaljsiden." };
+        }
         return { reason: "Klarte ikke hente batch-sjekk." };
       }
       const payload = (await response.json()) as { eligible?: boolean; reason?: string | null };
@@ -1268,9 +1269,8 @@ export function CompanyCheckShell() {
   ), outreachStatusByOrg, listQuickFilters).sort(canUseEmailBatch ? compareEmailBatchPriority : compareLeadPriority);
   const visibleSearchCompanies = filteredCompanies.filter((company) => {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
-    const batchBlocked = outreachStatus?.status === "batch_excluded"
-      || batchValidationByOrg[company.orgNumber]?.status === "blocked";
-    return !outreachStatus?.sent
+    const batchBlocked = batchValidationByOrg[company.orgNumber]?.status === "blocked";
+    return !hasEverSentOutreach(outreachStatus)
       && outreachStatus?.status !== "not_relevant"
       && ((canUseEmailBatch && showBatchExcluded) || !batchBlocked);
   });
@@ -1279,7 +1279,7 @@ export function CompanyCheckShell() {
       batchSelectionByOrg[company.orgNumber]
       && canSelectEmailBatchCandidate(company)
       && batchValidationByOrg[company.orgNumber]?.status !== "blocked"
-      && !isBatchExcluded(outreachStatusByOrg[company.orgNumber])
+      && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])
     )
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
@@ -1310,7 +1310,7 @@ export function CompanyCheckShell() {
       const validation = batchValidationByOrg[company.orgNumber];
       return company.email
         && canSelectEmailBatchCandidate(company)
-        && !isBatchExcluded(outreachStatusByOrg[company.orgNumber])
+        && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])
         && validation?.status !== "ready"
         && validation?.status !== "blocked"
         && validation?.status !== "checking";
@@ -1893,7 +1893,7 @@ export function CompanyCheckShell() {
                     company={company}
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !isBatchExcluded(outreachStatusByOrg[company.orgNumber])}
+                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])}
                     batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
                     batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
                     onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
@@ -2095,6 +2095,13 @@ function BrregWebsiteMatchesPanel({
     if (!match.email || !generatedEmail) {
       return;
     }
+    if (hasEverSentOutreach(outreachStatusByOrg[match.orgNumber])) {
+      setSendErrorByOrg((current) => ({
+        ...current,
+        [match.orgNumber]: "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.",
+      }));
+      return;
+    }
 
     setSendingByOrg((current) => ({ ...current, [match.orgNumber]: true }));
     setSendErrorByOrg((current) => ({ ...current, [match.orgNumber]: null }));
@@ -2122,7 +2129,9 @@ function BrregWebsiteMatchesPanel({
       if (!response.ok) {
         setSendErrorByOrg((current) => ({
           ...current,
-          [match.orgNumber]: "Klarte ikke sende e-post via SMTP.",
+          [match.orgNumber]: response.status === 409
+            ? "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten."
+            : "Klarte ikke sende e-post via SMTP.",
         }));
         return;
       }
@@ -2201,7 +2210,7 @@ function BrregWebsiteMatchesPanel({
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
                     className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
-                    disabled={Boolean(generatingByOrg[match.orgNumber])}
+                    disabled={Boolean(generatingByOrg[match.orgNumber]) || hasEverSentOutreach(outreachStatusByOrg[match.orgNumber])}
                     onClick={() => void generateEmail(match)}
                     type="button"
                   >
@@ -2209,14 +2218,16 @@ function BrregWebsiteMatchesPanel({
                   </Button>
                   <Button
                     className="rounded-sm border-[#BCCCDC] bg-white px-4 text-[#1F2933] hover:bg-[#F8FBFF]"
-                    disabled={!match.email || !generatedEmailByOrg[match.orgNumber] || Boolean(sendingByOrg[match.orgNumber])}
+                    disabled={!match.email || !generatedEmailByOrg[match.orgNumber] || Boolean(sendingByOrg[match.orgNumber]) || hasEverSentOutreach(outreachStatusByOrg[match.orgNumber])}
                     onClick={() => void sendEmail(match)}
                     type="button"
                     variant="outline"
                   >
                     {sendingByOrg[match.orgNumber] ? "Sender..." : "Send automatisk"}
                   </Button>
-                  {!match.email ? (
+                  {hasEverSentOutreach(outreachStatusByOrg[match.orgNumber]) ? (
+                    <span className="text-[12px] font-semibold text-amber-700">Allerede kontaktet – ny utsending er sperret</span>
+                  ) : !match.email ? (
                     <span className="text-[12px] font-medium text-[#7B8794]">Mangler e-post i BRREG</span>
                   ) : null}
                 </div>
@@ -3645,7 +3656,7 @@ function LeadResultRow({
         <div className="flex flex-wrap gap-1.5">
           <Badge className={priority.badgeClass}>{priority.label}</Badge>
           {batchExcluded ? (
-            <Badge className="rounded-sm bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">Batch-sperret</Badge>
+            <Badge className="rounded-sm bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-700">Tidligere batch-vurdering</Badge>
           ) : null}
         </div>
         <p className="mt-1 truncate text-[11px] text-[#52606D]">{commercialOpportunity.title}</p>
@@ -3668,7 +3679,7 @@ function LeadResultRow({
       </Button>
       {(batchValidation?.status === "blocked" && batchValidation.reason) || (batchExcluded && outreachStatus?.note) ? (
         <p className="text-[11px] text-amber-700 lg:col-span-5">
-          Batch-sperret: {batchValidation?.reason || outreachStatus?.note}
+          {batchValidation?.status === "blocked" ? "Batch-sperret" : "Tidligere vurdering"}: {batchValidation?.reason || outreachStatus?.note}
         </p>
       ) : null}
     </div>
@@ -3688,7 +3699,7 @@ function OutreachCheckbox({
   className?: string;
   compact?: boolean;
 }>) {
-  const sentAlready = status?.sent ?? false;
+  const sentAlready = hasEverSentOutreach(status);
   const markedNotRelevant = status?.status === "not_relevant";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
   const noteSuggestions = [
@@ -3901,7 +3912,8 @@ function CompanyDetailView({
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
   const generatedEmailHtml = generatedEmail ? buildOutreachEmailHtml(generatedEmail.body) : "";
-  const generatedEmailHref = generatedEmail && company.email
+  const alreadyContacted = hasEverSentOutreach(outreachStatus);
+  const generatedEmailHref = generatedEmail && company.email && !alreadyContacted
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
   useEffect(() => {
@@ -4265,7 +4277,7 @@ function CompanyDetailView({
                   </div>
                   <Button
                     className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
-                    disabled={generatingEmail}
+                    disabled={generatingEmail || alreadyContacted}
                     onClick={onGenerateEmail}
                     type="button"
                   >
@@ -4282,6 +4294,7 @@ function CompanyDetailView({
                     <div className="flex flex-wrap items-center gap-2">
                       <Button
                         className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
+                        disabled={alreadyContacted}
                         onClick={() => void handleCopyGeneratedEmail()}
                         type="button"
                       >
@@ -4289,6 +4302,7 @@ function CompanyDetailView({
                       </Button>
                       <Button
                         className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
+                        disabled={alreadyContacted}
                         onClick={() => void handleCopyGeneratedHtmlEmail()}
                         type="button"
                       >
@@ -4306,18 +4320,23 @@ function CompanyDetailView({
                         </button>
                       ) : (
                         <span className="inline-flex items-center justify-center rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2 text-[12px] font-medium text-[#7B8794]">
-                          Mangler e-postadresse
+                          {alreadyContacted ? "Allerede kontaktet" : "Mangler e-postadresse"}
                         </span>
                       )}
                       <Button
                         className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
-                        disabled={!company.email || sendingEmail || outreachSaving}
+                        disabled={!company.email || sendingEmail || outreachSaving || alreadyContacted}
                         onClick={onSendEmail}
                         type="button"
                       >
                         {sendingEmail ? "Sender..." : "Send automatisk"}
                       </Button>
                     </div>
+                    {alreadyContacted ? (
+                      <p className="rounded-sm border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] font-semibold text-amber-800">
+                        Ny nettsidehenvendelse er sperret fordi virksomheten allerede er kontaktet.
+                      </p>
+                    ) : null}
                     {emailSendError ? (
                       <p className="rounded-sm border border-rose-200 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">
                         {emailSendError}

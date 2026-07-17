@@ -9,7 +9,7 @@ import io.ltj.nyfirmasjekk.api.v1.CompanySearchResponse;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.api.v1.BrregWebsiteMatch;
 import io.ltj.nyfirmasjekk.api.v1.WebsiteInspectionResponse;
-import io.ltj.nyfirmasjekk.api.v1.WebsiteReachabilityService;
+import io.ltj.nyfirmasjekk.api.v1.WebsiteContentInspectionService;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
@@ -63,7 +63,7 @@ public class CompanyCheckController {
     private final AdminAccessService adminAccessService;
     private final InMemoryRateLimitService rateLimitService;
     private final MeterRegistry meterRegistry;
-    private final WebsiteReachabilityService websiteReachabilityService;
+    private final WebsiteContentInspectionService websiteContentInspectionService;
 
     public CompanyCheckController(
             CompanyCheckService companyCheckService,
@@ -75,7 +75,7 @@ public class CompanyCheckController {
             AdminAccessService adminAccessService,
             InMemoryRateLimitService rateLimitService,
             MeterRegistry meterRegistry,
-            WebsiteReachabilityService websiteReachabilityService
+            WebsiteContentInspectionService websiteContentInspectionService
     ) {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
@@ -86,7 +86,7 @@ public class CompanyCheckController {
         this.adminAccessService = adminAccessService;
         this.rateLimitService = rateLimitService;
         this.meterRegistry = meterRegistry;
-        this.websiteReachabilityService = websiteReachabilityService;
+        this.websiteContentInspectionService = websiteContentInspectionService;
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -122,6 +122,14 @@ public class CompanyCheckController {
             String organisasjonsnummer
     ) {
         rateLimitService.requireAllowed("company-batch-eligibility", 240, Duration.ofMinutes(10));
+        if (outreachLogService.hasEverSent(organisasjonsnummer)) {
+            return new BatchEmailEligibilityResponse(
+                    organisasjonsnummer,
+                    false,
+                    "Det er allerede sendt en nettsidehenvendelse til virksomheten.",
+                    null
+            );
+        }
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         if (hasText(enhet.hjemmeside())) {
             return new BatchEmailEligibilityResponse(
@@ -143,11 +151,12 @@ public class CompanyCheckController {
         String emailDomain = extractEmailDomain(enhet.epostadresse());
         if (hasText(emailDomain) && !isGenericEmailDomain(emailDomain)) {
             String candidate = "https://" + emailDomain;
-            if (websiteReachabilityService.isReachable(candidate)) {
+            var contentMatch = websiteContentInspectionService.inspect(candidate, enhet.navn(), null);
+            if (contentMatch.matched()) {
                 return new BatchEmailEligibilityResponse(
                         organisasjonsnummer,
                         false,
-                        "Mulig nettside svarte: " + candidate + " (utledet fra registrert e-postdomene).",
+                        "Nettsiden " + candidate + " har innhold som matcher virksomhetsnavnet.",
                         candidate
                 );
             }
@@ -250,19 +259,27 @@ public class CompanyCheckController {
         @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
     ) {
         adminAccessService.requireAdmin(adminToken);
-        String recipient = outreachEmailService.send(request);
-        var status = outreachLogService.register(new OutreachStatusRequest(
-                organisasjonsnummer,
-                request.companyName(),
-                request.organizationForm(),
-                true,
-                "sent",
-                request.price(),
-                request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
-                request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
-                request.note()
-        ));
-        return new OutreachEmailSendResponse(true, recipient, request.subject(), status);
+        synchronized (outreachLogService) {
+            if (outreachLogService.hasEverSent(organisasjonsnummer)) {
+                throw new org.springframework.web.server.ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Det er allerede sendt en nettsidehenvendelse til virksomheten."
+                );
+            }
+            String recipient = outreachEmailService.send(request);
+            var status = outreachLogService.register(new OutreachStatusRequest(
+                    organisasjonsnummer,
+                    request.companyName(),
+                    request.organizationForm(),
+                    true,
+                    "sent",
+                    request.price(),
+                    request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
+                    request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
+                    request.note()
+            ));
+            return new OutreachEmailSendResponse(true, recipient, request.subject(), status);
+        }
     }
 
     @GetMapping("/filters")

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -64,11 +65,19 @@ public class OutreachLogService {
     }
 
     public synchronized OutreachStatusResponse statusFor(String orgNumber) {
-        return toLatestStatusResponse(orgNumber, readAllEntries().stream()
+        List<OutreachLogEntry> entries = readAllEntries().stream()
                 .filter(entry -> orgNumber.equals(entry.orgNumber()))
                 .sorted(Comparator.comparing(this::sortTimestamp))
-                .reduce((first, second) -> second)
-                .orElse(null));
+                .toList();
+        OutreachLogEntry latestEntry = entries.isEmpty() ? null : entries.getLast();
+        boolean everSent = entries.stream().anyMatch(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()));
+        return toLatestStatusResponse(orgNumber, latestEntry, everSent);
+    }
+
+    public synchronized boolean hasEverSent(String orgNumber) {
+        return readAllEntries().stream()
+                .anyMatch(entry -> orgNumber.equals(entry.orgNumber())
+                        && STATUS_SENT.equalsIgnoreCase(entry.status()));
     }
 
     public synchronized Map<String, OutreachStatusResponse> statusesFor(Collection<String> orgNumbers) {
@@ -78,19 +87,33 @@ public class OutreachLogService {
 
         var requestedOrgNumbers = new HashSet<>(orgNumbers);
         Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
+        var everSentOrgNumbers = new HashSet<String>();
         readAllEntries().stream()
                 .filter(entry -> requestedOrgNumbers.contains(entry.orgNumber()))
                 .sorted(Comparator.comparing(this::sortTimestamp))
-                .forEach(entry -> latestByOrgNumber.put(entry.orgNumber(), entry));
+                .forEach(entry -> {
+                    latestByOrgNumber.put(entry.orgNumber(), entry);
+                    if (STATUS_SENT.equalsIgnoreCase(entry.status())) {
+                        everSentOrgNumbers.add(entry.orgNumber());
+                    }
+                });
 
         Map<String, OutreachStatusResponse> responses = new LinkedHashMap<>();
         for (String orgNumber : requestedOrgNumbers) {
-            responses.put(orgNumber, toLatestStatusResponse(orgNumber, latestByOrgNumber.get(orgNumber)));
+            responses.put(orgNumber, toLatestStatusResponse(
+                    orgNumber,
+                    latestByOrgNumber.get(orgNumber),
+                    everSentOrgNumbers.contains(orgNumber)
+            ));
         }
         return responses;
     }
 
-    private OutreachStatusResponse toLatestStatusResponse(String orgNumber, OutreachLogEntry latestEntry) {
+    private OutreachStatusResponse toLatestStatusResponse(
+            String orgNumber,
+            OutreachLogEntry latestEntry,
+            boolean everSent
+    ) {
         if (latestEntry == null || !STATUS_SENT.equalsIgnoreCase(latestEntry.status())) {
             return new OutreachStatusResponse(
                     orgNumber,
@@ -103,7 +126,8 @@ public class OutreachLogService {
                     latestEntry == null ? null : latestEntry.offerType(),
                     latestEntry == null ? null : latestEntry.timestamp(),
                     null,
-                    latestEntry == null ? null : latestEntry.note()
+                    latestEntry == null ? null : latestEntry.note(),
+                    everSent
             );
         }
         return new OutreachStatusResponse(
@@ -117,14 +141,20 @@ public class OutreachLogService {
                 latestEntry.offerType(),
                 latestEntry.timestamp(),
                 latestEntry.timestamp(),
-                latestEntry.note()
+                latestEntry.note(),
+                everSent
         );
     }
 
     public synchronized List<OutreachStatusResponse> statuses() {
-        return readAllEntries().stream()
+        List<OutreachLogEntry> entries = readAllEntries();
+        Set<String> everSentOrgNumbers = entries.stream()
+                .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
+                .map(OutreachLogEntry::orgNumber)
+                .collect(java.util.stream.Collectors.toSet());
+        return entries.stream()
                 .sorted(Comparator.comparing(this::sortTimestamp).reversed())
-                .map(this::toStatusResponse)
+                .map(entry -> toStatusResponse(entry, everSentOrgNumbers.contains(entry.orgNumber())))
                 .toList();
     }
 
@@ -206,7 +236,7 @@ public class OutreachLogService {
         return statusFor(request.orgNumber());
     }
 
-    private OutreachStatusResponse toStatusResponse(OutreachLogEntry entry) {
+    private OutreachStatusResponse toStatusResponse(OutreachLogEntry entry, boolean everSent) {
         boolean sent = STATUS_SENT.equalsIgnoreCase(entry.status());
         return new OutreachStatusResponse(
                 entry.orgNumber(),
@@ -219,7 +249,8 @@ public class OutreachLogService {
                 entry.offerType(),
                 entry.timestamp(),
                 sent ? entry.timestamp() : null,
-                entry.note()
+                entry.note(),
+                everSent
         );
     }
 

@@ -481,7 +481,7 @@ public class CompanyApiV1Mapper {
         }
         boolean reachable = websiteReachabilityService.isReachable(candidate);
         WebsiteContentMatch contentMatch = reachable
-                ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), emailDomain)
+                ? websiteContentInspectionService.inspect(candidate, companyCheck.navn(), null)
                 : new WebsiteContentMatch(false, "Domene svarte ikke ved sjekk.", null);
         String confidence = "LOW";
         if (reachable) {

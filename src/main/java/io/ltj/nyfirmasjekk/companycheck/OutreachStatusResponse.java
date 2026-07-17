@@ -11,6 +11,7 @@ public record OutreachStatusResponse(
         String offerType,
         String timestamp,
         String sentAt,
-        String note
+        String note,
+        boolean everSent
 ) {
 }
