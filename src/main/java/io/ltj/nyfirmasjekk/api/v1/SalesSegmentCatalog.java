@@ -162,7 +162,7 @@ public final class SalesSegmentCatalog {
         if (naceCode == null || naceCode.isBlank()) {
             return null;
         }
-        String digits = naceCode.replaceAll("[^0-9]", "");
+        String digits = naceCode.replaceAll("\\D", "");
         if (digits.length() < 2) {
             return null;
         }

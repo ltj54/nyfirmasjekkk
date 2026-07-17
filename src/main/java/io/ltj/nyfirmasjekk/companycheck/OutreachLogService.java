@@ -469,10 +469,10 @@ public class OutreachLogService {
     }
 
     private void validateImportedStatus(String status) {
-        switch (status.trim().toLowerCase(Locale.ROOT)) {
-            case STATUS_SENT, STATUS_REVERTED, STATUS_NOT_RELEVANT, STATUS_BATCH_EXCLUDED -> {
-            }
-            default -> throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
+        String normalizedStatus = status.trim().toLowerCase(Locale.ROOT);
+        if (!Set.of(STATUS_SENT, STATUS_REVERTED, STATUS_NOT_RELEVANT, STATUS_BATCH_EXCLUDED)
+                .contains(normalizedStatus)) {
+            throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
         }
     }
 

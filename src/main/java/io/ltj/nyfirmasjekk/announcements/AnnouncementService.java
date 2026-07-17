@@ -44,28 +44,10 @@ public class AnnouncementService {
         List<Announcement> announcements = new ArrayList<>();
 
         for (Element link : document.select("a[href*=hent_en.jsp]")) {
-            Element row = link.closest("tr");
-            if (row == null) {
-                continue;
+            Announcement announcement = toAnnouncement(link);
+            if (announcement != null) {
+                announcements.add(announcement);
             }
-
-            List<Element> cells = row.select("td");
-            if (cells.size() < 4) {
-                continue;
-            }
-
-            String date = normalizeBlank(cells.get(1).text());
-            String title = normalizeBlank(link.text());
-            if (title == null) {
-                continue;
-            }
-
-            announcements.add(new Announcement(
-                    classifyAnnouncementType(title),
-                    title,
-                    date,
-                    "BRREG kunngjøringer"
-            ));
         }
 
         return announcements.stream()
@@ -73,6 +55,24 @@ public class AnnouncementService {
                 .sorted(Comparator.comparing(Announcement::date, Comparator.nullsLast(Comparator.reverseOrder()))
                         .thenComparing(Announcement::title, String.CASE_INSENSITIVE_ORDER))
                 .toList();
+    }
+
+    private Announcement toAnnouncement(Element link) {
+        Element row = link.closest("tr");
+        if (row == null) {
+            return null;
+        }
+        List<Element> cells = row.select("td");
+        String title = normalizeBlank(link.text());
+        if (cells.size() < 4 || title == null) {
+            return null;
+        }
+        return new Announcement(
+                classifyAnnouncementType(title),
+                title,
+                normalizeBlank(cells.get(1).text()),
+                "BRREG kunngjøringer"
+        );
     }
 
     private List<Announcement> hentKunngjoringerFraBrreg(String organisasjonsnummer) {

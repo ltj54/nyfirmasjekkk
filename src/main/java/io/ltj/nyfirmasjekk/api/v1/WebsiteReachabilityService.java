@@ -41,11 +41,11 @@ public class WebsiteReachabilityService {
             if (isReachableStatus(headResponse.statusCode())) {
                 return true;
             }
-        } catch (IOException | InterruptedException | IllegalArgumentException exception) {
-            if (exception instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-                return false;
-            }
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return false;
+        } catch (IOException | IllegalArgumentException exception) {
+            // HEAD is not consistently supported; retry with GET below.
         }
 
         try {
@@ -59,10 +59,10 @@ public class WebsiteReachabilityService {
                     HttpResponse.BodyHandlers.discarding()
             );
             return isReachableStatus(getResponse.statusCode());
-        } catch (IOException | InterruptedException | IllegalArgumentException exception) {
-            if (exception instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return false;
+        } catch (IOException | IllegalArgumentException exception) {
             return false;
         }
     }

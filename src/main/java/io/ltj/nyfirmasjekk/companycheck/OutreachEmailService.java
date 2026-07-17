@@ -1,6 +1,7 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +78,7 @@ public class OutreachEmailService {
         if (request == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mangler e-postdata.");
         }
-        if (request.to() == null || !request.to().matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+        if (!isValidEmailAddress(request.to())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mottakeradresse mangler eller er ugyldig.");
         }
         if (request.subject() == null || request.subject().isBlank()) {
@@ -85,6 +86,19 @@ public class OutreachEmailService {
         }
         if (request.body() == null || request.body().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mailtekst mangler.");
+        }
+    }
+
+    private boolean isValidEmailAddress(String value) {
+        if (value == null || value.isBlank()) {
+            return false;
+        }
+        try {
+            InternetAddress address = new InternetAddress(value, true);
+            address.validate();
+            return value.equals(address.getAddress());
+        } catch (AddressException exception) {
+            return false;
         }
     }
 }

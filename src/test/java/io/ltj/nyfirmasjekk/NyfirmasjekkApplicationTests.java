@@ -10,6 +10,7 @@ class NyfirmasjekkApplicationTests {
 
     @Test
     void contextLoads() {
+        // A successful Spring context startup is the assertion for this smoke test.
     }
 
 }

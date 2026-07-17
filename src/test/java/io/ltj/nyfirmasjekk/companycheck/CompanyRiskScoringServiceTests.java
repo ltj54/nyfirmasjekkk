@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -69,8 +70,8 @@ class CompanyRiskScoringServiceTests {
                 0,
                 true,
                 null,
-                LocalDate.of(2026, 5, 1),
-                LocalDate.of(2026, 5, 1),
+                LocalDate.of(2026, Month.MAY, 1),
+                LocalDate.of(2026, Month.MAY, 1),
                 null,
                 null
         );
@@ -159,8 +160,8 @@ class CompanyRiskScoringServiceTests {
                 1,
                 true,
                 "2025",
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         );
@@ -188,8 +189,8 @@ class CompanyRiskScoringServiceTests {
                 1,
                 true,
                 "2025",
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         );

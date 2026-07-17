@@ -5,6 +5,7 @@ import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,8 +39,8 @@ class AnnouncementServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2023, 12, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
+                LocalDate.of(2023, Month.DECEMBER, 1),
                 null,
                 null
         );
@@ -67,8 +68,8 @@ class AnnouncementServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2023, 12, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
+                LocalDate.of(2023, Month.DECEMBER, 1),
                 null,
                 null
         );

@@ -8,14 +8,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#f7f2e9;--panel:rgba(255,255,255,.88);--line:rgba(20,31,36,.12);--text:#152026;--muted:rgba(21,32,38,.68);--green:#169b62;--yellow:#c88d00;--red:#cd4a37;--shadow:0 24px 60px rgba(47,34,18,.12);--max:1180px}
+        :root{--bg:#f7f2e9;--panel:rgba(255,255,255,.88);--line:rgba(20,31,36,.12);--text:#152026;--muted:#52606d;--green:#169b62;--yellow:#9a6c00;--red:#b33d2d;--shadow:0 24px 60px rgba(47,34,18,.12);--max:1180px}
         *{box-sizing:border-box}body{margin:0;font-family:"Manrope",sans-serif;color:var(--text);background:radial-gradient(circle at 14% 10%,rgba(244,193,104,.18),transparent 24%),linear-gradient(180deg,#fbf8f2,#f7f2e9 34%,#efe1ca 100%)}a{color:inherit;text-decoration:none}
         .shell{width:min(var(--max),calc(100% - 28px));margin:0 auto}.page{padding:24px 0 64px}.topbar,.hero,.two-col,.score-lines{display:flex}.topbar,.hero,.two-col{gap:24px}.topbar{justify-content:space-between;align-items:center}.brand{display:flex;align-items:center;gap:12px;font-weight:800}.mark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(21,32,38,.1);background:radial-gradient(circle at 35% 30%,rgba(207,123,47,.4),rgba(255,255,255,.9))}.mark span{font-family:"Fraunces",serif}
         .hero,.panel,.finding{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.76));border:1px solid var(--line);box-shadow:var(--shadow)}.hero{margin-top:28px;border-radius:30px;padding:28px}.hero-main{flex:1 1 60%}.hero-side{flex:1 1 40%;display:grid;gap:18px}
         .eyebrow{display:inline-flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.16em;font-size:.74rem;font-weight:800;color:var(--muted)}.eyebrow:before{content:"";width:34px;height:1px;background:rgba(21,32,38,.18)}
         h1,h2,h3{margin:0;font-family:"Fraunces",serif;letter-spacing:-.04em}h1{font-size:clamp(2.4rem,5vw,4.8rem);line-height:.92;max-width:11ch}h3{font-size:clamp(1.7rem,3vw,2.3rem)}.lede,.panel p{margin:0;color:var(--muted);line-height:1.78}
-        .pill{display:inline-flex;align-items:center;gap:10px;width:fit-content;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.64);font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.dot{width:12px;height:12px;border-radius:50%;box-shadow:0 0 16px currentColor}.green{background:var(--green);color:var(--green)}.yellow{background:var(--yellow);color:var(--yellow)}.red{background:var(--red);color:var(--red)}
-        .panel{border-radius:24px;padding:22px}.two-col{flex-wrap:wrap;align-items:flex-start}.two-col>.panel{flex:1 1 340px}.section{padding-top:28px}.listset,.findings{display:grid;gap:14px}.item{padding-bottom:14px;border-bottom:1px solid rgba(21,32,38,.08)}.item:last-child{padding-bottom:0;border-bottom:0}.item strong{display:block;margin-bottom:4px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(21,32,38,.5)}.item span{line-height:1.7}
+        .pill{display:inline-flex;align-items:center;gap:10px;width:fit-content;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.64);font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.dot{width:12px;height:12px;border-radius:50%;box-shadow:0 0 16px currentColor}
+        /* Statusklassene settes dynamisk fra API-resultatet. */
+        /*noinspection CssUnusedSymbol*/
+        .green{background:var(--green);color:var(--green)}
+        .yellow{background:var(--yellow);color:var(--yellow)}
+        /*noinspection CssUnusedSymbol*/
+        .red{background:var(--red);color:var(--red)}
+        .panel{border-radius:24px;padding:22px}.two-col{flex-wrap:wrap;align-items:flex-start}.two-col>.panel{flex:1 1 340px}.section{padding-top:28px}.listset,.findings{display:grid;gap:14px}.item{padding-bottom:14px;border-bottom:1px solid rgba(21,32,38,.08)}.item:last-child{padding-bottom:0;border-bottom:0}.item strong{display:block;margin-bottom:4px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#52606d}.item span{line-height:1.7}
         .score-lines{flex-direction:column;margin-top:16px}.score-row{display:grid;grid-template-columns:72px 1fr 34px;gap:12px;align-items:center}.track{height:10px;border-radius:999px;background:rgba(21,32,38,.08);overflow:hidden}.track span{display:block;height:100%;border-radius:inherit}
         .finding{border-radius:20px;padding:18px;display:grid;gap:10px}.badgebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.badge{padding:10px 14px;border-radius:14px;background:rgba(21,32,38,.06);border:1px dashed rgba(21,32,38,.16);color:var(--muted)}
         .disclaimer{margin-top:18px;padding:14px 16px;border-radius:18px;background:rgba(207,123,47,.08);border:1px solid rgba(207,123,47,.15);color:#7a4b1c;line-height:1.7}.loading,.error{margin-top:16px;line-height:1.7}.error{color:#af3d2d}
@@ -53,9 +59,9 @@
                     <section class="panel">
                         <div class="eyebrow">Fordeling av funn</div>
                         <div class="score-lines">
-                            <div class="score-row"><span>Grønn</span><div class="track"><span id="green-bar" style="width:0%;background:linear-gradient(90deg,#99ecc0,#169b62)"></span></div><strong id="green-count">0</strong></div>
-                            <div class="score-row"><span>Gul</span><div class="track"><span id="yellow-bar" style="width:0%;background:linear-gradient(90deg,#ffe29c,#c88d00)"></span></div><strong id="yellow-count">0</strong></div>
-                            <div class="score-row"><span>Rød</span><div class="track"><span id="red-bar" style="width:0%;background:linear-gradient(90deg,#ff9889,#cd4a37)"></span></div><strong id="red-count">0</strong></div>
+                            <div class="score-row"><span>Grønn</span><div class="track"><span id="green-bar" style="width:0;background:linear-gradient(90deg,#99ecc0,#169b62)"></span></div><strong id="green-count">0</strong></div>
+                            <div class="score-row"><span>Gul</span><div class="track"><span id="yellow-bar" style="width:0;background:linear-gradient(90deg,#ffe29c,#c88d00)"></span></div><strong id="yellow-count">0</strong></div>
+                            <div class="score-row"><span>Rød</span><div class="track"><span id="red-bar" style="width:0;background:linear-gradient(90deg,#ff9889,#cd4a37)"></span></div><strong id="red-count">0</strong></div>
                         </div>
                     </section>
                 </aside>
@@ -101,7 +107,7 @@
     </div>
 </main>
 
-<script>
+<script type="module">
 const statusMap={GREEN:{label:"Ser grei ut",className:"green"},YELLOW:{label:"Vær obs",className:"yellow"},RED:{label:"Høy risiko",className:"red"}};
 const orgNumber=new URLSearchParams(window.location.search).get("orgnr");
 const loading=document.getElementById("loading");
@@ -128,7 +134,7 @@ if(!orgNumber){
     loading.textContent="";
     error.textContent="Mangler organisasjonsnummer i URL.";
 }else{
-    loadCompany(orgNumber);
+    await loadCompany(orgNumber);
 }
 
 async function loadCompany(id){
@@ -136,7 +142,9 @@ async function loadCompany(id){
         const [detailResponse,scoreResponse]=await Promise.all([fetch(`/api/v1/companies/${id}`),fetch(`/api/v1/companies/${id}/score`)]);
         if(!detailResponse.ok||!scoreResponse.ok){
             const payload=await detailResponse.json().catch(()=>({}));
-            throw new Error(payload.detail||"Klarte ikke hente virksomheten.");
+            loading.textContent="";
+            error.textContent=payload.detail||"Klarte ikke hente virksomheten.";
+            return;
         }
         render(await detailResponse.json(),await scoreResponse.json());
         loading.style.display="none";
@@ -188,7 +196,7 @@ function renderList(target,items){
     target.innerHTML=items.map(([label,value])=>`<div class="item"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(value||"Ikke oppgitt")}</span></div>`).join("");
 }
 
-function joinValues(left,right){if(left&&right)return `${left} ${right}`;return left||right||"Ikke oppgitt";}
+function joinValues(left,right){return left&&right?`${left} ${right}`:left||right||"Ikke oppgitt";}
 function prettyRole(type){return String(type||"ROLE").toLowerCase().split("_").map(part=>part.charAt(0).toUpperCase()+part.slice(1)).join(" ");}
 function prettyFlag(flag){return String(flag||"FLAG").toLowerCase().split("_").map(part=>part.charAt(0).toUpperCase()+part.slice(1)).join(" ");}
 function flagDescription(flag){
