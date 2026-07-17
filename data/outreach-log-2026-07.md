@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 218
-- Sendt: 218
+- Antall hendelser: 232
+- Sendt: 225
 - Angret: 0
-- Aktive kontaktede selskaper: 218
+- Aktive kontaktede selskaper: 225
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-17 | 937897308 | STÅLAND AS | AS | email | website-offer |
+| 2026-07-17 | 938045038 | BØ SERVICE & CONSULTING | ENK | email | website-offer |
+| 2026-07-17 | 938025096 | AVA NORDIC APS | UTLA | email | website-offer |
+| 2026-07-17 | 938037329 | HAAKON GJEILO | ENK | email | website-offer |
+| 2026-07-17 | 938045739 | EKER EVENT OG TJENESTER | ENK | email | website-offer |
+| 2026-07-17 | 938084904 | FENRIR STUDIO HOLMBOE | ENK | email | website-offer |
+| 2026-07-17 | 938122822 | MARTIN MYSKA | UTLA | email | website-offer |
 | 2026-07-17 | 938118213 | ISEFOSSVEIEN 2 AS | AS | email | website-offer |
 | 2026-07-17 | 938058725 | HENRIK JENSEN TAXI | ENK | email | website-offer |
 | 2026-07-17 | 937998627 | GRAPHIC PACKAGING INTERNATIONAL BREMEN GMBH NUF | NUF | email | website-offer |
@@ -236,6 +243,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-17 16:18 | sent | 937897308 | STÅLAND AS | AS | email | - |
+| 2026-07-17 16:18 | sending | 937897308 | STÅLAND AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-17 16:18 | sent | 938045038 | BØ SERVICE & CONSULTING | ENK | email | - |
+| 2026-07-17 16:18 | sending | 938045038 | BØ SERVICE & CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-17 16:18 | sent | 938025096 | AVA NORDIC APS | UTLA | email | - |
+| 2026-07-17 16:18 | sending | 938025096 | AVA NORDIC APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-17 16:18 | sent | 938037329 | HAAKON GJEILO | ENK | email | - |
+| 2026-07-17 16:18 | sending | 938037329 | HAAKON GJEILO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-17 16:18 | sent | 938045739 | EKER EVENT OG TJENESTER | ENK | email | - |
+| 2026-07-17 16:18 | sending | 938045739 | EKER EVENT OG TJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-17 16:18 | sent | 938084904 | FENRIR STUDIO HOLMBOE | ENK | email | - |
+| 2026-07-17 16:18 | sending | 938084904 | FENRIR STUDIO HOLMBOE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-17 16:16 | sent | 938122822 | MARTIN MYSKA | UTLA | email | - |
+| 2026-07-17 16:16 | sending | 938122822 | MARTIN MYSKA | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-17 15:05 | sent | 938118213 | ISEFOSSVEIEN 2 AS | AS | email | - |
 | 2026-07-17 15:05 | sent | 938058725 | HENRIK JENSEN TAXI | ENK | email | - |
 | 2026-07-17 15:03 | sent | 937998627 | GRAPHIC PACKAGING INTERNATIONAL BREMEN GMBH NUF | NUF | email | - |
