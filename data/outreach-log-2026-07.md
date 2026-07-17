@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 210
-- Sendt: 210
+- Antall hendelser: 218
+- Sendt: 218
 - Angret: 0
-- Aktive kontaktede selskaper: 210
+- Aktive kontaktede selskaper: 218
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-17 | 938118213 | ISEFOSSVEIEN 2 AS | AS | email | website-offer |
+| 2026-07-17 | 938058725 | HENRIK JENSEN TAXI | ENK | email | website-offer |
+| 2026-07-17 | 937998627 | GRAPHIC PACKAGING INTERNATIONAL BREMEN GMBH NUF | NUF | email | website-offer |
+| 2026-07-17 | 938095612 | MAMA MIA HAMRE | ENK | email | website-offer |
+| 2026-07-17 | 937953925 | DANIEL PASARES HÅNDVERKSTJENESTER | ENK | email | website-offer |
+| 2026-07-17 | 938115818 | MARI KANSTAD MUSIC | ENK | email | website-offer |
+| 2026-07-17 | 838107052 | GALLERI JAF JØRN ANDRE FJELD | ENK | email | website-offer |
+| 2026-07-17 | 938117349 | ALEXANDER NORDSETH MYRVANG ENK | ENK | email | website-offer |
 | 2026-07-17 | 937887035 | GRADEK AS | AS | email | website-offer |
 | 2026-07-17 | 937887108 | ELG PERSONTRANSPORT AS | AS | email | website-offer |
 | 2026-07-17 | 937887086 | EVBEE ENERGY AS | AS | email | website-offer |
@@ -228,6 +236,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-17 15:05 | sent | 938118213 | ISEFOSSVEIEN 2 AS | AS | email | - |
+| 2026-07-17 15:05 | sent | 938058725 | HENRIK JENSEN TAXI | ENK | email | - |
+| 2026-07-17 15:03 | sent | 937998627 | GRAPHIC PACKAGING INTERNATIONAL BREMEN GMBH NUF | NUF | email | - |
+| 2026-07-17 15:03 | sent | 938095612 | MAMA MIA HAMRE | ENK | email | - |
+| 2026-07-17 15:03 | sent | 937953925 | DANIEL PASARES HÅNDVERKSTJENESTER | ENK | email | - |
+| 2026-07-17 15:03 | sent | 938115818 | MARI KANSTAD MUSIC | ENK | email | - |
+| 2026-07-17 15:03 | sent | 838107052 | GALLERI JAF JØRN ANDRE FJELD | ENK | email | - |
+| 2026-07-17 15:03 | sent | 938117349 | ALEXANDER NORDSETH MYRVANG ENK | ENK | email | - |
 | 2026-07-17 14:25 | sent | 937887035 | GRADEK AS | AS | email | - |
 | 2026-07-17 14:25 | sent | 937887108 | ELG PERSONTRANSPORT AS | AS | email | - |
 | 2026-07-17 14:25 | sent | 937887086 | EVBEE ENERGY AS | AS | email | - |
