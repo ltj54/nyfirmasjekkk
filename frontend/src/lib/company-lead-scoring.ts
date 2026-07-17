@@ -108,7 +108,8 @@ export function applyLeadQuickFilters(
         case "MISSING_WEBSITE":
           return !hasWebsiteSignal(company);
         case "NOT_SENT":
-          return !(status?.everSent ?? status?.sent) && status?.status !== "not_relevant";
+          return !(status?.sendBlocked ?? status?.everSent ?? status?.sent)
+            && status?.status !== "not_relevant";
         case "NOT_RELEVANT":
           return status?.status === "not_relevant";
       }

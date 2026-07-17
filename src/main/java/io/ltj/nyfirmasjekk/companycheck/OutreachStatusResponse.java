@@ -12,6 +12,7 @@ public record OutreachStatusResponse(
         String timestamp,
         String sentAt,
         String note,
-        boolean everSent
+        boolean everSent,
+        boolean sendBlocked
 ) {
 }

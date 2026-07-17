@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.regex.Pattern;
 
@@ -127,30 +126,6 @@ public class CompanyApiV1Mapper {
     private static final String SIGNAL_CLUSTERED_NEW_COMPANY_PATTERN = "CLUSTERED_NEW_COMPANY_PATTERN";
     private static final String ROLE_DAGLIG_LEDER = "DAGLIG_LEDER";
     private static final String ROLE_STYRELEDER = "STYRELEDER";
-    private static final Set<String> DOMAIN_STOP_WORDS = Set.of("as", "enk", "nuf", "sa", "fli", "da", "ans");
-    private static final Set<String> DOMAIN_TRAILING_QUALIFIERS = Set.of(
-            "ny",
-            "drift",
-            "holding",
-            "holdings",
-            "eiendom",
-            "eiendommer",
-            "invest",
-            "investment",
-            "investments",
-            "norge",
-            "norway",
-            "group",
-            "gruppen"
-    );
-    private static final Set<String> DOMAIN_SEQUENCE_TOKENS = Set.of("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x");
-    private static final Map<String, String> DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS = Map.of(
-            "vedlikeholdsservice", SERVICE_SUFFIX,
-            "renholdsservice", SERVICE_SUFFIX,
-            "batservice", SERVICE_SUFFIX,
-            "byggservice", SERVICE_SUFFIX,
-            "vaktmesterservice", SERVICE_SUFFIX
-    );
     private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,63}\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern PHONE_PATTERN = Pattern.compile("(?:\\+47\\s*+)?(?:\\d[\\s-]?+){7}\\d");
     private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*(20\\d{2})");
@@ -431,7 +406,7 @@ public class CompanyApiV1Mapper {
             return emailDomainWebsiteDiscovery(companyCheck, emailDomain, inspectAllCandidates);
         }
 
-        List<String> nameCandidates = nameBasedWebsiteCandidates(companyCheck.navn());
+        List<String> nameCandidates = WebsiteCandidateGenerator.generate(companyCheck.navn());
         if (!nameCandidates.isEmpty()) {
             return nameBasedWebsiteDiscovery(companyCheck, emailDomain, nameCandidates, inspectAllCandidates);
         }
@@ -2846,185 +2821,6 @@ public class CompanyApiV1Mapper {
                 .filter(Objects::nonNull)
                 .map(this::toRuleName)
                 .distinct()
-                .toList();
-    }
-
-    private List<String> nameBasedWebsiteCandidates(String companyName) {
-        List<String> normalizedVariants = normalizeCompanyNameVariantsForDomain(companyName);
-        if (normalizedVariants.isEmpty()) {
-            return List.of();
-        }
-
-        var candidates = new LinkedHashSet<String>();
-        for (String normalized : normalizedVariants) {
-            String compact = normalized.replace("-", "");
-            if (!hasText(compact) || compact.length() < 4) {
-                continue;
-            }
-            candidates.add(HTTPS_PREFIX + normalized + ".no");
-            if (!normalized.contains("-")) {
-                String dashed = dashedDomainVariant(normalized, companyName);
-                if (hasText(dashed) && !dashed.equals(normalized)) {
-                    candidates.add(HTTPS_PREFIX + dashed + ".no");
-                }
-            }
-            if (shouldSuggestPluralVariant(compact)) {
-                candidates.add(HTTPS_PREFIX + compact + "er.no");
-            }
-            if (compact.endsWith("er")) {
-                candidates.add(HTTPS_PREFIX + compact.substring(0, compact.length() - 2) + ".no");
-            }
-        }
-
-        return candidates.stream().limit(5).toList();
-    }
-
-    private boolean shouldSuggestPluralVariant(String normalized) {
-        return !normalized.endsWith("er")
-                && !normalized.endsWith("ene")
-                && !normalized.endsWith("e")
-                && !normalized.endsWith("i")
-                && !normalized.endsWith("og")
-                && Character.isLetter(normalized.charAt(normalized.length() - 1));
-    }
-
-    private List<String> normalizeCompanyNameVariantsForDomain(String companyName) {
-        if (!hasText(companyName)) {
-            return List.of();
-        }
-
-        String cleaned = companyName
-                .toLowerCase(Locale.ROOT)
-                .replace('æ', 'a')
-                .replace('ø', 'o')
-                .replace('å', 'a');
-
-        cleaned = cleaned.replace("&", " og ").replace("+", " og ");
-        cleaned = NON_ALPHANUMERIC_SPACE_PATTERN.matcher(cleaned).replaceAll(" ");
-        List<String> tokens = Arrays.stream(cleaned.trim().split("\\s+"))
-                .filter(part -> !part.isBlank())
-                .filter(part -> !DOMAIN_STOP_WORDS.contains(part))
-                .toList();
-
-        if (tokens.isEmpty()) {
-            return List.of();
-        }
-
-        var variants = new LinkedHashSet<String>();
-        List<String> withoutTrailingNoise = stripTrailingNoiseTokens(tokens);
-        if (!withoutTrailingNoise.equals(tokens)) {
-            addDomainVariant(variants, withoutTrailingNoise);
-            addDomainVariant(variants, removeGlueWords(withoutTrailingNoise));
-        }
-        if (tokens.size() == 3 && "og".equals(tokens.get(1))) {
-            addDomainVariant(variants, tokens);
-            addDomainVariant(variants, removeGlueWords(tokens));
-        }
-        if (tokens.size() > 2) {
-            addDomainVariant(variants, tokens.subList(0, 2));
-            addDomainVariant(variants, removeGlueWords(tokens.subList(0, 2)));
-            addFirstTwoAndLastBusinessWordVariant(variants, tokens);
-        }
-        addDomainVariant(variants, removeGlueWords(tokens));
-        addDomainVariant(variants, tokens);
-        addFirstAndLastBusinessWordVariant(variants, tokens);
-
-        return variants.stream().toList();
-    }
-
-    private void addDomainVariant(LinkedHashSet<String> variants, List<String> tokens) {
-        String normalized = tokens.stream()
-                .filter(part -> !part.isBlank())
-                .limit(3)
-                .collect(Collectors.joining());
-        if (hasText(normalized)) {
-            variants.add(normalized);
-        }
-    }
-
-    private List<String> removeGlueWords(List<String> tokens) {
-        return tokens.stream()
-                .filter(token -> !"og".equals(token))
-                .toList();
-    }
-
-    private void addFirstAndLastBusinessWordVariant(LinkedHashSet<String> variants, List<String> tokens) {
-        List<String> withoutGlueWords = removeGlueWords(stripTrailingNoiseTokens(tokens));
-        if (withoutGlueWords.size() < 3) {
-            return;
-        }
-
-        String first = withoutGlueWords.getFirst();
-        String last = DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS.getOrDefault(withoutGlueWords.getLast(), withoutGlueWords.getLast());
-        if (hasText(first) && hasText(last) && !first.equals(last)) {
-            addDomainVariant(variants, List.of(first, last));
-        }
-    }
-
-    private void addFirstTwoAndLastBusinessWordVariant(LinkedHashSet<String> variants, List<String> tokens) {
-        List<String> withoutGlueWords = removeGlueWords(stripTrailingNoiseTokens(tokens));
-        if (withoutGlueWords.size() < 3) {
-            return;
-        }
-
-        String first = withoutGlueWords.get(0);
-        String second = withoutGlueWords.get(1);
-        String last = DOMAIN_COMPOUND_SUFFIX_REPLACEMENTS.getOrDefault(withoutGlueWords.getLast(), withoutGlueWords.getLast());
-        if (hasText(first) && hasText(second) && hasText(last) && !second.equals(last)) {
-            addDomainVariant(variants, List.of(first, second, last));
-        }
-    }
-
-    private List<String> stripTrailingNoiseTokens(List<String> tokens) {
-        List<String> stripped = new ArrayList<>(tokens);
-        while (stripped.size() > 1 && isDroppableTrailingToken(stripped.getLast())) {
-            stripped.removeLast();
-        }
-        return stripped;
-    }
-
-    private boolean isDroppableTrailingToken(String token) {
-        return isSequenceToken(token) || DOMAIN_TRAILING_QUALIFIERS.contains(token.trim().toLowerCase(Locale.ROOT));
-    }
-
-    private boolean isSequenceToken(String token) {
-        if (!hasText(token)) {
-            return false;
-        }
-        String normalized = token.trim().toLowerCase(Locale.ROOT);
-        return normalized.matches("\\d+")
-                || DOMAIN_SEQUENCE_TOKENS.contains(normalized);
-    }
-
-    private String dashedDomainVariant(String normalized, String companyName) {
-        List<String> tokens = normalizeCompanyNameTokensForDomain(companyName);
-        List<String> withoutTrailingNoise = stripTrailingNoiseTokens(tokens);
-        List<String> selectedTokens = withoutTrailingNoise.isEmpty() ? tokens : withoutTrailingNoise;
-        String compact = selectedTokens.stream().limit(3).collect(Collectors.joining());
-        if (!compact.equals(normalized) || selectedTokens.size() < 2) {
-            return null;
-        }
-        return selectedTokens.stream()
-                .limit(3)
-                .collect(Collectors.joining("-"));
-    }
-
-    private List<String> normalizeCompanyNameTokensForDomain(String companyName) {
-        if (!hasText(companyName)) {
-            return List.of();
-        }
-        String cleaned = companyName
-                .toLowerCase(Locale.ROOT)
-                .replace('æ', 'a')
-                .replace('ø', 'o')
-                .replace('å', 'a')
-                .replace("&", " og ")
-                .replace("+", " og ")
-                .transform(normalized -> NON_ALPHANUMERIC_SPACE_PATTERN.matcher(normalized).replaceAll(" "));
-
-        return Arrays.stream(cleaned.trim().split("\\s+"))
-                .filter(part -> !part.isBlank())
-                .filter(part -> !DOMAIN_STOP_WORDS.contains(part))
                 .toList();
     }
 

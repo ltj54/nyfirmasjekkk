@@ -184,6 +184,8 @@ function formatPipelineStatus(entry: OutreachStatus) {
     case "not_relevant": return "Ikke aktuell";
     case "batch_excluded": return "Batch-sperret";
     case "reverted": return "Til vurdering";
+    case "sending": return "Utsendelse reservert";
+    case "delivery_uncertain": return "Levering uavklart";
     default: return "Uten status";
   }
 }

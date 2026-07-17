@@ -244,4 +244,55 @@ class OutreachLogServiceTests {
         assertThat(service.statusFor("123456789").sent()).isTrue();
         assertThat(service.exportJsonl().lines()).hasSize(1);
     }
+
+    @Test
+    void reserveSendAtomicallyBlocksASecondSendAttempt() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+        OutreachStatusRequest request = new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, null, 4500,
+                "email", "website-offer", null
+        );
+
+        assertThat(service.reserveSend(request)).isTrue();
+        assertThat(service.reserveSend(request)).isFalse();
+
+        OutreachStatusResponse status = service.statusFor("123456789");
+        assertThat(status.status()).isEqualTo("sending");
+        assertThat(status.sendBlocked()).isTrue();
+        assertThat(status.sent()).isFalse();
+        assertThat(status.everSent()).isFalse();
+    }
+
+    @Test
+    void uncertainDeliveryRemainsBlockedAfterRestart() {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Path archivePath = tempDir.resolve("archive");
+        Clock clock = Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC);
+        OutreachLogService service = new OutreachLogService(
+                logPath, tempDir, archivePath, clock, new ObjectMapper()
+        );
+        OutreachStatusRequest request = new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, null, 4500,
+                "email", "website-offer", null
+        );
+
+        assertThat(service.reserveSend(request)).isTrue();
+        service.markDeliveryUncertain(request, "SMTP svarte ikke entydig");
+
+        OutreachLogService restartedService = new OutreachLogService(
+                logPath, tempDir, archivePath, clock, new ObjectMapper()
+        );
+        OutreachStatusResponse status = restartedService.statusFor("123456789");
+        assertThat(status.status()).isEqualTo("delivery_uncertain");
+        assertThat(status.sendBlocked()).isTrue();
+        assertThat(status.sent()).isFalse();
+        assertThat(status.everSent()).isFalse();
+        assertThat(restartedService.reserveSend(request)).isFalse();
+    }
 }

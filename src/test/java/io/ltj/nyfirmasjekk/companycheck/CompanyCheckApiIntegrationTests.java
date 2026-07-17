@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -53,11 +54,24 @@ class CompanyCheckApiIntegrationTests {
     @MockitoBean
     private BrregAnnouncementsClient announcementsClient;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
+    private OutreachLogService outreachLogService;
+
     @BeforeEach
     void ryddTestOutreachFiler() throws Exception {
+        cacheManager.getCacheNames().forEach(cacheName -> {
+            var cache = cacheManager.getCache(cacheName);
+            if (cache != null) {
+                cache.clear();
+            }
+        });
         deleteRecursively(Path.of("./build/test-outreach-log.jsonl"));
         deleteRecursively(Path.of("./build/test-outreach-reports"));
         deleteRecursively(Path.of("./build/test-outreach-archive"));
+        outreachLogService.reloadFromStorage();
     }
 
     @Test

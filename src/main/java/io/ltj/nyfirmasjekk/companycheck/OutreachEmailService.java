@@ -74,7 +74,7 @@ public class OutreachEmailService {
         return request.htmlBody().trim();
     }
 
-    private void validate(OutreachEmailSendRequest request) {
+    void validate(OutreachEmailSendRequest request) {
         if (request == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mangler e-postdata.");
         }

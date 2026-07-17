@@ -218,6 +218,14 @@ function hasEverSentOutreach(status: OutreachStatus | null | undefined) {
   return status?.everSent ?? status?.sent ?? false;
 }
 
+function isOutreachSendBlocked(status: OutreachStatus | null | undefined) {
+  return status?.sendBlocked ?? (
+    hasEverSentOutreach(status)
+    || status?.status === "sending"
+    || status?.status === "delivery_uncertain"
+  );
+}
+
 function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website" | "websiteDiscovery">) {
   if (!company.email) {
     return "mangler e-postadresse";
@@ -533,7 +541,7 @@ export function CompanyCheckShell() {
     if (!company.email || !generatedEmail) {
       return false;
     }
-    if (hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])) {
+    if (isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])) {
       setEmailSendErrorByOrg((current) => ({
         ...current,
         [company.orgNumber]: "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.",
@@ -622,7 +630,7 @@ export function CompanyCheckShell() {
 
     const eligibleCompanies = companies.filter(
       (company) => canSelectEmailBatchCandidate(company)
-        && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber]),
+        && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber]),
     );
     const sendableCompanies = eligibleCompanies.filter((company) => Boolean(company.email));
     if (sendableCompanies.length === 0) {
@@ -1270,7 +1278,7 @@ export function CompanyCheckShell() {
   const visibleSearchCompanies = filteredCompanies.filter((company) => {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
     const batchBlocked = batchValidationByOrg[company.orgNumber]?.status === "blocked";
-    return !hasEverSentOutreach(outreachStatus)
+    return !isOutreachSendBlocked(outreachStatus)
       && outreachStatus?.status !== "not_relevant"
       && ((canUseEmailBatch && showBatchExcluded) || !batchBlocked);
   });
@@ -1279,7 +1287,7 @@ export function CompanyCheckShell() {
       batchSelectionByOrg[company.orgNumber]
       && canSelectEmailBatchCandidate(company)
       && batchValidationByOrg[company.orgNumber]?.status !== "blocked"
-      && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])
+      && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])
     )
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
@@ -1310,7 +1318,7 @@ export function CompanyCheckShell() {
       const validation = batchValidationByOrg[company.orgNumber];
       return company.email
         && canSelectEmailBatchCandidate(company)
-        && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])
+        && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])
         && validation?.status !== "ready"
         && validation?.status !== "blocked"
         && validation?.status !== "checking";
@@ -1893,7 +1901,7 @@ export function CompanyCheckShell() {
                     company={company}
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !hasEverSentOutreach(outreachStatusByOrg[company.orgNumber])}
+                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])}
                     batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
                     batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
                     onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
@@ -2095,7 +2103,7 @@ function BrregWebsiteMatchesPanel({
     if (!match.email || !generatedEmail) {
       return;
     }
-    if (hasEverSentOutreach(outreachStatusByOrg[match.orgNumber])) {
+    if (isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])) {
       setSendErrorByOrg((current) => ({
         ...current,
         [match.orgNumber]: "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.",
@@ -2210,7 +2218,7 @@ function BrregWebsiteMatchesPanel({
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
                     className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
-                    disabled={Boolean(generatingByOrg[match.orgNumber]) || hasEverSentOutreach(outreachStatusByOrg[match.orgNumber])}
+                    disabled={Boolean(generatingByOrg[match.orgNumber]) || isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])}
                     onClick={() => void generateEmail(match)}
                     type="button"
                   >
@@ -2218,14 +2226,14 @@ function BrregWebsiteMatchesPanel({
                   </Button>
                   <Button
                     className="rounded-sm border-[#BCCCDC] bg-white px-4 text-[#1F2933] hover:bg-[#F8FBFF]"
-                    disabled={!match.email || !generatedEmailByOrg[match.orgNumber] || Boolean(sendingByOrg[match.orgNumber]) || hasEverSentOutreach(outreachStatusByOrg[match.orgNumber])}
+                    disabled={!match.email || !generatedEmailByOrg[match.orgNumber] || Boolean(sendingByOrg[match.orgNumber]) || isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])}
                     onClick={() => void sendEmail(match)}
                     type="button"
                     variant="outline"
                   >
                     {sendingByOrg[match.orgNumber] ? "Sender..." : "Send automatisk"}
                   </Button>
-                  {hasEverSentOutreach(outreachStatusByOrg[match.orgNumber]) ? (
+                  {isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber]) ? (
                     <span className="text-[12px] font-semibold text-amber-700">Allerede kontaktet – ny utsending er sperret</span>
                   ) : !match.email ? (
                     <span className="text-[12px] font-medium text-[#7B8794]">Mangler e-post i BRREG</span>
@@ -3699,7 +3707,7 @@ function OutreachCheckbox({
   className?: string;
   compact?: boolean;
 }>) {
-  const sentAlready = hasEverSentOutreach(status);
+  const sentAlready = isOutreachSendBlocked(status);
   const markedNotRelevant = status?.status === "not_relevant";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
   const noteSuggestions = [
@@ -3912,7 +3920,7 @@ function CompanyDetailView({
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
   const generatedEmailHtml = generatedEmail ? buildOutreachEmailHtml(generatedEmail.body) : "";
-  const alreadyContacted = hasEverSentOutreach(outreachStatus);
+  const alreadyContacted = isOutreachSendBlocked(outreachStatus);
   const generatedEmailHref = generatedEmail && company.email && !alreadyContacted
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;

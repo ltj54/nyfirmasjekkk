@@ -122,11 +122,11 @@ public class CompanyCheckController {
             String organisasjonsnummer
     ) {
         rateLimitService.requireAllowed("company-batch-eligibility", 240, Duration.ofMinutes(10));
-        if (outreachLogService.hasEverSent(organisasjonsnummer)) {
+        if (outreachLogService.isSendBlocked(organisasjonsnummer)) {
             return new BatchEmailEligibilityResponse(
                     organisasjonsnummer,
                     false,
-                    "Det er allerede sendt en nettsidehenvendelse til virksomheten.",
+                    "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse.",
                     null
             );
         }
@@ -256,29 +256,38 @@ public class CompanyCheckController {
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer,
             @RequestBody OutreachEmailSendRequest request,
-        @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
     ) {
         adminAccessService.requireAdmin(adminToken);
-        synchronized (outreachLogService) {
-            if (outreachLogService.hasEverSent(organisasjonsnummer)) {
-                throw new org.springframework.web.server.ResponseStatusException(
-                        HttpStatus.CONFLICT,
-                        "Det er allerede sendt en nettsidehenvendelse til virksomheten."
-                );
-            }
+        outreachEmailService.validate(request);
+        var outreachRequest = new OutreachStatusRequest(
+                organisasjonsnummer,
+                request.companyName(),
+                request.organizationForm(),
+                true,
+                "sent",
+                request.price(),
+                request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
+                request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
+                request.note()
+        );
+        if (!outreachLogService.reserveSend(outreachRequest)) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse."
+            );
+        }
+
+        try {
             String recipient = outreachEmailService.send(request);
-            var status = outreachLogService.register(new OutreachStatusRequest(
-                    organisasjonsnummer,
-                    request.companyName(),
-                    request.organizationForm(),
-                    true,
-                    "sent",
-                    request.price(),
-                    request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
-                    request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
-                    request.note()
-            ));
+            var status = outreachLogService.register(outreachRequest);
             return new OutreachEmailSendResponse(true, recipient, request.subject(), status);
+        } catch (RuntimeException exception) {
+            outreachLogService.markDeliveryUncertain(
+                    outreachRequest,
+                    "SMTP-leveringen feilet eller fikk ukjent utfall. Ny utsendelse er sperret for å unngå duplikat."
+            );
+            throw exception;
         }
     }
 

@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +39,8 @@ public class OutreachLogService {
     private static final String STATUS_REVERTED = "reverted";
     private static final String STATUS_NOT_RELEVANT = "not_relevant";
     private static final String STATUS_BATCH_EXCLUDED = "batch_excluded";
+    private static final String STATUS_SENDING = "sending";
+    private static final String STATUS_DELIVERY_UNCERTAIN = "delivery_uncertain";
     private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
     private final Path logPath;
@@ -45,6 +48,9 @@ public class OutreachLogService {
     private final Path archiveDirectory;
     private final Clock clock;
     private final ObjectMapper objectMapper;
+    private final List<OutreachLogEntry> indexedEntries = new ArrayList<>();
+    private final Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
+    private final Set<String> everSentOrgNumbers = new HashSet<>();
 
     @Autowired
     public OutreachLogService(
@@ -62,22 +68,33 @@ public class OutreachLogService {
         this.archiveDirectory = archiveDirectory;
         this.clock = clock;
         this.objectMapper = objectMapper;
+        rebuildIndex(readAllEntries());
+    }
+
+    synchronized void reloadFromStorage() {
+        rebuildIndex(readAllEntries());
     }
 
     public synchronized OutreachStatusResponse statusFor(String orgNumber) {
-        List<OutreachLogEntry> entries = readAllEntries().stream()
-                .filter(entry -> orgNumber.equals(entry.orgNumber()))
-                .sorted(Comparator.comparing(this::sortTimestamp))
-                .toList();
-        OutreachLogEntry latestEntry = entries.isEmpty() ? null : entries.getLast();
-        boolean everSent = entries.stream().anyMatch(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()));
-        return toLatestStatusResponse(orgNumber, latestEntry, everSent);
+        OutreachLogEntry latestEntry = latestByOrgNumber.get(orgNumber);
+        return toLatestStatusResponse(
+                orgNumber,
+                latestEntry,
+                everSentOrgNumbers.contains(orgNumber),
+                isSendBlocked(orgNumber)
+        );
     }
 
     public synchronized boolean hasEverSent(String orgNumber) {
-        return readAllEntries().stream()
-                .anyMatch(entry -> orgNumber.equals(entry.orgNumber())
-                        && STATUS_SENT.equalsIgnoreCase(entry.status()));
+        return everSentOrgNumbers.contains(orgNumber);
+    }
+
+    public synchronized boolean isSendBlocked(String orgNumber) {
+        if (everSentOrgNumbers.contains(orgNumber)) {
+            return true;
+        }
+        OutreachLogEntry latestEntry = latestByOrgNumber.get(orgNumber);
+        return latestEntry != null && isBlockingDeliveryStatus(latestEntry.status());
     }
 
     public synchronized Map<String, OutreachStatusResponse> statusesFor(Collection<String> orgNumbers) {
@@ -86,24 +103,13 @@ public class OutreachLogService {
         }
 
         var requestedOrgNumbers = new HashSet<>(orgNumbers);
-        Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
-        var everSentOrgNumbers = new HashSet<String>();
-        readAllEntries().stream()
-                .filter(entry -> requestedOrgNumbers.contains(entry.orgNumber()))
-                .sorted(Comparator.comparing(this::sortTimestamp))
-                .forEach(entry -> {
-                    latestByOrgNumber.put(entry.orgNumber(), entry);
-                    if (STATUS_SENT.equalsIgnoreCase(entry.status())) {
-                        everSentOrgNumbers.add(entry.orgNumber());
-                    }
-                });
-
         Map<String, OutreachStatusResponse> responses = new LinkedHashMap<>();
         for (String orgNumber : requestedOrgNumbers) {
             responses.put(orgNumber, toLatestStatusResponse(
                     orgNumber,
                     latestByOrgNumber.get(orgNumber),
-                    everSentOrgNumbers.contains(orgNumber)
+                    everSentOrgNumbers.contains(orgNumber),
+                    isSendBlocked(orgNumber)
             ));
         }
         return responses;
@@ -112,7 +118,8 @@ public class OutreachLogService {
     private OutreachStatusResponse toLatestStatusResponse(
             String orgNumber,
             OutreachLogEntry latestEntry,
-            boolean everSent
+            boolean everSent,
+            boolean sendBlocked
     ) {
         if (latestEntry == null || !STATUS_SENT.equalsIgnoreCase(latestEntry.status())) {
             return new OutreachStatusResponse(
@@ -127,7 +134,8 @@ public class OutreachLogService {
                     latestEntry == null ? null : latestEntry.timestamp(),
                     null,
                     latestEntry == null ? null : latestEntry.note(),
-                    everSent
+                    everSent,
+                    sendBlocked
             );
         }
         return new OutreachStatusResponse(
@@ -142,25 +150,25 @@ public class OutreachLogService {
                 latestEntry.timestamp(),
                 latestEntry.timestamp(),
                 latestEntry.note(),
-                everSent
+                everSent,
+                sendBlocked
         );
     }
 
     public synchronized List<OutreachStatusResponse> statuses() {
-        List<OutreachLogEntry> entries = readAllEntries();
-        Set<String> everSentOrgNumbers = entries.stream()
-                .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
-                .map(OutreachLogEntry::orgNumber)
-                .collect(java.util.stream.Collectors.toSet());
-        return entries.stream()
+        return indexedEntries.stream()
                 .sorted(Comparator.comparing(this::sortTimestamp).reversed())
-                .map(entry -> toStatusResponse(entry, everSentOrgNumbers.contains(entry.orgNumber())))
+                .map(entry -> toStatusResponse(
+                        entry,
+                        everSentOrgNumbers.contains(entry.orgNumber()),
+                        isSendBlocked(entry.orgNumber())
+                ))
                 .toList();
     }
 
     public synchronized String exportJsonl() {
         StringBuilder export = new StringBuilder();
-        readAllEntries().stream()
+        indexedEntries.stream()
                 .sorted(Comparator.comparing(this::sortTimestamp))
                 .map(this::serializeEntry)
                 .forEach(export::append);
@@ -170,10 +178,10 @@ public class OutreachLogService {
     public synchronized OutreachImportResponse importJsonl(String jsonl) {
         List<OutreachLogEntry> importedEntries = parseImportedEntries(jsonl);
         if (importedEntries.isEmpty()) {
-            return new OutreachImportResponse(0, 0, readAllEntries().size());
+            return new OutreachImportResponse(0, 0, indexedEntries.size());
         }
 
-        Map<String, OutreachLogEntry> existingByKey = readAllEntries().stream()
+        Map<String, OutreachLogEntry> existingByKey = indexedEntries.stream()
                 .collect(java.util.stream.Collectors.toMap(
                         this::entryKey,
                         entry -> entry,
@@ -202,6 +210,7 @@ public class OutreachLogService {
                     .toList();
             writeEntries(logPath, activeEntries);
             rotateArchivedEntries();
+            newEntries.forEach(this::indexEntry);
 
             newEntries.stream()
                     .map(entry -> parseYearMonth(entry.timestamp()))
@@ -213,7 +222,7 @@ public class OutreachLogService {
         return new OutreachImportResponse(
                 newEntries.size(),
                 importedEntries.size() - newEntries.size(),
-                readAllEntries().size()
+                indexedEntries.size()
         );
     }
 
@@ -231,12 +240,55 @@ public class OutreachLogService {
                 blankToNull(request.note())
         );
         appendEntry(entry);
+        indexEntry(entry);
         rotateArchivedEntries();
         refreshMonthlyReportFor(entry.timestamp());
         return statusFor(request.orgNumber());
     }
 
-    private OutreachStatusResponse toStatusResponse(OutreachLogEntry entry, boolean everSent) {
+    public synchronized boolean reserveSend(OutreachStatusRequest request) {
+        validateRequest(request);
+        if (isSendBlocked(request.orgNumber())) {
+            return false;
+        }
+        appendInternalStatus(request, STATUS_SENDING, "Utsendelse reservert før SMTP-levering.");
+        return true;
+    }
+
+    public synchronized void markDeliveryUncertain(
+            OutreachStatusRequest request,
+            String reason
+    ) {
+        validateRequest(request);
+        String note = blankToNull(reason) == null
+                ? "SMTP-levering feilet eller fikk ukjent utfall. Ny utsendelse er sperret."
+                : reason.trim();
+        appendInternalStatus(request, STATUS_DELIVERY_UNCERTAIN, note);
+    }
+
+    private void appendInternalStatus(OutreachStatusRequest request, String status, String note) {
+        OutreachLogEntry entry = new OutreachLogEntry(
+                Instant.now(clock).toString(),
+                request.orgNumber(),
+                blankToNull(request.companyName()),
+                blankToNull(request.organizationForm()),
+                status,
+                request.price(),
+                blankToNull(request.channel()) == null ? "email" : request.channel().trim(),
+                blankToNull(request.offerType()) == null ? "website-offer" : request.offerType().trim(),
+                note
+        );
+        appendEntry(entry);
+        indexEntry(entry);
+        rotateArchivedEntries();
+        refreshMonthlyReportFor(entry.timestamp());
+    }
+
+    private OutreachStatusResponse toStatusResponse(
+            OutreachLogEntry entry,
+            boolean everSent,
+            boolean sendBlocked
+    ) {
         boolean sent = STATUS_SENT.equalsIgnoreCase(entry.status());
         return new OutreachStatusResponse(
                 entry.orgNumber(),
@@ -250,7 +302,8 @@ public class OutreachLogService {
                 entry.timestamp(),
                 sent ? entry.timestamp() : null,
                 entry.note(),
-                everSent
+                everSent,
+                sendBlocked
         );
     }
 
@@ -270,6 +323,8 @@ public class OutreachLogService {
             case STATUS_REVERTED -> STATUS_REVERTED;
             case STATUS_NOT_RELEVANT -> STATUS_NOT_RELEVANT;
             case STATUS_BATCH_EXCLUDED -> STATUS_BATCH_EXCLUDED;
+            case STATUS_SENDING -> STATUS_SENDING;
+            case STATUS_DELIVERY_UNCERTAIN -> STATUS_DELIVERY_UNCERTAIN;
             default -> throw new IllegalArgumentException("Ugyldig outreach-status");
         };
     }
@@ -299,10 +354,7 @@ public class OutreachLogService {
             return;
         }
 
-        List<OutreachLogEntry> monthEntries = readAllEntries().stream()
-                .filter(entry -> month.equals(parseYearMonth(entry.timestamp())))
-                .sorted(Comparator.comparing(OutreachLogEntry::timestamp))
-                .toList();
+        List<OutreachLogEntry> monthEntries = readEntriesForMonth(month);
 
         if (monthEntries.isEmpty()) {
             return;
@@ -384,7 +436,7 @@ public class OutreachLogService {
     }
 
     private List<OutreachLogEntry> readEntriesForMonth(YearMonth month) {
-        return readAllEntries().stream()
+        return indexedEntries.stream()
                 .filter(entry -> month.equals(parseYearMonth(entry.timestamp())))
                 .sorted(Comparator.comparing(this::sortTimestamp))
                 .toList();
@@ -470,7 +522,14 @@ public class OutreachLogService {
 
     private void validateImportedStatus(String status) {
         String normalizedStatus = status.trim().toLowerCase(Locale.ROOT);
-        if (!Set.of(STATUS_SENT, STATUS_REVERTED, STATUS_NOT_RELEVANT, STATUS_BATCH_EXCLUDED)
+        if (!Set.of(
+                STATUS_SENT,
+                STATUS_REVERTED,
+                STATUS_NOT_RELEVANT,
+                STATUS_BATCH_EXCLUDED,
+                STATUS_SENDING,
+                STATUS_DELIVERY_UNCERTAIN
+        )
                 .contains(normalizedStatus)) {
             throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
         }
@@ -478,6 +537,31 @@ public class OutreachLogService {
 
     private String blankToNull(String value) {
         return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private boolean isBlockingDeliveryStatus(String status) {
+        return STATUS_SENDING.equalsIgnoreCase(status)
+                || STATUS_DELIVERY_UNCERTAIN.equalsIgnoreCase(status);
+    }
+
+    private void rebuildIndex(List<OutreachLogEntry> entries) {
+        indexedEntries.clear();
+        latestByOrgNumber.clear();
+        everSentOrgNumbers.clear();
+        entries.stream()
+                .filter(Objects::nonNull)
+                .forEach(this::indexEntry);
+    }
+
+    private void indexEntry(OutreachLogEntry entry) {
+        indexedEntries.add(entry);
+        if (STATUS_SENT.equalsIgnoreCase(entry.status())) {
+            everSentOrgNumbers.add(entry.orgNumber());
+        }
+        OutreachLogEntry currentLatest = latestByOrgNumber.get(entry.orgNumber());
+        if (currentLatest == null || !sortTimestamp(entry).isBefore(sortTimestamp(currentLatest))) {
+            latestByOrgNumber.put(entry.orgNumber(), entry);
+        }
     }
 
     private void writeEntries(Path path, List<OutreachLogEntry> entries) {
