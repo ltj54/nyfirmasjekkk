@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 200
-- Sendt: 200
+- Antall hendelser: 210
+- Sendt: 210
 - Angret: 0
-- Aktive kontaktede selskaper: 200
+- Aktive kontaktede selskaper: 210
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-17 | 937887035 | GRADEK AS | AS | email | website-offer |
+| 2026-07-17 | 937887108 | ELG PERSONTRANSPORT AS | AS | email | website-offer |
+| 2026-07-17 | 937887086 | EVBEE ENERGY AS | AS | email | website-offer |
+| 2026-07-17 | 938117446 | SVAHN SOUND | ENK | email | website-offer |
+| 2026-07-17 | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | website-offer |
+| 2026-07-17 | 937817614 | NZO WAS B.V. NUF | NUF | email | website-offer |
+| 2026-07-17 | 938115478 | NZO WAS B.V. | UTLA | email | website-offer |
+| 2026-07-17 | 838110312 | NEDRE HOLAND GÅRD - BERGE | ENK | email | website-offer |
+| 2026-07-17 | 937950632 | NASSAU PARC B.V. NUF | NUF | email | website-offer |
+| 2026-07-17 | 938117411 | SEAHOUSE ANDREASSEN | ENK | email | website-offer |
 | 2026-07-16 | 938098352 | MICHAL WITEMBERG | UTLA | email | website-offer |
 | 2026-07-16 | 938098395 | FROMREIDE LANDBRUK OG MASKIN | ENK | email | website-offer |
 | 2026-07-16 | 938097097 | FEMLONE ACADEMY AS | AS | email | website-offer |
@@ -218,6 +228,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-17 14:25 | sent | 937887035 | GRADEK AS | AS | email | - |
+| 2026-07-17 14:25 | sent | 937887108 | ELG PERSONTRANSPORT AS | AS | email | - |
+| 2026-07-17 14:25 | sent | 937887086 | EVBEE ENERGY AS | AS | email | - |
+| 2026-07-17 14:19 | sent | 938117446 | SVAHN SOUND | ENK | email | - |
+| 2026-07-17 14:19 | sent | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | - |
+| 2026-07-17 14:19 | sent | 937817614 | NZO WAS B.V. NUF | NUF | email | - |
+| 2026-07-17 14:19 | sent | 938115478 | NZO WAS B.V. | UTLA | email | - |
+| 2026-07-17 14:19 | sent | 838110312 | NEDRE HOLAND GÅRD - BERGE | ENK | email | - |
+| 2026-07-17 14:19 | sent | 937950632 | NASSAU PARC B.V. NUF | NUF | email | - |
+| 2026-07-17 14:19 | sent | 938117411 | SEAHOUSE ANDREASSEN | ENK | email | - |
 | 2026-07-16 12:32 | sent | 938098352 | MICHAL WITEMBERG | UTLA | email | - |
 | 2026-07-16 12:32 | sent | 938098395 | FROMREIDE LANDBRUK OG MASKIN | ENK | email | - |
 | 2026-07-16 12:31 | sent | 938097097 | FEMLONE ACADEMY AS | AS | email | - |
