@@ -4,15 +4,50 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 232
-- Sendt: 225
+- Antall hendelser: 302
+- Sendt: 260
 - Angret: 0
-- Aktive kontaktede selskaper: 225
+- Aktive kontaktede selskaper: 260
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-20 | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | website-offer |
+| 2026-07-20 | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | website-offer |
+| 2026-07-20 | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | website-offer |
+| 2026-07-20 | 937915985 | ORKLAND DISTRIKTSFORUM | FLI | email | website-offer |
+| 2026-07-20 | 837848652 | FLORENTIN MEDRIANE FYSIOTERAPI | ENK | email | website-offer |
+| 2026-07-20 | 937857209 | ERNTZEN LASER OG HOBBY | ENK | email | website-offer |
+| 2026-07-20 | 937671040 | BEAUTY CLINIC CECILIE GOFFENG | ENK | email | website-offer |
+| 2026-07-20 | 937882106 | STIEN HJEM - SABINA HAALAND | ENK | email | website-offer |
+| 2026-07-20 | 937889038 | MICHELLE FOSS DESIGN | ENK | email | website-offer |
+| 2026-07-20 | 937870965 | MEDICMIDT NORDBAKK | ENK | email | website-offer |
+| 2026-07-20 | 937921268 | KLEAN KODE AS | AS | email | website-offer |
+| 2026-07-20 | 937888333 | ANDJELA RAJKOVIC RÅDGIVNING | ENK | email | website-offer |
+| 2026-07-20 | 937875479 | ANDERSEN RÅDGIVINGSTJENESTE OG SERVICE | ENK | email | website-offer |
+| 2026-07-20 | 937988338 | HOT CLUB DE FOSSEFALL AS | AS | email | website-offer |
+| 2026-07-20 | 937944160 | JON OLAV LEIRA | ENK | email | website-offer |
+| 2026-07-20 | 937837402 | SEA RANCH APS NUF | NUF | email | website-offer |
+| 2026-07-20 | 937967772 | INFRAX BUILDTECH AB | UTLA | email | website-offer |
+| 2026-07-20 | 937954603 | MATAEV SALES | ENK | email | website-offer |
+| 2026-07-20 | 937017979 | NORTHHAVEN MANAGEMENT AS | AS | email | website-offer |
+| 2026-07-20 | 938031177 | MARTIN SØILEN | ENK | email | website-offer |
+| 2026-07-20 | 938017913 | FÅBERG TREKKSPELLFORENING | FLI | email | website-offer |
+| 2026-07-20 | 938086362 | NORD-ØSTERDAL MOTOR CLUB | FLI | email | website-offer |
+| 2026-07-20 | 938125406 | KENNEL KNIHA | ENK | email | website-offer |
+| 2026-07-20 | 938125279 | PAVEL KOROLIOV | ENK | email | website-offer |
+| 2026-07-20 | 838124372 | LINDEMAN TECHNOLOGIES | ENK | email | website-offer |
+| 2026-07-20 | 938124116 | VASK OG FIKS JOHANSEN | ENK | email | website-offer |
+| 2026-07-20 | 938121435 | M RYDNINGEN MASKIN | ENK | email | website-offer |
+| 2026-07-20 | 938123330 | GARCIA GUZMAN HEDONISM | ENK | email | website-offer |
+| 2026-07-20 | 938126208 | WOOD WORKS O.K. CORTAC | ENK | email | website-offer |
+| 2026-07-20 | 938060991 | VERICA STAUBO - HJEM OG VELVÆRE | ENK | email | website-offer |
+| 2026-07-20 | 938125384 | QVIGSTAD BILPLEIE | ENK | email | website-offer |
+| 2026-07-20 | 938120153 | FREDRIKSEN MASKIN OG SERVICE | ENK | email | website-offer |
+| 2026-07-20 | 938123357 | FILMON ESTIFANOS | ENK | email | website-offer |
+| 2026-07-20 | 938124213 | ANDERSEN MEDIA | ENK | email | website-offer |
+| 2026-07-20 | 838124402 | ALKHATIB ALBUAINI DINING | ENK | email | website-offer |
 | 2026-07-17 | 937897308 | STÅLAND AS | AS | email | website-offer |
 | 2026-07-17 | 938045038 | BØ SERVICE & CONSULTING | ENK | email | website-offer |
 | 2026-07-17 | 938025096 | AVA NORDIC APS | UTLA | email | website-offer |
@@ -243,6 +278,76 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-20 11:15 | sent | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | - |
+| 2026-07-20 11:15 | sending | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | - |
+| 2026-07-20 11:14 | sending | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | - |
+| 2026-07-20 11:14 | sending | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937915985 | ORKLAND DISTRIKTSFORUM | FLI | email | - |
+| 2026-07-20 11:14 | sending | 937915985 | ORKLAND DISTRIKTSFORUM | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 837848652 | FLORENTIN MEDRIANE FYSIOTERAPI | ENK | email | - |
+| 2026-07-20 11:14 | sending | 837848652 | FLORENTIN MEDRIANE FYSIOTERAPI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937857209 | ERNTZEN LASER OG HOBBY | ENK | email | - |
+| 2026-07-20 11:14 | sending | 937857209 | ERNTZEN LASER OG HOBBY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937671040 | BEAUTY CLINIC CECILIE GOFFENG | ENK | email | - |
+| 2026-07-20 11:14 | sending | 937671040 | BEAUTY CLINIC CECILIE GOFFENG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937882106 | STIEN HJEM - SABINA HAALAND | ENK | email | - |
+| 2026-07-20 11:14 | sending | 937882106 | STIEN HJEM - SABINA HAALAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:14 | sent | 937889038 | MICHELLE FOSS DESIGN | ENK | email | - |
+| 2026-07-20 11:14 | sending | 937889038 | MICHELLE FOSS DESIGN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:13 | sent | 937870965 | MEDICMIDT NORDBAKK | ENK | email | - |
+| 2026-07-20 11:13 | sending | 937870965 | MEDICMIDT NORDBAKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:13 | sent | 937921268 | KLEAN KODE AS | AS | email | - |
+| 2026-07-20 11:13 | sending | 937921268 | KLEAN KODE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:13 | sent | 937888333 | ANDJELA RAJKOVIC RÅDGIVNING | ENK | email | - |
+| 2026-07-20 11:13 | sending | 937888333 | ANDJELA RAJKOVIC RÅDGIVNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:13 | sent | 937875479 | ANDERSEN RÅDGIVINGSTJENESTE OG SERVICE | ENK | email | - |
+| 2026-07-20 11:13 | sending | 937875479 | ANDERSEN RÅDGIVINGSTJENESTE OG SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:09 | sent | 937988338 | HOT CLUB DE FOSSEFALL AS | AS | email | - |
+| 2026-07-20 11:09 | sending | 937988338 | HOT CLUB DE FOSSEFALL AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:09 | sent | 937944160 | JON OLAV LEIRA | ENK | email | - |
+| 2026-07-20 11:09 | sending | 937944160 | JON OLAV LEIRA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:09 | sent | 937837402 | SEA RANCH APS NUF | NUF | email | - |
+| 2026-07-20 11:09 | sending | 937837402 | SEA RANCH APS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:09 | sent | 937967772 | INFRAX BUILDTECH AB | UTLA | email | - |
+| 2026-07-20 11:09 | sending | 937967772 | INFRAX BUILDTECH AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:09 | sent | 937954603 | MATAEV SALES | ENK | email | - |
+| 2026-07-20 11:09 | sending | 937954603 | MATAEV SALES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:07 | sent | 937017979 | NORTHHAVEN MANAGEMENT AS | AS | email | - |
+| 2026-07-20 11:07 | sending | 937017979 | NORTHHAVEN MANAGEMENT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:07 | sent | 938031177 | MARTIN SØILEN | ENK | email | - |
+| 2026-07-20 11:07 | sending | 938031177 | MARTIN SØILEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:07 | sent | 938017913 | FÅBERG TREKKSPELLFORENING | FLI | email | - |
+| 2026-07-20 11:07 | sending | 938017913 | FÅBERG TREKKSPELLFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:05 | sent | 938086362 | NORD-ØSTERDAL MOTOR CLUB | FLI | email | - |
+| 2026-07-20 11:05 | sending | 938086362 | NORD-ØSTERDAL MOTOR CLUB | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:05 | sent | 938125406 | KENNEL KNIHA | ENK | email | - |
+| 2026-07-20 11:05 | sending | 938125406 | KENNEL KNIHA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938125279 | PAVEL KOROLIOV | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938125279 | PAVEL KOROLIOV | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 838124372 | LINDEMAN TECHNOLOGIES | ENK | email | - |
+| 2026-07-20 11:04 | sending | 838124372 | LINDEMAN TECHNOLOGIES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938124116 | VASK OG FIKS JOHANSEN | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938124116 | VASK OG FIKS JOHANSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938121435 | M RYDNINGEN MASKIN | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938121435 | M RYDNINGEN MASKIN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938123330 | GARCIA GUZMAN HEDONISM | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938123330 | GARCIA GUZMAN HEDONISM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938126208 | WOOD WORKS O.K. CORTAC | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938126208 | WOOD WORKS O.K. CORTAC | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938060991 | VERICA STAUBO - HJEM OG VELVÆRE | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938060991 | VERICA STAUBO - HJEM OG VELVÆRE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938125384 | QVIGSTAD BILPLEIE | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938125384 | QVIGSTAD BILPLEIE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938120153 | FREDRIKSEN MASKIN OG SERVICE | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938120153 | FREDRIKSEN MASKIN OG SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938123357 | FILMON ESTIFANOS | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938123357 | FILMON ESTIFANOS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 938124213 | ANDERSEN MEDIA | ENK | email | - |
+| 2026-07-20 11:04 | sending | 938124213 | ANDERSEN MEDIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-20 11:04 | sent | 838124402 | ALKHATIB ALBUAINI DINING | ENK | email | - |
+| 2026-07-20 11:04 | sending | 838124402 | ALKHATIB ALBUAINI DINING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-17 16:18 | sent | 937897308 | STÅLAND AS | AS | email | - |
 | 2026-07-17 16:18 | sending | 937897308 | STÅLAND AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-17 16:18 | sent | 938045038 | BØ SERVICE & CONSULTING | ENK | email | - |
