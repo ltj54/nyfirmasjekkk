@@ -14,9 +14,20 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 @Service
 public class OutreachEmailService {
+    private static final Set<String> APPROVED_WEBSITE_EMAIL_EVIDENCE = Set.of(
+            "WEAK_CONTACT_POINT",
+            "CONTACT_DETAILS_NOT_VISIBLE",
+            "MISSING_PRIVACY_NOTICE",
+            "CRAWL_FORM_PRIVACY_REVIEW",
+            "MISSING_ORG_NUMBER",
+            "MISSING_OPENING_HOURS",
+            "MISSING_ABOUT_SECTION",
+            "MISSING_HTTPS"
+    );
     private final ObjectProvider<JavaMailSender> mailSenderProvider;
     private final String from;
     private final String fromName;
@@ -86,6 +97,13 @@ public class OutreachEmailService {
         }
         if (request.body() == null || request.body().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mailtekst mangler.");
+        }
+        if ("website-registered-review".equals(request.offerType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Registrert nettside må vurderes manuelt før utsending.");
+        }
+        if ("website-improvement-offer".equals(request.offerType())
+                && (request.evidenceCode() == null || !APPROVED_WEBSITE_EMAIL_EVIDENCE.contains(request.evidenceCode()))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nettsidemail krever et konkret, godkjent funn.");
         }
     }
 

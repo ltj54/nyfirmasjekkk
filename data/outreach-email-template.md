@@ -14,12 +14,13 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - NACE: `{{naceCode}}` / `{{naceDescription}}`
 - Salgsgruppe: `{{salesSegment}}`
 - Tilpasset bransjetekst: `{{salesSegmentPitch}}`
-- Mottakerform: `{{recipientSubject}}`, `{{recipientPossessive}}`, `{{recipientObject}}`, `{{recipientPagePossessive}}`
+- Hilsningslinje: `{{greetingLine}}` (`Hei [fornavn],` eller `Hei,`)
 - Domeneeksempel: `{{domainExample}}`
 - Domenelinje: `{{domainLine}}`
 - Pris: `{{priceValue}}`
 - Registrert nettside-intro: `{{registeredWebsiteIntro}}`
-- Forsiktig personvern/UU-linje: `{{websiteComplianceMailLine}}`
+- Dokumentert observasjon: `{{websiteQualityMailLine}}`
+- Kort konsekvens: `{{websiteQualityImpactLine}}`
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
   - `[For eksempel: nylig registrert]`
@@ -43,142 +44,107 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Hold e-posten kort, helst 6-9 linjer før signatur.
 - Skriv på norsk bokmal.
 - Ikke bruk overdreven salgstone.
-- Ikke påsta ting du ikke vet sikkert.
+- Ikke påstå ting du ikke vet sikkert.
 - Hvis kontaktperson mangler, skriv til selskapet generelt.
 - Hvis telefon mangler, ikke nevn telefon.
 - Ikke prøv å overbevise i første e-post. Målet er å få svar.
-- Bruk maks 1-2 konkrete funn i første e-post.
+- Bruk nøyaktig ett konkret, dokumentert funn i forbedringsmailen.
+- Registrert nettside uten et godkjent funn skal legges til manuell kontroll og ikke sendes automatisk.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
-
-## Emneforslag
-
-- `Nettside for {{companyName}}`
-- `{{companyName}} - nettside/kontaktinfo`
-- `Spørsmål om nettsiden til {{companyName}}`
-- `Kort observasjon om {{registeredWebsite}}`
-- `Fant ikke nettside for {{companyName}}`
 
 ## E-postmal
 
-Emne: `Nettside for {{companyName}}`
+Emne: `Fant ikke nettsiden til {{companyName}}`
 
-Hei {{greeting}},
+{{greetingLine}}
 
-Jeg kom over {{companyName}}, men fant ikke en tydelig nettside/kontaktside.
+Jeg kom over {{companyName}}, men fant ikke en tydelig nettside eller kontaktside.
 
-Jeg lager enkle nettsider for små og nye virksomheter - med kort presentasjon, kontaktinfo og tydelig kontaktvei.
+Jeg lager profesjonelle nettsider for små virksomheter, med presentasjon, kontaktinformasjon og en tydelig vei for kunder som ønsker å ta kontakt.
 
-Pris for en enkel førsteside er fra kr {{priceValue}}.
+Jeg tilbyr en profesjonell førsteside til {{priceValue}} kr.
 
-Eksempel:
+Her er et eksempel på hvordan jeg jobber:
 {{senderWebsite}}
 
-Hvis det er aktuelt, kan jeg sende et konkret forslag.
+Skal jeg sende et uforpliktende forslag til hvordan en side for {{companyName}} kan se ut?
 
 Mvh  
 {{senderName}}  
+LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
 ## E-postmal - registrert nettside svarer ikke
 
-Emne: `Kort observasjon om {{registeredWebsite}}`
+Emne: `Nettsiden til {{companyName}} svarte ikke`
 
-Hei {{greeting}},
+{{greetingLine}}
 
-Jeg så at {{companyName}} har {{registeredWebsite}} registrert som nettside.
+Jeg så at {{registeredWebsite}} er registrert som nettside for {{companyName}}.
 
-Da jeg sjekket, svarte ikke siden hos meg. Det kan selvfølgelig være midlertidig, men jeg ville bare nevne det i tilfelle dere ikke er klar over det.
+Da jeg sjekket den, svarte ikke siden hos meg. Det kan selvfølgelig være midlertidig, men jeg ville nevne det i tilfelle dere ikke er klar over det.
 
-Hvis dere ønsker det, kan jeg ta en kort sjekk og sende en enkel vurdering av hva som eventuelt bør rettes.
+Hvis nettsiden ikke er ferdig eller ikke lenger skal brukes, kan jeg hjelpe med å få på plass en ny nettside med tydelig presentasjon og kontaktinformasjon.
 
-Eksempel på nettsidesjekk:
-{{websiteCheckSenderWebsite}}
+Jeg tilbyr en profesjonell førsteside til {{priceValue}} kr.
+
+Her kan dere se hvordan jeg jobber:
+{{senderWebsite}}
+
+Er det aktuelt at jeg sender et uforpliktende forslag?
 
 Mvh  
 {{senderName}}  
+LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
 ## E-postmal - nettside kan forbedres
 
-Emne: `Spørsmål om nettsiden til {{companyName}}`
+Emne: `En observasjon om nettsiden til {{companyName}}`
 
-Hei {{greeting}},
+{{greetingLine}}
 
-Jeg tok en enkel førstesjekk av nettsiden til {{companyName}} og så noen punkter som kan være verdt å se nærmere på.
+Jeg tok en rask førstesjekk av nettsiden til {{companyName}}.
 
 {{websiteQualityMailLine}}
-{{websiteComplianceMailLine}}
+{{websiteQualityImpactLine}}
 
-Dette er ikke en full gjennomgang, bare en rask teknisk indikasjon.
+Dette er ikke en full gjennomgang, men det kan være verdt å se nærmere på.
 
-Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til enkle forbedringer.
+Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til forbedringer.
 
-Eksempel:
+Her er et eksempel på hva jeg ser etter:
 {{websiteCheckSenderWebsite}}
 
+Skal jeg sende rapporten?
+
 Mvh  
 {{senderName}}  
+LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
-## E-postmal - registrert nettside bør vurderes
+## E-postmal - registrert nettside bør vurderes manuelt
 
-Emne: `Spørsmål om nettsiden til {{companyName}}`
+Emne: `Nettsiden til {{companyName}}`
 
-Hei {{greeting}},
+{{greetingLine}}
 
-Jeg tok en enkel førstesjekk av nettsiden til {{companyName}} og så noen punkter som kan være verdt å se nærmere på.
+Jeg kom over nettsiden til {{companyName}} i forbindelse med en gjennomgang av lokale virksomheter.
 
-Dette er ikke en full gjennomgang, bare en rask teknisk indikasjon.
+Jeg tilbyr korte nettsidesjekker med vurdering av blant annet mobilbruk, kontaktinformasjon, teknisk kvalitet og personvern.
 
-Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til enkle forbedringer.
+Hvis det er interessant, kan jeg ta en nærmere titt på siden deres og sende noen konkrete punkter.
 
-Eksempel:
+Her kan dere se hva sjekken omfatter:
 {{websiteCheckSenderWebsite}}
 
-Mvh  
-{{senderName}}  
-{{senderPhone}}  
-{{senderEmail}}
-
-## Kort variant
-
-Hei {{greeting}},
-
-Jeg kom over {{companyName}}, men fant ikke en tydelig nettside/kontaktside.
-
-Jeg lager enkle nettsider for små og nye virksomheter. Pris for en enkel førsteside er fra kr {{priceValue}}.
-
-Eksempel:
-{{senderWebsite}}
-
-Hvis det er aktuelt, kan jeg sende et konkret forslag.
+Er det aktuelt?
 
 Mvh  
 {{senderName}}  
+LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
-
-## Generert eksempel
-
-Emne: `Nettside for Eksempel AS`
-
-Hei dere i Eksempel AS,
-
-Jeg kom over Eksempel AS, men fant ikke en tydelig nettside/kontaktside.
-
-Jeg lager enkle nettsider for små og nye virksomheter - med kort presentasjon, kontaktinfo og tydelig kontaktvei.
-
-Pris for en enkel førsteside er fra kr 1.990.
-
-Eksempel:
-https://ltj-production.no/
-
-Hvis det er aktuelt, kan jeg sende et konkret forslag.
-
-Mvh  
-Lars Johannessen  
-977 24 209  
-kontakt@ltj-production.no

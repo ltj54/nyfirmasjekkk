@@ -10,6 +10,7 @@ public record OutreachEmailSendRequest(
         Integer price,
         String channel,
         String offerType,
+        String evidenceCode,
         String note
 ) {
 }

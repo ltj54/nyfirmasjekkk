@@ -1,6 +1,7 @@
 import type { CompanyEvent, CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
+import { websiteQualityMailSignalCode } from "@/lib/outreach-email-template";
 
-type OutreachOfferCompany = Pick<CompanySummary, "name" | "organizationForm" | "website" | "websiteDiscovery" | "websiteQuality"> & {
+type OutreachOfferCompany = Pick<CompanySummary, "name" | "organizationForm" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"> & {
   naceDescription?: string | null;
 };
 
@@ -13,9 +14,9 @@ export function outreachOfferTypeForCompany(company: OutreachOfferCompany) {
   }
   if (
     company.website
-    && company.websiteDiscovery?.status === "REGISTERED"
+    && (company.websiteDiscovery?.status === "REGISTERED" || company.websiteDiscovery?.status === "POSSIBLE_MATCH")
     && company.websiteDiscovery.verifiedReachable !== false
-    && (company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW")
+    && websiteQualityMailSignalCode(company) !== null
   ) {
     return "website-improvement-offer";
   }

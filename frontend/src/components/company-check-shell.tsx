@@ -48,7 +48,9 @@ import {
   buildOutreachEmailBody,
   buildOutreachEmailHtml,
   buildOutreachEmailSubject,
+  outreachEmailAutoSendBlockReason,
   websiteQualityMailLine,
+  websiteQualityMailSignalCode,
 } from "@/lib/outreach-email-template";
 import {
   buildGoogleSearchUrl,
@@ -192,6 +194,7 @@ const MAX_EMAIL_BATCH_SIZE = 25;
 const EMAIL_BATCH_SEND_DELAY_MS = 2_000;
 const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
 type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "batch_excluded";
+type OutreachEmailSendResult = "sent" | "skipped" | "failed";
 
 function wait(ms: number) {
   return new Promise((resolve) => {
@@ -204,10 +207,17 @@ function scrollToSection(id: string) {
 }
 
 function canSelectEmailBatchCandidate(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
-  return !company.website && (
-    company.websiteDiscovery?.status === "NONE"
-      || company.websiteDiscovery?.status === "POSSIBLE_MATCH"
-  );
+  return isRegisteredWebsiteUnavailable(company)
+    || (!company.website && (
+      company.websiteDiscovery?.status === "NONE"
+        || company.websiteDiscovery?.status === "POSSIBLE_MATCH"
+    ));
+}
+
+function isRegisteredWebsiteUnavailable(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
+  return Boolean(company.website)
+    && company.websiteDiscovery?.status === "REGISTERED"
+    && company.websiteDiscovery.verifiedReachable === false;
 }
 
 function isBatchExcluded(status: OutreachStatus | null | undefined) {
@@ -231,6 +241,9 @@ function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website"
     return "mangler e-postadresse";
   }
   if (company.website) {
+    if (isRegisteredWebsiteUnavailable(company)) {
+      return null;
+    }
     return `har registrert nettside: ${company.website}`;
   }
 
@@ -448,7 +461,7 @@ export function CompanyCheckShell() {
   }
 
   async function updateOutreachStatus(
-    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "website" | "websiteDiscovery" | "websiteQuality">,
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">,
     sent: boolean,
     note?: string,
     statusOverride?: OutreachStatusOverride
@@ -535,18 +548,26 @@ export function CompanyCheckShell() {
   }
 
   async function sendGeneratedOutreachEmail(
-    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "email" | "website" | "websiteDiscovery" | "websiteQuality">,
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "naceCode" | "naceDescription" | "salesSegment" | "email" | "website" | "websiteDiscovery" | "websiteQuality">,
     generatedEmail: { subject: string; body: string } | null
-  ) {
+  ): Promise<OutreachEmailSendResult> {
     if (!company.email || !generatedEmail) {
-      return false;
+      return "failed";
     }
     if (isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])) {
       setEmailSendErrorByOrg((current) => ({
         ...current,
         [company.orgNumber]: "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.",
       }));
-      return false;
+      return "skipped";
+    }
+    const automaticSendBlockReason = outreachEmailAutoSendBlockReason(company);
+    if (automaticSendBlockReason) {
+      setEmailSendErrorByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: automaticSendBlockReason,
+      }));
+      return "skipped";
     }
 
     setSendingEmailByOrg((current) => ({
@@ -563,6 +584,29 @@ export function CompanyCheckShell() {
     }));
 
     try {
+      if (outreachOfferTypeForCompany(company) === "website-unavailable-offer" && company.website) {
+        const verificationResponse = await fetch(
+          `/api/company-check/website-inspection?url=${encodeURIComponent(normalizeWebsiteUrl(company.website))}`,
+          { cache: "no-store" },
+        );
+        if (!verificationResponse.ok) {
+          setEmailSendErrorByOrg((current) => ({
+            ...current,
+            [company.orgNumber]: "Utsending stoppet fordi nettsiden ikke kunne kontrolleres på nytt.",
+          }));
+          return "skipped";
+        }
+        const verification = (await verificationResponse.json()) as WebsiteInspectionResponse;
+        const stillUnavailable = verification.websiteQuality.signals.some((signal) => signal.code === "TECHNICAL_FAILURE");
+        if (!stillUnavailable) {
+          setEmailSendErrorByOrg((current) => ({
+            ...current,
+            [company.orgNumber]: "Utsending stoppet: Nettsiden svarte ved kontrollen rett før sending.",
+          }));
+          return "skipped";
+        }
+      }
+
       const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
         method: "POST",
         cache: "no-store",
@@ -579,6 +623,7 @@ export function CompanyCheckShell() {
           price: null,
           channel: "email",
           offerType: outreachOfferTypeForCompany(company),
+          evidenceCode: websiteQualityMailSignalCode(company),
           note: null,
         }),
       });
@@ -594,7 +639,7 @@ export function CompanyCheckShell() {
               ? "For mange e-postforsøk på kort tid. Vent før du prøver igjen."
               : "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
         }));
-        return false;
+        return response.status === 409 ? "skipped" : "failed";
       }
 
       const payload = (await response.json()) as { to: string; outreachStatus: OutreachStatus };
@@ -607,14 +652,14 @@ export function CompanyCheckShell() {
         [company.orgNumber]: payload.to,
       }));
       setOutreachEntries((current) => [payload.outreachStatus, ...current]);
-      return true;
+      return "sent";
     } catch (error) {
       console.error("Failed to send outreach email", error);
       setEmailSendErrorByOrg((current) => ({
         ...current,
         [company.orgNumber]: "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
       }));
-      return false;
+      return "failed";
     } finally {
       setSendingEmailByOrg((current) => ({
         ...current,
@@ -634,7 +679,7 @@ export function CompanyCheckShell() {
     );
     const sendableCompanies = eligibleCompanies.filter((company) => Boolean(company.email));
     if (sendableCompanies.length === 0) {
-      window.alert("Ingen av de valgte treffene har både e-post og manglende registrert nettside.");
+      window.alert("Ingen av de valgte treffene har e-post og en nettsidestatus som kan sendes i batch.");
       return;
     }
     if (sendableCompanies.length > MAX_EMAIL_BATCH_SIZE) {
@@ -646,8 +691,8 @@ export function CompanyCheckShell() {
     const delaySeconds = Math.round(EMAIL_BATCH_SEND_DELAY_MS / 1000);
     const confirmed = window.confirm(
       skippedCount > 0
-        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Detaljsjekk stopper før sending hvis en mulig nettside faktisk svarer. Fortsette?`
-        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. Detaljsjekk stopper før sending hvis en mulig nettside faktisk svarer. Fortsette?`,
+        ? `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. ${skippedCount} hoppes over fordi de mangler e-post eller ikke oppfyller nettsidekravet. Virksomheter hoppes over hvis en nettside svarer ved kontrollen rett før sending. Fortsette?`
+        : `Sender e-post til ${sendableCompanies.length} valgte virksomheter med ${delaySeconds} sekunders pause mellom hver. Virksomheter hoppes over hvis en nettside svarer ved kontrollen rett før sending. Fortsette?`,
     );
     if (!confirmed) {
       return;
@@ -706,8 +751,16 @@ export function CompanyCheckShell() {
           ...current,
           [detailedCompany.orgNumber]: generatedEmail,
         }));
-        const sent = await sendGeneratedOutreachEmail(detailedCompany, generatedEmail);
-        if (!sent) {
+        const sendResult = await sendGeneratedOutreachEmail(detailedCompany, generatedEmail);
+        if (sendResult === "skipped") {
+          skippedDuringRunCount += 1;
+          setBatchSelectionByOrg((current) => ({
+            ...current,
+            [detailedCompany.orgNumber]: false,
+          }));
+          continue;
+        }
+        if (sendResult === "failed") {
           window.alert(`Batch stoppet. Klarte ikke sende e-post til ${detailedCompany.name}. ${sentCount} sendt før stopp.`);
           return;
         }
@@ -719,7 +772,7 @@ export function CompanyCheckShell() {
 
       window.alert(
         skippedDuringRunCount > 0
-          ? `Batch ferdig. ${sentCount} e-poster sendt. ${skippedDuringRunCount} hoppet over fordi detaljsjekk fant mulig nettside eller ikke kunne fullføres.`
+          ? `Batch ferdig. ${sentCount} e-poster sendt. ${skippedDuringRunCount} hoppet over etter kontroll av e-post- og nettsidestatus.`
           : `Batch ferdig. ${sentCount} e-poster sendt.`,
       );
     } finally {
@@ -1269,7 +1322,8 @@ export function CompanyCheckShell() {
     );
   }
 
-  const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL") && leadQuickFilters.includes("MISSING_WEBSITE");
+  const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL")
+    && (leadQuickFilters.includes("MISSING_WEBSITE") || leadQuickFilters.includes("HAS_WEBSITE"));
   const listQuickFilters = leadQuickFilters.filter((filter) => filter !== "NOT_SENT");
   const filteredCompanies = applyLeadQuickFilters((selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
@@ -1820,7 +1874,7 @@ export function CompanyCheckShell() {
                     className={`ml-1 inline-flex h-8 items-center gap-2 whitespace-nowrap text-[12px] font-semibold ${
                       canUseEmailBatch ? "cursor-pointer text-[#52606D]" : "cursor-not-allowed text-[#9FB3C8]"
                     }`}
-                    title={canUseEmailBatch ? undefined : "Velg Har e-post og Mangler nettside for å vise batch-sperrede rader."}
+                    title={canUseEmailBatch ? undefined : "Velg Har e-post og enten Mangler nettside eller Har nettside for å bruke batch."}
                   >
                     <input
                       checked={showBatchExcluded}
@@ -1854,7 +1908,7 @@ export function CompanyCheckShell() {
                     size="sm"
                     title={
                       !canUseEmailBatch
-                        ? "Velg Har e-post og Mangler nettside før batch kan kjøres."
+                        ? "Velg Har e-post og enten Mangler nettside eller Har nettside før batch kan kjøres."
                         : overEmailBatchLimit
                           ? `Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch.`
                           : undefined
@@ -2100,6 +2154,7 @@ function BrregWebsiteMatchesPanel({
 
   async function sendEmail(match: BrregWebsiteMatch) {
     const generatedEmail = generatedEmailByOrg[match.orgNumber];
+    const company = companyFromBrregWebsiteMatch(match, inspection);
     if (!match.email || !generatedEmail) {
       return;
     }
@@ -2107,6 +2162,14 @@ function BrregWebsiteMatchesPanel({
       setSendErrorByOrg((current) => ({
         ...current,
         [match.orgNumber]: "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.",
+      }));
+      return;
+    }
+    const automaticSendBlockReason = outreachEmailAutoSendBlockReason(company);
+    if (automaticSendBlockReason) {
+      setSendErrorByOrg((current) => ({
+        ...current,
+        [match.orgNumber]: automaticSendBlockReason,
       }));
       return;
     }
@@ -2131,6 +2194,7 @@ function BrregWebsiteMatchesPanel({
           price: null,
           channel: "email",
           offerType: "website-improvement-offer",
+          evidenceCode: websiteQualityMailSignalCode(company),
           note: `Sendt fra nettsidesjekk: ${inspection.normalizedUrl}`,
         }),
       });
@@ -2226,7 +2290,11 @@ function BrregWebsiteMatchesPanel({
                   </Button>
                   <Button
                     className="rounded-sm border-[#BCCCDC] bg-white px-4 text-[#1F2933] hover:bg-[#F8FBFF]"
-                    disabled={!match.email || !generatedEmailByOrg[match.orgNumber] || Boolean(sendingByOrg[match.orgNumber]) || isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])}
+                    disabled={!match.email
+                      || !generatedEmailByOrg[match.orgNumber]
+                      || Boolean(sendingByOrg[match.orgNumber])
+                      || isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])
+                      || Boolean(outreachEmailAutoSendBlockReason(companyFromBrregWebsiteMatch(match, inspection)))}
                     onClick={() => void sendEmail(match)}
                     type="button"
                     variant="outline"
@@ -2237,6 +2305,10 @@ function BrregWebsiteMatchesPanel({
                     <span className="text-[12px] font-semibold text-amber-700">Allerede kontaktet – ny utsending er sperret</span>
                   ) : !match.email ? (
                     <span className="text-[12px] font-medium text-[#7B8794]">Mangler e-post i BRREG</span>
+                  ) : outreachEmailAutoSendBlockReason(companyFromBrregWebsiteMatch(match, inspection)) ? (
+                    <span className="text-[12px] font-semibold text-amber-700">
+                      {outreachEmailAutoSendBlockReason(companyFromBrregWebsiteMatch(match, inspection))}
+                    </span>
                   ) : null}
                 </div>
                 {generatedEmailByOrg[match.orgNumber] ? (
@@ -3921,6 +3993,7 @@ function CompanyDetailView({
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
   const generatedEmailHtml = generatedEmail ? buildOutreachEmailHtml(generatedEmail.body) : "";
   const alreadyContacted = isOutreachSendBlocked(outreachStatus);
+  const automaticSendBlockReason = outreachEmailAutoSendBlockReason(company);
   const generatedEmailHref = generatedEmail && company.email && !alreadyContacted
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
@@ -4271,9 +4344,10 @@ function CompanyDetailView({
                     </div>
                     {requiresManualWebsiteCheck ? (
                       <p className="mt-3 max-w-2xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] font-medium leading-5 text-amber-800">
-                        {offerType === "website-registered-review"
-                          ? "Selskapet har registrert nettside som ser grei ut i automatisk sjekk. Send bare hvis du har gjort en manuell vurdering og ser et konkret forbedringsbehov."
-                          : "Sjekk nettsiden manuelt før du sender. Denne mailtypen bygger på teknisk nettsidesjekk og enkle kvalitetssignaler."}
+                        {automaticSendBlockReason
+                          ?? (offerType === "website-unavailable-offer"
+                            ? "Nettsiden kontrolleres på nytt rett før automatisk sending. E-posten stoppes dersom siden svarer igjen."
+                            : "E-posten bygger på et konkret, dokumentert funn fra nettsidesjekken.")}
                       </p>
                     ) : null}
                     {mailQualityLine ? (
@@ -4333,7 +4407,7 @@ function CompanyDetailView({
                       )}
                       <Button
                         className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
-                        disabled={!company.email || sendingEmail || outreachSaving || alreadyContacted}
+                        disabled={!company.email || sendingEmail || outreachSaving || alreadyContacted || Boolean(automaticSendBlockReason)}
                         onClick={onSendEmail}
                         type="button"
                       >

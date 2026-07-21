@@ -20,12 +20,12 @@ type OutreachEmailCompany = Pick<
 
 export function buildOutreachEmailSubject(markdown: string, company: OutreachEmailCompany) {
   const template = isRegisteredWebsiteUnavailable(company)
-    ? extractMailSubject(markdown, "E-postmal - registrert nettside svarer ikke") ?? "Kort observasjon om {{registeredWebsite}}"
+    ? extractMailSubject(markdown, "E-postmal - registrert nettside svarer ikke") ?? "Nettsiden til {{companyName}} svarte ikke"
     : hasWebsiteQualityOpportunity(company)
-      ? extractMailSubject(markdown, "E-postmal - nettside kan forbedres") ?? "Spørsmål om nettsiden til {{companyName}}"
+      ? extractMailSubject(markdown, "E-postmal - nettside kan forbedres") ?? "En observasjon om nettsiden til {{companyName}}"
     : hasRegisteredWebsiteForManualReview(company)
-      ? extractMailSubject(markdown, "E-postmal - registrert nettside bør vurderes") ?? "Spørsmål om nettsiden til {{companyName}}"
-    : extractMailSubject(markdown) ?? "Nettside for {{companyName}}";
+      ? extractMailSubject(markdown, "E-postmal - registrert nettside bør vurderes manuelt") ?? "Nettsiden til {{companyName}}"
+    : extractMailSubject(markdown) ?? "Fant ikke nettsiden til {{companyName}}";
   return applyOutreachTemplate(template, company);
 }
 
@@ -35,35 +35,118 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
     : hasWebsiteQualityOpportunity(company)
       ? extractMarkdownSection(markdown, "E-postmal - nettside kan forbedres") ?? defaultWebsiteQualityOpportunityEmailTemplate()
     : hasRegisteredWebsiteForManualReview(company)
-      ? extractMarkdownSection(markdown, "E-postmal - registrert nettside bør vurderes") ?? defaultRegisteredWebsiteReviewEmailTemplate()
+      ? extractMarkdownSection(markdown, "E-postmal - registrert nettside bør vurderes manuelt") ?? defaultRegisteredWebsiteReviewEmailTemplate()
     : extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
   const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
   return applyOutreachTemplate(cleanedTemplate, company);
 }
 
 export function websiteQualityMailLine(company: OutreachEmailCompany) {
+  return approvedWebsiteObservation(company)?.observation ?? "";
+}
+
+export function websiteQualityImpactLine(company: OutreachEmailCompany) {
+  return approvedWebsiteObservation(company)?.impact ?? "";
+}
+
+export function websiteQualityMailSignalCode(company: Pick<OutreachEmailCompany, "naceCode" | "salesSegment" | "websiteQuality">) {
+  return approvedWebsiteObservation(company)?.code ?? null;
+}
+
+type OutreachEmailSendCompany = Pick<
+  OutreachEmailCompany,
+  "name" | "organizationForm" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"
+>;
+
+export function outreachEmailAutoSendBlockReason(company: OutreachEmailSendCompany) {
+  const registeredWebsiteNeedsReview = Boolean(company.website)
+    && company.websiteDiscovery?.status === "REGISTERED"
+    && company.websiteDiscovery.verifiedReachable !== false
+    && (isRegulatedOrEstablishedWebsiteOwner(company) || !approvedWebsiteObservation(company));
+  if (registeredWebsiteNeedsReview) {
+    return "Registrert nettside krever manuell kontroll og en konkret observasjon før utsending.";
+  }
+  if (company.website && !isRegisteredWebsiteUnavailable(company) && !approvedWebsiteObservation(company)) {
+    return "Nettsidesjekken har ikke et konkret, godkjent funn som kan brukes i automatisk e-post.";
+  }
+  return null;
+}
+
+type ApprovedWebsiteObservation = {
+  code: string;
+  observation: string;
+  impact: string;
+};
+
+function approvedWebsiteObservation(company: Pick<OutreachEmailCompany, "naceCode" | "salesSegment" | "websiteQuality">): ApprovedWebsiteObservation | null {
   const signals = company.websiteQuality?.signals ?? [];
-  const signalCodes = new Set(signals.map((signal) => signal.code));
-  if (signalCodes.has("THIRD_PARTY_SURFACE")) {
-    return "Jeg så blant annet noen mulige forbedringspunkter knyttet til kontaktinfo og en fast nettside.";
+  const approved: Array<{
+    code: string;
+    observation: string;
+    impact: string;
+    include?: (severity: string) => boolean;
+  }> = [
+    {
+      code: "WEAK_CONTACT_POINT",
+      observation: "Jeg fant ikke telefon, e-post eller et tydelig kontaktpunkt på siden.",
+      impact: "Det kan gjøre det unødvendig vanskelig for nye kunder å ta kontakt.",
+    },
+    {
+      code: "CONTACT_DETAILS_NOT_VISIBLE",
+      observation: "Siden nevner kontakt, men jeg fant ikke tydelig telefonnummer eller e-postadresse.",
+      impact: "Det kan gjøre det unødvendig vanskelig for nye kunder å ta kontakt.",
+    },
+    {
+      code: "MISSING_PRIVACY_NOTICE",
+      observation: "Siden ser ut til å samle inn kontaktdata, men jeg fant ingen tydelig personvernlenke eller personverntekst.",
+      impact: "Besøkende bør enkelt kunne se hvordan opplysningene deres behandles.",
+    },
+    {
+      code: "CRAWL_FORM_PRIVACY_REVIEW",
+      observation: "Jeg fant et skjema på nettsiden, men ingen tydelig personverntekst på sidene som ble kontrollert.",
+      impact: "Besøkende bør enkelt kunne se hvordan opplysningene deres behandles.",
+    },
+    {
+      code: "MISSING_HTTPS",
+      observation: "Nettsiden bruker ikke en sikker HTTPS-forbindelse.",
+      impact: "Det kan føre til varsler i nettleseren og svekke tilliten til siden.",
+      include: (severity) => severity === "HIGH",
+    },
+    {
+      code: "MISSING_ORG_NUMBER",
+      observation: "Jeg fant ikke organisasjonsnummeret tydelig oppgitt på nettsiden.",
+      impact: "Tydelig selskapsinformasjon kan gjøre det enklere for nye kunder å vite hvem de forholder seg til.",
+    },
+    {
+      code: "MISSING_OPENING_HOURS",
+      observation: "Jeg fant ikke tydelig oppgitte åpningstider eller tilgjengelighet på nettsiden.",
+      impact: "Det kan gjøre det vanskeligere for besøkende å vite når de kan komme innom eller ta kontakt.",
+      include: () => isOpeningHoursMailRelevant(company),
+    },
+    {
+      code: "MISSING_ABOUT_SECTION",
+      observation: "Jeg fant ingen tydelig presentasjon av hvem som står bak virksomheten.",
+      impact: "En kort presentasjon kan gjøre det enklere for nye kunder å bli trygge på hvem de kontakter.",
+      include: (severity) => severity === "HIGH",
+    },
+  ];
+
+  for (const candidate of approved) {
+    const signal = signals.find((item) => item.code === candidate.code && (candidate.include?.(item.severity) ?? true));
+    if (signal) {
+      return candidate;
+    }
   }
+  return null;
+}
 
-  const isCandidate = isWebsiteCandidateContext(company);
-  const isThin = signalCodes.has("THIN_CONTENT") || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT") || signalCodes.has("WEAK_HOMEPAGE_STRUCTURE");
-
-  if (isCandidate && isThin) {
-    return "Jeg så blant annet noen mulige forbedringspunkter knyttet til innhold og førsteinntrykk.";
-  }
-
-  const categoryPoints = websiteQualityMailCategoryPoints(signalCodes);
-  if (categoryPoints.length > 0) {
-    const limit = isCandidate ? 2 : 2;
-    return `Jeg så blant annet noen mulige forbedringspunkter knyttet til ${formatNorwegianList(categoryPoints.slice(0, limit))}.`;
-  }
-
-  return signals.length > 0
-    ? "Jeg så blant annet noen mulige forbedringspunkter knyttet til innhold, kontaktinfo eller teknisk kvalitet."
-    : "";
+function isOpeningHoursMailRelevant(company: Pick<OutreachEmailCompany, "naceCode" | "salesSegment">) {
+  const segmentCode = company.salesSegment?.code;
+  const naceCode = company.naceCode?.trim() ?? "";
+  return segmentCode === "BUTIKK_LOKALHANDEL"
+    || segmentCode === "MAT_SERVERING"
+    || naceCode.startsWith("47")
+    || naceCode.startsWith("56");
 }
 
 export function websiteComplianceMailLine(company: OutreachEmailCompany) {
@@ -170,174 +253,6 @@ export function websiteComplianceMailLine(company: OutreachEmailCompany) {
   }
 
   return toneProfile.complianceLine;
-}
-
-function hasSemanticAccessibilityRisk(signalCodes: Set<string>) {
-  return signalCodes.has("MISSING_MAIN_LANDMARK")
-    || signalCodes.has("WEAK_PAGE_LANDMARKS")
-    || signalCodes.has("SKIPPED_HEADING_LEVELS")
-    || signalCodes.has("VAGUE_LINK_TEXT")
-    || signalCodes.has("TABLE_HEADERS_MISSING")
-    || signalCodes.has("IFRAME_TITLE_RISK");
-}
-
-function hasFormAccessibilityRisk(signalCodes: Set<string>) {
-  return signalCodes.has("FORM_LABEL_RISK")
-    || signalCodes.has("NEWSLETTER_FORM_LABEL_RISK")
-    || signalCodes.has("FORM_AUTOCOMPLETE_MISSING")
-    || signalCodes.has("FORM_INPUT_TYPE_RISK")
-    || signalCodes.has("INSECURE_FORM_ACTION")
-    || signalCodes.has("PASSWORD_AUTOCOMPLETE_RISK");
-}
-
-function hasCommerceRisk(signalCodes: Set<string>) {
-  return signalCodes.has("COMMERCE_TERMS_MISSING")
-    || signalCodes.has("COMMERCE_RETURN_INFO_MISSING")
-    || signalCodes.has("COMMERCE_DELIVERY_INFO_MISSING")
-    || signalCodes.has("PAYMENT_TRUST_INFO_MISSING");
-}
-
-function hasSecurityHeaderRisk(signalCodes: Set<string>) {
-  return signalCodes.has("MISSING_HSTS_HEADER")
-    || signalCodes.has("MISSING_CSP_HEADER")
-    || signalCodes.has("MISSING_CONTENT_TYPE_OPTIONS")
-    || signalCodes.has("MISSING_REFERRER_POLICY")
-    || signalCodes.has("MISSING_PERMISSIONS_POLICY")
-    || signalCodes.has("MISSING_FRAME_PROTECTION")
-    || signalCodes.has("TLS_CERTIFICATE_REVIEW")
-    || signalCodes.has("TLS_CERTIFICATE_EXPIRING")
-    || signalCodes.has("HTTP_TO_HTTPS_REDIRECT_REVIEW")
-    || signalCodes.has("WEAK_HSTS_HEADER")
-    || signalCodes.has("WEAK_CSP_HEADER")
-    || signalCodes.has("SERVER_TECH_HEADER_EXPOSED")
-    || signalCodes.has("SECURITY_TXT_MISSING")
-    || signalCodes.has("ROBOTS_SENSITIVE_PATHS");
-}
-
-function hasApplicationSecurityRisk(signalCodes: Set<string>) {
-  return signalCodes.has("ADMIN_OR_LOGIN_PATH_EXPOSED")
-    || signalCodes.has("LOGIN_FORM_SECURITY_REVIEW")
-    || signalCodes.has("FILE_UPLOAD_REVIEW")
-    || signalCodes.has("API_ENDPOINTS_VISIBLE")
-    || signalCodes.has("CMS_VERSION_EXPOSED")
-    || signalCodes.has("SOURCE_MAP_EXPOSED")
-    || signalCodes.has("DEVELOPMENT_REFERENCE_EXPOSED")
-    || signalCodes.has("TARGET_BLANK_NOOPENER_MISSING")
-    || signalCodes.has("PERSONAL_DATA_GET_FORM")
-    || signalCodes.has("SENSITIVE_DATA_FORM")
-    || signalCodes.has("EXTERNAL_FORM_ACTION")
-    || signalCodes.has("DOM_XSS_SURFACE_REVIEW")
-    || signalCodes.has("DANGEROUS_JS_SINK_REVIEW")
-    || signalCodes.has("INLINE_EVENT_HANDLER_REVIEW")
-    || signalCodes.has("JAVASCRIPT_HREF_REVIEW")
-    || signalCodes.has("THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW")
-    || signalCodes.has("MANY_THIRD_PARTY_SCRIPT_HOSTS")
-    || signalCodes.has("MANY_INLINE_SCRIPTS_WITHOUT_CSP")
-    || signalCodes.has("POST_FORM_CSRF_REVIEW")
-    || signalCodes.has("OUTDATED_JS_LIBRARY_REVIEW")
-    || signalCodes.has("EMAIL_SECURITY_DNS_REVIEW")
-    || signalCodes.has("EMAIL_MX_MISSING")
-    || signalCodes.has("DNS_CAA_MISSING")
-    || signalCodes.has("SPF_POLICY_SOFT")
-    || signalCodes.has("SPF_LOOKUP_RISK")
-    || signalCodes.has("DUPLICATE_SPF_RECORDS")
-    || signalCodes.has("DMARC_POLICY_NONE")
-    || signalCodes.has("DMARC_RUA_MISSING")
-    || signalCodes.has("COOKIE_SECURE_FLAG_MISSING")
-    || signalCodes.has("COOKIE_HTTPONLY_REVIEW")
-    || signalCodes.has("COOKIE_SAMESITE_REVIEW");
-}
-
-function websiteQualityMailCategoryPoints(signalCodes: Set<string>) {
-  const points: string[] = [];
-
-  addMailPoint(points, hasTrustOrContentRisk(signalCodes), "innhold og tillit");
-  addMailPoint(points, signalCodes.has("MIXED_CONTENT_RISK") || hasTechnologyExposure(signalCodes), "teknisk kvalitet");
-  addMailPoint(points, hasSecurityHeaderRisk(signalCodes), "teknisk trygghet");
-  addMailPoint(points, hasPrivacyOrThirdPartyRisk(signalCodes), "personvern og skjema");
-  addMailPoint(points, hasAccessibilityCategoryRisk(signalCodes), "brukervennlighet");
-  addMailPoint(points, hasApplicationSecurityRisk(signalCodes), "teknisk ryddighet");
-  addMailPoint(points, hasEmailSecurityRisk(signalCodes), "e-postoppsett");
-  addMailPoint(points, hasCommerceRisk(signalCodes), "kjøpsinformasjon");
-
-  return points;
-}
-
-function hasTechnologyExposure(signalCodes: Set<string>) {
-  return signalCodes.has("TECHNOLOGY_STACK_DETECTED")
-    || signalCodes.has("SERVER_TECH_HEADER_EXPOSED")
-    || signalCodes.has("CMS_VERSION_EXPOSED")
-    || signalCodes.has("SOURCE_MAP_EXPOSED")
-    || signalCodes.has("DEVELOPMENT_REFERENCE_EXPOSED")
-    || signalCodes.has("ROBOTS_SENSITIVE_PATHS");
-}
-
-function hasPrivacyOrThirdPartyRisk(signalCodes: Set<string>) {
-  return signalCodes.has("MISSING_PRIVACY_NOTICE")
-    || signalCodes.has("CRAWL_PRIVACY_PAGE_NOT_FOUND")
-    || signalCodes.has("CRAWL_FORM_PRIVACY_REVIEW")
-    || signalCodes.has("PRIVACY_LINK_REVIEW")
-    || signalCodes.has("COOKIE_CONSENT_RISK")
-    || signalCodes.has("COOKIE_SECURE_FLAG_MISSING")
-    || signalCodes.has("COOKIE_HTTPONLY_REVIEW")
-    || signalCodes.has("COOKIE_SAMESITE_REVIEW")
-    || signalCodes.has("MANY_EXTERNAL_SCRIPTS")
-    || signalCodes.has("EXTERNAL_IFRAME_RISK")
-    || signalCodes.has("THIRD_PARTY_EMBED_CONSENT_RISK")
-    || signalCodes.has("THIRD_PARTY_FORM_RISK")
-    || signalCodes.has("PERSONAL_DATA_GET_FORM")
-    || signalCodes.has("SENSITIVE_DATA_FORM")
-    || signalCodes.has("EXTERNAL_FORM_ACTION")
-    || signalCodes.has("GOOGLE_ANALYTICS_WITHOUT_CONSENT")
-    || signalCodes.has("META_PIXEL_WITHOUT_CONSENT")
-    || signalCodes.has("SESSION_TRACKING_WITHOUT_CONSENT");
-}
-
-function hasAccessibilityCategoryRisk(signalCodes: Set<string>) {
-  return hasSemanticAccessibilityRisk(signalCodes)
-    || hasFormAccessibilityRisk(signalCodes)
-    || signalCodes.has("IMAGE_ALT_RISK")
-    || signalCodes.has("EMPTY_BUTTON_RISK")
-    || signalCodes.has("MISSING_LANGUAGE")
-    || signalCodes.has("LANGUAGE_MISMATCH_RISK")
-    || signalCodes.has("FOCUS_STYLE_RISK")
-    || signalCodes.has("AUTOPLAY_MEDIA_RISK")
-    || signalCodes.has("MOTION_ACCESSIBILITY_RISK")
-    || signalCodes.has("FIXED_WIDTH_LAYOUT")
-    || signalCodes.has("MISSING_VIEWPORT");
-}
-
-function hasEmailSecurityRisk(signalCodes: Set<string>) {
-  return signalCodes.has("EMAIL_SECURITY_DNS_REVIEW")
-    || signalCodes.has("EMAIL_MX_MISSING")
-    || signalCodes.has("DNS_CAA_MISSING")
-    || signalCodes.has("SPF_POLICY_SOFT")
-    || signalCodes.has("SPF_LOOKUP_RISK")
-    || signalCodes.has("DUPLICATE_SPF_RECORDS")
-    || signalCodes.has("DMARC_POLICY_NONE")
-    || signalCodes.has("DMARC_RUA_MISSING");
-}
-
-function hasTrustOrContentRisk(signalCodes: Set<string>) {
-  return signalCodes.has("WEAK_HOMEPAGE_STRUCTURE")
-    || signalCodes.has("THIN_CONTENT")
-    || signalCodes.has("WEAK_NAVIGATION")
-    || signalCodes.has("WEAK_INDUSTRY_RELEVANCE")
-    || signalCodes.has("GENERIC_SERVICE_TEXT")
-    || signalCodes.has("AI_LIKE_PRESENTATION_RISK")
-    || signalCodes.has("MISSING_ORG_NUMBER")
-    || signalCodes.has("LEGAL_NAME_NOT_VISIBLE")
-    || signalCodes.has("MISSING_ADDRESS_OR_AREA")
-    || signalCodes.has("MISSING_ABOUT_SECTION")
-    || signalCodes.has("MISSING_SOCIAL_PROOF")
-    || signalCodes.has("AI_LIKE_PRESENTATION_RISK")
-    || signalCodes.has("GENERIC_PRESENTATION_TRUST_RISK")
-    || signalCodes.has("GENERIC_OR_AI_IMAGE_RISK")
-    || signalCodes.has("PLACEHOLDER_IMAGE_RISK")
-    || signalCodes.has("CTA_DESTINATION_MISMATCH")
-    || signalCodes.has("TEMPLATE_PLACEHOLDER_CONTENT")
-    || signalCodes.has("INCOMPLETE_MARKET_OR_CHECKOUT")
-    || signalCodes.has("DATA_HANDLING_INFO_REVIEW");
 }
 
 type WebsiteQualityStrictness = "strict" | "commerce" | "normal" | "light";
@@ -482,12 +397,6 @@ function normalizeContextText(text: string) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-function addMailPoint(points: string[], include: boolean, point: string) {
-  if (include && !points.includes(point)) {
-    points.push(point);
-  }
-}
-
 function formatNorwegianList(items: string[]) {
   if (items.length <= 1) {
     return items[0] ?? "";
@@ -622,7 +531,8 @@ function extractMarkdownSection(markdown: string, heading: string) {
 function applyOutreachTemplate(template: string, company: OutreachEmailCompany) {
   const displayName = displayCompanyName(company);
   const contactName = company.contactPersonName?.trim() || "";
-  const greeting = contactName ? firstNameFromContactName(contactName) : `dere i ${displayName}`;
+  const greeting = contactName ? firstNameFromContactName(contactName) : "";
+  const greetingLine = greeting ? `Hei ${greeting},` : "Hei,";
   const location = [company.municipality, company.county].filter(Boolean).join(", ");
   const recipientSubject = contactName ? "du" : "dere";
   const recipientPossessive = contactName ? "ditt" : "deres";
@@ -645,12 +555,13 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{domainExample}}": domainExamplesForCompany(company)[0] ?? "firmanavn.no",
     "{{domainLine}}": domainLineForCompany(company),
     "{{greeting}}": greeting,
+    "{{greetingLine}}": greetingLine,
     "{{recipientSubject}}": recipientSubject,
     "{{recipientPossessive}}": recipientPossessive,
     "{{recipientObject}}": recipientObject,
     "{{recipientPagePossessive}}": recipientPagePossessive,
-    "{{price}}": "1.990",
-    "{{priceValue}}": "1.990",
+    "{{price}}": "1 990",
+    "{{priceValue}}": "1 990",
     "{{senderName}}": "Lars Johannessen",
     "{{senderPhone}}": "977 24 209",
     "{{senderEmail}}": "kontakt@ltj-production.no",
@@ -660,6 +571,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{registeredWebsiteIntro}}": registeredWebsiteIntro(company),
     "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
     "{{websiteQualityMailLine}}": websiteQualityMailLine(company),
+    "{{websiteQualityImpactLine}}": websiteQualityImpactLine(company),
     "{{websiteComplianceMailLine}}": websiteComplianceMailLine(company),
   };
 
@@ -674,45 +586,53 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
 }
 
 function defaultWebsiteQualityOpportunityEmailTemplate() {
-  return `Hei {{greeting}},
+  return `{{greetingLine}}
 
-Jeg tok en enkel førstesjekk av nettsiden til {{companyName}} og så noen punkter som kan være verdt å se nærmere på.
+Jeg tok en rask førstesjekk av nettsiden til {{companyName}}.
 
 {{websiteQualityMailLine}}
-{{websiteComplianceMailLine}}
+{{websiteQualityImpactLine}}
 
-Dette er ikke en full gjennomgang, bare en rask teknisk indikasjon.
+Dette er ikke en full gjennomgang, men det kan være verdt å se nærmere på.
 
-Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til enkle forbedringer.
+Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til forbedringer.
 
-Eksempel:
+Her er et eksempel på hva jeg ser etter:
 {{websiteCheckSenderWebsite}}
+
+Skal jeg sende rapporten?
 
 Mvh
 {{senderName}}
+LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
 
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
-  return `Hei {{greeting}},
+  return `{{greetingLine}}
 
-Jeg så at {{companyName}} har {{registeredWebsite}} registrert som nettside.
+Jeg så at {{registeredWebsite}} er registrert som nettside for {{companyName}}.
 
-Da jeg sjekket, svarte ikke siden hos meg. Det kan selvfølgelig være midlertidig, men jeg ville bare nevne det i tilfelle dere ikke er klar over det.
+Da jeg sjekket den, svarte ikke siden hos meg. Det kan selvfølgelig være midlertidig, men jeg ville nevne det i tilfelle dere ikke er klar over det.
 
-Hvis dere ønsker det, kan jeg ta en kort sjekk og sende en enkel vurdering av hva som eventuelt bør rettes.
+Hvis nettsiden ikke er ferdig eller ikke lenger skal brukes, kan jeg hjelpe med å få på plass en ny nettside med tydelig presentasjon og kontaktinformasjon.
 
-Eksempel på nettsidesjekk:
-{{websiteCheckSenderWebsite}}
+Jeg tilbyr en profesjonell førsteside til {{priceValue}} kr.
+
+Her kan dere se hvordan jeg jobber:
+{{senderWebsite}}
+
+Er det aktuelt at jeg sender et uforpliktende forslag?
 
 Mvh
 {{senderName}}
+LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
 
-function isRegisteredWebsiteUnavailable(company: OutreachEmailCompany) {
+function isRegisteredWebsiteUnavailable(company: Pick<OutreachEmailCompany, "website" | "websiteDiscovery">) {
   return Boolean(company.website)
     && company.websiteDiscovery?.status === "REGISTERED"
     && company.websiteDiscovery.verifiedReachable === false;
@@ -723,13 +643,13 @@ function hasWebsiteQualityOpportunity(company: OutreachEmailCompany) {
   return Boolean(company.website)
     && (discovery?.status === "REGISTERED" || isWebsiteCandidateContext(company))
     && discovery?.verifiedReachable !== false
-    && !isRegulatedOrEstablishedWebsiteOwner(company);
+    && !isRegulatedOrEstablishedWebsiteOwner(company)
+    && approvedWebsiteObservation(company) !== null;
 }
 
 function hasRegisteredWebsiteForManualReview(company: OutreachEmailCompany) {
   return Boolean(company.website)
-    && company.websiteDiscovery?.status === "REGISTERED"
-    && company.websiteDiscovery.verifiedReachable !== false;
+    && company.websiteDiscovery?.verifiedReachable !== false;
 }
 
 function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany, "name" | "organizationForm" | "naceDescription">) {
@@ -750,39 +670,43 @@ function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany
 }
 
 function defaultRegisteredWebsiteReviewEmailTemplate() {
-  return `Hei {{greeting}},
+  return `{{greetingLine}}
 
-Jeg tok en enkel førstesjekk av nettsiden til {{companyName}} og så noen punkter som kan være verdt å se nærmere på.
+Jeg kom over nettsiden til {{companyName}} i forbindelse med en gjennomgang av lokale virksomheter.
 
-Dette er ikke en full gjennomgang, bare en rask teknisk indikasjon.
+Jeg tilbyr korte nettsidesjekker med vurdering av blant annet mobilbruk, kontaktinformasjon, teknisk kvalitet og personvern.
 
-Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til enkle forbedringer.
+Hvis det er interessant, kan jeg ta en nærmere titt på siden deres og sende noen konkrete punkter.
 
-Eksempel:
+Her kan dere se hva sjekken omfatter:
 {{websiteCheckSenderWebsite}}
+
+Er det aktuelt?
 
 Mvh
 {{senderName}}
+LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
 
 function defaultOutreachEmailTemplate() {
-  return `Hei {{greeting}},
+  return `{{greetingLine}}
 
-Jeg kom over {{companyName}}, men fant ikke en tydelig nettside/kontaktside.
+Jeg kom over {{companyName}}, men fant ikke en tydelig nettside eller kontaktside.
 
-Jeg lager enkle nettsider for små og nye virksomheter - med kort presentasjon, kontaktinfo og tydelig kontaktvei.
+Jeg lager profesjonelle nettsider for små virksomheter, med presentasjon, kontaktinformasjon og en tydelig vei for kunder som ønsker å ta kontakt.
 
-Pris for en enkel førsteside er fra kr {{priceValue}}.
+Jeg tilbyr en profesjonell førsteside til {{priceValue}} kr.
 
-Eksempel:
+Her er et eksempel på hvordan jeg jobber:
 {{senderWebsite}}
 
-Hvis det er aktuelt, kan jeg sende et konkret forslag.
+Skal jeg sende et uforpliktende forslag til hvordan en side for {{companyName}} kan se ut?
 
 Mvh
 {{senderName}}
+LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }

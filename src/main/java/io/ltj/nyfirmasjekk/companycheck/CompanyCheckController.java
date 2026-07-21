@@ -131,20 +131,31 @@ public class CompanyCheckController {
             );
         }
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
-        if (hasText(enhet.hjemmeside())) {
-            return new BatchEmailEligibilityResponse(
-                    organisasjonsnummer,
-                    false,
-                    "Har registrert nettside: " + enhet.hjemmeside(),
-                    enhet.hjemmeside()
-            );
-        }
         if (!hasText(enhet.epostadresse())) {
             return new BatchEmailEligibilityResponse(
                     organisasjonsnummer,
                     false,
                     "Mangler e-postadresse.",
                     null
+            );
+        }
+        if (hasText(enhet.hjemmeside())) {
+            var inspection = mapper.inspectWebsite(enhet.hjemmeside());
+            boolean unavailable = inspection.websiteQuality().signals().stream()
+                    .anyMatch(signal -> "TECHNICAL_FAILURE".equals(signal.code()));
+            if (unavailable) {
+                return new BatchEmailEligibilityResponse(
+                        organisasjonsnummer,
+                        true,
+                        null,
+                        enhet.hjemmeside()
+                );
+            }
+            return new BatchEmailEligibilityResponse(
+                    organisasjonsnummer,
+                    false,
+                    "Registrert nettside svarer: " + enhet.hjemmeside(),
+                    enhet.hjemmeside()
             );
         }
 
@@ -260,6 +271,7 @@ public class CompanyCheckController {
     ) {
         adminAccessService.requireAdmin(adminToken);
         outreachEmailService.validate(request);
+        requireWebsiteStillUnavailable(organisasjonsnummer, request);
         var outreachRequest = new OutreachStatusRequest(
                 organisasjonsnummer,
                 request.companyName(),
@@ -288,6 +300,30 @@ public class CompanyCheckController {
                     "SMTP-leveringen feilet eller fikk ukjent utfall. Ny utsendelse er sperret for å unngå duplikat."
             );
             throw exception;
+        }
+    }
+
+    private void requireWebsiteStillUnavailable(String organisasjonsnummer, OutreachEmailSendRequest request) {
+        if (!"website-unavailable-offer".equals(request.offerType())) {
+            return;
+        }
+
+        var enhet = brregClient.hentEnhet(organisasjonsnummer);
+        if (!hasText(enhet.hjemmeside())) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Utsending stoppet fordi registrert nettside ikke kunne kontrolleres på nytt."
+            );
+        }
+
+        var inspection = mapper.inspectWebsite(enhet.hjemmeside());
+        boolean stillUnavailable = inspection.websiteQuality().signals().stream()
+                .anyMatch(signal -> "TECHNICAL_FAILURE".equals(signal.code()));
+        if (!stillUnavailable) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Utsending stoppet fordi nettsiden svarte ved kontrollen rett før sending."
+            );
         }
     }
 
