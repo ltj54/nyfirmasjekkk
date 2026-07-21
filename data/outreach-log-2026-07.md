@@ -4,15 +4,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 302
-- Sendt: 260
+- Antall hendelser: 356
+- Sendt: 287
 - Angret: 0
-- Aktive kontaktede selskaper: 260
+- Aktive kontaktede selskaper: 287
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-21 | 938028478 | T ROGNLI CONSULT | ENK | email | website-offer |
+| 2026-07-21 | 837942942 | CHRISTOPH GÜNDERA | ENK | email | website-offer |
+| 2026-07-21 | 938127832 | RS BYGG OG INNREDNING AS | AS | email | website-offer |
+| 2026-07-21 | 938123500 | URDALEN & CO | ENK | email | website-offer |
+| 2026-07-21 | 937887167 | DIRGIS HOLDING AS | AS | email | website-offer |
+| 2026-07-21 | 837848342 | HUMMERHUSET AS | AS | email | website-offer |
+| 2026-07-21 | 937887159 | EMBER RESTAURANT AS | AS | email | website-offer |
+| 2026-07-21 | 937770111 | RENT & PENT I OSLO OG AKERSHUS - FEHRATOVIC | ENK | email | website-offer |
+| 2026-07-21 | 937888449 | BALLANGRUD MASKIN & TRANSPORT | ENK | email | website-offer |
+| 2026-07-21 | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | website-offer |
+| 2026-07-21 | 837763932 | UAB ELLA GROUP | UTLA | email | website-offer |
+| 2026-07-21 | 937846576 | TOMASZ S GOLKIEWICZ | ENK | email | website-offer |
+| 2026-07-21 | 937880626 | SAMEIET TRONESHØYDEN | ESEK | email | website-offer |
+| 2026-07-21 | 937919999 | SAGAU FOTTERAPI | ENK | email | website-offer |
+| 2026-07-21 | 936968597 | BEST SOLUTION AS | AS | email | website-offer |
+| 2026-07-21 | 937903081 | BG MASKIN GRØNVOLD | ENK | email | website-offer |
+| 2026-07-21 | 937889933 | PADELPORTEN BERNTSEN | ENK | email | website-offer |
+| 2026-07-21 | 937923570 | KIA CONNECT GMBH | NUF | email | website-offer |
+| 2026-07-21 | 938060711 | MARI LARSEN PROSJEKT OG DOKUMENTASJON | ENK | email | website-offer |
+| 2026-07-21 | 938128820 | METRION AS | AS | email | website-offer |
+| 2026-07-21 | 937469543 | GENVICO CARE | FLI | email | website-offer |
+| 2026-07-21 | 938075387 | TRYGG RENHOLD V/ IBRAHIM | ENK | email | website-offer |
+| 2026-07-21 | 938124442 | M. M. VÅGENES BYGG | ENK | email | website-offer |
+| 2026-07-21 | 838130542 | MAKHNIUK VVS & BYGG | ENK | email | website-offer |
+| 2026-07-21 | 938128065 | JENNIFER JOLINE SPOOR | ENK | email | website-offer |
+| 2026-07-21 | 838124712 | ADNAN SCHULLER TRANSPORT | ENK | email | website-offer |
+| 2026-07-21 | 935645743 | ROSEMARY ONOIKHUA SUNDBAKKEN NAIJA KITCHEN | ENK | email | website-offer |
 | 2026-07-20 | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | website-offer |
 | 2026-07-20 | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | website-offer |
 | 2026-07-20 | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | website-offer |
@@ -278,6 +305,60 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-21 09:13 | sent | 938028478 | T ROGNLI CONSULT | ENK | email | - |
+| 2026-07-21 09:13 | sending | 938028478 | T ROGNLI CONSULT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:13 | sent | 837942942 | CHRISTOPH GÜNDERA | ENK | email | - |
+| 2026-07-21 09:13 | sending | 837942942 | CHRISTOPH GÜNDERA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:11 | sent | 938127832 | RS BYGG OG INNREDNING AS | AS | email | - |
+| 2026-07-21 09:11 | sending | 938127832 | RS BYGG OG INNREDNING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:11 | sent | 938123500 | URDALEN & CO | ENK | email | - |
+| 2026-07-21 09:11 | sending | 938123500 | URDALEN & CO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:10 | sent | 937887167 | DIRGIS HOLDING AS | AS | email | - |
+| 2026-07-21 09:10 | sending | 937887167 | DIRGIS HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:10 | sent | 837848342 | HUMMERHUSET AS | AS | email | - |
+| 2026-07-21 09:10 | sending | 837848342 | HUMMERHUSET AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:10 | sent | 937887159 | EMBER RESTAURANT AS | AS | email | - |
+| 2026-07-21 09:10 | sending | 937887159 | EMBER RESTAURANT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:09 | sent | 937770111 | RENT & PENT I OSLO OG AKERSHUS - FEHRATOVIC | ENK | email | - |
+| 2026-07-21 09:09 | sending | 937770111 | RENT & PENT I OSLO OG AKERSHUS - FEHRATOVIC | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:09 | sent | 937888449 | BALLANGRUD MASKIN & TRANSPORT | ENK | email | - |
+| 2026-07-21 09:09 | sending | 937888449 | BALLANGRUD MASKIN & TRANSPORT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:09 | sent | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | - |
+| 2026-07-21 09:09 | sending | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:08 | sent | 837763932 | UAB ELLA GROUP | UTLA | email | - |
+| 2026-07-21 09:08 | sending | 837763932 | UAB ELLA GROUP | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:08 | sent | 937846576 | TOMASZ S GOLKIEWICZ | ENK | email | - |
+| 2026-07-21 09:08 | sending | 937846576 | TOMASZ S GOLKIEWICZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:06 | sent | 937880626 | SAMEIET TRONESHØYDEN | ESEK | email | - |
+| 2026-07-21 09:06 | sending | 937880626 | SAMEIET TRONESHØYDEN | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:06 | sent | 937919999 | SAGAU FOTTERAPI | ENK | email | - |
+| 2026-07-21 09:06 | sending | 937919999 | SAGAU FOTTERAPI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:05 | sent | 936968597 | BEST SOLUTION AS | AS | email | - |
+| 2026-07-21 09:05 | sending | 936968597 | BEST SOLUTION AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:05 | sent | 937903081 | BG MASKIN GRØNVOLD | ENK | email | - |
+| 2026-07-21 09:05 | sending | 937903081 | BG MASKIN GRØNVOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:05 | sent | 937889933 | PADELPORTEN BERNTSEN | ENK | email | - |
+| 2026-07-21 09:05 | sending | 937889933 | PADELPORTEN BERNTSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:05 | sent | 937923570 | KIA CONNECT GMBH | NUF | email | - |
+| 2026-07-21 09:05 | sending | 937923570 | KIA CONNECT GMBH | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:01 | sent | 938060711 | MARI LARSEN PROSJEKT OG DOKUMENTASJON | ENK | email | - |
+| 2026-07-21 09:01 | sending | 938060711 | MARI LARSEN PROSJEKT OG DOKUMENTASJON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:01 | sent | 938128820 | METRION AS | AS | email | - |
+| 2026-07-21 09:01 | sending | 938128820 | METRION AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:01 | sent | 937469543 | GENVICO CARE | FLI | email | - |
+| 2026-07-21 09:01 | sending | 937469543 | GENVICO CARE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:01 | sent | 938075387 | TRYGG RENHOLD V/ IBRAHIM | ENK | email | - |
+| 2026-07-21 09:01 | sending | 938075387 | TRYGG RENHOLD V/ IBRAHIM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:01 | sent | 938124442 | M. M. VÅGENES BYGG | ENK | email | - |
+| 2026-07-21 09:01 | sending | 938124442 | M. M. VÅGENES BYGG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:00 | sent | 838130542 | MAKHNIUK VVS & BYGG | ENK | email | - |
+| 2026-07-21 09:00 | sending | 838130542 | MAKHNIUK VVS & BYGG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:00 | sent | 938128065 | JENNIFER JOLINE SPOOR | ENK | email | - |
+| 2026-07-21 09:00 | sending | 938128065 | JENNIFER JOLINE SPOOR | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:00 | sent | 838124712 | ADNAN SCHULLER TRANSPORT | ENK | email | - |
+| 2026-07-21 09:00 | sending | 838124712 | ADNAN SCHULLER TRANSPORT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 09:00 | sent | 935645743 | ROSEMARY ONOIKHUA SUNDBAKKEN NAIJA KITCHEN | ENK | email | - |
+| 2026-07-21 09:00 | sending | 935645743 | ROSEMARY ONOIKHUA SUNDBAKKEN NAIJA KITCHEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-20 11:15 | sent | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | - |
 | 2026-07-20 11:15 | sending | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-20 11:14 | sent | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | - |
