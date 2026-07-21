@@ -41,6 +41,7 @@ public class CompanyApiV1Mapper {
     private static final String SOURCE_INTERNAL_NETWORK_SNAPSHOT = "Intern nettverkssnapshot / BRREG";
     private static final String CONFIDENCE_MEDIUM = "MEDIUM";
     private static final String DISCOVERY_POSSIBLE_MATCH = "POSSIBLE_MATCH";
+    private static final String DISCOVERY_UNVERIFIED_SUGGESTION = "UNVERIFIED_SUGGESTION";
     private static final String SIGNAL_TECHNICAL_FAILURE = "TECHNICAL_FAILURE";
     private static final String SIGNAL_MISSING_HTTPS = "MISSING_HTTPS";
     private static final String LABEL_WEBSITE_UNREACHABLE = "Nettsiden svarer ikke";
@@ -449,9 +450,9 @@ public class CompanyApiV1Mapper {
     private WebsiteDiscovery emailDomainWebsiteDiscovery(CompanyCheck companyCheck, String emailDomain, boolean inspect) {
         String candidate = HTTPS_PREFIX + emailDomain;
         if (!inspect) {
-            return new WebsiteDiscovery(DISCOVERY_POSSIBLE_MATCH, CONFIDENCE_MEDIUM, List.of(candidate), null,
+            return new WebsiteDiscovery(DISCOVERY_UNVERIFIED_SUGGESTION, "LOW", List.of(candidate), null,
                     null, null, "Domene er utledet fra registrert e-postadresse, men ikke teknisk sjekket i listevisning.",
-                    null, List.of(), "Mulig nettside er utledet fra registrert e-postadresse. Åpne detaljsiden for teknisk sjekk.",
+                    null, List.of(), "Domeneforslag er utledet fra registrert e-postadresse. Ingen nettside er bekreftet.",
                     "EMAIL_DOMAIN");
         }
         boolean reachable = websiteReachabilityService.isReachable(candidate);
@@ -465,7 +466,8 @@ public class CompanyApiV1Mapper {
         String reason = reachable
                 ? "Domene er utledet fra registrert e-postadresse og svarte ved sjekk. Må fortsatt bekreftes manuelt."
                 : "Domene er utledet fra registrert e-postadresse, men svarte ikke ved sjekk. Må bekreftes manuelt.";
-        return new WebsiteDiscovery(DISCOVERY_POSSIBLE_MATCH, confidence, List.of(candidate),
+        return new WebsiteDiscovery(reachable ? DISCOVERY_POSSIBLE_MATCH : DISCOVERY_UNVERIFIED_SUGGESTION,
+                confidence, List.of(candidate),
                 reachable ? candidate : null, reachable, contentMatch.matched(), contentMatch.reason(),
                 contentMatch.pageTitle(), List.of(toWebsiteCandidateCheck(candidate, reachable, contentMatch)), reason,
                 "EMAIL_DOMAIN");
@@ -478,7 +480,7 @@ public class CompanyApiV1Mapper {
             boolean inspect
     ) {
         if (!inspect) {
-            return new WebsiteDiscovery(DISCOVERY_POSSIBLE_MATCH, "LOW", candidates, null, null, null,
+            return new WebsiteDiscovery(DISCOVERY_UNVERIFIED_SUGGESTION, "LOW", candidates, null, null, null,
                     "Navnebaserte domene-forslag er ikke teknisk sjekket i listevisning.", null, List.of(),
                     "Navnebaserte domene-forslag uten bekreftet kobling. Åpne detaljsiden for teknisk sjekk.",
                     "NAME_HEURISTIC");
@@ -495,7 +497,7 @@ public class CompanyApiV1Mapper {
         String reason = reachable
                 ? "Navnebasert domene-forslag svarte ved sjekk, men uten bekreftet kobling til selskapet. Må bekreftes manuelt."
                 : "Navnebasert domene-forslag uten bekreftet kobling. Må bekreftes manuelt.";
-        return new WebsiteDiscovery(DISCOVERY_POSSIBLE_MATCH,
+        return new WebsiteDiscovery(reachable ? DISCOVERY_POSSIBLE_MATCH : DISCOVERY_UNVERIFIED_SUGGESTION,
                 reachable && contentMatch.matched() ? CONFIDENCE_MEDIUM : "LOW", candidates, reachableCandidate,
                 reachable, contentMatch.matched(), contentMatch.reason(), contentMatch.pageTitle(), candidateChecks,
                 reason, "NAME_HEURISTIC");

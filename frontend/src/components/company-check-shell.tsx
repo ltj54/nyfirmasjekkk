@@ -210,6 +210,7 @@ function canSelectEmailBatchCandidate(company: Pick<CompanySummary, "website" | 
   return isRegisteredWebsiteUnavailable(company)
     || (!company.website && (
       company.websiteDiscovery?.status === "NONE"
+        || company.websiteDiscovery?.status === "UNVERIFIED_SUGGESTION"
         || company.websiteDiscovery?.status === "POSSIBLE_MATCH"
     ));
 }
@@ -251,7 +252,7 @@ function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website"
   if (!discovery) {
     return "mangler nettsidevurdering";
   }
-  if (discovery.status === "NONE") {
+  if (discovery.status === "NONE" || discovery.status === "UNVERIFIED_SUGGESTION") {
     return null;
   }
   if (discovery.status !== "POSSIBLE_MATCH") {
@@ -3712,6 +3713,7 @@ function LeadResultRow({
   const commercialOpportunity = getCommercialOpportunity(company);
   const contact = getBestContactPoint(company);
   const batchExcluded = isBatchExcluded(outreachStatus);
+  const hasUnverifiedWebsiteSuggestion = company.websiteDiscovery?.status === "UNVERIFIED_SUGGESTION";
   const risk = {
     GREEN: { label: "Lav", detail: "Ryddig registerstatus", className: "bg-emerald-50 text-emerald-700" },
     YELLOW: { label: "Bør vurderes", detail: "Begrenset registerinfo", className: "bg-amber-50 text-amber-700" },
@@ -3751,6 +3753,9 @@ function LeadResultRow({
           ) : null}
         </div>
         <p className="mt-1 truncate text-[11px] text-[#52606D]">{commercialOpportunity.title}</p>
+        {hasUnverifiedWebsiteSuggestion ? (
+          <p className="mt-1 truncate text-[11px] text-[#52606D]">Mulig domene foreslått – ingen nettside bekreftet</p>
+        ) : null}
       </div>
 
       <div className="min-w-0">
@@ -4188,11 +4193,18 @@ function CompanyDetailView({
                 <p className="text-[15px] font-semibold leading-relaxed">{primaryReason}</p>
               </div>
 
-              {!company.website && company.websiteDiscovery?.status === "POSSIBLE_MATCH" && company.websiteDiscovery.candidates.length > 0 ? (
+              {!company.website
+                && (company.websiteDiscovery?.status === "POSSIBLE_MATCH"
+                  || company.websiteDiscovery?.status === "UNVERIFIED_SUGGESTION")
+                && company.websiteDiscovery.candidates.length > 0 ? (
                 <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
                     <p className="text-[12px] font-medium text-[#52606D]">
-                      {company.websiteDiscovery.contentMatched ? "Sannsynlig nettside" : "Mulig nettside"}
+                      {company.websiteDiscovery.contentMatched
+                        ? "Sannsynlig nettside"
+                        : company.websiteDiscovery.status === "UNVERIFIED_SUGGESTION"
+                          ? "Domeneforslag"
+                          : "Mulig nettside"}
                     </p>
                     <a
                       className="inline-flex items-center rounded-sm border border-[#BCCCDC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#1F2933] hover:border-[#829AB1] hover:bg-[#F8FBFF]"
@@ -4206,7 +4218,9 @@ function CompanyDetailView({
                   <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">
                     {company.websiteDiscovery.contentMatched
                       ? "Ingen registrert nettside i BRREG, men kandidaten ser ut til å høre til selskapet."
-                      : "Ingen registrert nettside i BRREG, men vi fant en mulig kandidat."}
+                      : company.websiteDiscovery.status === "UNVERIFIED_SUGGESTION"
+                        ? "Mulig domene foreslått – ingen nettside bekreftet."
+                        : "Ingen registrert nettside i BRREG, men vi fant en mulig kandidat."}
                   </p>
                   <div className="mt-3 grid gap-2">
                     {websiteCandidateRows(company.websiteDiscovery).map((candidate) => (

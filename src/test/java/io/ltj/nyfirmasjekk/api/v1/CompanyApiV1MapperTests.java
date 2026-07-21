@@ -99,6 +99,7 @@ class CompanyApiV1MapperTests {
         var summary = summaryForName("FONNES BÅTSERVICE II AS");
 
         assertThat(summary.websiteDiscovery()).isNotNull();
+        assertThat(summary.websiteDiscovery().status()).isEqualTo("UNVERIFIED_SUGGESTION");
         assertThat(summary.websiteDiscovery().candidates())
                 .contains("https://fonnesbatservice.no")
                 .contains("https://fonnes-batservice.no")
@@ -136,6 +137,17 @@ class CompanyApiV1MapperTests {
                 .contains("https://romerikerenhold.no")
                 .contains("https://romerikerenholdservice.no")
                 .doesNotContain("https://yahoo.no");
+    }
+
+    @Test
+    void ukontrollertEpostdomeneErEtForslagMedLavSikkerhet() {
+        var summary = summaryForName("TESTFIRMA AS", "kontakt@testfirma.no");
+
+        assertThat(summary.websiteDiscovery()).isNotNull();
+        assertThat(summary.websiteDiscovery().status()).isEqualTo("UNVERIFIED_SUGGESTION");
+        assertThat(summary.websiteDiscovery().confidence()).isEqualTo("LOW");
+        assertThat(summary.websiteDiscovery().source()).isEqualTo("EMAIL_DOMAIN");
+        assertThat(summary.websiteDiscovery().candidates()).containsExactly("https://testfirma.no");
     }
 
     @Test
@@ -616,7 +628,7 @@ class CompanyApiV1MapperTests {
                 null,
                 List.of(),
                 null,
-                null,
+                email,
                 null,
                 null,
                 false,

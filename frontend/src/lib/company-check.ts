@@ -96,7 +96,7 @@ export interface SalesSegment {
 }
 
 export interface WebsiteDiscovery {
-  status: "REGISTERED" | "POSSIBLE_MATCH" | "NONE";
+  status: "REGISTERED" | "POSSIBLE_MATCH" | "UNVERIFIED_SUGGESTION" | "NONE";
   confidence: "HIGH" | "LOW" | "MEDIUM";
   candidates: string[];
   verifiedCandidate: string | null;
