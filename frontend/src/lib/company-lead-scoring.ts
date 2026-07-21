@@ -149,13 +149,14 @@ export function describeListStructureSummary(signals: StructureSignal[]) {
 function evaluateLeadSignal(company: CompanySummary) {
   const hasEmail = Boolean(company.email);
   const hasPhone = Boolean(company.phone);
-  const hasPossibleWebsite = company.websiteDiscovery?.status === "POSSIBLE_MATCH";
+  const hasReachableWebsiteCandidate = company.websiteDiscovery?.status === "POSSIBLE_MATCH"
+    && company.websiteDiscovery.verifiedReachable === true;
   const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
   const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
   const hasRegisteredUnreachableWebsite = Boolean(company.website) && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false;
   const hasWeakWebsiteQuality = company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW";
   const hasCommerceWebsiteQuality = isCommerceWebsiteQuality(company);
-  const missingWebsite = !company.website && !hasPossibleWebsite;
+  const missingWebsite = !company.website && !hasReachableWebsiteCandidate;
 
   if (company.scoreColor === "RED") {
     return leadSignalResult(
@@ -247,7 +248,7 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (hasPossibleWebsite) {
+  if (hasReachableWebsiteCandidate) {
     return leadSignalResult(
       "Mulig lead",
       "Mulig nettside funnet, må bekreftes manuelt",

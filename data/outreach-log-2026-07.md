@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 368
-- Sendt: 293
+- Antall hendelser: 388
+- Sendt: 303
 - Angret: 0
-- Aktive kontaktede selskaper: 293
+- Aktive kontaktede selskaper: 303
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-21 | 837768632 | SUNNIVA B EIDSET AS | AS | email | website-offer |
+| 2026-07-21 | 937909705 | SALAR | FLI | email | website-offer |
+| 2026-07-21 | 837921872 | RSSW LIMITED | UTLA | email | website-offer |
+| 2026-07-21 | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | website-offer |
+| 2026-07-21 | 938129673 | TAHIR JEMMA TAXI | ENK | email | website-offer |
+| 2026-07-21 | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | website-offer |
+| 2026-07-21 | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | website-offer |
+| 2026-07-21 | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | website-offer |
+| 2026-07-21 | 938131597 | SEA MORE ADVNTURES AS | AS | email | website-offer |
+| 2026-07-21 | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | website-offer |
 | 2026-07-21 | 937812906 | GEN TECH OY NUF | NUF | email | website-offer |
 | 2026-07-21 | 937801319 | GRUIA COMPOSITES LTD NUF | NUF | email | website-offer |
 | 2026-07-21 | 937894201 | FORELDRENES FELLESRÅD | FLI | email | website-offer |
@@ -311,6 +321,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-21 14:17 | sent | 837768632 | SUNNIVA B EIDSET AS | AS | email | - |
+| 2026-07-21 14:17 | sending | 837768632 | SUNNIVA B EIDSET AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:16 | sent | 937909705 | SALAR | FLI | email | - |
+| 2026-07-21 14:16 | sending | 937909705 | SALAR | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:16 | sent | 837921872 | RSSW LIMITED | UTLA | email | - |
+| 2026-07-21 14:16 | sending | 837921872 | RSSW LIMITED | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:16 | sent | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | - |
+| 2026-07-21 14:16 | sending | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:10 | sent | 938129673 | TAHIR JEMMA TAXI | ENK | email | - |
+| 2026-07-21 14:10 | sending | 938129673 | TAHIR JEMMA TAXI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:10 | sent | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | - |
+| 2026-07-21 14:10 | sending | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:10 | sent | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | - |
+| 2026-07-21 14:10 | sending | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:10 | sent | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | - |
+| 2026-07-21 14:10 | sending | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:09 | sent | 938131597 | SEA MORE ADVNTURES AS | AS | email | - |
+| 2026-07-21 14:09 | sending | 938131597 | SEA MORE ADVNTURES AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 14:09 | sent | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | - |
+| 2026-07-21 14:09 | sending | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-21 10:55 | sent | 937812906 | GEN TECH OY NUF | NUF | email | - |
 | 2026-07-21 10:55 | sending | 937812906 | GEN TECH OY NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-21 10:54 | sent | 937801319 | GRUIA COMPOSITES LTD NUF | NUF | email | - |
