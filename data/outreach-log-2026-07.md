@@ -4,15 +4,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 356
-- Sendt: 287
+- Antall hendelser: 368
+- Sendt: 293
 - Angret: 0
-- Aktive kontaktede selskaper: 287
+- Aktive kontaktede selskaper: 293
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-21 | 937812906 | GEN TECH OY NUF | NUF | email | website-offer |
+| 2026-07-21 | 937801319 | GRUIA COMPOSITES LTD NUF | NUF | email | website-offer |
+| 2026-07-21 | 937894201 | FORELDRENES FELLESRÅD | FLI | email | website-offer |
+| 2026-07-21 | 938131856 | NGUYEN BUNAD | ENK | email | website-offer |
+| 2026-07-21 | 838100252 | BLACK (BERGEN LAIVE ACTION COSPLAY KLUBB) | FLI | email | website-offer |
+| 2026-07-21 | 938131724 | RANDI RASMUSSEN VEVKJÆRRING | ENK | email | website-offer |
 | 2026-07-21 | 938028478 | T ROGNLI CONSULT | ENK | email | website-offer |
 | 2026-07-21 | 837942942 | CHRISTOPH GÜNDERA | ENK | email | website-offer |
 | 2026-07-21 | 938127832 | RS BYGG OG INNREDNING AS | AS | email | website-offer |
@@ -305,6 +311,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-21 10:55 | sent | 937812906 | GEN TECH OY NUF | NUF | email | - |
+| 2026-07-21 10:55 | sending | 937812906 | GEN TECH OY NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 10:54 | sent | 937801319 | GRUIA COMPOSITES LTD NUF | NUF | email | - |
+| 2026-07-21 10:54 | sending | 937801319 | GRUIA COMPOSITES LTD NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 10:54 | sent | 937894201 | FORELDRENES FELLESRÅD | FLI | email | - |
+| 2026-07-21 10:54 | sending | 937894201 | FORELDRENES FELLESRÅD | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 10:52 | sent | 938131856 | NGUYEN BUNAD | ENK | email | - |
+| 2026-07-21 10:52 | sending | 938131856 | NGUYEN BUNAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 10:49 | sent | 838100252 | BLACK (BERGEN LAIVE ACTION COSPLAY KLUBB) | FLI | email | - |
+| 2026-07-21 10:49 | sending | 838100252 | BLACK (BERGEN LAIVE ACTION COSPLAY KLUBB) | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-21 10:49 | sent | 938131724 | RANDI RASMUSSEN VEVKJÆRRING | ENK | email | - |
+| 2026-07-21 10:49 | sending | 938131724 | RANDI RASMUSSEN VEVKJÆRRING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-21 09:13 | sent | 938028478 | T ROGNLI CONSULT | ENK | email | - |
 | 2026-07-21 09:13 | sending | 938028478 | T ROGNLI CONSULT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-21 09:13 | sent | 837942942 | CHRISTOPH GÜNDERA | ENK | email | - |
