@@ -1193,7 +1193,25 @@ public class WebsiteContentSnapshotFetcher {
     private static String normalizedMetaDescription(Document document) {
         Element description = document.selectFirst("meta[name=description]");
         String value = attrOrNull(description, ATTRIBUTE_CONTENT);
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
+        return value == null ? "" : collapseWhitespace(value.toLowerCase(Locale.ROOT));
+    }
+
+    private static String collapseWhitespace(String value) {
+        StringBuilder normalized = new StringBuilder(value.length());
+        boolean previousWasWhitespace = true;
+        for (int index = 0; index < value.length(); index++) {
+            char character = value.charAt(index);
+            if (Character.isWhitespace(character)) {
+                previousWasWhitespace = !normalized.isEmpty();
+            } else {
+                if (previousWasWhitespace && !normalized.isEmpty()) {
+                    normalized.append(' ');
+                }
+                normalized.append(character);
+                previousWasWhitespace = false;
+            }
+        }
+        return normalized.toString();
     }
 
     private static String origin(URI uri) {

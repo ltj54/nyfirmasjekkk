@@ -484,20 +484,11 @@ public class CompanyCheckController {
                     .collect(Collectors.groupingBy(result -> result.scoreColor().name(), Collectors.counting()));
 
             long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
-            log.info("company-check search completed in {} ms: {}", durationMs, buildSearchLogLine(
-                    dager,
-                    page,
-                    score,
-                    navn,
-                    fylke,
-                    effectiveOrganisasjonsform,
-                    hasEmail,
-                    hasWebsite,
-                    missingWebsite,
-                    results.size(),
-                    searchPage.totalElements(),
-                    scoreCounts
-            ));
+            var searchLogData = new SearchLogData(
+                    dager, page, score, navn, fylke, effectiveOrganisasjonsform,
+                    hasEmail, hasWebsite, missingWebsite, results.size(), searchPage.totalElements(), scoreCounts
+            );
+            log.info("company-check search completed in {} ms: {}", durationMs, buildSearchLogLine(searchLogData));
             return mapper.toSearchResponse(results, searchPage.page(), searchPage.size(), searchPage.totalElements(), searchPage.totalPages());
         });
     }
@@ -512,36 +503,30 @@ public class CompanyCheckController {
         for (CompanySearchRequest searchRequest : searchRequestsForVisiblePage(request)) {
             int backendPage = 0;
             reachedEnd = false;
+            boolean hasMoreBackendPages = true;
 
-            while (visibleItems.size() < SEARCH_RESULT_SIZE) {
+            while (visibleItems.size() < SEARCH_RESULT_SIZE && hasMoreBackendPages) {
                 CompanySearchPage backendSearchPage = companyCheckService.sokPage(searchRequest, backendPage);
                 List<CompanyCheck> backendItems = backendSearchPage.items();
                 if (backendItems.isEmpty()) {
                     reachedEnd = true;
-                    break;
+                    hasMoreBackendPages = false;
+                } else {
+                    Map<String, OutreachStatusResponse> statusesByOrgNumber = outreachLogService.statusesFor(
+                            backendItems.stream().map(CompanyCheck::organisasjonsnummer).toList()
+                    );
+                    visibleBeforePage = collectVisibleItems(
+                            backendItems,
+                            statusesByOrgNumber,
+                            seenOrgNumbers,
+                            requestedOffset,
+                            visibleBeforePage,
+                            visibleItems
+                    );
+                    hasMoreBackendPages = backendPage + 1 < backendSearchPage.totalPages();
+                    reachedEnd = !hasMoreBackendPages;
+                    backendPage += 1;
                 }
-
-                Map<String, OutreachStatusResponse> statusesByOrgNumber = outreachLogService.statusesFor(
-                        backendItems.stream().map(CompanyCheck::organisasjonsnummer).toList()
-                );
-                for (CompanyCheck item : backendItems) {
-                    if (!seenOrgNumbers.add(item.organisasjonsnummer())) {
-                        continue;
-                    }
-                    if (isHiddenFromSearch(statusesByOrgNumber.get(item.organisasjonsnummer()))) {
-                        continue;
-                    }
-                    if (visibleBeforePage >= requestedOffset && visibleItems.size() < SEARCH_RESULT_SIZE) {
-                        visibleItems.add(item);
-                    }
-                    visibleBeforePage += 1;
-                }
-
-                if (backendPage + 1 >= backendSearchPage.totalPages()) {
-                    reachedEnd = true;
-                    break;
-                }
-                backendPage += 1;
             }
 
             if (visibleItems.size() >= SEARCH_RESULT_SIZE) {
@@ -554,6 +539,28 @@ public class CompanyCheckController {
                 : visibleBeforePage;
         int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / SEARCH_RESULT_SIZE);
         return new CompanySearchPage(visibleItems, Math.max(page, 0), SEARCH_RESULT_SIZE, totalElements, totalPages);
+    }
+
+    private int collectVisibleItems(
+            List<CompanyCheck> backendItems,
+            Map<String, OutreachStatusResponse> statusesByOrgNumber,
+            Set<String> seenOrgNumbers,
+            int requestedOffset,
+            int visibleBeforePage,
+            List<CompanyCheck> visibleItems
+    ) {
+        int visibleCount = visibleBeforePage;
+        for (CompanyCheck item : backendItems) {
+            boolean isNewItem = seenOrgNumbers.add(item.organisasjonsnummer());
+            boolean isVisible = isNewItem && !isHiddenFromSearch(statusesByOrgNumber.get(item.organisasjonsnummer()));
+            if (isVisible) {
+                if (visibleCount >= requestedOffset && visibleItems.size() < SEARCH_RESULT_SIZE) {
+                    visibleItems.add(item);
+                }
+                visibleCount += 1;
+            }
+        }
+        return visibleCount;
     }
 
     private boolean isHiddenFromSearch(OutreachStatusResponse status) {
@@ -633,7 +640,38 @@ public class CompanyCheckController {
         );
     }
 
-    private String buildSearchLogLine(
+    private String buildSearchLogLine(SearchLogData data) {
+        var joiner = new StringJoiner(", ");
+        joiner.add("dager=" + data.dager());
+        joiner.add("page=" + data.page());
+        if (hasText(data.score())) {
+            joiner.add("score=" + data.score());
+        }
+        if (hasText(data.navn())) {
+            joiner.add("navn=" + data.navn());
+        }
+        if (hasText(data.fylke())) {
+            joiner.add("fylke=" + data.fylke());
+        }
+        if (hasText(data.organisasjonsform())) {
+            joiner.add("organisasjonsform=" + data.organisasjonsform());
+        }
+        if (data.hasEmail()) {
+            joiner.add("hasEmail=true");
+        }
+        if (data.hasWebsite()) {
+            joiner.add("hasWebsite=true");
+        }
+        if (data.missingWebsite()) {
+            joiner.add("missingWebsite=true");
+        }
+        joiner.add("results=" + data.results());
+        joiner.add("totalElements=" + data.totalElements());
+        joiner.add("scoreCounts=" + data.scoreCounts());
+        return joiner.toString();
+    }
+
+    private record SearchLogData(
             int dager,
             int page,
             String score,
@@ -647,34 +685,6 @@ public class CompanyCheckController {
             long totalElements,
             Map<String, Long> scoreCounts
     ) {
-        var joiner = new StringJoiner(", ");
-        joiner.add("dager=" + dager);
-        joiner.add("page=" + page);
-        if (score != null && !score.isBlank()) {
-            joiner.add("score=" + score);
-        }
-        if (navn != null && !navn.isBlank()) {
-            joiner.add("navn=" + navn);
-        }
-        if (fylke != null && !fylke.isBlank()) {
-            joiner.add("fylke=" + fylke);
-        }
-        if (organisasjonsform != null && !organisasjonsform.isBlank()) {
-            joiner.add("organisasjonsform=" + organisasjonsform);
-        }
-        if (hasEmail) {
-            joiner.add("hasEmail=true");
-        }
-        if (hasWebsite) {
-            joiner.add("hasWebsite=true");
-        }
-        if (missingWebsite) {
-            joiner.add("missingWebsite=true");
-        }
-        joiner.add("results=" + results);
-        joiner.add("totalElements=" + totalElements);
-        joiner.add("scoreCounts=" + scoreCounts);
-        return joiner.toString();
     }
 
     private String firstNonBlank(String... values) {

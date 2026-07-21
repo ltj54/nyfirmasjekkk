@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -335,7 +336,15 @@ public class CompanyCheckService {
     }
 
     private String navnForBrregSearch(String navn) {
-        return navn.trim().replaceFirst("(?i)\\s+(AS|ASA|ENK|NUF|SA|FLI)\\s*$", "");
+        String trimmedName = navn.trim();
+        int lastSpace = trimmedName.lastIndexOf(' ');
+        if (lastSpace < 0) {
+            return trimmedName;
+        }
+        String suffix = trimmedName.substring(lastSpace + 1).toUpperCase(Locale.ROOT);
+        return Set.of("AS", "ASA", "ENK", "NUF", "SA", "FLI").contains(suffix)
+                ? trimmedName.substring(0, lastSpace).trim()
+                : trimmedName;
     }
 
     private List<String> nameSearchVariants(String navn) {

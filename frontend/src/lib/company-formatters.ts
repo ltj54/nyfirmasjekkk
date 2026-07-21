@@ -1,6 +1,8 @@
 import type { CompanyEvent, CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
 import { websiteQualityMailSignalCode } from "@/lib/outreach-email-template";
 
+type StructureSignalSeverity = "HIGH" | "MEDIUM" | "INFO";
+
 type OutreachOfferCompany = Pick<CompanySummary, "name" | "organizationForm" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"> & {
   naceDescription?: string | null;
 };
@@ -159,7 +161,8 @@ function getNorwegianDateTimeParts(value: string | null | undefined) {
 }
 
 export function buildGoogleSearchUrl(query: string) {
-  return `https://www.google.com/search?q=${encodeURIComponent(`"${query}"`)}`;
+  const quotedQuery = `"${query}"`;
+  return `https://www.google.com/search?q=${encodeURIComponent(quotedQuery)}`;
 }
 
 export function formatRegistryFlag(value: boolean | null) {
@@ -215,7 +218,7 @@ export function formatEventDate(value: string) {
     return value;
   }
 
-  const norwegianDateMatch = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  const norwegianDateMatch = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value);
   if (norwegianDateMatch) {
     const [, day, month, year] = norwegianDateMatch;
     return `${year}-${month}-${day}`;
@@ -412,7 +415,7 @@ export function estimateListProgress(elapsedMs: number) {
   return 90;
 }
 
-export function structureSignalSeverityClassName(severity: "HIGH" | "MEDIUM" | "INFO") {
+export function structureSignalSeverityClassName(severity: StructureSignalSeverity) {
   if (severity === "HIGH") {
     return "bg-rose-50 text-rose-700";
   }
@@ -422,7 +425,7 @@ export function structureSignalSeverityClassName(severity: "HIGH" | "MEDIUM" | "
   return "bg-slate-100 text-slate-700";
 }
 
-export function formatStructureSignalSeverity(severity: "HIGH" | "MEDIUM" | "INFO") {
+export function formatStructureSignalSeverity(severity: StructureSignalSeverity) {
   if (severity === "HIGH") {
     return "Høy relevans";
   }
@@ -432,7 +435,7 @@ export function formatStructureSignalSeverity(severity: "HIGH" | "MEDIUM" | "INF
   return "Til orientering";
 }
 
-export function listStructureSignalClassName(severity: "HIGH" | "MEDIUM" | "INFO") {
+export function listStructureSignalClassName(severity: StructureSignalSeverity) {
   if (severity === "HIGH") {
     return "bg-rose-50 text-rose-700";
   }

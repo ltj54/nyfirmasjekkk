@@ -129,7 +129,7 @@ public class CompanyApiV1Mapper {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,63}\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern PHONE_PATTERN = Pattern.compile("(?:\\+47\\s*+)?(?:\\d[\\s-]?+){7}\\d");
     private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*(20\\d{2})");
-    private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]+\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]{1,2048}\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
     private static final Pattern FOREIGN_ORGANIZATION_NUMBER_PATTERN = Pattern.compile("\\b(?:\\d{6}\\s\\d{4}|se\\d{10,12})\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern NON_ALPHANUMERIC_SPACE_PATTERN = Pattern.compile("[^a-z0-9 ]");
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
@@ -1728,7 +1728,8 @@ public class CompanyApiV1Mapper {
         if (host == null) {
             return;
         }
-        String domain = host.replaceFirst("\\.[a-z.]+$", "").replace("-", "");
+        int firstDot = host.indexOf('.');
+        String domain = (firstDot < 0 ? host : host.substring(0, firstDot)).replace("-", "");
         String companyName = normalizeDomainToken(companyCheck.navn());
         if (companyName.length() >= 5 && !companyName.contains(domain) && !domain.contains(companyName.substring(0, Math.min(companyName.length(), 8)))) {
             signals.add(new WebsiteQualitySignal(

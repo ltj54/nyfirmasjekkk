@@ -19,26 +19,51 @@ type OutreachEmailCompany = Pick<
 >;
 
 export function buildOutreachEmailSubject(markdown: string, company: OutreachEmailCompany) {
-  const template = isRegisteredWebsiteUnavailable(company)
-    ? extractMailSubject(markdown, "E-postmal - registrert nettside svarer ikke") ?? "Nettsiden til {{companyName}} svarte ikke"
-    : hasWebsiteQualityOpportunity(company)
-      ? extractMailSubject(markdown, "E-postmal - nettside kan forbedres") ?? "En observasjon om nettsiden til {{companyName}}"
-    : hasRegisteredWebsiteForManualReview(company)
-      ? extractMailSubject(markdown, "E-postmal - registrert nettside bør vurderes manuelt") ?? "Nettsiden til {{companyName}}"
-    : extractMailSubject(markdown) ?? "Fant ikke nettsiden til {{companyName}}";
+  const config = outreachEmailTemplateConfig(company);
+  const template = extractMailSubject(markdown, config.heading) ?? config.subjectFallback;
   return applyOutreachTemplate(template, company);
 }
 
 export function buildOutreachEmailBody(markdown: string, company: OutreachEmailCompany) {
-  const template = isRegisteredWebsiteUnavailable(company)
-    ? extractMarkdownSection(markdown, "E-postmal - registrert nettside svarer ikke") ?? defaultRegisteredWebsiteUnavailableEmailTemplate()
-    : hasWebsiteQualityOpportunity(company)
-      ? extractMarkdownSection(markdown, "E-postmal - nettside kan forbedres") ?? defaultWebsiteQualityOpportunityEmailTemplate()
-    : hasRegisteredWebsiteForManualReview(company)
-      ? extractMarkdownSection(markdown, "E-postmal - registrert nettside bør vurderes manuelt") ?? defaultRegisteredWebsiteReviewEmailTemplate()
-    : extractMarkdownSection(markdown, "E-postmal") ?? defaultOutreachEmailTemplate();
-  const cleanedTemplate = template.replace(/^Emne:\s*`?.+`?\s*$/m, "").trim();
+  const config = outreachEmailTemplateConfig(company);
+  const template = extractMarkdownSection(markdown, config.heading) ?? config.bodyFallback();
+  const cleanedTemplate = removeMailSubjectLine(template);
   return applyOutreachTemplate(cleanedTemplate, company);
+}
+
+type OutreachEmailTemplateConfig = {
+  heading: string;
+  subjectFallback: string;
+  bodyFallback: () => string;
+};
+
+function outreachEmailTemplateConfig(company: OutreachEmailCompany): OutreachEmailTemplateConfig {
+  if (isRegisteredWebsiteUnavailable(company)) {
+    return {
+      heading: "E-postmal - registrert nettside svarer ikke",
+      subjectFallback: "Nettsiden til {{companyName}} svarte ikke",
+      bodyFallback: defaultRegisteredWebsiteUnavailableEmailTemplate,
+    };
+  }
+  if (hasWebsiteQualityOpportunity(company)) {
+    return {
+      heading: "E-postmal - nettside kan forbedres",
+      subjectFallback: "En observasjon om nettsiden til {{companyName}}",
+      bodyFallback: defaultWebsiteQualityOpportunityEmailTemplate,
+    };
+  }
+  if (hasRegisteredWebsiteForManualReview(company)) {
+    return {
+      heading: "E-postmal - registrert nettside bør vurderes manuelt",
+      subjectFallback: "Nettsiden til {{companyName}}",
+      bodyFallback: defaultRegisteredWebsiteReviewEmailTemplate,
+    };
+  }
+  return {
+    heading: "E-postmal",
+    subjectFallback: "Fant ikke nettsiden til {{companyName}}",
+    bodyFallback: defaultOutreachEmailTemplate,
+  };
 }
 
 export function websiteQualityMailLine(company: OutreachEmailCompany) {
@@ -132,8 +157,8 @@ function approvedWebsiteObservation(company: Pick<OutreachEmailCompany, "naceCod
   ];
 
   for (const candidate of approved) {
-    const signal = signals.find((item) => item.code === candidate.code && (candidate.include?.(item.severity) ?? true));
-    if (signal) {
+    const hasMatchingSignal = signals.some((item) => item.code === candidate.code && (candidate.include?.(item.severity) ?? true));
+    if (hasMatchingSignal) {
       return candidate;
     }
   }
@@ -511,8 +536,16 @@ function extractMailSubject(markdown: string, heading = "E-postmal") {
     return null;
   }
 
-  const match = section.match(/Emne:\s*`?([^\n`]+)`?/);
+  const match = /Emne:\s*`?([^\n`]+)`?/.exec(section);
   return match?.[1]?.trim() ?? null;
+}
+
+function removeMailSubjectLine(template: string) {
+  if (!template.startsWith("Emne:")) {
+    return template.trim();
+  }
+  const firstLineEnd = template.indexOf("\n");
+  return firstLineEnd < 0 ? "" : template.slice(firstLineEnd + 1).trim();
 }
 
 function extractMarkdownSection(markdown: string, heading: string) {
@@ -716,10 +749,11 @@ function firstNameFromContactName(value: string) {
 }
 
 function displayCompanyName(company: Pick<OutreachEmailCompany, "name" | "organizationForm">) {
-  return company.name
-    .replace(/\s+(AS|ASA|ENK|NUF|DA|ANS|SA|BA|LTD|LIMITED|LLC|INC|GMBH|OU|OÜ)$/i, "")
-    .replace(/\.+(AS|ASA|ENK|NUF|DA|ANS|SA|BA|LTD|LIMITED|LLC|INC|GMBH|OU|OÜ)$/i, "")
-    .trim();
+  const suffixes = ["AS", "ASA", "ENK", "NUF", "DA", "ANS", "SA", "BA", "LTD", "LIMITED", "LLC", "INC", "GMBH", "OU", "OÜ"];
+  const trimmedName = company.name.trim();
+  const upperName = trimmedName.toUpperCase();
+  const suffix = suffixes.find((candidate) => upperName.endsWith(` ${candidate}`) || upperName.endsWith(`.${candidate}`));
+  return suffix ? trimmedName.slice(0, -(suffix.length + 1)).trim() : trimmedName;
 }
 
 function domainExamplesForCompany(company: OutreachEmailCompany) {
@@ -1042,5 +1076,11 @@ function isHttpUrl(value: string) {
 }
 
 function isEmailAddress(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const atIndex = value.indexOf("@");
+  const dotIndex = value.lastIndexOf(".");
+  return atIndex > 0
+    && atIndex === value.lastIndexOf("@")
+    && dotIndex > atIndex + 1
+    && dotIndex < value.length - 1
+    && !Array.from(value).some((character) => character.trim().length === 0);
 }

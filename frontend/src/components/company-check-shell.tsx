@@ -272,6 +272,26 @@ function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website"
   return null;
 }
 
+function automaticEmailSendError(status: number) {
+  if (status === 409) {
+    return "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten.";
+  }
+  if (status === 429) {
+    return "For mange e-postforsøk på kort tid. Vent før du prøver igjen.";
+  }
+  return "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.";
+}
+
+function emailBatchButtonTitle(canUseEmailBatch: boolean, overEmailBatchLimit: boolean) {
+  if (!canUseEmailBatch) {
+    return "Velg Har e-post og enten Mangler nettside eller Har nettside før batch kan kjøres.";
+  }
+  if (overEmailBatchLimit) {
+    return `Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch.`;
+  }
+  return undefined;
+}
+
 function compareEmailBatchPriority(left: CompanySummary, right: CompanySummary) {
   const leftSelectable = canSelectEmailBatchCandidate(left) ? 0 : 1;
   const rightSelectable = canSelectEmailBatchCandidate(right) ? 0 : 1;
@@ -633,11 +653,7 @@ export function CompanyCheckShell() {
         console.error("Failed to send outreach email", errorText);
         setEmailSendErrorByOrg((current) => ({
           ...current,
-          [company.orgNumber]: response.status === 409
-            ? "Sperret: Det er allerede sendt en nettsidehenvendelse til virksomheten."
-            : response.status === 429
-              ? "For mange e-postforsøk på kort tid. Vent før du prøver igjen."
-              : "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.",
+          [company.orgNumber]: automaticEmailSendError(response.status),
         }));
         return response.status === 409 ? "skipped" : "failed";
       }
@@ -1877,6 +1893,7 @@ export function CompanyCheckShell() {
                     title={canUseEmailBatch ? undefined : "Velg Har e-post og enten Mangler nettside eller Har nettside for å bruke batch."}
                   >
                     <input
+                      aria-checked={showBatchExcluded}
                       checked={showBatchExcluded}
                       className="peer sr-only"
                       disabled={!canUseEmailBatch}
@@ -1906,13 +1923,7 @@ export function CompanyCheckShell() {
                     disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || overEmailBatchLimit || isBatchSending}
                     onClick={() => void runEmailBatch(selectedBatchCompanies)}
                     size="sm"
-                    title={
-                      !canUseEmailBatch
-                        ? "Velg Har e-post og enten Mangler nettside eller Har nettside før batch kan kjøres."
-                        : overEmailBatchLimit
-                          ? `Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch.`
-                          : undefined
-                    }
+                    title={emailBatchButtonTitle(canUseEmailBatch, overEmailBatchLimit)}
                     type="button"
                     variant="outline"
                   >
@@ -2277,7 +2288,7 @@ function BrregWebsiteMatchesPanel({
               />
               <div className="mt-4 border-t border-[#D9E2EC] pt-4">
                 <p className="mb-3 text-[12px] leading-5 text-[#52606D]">
-                  Utsending loggføres på <span className="font-semibold text-[#1F2933]">{match.name}</span>{" ("}{match.orgNumber}). Mottaker: {match.email || "ingen e-post registrert"}.
+                  Utsending loggføres på <span className="font-semibold text-[#1F2933]">{`${match.name} (${match.orgNumber})`}</span>. Mottaker: {match.email || "ingen e-post registrert"}.
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
