@@ -4,15 +4,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 448
-- Sendt: 333
+- Antall hendelser: 480
+- Sendt: 349
 - Angret: 0
-- Aktive kontaktede selskaper: 333
+- Aktive kontaktede selskaper: 349
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-23 | 937208081 | REKAI GÖLZ | ENK | email | website-offer |
+| 2026-07-23 | 937333137 | FJORDENS DELIKATESSER AMREJI | ENK | email | website-offer |
+| 2026-07-23 | 937339798 | VERONA SPORTSFISKERI SJØSTRØM | ENK | email | website-offer |
+| 2026-07-23 | 937384467 | SVEIN DANIELSEN | ENK | email | website-offer |
+| 2026-07-23 | 837188342 | MEBERG MARKETING | ENK | email | website-offer |
+| 2026-07-23 | 837440882 | MAGNUS VONEN HOLDING AS | AS | email | website-offer |
+| 2026-07-23 | 937422784 | GOLLNHUBAIR E.U / GOLLNHUBER | ENK | email | website-offer |
+| 2026-07-23 | 837449162 | SVEIPE MARTHINSEN MEDIA | ENK | email | website-offer |
+| 2026-07-23 | 837384192 | SABAI SAITONG MASSAGE 2 | ENK | email | website-offer |
+| 2026-07-23 | 937604343 | SKOLENES LANDSFORBUND FORENING KRISTIANSUND | FLI | email | website-offer |
+| 2026-07-23 | 937562322 | ALVASAR OÜ NUF | NUF | email | website-offer |
+| 2026-07-23 | 937635966 | NEXT-GEN CRUISES LTD. NUF | NUF | email | website-offer |
+| 2026-07-23 | 937732430 | WIDE HORIZON S.C.S. | UTLA | email | website-offer |
+| 2026-07-23 | 937752040 | TRANSNORD APS | UTLA | email | website-offer |
+| 2026-07-23 | 937545924 | PAUL SMITH LIMITED | NUF | email | website-offer |
+| 2026-07-23 | 937891504 | HOLMEN 13 AS | AS | email | website-offer |
 | 2026-07-22 | 937538782 | NTL POLITIET INNLANDET LOKALLAG | FLI | email | website-offer |
 | 2026-07-22 | 937480296 | BELSVIK SØRGÅRDEN | ENK | email | website-offer |
 | 2026-07-22 | 937537484 | NYGAARD FAM INVEST AS | AS | email | website-offer |
@@ -351,6 +367,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-23 00:14 | sent | 937208081 | REKAI GÖLZ | ENK | email | - |
+| 2026-07-23 00:14 | sending | 937208081 | REKAI GÖLZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 937333137 | FJORDENS DELIKATESSER AMREJI | ENK | email | - |
+| 2026-07-23 00:14 | sending | 937333137 | FJORDENS DELIKATESSER AMREJI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 937339798 | VERONA SPORTSFISKERI SJØSTRØM | ENK | email | - |
+| 2026-07-23 00:14 | sending | 937339798 | VERONA SPORTSFISKERI SJØSTRØM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 937384467 | SVEIN DANIELSEN | ENK | email | - |
+| 2026-07-23 00:14 | sending | 937384467 | SVEIN DANIELSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 837188342 | MEBERG MARKETING | ENK | email | - |
+| 2026-07-23 00:14 | sending | 837188342 | MEBERG MARKETING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 837440882 | MAGNUS VONEN HOLDING AS | AS | email | - |
+| 2026-07-23 00:14 | sending | 837440882 | MAGNUS VONEN HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 937422784 | GOLLNHUBAIR E.U / GOLLNHUBER | ENK | email | - |
+| 2026-07-23 00:14 | sending | 937422784 | GOLLNHUBAIR E.U / GOLLNHUBER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 837449162 | SVEIPE MARTHINSEN MEDIA | ENK | email | - |
+| 2026-07-23 00:14 | sending | 837449162 | SVEIPE MARTHINSEN MEDIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:14 | sent | 837384192 | SABAI SAITONG MASSAGE 2 | ENK | email | - |
+| 2026-07-23 00:14 | sending | 837384192 | SABAI SAITONG MASSAGE 2 | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:12 | sent | 937604343 | SKOLENES LANDSFORBUND FORENING KRISTIANSUND | FLI | email | - |
+| 2026-07-23 00:12 | sending | 937604343 | SKOLENES LANDSFORBUND FORENING KRISTIANSUND | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:12 | sent | 937562322 | ALVASAR OÜ NUF | NUF | email | - |
+| 2026-07-23 00:12 | sending | 937562322 | ALVASAR OÜ NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:12 | sent | 937635966 | NEXT-GEN CRUISES LTD. NUF | NUF | email | - |
+| 2026-07-23 00:12 | sending | 937635966 | NEXT-GEN CRUISES LTD. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:12 | sent | 937732430 | WIDE HORIZON S.C.S. | UTLA | email | - |
+| 2026-07-23 00:12 | sending | 937732430 | WIDE HORIZON S.C.S. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:12 | sent | 937752040 | TRANSNORD APS | UTLA | email | - |
+| 2026-07-23 00:12 | sending | 937752040 | TRANSNORD APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:11 | sent | 937545924 | PAUL SMITH LIMITED | NUF | email | - |
+| 2026-07-23 00:11 | sending | 937545924 | PAUL SMITH LIMITED | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-23 00:09 | sent | 937891504 | HOLMEN 13 AS | AS | email | - |
+| 2026-07-23 00:09 | sending | 937891504 | HOLMEN 13 AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-22 15:53 | sent | 937538782 | NTL POLITIET INNLANDET LOKALLAG | FLI | email | - |
 | 2026-07-22 15:53 | sending | 937538782 | NTL POLITIET INNLANDET LOKALLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-22 15:53 | sent | 937480296 | BELSVIK SØRGÅRDEN | ENK | email | - |
