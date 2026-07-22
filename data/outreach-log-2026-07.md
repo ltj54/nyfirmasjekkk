@@ -4,15 +4,45 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 388
-- Sendt: 303
+- Antall hendelser: 448
+- Sendt: 333
 - Angret: 0
-- Aktive kontaktede selskaper: 303
+- Aktive kontaktede selskaper: 333
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-22 | 937538782 | NTL POLITIET INNLANDET LOKALLAG | FLI | email | website-offer |
+| 2026-07-22 | 937480296 | BELSVIK SØRGÅRDEN | ENK | email | website-offer |
+| 2026-07-22 | 937537484 | NYGAARD FAM INVEST AS | AS | email | website-offer |
+| 2026-07-22 | 937537441 | LSN FAM INVEST AS | AS | email | website-offer |
+| 2026-07-22 | 937443242 | PEDERSEN PROSESS | ENK | email | website-offer |
+| 2026-07-22 | 937492960 | ENZO BYGG OG REHABILITERING AS | AS | email | website-offer |
+| 2026-07-22 | 937475357 | ESTETISK SYKEPLEIER HURME | ENK | email | website-offer |
+| 2026-07-22 | 937473370 | ENERGI OG TERAPIROMMET LUNDSETH | ENK | email | website-offer |
+| 2026-07-22 | 937477007 | ESKILD TORGERSEN ARNTSEN NUF | NUF | email | website-offer |
+| 2026-07-22 | 937754663 | UNGE KONSERVATIVE TRØNDELAG | FLI | email | website-offer |
+| 2026-07-22 | 937679971 | ADRIAN-HOLDING II AS | AS | email | website-offer |
+| 2026-07-22 | 937642695 | IRISH HOMES II AS | AS | email | website-offer |
+| 2026-07-22 | 937664508 | YSTAD RAFFERTY STUDIOS | ENK | email | website-offer |
+| 2026-07-22 | 937689527 | FARAASEN MULTISERVICE | ENK | email | website-offer |
+| 2026-07-22 | 937685416 | GRAND CAR CARE SWEDEN AB | UTLA | email | website-offer |
+| 2026-07-22 | 937800444 | BRREG QUALITY CREW | FLI | email | website-offer |
+| 2026-07-22 | 937881703 | DRONNINGENS GATE 48 BODØ AS | AS | email | website-offer |
+| 2026-07-22 | 937780184 | TP ELEKTRO BERG-OLSEN | ENK | email | website-offer |
+| 2026-07-22 | 937780958 | VERS & TONAR - FLOTVE | ENK | email | website-offer |
+| 2026-07-22 | 937801246 | LAURIS TIMERMANIS NUF | NUF | email | website-offer |
+| 2026-07-22 | 937951361 | ØSTEIENDOM DRIFT AS | AS | email | website-offer |
+| 2026-07-22 | 937976186 | HAVGNIST AKADEMIET | FLI | email | website-offer |
+| 2026-07-22 | 938135436 | KRISTOFFER TULLERUD AS | AS | email | website-offer |
+| 2026-07-22 | 938137374 | ANINE WOLDSUND | ENK | email | website-offer |
+| 2026-07-22 | 938134332 | BAYAT TOTALSERVICE | ENK | email | website-offer |
+| 2026-07-22 | 938139520 | UNDRE VITENSHOW AARSKOG | ENK | email | website-offer |
+| 2026-07-22 | 937851987 | LYNGEN PRIDE | FLI | email | website-offer |
+| 2026-07-22 | 838140602 | LINE VASLESTAD COACHING | ENK | email | website-offer |
+| 2026-07-22 | 938137765 | FOSSEGRIM HOGNESTAD | ENK | email | website-offer |
+| 2026-07-22 | 938143803 | BIZ & BUZZ BARSNES-SIMONSEN | ENK | email | website-offer |
 | 2026-07-21 | 837768632 | SUNNIVA B EIDSET AS | AS | email | website-offer |
 | 2026-07-21 | 937909705 | SALAR | FLI | email | website-offer |
 | 2026-07-21 | 837921872 | RSSW LIMITED | UTLA | email | website-offer |
@@ -321,6 +351,66 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-22 15:53 | sent | 937538782 | NTL POLITIET INNLANDET LOKALLAG | FLI | email | - |
+| 2026-07-22 15:53 | sending | 937538782 | NTL POLITIET INNLANDET LOKALLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:53 | sent | 937480296 | BELSVIK SØRGÅRDEN | ENK | email | - |
+| 2026-07-22 15:53 | sending | 937480296 | BELSVIK SØRGÅRDEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:53 | sent | 937537484 | NYGAARD FAM INVEST AS | AS | email | - |
+| 2026-07-22 15:53 | sending | 937537484 | NYGAARD FAM INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:52 | sent | 937537441 | LSN FAM INVEST AS | AS | email | - |
+| 2026-07-22 15:52 | sending | 937537441 | LSN FAM INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:52 | sent | 937443242 | PEDERSEN PROSESS | ENK | email | - |
+| 2026-07-22 15:52 | sending | 937443242 | PEDERSEN PROSESS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:52 | sent | 937492960 | ENZO BYGG OG REHABILITERING AS | AS | email | - |
+| 2026-07-22 15:52 | sending | 937492960 | ENZO BYGG OG REHABILITERING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:52 | sent | 937475357 | ESTETISK SYKEPLEIER HURME | ENK | email | - |
+| 2026-07-22 15:52 | sending | 937475357 | ESTETISK SYKEPLEIER HURME | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:52 | sent | 937473370 | ENERGI OG TERAPIROMMET LUNDSETH | ENK | email | - |
+| 2026-07-22 15:52 | sending | 937473370 | ENERGI OG TERAPIROMMET LUNDSETH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:51 | sent | 937477007 | ESKILD TORGERSEN ARNTSEN NUF | NUF | email | - |
+| 2026-07-22 15:51 | sending | 937477007 | ESKILD TORGERSEN ARNTSEN NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:49 | sent | 937754663 | UNGE KONSERVATIVE TRØNDELAG | FLI | email | - |
+| 2026-07-22 15:49 | sending | 937754663 | UNGE KONSERVATIVE TRØNDELAG | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:48 | sent | 937679971 | ADRIAN-HOLDING II AS | AS | email | - |
+| 2026-07-22 15:48 | sending | 937679971 | ADRIAN-HOLDING II AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:48 | sent | 937642695 | IRISH HOMES II AS | AS | email | - |
+| 2026-07-22 15:48 | sending | 937642695 | IRISH HOMES II AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:48 | sent | 937664508 | YSTAD RAFFERTY STUDIOS | ENK | email | - |
+| 2026-07-22 15:48 | sending | 937664508 | YSTAD RAFFERTY STUDIOS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:48 | sent | 937689527 | FARAASEN MULTISERVICE | ENK | email | - |
+| 2026-07-22 15:48 | sending | 937689527 | FARAASEN MULTISERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:48 | sent | 937685416 | GRAND CAR CARE SWEDEN AB | UTLA | email | - |
+| 2026-07-22 15:48 | sending | 937685416 | GRAND CAR CARE SWEDEN AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:45 | sent | 937800444 | BRREG QUALITY CREW | FLI | email | - |
+| 2026-07-22 15:45 | sending | 937800444 | BRREG QUALITY CREW | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:43 | sent | 937881703 | DRONNINGENS GATE 48 BODØ AS | AS | email | - |
+| 2026-07-22 15:43 | sending | 937881703 | DRONNINGENS GATE 48 BODØ AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:43 | sent | 937780184 | TP ELEKTRO BERG-OLSEN | ENK | email | - |
+| 2026-07-22 15:43 | sending | 937780184 | TP ELEKTRO BERG-OLSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:42 | sent | 937780958 | VERS & TONAR - FLOTVE | ENK | email | - |
+| 2026-07-22 15:42 | sending | 937780958 | VERS & TONAR - FLOTVE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:42 | sent | 937801246 | LAURIS TIMERMANIS NUF | NUF | email | - |
+| 2026-07-22 15:42 | sending | 937801246 | LAURIS TIMERMANIS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:39 | sent | 937951361 | ØSTEIENDOM DRIFT AS | AS | email | - |
+| 2026-07-22 15:39 | sending | 937951361 | ØSTEIENDOM DRIFT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:38 | sent | 937976186 | HAVGNIST AKADEMIET | FLI | email | - |
+| 2026-07-22 15:38 | sending | 937976186 | HAVGNIST AKADEMIET | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:38 | sent | 938135436 | KRISTOFFER TULLERUD AS | AS | email | - |
+| 2026-07-22 15:38 | sending | 938135436 | KRISTOFFER TULLERUD AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 938137374 | ANINE WOLDSUND | ENK | email | - |
+| 2026-07-22 15:35 | sending | 938137374 | ANINE WOLDSUND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 938134332 | BAYAT TOTALSERVICE | ENK | email | - |
+| 2026-07-22 15:35 | sending | 938134332 | BAYAT TOTALSERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 938139520 | UNDRE VITENSHOW AARSKOG | ENK | email | - |
+| 2026-07-22 15:35 | sending | 938139520 | UNDRE VITENSHOW AARSKOG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 937851987 | LYNGEN PRIDE | FLI | email | - |
+| 2026-07-22 15:35 | sending | 937851987 | LYNGEN PRIDE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 838140602 | LINE VASLESTAD COACHING | ENK | email | - |
+| 2026-07-22 15:35 | sending | 838140602 | LINE VASLESTAD COACHING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 938137765 | FOSSEGRIM HOGNESTAD | ENK | email | - |
+| 2026-07-22 15:35 | sending | 938137765 | FOSSEGRIM HOGNESTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-22 15:35 | sent | 938143803 | BIZ & BUZZ BARSNES-SIMONSEN | ENK | email | - |
+| 2026-07-22 15:35 | sending | 938143803 | BIZ & BUZZ BARSNES-SIMONSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-21 14:17 | sent | 837768632 | SUNNIVA B EIDSET AS | AS | email | - |
 | 2026-07-21 14:17 | sending | 837768632 | SUNNIVA B EIDSET AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-21 14:16 | sent | 937909705 | SALAR | FLI | email | - |
