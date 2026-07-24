@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 480
-- Sendt: 349
+- Antall hendelser: 494
+- Sendt: 356
 - Angret: 0
-- Aktive kontaktede selskaper: 349
+- Aktive kontaktede selskaper: 356
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-24 | 938151156 | MINSEO KWON | ENK | email | website-offer |
+| 2026-07-24 | 938148694 | INGRID QIULI LARSEN | ENK | email | website-offer |
+| 2026-07-24 | 938144354 | EVEN FLOTTORP | ENK | email | website-offer |
+| 2026-07-24 | 937870515 | DR. HJELSETH SKIPHAMN | ENK | email | website-offer |
+| 2026-07-24 | 938147833 | BLACK PANTHER FORLAG OG KREATIVT BYRÅ AS | AS | email | website-offer |
+| 2026-07-24 | 938152195 | STINE MARI SÆGROV | ENK | email | website-offer |
+| 2026-07-24 | 838152392 | LILA MUSIOL CLARK | ENK | email | website-offer |
 | 2026-07-23 | 937208081 | REKAI GÖLZ | ENK | email | website-offer |
 | 2026-07-23 | 937333137 | FJORDENS DELIKATESSER AMREJI | ENK | email | website-offer |
 | 2026-07-23 | 937339798 | VERONA SPORTSFISKERI SJØSTRØM | ENK | email | website-offer |
@@ -367,6 +374,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-24 10:24 | sent | 938151156 | MINSEO KWON | ENK | email | - |
+| 2026-07-24 10:24 | sending | 938151156 | MINSEO KWON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-24 10:24 | sent | 938148694 | INGRID QIULI LARSEN | ENK | email | - |
+| 2026-07-24 10:24 | sending | 938148694 | INGRID QIULI LARSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-24 10:24 | sent | 938144354 | EVEN FLOTTORP | ENK | email | - |
+| 2026-07-24 10:24 | sending | 938144354 | EVEN FLOTTORP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-24 10:23 | sent | 937870515 | DR. HJELSETH SKIPHAMN | ENK | email | - |
+| 2026-07-24 10:23 | sending | 937870515 | DR. HJELSETH SKIPHAMN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-24 10:23 | sent | 938147833 | BLACK PANTHER FORLAG OG KREATIVT BYRÅ AS | AS | email | - |
+| 2026-07-24 10:23 | sending | 938147833 | BLACK PANTHER FORLAG OG KREATIVT BYRÅ AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-24 10:23 | sent | 938152195 | STINE MARI SÆGROV | ENK | email | - |
+| 2026-07-24 10:23 | sending | 938152195 | STINE MARI SÆGROV | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-24 10:23 | sent | 838152392 | LILA MUSIOL CLARK | ENK | email | - |
+| 2026-07-24 10:23 | sending | 838152392 | LILA MUSIOL CLARK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-23 00:14 | sent | 937208081 | REKAI GÖLZ | ENK | email | - |
 | 2026-07-23 00:14 | sending | 937208081 | REKAI GÖLZ | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-23 00:14 | sent | 937333137 | FJORDENS DELIKATESSER AMREJI | ENK | email | - |
