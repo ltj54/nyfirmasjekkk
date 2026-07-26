@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 494
-- Sendt: 356
+- Antall hendelser: 509
+- Sendt: 363
 - Angret: 0
-- Aktive kontaktede selskaper: 356
+- Aktive kontaktede selskaper: 363
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-26 | 938158584 | SVÆRD SKOGSERVICE | ENK | email | website-offer |
+| 2026-07-26 | 838158552 | CHIYU NERHUS | ENK | email | website-offer |
+| 2026-07-26 | 938157251 | LENA SÆTHER | ENK | email | website-offer |
+| 2026-07-26 | 938158428 | JØRGEN BYE | ENK | email | website-offer |
+| 2026-07-26 | 938155429 | SHEHRYARS HELSEPUNKT | ENK | email | website-offer |
+| 2026-07-26 | 938156336 | LARS J HAUGEN SIVILARKITEKT MNAL | ENK | email | website-offer |
+| 2026-07-26 | 938158614 | PAULSEN UTVIKLING | ENK | email | website-offer |
 | 2026-07-24 | 938151156 | MINSEO KWON | ENK | email | website-offer |
 | 2026-07-24 | 938148694 | INGRID QIULI LARSEN | ENK | email | website-offer |
 | 2026-07-24 | 938144354 | EVEN FLOTTORP | ENK | email | website-offer |
@@ -374,6 +381,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-26 07:52 | not_relevant | 938067074 | MØBEL INVEST KRISTIANSAND AS | AS | email | - |
+| 2026-07-26 07:48 | sent | 938158584 | SVÆRD SKOGSERVICE | ENK | email | - |
+| 2026-07-26 07:48 | sending | 938158584 | SVÆRD SKOGSERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-26 07:48 | sent | 838158552 | CHIYU NERHUS | ENK | email | - |
+| 2026-07-26 07:48 | sending | 838158552 | CHIYU NERHUS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-26 07:48 | sent | 938157251 | LENA SÆTHER | ENK | email | - |
+| 2026-07-26 07:48 | sending | 938157251 | LENA SÆTHER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-26 07:48 | sent | 938158428 | JØRGEN BYE | ENK | email | - |
+| 2026-07-26 07:48 | sending | 938158428 | JØRGEN BYE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-26 07:48 | sent | 938155429 | SHEHRYARS HELSEPUNKT | ENK | email | - |
+| 2026-07-26 07:48 | sending | 938155429 | SHEHRYARS HELSEPUNKT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-26 07:48 | sent | 938156336 | LARS J HAUGEN SIVILARKITEKT MNAL | ENK | email | - |
+| 2026-07-26 07:48 | sending | 938156336 | LARS J HAUGEN SIVILARKITEKT MNAL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-26 07:48 | sent | 938158614 | PAULSEN UTVIKLING | ENK | email | - |
+| 2026-07-26 07:48 | sending | 938158614 | PAULSEN UTVIKLING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-24 10:24 | sent | 938151156 | MINSEO KWON | ENK | email | - |
 | 2026-07-24 10:24 | sending | 938151156 | MINSEO KWON | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-24 10:24 | sent | 938148694 | INGRID QIULI LARSEN | ENK | email | - |
