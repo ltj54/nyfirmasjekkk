@@ -4,15 +4,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 509
-- Sendt: 363
+- Antall hendelser: 535
+- Sendt: 376
 - Angret: 0
-- Aktive kontaktede selskaper: 363
+- Aktive kontaktede selskaper: 366
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-27 | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | website-follow-up |
+| 2026-07-27 | 938131597 | SEA MORE ADVNTURES AS | AS | email | website-follow-up |
+| 2026-07-27 | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | website-follow-up |
+| 2026-07-27 | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | website-follow-up |
+| 2026-07-27 | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | website-follow-up |
+| 2026-07-27 | 938129673 | TAHIR JEMMA TAXI | ENK | email | website-follow-up |
+| 2026-07-27 | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | website-follow-up |
+| 2026-07-27 | 837921872 | RSSW LIMITED | UTLA | email | website-follow-up |
+| 2026-07-27 | 937909705 | SALAR | FLI | email | website-follow-up |
+| 2026-07-27 | 837768632 | SUNNIVA B EIDSET AS | AS | email | website-follow-up |
+| 2026-07-27 | 938158088 | RAFDAL ENGINEERING | ENK | email | website-offer |
+| 2026-07-27 | 938159149 | GHASEMI RENHOLD | ENK | email | website-offer |
+| 2026-07-27 | 938159912 | ZIWANI BYGG OG RENOVERING | ENK | email | website-offer |
 | 2026-07-26 | 938158584 | SVÆRD SKOGSERVICE | ENK | email | website-offer |
 | 2026-07-26 | 838158552 | CHIYU NERHUS | ENK | email | website-offer |
 | 2026-07-26 | 938157251 | LENA SÆTHER | ENK | email | website-offer |
@@ -73,16 +86,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-07-22 | 838140602 | LINE VASLESTAD COACHING | ENK | email | website-offer |
 | 2026-07-22 | 938137765 | FOSSEGRIM HOGNESTAD | ENK | email | website-offer |
 | 2026-07-22 | 938143803 | BIZ & BUZZ BARSNES-SIMONSEN | ENK | email | website-offer |
-| 2026-07-21 | 837768632 | SUNNIVA B EIDSET AS | AS | email | website-offer |
-| 2026-07-21 | 937909705 | SALAR | FLI | email | website-offer |
-| 2026-07-21 | 837921872 | RSSW LIMITED | UTLA | email | website-offer |
-| 2026-07-21 | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | website-offer |
-| 2026-07-21 | 938129673 | TAHIR JEMMA TAXI | ENK | email | website-offer |
-| 2026-07-21 | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | website-offer |
-| 2026-07-21 | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | website-offer |
-| 2026-07-21 | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | website-offer |
-| 2026-07-21 | 938131597 | SEA MORE ADVNTURES AS | AS | email | website-offer |
-| 2026-07-21 | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | website-offer |
 | 2026-07-21 | 937812906 | GEN TECH OY NUF | NUF | email | website-offer |
 | 2026-07-21 | 937801319 | GRUIA COMPOSITES LTD NUF | NUF | email | website-offer |
 | 2026-07-21 | 937894201 | FORELDRENES FELLESRÅD | FLI | email | website-offer |
@@ -381,6 +384,32 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-27 11:18 | sent | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 938130566 | BAKKEVIK KONSULENTTJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 938131597 | SEA MORE ADVNTURES AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 938131597 | SEA MORE ADVNTURES AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 938133034 | VEDLIKEHOLDER'N WESTHAGEN-FLADSET | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 838129552 | DMITRIJS SECENIHS BYGGEFORRETNING BRA JOBBA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 938133123 | KRAGERØ GRAVSTELL SIGURDSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 938129673 | TAHIR JEMMA TAXI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 938129673 | TAHIR JEMMA TAXI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 837926742 | FIRMA USLOGOWA TOMASZ KRAMARCZYK | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 837921872 | RSSW LIMITED | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 837921872 | RSSW LIMITED | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:18 | sent | 937909705 | SALAR | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:18 | sending | 937909705 | SALAR | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:17 | sent | 837768632 | SUNNIVA B EIDSET AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-07-27 11:17 | sending | 837768632 | SUNNIVA B EIDSET AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-07-27 11:11 | sent | 938158088 | RAFDAL ENGINEERING | ENK | email | - |
+| 2026-07-27 11:11 | sending | 938158088 | RAFDAL ENGINEERING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-27 11:11 | sent | 938159149 | GHASEMI RENHOLD | ENK | email | - |
+| 2026-07-27 11:11 | sending | 938159149 | GHASEMI RENHOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-07-27 11:11 | sent | 938159912 | ZIWANI BYGG OG RENOVERING | ENK | email | - |
+| 2026-07-27 11:11 | sending | 938159912 | ZIWANI BYGG OG RENOVERING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-07-26 07:52 | not_relevant | 938067074 | MØBEL INVEST KRISTIANSAND AS | AS | email | - |
 | 2026-07-26 07:48 | sent | 938158584 | SVÆRD SKOGSERVICE | ENK | email | - |
 | 2026-07-26 07:48 | sending | 938158584 | SVÆRD SKOGSERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |

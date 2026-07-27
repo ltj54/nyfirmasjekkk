@@ -58,6 +58,8 @@ export function formatOutreachOfferType(value: string | null | undefined) {
       return "Har registrert nettside";
     case "website-offer":
       return "Ny nettside";
+    case "website-follow-up":
+      return "Oppfølging";
     default:
       return value || "-";
   }
@@ -94,6 +96,30 @@ export function getLatestOutreachEntriesByOrg(entries: OutreachStatus[]) {
   }
 
   return Array.from(latestByOrgNumber.values());
+}
+
+export function getOutreachEntriesDueForFollowUp(entries: OutreachStatus[]) {
+  return getLatestOutreachEntriesByOrg(entries).filter((entry) => {
+    if (entry.status !== "sent" || /oppfølging sendt|avsluttet|ikke interessert|tilbud sendt|kunde/i.test(entry.note ?? "")) {
+      return false;
+    }
+    return businessDaysSince(entry.timestamp ?? entry.sentAt) >= 4;
+  });
+}
+
+function businessDaysSince(value: string | null | undefined) {
+  if (!value) return 0;
+  const start = new Date(value);
+  if (Number.isNaN(start.getTime())) return 0;
+  const end = new Date();
+  start.setHours(0, 0, 0, 0);
+  end.setHours(0, 0, 0, 0);
+  let count = 0;
+  for (const cursor = new Date(start); cursor < end; cursor.setDate(cursor.getDate() + 1)) {
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) count += 1;
+  }
+  return count;
 }
 
 export function parseOutreachJsonl(jsonl: string): OutreachStatus[] {

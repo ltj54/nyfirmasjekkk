@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Download, FileUp, RefreshCw, Settings2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Download, FileUp, Mail, RefreshCw, Settings2 } from "lucide-react";
 
 import type { OutreachStatus } from "@/lib/company-check";
 import {
   formatLogDateTime,
   formatOutreachOfferType,
   getLatestOutreachEntriesByOrg,
+  getOutreachEntriesDueForFollowUp,
   getOutreachSortValue,
 } from "@/lib/company-formatters";
 import { Button } from "@/components/ui/button";
@@ -19,30 +20,47 @@ export function OutreachOverview({
   error,
   importMessage,
   isImporting,
+  isFollowUpBatchSending,
   isLoading,
   onImportAction,
   onOpenCompanyAction,
   onRefreshAction,
+  onSendFollowUpBatchAction,
 }: Readonly<{
   entries: OutreachStatus[];
   error: string | null;
   importMessage: string | null;
   isImporting: boolean;
+  isFollowUpBatchSending: boolean;
   isLoading: boolean;
   onImportAction: (file: File) => void;
   onOpenCompanyAction: (orgNumber: string) => void;
   onRefreshAction: () => void;
+  onSendFollowUpBatchAction: (entries: OutreachStatus[]) => void;
 }>) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [showAdministration, setShowAdministration] = useState(false);
   const [eventLimit, setEventLimit] = useState(20);
+  const [selectedFollowUpByOrg, setSelectedFollowUpByOrg] = useState<Record<string, boolean>>({});
   const logEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
   const latestEntries = getLatestOutreachEntriesByOrg(logEntries);
-  const needsFollowUp = (entry: OutreachStatus) => /følg|svar|ring|senere/i.test(entry.note ?? "");
   const reviewEntries = latestEntries.filter((entry) => entry.status === "reverted" || entry.status === "batch_excluded");
-  const followUpEntries = latestEntries.filter((entry) => entry.status === "sent" && needsFollowUp(entry));
-  const contactedEntries = latestEntries.filter((entry) => entry.status === "sent" && !needsFollowUp(entry));
+  const followUpEntries = getOutreachEntriesDueForFollowUp(logEntries);
+  const followUpOrgNumbers = new Set(followUpEntries.map((entry) => entry.orgNumber));
+  const contactedEntries = latestEntries.filter((entry) => entry.status === "sent" && !followUpOrgNumbers.has(entry.orgNumber));
   const notRelevantEntries = latestEntries.filter((entry) => entry.status === "not_relevant");
+  const followUpKey = followUpEntries.map((entry) => entry.orgNumber).join("|");
+  const selectedFollowUpEntries = followUpEntries.filter((entry) => selectedFollowUpByOrg[entry.orgNumber]);
+
+  useEffect(() => {
+    setSelectedFollowUpByOrg((current) => {
+      const validSelected = followUpEntries.filter((entry) => current[entry.orgNumber]).slice(0, 10);
+      const selected = validSelected.length > 0 ? validSelected : followUpEntries.slice(0, 10);
+      return Object.fromEntries(selected.map((entry) => [entry.orgNumber, true]));
+    });
+  // The serialized key changes only when the follow-up queue changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [followUpKey]);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-8" id="outreach">
@@ -50,7 +68,7 @@ export function OutreachOverview({
         <div>
           <p className="text-[12px] font-semibold uppercase text-[#52606D]">Utsendelser</p>
           <h1 className="mt-1 text-2xl font-semibold text-[#1F2933]">Arbeidskø og oppfølging</h1>
-          <p className="mt-2 text-[13px] text-[#52606D]">Siste lagrede status per virksomhet. Oppfølging identifiseres fra notater.</p>
+          <p className="mt-2 text-[13px] text-[#52606D]">Siste status per virksomhet. Første oppfølging blir synlig etter fire arbeidsdager.</p>
         </div>
         <div className="flex gap-2">
           <Button className="rounded-sm" disabled={isLoading} onClick={onRefreshAction} type="button" variant="outline">
@@ -72,6 +90,50 @@ export function OutreachOverview({
 
       {importMessage ? <p className="mt-4 border border-[#C7DFF8] bg-[#F8FBFF] px-4 py-3 text-[13px] font-medium text-[#1F5FA9]">{importMessage}</p> : null}
       {error ? <p className="mt-4 border border-rose-100 bg-rose-50 px-4 py-3 text-[13px] font-medium text-rose-700">{error}</p> : null}
+
+      <div className="mt-6 border border-[#C7DFF8] bg-[#F8FBFF] p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-[16px] font-semibold text-[#1F2933]">Oppfølgingsbatch</h2>
+            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet. Inntil ti mottakere kan sendes om gangen.</p>
+          </div>
+          <Button
+            className="rounded-sm bg-[#1F5FA9] text-white hover:bg-[#2F6FB2]"
+            disabled={selectedFollowUpEntries.length === 0 || isFollowUpBatchSending}
+            onClick={() => onSendFollowUpBatchAction(selectedFollowUpEntries)}
+            type="button"
+          >
+            <Mail className="size-4" />
+            {isFollowUpBatchSending ? "Sender oppfølging..." : `Send oppfølging (${selectedFollowUpEntries.length})`}
+          </Button>
+        </div>
+        {followUpEntries.length === 0 ? (
+          <p className="mt-4 text-[12px] text-[#829AB1]">Ingen virksomheter er klare for oppfølging ennå.</p>
+        ) : (
+          <div className="mt-4 grid gap-2 md:grid-cols-2">
+            {followUpEntries.map((entry) => {
+              const selected = Boolean(selectedFollowUpByOrg[entry.orgNumber]);
+              const selectionLimitReached = !selected && selectedFollowUpEntries.length >= 10;
+              return (
+                <label className="flex items-start gap-3 border border-[#D9E2EC] bg-white p-3" key={entry.orgNumber}>
+                  <span className="sr-only">Velg {entry.companyName || entry.orgNumber} for oppfølging</span>
+                  <input
+                    checked={selected}
+                    className="mt-0.5 size-4"
+                    disabled={isFollowUpBatchSending || selectionLimitReached}
+                    onChange={(event) => setSelectedFollowUpByOrg((current) => ({ ...current, [entry.orgNumber]: event.target.checked }))}
+                    type="checkbox"
+                  />
+                  <span className="min-w-0">
+                    <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
+                    <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <PipelineColumn emptyText="Ingen virksomheter til ny vurdering." entries={reviewEntries} heading="Til vurdering" onOpenCompany={onOpenCompanyAction} tone="review" />

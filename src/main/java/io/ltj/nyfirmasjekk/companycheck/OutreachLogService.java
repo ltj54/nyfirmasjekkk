@@ -41,6 +41,7 @@ public class OutreachLogService {
     private static final String STATUS_BATCH_EXCLUDED = "batch_excluded";
     private static final String STATUS_SENDING = "sending";
     private static final String STATUS_DELIVERY_UNCERTAIN = "delivery_uncertain";
+    private static final String OFFER_TYPE_FOLLOW_UP = "website-follow-up";
     private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
     private final Path logPath;
@@ -121,26 +122,16 @@ public class OutreachLogService {
             boolean everSent,
             boolean sendBlocked
     ) {
-        if (latestEntry == null || !STATUS_SENT.equalsIgnoreCase(latestEntry.status())) {
+        if (latestEntry == null) {
             return new OutreachStatusResponse(
-                    orgNumber,
-                    false,
-                    latestEntry == null ? null : latestEntry.status(),
-                    latestEntry == null ? null : latestEntry.companyName(),
-                    latestEntry == null ? null : latestEntry.organizationForm(),
-                    latestEntry == null ? null : latestEntry.price(),
-                    latestEntry == null ? null : latestEntry.channel(),
-                    latestEntry == null ? null : latestEntry.offerType(),
-                    latestEntry == null ? null : latestEntry.timestamp(),
-                    null,
-                    latestEntry == null ? null : latestEntry.note(),
-                    everSent,
-                    sendBlocked
+                    orgNumber, false, null, null, null, null, null, null,
+                    null, null, null, everSent, sendBlocked
             );
         }
+        boolean sent = STATUS_SENT.equalsIgnoreCase(latestEntry.status());
         return new OutreachStatusResponse(
                 orgNumber,
-                true,
+                sent,
                 latestEntry.status(),
                 latestEntry.companyName(),
                 latestEntry.organizationForm(),
@@ -148,7 +139,7 @@ public class OutreachLogService {
                 latestEntry.channel(),
                 latestEntry.offerType(),
                 latestEntry.timestamp(),
-                latestEntry.timestamp(),
+                sent ? latestEntry.timestamp() : null,
                 latestEntry.note(),
                 everSent,
                 sendBlocked
@@ -252,6 +243,25 @@ public class OutreachLogService {
             return false;
         }
         appendInternalStatus(request, STATUS_SENDING, "Utsendelse reservert før SMTP-levering.");
+        return true;
+    }
+
+    public synchronized boolean reserveFollowUp(OutreachStatusRequest request) {
+        validateRequest(request);
+        if (!everSentOrgNumbers.contains(request.orgNumber())) {
+            return false;
+        }
+        boolean alreadyAttempted = indexedEntries.stream().anyMatch(entry ->
+                request.orgNumber().equals(entry.orgNumber())
+                        && OFFER_TYPE_FOLLOW_UP.equals(entry.offerType())
+                        && (STATUS_SENT.equalsIgnoreCase(entry.status())
+                        || STATUS_SENDING.equalsIgnoreCase(entry.status())
+                        || STATUS_DELIVERY_UNCERTAIN.equalsIgnoreCase(entry.status()))
+        );
+        if (alreadyAttempted) {
+            return false;
+        }
+        appendInternalStatus(request, STATUS_SENDING, "Oppfølging reservert før SMTP-levering.");
         return true;
     }
 
@@ -649,12 +659,12 @@ public class OutreachLogService {
     }
 
     private String buildMonthlyMarkdownReport(YearMonth month, List<OutreachLogEntry> entries) {
-        Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
+        Map<String, OutreachLogEntry> latestMonthlyEntryByOrgNumber = new LinkedHashMap<>();
         for (OutreachLogEntry entry : entries) {
-            latestByOrgNumber.put(entry.orgNumber(), entry);
+            latestMonthlyEntryByOrgNumber.put(entry.orgNumber(), entry);
         }
 
-        List<OutreachLogEntry> activeCompanies = latestByOrgNumber.values().stream()
+        List<OutreachLogEntry> activeCompanies = latestMonthlyEntryByOrgNumber.values().stream()
                 .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
                 .sorted(Comparator.comparing(OutreachLogEntry::timestamp).reversed())
                 .toList();

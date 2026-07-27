@@ -97,16 +97,18 @@ export function applyLeadQuickFilters(
     return companies;
   }
 
+  const websiteFilters = filters.filter((filter) => filter === "HAS_WEBSITE" || filter === "MISSING_WEBSITE");
+  const otherFilters = filters.filter((filter) => filter !== "HAS_WEBSITE" && filter !== "MISSING_WEBSITE");
+
   return companies.filter((company) => {
     const status = outreachStatusByOrg[company.orgNumber];
-    return filters.every((filter) => {
+    const matchesWebsiteFilter = websiteFilters.length === 0 || websiteFilters.some((filter) => (
+      filter === "HAS_WEBSITE" ? hasWebsiteSignal(company) : !hasWebsiteSignal(company)
+    ));
+    return matchesWebsiteFilter && otherFilters.every((filter) => {
       switch (filter) {
         case "HAS_EMAIL":
           return Boolean(company.email);
-        case "HAS_WEBSITE":
-          return hasWebsiteSignal(company);
-        case "MISSING_WEBSITE":
-          return !hasWebsiteSignal(company);
         case "NOT_SENT":
           return !(status?.sendBlocked ?? status?.everSent ?? status?.sent)
             && status?.status !== "not_relevant";
@@ -147,17 +149,32 @@ export function describeListStructureSummary(signals: StructureSignal[]) {
 }
 
 function evaluateLeadSignal(company: CompanySummary) {
-  const hasEmail = Boolean(company.email);
-  const hasPhone = Boolean(company.phone);
+  const context = leadEvaluationContext(company);
+  return evaluateRiskOrExistingWebsite(company, context)
+    ?? evaluateMissingWebsite(company, context)
+    ?? evaluateWebsiteCandidate(company, context)
+    ?? evaluateContactFallback(company, context);
+}
+
+type LeadEvaluationContext = ReturnType<typeof leadEvaluationContext>;
+
+function leadEvaluationContext(company: CompanySummary) {
   const hasReachableWebsiteCandidate = company.websiteDiscovery?.status === "POSSIBLE_MATCH"
     && company.websiteDiscovery.verifiedReachable === true;
-  const hasLikelyWebsite = company.websiteDiscovery?.contentMatched === true;
-  const hasMismatchWebsite = company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false;
-  const hasRegisteredUnreachableWebsite = Boolean(company.website) && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false;
-  const hasWeakWebsiteQuality = company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW";
-  const hasCommerceWebsiteQuality = isCommerceWebsiteQuality(company);
-  const missingWebsite = !company.website && !hasReachableWebsiteCandidate;
+  return {
+    hasEmail: Boolean(company.email),
+    hasPhone: Boolean(company.phone),
+    hasReachableWebsiteCandidate,
+    hasLikelyWebsite: company.websiteDiscovery?.contentMatched === true,
+    hasMismatchWebsite: company.websiteDiscovery?.verifiedReachable === true && company.websiteDiscovery?.contentMatched === false,
+    hasRegisteredUnreachableWebsite: Boolean(company.website) && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false,
+    hasWeakWebsiteQuality: company.websiteQuality?.status === "WEAK" || company.websiteQuality?.status === "NEEDS_REVIEW",
+    hasCommerceWebsiteQuality: isCommerceWebsiteQuality(company),
+    missingWebsite: !company.website && !hasReachableWebsiteCandidate,
+  };
+}
 
+function evaluateRiskOrExistingWebsite(company: CompanySummary, context: LeadEvaluationContext) {
   if (company.scoreColor === "RED") {
     return leadSignalResult(
       "Svakt lead",
@@ -169,10 +186,10 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (hasRegisteredUnreachableWebsite) {
+  if (context.hasRegisteredUnreachableWebsite) {
     return leadSignalResult(
       "Mulig lead",
-      hasEmail ? `Start med e-post: ${company.email}` : "Registrert nettside svarer ikke",
+      context.hasEmail ? `Start med e-post: ${company.email}` : "Registrert nettside svarer ikke",
       "Registrert nettside svarer ikke",
       "Selskapet har nettside registrert i BRREG, men den svarte ikke ved teknisk sjekk. Dette er en egen mulighet: hjelp til å få en fungerende side på plass.",
       "Se detaljer",
@@ -180,20 +197,22 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (company.website && hasWeakWebsiteQuality) {
+  if (company.website && context.hasWeakWebsiteQuality) {
+    const qualityTitle = context.hasCommerceWebsiteQuality ? "Nettbutikk kan forbedres" : "Nettside kan forbedres";
+    const qualitySummary = context.hasCommerceWebsiteQuality
+      ? "Siden finnes allerede og virker etablert. Muligheten ligger i forbedring av tillit, tilgjengelighet, teknisk kvalitet, SEO og markedstilpasning."
+      : "Selskapet har nettside registrert i BRREG, men detaljsjekken fant tekniske eller innholdsmessige signaler som bør vurderes manuelt.";
     return leadSignalResult(
       "Mulig lead",
-      hasEmail ? `Start med e-post: ${company.email}` : "Nettside bør vurderes",
-      hasCommerceWebsiteQuality ? "Nettbutikk kan forbedres" : "Nettside kan forbedres",
-      hasCommerceWebsiteQuality
-        ? "Siden finnes allerede og virker etablert. Muligheten ligger i forbedring av tillit, tilgjengelighet, teknisk kvalitet, SEO og markedstilpasning."
-        : "Selskapet har nettside registrert i BRREG, men detaljsjekken fant tekniske eller innholdsmessige signaler som bør vurderes manuelt.",
+      context.hasEmail ? `Start med e-post: ${company.email}` : "Nettside bør vurderes",
+      qualityTitle,
+      qualitySummary,
       "Se detaljer",
       "border-amber-100 bg-amber-50/70"
     );
   }
 
-  if (company.website || hasLikelyWebsite) {
+  if (company.website || context.hasLikelyWebsite) {
     if (company.website) {
       return leadSignalResult(
         "Svakt lead",
@@ -215,7 +234,11 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (missingWebsite && hasEmail) {
+  return null;
+}
+
+function evaluateMissingWebsite(company: CompanySummary, context: LeadEvaluationContext) {
+  if (context.missingWebsite && context.hasEmail) {
     return leadSignalResult(
       "Sterkt lead",
       `Start med e-post: ${company.email}`,
@@ -226,7 +249,7 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (missingWebsite && hasPhone) {
+  if (context.missingWebsite && context.hasPhone) {
     return leadSignalResult(
       "Mulig lead",
       `Start med telefon: ${company.phone}`,
@@ -237,7 +260,24 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (hasMismatchWebsite) {
+  if (context.missingWebsite) {
+    const contactLabel = company.contactPersonName
+      ? `Manuell kontakt mot ${company.contactPersonName}`
+      : "Krever manuell research";
+    return leadSignalResult(
+      "Mulig lead",
+      contactLabel,
+      "Digital tilstedeværelse mangler",
+      "Ingen nettside registrert, men uten e-post blir dette mer manuelt å følge opp.",
+      "Vurder lead",
+      "border-amber-100 bg-amber-50/70"
+    );
+  }
+  return null;
+}
+
+function evaluateWebsiteCandidate(company: CompanySummary, context: LeadEvaluationContext) {
+  if (context.hasMismatchWebsite) {
     return leadSignalResult(
       "Mulig lead",
       "Domene svarer, men kan være feiltreff",
@@ -248,7 +288,7 @@ function evaluateLeadSignal(company: CompanySummary) {
     );
   }
 
-  if (hasReachableWebsiteCandidate) {
+  if (context.hasReachableWebsiteCandidate) {
     return leadSignalResult(
       "Mulig lead",
       "Mulig nettside funnet, må bekreftes manuelt",
@@ -258,26 +298,20 @@ function evaluateLeadSignal(company: CompanySummary) {
       "border-amber-100 bg-amber-50/70"
     );
   }
+  return null;
+}
 
-  if (missingWebsite) {
+function evaluateContactFallback(company: CompanySummary, context: LeadEvaluationContext) {
+  if (context.hasEmail || context.hasPhone) {
+    const contactLabel = context.hasEmail ? `Start med e-post: ${company.email}` : `Start med telefon: ${company.phone}`;
+    const summary = context.hasEmail
+      ? "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate."
+      : "Har telefon, men mangler e-post. Det gjør oppfølgingen mindre effektiv.";
     return leadSignalResult(
       "Mulig lead",
-      company.contactPersonName ? `Manuell kontakt mot ${company.contactPersonName}` : "Krever manuell research",
-      "Digital tilstedeværelse mangler",
-      "Ingen nettside registrert, men uten e-post blir dette mer manuelt å følge opp.",
-      "Vurder lead",
-      "border-amber-100 bg-amber-50/70"
-    );
-  }
-
-  if (hasEmail || hasPhone) {
-    return leadSignalResult(
-      "Mulig lead",
-      hasEmail ? `Start med e-post: ${company.email}` : `Start med telefon: ${company.phone}`,
+      contactLabel,
       "Kontaktbar virksomhet",
-      hasEmail
-        ? "Har synlig kontaktpunkt. Vurder kvaliteten på eksisterende digital flate."
-        : "Har telefon, men mangler e-post. Det gjør oppfølgingen mindre effektiv.",
+      summary,
       "Se kontakt",
       "border-emerald-100 bg-emerald-50/60"
     );
@@ -355,10 +389,10 @@ function salesSegmentRank(company: CompanySummary) {
 }
 
 function structureSignalRank(company: CompanySummary) {
-  const severities = prioritizedListStructureSignals(company.structureSignals || []).map((signal) => signal.severity);
-  if (severities.includes("HIGH")) return 0;
-  if (severities.includes("MEDIUM")) return 1;
-  if (severities.includes("INFO")) return 2;
+  const severities = new Set(prioritizedListStructureSignals(company.structureSignals || []).map((signal) => signal.severity));
+  if (severities.has("HIGH")) return 0;
+  if (severities.has("MEDIUM")) return 1;
+  if (severities.has("INFO")) return 2;
   return 3;
 }
 

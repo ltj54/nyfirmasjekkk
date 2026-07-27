@@ -72,10 +72,7 @@ public class CompanyCheckController {
             MetadataService metadataService,
             OutreachLogService outreachLogService,
             OutreachEmailService outreachEmailService,
-            AdminAccessService adminAccessService,
-            InMemoryRateLimitService rateLimitService,
-            MeterRegistry meterRegistry,
-            WebsiteContentInspectionService websiteContentInspectionService
+            CompanyCheckControllerInfrastructure infrastructure
     ) {
         this.companyCheckService = companyCheckService;
         this.mapper = mapper;
@@ -83,10 +80,10 @@ public class CompanyCheckController {
         this.metadataService = metadataService;
         this.outreachLogService = outreachLogService;
         this.outreachEmailService = outreachEmailService;
-        this.adminAccessService = adminAccessService;
-        this.rateLimitService = rateLimitService;
-        this.meterRegistry = meterRegistry;
-        this.websiteContentInspectionService = websiteContentInspectionService;
+        this.adminAccessService = infrastructure.adminAccessService();
+        this.rateLimitService = infrastructure.rateLimitService();
+        this.meterRegistry = infrastructure.meterRegistry();
+        this.websiteContentInspectionService = infrastructure.websiteContentInspectionService();
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -283,10 +280,16 @@ public class CompanyCheckController {
                 request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
                 request.note()
         );
-        if (!outreachLogService.reserveSend(outreachRequest)) {
+        boolean followUp = "website-follow-up".equals(outreachRequest.offerType());
+        boolean reserved = followUp
+                ? outreachLogService.reserveFollowUp(outreachRequest)
+                : outreachLogService.reserveSend(outreachRequest);
+        if (!reserved) {
             throw new org.springframework.web.server.ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse."
+                    followUp
+                            ? "Virksomheten mangler en førstegangshenvendelse eller har allerede fått oppfølging."
+                            : "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse."
             );
         }
 

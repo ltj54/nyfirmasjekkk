@@ -107,13 +107,14 @@ class OutreachLogServiceTests {
         assertThat(Files.exists(reportPath)).isTrue();
         String report = Files.readString(reportPath);
 
-        assertThat(report).contains("# Outreach-logg 2026-04");
-        assertThat(report).contains("Aktive kontaktede selskaper: 1");
-        assertThat(report).contains("Test AS");
-        assertThat(report).contains("Selskapsform");
-        assertThat(report).contains("AS");
-        assertThat(report).doesNotContain("kr 4.500");
-        assertThat(report).contains("Ferdig utkast sendt");
+        assertThat(report)
+                .contains("# Outreach-logg 2026-04")
+                .contains("Aktive kontaktede selskaper: 1")
+                .contains("Test AS")
+                .contains("Selskapsform")
+                .contains("AS")
+                .doesNotContain("kr 4.500")
+                .contains("Ferdig utkast sendt");
     }
 
     @Test
@@ -214,9 +215,10 @@ class OutreachLogServiceTests {
 
         String export = service.exportJsonl();
 
-        assertThat(export).contains("\"orgNumber\":\"123456789\"");
-        assertThat(export).contains("\"status\":\"sent\"");
-        assertThat(export).contains("\"status\":\"reverted\"");
+        assertThat(export)
+                .contains("\"orgNumber\":\"123456789\"")
+                .contains("\"status\":\"sent\"")
+                .contains("\"status\":\"reverted\"");
         assertThat(export.lines()).hasSize(2);
     }
 
@@ -267,6 +269,31 @@ class OutreachLogServiceTests {
         assertThat(status.sendBlocked()).isTrue();
         assertThat(status.sent()).isFalse();
         assertThat(status.everSent()).isFalse();
+    }
+
+    @Test
+    void reserveFollowUpRequiresInitialSendAndAllowsOnlyOneAttempt() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+        OutreachStatusRequest followUp = new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", true, "sent", null,
+                "email", "website-follow-up", "Oppfølging sendt – avslutt hvis stille"
+        );
+        assertThat(service.reserveFollowUp(followUp)).isFalse();
+
+        service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", true, "sent", null,
+                "email", "website-offer", null
+        ));
+
+        assertThat(service.reserveFollowUp(followUp)).isTrue();
+        assertThat(service.reserveFollowUp(followUp)).isFalse();
+        assertThat(service.statusFor("123456789").status()).isEqualTo("sending");
     }
 
     @Test

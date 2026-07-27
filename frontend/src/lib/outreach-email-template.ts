@@ -5,6 +5,7 @@ type OutreachEmailCompany = Pick<
   | "name"
   | "organizationForm"
   | "orgNumber"
+  | "registrationDate"
   | "contactPersonName"
   | "email"
   | "phone"
@@ -18,6 +19,43 @@ type OutreachEmailCompany = Pick<
   | "websiteQuality"
 >;
 
+export const PERSONAL_OBSERVATION_PLACEHOLDER = "[Skriv én konkret observasjon om virksomheten her.]";
+
+export function hasUnresolvedPersonalObservation(body: string) {
+  return body.includes(PERSONAL_OBSERVATION_PLACEHOLDER);
+}
+
+export function personalObservation(company: OutreachEmailCompany) {
+  const companyName = displayCompanyName(company);
+  const municipality = company.municipality?.trim();
+  const naceCode = company.naceCode?.trim();
+  const naceDescription = company.naceDescription?.trim();
+  const registrationYear = company.registrationDate?.match(/^\d{4}/)?.[0];
+
+  if (naceCode && naceDescription && municipality) {
+    return `Jeg la merke til at ${companyName} er registrert i BRREG med næringskode ${naceCode} (${lowercaseFirst(naceDescription)}) i ${municipality}.`;
+  }
+  if (naceDescription && municipality) {
+    return `Jeg la merke til at BRREG beskriver ${companyName} som en virksomhet innen ${lowercaseFirst(naceDescription)} i ${municipality}.`;
+  }
+  if (naceCode && naceDescription) {
+    return `Jeg la merke til at ${companyName} er registrert i BRREG med næringskode ${naceCode} (${lowercaseFirst(naceDescription)}).`;
+  }
+  if (municipality && registrationYear) {
+    return `Jeg la merke til at ${companyName} har vært registrert i BRREG i ${municipality} siden ${registrationYear}.`;
+  }
+  if (naceDescription) {
+    return `Jeg la merke til at BRREG beskriver ${companyName} som en virksomhet innen ${lowercaseFirst(naceDescription)}.`;
+  }
+  if (municipality) {
+    return `Jeg kom over ${companyName} blant virksomhetene som er registrert i BRREG i ${municipality}.`;
+  }
+  if (registrationYear) {
+    return `Jeg la merke til at ${companyName} har vært registrert i BRREG siden ${registrationYear}.`;
+  }
+  return `Jeg kom over ${companyName} i virksomhetsopplysningene fra BRREG.`;
+}
+
 export function buildOutreachEmailSubject(markdown: string, company: OutreachEmailCompany) {
   const config = outreachEmailTemplateConfig(company);
   const template = extractMailSubject(markdown, config.heading) ?? config.subjectFallback;
@@ -29,6 +67,18 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
   const template = extractMarkdownSection(markdown, config.heading) ?? config.bodyFallback();
   const cleanedTemplate = removeMailSubjectLine(template);
   return applyOutreachTemplate(cleanedTemplate, company);
+}
+
+export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
+  const template = extractMailSubject(markdown, "Oppfølging etter 4–6 arbeidsdager")
+    ?? "Oppfølging: nettside for {{companyName}}";
+  return applyOutreachTemplate(template, company);
+}
+
+export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailCompany) {
+  const template = extractMarkdownSection(markdown, "Oppfølging etter 4–6 arbeidsdager")
+    ?? defaultFollowUpEmailTemplate();
+  return applyOutreachTemplate(removeMailSubjectLine(template), company);
 }
 
 type OutreachEmailTemplateConfig = {
@@ -61,7 +111,7 @@ function outreachEmailTemplateConfig(company: OutreachEmailCompany): OutreachEma
   }
   return {
     heading: "E-postmal",
-    subjectFallback: "Fant ikke nettsiden til {{companyName}}",
+    subjectFallback: "Et forslag til nettside for {{companyName}}",
     bodyFallback: defaultOutreachEmailTemplate,
   };
 }
@@ -464,44 +514,34 @@ export function buildOutreachEmailHtml(body: string) {
 
     closeList();
 
-    const signatureBlock = collectSignatureBlock(lines, index);
-    if (signatureBlock.length > 0) {
-      parts.push(
-        `<p style="margin: 0 0 14px;">${signatureBlock.map((signatureLine) => renderInlineHtml(signatureLine)).join("<br>")}</p>`
-      );
-      index += signatureBlock.length - 1;
-      continue;
-    }
-
-    const nextLine = lines[index + 1]?.trim() ?? "";
-    if ((line === "Se eksempel her:" || line === "Eksempel på enkel side:" || line === "Eksempel:") && isHttpUrl(nextLine)) {
-      parts.push(
-        `<p style="margin: 0 0 14px;">${escapeHtml(line)} <a href="${escapeHtml(nextLine)}" style="color: #1F5FA9;">Se eksempel</a></p>`
-      );
-      index += 1;
-      continue;
-    }
-
-    if (isEmailAddress(line)) {
-      parts.push(
-        `<p style="margin: 0 0 14px;"><a href="mailto:${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a></p>`
-      );
-      continue;
-    }
-
-    if (isHttpUrl(line)) {
-      parts.push(
-        `<p style="margin: 0 0 14px;"><a href="${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a></p>`
-      );
-      continue;
-    }
-
-    parts.push(`<p style="margin: 0 0 14px;">${escapeHtml(line)}</p>`);
+    const rendered = renderEmailParagraph(lines, index);
+    parts.push(rendered.html);
+    index += rendered.extraLinesConsumed;
   }
 
   closeList();
 
   return `<div style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.55; color: #1F2933;">${parts.join("")}</div>`;
+}
+
+function renderEmailParagraph(lines: string[], index: number) {
+  const line = lines[index].trim();
+  const signatureBlock = collectSignatureBlock(lines, index);
+  if (signatureBlock.length > 0) {
+    return {
+      html: `<p style="margin: 0 0 14px;">${signatureBlock.map(renderInlineHtml).join("<br>")}</p>`,
+      extraLinesConsumed: signatureBlock.length - 1,
+    };
+  }
+  const nextLine = lines[index + 1]?.trim() ?? "";
+  const exampleLabels = new Set(["Se eksempel her:", "Eksempel på enkel side:", "Eksempel:"]);
+  if (exampleLabels.has(line) && isHttpUrl(nextLine)) {
+    return {
+      html: `<p style="margin: 0 0 14px;">${escapeHtml(line)} <a href="${escapeHtml(nextLine)}" style="color: #1F5FA9;">Se eksempel</a></p>`,
+      extraLinesConsumed: 1,
+    };
+  }
+  return { html: `<p style="margin: 0 0 14px;">${renderInlineHtml(line)}</p>`, extraLinesConsumed: 0 };
 }
 
 function collectSignatureBlock(lines: string[], startIndex: number) {
@@ -541,11 +581,11 @@ function extractMailSubject(markdown: string, heading = "E-postmal") {
 }
 
 function removeMailSubjectLine(template: string) {
-  if (!template.startsWith("Emne:")) {
+  const subjectLine = /^Emne:.*(?:\r?\n|$)/m.exec(template);
+  if (!subjectLine) {
     return template.trim();
   }
-  const firstLineEnd = template.indexOf("\n");
-  return firstLineEnd < 0 ? "" : template.slice(firstLineEnd + 1).trim();
+  return template.slice(subjectLine.index + subjectLine[0].length).trim();
 }
 
 function extractMarkdownSection(markdown: string, heading: string) {
@@ -573,6 +613,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
   const recipientPagePossessive = contactName ? "din" : "deres";
 
   const replacements: Record<string, string> = {
+    [PERSONAL_OBSERVATION_PLACEHOLDER]: personalObservation(company),
     "{{companyName}}": displayName,
     "{{registeredCompanyName}}": company.name,
     "{{orgNumber}}": company.orgNumber,
@@ -621,7 +662,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
 function defaultWebsiteQualityOpportunityEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg tok en rask førstesjekk av nettsiden til {{companyName}}.
+${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 {{websiteQualityMailLine}}
 {{websiteQualityImpactLine}}
@@ -645,18 +686,18 @@ LTJ Production
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg så at {{registeredWebsite}} er registrert som nettside for {{companyName}}.
+${PERSONAL_OBSERVATION_PLACEHOLDER}
 
-Da jeg sjekket den, svarte ikke siden hos meg. Det kan selvfølgelig være midlertidig, men jeg ville nevne det i tilfelle dere ikke er klar over det.
+Jeg så også at {{registeredWebsite}} er registrert som nettside, men siden svarte ikke da jeg sjekket. Det kan selvfølgelig være midlertidig.
 
-Hvis nettsiden ikke er ferdig eller ikke lenger skal brukes, kan jeg hjelpe med å få på plass en ny nettside med tydelig presentasjon og kontaktinformasjon.
+Jeg kan lage en enkel nettside som gjør det lettere for nye kunder å forstå hva dere tilbyr og ta kontakt.
 
-Jeg tilbyr en profesjonell førsteside til {{priceValue}} kr.
+En enkel førsteside koster fast {{priceValue}} kr. Jeg tilpasser den til virksomheten, sørger for at den fungerer godt på mobil og hjelper med publisering. Hvis dere ønsker booking, nettbutikk eller flere sider, kan jeg også hjelpe med det – så finner vi omfang og pris sammen. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
 
 Her kan dere se hvordan jeg jobber:
 {{senderWebsite}}
 
-Er det aktuelt at jeg sender et uforpliktende forslag?
+Er det greit at jeg sender et kort, tekstbasert forslag til hvordan siden kan bygges opp?
 
 Mvh
 {{senderName}}
@@ -705,7 +746,7 @@ function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany
 function defaultRegisteredWebsiteReviewEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg kom over nettsiden til {{companyName}} i forbindelse med en gjennomgang av lokale virksomheter.
+${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 Jeg tilbyr korte nettsidesjekker med vurdering av blant annet mobilbruk, kontaktinformasjon, teknisk kvalitet og personvern.
 
@@ -726,16 +767,32 @@ LTJ Production
 function defaultOutreachEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg kom over {{companyName}}, men fant ikke en tydelig nettside eller kontaktside.
+${PERSONAL_OBSERVATION_PLACEHOLDER}
 
-Jeg lager profesjonelle nettsider for små virksomheter, med presentasjon, kontaktinformasjon og en tydelig vei for kunder som ønsker å ta kontakt.
+Jeg lager enkle nettsider som gjør det lettere for nye kunder å forstå hva virksomheten tilbyr og ta kontakt.
 
-Jeg tilbyr en profesjonell førsteside til {{priceValue}} kr.
+En enkel førsteside koster fast {{priceValue}} kr. Jeg tilpasser den til virksomheten, sørger for at den fungerer godt på mobil og hjelper med publisering. Hvis dere ønsker booking, nettbutikk eller flere sider, kan jeg også hjelpe med det – så finner vi omfang og pris sammen. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
 
 Her er et eksempel på hvordan jeg jobber:
 {{senderWebsite}}
 
-Skal jeg sende et uforpliktende forslag til hvordan en side for {{companyName}} kan se ut?
+Er det greit at jeg sender et kort, tekstbasert forslag til hvordan siden kan bygges opp?
+
+Mvh
+{{senderName}}
+LTJ Production
+{{senderPhone}}
+{{senderEmail}}`;
+}
+
+function defaultFollowUpEmailTemplate() {
+  return `{{greetingLine}}
+
+Ville bare høre om du fikk sett meldingen min om nettside for {{companyName}}.
+
+Jeg tror det kan løses ryddig uten å gjøre prosjektet større enn nødvendig.
+
+Gi gjerne beskjed dersom du vil at jeg skal sende en kort, tekstbasert skisse av hvordan siden kan bygges opp.
 
 Mvh
 {{senderName}}
@@ -745,7 +802,12 @@ LTJ Production
 }
 
 function firstNameFromContactName(value: string) {
-  return value.split(/\s+/)[0] ?? value;
+  const firstSpace = value.indexOf(" ");
+  return firstSpace < 0 ? value : value.slice(0, firstSpace);
+}
+
+function lowercaseFirst(value: string) {
+  return value ? value.charAt(0).toLocaleLowerCase("nb-NO") + value.slice(1) : value;
 }
 
 function displayCompanyName(company: Pick<OutreachEmailCompany, "name" | "organizationForm">) {
@@ -837,50 +899,48 @@ function domainExamplesForCompany(company: OutreachEmailCompany) {
     return foodDomains;
   }
 
-  const suggestions: string[] = [];
-  const addSuggestion = (value: string) => {
-    if (!suggestions.includes(value)) {
-      suggestions.push(value);
-    }
-  };
+  const suggestions = new Set<string>();
   const normalizedWords = coreNameWords.length > 0 ? coreNameWords : words.slice(0, 4);
   const normalized = normalizedWords
     .join("-")
     .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/^-/, "")
+    .replace(/-$/, "");
   if (normalized) {
-    addSuggestion(`${normalized}.no`);
+    suggestions.add(`${normalized}.no`);
   }
   const compactName = coreNameWords.length > 0 ? coreNameWords.join("") : words.slice(0, 2).join("");
   if (compactName && compactName !== normalized.replaceAll("-", "") && compactName.length >= 5 && compactName.length <= 24) {
-    addSuggestion(`${compactName}.no`);
+    suggestions.add(`${compactName}.no`);
   }
-  if (locationWord && words.length > 0) {
-    if (compactName.length >= 5 && compactName.length + locationWord.length <= 26) {
-      addSuggestion(withOptionalLocation(compactName, locationWord));
-    }
-    if (coreNameWords.length === 0 && words[0].length + locationWord.length <= 24) {
-      addSuggestion(withOptionalLocation(words[0], locationWord));
-    }
-  }
-  if (emailWords.length > 0 && shouldUseEmailDomainHint(emailWords, coreNameWords)) {
-    addSuggestion(`${emailWords.join("")}.no`);
-    if (emailWords.length >= 2) {
-      addSuggestion(`${emailWords.join("-")}.no`);
-    }
-  }
-  if (emailDomainWords.length > 0 && shouldUseEmailDomainHint(emailDomainWords, coreNameWords)) {
-    addSuggestion(`${emailDomainWords.join("")}.no`);
-    if (emailDomainWords.length >= 2) {
-      addSuggestion(`${emailDomainWords.join("-")}.no`);
-    }
-  }
+  addLocationDomainSuggestions(suggestions, compactName, words, coreNameWords, locationWord);
+  addEmailDomainSuggestions(suggestions, emailWords, coreNameWords);
+  addEmailDomainSuggestions(suggestions, emailDomainWords, coreNameWords);
+  return (suggestions.size > 0 ? [...suggestions] : ["firmanavn.no"]).slice(0, 4);
+}
 
-  return (suggestions.length > 0 ? suggestions : ["firmanavn.no"]).slice(0, 4);
+function addLocationDomainSuggestions(
+  suggestions: Set<string>, compactName: string, words: string[], coreNameWords: string[], locationWord: string | null,
+) {
+  if (!locationWord || words.length === 0) return;
+  if (compactName.length >= 5 && compactName.length + locationWord.length <= 26) {
+    suggestions.add(withOptionalLocation(compactName, locationWord));
+  }
+  if (coreNameWords.length === 0 && words[0].length + locationWord.length <= 24) {
+    suggestions.add(withOptionalLocation(words[0], locationWord));
+  }
+}
+
+function addEmailDomainSuggestions(suggestions: Set<string>, emailWords: string[], coreNameWords: string[]) {
+  if (!shouldUseEmailDomainHint(emailWords, coreNameWords)) return;
+  suggestions.add(`${emailWords.join("")}.no`);
+  if (emailWords.length >= 2) suggestions.add(`${emailWords.join("-")}.no`);
 }
 
 function normalizedCompanyNameWords(companyName: string, excludedWords: string[]) {
-  const namePart = companyName.split(/\s+-\s+/)[0] || companyName;
+  const separatorIndex = companyName.indexOf(" - ");
+  let namePart = companyName;
+  if (separatorIndex >= 0) namePart = companyName.slice(0, separatorIndex);
   return namePart
     .toLowerCase()
     .replaceAll("æ", "ae")
@@ -901,9 +961,12 @@ function normalizedLocationWord(value: string | null | undefined) {
 
 function normalizedEmailLocalWords(email: string | null | undefined, excludedWords: string[]) {
   const localPart = email?.split("@")[0] ?? "";
-  const cleanedLocalPart = localPart
-    .replace(/\bog\b/gi, " og ")
-    .replace(/(as|asa|enk|nuf|da|ans|sa|ba)$/i, " $1");
+  let cleanedLocalPart = localPart.replace(/\bog\b/gi, " og ");
+  const companySuffix = ["asa", "enk", "nuf", "ans", "as", "da", "sa", "ba"]
+    .find((suffix) => cleanedLocalPart.toLowerCase().endsWith(suffix));
+  if (companySuffix) {
+    cleanedLocalPart = `${cleanedLocalPart.slice(0, -companySuffix.length)} ${companySuffix}`;
+  }
   return normalizedCompanyNameWords(cleanedLocalPart, excludedWords);
 }
 
@@ -976,51 +1039,45 @@ function foodDomainExamples(
     return [];
   }
 
-  const suggestions: string[] = [];
-  const addSuggestion = (value: string) => {
-    if (!suggestions.includes(value)) {
-      suggestions.push(value);
-    }
-  };
-
-  if (emailWords.length > 0) {
-    const emailBrand = emailWords.join("");
-    if (emailBrand.length >= 5 && emailBrand.length <= 24) {
-      addSuggestion(`${emailBrand}.no`);
-    }
-    if (emailWords.length >= 2) {
-      const hyphenatedEmailBrand = emailWords.join("-");
-      if (hyphenatedEmailBrand.length >= 5 && hyphenatedEmailBrand.length <= 28) {
-        addSuggestion(`${hyphenatedEmailBrand}.no`);
-      }
-    }
-  }
-
-  if (words.length >= 2) {
-    const compactBrand = words.slice(0, 2).join("");
-    if (compactBrand.length >= 5 && compactBrand.length <= 20) {
-      if (locationWord && compactBrand.length + locationWord.length <= 26) {
-        addSuggestion(withOptionalLocation(compactBrand, locationWord));
-      }
-      addSuggestion(`${compactBrand}.no`);
-      addSuggestion(`${compactBrand}-catering.no`);
-    }
-  }
+  const suggestions = new Set<string>();
+  addFoodEmailSuggestions(suggestions, emailWords);
+  addFoodBrandSuggestions(suggestions, words, locationWord);
 
   const firstWord = words[0];
   if (firstWord && firstWord.length <= 16) {
     if (locationWord && firstWord.length + locationWord.length <= 24) {
-      addSuggestion(withOptionalLocation(firstWord, locationWord));
-      addSuggestion(withOptionalLocation(`${firstWord}-catering`, locationWord));
+      suggestions.add(withOptionalLocation(firstWord, locationWord));
+      suggestions.add(withOptionalLocation(`${firstWord}-catering`, locationWord));
     }
-    addSuggestion(`${firstWord}catering.no`);
+    suggestions.add(`${firstWord}catering.no`);
   }
 
   if (locationWord) {
-    addSuggestion(`catering-${locationWord}.no`);
+    suggestions.add(`catering-${locationWord}.no`);
   }
 
-  return suggestions.slice(0, 4);
+  return [...suggestions].slice(0, 4);
+}
+
+function addFoodEmailSuggestions(suggestions: Set<string>, emailWords: string[]) {
+  if (emailWords.length === 0) return;
+  const emailBrand = emailWords.join("");
+  if (emailBrand.length >= 5 && emailBrand.length <= 24) suggestions.add(`${emailBrand}.no`);
+  const hyphenatedEmailBrand = emailWords.join("-");
+  if (emailWords.length >= 2 && hyphenatedEmailBrand.length >= 5 && hyphenatedEmailBrand.length <= 28) {
+    suggestions.add(`${hyphenatedEmailBrand}.no`);
+  }
+}
+
+function addFoodBrandSuggestions(suggestions: Set<string>, words: string[], locationWord: string | null) {
+  if (words.length < 2) return;
+  const compactBrand = words.slice(0, 2).join("");
+  if (compactBrand.length < 5 || compactBrand.length > 20) return;
+  if (locationWord && compactBrand.length + locationWord.length <= 26) {
+    suggestions.add(withOptionalLocation(compactBrand, locationWord));
+  }
+  suggestions.add(`${compactBrand}.no`);
+  suggestions.add(`${compactBrand}-catering.no`);
 }
 
 function domainLineForCompany(company: OutreachEmailCompany) {

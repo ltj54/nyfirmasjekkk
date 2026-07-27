@@ -12,12 +12,15 @@ Dette oppsettet er laget for én bruker uten databasekostnad.
 
 ## Daglig bruk
 
-1. Åpne appen og marker `Første e-post om nettside er sendt` når du faktisk har sendt.
-2. Appen skriver en ny linje i `data/outreach-log.jsonl`.
-3. Eldre måneder flyttes automatisk til `data/archive/`.
-4. Appen oppdaterer samtidig månedlig Markdown-rapport i `data/outreach-log-YYYY-MM.md`.
-5. Bruk `Last ned logg` i `Utsendelser` hvis du vil hente en samlet JSONL-eksport fra aktiv logg og arkiv.
-6. Når du er ferdig for dagen, commit og push logg, arkiv og rapport hvis Git er valgt backup-rutine.
+1. Aktiver `Har e-post` og enten `Mangler nettside` eller `Har nettside`, og velg inntil ti relevante virksomheter.
+2. Generer e-postteksten. Den markerte linjen erstattes automatisk med én sann, konkret observasjon basert på BRREG-data.
+3. Send først når teksten er kontrollert, og marker `Første e-post om nettside er sendt` når du faktisk har sendt.
+4. Appen skriver en ny linje i `data/outreach-log.jsonl`.
+5. Eldre måneder flyttes automatisk til `data/archive/`.
+6. Appen oppdaterer samtidig månedlig Markdown-rapport i `data/outreach-log-YYYY-MM.md`.
+7. Send én kort oppfølging etter fire til seks arbeidsdager. Avslutt dersom det fortsatt er stille.
+8. Bruk `Last ned logg` i `Utsendelser` hvis du vil hente en samlet JSONL-eksport fra aktiv logg og arkiv.
+9. Når du er ferdig for dagen, commit og push logg, arkiv og rapport hvis Git er valgt backup-rutine.
 
 ## Neste dag
 

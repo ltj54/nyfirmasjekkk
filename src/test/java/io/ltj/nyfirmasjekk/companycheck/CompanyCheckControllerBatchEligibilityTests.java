@@ -36,10 +36,12 @@ class CompanyCheckControllerBatchEligibilityTests {
                 null,
                 mock(OutreachLogService.class),
                 null,
-                null,
-                mock(InMemoryRateLimitService.class),
-                null,
-                websiteContentInspectionService
+                new CompanyCheckControllerInfrastructure(
+                        null,
+                        mock(InMemoryRateLimitService.class),
+                        null,
+                        websiteContentInspectionService
+                )
         );
     }
 

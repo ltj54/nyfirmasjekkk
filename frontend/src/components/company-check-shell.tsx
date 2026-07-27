@@ -22,6 +22,7 @@ import {
   ArrowLeft,
   X,
 } from "lucide-react";
+import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
 import type {
@@ -45,9 +46,12 @@ import {
   type LeadQuickFilter,
 } from "@/lib/company-lead-scoring";
 import {
+  buildFollowUpEmailBody,
+  buildFollowUpEmailSubject,
   buildOutreachEmailBody,
   buildOutreachEmailHtml,
   buildOutreachEmailSubject,
+  hasUnresolvedPersonalObservation,
   outreachEmailAutoSendBlockReason,
   websiteQualityMailLine,
   websiteQualityMailSignalCode,
@@ -69,6 +73,7 @@ import {
   formatWebsiteConfidence,
   formatWebsiteVerification,
   getLatestOutreachEntriesByOrg,
+  getOutreachEntriesDueForFollowUp,
   normalizeWebsiteUrl,
   outreachOfferTypeForCompany,
   formatOutreachOfferType,
@@ -190,7 +195,7 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
-const MAX_EMAIL_BATCH_SIZE = 25;
+const MAX_EMAIL_BATCH_SIZE = 10;
 const EMAIL_BATCH_SEND_DELAY_MS = 2_000;
 const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
 type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "batch_excluded";
@@ -200,6 +205,24 @@ function wait(ms: number) {
   return new Promise((resolve) => {
     window.setTimeout(resolve, ms);
   });
+}
+
+function Show({ when, children }: Readonly<{ when: boolean; children: ReactNode | (() => ReactNode) }>) {
+  if (!when) return null;
+  return typeof children === "function" ? children() : children;
+}
+
+function RenderCollection<T>({
+  items,
+  empty,
+  children,
+}: Readonly<{ items: T[]; empty: ReactNode; children: (item: T) => ReactNode }>) {
+  if (items.length === 0) return empty;
+  return items.map(children);
+}
+
+function choose<T>(condition: boolean, whenTrue: T, whenFalse: T): T {
+  return condition ? whenTrue : whenFalse;
 }
 
 function scrollToSection(id: string) {
@@ -223,6 +246,13 @@ function isRegisteredWebsiteUnavailable(company: Pick<CompanySummary, "website" 
 
 function isBatchExcluded(status: OutreachStatus | null | undefined) {
   return status?.status === "batch_excluded";
+}
+
+function hasWebsiteDiscoveryCandidate(company: Pick<CompanySummary, "website" | "websiteDiscovery">) {
+  if (company.website || !company.websiteDiscovery) return false;
+  const candidateStatus = company.websiteDiscovery.status === "POSSIBLE_MATCH"
+    || company.websiteDiscovery.status === "UNVERIFIED_SUGGESTION";
+  return candidateStatus && company.websiteDiscovery.candidates.length > 0;
 }
 
 function hasEverSentOutreach(status: OutreachStatus | null | undefined) {
@@ -337,6 +367,42 @@ function websiteSignalSeverityLabel(severity: WebsiteQualitySignal["severity"]) 
   return "Info";
 }
 
+type RecentSearchOptions = {
+  daysFilter: string;
+  page: number;
+  countyFilter: string;
+  organizationFormFilter: string;
+  selectedLegend: keyof typeof legendDetails | null;
+  nameFilter: string;
+  quickFilters: LeadQuickFilter[];
+};
+
+function recentSearchParams(options: RecentSearchOptions) {
+  const params = new URLSearchParams({
+    dager: options.daysFilter,
+    page: options.page.toString(),
+  });
+  if (options.countyFilter) params.set("fylke", options.countyFilter);
+  if (options.organizationFormFilter) params.set("organizationForm", options.organizationFormFilter);
+  if (options.selectedLegend) params.set("score", options.selectedLegend);
+  if (options.nameFilter) params.set("navn", options.nameFilter);
+  if (options.quickFilters.includes("HAS_EMAIL")) params.set("hasEmail", "true");
+
+  const hasWebsite = options.quickFilters.includes("HAS_WEBSITE");
+  const missingWebsite = options.quickFilters.includes("MISSING_WEBSITE");
+  if (hasWebsite !== missingWebsite) {
+    params.set("hasWebsite", hasWebsite.toString());
+  }
+  return params;
+}
+
+function normalizeRecentSearchResponse(data: CompanySummary[] | { items?: CompanySummary[]; totalPages?: number }) {
+  if (Array.isArray(data)) {
+    return { items: data, totalPages: data.length > 0 ? 1 : 0 };
+  }
+  return { items: data.items ?? [], totalPages: data.totalPages ?? 0 };
+}
+
 export function CompanyCheckShell() {
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("leads");
   const [backendReady, setBackendReady] = useState(false);
@@ -359,12 +425,17 @@ export function CompanyCheckShell() {
   const [debouncedNameFilter, setDebouncedNameFilter] = useState("");
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showBatchExcluded, setShowBatchExcluded] = useState(true);
-  const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([]);
+  const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([
+    "HAS_EMAIL",
+    "MISSING_WEBSITE",
+    "HAS_WEBSITE",
+  ]);
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
   const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, BatchValidation>>({});
   const [isBatchSending, setIsBatchSending] = useState(false);
+  const [isFollowUpBatchSending, setIsFollowUpBatchSending] = useState(false);
   const [outreachEntries, setOutreachEntries] = useState<OutreachStatus[]>([]);
   const [isOutreachListLoading, setIsOutreachListLoading] = useState(false);
   const [outreachListError, setOutreachListError] = useState<string | null>(null);
@@ -533,7 +604,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">) {
+  async function generateOutreachEmail(company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "registrationDate" | "contactPersonName" | "email" | "phone" | "municipality" | "county" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">) {
     setGeneratingEmailByOrg((current) => ({
       ...current,
       [company.orgNumber]: true,
@@ -574,6 +645,13 @@ export function CompanyCheckShell() {
   ): Promise<OutreachEmailSendResult> {
     if (!company.email || !generatedEmail) {
       return "failed";
+    }
+    if (hasUnresolvedPersonalObservation(generatedEmail.body)) {
+      setEmailSendErrorByOrg((current) => ({
+        ...current,
+        [company.orgNumber]: "Observasjonen ble ikke fylt inn. Generer e-postteksten på nytt før du sender.",
+      }));
+      return "skipped";
     }
     if (isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])) {
       setEmailSendErrorByOrg((current) => ({
@@ -733,52 +811,13 @@ export function CompanyCheckShell() {
       let skippedDuringRunCount = 0;
 
       for (const company of sendableCompanies) {
-        const detailedCompany = await fetchCompanyDetailsForBatch(company.orgNumber);
-        if (!detailedCompany) {
-          skippedDuringRunCount += 1;
-          setBatchValidationByOrg((current) => ({
-            ...current,
-            [company.orgNumber]: { status: "blocked", reason: "Klarte ikke hente detaljsjekk." },
-          }));
-          setBatchSelectionByOrg((current) => ({
-            ...current,
-            [company.orgNumber]: false,
-          }));
-          continue;
-        }
-        const blockReason = emailBatchBlockReason(detailedCompany);
-        if (blockReason) {
-          skippedDuringRunCount += 1;
-          setBatchValidationByOrg((current) => ({
-            ...current,
-            [detailedCompany.orgNumber]: { status: "blocked", reason: blockReason },
-          }));
-          setBatchSelectionByOrg((current) => ({
-            ...current,
-            [detailedCompany.orgNumber]: false,
-          }));
-          continue;
-        }
-
-        const generatedEmail = generatedEmailByOrg[detailedCompany.orgNumber] ?? {
-          subject: buildOutreachEmailSubject(templateContent, detailedCompany),
-          body: buildOutreachEmailBody(templateContent, detailedCompany),
-        };
-        setGeneratedEmailByOrg((current) => ({
-          ...current,
-          [detailedCompany.orgNumber]: generatedEmail,
-        }));
-        const sendResult = await sendGeneratedOutreachEmail(detailedCompany, generatedEmail);
+        const sendResult = await processBatchCompany(company, templateContent);
         if (sendResult === "skipped") {
           skippedDuringRunCount += 1;
-          setBatchSelectionByOrg((current) => ({
-            ...current,
-            [detailedCompany.orgNumber]: false,
-          }));
           continue;
         }
         if (sendResult === "failed") {
-          window.alert(`Batch stoppet. Klarte ikke sende e-post til ${detailedCompany.name}. ${sentCount} sendt før stopp.`);
+          window.alert(`Batch stoppet. Klarte ikke sende e-post til ${company.name}. ${sentCount} sendt før stopp.`);
           return;
         }
         sentCount += 1;
@@ -1067,29 +1106,24 @@ export function CompanyCheckShell() {
     const effectiveOrganizationFormFilter = overrides?.organizationFormFilter ?? organizationFormFilter;
     const effectiveSelectedLegend = overrides?.selectedLegend === undefined ? selectedLegend : overrides.selectedLegend;
     const effectiveNameFilter = overrides?.nameFilter ?? debouncedNameFilter;
-    const params = new URLSearchParams();
-    params.set("dager", effectiveDaysFilter);
-    params.set("page", pageNum.toString());
-    if (effectiveCountyFilter) params.set("fylke", effectiveCountyFilter);
-    if (effectiveOrganizationFormFilter) params.set("organizationForm", effectiveOrganizationFormFilter);
-    if (effectiveSelectedLegend) params.set("score", effectiveSelectedLegend);
-    if (effectiveNameFilter) params.set("navn", effectiveNameFilter);
-    if (leadQuickFilters.includes("HAS_EMAIL")) params.set("hasEmail", "true");
-    if (leadQuickFilters.includes("HAS_WEBSITE")) params.set("hasWebsite", "true");
-    if (leadQuickFilters.includes("MISSING_WEBSITE")) params.set("missingWebsite", "true");
+    const params = recentSearchParams({
+      daysFilter: effectiveDaysFilter,
+      page: pageNum,
+      countyFilter: effectiveCountyFilter,
+      organizationFormFilter: effectiveOrganizationFormFilter,
+      selectedLegend: effectiveSelectedLegend,
+      nameFilter: effectiveNameFilter,
+      quickFilters: leadQuickFilters,
+    });
 
     try {
       const response = await fetch(`/api/company-check/search?${params.toString()}`);
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as CompanySummary[] | { items?: CompanySummary[]; totalPages?: number };
         if (requestId !== latestListRequestId.current) {
           return;
         }
-        const items = Array.isArray(data) ? data : data.items || [];
-        let nextTotalPages = data.totalPages ?? 0;
-        if (Array.isArray(data)) {
-          nextTotalPages = items.length > 0 ? 1 : 0;
-        }
+        const { items, totalPages: nextTotalPages } = normalizeRecentSearchResponse(data);
         setRecentCompanies(items);
         setPage(pageNum);
         setTotalPages(nextTotalPages);
@@ -1313,6 +1347,115 @@ export function CompanyCheckShell() {
     });
   }
 
+  async function runFollowUpBatch(entries: OutreachStatus[]) {
+    if (isFollowUpBatchSending || entries.length === 0) return;
+    if (entries.length > MAX_EMAIL_BATCH_SIZE) {
+      window.alert(`Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per oppfølgingsbatch.`);
+      return;
+    }
+    if (!window.confirm(`Sender én oppfølgingsmail til ${entries.length} virksomheter med 2 sekunders pause mellom hver. Fortsette?`)) {
+      return;
+    }
+
+    setIsFollowUpBatchSending(true);
+    try {
+      const templateResponse = await fetch("/api/outreach-email-template", { cache: "no-store" });
+      if (!templateResponse.ok) {
+        window.alert("Klarte ikke laste oppfølgingsmalen.");
+        return;
+      }
+      const { content = "" } = (await templateResponse.json()) as { content?: string };
+      let sentCount = 0;
+      let skippedCount = 0;
+
+      for (const entry of entries) {
+        const company = await fetchCompanyDetailsForBatch(entry.orgNumber);
+        if (!company?.email) {
+          skippedCount += 1;
+          continue;
+        }
+        const subject = buildFollowUpEmailSubject(content, company);
+        const body = buildFollowUpEmailBody(content, company);
+        const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
+          method: "POST",
+          cache: "no-store",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to: company.email,
+            subject,
+            body,
+            htmlBody: buildOutreachEmailHtml(body),
+            companyName: company.name,
+            organizationForm: company.organizationForm,
+            price: null,
+            channel: "email",
+            offerType: "website-follow-up",
+            evidenceCode: null,
+            note: "Oppfølging sendt – avslutt hvis stille",
+          }),
+        });
+        if (!response.ok) {
+          window.alert(`Oppfølgingsbatch stoppet ved ${company.name}. ${sentCount} sendt før stopp.`);
+          return;
+        }
+        const payload = (await response.json()) as { to: string; outreachStatus: OutreachStatus };
+        setOutreachStatusByOrg((current) => ({ ...current, [company.orgNumber]: payload.outreachStatus }));
+        setOutreachEntries((current) => [payload.outreachStatus, ...current]);
+        sentCount += 1;
+        if (sentCount < entries.length) await wait(EMAIL_BATCH_SEND_DELAY_MS);
+      }
+
+      window.alert(skippedCount > 0
+        ? `Oppfølgingsbatch ferdig. ${sentCount} sendt og ${skippedCount} hoppet over fordi e-post manglet.`
+        : `Oppfølgingsbatch ferdig. ${sentCount} e-poster sendt.`);
+    } finally {
+      setIsFollowUpBatchSending(false);
+      await fetchOutreachEntries();
+    }
+  }
+
+  async function processBatchCompany(company: CompanySummary, templateContent: string) {
+    const detailedCompany = await fetchCompanyDetailsForBatch(company.orgNumber);
+    if (!detailedCompany) {
+      blockBatchCompany(company.orgNumber, "Klarte ikke hente detaljsjekk.");
+      return "skipped" as const;
+    }
+
+    const blockReason = emailBatchBlockReason(detailedCompany);
+    if (blockReason) {
+      blockBatchCompany(detailedCompany.orgNumber, blockReason);
+      return "skipped" as const;
+    }
+
+    const generatedEmail = {
+      subject: buildOutreachEmailSubject(templateContent, detailedCompany),
+      body: buildOutreachEmailBody(templateContent, detailedCompany),
+    };
+    setGeneratedEmailByOrg((current) => ({
+      ...current,
+      [detailedCompany.orgNumber]: generatedEmail,
+    }));
+    const sendResult = await sendGeneratedOutreachEmail(detailedCompany, generatedEmail);
+    if (sendResult === "skipped") {
+      setBatchSelectionByOrg((current) => ({
+        ...current,
+        [detailedCompany.orgNumber]: false,
+      }));
+    }
+    return sendResult;
+  }
+
+  function blockBatchCompany(orgNumber: string, reason: string) {
+    setBatchValidationByOrg((current) => ({
+      ...current,
+      [orgNumber]: { status: "blocked", reason },
+    }));
+    setBatchSelectionByOrg((current) => ({
+      ...current,
+      [orgNumber]: false,
+    }));
+  }
+
   function submitCompanySearch() {
     const value = nameFilter.trim();
     if (/^\d{9}$/.test(value)) {
@@ -1341,6 +1484,7 @@ export function CompanyCheckShell() {
 
   const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL")
     && (leadQuickFilters.includes("MISSING_WEBSITE") || leadQuickFilters.includes("HAS_WEBSITE"));
+  const followUpEntries = getOutreachEntriesDueForFollowUp(outreachEntries);
   const listQuickFilters = leadQuickFilters.filter((filter) => filter !== "NOT_SENT");
   const filteredCompanies = applyLeadQuickFilters((selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
@@ -1504,8 +1648,8 @@ export function CompanyCheckShell() {
       </header>
 
       <main id="main-content" className="pb-16">
-        <div className={selectedCompany || selectedWebsiteInspection ? "pointer-events-none select-none blur-[3px] transition-all duration-200" : "transition-all duration-200"}>
-          {activeTab === "leads" ? (
+        <div className={choose(Boolean(selectedCompany || selectedWebsiteInspection), "pointer-events-none select-none blur-[3px] transition-all duration-200", "transition-all duration-200")}>
+          <Show when={activeTab === "leads"}>
           <section id="search" className="mx-auto max-w-7xl px-6 pt-6 sm:pt-8">
             <div className="grid gap-4">
               <div className="border border-[#D9E2EC] bg-white px-5 py-5 sm:px-6">
@@ -1532,7 +1676,7 @@ export function CompanyCheckShell() {
                       placeholder="Søk på navn eller organisasjonsnummer"
                       value={nameFilter}
                     />
-                    {nameFilter ? (
+                    <Show when={Boolean(nameFilter)}>
                       <button
                         aria-label="Tøm søk"
                         className="absolute right-1 top-1 flex size-8 items-center justify-center text-[#52606D] hover:text-[#1F2933]"
@@ -1545,7 +1689,7 @@ export function CompanyCheckShell() {
                       >
                         <X className="size-4" />
                       </button>
-                    ) : null}
+                    </Show>
                   </form>
                   <div className="flex gap-2">
                     <select
@@ -1567,12 +1711,12 @@ export function CompanyCheckShell() {
                     >
                       <SlidersHorizontal className="size-4" />
                       Filtre
-                      <ChevronDown className={`size-4 transition-transform ${showAdvancedFilters ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`size-4 transition-transform ${choose(showAdvancedFilters, "rotate-180", "")}`} />
                     </Button>
                   </div>
                 </div>
 
-                {showAdvancedFilters ? (
+                <Show when={showAdvancedFilters}>
                 <div className="mt-5 border-t border-[#E4E7EB] pt-4">
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="text-[#52606D]">Selskapsform:</span>
@@ -1580,9 +1724,11 @@ export function CompanyCheckShell() {
                     <div key={code} className="relative inline-flex items-center gap-1.5">
                       <button
                         className={`peer rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                          organizationFormFilter === code
-                            ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                          choose(
+                            organizationFormFilter === code,
+                            "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]",
+                            "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]",
+                          )
                         } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:border-[#D9E2EC]`}
                         disabled={filterButtonDisabled}
                         onClick={() => {
@@ -1617,9 +1763,11 @@ export function CompanyCheckShell() {
                     <button
                       key={item.status}
                       className={`rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                        selectedLegend === item.status
-                          ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                          : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                        choose(
+                          selectedLegend === item.status,
+                          "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]",
+                          "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]",
+                        )
                       } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:border-[#D9E2EC]`}
                       disabled={filterButtonDisabled}
                       onClick={() =>
@@ -1680,15 +1828,15 @@ export function CompanyCheckShell() {
                   </button>
                 </div>
                 </div>
-                ) : null}
+                </Show>
 
               </div>
 
             </div>
           </section>
-          ) : null}
+          </Show>
 
-          {activeTab === "website" ? (
+          <Show when={activeTab === "website"}>
             <section className="mx-auto max-w-7xl px-6 py-8" id="website-workspace">
               <div className="border border-[#D9E2EC] bg-white p-5 sm:p-7">
                 <div className="max-w-2xl">
@@ -1719,33 +1867,35 @@ export function CompanyCheckShell() {
                   </div>
                   <Button className="h-11 rounded-sm bg-[#1F5FA9] px-5 text-white hover:bg-[#2F6FB2]" disabled={isWebsiteInspectionLoading} type="submit">
                     <MonitorCheck className="size-4" />
-                    {isWebsiteInspectionLoading ? "Sjekker..." : "Sjekk nettside"}
+                    {choose(isWebsiteInspectionLoading, "Sjekker...", "Sjekk nettside")}
                   </Button>
                 </form>
-                {websiteInspectionError ? (
+                <Show when={Boolean(websiteInspectionError)}>
                   <p className="mt-3 border border-rose-100 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">{websiteInspectionError}</p>
-                ) : null}
+                </Show>
               </div>
             </section>
-          ) : null}
+          </Show>
 
-          {activeTab === "outreach" ? (
+          <Show when={activeTab === "outreach"}>
           <OutreachOverview
             entries={outreachEntries}
             error={outreachListError}
             importMessage={outreachImportMessage}
             isImporting={isOutreachImporting}
             isLoading={isOutreachListLoading}
+            isFollowUpBatchSending={isFollowUpBatchSending}
             onImportAction={(file) => void importOutreachLog(file)}
             onOpenCompanyAction={(orgNumber) => void openCompanyDetails(orgNumber)}
             onRefreshAction={() => void fetchOutreachEntries()}
+            onSendFollowUpBatchAction={(entries) => void runFollowUpBatch(entries)}
           />
-          ) : null}
+          </Show>
 
           {/* Dynamic Content */}
-          {activeTab === "leads" ? (
+          <Show when={activeTab === "leads"}>
           <section id="results" className="mx-auto max-w-7xl px-6 pb-24 pt-10">
-          {error && (
+          <Show when={Boolean(error)}>
             <div className="mx-auto mb-12 max-w-2xl border border-rose-100/60 bg-rose-50/50 p-7 text-center animate-in zoom-in duration-300">
               <div className="mx-auto mb-4 flex size-12 items-center justify-center bg-rose-100 text-rose-600">
                 <AlertCircle className="size-6" />
@@ -1762,10 +1912,10 @@ export function CompanyCheckShell() {
                 Prøv igjen
               </Button>
             </div>
-          )}
+          </Show>
 
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700">
-              {isListLoading && (
+              <Show when={isListLoading}>
                 <div className="border border-[#D9E2EC] bg-white px-5 py-4">
                   <div className="mb-3 flex items-center justify-between gap-4">
                     <div>
@@ -1773,9 +1923,7 @@ export function CompanyCheckShell() {
                         Søker i registerdata
                       </p>
                       <p className="mt-1 text-[14px] font-medium text-[#52606D]">
-                        {listLoadSeconds < 8
-                          ? "Henter første treffliste."
-                          : "Søket er fortsatt i gang. Filteret jobber mot mange selskaper."}
+                        {choose(listLoadSeconds < 8, "Henter første treffliste.", "Søket er fortsatt i gang. Filteret jobber mot mange selskaper.")}
                       </p>
                     </div>
                     <p className="whitespace-nowrap text-[12px] font-bold text-[#52606D]">
@@ -1789,17 +1937,15 @@ export function CompanyCheckShell() {
                     />
                   </div>
                 </div>
-              )}
+              </Show>
 
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Aktuelle selskaper</h2>
+                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Dagens håndplukkede kandidater</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
                     Viser {visibleSearchCompanies.length} aktuelle treff på denne siden
-                    {hiddenByOutreachCount > 0
-                      ? ` (${hiddenByOutreachCount} skjult fordi de er sendt eller ikke aktuelle).`
-                      : "."}
+                    {choose(hiddenByOutreachCount > 0, ` (${hiddenByOutreachCount} skjult fordi de er sendt eller ikke aktuelle).`, ".")}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -1814,7 +1960,7 @@ export function CompanyCheckShell() {
                         Forrige
                       </Button>
                       <span className="min-w-24 text-center text-sm font-medium">
-                        Side {totalPages > 0 ? page + 1 : 0} av {Math.max(totalPages, 0)}
+                        Side {choose(totalPages > 0, page + 1, 0)} av {Math.max(totalPages, 0)}
                       </span>
                       <Button
                         variant="outline"
@@ -1825,7 +1971,7 @@ export function CompanyCheckShell() {
                         Neste
                       </Button>
                     </div>
-                    {totalPages > 1 ? (
+                    <Show when={totalPages > 1}>
                       <div className="flex max-w-[360px] flex-wrap justify-center gap-1">
                         {paginationItems(page, totalPages).map((item) =>
                           typeof item === "string" ? (
@@ -1854,7 +2000,7 @@ export function CompanyCheckShell() {
                           ),
                         )}
                       </div>
-                    ) : null}
+                    </Show>
                   </div>
                 </div>
                 </div>
@@ -1867,9 +2013,11 @@ export function CompanyCheckShell() {
                       <button
                         key={option.value}
                         className={`rounded-sm border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                          active
-                            ? "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]"
-                            : "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]"
+                          choose(
+                            active,
+                            "border-[#2F6FB2] bg-[#E6F0FA] text-[#1F5FA9]",
+                            "border-[#D9E2EC] bg-white text-[#52606D] hover:border-[#2F6FB2] hover:text-[#1F2933]",
+                          )
                         }`}
                         onClick={() => toggleLeadQuickFilter(option.value)}
                         type="button"
@@ -1878,7 +2026,7 @@ export function CompanyCheckShell() {
                       </button>
                     );
                   })}
-                  {leadQuickFilters.length > 0 ? (
+                  <Show when={leadQuickFilters.length > 0}>
                     <button
                       className="ml-1 text-[12px] font-semibold text-[#1F5FA9] hover:underline"
                       onClick={() => setLeadQuickFilters([])}
@@ -1886,7 +2034,18 @@ export function CompanyCheckShell() {
                     >
                       Nullstill hurtigfilter
                     </button>
-                  ) : null}
+                  </Show>
+                  <Button
+                    className="rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
+                    disabled={followUpEntries.length === 0 || isFollowUpBatchSending}
+                    onClick={() => setActiveTab("outreach")}
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  >
+                    <Mail className="size-4" />
+                    Oppfølging ({followUpEntries.length})
+                  </Button>
                   <label
                     className={`ml-1 inline-flex h-8 items-center gap-2 whitespace-nowrap text-[12px] font-semibold ${
                       canUseEmailBatch ? "cursor-pointer text-[#52606D]" : "cursor-not-allowed text-[#9FB3C8]"
@@ -1917,7 +2076,7 @@ export function CompanyCheckShell() {
                         }`}
                       />
                     </span>
-                    Vis batch-sperret
+                    {"Vis batch-sperret"}
                   </label>
                   <Button
                     className="ml-auto rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
@@ -1931,15 +2090,15 @@ export function CompanyCheckShell() {
                     {isBatchSending ? "Sender batch..." : "Kjør e-post batch"}
                     {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
                   </Button>
-                  {overEmailBatchLimit ? (
+                  <Show when={overEmailBatchLimit}>
                     <span className="basis-full text-[12px] font-medium text-[#9F580A] sm:basis-auto">
                       Maks {MAX_EMAIL_BATCH_SIZE} per batch.
                     </span>
-                  ) : null}
+                  </Show>
                 </div>
               </div>
               <div className="overflow-hidden border border-[#D9E2EC] bg-white">
-                {!isListLoading && visibleSearchCompanies.length > 0 ? (
+                <Show when={!isListLoading && visibleSearchCompanies.length > 0}>
                   <div className="hidden grid-cols-[minmax(240px,1.5fr)_minmax(170px,1fr)_minmax(190px,1fr)_minmax(150px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
                     <span>Virksomhet</span>
                     <span>Prioritet</span>
@@ -1947,21 +2106,20 @@ export function CompanyCheckShell() {
                     <span>Registerrisiko</span>
                     <span className="sr-only">Handling</span>
                   </div>
-                ) : null}
-              {isListLoading && recentCompanies.length === 0 ? (
-                ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"].map((skeletonKey) => (
-                  <div key={skeletonKey} className="grid animate-pulse gap-3 border-b border-[#E4E7EB] p-4 last:border-b-0 lg:grid-cols-4">
-                    <div className="space-y-2">
-                      <div className="h-4 w-3/4 bg-[#E4E7EB]" />
-                      <div className="h-3 w-1/2 bg-[#E4E7EB]" />
-                    </div>
-                    <div className="h-4 w-24 bg-[#E4E7EB]" />
-                    <div className="h-4 w-36 bg-[#E4E7EB]" />
-                    <div className="h-4 w-20 bg-[#E4E7EB]" />
-                  </div>
-                ))
-              ) : visibleSearchCompanies.length > 0 ? (
-                visibleSearchCompanies.map((company) => (
+                </Show>
+              <LeadResultsBody
+                companies={visibleSearchCompanies}
+                hasLoadedCompanies={recentCompanies.length > 0}
+                isLoading={isListLoading}
+                onReset={() => {
+                  setDaysFilter("5");
+                  setCountyFilter("");
+                  setOrganizationFormFilter("");
+                  setSelectedLegend(null);
+                  setLeadQuickFilters([]);
+                  void fetchRecent(0);
+                }}
+                renderCompany={(company) => (
                   <LeadResultRow
                     key={company.orgNumber}
                     company={company}
@@ -1972,40 +2130,16 @@ export function CompanyCheckShell() {
                     batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
                     onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
                   />
-                ))
-              ) : (
-                  <div className="col-span-full rounded-[18px] border border-dashed border-[#D9E2EC] bg-[#F0F4F8] px-6 py-14 text-center">
-                    <p className="mb-2 text-[12px] font-medium text-[#52606D]">
-                      Ingen selskaper funnet
-                    </p>
-                    <p className="mx-auto max-w-sm text-[16px] font-medium leading-relaxed text-[#52606D]">
-                      Vi fant ingen virksomheter som samsvarer med valgte filtre.
-                    </p>
-                    <div className="mt-8 flex justify-center gap-4">
-                      <Button
-                        variant="outline"
-                        className="rounded-full bg-white font-bold"
-                        onClick={() => {
-                          setDaysFilter("5");
-                          setCountyFilter("");
-                          setOrganizationFormFilter("");
-                          setSelectedLegend(null);
-                          setLeadQuickFilters([]);
-                          void fetchRecent(0);
-                        }}
-                      >
-                        Nullstill alle filtre
-                      </Button>
-                    </div>
-                  </div>
                 )}
+              />
               </div>
             </div>
           </section>
-          ) : null}
+          </Show>
         </div>
 
-        {selectedCompany ? (
+        <Show when={Boolean(selectedCompany)}>
+          {selectedCompany ? (
           <dialog
             ref={dialogRef}
             aria-label={`Virksomhetsdetaljer for ${selectedCompany.name}`}
@@ -2014,7 +2148,7 @@ export function CompanyCheckShell() {
           >
             <CompanyDetailView
               company={selectedCompany}
-              events={selectedCompanyEvents.length > 0 ? selectedCompanyEvents : selectedCompany.events}
+              events={choose(selectedCompanyEvents.length > 0, selectedCompanyEvents, selectedCompany.events)}
               generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
               generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
               emailSendError={emailSendErrorByOrg[selectedCompany.orgNumber] ?? null}
@@ -2030,9 +2164,11 @@ export function CompanyCheckShell() {
               onInspectWebsite={(url) => void inspectWebsiteUrl(url, brregWebsiteMatchFromCompany(selectedCompany, url))}
             />
           </dialog>
-        ) : null}
+          ) : null}
+        </Show>
 
-        {selectedWebsiteInspection ? (
+        <Show when={Boolean(selectedWebsiteInspection)}>
+          {selectedWebsiteInspection ? (
           <dialog
             ref={dialogRef}
             aria-label={`Nettsidesjekk for ${selectedWebsiteInspection.normalizedUrl}`}
@@ -2052,7 +2188,8 @@ export function CompanyCheckShell() {
               }}
             />
           </dialog>
-        ) : null}
+          ) : null}
+        </Show>
       </main>
     </div>
   );
@@ -2168,6 +2305,13 @@ function BrregWebsiteMatchesPanel({
     const generatedEmail = generatedEmailByOrg[match.orgNumber];
     const company = companyFromBrregWebsiteMatch(match, inspection);
     if (!match.email || !generatedEmail) {
+      return;
+    }
+    if (hasUnresolvedPersonalObservation(generatedEmail.body)) {
+      setSendErrorByOrg((current) => ({
+        ...current,
+        [match.orgNumber]: "Observasjonen ble ikke fylt inn. Generer e-postteksten på nytt før du sender.",
+      }));
       return;
     }
     if (isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])) {
@@ -2313,15 +2457,11 @@ function BrregWebsiteMatchesPanel({
                   >
                     {sendingByOrg[match.orgNumber] ? "Sender..." : "Send automatisk"}
                   </Button>
-                  {isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber]) ? (
-                    <span className="text-[12px] font-semibold text-amber-700">Allerede kontaktet – ny utsending er sperret</span>
-                  ) : !match.email ? (
-                    <span className="text-[12px] font-medium text-[#7B8794]">Mangler e-post i BRREG</span>
-                  ) : outreachEmailAutoSendBlockReason(companyFromBrregWebsiteMatch(match, inspection)) ? (
-                    <span className="text-[12px] font-semibold text-amber-700">
-                      {outreachEmailAutoSendBlockReason(companyFromBrregWebsiteMatch(match, inspection))}
-                    </span>
-                  ) : null}
+                  <BrregSendBlockNotice
+                    blocked={isOutreachSendBlocked(outreachStatusByOrg[match.orgNumber])}
+                    email={match.email}
+                    reason={outreachEmailAutoSendBlockReason(companyFromBrregWebsiteMatch(match, inspection))}
+                  />
                 </div>
                 {generatedEmailByOrg[match.orgNumber] ? (
                   <div className="mt-3">
@@ -2370,6 +2510,23 @@ async function copyWebsiteReport(text: string, onCopied: (value: boolean) => voi
   }
 }
 
+function BrregSendBlockNotice({ blocked, email, reason }: Readonly<{
+  blocked: boolean;
+  email: string | null;
+  reason: string | null;
+}>) {
+  if (blocked) {
+    return <span className="text-[12px] font-semibold text-amber-700">Allerede kontaktet – ny utsending er sperret</span>;
+  }
+  if (!email) {
+    return <span className="text-[12px] font-medium text-[#7B8794]">Mangler e-post i BRREG</span>;
+  }
+  if (reason) {
+    return <span className="text-[12px] font-semibold text-amber-700">{reason}</span>;
+  }
+  return null;
+}
+
 function WebsiteQualityPanel({
   quality,
   className = "",
@@ -2394,6 +2551,7 @@ function WebsiteQualityPanel({
   const [copiedCustomerReport, setCopiedCustomerReport] = useState(false);
   const shortReport = buildWebsiteShortReport(quality);
   const customerReport = buildWebsiteCustomerReport(quality);
+  const statusClassName = websiteQualityStatusClassName(quality.status);
 
   return (
     <div className={`border border-[#D9E2EC] bg-white p-5 ${className}`}>
@@ -2402,53 +2560,21 @@ function WebsiteQualityPanel({
           <p className="text-[12px] font-medium text-[#52606D]">Nettsidekvalitet</p>
           <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{quality.label}</h4>
         </div>
-        <span className={`inline-flex w-fit rounded-sm px-2 py-1 text-[10px] font-semibold ${
-          quality.status === "WEAK"
-            ? "bg-rose-50 text-rose-700"
-            : quality.status === "NEEDS_REVIEW"
-              ? "bg-amber-50 text-amber-700"
-              : "bg-slate-100 text-slate-700"
-        }`}>
+        <span className={`inline-flex w-fit rounded-sm px-2 py-1 text-[10px] font-semibold ${statusClassName}`}>
           {quality.status === "OK" ? "OK" : "Bør sjekkes"}
         </span>
       </div>
       <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{quality.summary}</p>
-      {shortReport ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button
-            className="rounded-sm text-[12px] font-semibold"
-            onClick={() => setShowShortReport((current) => !current)}
-            size="sm"
-            type="button"
-            variant="outline"
-          >
-            {showShortReport ? "Skjul kort rapport" : "Lag kort rapport"}
-          </Button>
-          <Button
-            className="rounded-sm text-[12px] font-semibold"
-            onClick={() => void copyWebsiteReport(shortReport, setCopiedShortReport)}
-            size="sm"
-            type="button"
-            variant="outline"
-          >
-            {copiedShortReport ? "Rapport kopiert" : "Kopier rapport"}
-          </Button>
-          <Button
-            className="rounded-sm text-[12px] font-semibold"
-            onClick={() => void copyWebsiteReport(customerReport, setCopiedCustomerReport)}
-            size="sm"
-            type="button"
-            variant="outline"
-          >
-            {copiedCustomerReport ? "Kundetekst kopiert" : "Kopier kundetekst"}
-          </Button>
-        </div>
-      ) : null}
-      {showShortReport && shortReport ? (
-        <pre className="mt-3 whitespace-pre-wrap border border-[#D9E2EC] bg-[#F8FBFF] p-4 text-[12px] leading-5 text-[#334E68]">
-          {shortReport}
-        </pre>
-      ) : null}
+      <WebsiteReportControls
+        copiedCustomerReport={copiedCustomerReport}
+        copiedShortReport={copiedShortReport}
+        customerReport={customerReport}
+        onCopyCustomer={() => void copyWebsiteReport(customerReport, setCopiedCustomerReport)}
+        onCopyShort={() => void copyWebsiteReport(shortReport, setCopiedShortReport)}
+        onToggle={() => setShowShortReport((current) => !current)}
+        shortReport={shortReport}
+        showShortReport={showShortReport}
+      />
       {reportSummary.length > 0 ? (
         <div className="mt-4 grid gap-3 border border-[#D9E2EC] bg-[#F8FBFF] p-4 md:grid-cols-3">
           {reportSummary.map((item) => (
@@ -2459,32 +2585,7 @@ function WebsiteQualityPanel({
           ))}
         </div>
       ) : null}
-      {groupedSignals.length > 0 ? (
-        <div className="mt-4 grid gap-4">
-          {groupedSignals.map((group) => (
-            <div key={group.title}>
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{group.title}</p>
-              <div className="grid gap-2">
-                {group.signals.map((signal) => (
-                  <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
-                      <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
-                        {websiteSignalSeverityLabel(signal.severity)}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
-                    <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-2">
-                      <WebsiteSignalReportItem label="Hvorfor" value={websiteSignalWhy(signal)} />
-                      <WebsiteSignalReportItem label="Tiltak" value={websiteSignalAction(signal)} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : null}
+      <WebsiteSignalGroups className="mt-4" groups={groupedSignals} />
       {hiddenSignals.length > 0 ? (
         <div className="mt-4 border-t border-[#E4E7EB] pt-4">
           <Button
@@ -2499,32 +2600,7 @@ function WebsiteQualityPanel({
           <p className="mt-2 text-[12px] leading-5 text-[#52606D]">
             Standardvisningen viser de viktigste funnene. Resten er tekniske signaler som kan være nyttige ved manuell gjennomgang, men som ofte blir støy i første kundedialog.
           </p>
-          {showAllSignals ? (
-            <div className="mt-4 grid gap-4">
-              {[...hiddenGroupedSignals, ...advancedGroupedSignals].map((group) => (
-                <div key={group.title}>
-                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{group.title}</p>
-                  <div className="grid gap-2">
-                    {group.signals.map((signal) => (
-                      <div key={signal.code} className="border border-[#E4E7EB] bg-white px-3 py-2">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
-                          <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
-                            {websiteSignalSeverityLabel(signal.severity)}
-                          </span>
-                        </div>
-                        <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
-                        <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-2">
-                          <WebsiteSignalReportItem label="Hvorfor" value={websiteSignalWhy(signal)} />
-                          <WebsiteSignalReportItem label="Tiltak" value={websiteSignalAction(signal)} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : null}
+          {showAllSignals ? <WebsiteSignalGroups className="mt-4" groups={[...hiddenGroupedSignals, ...advancedGroupedSignals]} /> : null}
         </div>
       ) : null}
     </div>
@@ -2915,7 +2991,7 @@ function WebsiteSignalReportItem({ label, value }: Readonly<{ label: string; val
   );
 }
 
-function websiteSignalWhy(signal: WebsiteQualitySignal) {
+function websiteSignalWhyPrimary(signal: WebsiteQualitySignal): string | null {
   switch (signal.code) {
     case "TECHNICAL_FAILURE":
       return "Hvis registrert nettside ikke svarer, mister virksomheten et viktig kontaktpunkt og kan fremstå mindre aktiv.";
@@ -2973,6 +3049,96 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "Sidetittelen vises i nettleser, søkeresultater og deling, og bør raskt forklare hvem siden gjelder.";
     case "MISSING_META_DESCRIPTION":
       return "Meta description påvirker hvordan siden presenteres i søkeresultater og ved deling.";
+    default:
+      return null;
+  }
+}
+
+function websiteQualityStatusClassName(status: WebsiteQualityAssessment["status"]) {
+  if (status === "WEAK") return "bg-rose-50 text-rose-700";
+  if (status === "NEEDS_REVIEW") return "bg-amber-50 text-amber-700";
+  return "bg-slate-100 text-slate-700";
+}
+
+function WebsiteReportControls({
+  copiedCustomerReport,
+  copiedShortReport,
+  onCopyCustomer,
+  onCopyShort,
+  onToggle,
+  shortReport,
+  showShortReport,
+}: Readonly<{
+  copiedCustomerReport: boolean;
+  copiedShortReport: boolean;
+  customerReport: string;
+  onCopyCustomer: () => void;
+  onCopyShort: () => void;
+  onToggle: () => void;
+  shortReport: string;
+  showShortReport: boolean;
+}>) {
+  if (!shortReport) return null;
+  return (
+    <>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button className="rounded-sm text-[12px] font-semibold" onClick={onToggle} size="sm" type="button" variant="outline">
+          {showShortReport ? "Skjul kort rapport" : "Lag kort rapport"}
+        </Button>
+        <Button className="rounded-sm text-[12px] font-semibold" onClick={onCopyShort} size="sm" type="button" variant="outline">
+          {copiedShortReport ? "Rapport kopiert" : "Kopier rapport"}
+        </Button>
+        <Button className="rounded-sm text-[12px] font-semibold" onClick={onCopyCustomer} size="sm" type="button" variant="outline">
+          {copiedCustomerReport ? "Kundetekst kopiert" : "Kopier kundetekst"}
+        </Button>
+      </div>
+      {showShortReport ? (
+        <pre className="mt-3 whitespace-pre-wrap border border-[#D9E2EC] bg-[#F8FBFF] p-4 text-[12px] leading-5 text-[#334E68]">
+          {shortReport}
+        </pre>
+      ) : null}
+    </>
+  );
+}
+
+function WebsiteSignalGroups({
+  groups,
+  className,
+}: Readonly<{
+  groups: Array<{ title: string; signals: WebsiteQualitySignal[] }>;
+  className?: string;
+}>) {
+  if (groups.length === 0) return null;
+  return (
+    <div className={`${className ?? ""} grid gap-4`}>
+      {groups.map((group) => (
+        <div key={group.title}>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{group.title}</p>
+          <div className="grid gap-2">
+            {group.signals.map((signal) => (
+              <div key={signal.code} className="border border-[#E4E7EB] bg-[#F8FBFF] px-3 py-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-[13px] font-semibold text-[#1F2933]">{signal.title}</p>
+                  <span className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold ${structureSignalSeverityClassName(signal.severity)}`}>
+                    {websiteSignalSeverityLabel(signal.severity)}
+                  </span>
+                </div>
+                <p className="mt-1 text-[12px] leading-5 text-[#52606D]">{signal.detail}</p>
+                <div className="mt-3 grid gap-2 border-t border-[#E4E7EB] pt-3 sm:grid-cols-2">
+                  <WebsiteSignalReportItem label="Hvorfor" value={websiteSignalWhy(signal)} />
+                  <WebsiteSignalReportItem label="Tiltak" value={websiteSignalAction(signal)} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function websiteSignalWhyDiscovery(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "DUPLICATE_META_DESCRIPTIONS":
       return "Når flere undersider bruker samme beskrivelse, mister hver side muligheten til å forklare sitt eget formål i søk og deling.";
     case "WEAK_SHARE_PREVIEW":
@@ -2999,6 +3165,13 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "Autocomplete gjør skjema enklere å fylle ut og er et praktisk UU- og mobilbrukssignal.";
     case "NEWSLETTER_FORM_LABEL_RISK":
       return "Nyhetsbrevskjema samler kontaktdata og bør være tydelig merket for både brukervennlighet og tilgjengelighet.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalWhyTechnical(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "FIXED_WIDTH_LAYOUT":
       return "Fast bredde i HTML/CSS kan gi dårlig mobilvisning selv om siden ser grei ut på stor skjerm.";
     case "MISSING_MAIN_LANDMARK":
@@ -3057,6 +3230,13 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "GET-skjema kan legge personopplysninger i URL, nettleserhistorikk, logger og analyseverktøy.";
     case "EXTERNAL_FORM_ACTION":
       return "Når skjema sendes til annet domene, bør databehandler og personvern være tydelig avklart.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalWhySecurity(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "DOM_XSS_SURFACE_REVIEW":
       return "XSS oppstår ofte når URL-, skjema- eller brukerdata ender i HTML/JavaScript uten trygg escaping. Dette er et passivt signal om angrepsflate, ikke et bevis.";
     case "DANGEROUS_JS_SINK_REVIEW":
@@ -3091,6 +3271,18 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
       return "Når siden berører helse, behandling eller personopplysninger, bør personvern og skjema vurderes ekstra varsomt.";
     case "PRIVACY_LINK_REVIEW":
       return "En policy- eller vilkårslenke er funnet, men innholdet må bekreftes når skjema, cookies eller kontaktdata brukes.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalWhy(signal: WebsiteQualitySignal) {
+  const directExplanation = websiteSignalWhyPrimary(signal)
+    ?? websiteSignalWhyDiscovery(signal)
+    ?? websiteSignalWhyTechnical(signal)
+    ?? websiteSignalWhySecurity(signal);
+  if (directExplanation) {
+    return directExplanation;
   }
   if ([
     "GENERIC_PRESENTATION_TRUST_RISK",
@@ -3142,7 +3334,7 @@ function websiteSignalWhy(signal: WebsiteQualitySignal) {
   return "Dette er et automatisk signal som bør brukes som startpunkt for manuell vurdering.";
 }
 
-function websiteSignalAction(signal: WebsiteQualitySignal) {
+function websiteSignalActionPrimary(signal: WebsiteQualitySignal): string | null {
   switch (signal.code) {
     case "TECHNICAL_FAILURE":
       return "Sjekk domenet manuelt og avklar om problemet gjelder DNS, SSL, hosting, redirect, 404/5xx eller midlertidig nedetid.";
@@ -3203,6 +3395,13 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Skriv en konkret sidetittel med virksomhet, tjeneste/produkt og gjerne sted eller marked.";
     case "MISSING_META_DESCRIPTION":
       return "Skriv en kort meta description som forklarer hva virksomheten tilbyr og hvorfor siden er relevant.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalActionDiscovery(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "DUPLICATE_META_DESCRIPTIONS":
       return "Skriv egne meta descriptions for viktige undersider som tjenester, om oss, team, FAQ og produkt-/landingssider.";
     case "WEAK_SHARE_PREVIEW":
@@ -3229,6 +3428,13 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Legg autocomplete på navn, e-post, telefon og adressefelt.";
     case "NEWSLETTER_FORM_LABEL_RISK":
       return "Gi nyhetsbrevfeltet synlig label, tydelig hjelpetekst og ryddig personvernkobling.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalActionTechnical(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "FIXED_WIDTH_LAYOUT":
       return "Test siden på mobil og fjern faste bredder som skaper horisontal scroll eller kuttet innhold.";
     case "MISSING_MAIN_LANDMARK":
@@ -3273,6 +3479,13 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Sjekk 2FA, rate limiting, passord-reset, session cookies og tilgangsstyring.";
     case "API_ENDPOINTS_VISIBLE":
       return "Verifiser CORS, autentisering, rate limiting og at API ikke eksponerer interne data.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalActionEmailAndData(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "SPF_POLICY_SOFT":
       return "Stram SPF når alle legitime avsendere er kartlagt.";
     case "DMARC_POLICY_NONE":
@@ -3299,6 +3512,13 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Bruk POST for skjema med navn, e-post, telefon eller andre personopplysninger.";
     case "EXTERNAL_FORM_ACTION":
       return "Verifiser ekstern skjematjeneste, databehandleravtale og forklaringen i personvernteksten.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalActionSecurity(signal: WebsiteQualitySignal): string | null {
+  switch (signal.code) {
     case "DOM_XSS_SURFACE_REVIEW":
       return "Gå gjennom JavaScript som leser URL/hash/query og sjekk at verdier ikke settes inn i HTML uten trygg escaping/sanitering.";
     case "DANGEROUS_JS_SINK_REVIEW":
@@ -3336,6 +3556,19 @@ function websiteSignalAction(signal: WebsiteQualitySignal) {
       return "Verifiser personverntekst, skjema, samtykke og databehandling manuelt før dette omtales konkret.";
     case "PRIVACY_LINK_REVIEW":
       return "Åpne policylenken og sjekk at den faktisk dekker personvern, skjema, cookies og databehandlerforhold.";
+    default:
+      return null;
+  }
+}
+
+function websiteSignalAction(signal: WebsiteQualitySignal) {
+  const directAction = websiteSignalActionPrimary(signal)
+    ?? websiteSignalActionDiscovery(signal)
+    ?? websiteSignalActionTechnical(signal)
+    ?? websiteSignalActionEmailAndData(signal)
+    ?? websiteSignalActionSecurity(signal);
+  if (directAction) {
+    return directAction;
   }
   if (["AI_LIKE_PRESENTATION_RISK", "GENERIC_PRESENTATION_TRUST_RISK", "GENERIC_OR_AI_IMAGE_RISK"].includes(signal.code)) {
     return "Legg inn mer konkret tekst, ekte bilder, referanser, prosjekter eller dokumentasjon.";
@@ -3633,6 +3866,7 @@ function companyFromBrregWebsiteMatch(
     orgNumber: match.orgNumber,
     name: match.name,
     organizationForm: match.organizationForm,
+    registrationDate: match.registrationDate,
     municipality: match.municipality,
     county: match.county,
     naceCode: match.naceCode,
@@ -3659,6 +3893,50 @@ function companyFromBrregWebsiteMatch(
     phone: match.phone || match.mobile,
     contactPersonName: null,
   };
+}
+
+function LeadResultsBody({
+  companies,
+  hasLoadedCompanies,
+  isLoading,
+  onReset,
+  renderCompany,
+}: Readonly<{
+  companies: CompanySummary[];
+  hasLoadedCompanies: boolean;
+  isLoading: boolean;
+  onReset: () => void;
+  renderCompany: (company: CompanySummary) => ReactNode;
+}>) {
+  if (isLoading && !hasLoadedCompanies) {
+    return ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"].map((skeletonKey) => (
+      <div key={skeletonKey} className="grid animate-pulse gap-3 border-b border-[#E4E7EB] p-4 last:border-b-0 lg:grid-cols-4">
+        <div className="space-y-2">
+          <div className="h-4 w-3/4 bg-[#E4E7EB]" />
+          <div className="h-3 w-1/2 bg-[#E4E7EB]" />
+        </div>
+        <div className="h-4 w-24 bg-[#E4E7EB]" />
+        <div className="h-4 w-36 bg-[#E4E7EB]" />
+        <div className="h-4 w-20 bg-[#E4E7EB]" />
+      </div>
+    ));
+  }
+  if (companies.length > 0) {
+    return companies.map(renderCompany);
+  }
+  return (
+    <div className="col-span-full rounded-[18px] border border-dashed border-[#D9E2EC] bg-[#F0F4F8] px-6 py-14 text-center">
+      <p className="mb-2 text-[12px] font-medium text-[#52606D]">Ingen selskaper funnet</p>
+      <p className="mx-auto max-w-sm text-[16px] font-medium leading-relaxed text-[#52606D]">
+        Vi fant ingen virksomheter som samsvarer med valgte filtre.
+      </p>
+      <div className="mt-8 flex justify-center gap-4">
+        <Button variant="outline" className="rounded-full bg-white font-bold" onClick={onReset}>
+          Nullstill alle filtre
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 function WorkspaceTabButton({
@@ -3800,17 +4078,13 @@ function OutreachCheckbox({
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
   const noteSuggestions = [
     "Sendt til firmapost",
-    "Må følges opp",
+    "Følg opp om 4–6 arbeidsdager",
     "Ingen svar ennå",
-    "Ring senere",
+    "Oppfølging sendt – avslutt hvis stille",
+    "Interessert",
+    "Tilbud sendt",
   ];
-  const helpText = saving
-    ? "Oppdaterer utsendelsesstatus ..."
-    : markedNotRelevant
-      ? "Markert som ikke aktuell. Du kan angre eller sende likevel senere."
-    : sentAlready
-      ? "Registrert som sendt. Ny utsendelse krever eksplisitt overstyring."
-      : "Marker når første e-post er sendt, så unngår du dobbelt henvendelse.";
+  const helpText = outreachCheckboxHelpText(saving, markedNotRelevant, sentAlready);
   const wrapperClassName = [
     className,
     compact ? "mt-4" : "",
@@ -3856,43 +4130,15 @@ function OutreachCheckbox({
               Markert som ikke aktuell
             </span>
           ) : null}
-          {sentAlready || markedNotRelevant || compact ? (
-            status?.note ? (
-              <span className="mt-2 block text-[12px] text-[#52606D]">
-                Notat: {status.note}
-              </span>
-            ) : null
-          ) : (
-            <span className="mt-3 block">
-              <span className="mb-2 flex flex-wrap gap-2">
-                {noteSuggestions.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    type="button"
-                    className="rounded-sm border border-[#D9E2EC] bg-white px-2.5 py-1 text-[11px] font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
-                    disabled={saving}
-                    onClick={() => persistNote(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  className="rounded-sm border border-[#BCCCDC] bg-[#F8FBFF] px-2.5 py-1 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#EAF1F7]"
-                  disabled={saving}
-                  onClick={() => persistNote("")}
-                >
-                  Fjern kommentar
-                </button>
-              </span>
-              <textarea
-                className="min-h-[72px] w-full rounded-none border border-[#BCCCDC] bg-white px-3 py-2 text-[12px] text-[#1F2933] outline-none transition-colors placeholder:text-[#7B8794] focus:border-[#1F5FA9]"
-                onChange={(event) => setNoteDraft(event.target.value)}
-                placeholder="Kort notat, f.eks. sendt til firmapost eller må følges opp senere"
-                value={noteDraft}
-              />
-            </span>
-          )}
+          <OutreachNoteEditor
+            editable={!sentAlready && !markedNotRelevant && !compact}
+            note={status?.note ?? null}
+            noteDraft={noteDraft}
+            noteSuggestions={noteSuggestions}
+            onChange={setNoteDraft}
+            onPersist={persistNote}
+            saving={saving}
+          />
           {!sentAlready && !markedNotRelevant ? (
             <span className="mt-3 flex flex-wrap gap-2">
               <button
@@ -3931,6 +4177,66 @@ function OutreachCheckbox({
   );
 }
 
+function outreachCheckboxHelpText(saving: boolean, markedNotRelevant: boolean, sentAlready: boolean) {
+  if (saving) return "Oppdaterer utsendelsesstatus ...";
+  if (markedNotRelevant) return "Markert som ikke aktuell. Du kan angre eller sende likevel senere.";
+  if (sentAlready) return "Registrert som sendt. Ny utsendelse krever eksplisitt overstyring.";
+  return "Marker når første e-post er sendt, så unngår du dobbelt henvendelse.";
+}
+
+function OutreachNoteEditor({
+  editable,
+  note,
+  noteDraft,
+  noteSuggestions,
+  onChange,
+  onPersist,
+  saving,
+}: Readonly<{
+  editable: boolean;
+  note: string | null;
+  noteDraft: string;
+  noteSuggestions: string[];
+  onChange: (value: string) => void;
+  onPersist: (value: string) => void;
+  saving: boolean;
+}>) {
+  if (!editable) {
+    return note ? <span className="mt-2 block text-[12px] text-[#52606D]">Notat: {note}</span> : null;
+  }
+  return (
+    <span className="mt-3 block">
+      <span className="mb-2 flex flex-wrap gap-2">
+        {noteSuggestions.map((suggestion) => (
+          <button
+            key={suggestion}
+            type="button"
+            className="rounded-sm border border-[#D9E2EC] bg-white px-2.5 py-1 text-[11px] font-medium text-[#52606D] transition-colors hover:bg-[#F0F4F8]"
+            disabled={saving}
+            onClick={() => onPersist(suggestion)}
+          >
+            {suggestion}
+          </button>
+        ))}
+        <button
+          type="button"
+          className="rounded-sm border border-[#BCCCDC] bg-[#F8FBFF] px-2.5 py-1 text-[11px] font-semibold text-[#52606D] transition-colors hover:bg-[#EAF1F7]"
+          disabled={saving}
+          onClick={() => onPersist("")}
+        >
+          Fjern kommentar
+        </button>
+      </span>
+      <textarea
+        className="min-h-[72px] w-full rounded-none border border-[#BCCCDC] bg-white px-3 py-2 text-[12px] text-[#1F2933] outline-none transition-colors placeholder:text-[#7B8794] focus:border-[#1F5FA9]"
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Kort notat, f.eks. sendt til firmapost eller må følges opp senere"
+        value={noteDraft}
+      />
+    </span>
+  );
+}
+
 function detailLeadSignalConfig(label: string) {
   switch (label) {
     case "Sterkt lead":
@@ -3949,6 +4255,22 @@ function detailLeadSignalConfig(label: string) {
         text: "bg-slate-100 text-slate-700 border-slate-200",
       };
   }
+}
+
+function websiteDiscoveryCandidateHeading(discovery: NonNullable<CompanySummary["websiteDiscovery"]>) {
+  if (discovery.contentMatched) return "Sannsynlig nettside";
+  if (discovery.status === "UNVERIFIED_SUGGESTION") return "Domeneforslag";
+  return "Mulig nettside";
+}
+
+function websiteDiscoveryCandidateSummary(discovery: NonNullable<CompanySummary["websiteDiscovery"]>) {
+  if (discovery.contentMatched) {
+    return "Ingen registrert nettside i BRREG, men kandidaten ser ut til å høre til selskapet.";
+  }
+  if (discovery.status === "UNVERIFIED_SUGGESTION") {
+    return "Mulig domene foreslått – ingen nettside bekreftet.";
+  }
+  return "Ingen registrert nettside i BRREG, men vi fant en mulig kandidat.";
 }
 
 function CompanyDetailView({
@@ -4008,9 +4330,17 @@ function CompanyDetailView({
   const primaryReason = scoreEvidence[0]?.detail || scoreReasons[0] || "Ingen begrunnelse oppgitt.";
   const generatedEmailText = generatedEmail ? `Emne: ${generatedEmail.subject}\n\n${generatedEmail.body}` : "";
   const generatedEmailHtml = generatedEmail ? buildOutreachEmailHtml(generatedEmail.body) : "";
+  const lazyWebsiteDiscovery = company.websiteDiscovery as NonNullable<CompanySummary["websiteDiscovery"]>;
+  const lazyWebsite = company.website as string;
+  const lazyWebsiteQuality = currentWebsiteQuality as WebsiteQualityAssessment;
+  const lazyGeneratedEmail = generatedEmail as NonNullable<typeof generatedEmail>;
+  const lazyElevatedActorSignal = elevatedActorContextSignal as NonNullable<typeof elevatedActorContextSignal>;
   const alreadyContacted = isOutreachSendBlocked(outreachStatus);
   const automaticSendBlockReason = outreachEmailAutoSendBlockReason(company);
-  const generatedEmailHref = generatedEmail && company.email && !alreadyContacted
+  const needsPersonalObservation = generatedEmail
+    ? hasUnresolvedPersonalObservation(generatedEmail.body)
+    : false;
+  const generatedEmailHref = generatedEmail && company.email && !alreadyContacted && !needsPersonalObservation
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
   useEffect(() => {
@@ -4193,18 +4523,11 @@ function CompanyDetailView({
                 <p className="text-[15px] font-semibold leading-relaxed">{primaryReason}</p>
               </div>
 
-              {!company.website
-                && (company.websiteDiscovery?.status === "POSSIBLE_MATCH"
-                  || company.websiteDiscovery?.status === "UNVERIFIED_SUGGESTION")
-                && company.websiteDiscovery.candidates.length > 0 ? (
+              <Show when={hasWebsiteDiscoveryCandidate(company)}>{() => (
                 <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
                     <p className="text-[12px] font-medium text-[#52606D]">
-                      {company.websiteDiscovery.contentMatched
-                        ? "Sannsynlig nettside"
-                        : company.websiteDiscovery.status === "UNVERIFIED_SUGGESTION"
-                          ? "Domeneforslag"
-                          : "Mulig nettside"}
+                      {websiteDiscoveryCandidateHeading(lazyWebsiteDiscovery)}
                     </p>
                     <a
                       className="inline-flex items-center rounded-sm border border-[#BCCCDC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#1F2933] hover:border-[#829AB1] hover:bg-[#F8FBFF]"
@@ -4216,14 +4539,10 @@ function CompanyDetailView({
                     </a>
                   </div>
                   <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">
-                    {company.websiteDiscovery.contentMatched
-                      ? "Ingen registrert nettside i BRREG, men kandidaten ser ut til å høre til selskapet."
-                      : company.websiteDiscovery.status === "UNVERIFIED_SUGGESTION"
-                        ? "Mulig domene foreslått – ingen nettside bekreftet."
-                        : "Ingen registrert nettside i BRREG, men vi fant en mulig kandidat."}
+                    {websiteDiscoveryCandidateSummary(lazyWebsiteDiscovery)}
                   </p>
                   <div className="mt-3 grid gap-2">
-                    {websiteCandidateRows(company.websiteDiscovery).map((candidate) => (
+                    {websiteCandidateRows(lazyWebsiteDiscovery).map((candidate) => (
                       <div
                         key={candidate.url}
                         className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F2933]"
@@ -4251,24 +4570,24 @@ function CompanyDetailView({
                       </div>
                     ))}
                   </div>
-                  <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{company.websiteDiscovery.reason}</p>
-                  {company.websiteDiscovery.pageTitle ? (
+                  <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{lazyWebsiteDiscovery.reason}</p>
+                  <Show when={Boolean(lazyWebsiteDiscovery.pageTitle)}>
                     <p className="mt-2 text-[12px] font-medium text-[#52606D]">
-                      Sidetittel: {company.websiteDiscovery.pageTitle}
+                      Sidetittel: {lazyWebsiteDiscovery.pageTitle}
                     </p>
-                  ) : null}
+                  </Show>
                   <p className="mt-2 text-[12px] font-medium text-[#52606D]">
-                    {formatWebsiteVerification(company.websiteDiscovery)}
+                    {formatWebsiteVerification(lazyWebsiteDiscovery)}
                   </p>
-                  {company.websiteDiscovery.contentMatchReason ? (
+                  <Show when={Boolean(lazyWebsiteDiscovery.contentMatchReason)}>
                     <p className="mt-2 text-[12px] font-medium text-[#52606D]">
-                      {company.websiteDiscovery.contentMatchReason}
+                      {lazyWebsiteDiscovery.contentMatchReason}
                     </p>
-                  ) : null}
+                  </Show>
                   <div className="mt-4 border border-[#D9E2EC] bg-[#F8FBFF] p-4">
                     <p className="text-[12px] font-semibold text-[#1F2933]">Slik ble kandidaten vurdert</p>
                     <ul className="mt-3 space-y-2 text-[12px] leading-5 text-[#52606D]">
-                      {websiteDiscoveryExplanationItems(company.websiteDiscovery, company.name).map((item) => (
+                      {websiteDiscoveryExplanationItems(lazyWebsiteDiscovery, company.name).map((item) => (
                         <li key={item} className="flex gap-2">
                           <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#9FB3C8]" />
                           <span>{item}</span>
@@ -4277,12 +4596,12 @@ function CompanyDetailView({
                     </ul>
                   </div>
                   <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">
-                    {formatWebsiteConfidence(company.websiteDiscovery.confidence)} sikkerhet · {company.websiteDiscovery.source}
+                    {formatWebsiteConfidence(lazyWebsiteDiscovery.confidence)} sikkerhet · {lazyWebsiteDiscovery.source}
                   </p>
                 </div>
-              ) : null}
+              )}</Show>
 
-              {company.website && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false ? (
+              <Show when={isRegisteredWebsiteUnavailable(company)}>{() => (
                 <div className="mt-4 border border-amber-200 bg-amber-50/70 p-5">
                   <p className="mb-2 text-[12px] font-medium text-amber-800">Registrert nettside svarer ikke</p>
                   <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">
@@ -4290,7 +4609,7 @@ function CompanyDetailView({
                   </p>
                   <a
                     className="mt-3 inline-flex rounded-sm border border-amber-200 bg-white px-3 py-2 text-[12px] font-semibold text-[#1F5FA9] hover:bg-[#F8FBFF]"
-                    href={normalizeWebsiteUrl(company.website)}
+                    href={normalizeWebsiteUrl(lazyWebsite)}
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -4299,15 +4618,15 @@ function CompanyDetailView({
                   <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">
                     Dette kan være DNS-feil, timeout, 404/5xx, SSL-feil eller midlertidig nedetid. Sjekk manuelt før du bruker det i kontakt.
                   </p>
-                  {company.websiteDiscovery.contentMatchReason ? (
+                  <Show when={Boolean(lazyWebsiteDiscovery.contentMatchReason)}>
                     <p className="mt-2 text-[12px] font-medium text-[#52606D]">
-                      {company.websiteDiscovery.contentMatchReason}
+                      {lazyWebsiteDiscovery.contentMatchReason}
                     </p>
-                  ) : null}
+                  </Show>
                 </div>
-              ) : null}
+              )}</Show>
 
-              {company.website && currentWebsiteQuality ? (
+              <Show when={Boolean(company.website && currentWebsiteQuality)}>{() => (
                 <div className="mt-4">
                   <div className="border border-[#D9E2EC] bg-[#F8FBFF] p-4">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -4318,25 +4637,25 @@ function CompanyDetailView({
                         </p>
                       </div>
                     </div>
-                    {extendedWebsiteQualityLoading ? (
+                    <Show when={extendedWebsiteQualityLoading}>
                       <p className="mt-3 text-[12px] font-semibold text-[#52606D]">Kjører samlet nettsidesjekk...</p>
-                    ) : null}
-                    {extendedWebsiteQualityError ? (
+                    </Show>
+                    <Show when={Boolean(extendedWebsiteQualityError)}>
                       <p className="mt-3 text-[12px] font-semibold text-[#BA2525]">{extendedWebsiteQualityError}</p>
-                    ) : null}
+                    </Show>
                   </div>
-                  <WebsiteQualityPanel className="mt-4" quality={currentWebsiteQuality} />
+                  <WebsiteQualityPanel className="mt-4" quality={lazyWebsiteQuality} />
                 </div>
-              ) : null}
+              )}</Show>
 
-              {elevatedActorContextSignal ? (
+              <Show when={Boolean(elevatedActorContextSignal)}>{() => (
                 <div className="mt-4 border border-[#D9E2EC] bg-white p-5">
                   <p className="mb-2 text-[12px] font-medium text-[#52606D]">Løftet aktørkontekst</p>
-                  <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">{elevatedActorContextSignal.title}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">{elevatedActorContextSignal.detail}</p>
-                  <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{elevatedActorContextSignal.source}</p>
+                  <p className="text-[15px] font-semibold leading-relaxed text-[#1F2933]">{lazyElevatedActorSignal.title}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">{lazyElevatedActorSignal.detail}</p>
+                  <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{lazyElevatedActorSignal.source}</p>
                 </div>
-              ) : null}
+              )}</Show>
 
               <div className={`mt-4 border p-5 ${commercialOpportunity.cardClass}`}>
                 <div>
@@ -4360,27 +4679,27 @@ function CompanyDetailView({
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
                     <p className="text-[12px] font-medium text-[#52606D]">Tilbudsmail</p>
-                    <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">Generer e-posttekst fra mal</h4>
+                    <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">Lag en personlig e-post</h4>
                     <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
-                      Bruk Markdown-malen i `data/outreach-email-template.md` og fyll inn selskapsdata automatisk.
+                      Malen fyller automatisk inn én sann og konkret observasjon fra BRREG-data. Kontroller teksten før e-posten sendes.
                     </p>
                     <div className="mt-3 inline-flex rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F2933]">
                       Tilbudstype: {formatOutreachOfferType(offerType)}
                     </div>
-                    {requiresManualWebsiteCheck ? (
+                    <Show when={requiresManualWebsiteCheck}>
                       <p className="mt-3 max-w-2xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] font-medium leading-5 text-amber-800">
                         {automaticSendBlockReason
                           ?? (offerType === "website-unavailable-offer"
                             ? "Nettsiden kontrolleres på nytt rett før automatisk sending. E-posten stoppes dersom siden svarer igjen."
                             : "E-posten bygger på et konkret, dokumentert funn fra nettsidesjekken.")}
                       </p>
-                    ) : null}
-                    {mailQualityLine ? (
+                    </Show>
+                    <Show when={Boolean(mailQualityLine)}>
                       <div className="mt-3 max-w-2xl border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2">
                         <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Linje som brukes i mail</p>
                         <p className="mt-1 text-[12px] font-semibold leading-5 text-[#1F2933]">{mailQualityLine}</p>
                       </div>
-                    ) : null}
+                    </Show>
                   </div>
                   <Button
                     className="rounded-sm bg-[#1F5FA9] px-4 text-white hover:bg-[#2F6FB2]"
@@ -4392,11 +4711,11 @@ function CompanyDetailView({
                   </Button>
                 </div>
 
-                {generatedEmail ? (
+                <Show when={Boolean(generatedEmail)}>{() => (
                   <div className="mt-5 space-y-3">
                     <div className="border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3">
                       <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Emne</p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">{generatedEmail.subject}</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#1F2933]">{lazyGeneratedEmail.subject}</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <Button
@@ -4432,28 +4751,33 @@ function CompanyDetailView({
                       )}
                       <Button
                         className="rounded-sm border border-[#D9E2EC] bg-white px-4 text-[#52606D] hover:bg-[#F0F4F8]"
-                        disabled={!company.email || sendingEmail || outreachSaving || alreadyContacted || Boolean(automaticSendBlockReason)}
+                        disabled={!company.email || sendingEmail || outreachSaving || alreadyContacted || needsPersonalObservation || Boolean(automaticSendBlockReason)}
                         onClick={onSendEmail}
                         type="button"
                       >
                         {sendingEmail ? "Sender..." : "Send automatisk"}
                       </Button>
                     </div>
-                    {alreadyContacted ? (
+                    <Show when={alreadyContacted}>
                       <p className="rounded-sm border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] font-semibold text-amber-800">
                         Ny nettsidehenvendelse er sperret fordi virksomheten allerede er kontaktet.
                       </p>
-                    ) : null}
-                    {emailSendError ? (
+                    </Show>
+                    <Show when={needsPersonalObservation}>
+                      <p className="rounded-sm border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] font-semibold text-amber-800">
+                        Personlig observasjon mangler. Generer e-postteksten på nytt før du åpner eller sender den.
+                      </p>
+                    </Show>
+                    <Show when={Boolean(emailSendError)}>
                       <p className="rounded-sm border border-rose-200 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">
                         {emailSendError}
                       </p>
-                    ) : null}
-                    {emailSentRecipient ? (
+                    </Show>
+                    <Show when={Boolean(emailSentRecipient)}>
                       <p className="rounded-sm border border-emerald-200 bg-emerald-50 px-3 py-2 text-[12px] font-medium text-emerald-800">
                         Sendt til: {emailSentRecipient}
                       </p>
-                    ) : null}
+                    </Show>
                     <div className="border border-[#D9E2EC] bg-[#F8FBFF] p-3">
                       <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#52606D]">Mailtekst</p>
                       <textarea
@@ -4463,24 +4787,25 @@ function CompanyDetailView({
                       />
                     </div>
                   </div>
-                ) : null}
+                )}</Show>
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="border border-[#D9E2EC] bg-white p-5">
                   <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Viktigste registerspor</h4>
                   <div className="space-y-3">
-                    {quickEvidence.length > 0 ? (
-                      quickEvidence.map((item) => (
+                    <RenderCollection
+                      empty={<p className="text-[14px] text-[#52606D]">Ingen tydelige registerspor tilgjengelig.</p>}
+                      items={quickEvidence}
+                    >
+                      {(item) => (
                         <div key={`${item.label}-${item.source}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
                           <p className="text-[13px] font-bold text-[#1F2933]">{item.label}</p>
                           <p className="mt-1 text-[13px] leading-relaxed text-[#52606D]">{item.detail}</p>
                           <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{item.source}</p>
                         </div>
-                      ))
-                    ) : (
-                      <p className="text-[14px] text-[#52606D]">Ingen tydelige registerspor tilgjengelig.</p>
-                    )}
+                      )}
+                    </RenderCollection>
                   </div>
                 </div>
 
@@ -4531,16 +4856,17 @@ function CompanyDetailView({
                 </p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {company.roles && company.roles.length > 0 ? (
-                  company.roles.map((role) => (
+                <RenderCollection
+                  empty={<p className="text-sm italic text-[#7B8794]">Ingen roller funnet i åpne data.</p>}
+                  items={company.roles ?? []}
+                >
+                  {(role) => (
                     <div key={`${role.type}-${role.name}-${role.title ?? ""}`} className="border border-[#D9E2EC] bg-white px-4 py-3">
                       <p className="mb-1 text-[11px] font-medium text-[#52606D]">{role.type}</p>
                       <p className="text-[14px] font-bold text-[#1F2933]">{role.name}</p>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-sm italic text-[#7B8794]">Ingen roller funnet i åpne data.</p>
-                )}
+                  )}
+                </RenderCollection>
               </div>
         </div>
       </div>
@@ -4563,8 +4889,11 @@ function CompanyDetailView({
             <div className="insight-card border border-[#D9E2EC] bg-white p-5">
               <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Strukturmønstre</h4>
               <div className="space-y-3">
-                {structureSignals.length > 0 ? (
-                  structureSignals.map((signal) => (
+                <RenderCollection
+                  empty={<p className="text-[14px] text-[#52606D]">Ingen tydelige strukturmønstre er slått ut for dette selskapet ennå. Det betyr ikke nødvendigvis fravær av risiko, bare at dagens mønstermotor ikke har funnet et klart kryssselskapsmønster.</p>}
+                  items={structureSignals}
+                >
+                  {(signal) => (
                     <div key={signal.code} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
                       <div className="flex items-start justify-between gap-3">
                         <p className="text-[13px] font-bold text-[#1F2933]">{signal.title}</p>
@@ -4573,25 +4902,26 @@ function CompanyDetailView({
                         </span>
                       </div>
                       <p className="mt-2 text-[13px] leading-relaxed text-[#52606D]">{signal.detail}</p>
-                      {describeStructureSignal(signal) ? (
+                      <Show when={Boolean(describeStructureSignal(signal))}>
                         <p className="mt-2 text-[12px] font-medium leading-relaxed text-[#1F5FA9]">
                           {describeStructureSignal(signal)}
                         </p>
-                      ) : null}
+                      </Show>
                       <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.04em] text-[#7B8794]">{signal.source}</p>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen tydelige strukturmønstre er slått ut for dette selskapet ennå. Det betyr ikke nødvendigvis fravær av risiko, bare at dagens mønstermotor ikke har funnet et klart kryssselskapsmønster.</p>
-                )}
+                  )}
+                </RenderCollection>
               </div>
             </div>
 
             <div className="insight-card border border-[#D9E2EC] bg-white p-5">
               <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registrerte hendelser</h4>
               <div className="space-y-3">
-                {events.length > 0 ? (
-                  events.slice(0, 8).map((event) => (
+                <RenderCollection
+                  empty={<p className="text-[14px] text-[#52606D]">Ingen registrerte hendelser å vise ennå. Det betyr vanligvis at vi foreløpig bare har grunndata, uten synlige kunngjøringer eller normaliserte hendelser for selskapet.</p>}
+                  items={events.slice(0, 8)}
+                >
+                  {(event) => (
                     <div key={`${event.type}-${event.date}-${event.title}`} className="border border-[#E4E7EB] bg-[#FFFFFF] px-4 py-3">
                       <div className="flex items-start justify-between gap-4">
                         <div>
@@ -4606,25 +4936,24 @@ function CompanyDetailView({
                         <p className="whitespace-nowrap text-[12px] font-medium text-[#52606D]">{event.date ? formatEventDate(event.date) : "Udatert"}</p>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen registrerte hendelser å vise ennå. Det betyr vanligvis at vi foreløpig bare har grunndata, uten synlige kunngjøringer eller normaliserte hendelser for selskapet.</p>
-                )}
+                  )}
+                </RenderCollection>
               </div>
             </div>
 
             <div className="insight-card border border-[#D9E2EC] bg-white p-5">
               <h4 className="mb-4 text-[14px] font-semibold text-[#1F2933]">Registerspor bak vurderingen</h4>
               <div className="flex flex-wrap gap-2">
-                {scoreEvidence.length > 0 ? (
-                  scoreEvidence.map((item) => (
+                <RenderCollection
+                  empty={<p className="text-[14px] text-[#52606D]">Ingen tydelige signaler trekker vurderingen i en bestemt retning.</p>}
+                  items={scoreEvidence}
+                >
+                  {(item) => (
                     <Badge key={`${item.label}-${item.source}`} variant="outline" className="rounded-sm border-[#D9E2EC] bg-[#FFFFFF] text-[11px] font-medium text-[#52606D]">
                       {item.label}
                     </Badge>
-                  ))
-                ) : (
-                  <p className="text-[14px] text-[#52606D]">Ingen tydelige signaler trekker vurderingen i en bestemt retning.</p>
-                )}
+                  )}
+                </RenderCollection>
               </div>
             </div>
 
@@ -4710,22 +5039,7 @@ function ContactLine({
         </div>
         <div className="min-w-0">
           <p className="text-[11px] font-medium text-[#52606D]">{label}</p>
-          {value ? (
-            href ? (
-              <a
-                className="block truncate text-[14px] font-semibold text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
-                href={href}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {value}
-              </a>
-            ) : (
-              <p className="text-[14px] font-semibold text-[#1F2933]">{value}</p>
-            )
-          ) : (
-            <p className="text-[14px] text-[#7B8794]">Ikke registrert</p>
-          )}
+          <DetailDataValue href={href} value={value} />
           {subvalue ? (
             <p className="mt-1 text-[12px] font-medium text-[#52606D]">{subvalue}</p>
           ) : null}
@@ -4733,6 +5047,25 @@ function ContactLine({
       </div>
     </div>
   );
+}
+
+function DetailDataValue({ href, value }: Readonly<{ href?: string; value?: string | null }>) {
+  if (!value) {
+    return <p className="text-[14px] text-[#7B8794]">Ikke registrert</p>;
+  }
+  if (href) {
+    return (
+      <a
+        className="block truncate text-[14px] font-semibold text-[#1F5FA9] underline underline-offset-4 hover:text-[#2F6FB2]"
+        href={href}
+        rel="noreferrer"
+        target="_blank"
+      >
+        {value}
+      </a>
+    );
+  }
+  return <p className="text-[14px] font-semibold text-[#1F2933]">{value}</p>;
 }
 
 function buildResultsSummary(
