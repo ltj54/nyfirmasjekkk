@@ -195,9 +195,9 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
-const MAX_EMAIL_BATCH_SIZE = 10;
 const EMAIL_BATCH_SEND_DELAY_MS = 2_000;
 const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
+const MAX_FOLLOW_UP_BATCH_SIZE = 10;
 type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "batch_excluded";
 type OutreachEmailSendResult = "sent" | "skipped" | "failed";
 
@@ -313,12 +313,9 @@ function automaticEmailSendError(status: number) {
   return "Klarte ikke sende e-post via SMTP. Sjekk passord/miljøvariabler og prøv igjen.";
 }
 
-function emailBatchButtonTitle(canUseEmailBatch: boolean, overEmailBatchLimit: boolean) {
+function emailBatchButtonTitle(canUseEmailBatch: boolean) {
   if (!canUseEmailBatch) {
     return "Velg Har e-post og enten Mangler nettside eller Har nettside før batch kan kjøres.";
-  }
-  if (overEmailBatchLimit) {
-    return `Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch.`;
   }
   return undefined;
 }
@@ -777,11 +774,6 @@ export function CompanyCheckShell() {
       window.alert("Ingen av de valgte treffene har e-post og en nettsidestatus som kan sendes i batch.");
       return;
     }
-    if (sendableCompanies.length > MAX_EMAIL_BATCH_SIZE) {
-      window.alert(`Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per batch. Dette reduserer risikoen for rate limit og feilutsending.`);
-      return;
-    }
-
     const skippedCount = companies.length - sendableCompanies.length;
     const delaySeconds = Math.round(EMAIL_BATCH_SEND_DELAY_MS / 1000);
     const confirmed = window.confirm(
@@ -1349,8 +1341,8 @@ export function CompanyCheckShell() {
 
   async function runFollowUpBatch(entries: OutreachStatus[]) {
     if (isFollowUpBatchSending || entries.length === 0) return;
-    if (entries.length > MAX_EMAIL_BATCH_SIZE) {
-      window.alert(`Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per oppfølgingsbatch.`);
+    if (entries.length > MAX_FOLLOW_UP_BATCH_SIZE) {
+      window.alert(`Velg maks ${MAX_FOLLOW_UP_BATCH_SIZE} virksomheter per oppfølgingsbatch.`);
       return;
     }
     if (!window.confirm(`Sender én oppfølgingsmail til ${entries.length} virksomheter med 2 sekunders pause mellom hver. Fortsette?`)) {
@@ -1506,7 +1498,6 @@ export function CompanyCheckShell() {
     )
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
-  const overEmailBatchLimit = sendableBatchCount > MAX_EMAIL_BATCH_SIZE;
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
   const visibleBatchValidationKey = canUseEmailBatch
     ? visibleSearchCompanies
@@ -2080,21 +2071,16 @@ export function CompanyCheckShell() {
                   </label>
                   <Button
                     className="ml-auto rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
-                    disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || overEmailBatchLimit || isBatchSending}
+                    disabled={!canUseEmailBatch || selectedBatchCompanies.length === 0 || isBatchSending}
                     onClick={() => void runEmailBatch(selectedBatchCompanies)}
                     size="sm"
-                    title={emailBatchButtonTitle(canUseEmailBatch, overEmailBatchLimit)}
+                    title={emailBatchButtonTitle(canUseEmailBatch)}
                     type="button"
                     variant="outline"
                   >
                     {isBatchSending ? "Sender batch..." : "Kjør e-post batch"}
                     {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
                   </Button>
-                  <Show when={overEmailBatchLimit}>
-                    <span className="basis-full text-[12px] font-medium text-[#9F580A] sm:basis-auto">
-                      Maks {MAX_EMAIL_BATCH_SIZE} per batch.
-                    </span>
-                  </Show>
                 </div>
               </div>
               <div className="overflow-hidden border border-[#D9E2EC] bg-white">

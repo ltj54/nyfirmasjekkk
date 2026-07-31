@@ -95,7 +95,7 @@ export function OutreachOverview({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-[16px] font-semibold text-[#1F2933]">Oppfølgingsbatch</h2>
-            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet. Inntil ti mottakere kan sendes om gangen.</p>
+            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet. Inntil ti mottakere per utsending.</p>
           </div>
           <Button
             className="rounded-sm bg-[#1F5FA9] text-white hover:bg-[#2F6FB2]"

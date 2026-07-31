@@ -102,6 +102,7 @@
 
 ### Utsendelseslogg
 
+rii- [ ] Fjern virksomheter fra `Send oppfølging` så snart mottakeren har svart på den opprinnelige e-posten. Oppdag innkommende svar (typisk emne med `SV:` eller `Re:`), koble svaret til riktig virksomhet/utsendelse og registrer en append-only svarhendelse slik at mottakeren ikke får automatisert oppfølging.
 - [x] Lag filbasert logg for utsendelser.
 - [x] Lag månedlig Markdown-rapport.
 - [x] Arkiver eldre måneder automatisk.
