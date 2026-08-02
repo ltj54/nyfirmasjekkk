@@ -176,6 +176,32 @@ class OutreachLogServiceTests {
     }
 
     @Test
+    void registerRepliedStoresReplyWithoutLosingContactHistory() {
+        OutreachLogService service = new OutreachLogService(
+                tempDir.resolve("outreach-log.jsonl"),
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", true, null, null,
+                "email", "website-offer", "Første e-post sendt"
+        ));
+        OutreachStatusResponse response = service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, "replied", null,
+                "email", "website-offer", "Svar mottatt – interessert"
+        ));
+
+        assertThat(response.sent()).isFalse();
+        assertThat(response.status()).isEqualTo("replied");
+        assertThat(response.note()).isEqualTo("Svar mottatt – interessert");
+        assertThat(response.everSent()).isTrue();
+        assertThat(response.sendBlocked()).isTrue();
+    }
+
+    @Test
     void statusesReturnsAllOutreachEventsInReverseTimestampOrder() {
         OutreachLogService service = new OutreachLogService(
                 tempDir.resolve("outreach-log.jsonl"),

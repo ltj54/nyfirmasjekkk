@@ -157,7 +157,7 @@ export interface BrregWebsiteMatch {
 export interface OutreachStatus {
   orgNumber: string;
   sent: boolean;
-  status: "sent" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | null;
+  status: "sent" | "replied" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | null;
   companyName: string | null;
   organizationForm: string | null;
   price: number | null;

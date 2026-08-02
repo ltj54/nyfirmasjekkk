@@ -1339,6 +1339,54 @@ export function CompanyCheckShell() {
     });
   }
 
+  async function markOutreachEntryNotRelevant(entry: OutreachStatus) {
+    setSavingOutreachByOrg((current) => ({
+      ...current,
+      [entry.orgNumber]: true,
+    }));
+    setOutreachListError(null);
+
+    try {
+      const response = await fetch(`/api/company-check/${entry.orgNumber}/outreach-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyName: entry.companyName,
+          organizationForm: entry.organizationForm,
+          sent: false,
+          status: "not_relevant",
+          price: null,
+          channel: entry.channel || "email",
+          offerType: entry.offerType || "website-offer",
+          note: "Ikke aktuell fra arbeidskø og oppfølging",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to mark ${entry.orgNumber} as not relevant`);
+      }
+
+      const payload = (await response.json()) as OutreachStatus;
+      setOutreachStatusByOrg((current) => ({
+        ...current,
+        [entry.orgNumber]: payload,
+      }));
+      setOutreachEntries((current) => [payload, ...current]);
+      return true;
+    } catch (error) {
+      console.error("Failed to mark outreach entry as not relevant", error);
+      setOutreachListError("Klarte ikke markere virksomheten som ikke aktuell.");
+      return false;
+    } finally {
+      setSavingOutreachByOrg((current) => ({
+        ...current,
+        [entry.orgNumber]: false,
+      }));
+    }
+  }
+
   async function runFollowUpBatch(entries: OutreachStatus[]) {
     if (isFollowUpBatchSending || entries.length === 0) return;
     if (entries.length > MAX_FOLLOW_UP_BATCH_SIZE) {
@@ -1877,6 +1925,7 @@ export function CompanyCheckShell() {
             isLoading={isOutreachListLoading}
             isFollowUpBatchSending={isFollowUpBatchSending}
             onImportAction={(file) => void importOutreachLog(file)}
+            onMarkNotRelevantAction={markOutreachEntryNotRelevant}
             onOpenCompanyAction={(orgNumber) => void openCompanyDetails(orgNumber)}
             onRefreshAction={() => void fetchOutreachEntries()}
             onSendFollowUpBatchAction={(entries) => void runFollowUpBatch(entries)}

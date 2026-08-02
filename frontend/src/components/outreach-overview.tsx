@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Download, FileUp, Mail, RefreshCw, Settings2 } from "lucide-react";
+import { Download, FileUp, Mail, RefreshCw, Settings2, XCircle } from "lucide-react";
 
 import type { OutreachStatus } from "@/lib/company-check";
 import {
@@ -23,6 +23,7 @@ export function OutreachOverview({
   isFollowUpBatchSending,
   isLoading,
   onImportAction,
+  onMarkNotRelevantAction,
   onOpenCompanyAction,
   onRefreshAction,
   onSendFollowUpBatchAction,
@@ -34,6 +35,7 @@ export function OutreachOverview({
   isFollowUpBatchSending: boolean;
   isLoading: boolean;
   onImportAction: (file: File) => void;
+  onMarkNotRelevantAction: (entry: OutreachStatus) => Promise<boolean>;
   onOpenCompanyAction: (orgNumber: string) => void;
   onRefreshAction: () => void;
   onSendFollowUpBatchAction: (entries: OutreachStatus[]) => void;
@@ -41,13 +43,16 @@ export function OutreachOverview({
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [showAdministration, setShowAdministration] = useState(false);
   const [eventLimit, setEventLimit] = useState(20);
+  const [markingBatchByOrg, setMarkingBatchByOrg] = useState<Record<string, boolean>>({});
   const [selectedFollowUpByOrg, setSelectedFollowUpByOrg] = useState<Record<string, boolean>>({});
   const logEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
   const latestEntries = getLatestOutreachEntriesByOrg(logEntries);
   const reviewEntries = latestEntries.filter((entry) => entry.status === "reverted" || entry.status === "batch_excluded");
   const followUpEntries = getOutreachEntriesDueForFollowUp(logEntries);
   const followUpOrgNumbers = new Set(followUpEntries.map((entry) => entry.orgNumber));
-  const contactedEntries = latestEntries.filter((entry) => entry.status === "sent" && !followUpOrgNumbers.has(entry.orgNumber));
+  const contactedEntries = latestEntries.filter((entry) =>
+    entry.status === "replied" || (entry.status === "sent" && !followUpOrgNumbers.has(entry.orgNumber))
+  );
   const notRelevantEntries = latestEntries.filter((entry) => entry.status === "not_relevant");
   const followUpKey = followUpEntries.map((entry) => entry.orgNumber).join("|");
   const selectedFollowUpEntries = followUpEntries.filter((entry) => selectedFollowUpByOrg[entry.orgNumber]);
@@ -114,21 +119,39 @@ export function OutreachOverview({
             {followUpEntries.map((entry) => {
               const selected = Boolean(selectedFollowUpByOrg[entry.orgNumber]);
               const selectionLimitReached = !selected && selectedFollowUpEntries.length >= 10;
+              const isMarking = Boolean(markingBatchByOrg[entry.orgNumber]);
               return (
-                <label className="flex items-start gap-3 border border-[#D9E2EC] bg-white p-3" key={entry.orgNumber}>
-                  <span className="sr-only">Velg {entry.companyName || entry.orgNumber} for oppfølging</span>
-                  <input
-                    checked={selected}
-                    className="mt-0.5 size-4"
-                    disabled={isFollowUpBatchSending || selectionLimitReached}
-                    onChange={(event) => setSelectedFollowUpByOrg((current) => ({ ...current, [entry.orgNumber]: event.target.checked }))}
-                    type="checkbox"
-                  />
-                  <span className="min-w-0">
-                    <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
-                    <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
-                  </span>
-                </label>
+                <div className="flex items-center gap-3 border border-[#D9E2EC] bg-white p-3" key={entry.orgNumber}>
+                  <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
+                    <span className="sr-only">Velg {entry.companyName || entry.orgNumber} for oppfølging</span>
+                    <input
+                      checked={selected}
+                      className="mt-0.5 size-4"
+                      disabled={isFollowUpBatchSending || isMarking || selectionLimitReached}
+                      onChange={(event) => setSelectedFollowUpByOrg((current) => ({ ...current, [entry.orgNumber]: event.target.checked }))}
+                      type="checkbox"
+                    />
+                    <span className="min-w-0">
+                      <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
+                      <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
+                    </span>
+                  </label>
+                  <Button
+                    className="h-7 shrink-0 rounded-sm px-2 text-[11px]"
+                    disabled={isFollowUpBatchSending || isMarking}
+                    onClick={async () => {
+                      setMarkingBatchByOrg((current) => ({ ...current, [entry.orgNumber]: true }));
+                      await onMarkNotRelevantAction(entry);
+                      setMarkingBatchByOrg((current) => ({ ...current, [entry.orgNumber]: false }));
+                    }}
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  >
+                    <XCircle className="size-3.5" />
+                    {isMarking ? "Fjerner..." : "Ikke aktuell"}
+                  </Button>
+                </div>
               );
             })}
           </div>
@@ -136,9 +159,9 @@ export function OutreachOverview({
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <PipelineColumn emptyText="Ingen virksomheter til ny vurdering." entries={reviewEntries} heading="Til vurdering" onOpenCompany={onOpenCompanyAction} tone="review" />
-        <PipelineColumn emptyText="Ingen kontaktede virksomheter." entries={contactedEntries} heading="Kontaktet" onOpenCompany={onOpenCompanyAction} tone="contacted" />
-        <PipelineColumn emptyText="Ingen markert for oppfølging." entries={followUpEntries} heading="Følg opp" onOpenCompany={onOpenCompanyAction} tone="followup" />
+        <PipelineColumn emptyText="Ingen virksomheter til ny vurdering." entries={reviewEntries} heading="Til vurdering" onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="review" />
+        <PipelineColumn emptyText="Ingen kontaktede virksomheter." entries={contactedEntries} heading="Kontaktet" onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="contacted" />
+        <PipelineColumn emptyText="Ingen markert for oppfølging." entries={followUpEntries} heading="Følg opp" onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="followup" />
         <PipelineColumn emptyText="Ingen er markert som ikke aktuell." entries={notRelevantEntries} heading="Ikke aktuell" onOpenCompany={onOpenCompanyAction} tone="inactive" />
       </div>
 
@@ -205,15 +228,18 @@ function PipelineColumn({
   emptyText,
   entries,
   heading,
+  onMarkNotRelevant,
   onOpenCompany,
   tone,
 }: Readonly<{
   emptyText: string;
   entries: OutreachStatus[];
   heading: string;
+  onMarkNotRelevant?: (entry: OutreachStatus) => Promise<boolean>;
   onOpenCompany: (orgNumber: string) => void;
   tone: PipelineTone;
 }>) {
+  const [markingByOrg, setMarkingByOrg] = useState<Record<string, boolean>>({});
   const toneClass = {
     review: "border-t-amber-400",
     contacted: "border-t-emerald-500",
@@ -228,13 +254,35 @@ function PipelineColumn({
         <span className="bg-white px-2 py-0.5 text-[11px] font-semibold text-[#52606D]">{entries.length}</span>
       </div>
       <div className="space-y-2 p-3">
-        {entries.length === 0 ? <p className="px-1 py-5 text-[12px] leading-5 text-[#829AB1]">{emptyText}</p> : entries.slice(0, 12).map((entry) => (
-          <button className="block w-full border border-[#D9E2EC] bg-white p-3 text-left transition-colors hover:border-[#2F6FB2]" key={entry.orgNumber} onClick={() => onOpenCompany(entry.orgNumber)} type="button">
-            <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
-            <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
-            {entry.note ? <span className="mt-2 line-clamp-2 block text-[11px] leading-4 text-[#52606D]">{entry.note}</span> : null}
-          </button>
-        ))}
+        {entries.length === 0 ? <p className="px-1 py-5 text-[12px] leading-5 text-[#829AB1]">{emptyText}</p> : entries.slice(0, 12).map((entry) => {
+          const isMarking = Boolean(markingByOrg[entry.orgNumber]);
+          return (
+            <div className="border border-[#D9E2EC] bg-white p-3 transition-colors hover:border-[#2F6FB2]" key={entry.orgNumber}>
+              <button className="block w-full text-left" onClick={() => onOpenCompany(entry.orgNumber)} type="button">
+                <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
+                <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
+                {entry.note ? <span className="mt-2 line-clamp-2 block text-[11px] leading-4 text-[#52606D]">{entry.note}</span> : null}
+              </button>
+              {onMarkNotRelevant ? (
+                <Button
+                  className="mt-3 h-7 w-full rounded-sm text-[11px]"
+                  disabled={isMarking}
+                  onClick={async () => {
+                    setMarkingByOrg((current) => ({ ...current, [entry.orgNumber]: true }));
+                    await onMarkNotRelevant(entry);
+                    setMarkingByOrg((current) => ({ ...current, [entry.orgNumber]: false }));
+                  }}
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  <XCircle className="size-3.5" />
+                  {isMarking ? "Fjerner..." : "Ikke aktuell"}
+                </Button>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -243,6 +291,7 @@ function PipelineColumn({
 function formatPipelineStatus(entry: OutreachStatus) {
   switch (entry.status) {
     case "sent": return "Kontaktet";
+    case "replied": return "Svar mottatt";
     case "not_relevant": return "Ikke aktuell";
     case "batch_excluded": return "Batch-sperret";
     case "reverted": return "Til vurdering";

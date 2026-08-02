@@ -567,7 +567,9 @@ public class CompanyCheckController {
     }
 
     private boolean isHiddenFromSearch(OutreachStatusResponse status) {
-        return status != null && (status.sent() || "not_relevant".equalsIgnoreCase(status.status()));
+        return status != null && (status.sent()
+                || "replied".equalsIgnoreCase(status.status())
+                || "not_relevant".equalsIgnoreCase(status.status()));
     }
 
     private String extractEmailDomain(String email) {
