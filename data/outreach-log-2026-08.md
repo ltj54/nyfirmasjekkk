@@ -4,15 +4,68 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 98
-- Sendt: 42
+- Antall hendelser: 204
+- Sendt: 95
 - Angret: 0
-- Aktive kontaktede selskaper: 40
+- Aktive kontaktede selskaper: 93
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-03 | 937988338 | HOT CLUB DE FOSSEFALL AS | AS | email | website-follow-up |
+| 2026-08-03 | 937875479 | ANDERSEN RÅDGIVINGSTJENESTE OG SERVICE | ENK | email | website-follow-up |
+| 2026-08-03 | 937888333 | ANDJELA RAJKOVIC RÅDGIVNING | ENK | email | website-follow-up |
+| 2026-08-03 | 937921268 | KLEAN KODE AS | AS | email | website-follow-up |
+| 2026-08-03 | 937870965 | MEDICMIDT NORDBAKK | ENK | email | website-follow-up |
+| 2026-08-03 | 937889038 | MICHELLE FOSS DESIGN | ENK | email | website-follow-up |
+| 2026-08-03 | 937882106 | STIEN HJEM - SABINA HAALAND | ENK | email | website-follow-up |
+| 2026-08-03 | 937671040 | BEAUTY CLINIC CECILIE GOFFENG | ENK | email | website-follow-up |
+| 2026-08-03 | 937857209 | ERNTZEN LASER OG HOBBY | ENK | email | website-follow-up |
+| 2026-08-03 | 837848652 | FLORENTIN MEDRIANE FYSIOTERAPI | ENK | email | website-follow-up |
+| 2026-08-03 | 937915985 | ORKLAND DISTRIKTSFORUM | FLI | email | website-follow-up |
+| 2026-08-03 | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | website-follow-up |
+| 2026-08-03 | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | website-follow-up |
+| 2026-08-03 | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | website-follow-up |
+| 2026-08-03 | 935645743 | ROSEMARY ONOIKHUA SUNDBAKKEN NAIJA KITCHEN | ENK | email | website-follow-up |
+| 2026-08-03 | 838124712 | ADNAN SCHULLER TRANSPORT | ENK | email | website-follow-up |
+| 2026-08-03 | 938128065 | JENNIFER JOLINE SPOOR | ENK | email | website-follow-up |
+| 2026-08-03 | 838130542 | MAKHNIUK VVS & BYGG | ENK | email | website-follow-up |
+| 2026-08-03 | 938124442 | M. M. VÅGENES BYGG | ENK | email | website-follow-up |
+| 2026-08-03 | 938075387 | TRYGG RENHOLD V/ IBRAHIM | ENK | email | website-follow-up |
+| 2026-08-03 | 937469543 | GENVICO CARE | FLI | email | website-follow-up |
+| 2026-08-03 | 938128820 | METRION AS | AS | email | website-follow-up |
+| 2026-08-03 | 938060711 | MARI LARSEN PROSJEKT OG DOKUMENTASJON | ENK | email | website-follow-up |
+| 2026-08-03 | 937923570 | KIA CONNECT GMBH | NUF | email | website-follow-up |
+| 2026-08-03 | 937889933 | PADELPORTEN BERNTSEN | ENK | email | website-follow-up |
+| 2026-08-03 | 937903081 | BG MASKIN GRØNVOLD | ENK | email | website-follow-up |
+| 2026-08-03 | 936968597 | BEST SOLUTION AS | AS | email | website-follow-up |
+| 2026-08-03 | 937919999 | SAGAU FOTTERAPI | ENK | email | website-follow-up |
+| 2026-08-03 | 937880626 | SAMEIET TRONESHØYDEN | ESEK | email | website-follow-up |
+| 2026-08-03 | 937846576 | TOMASZ S GOLKIEWICZ | ENK | email | website-follow-up |
+| 2026-08-03 | 837763932 | UAB ELLA GROUP | UTLA | email | website-follow-up |
+| 2026-08-03 | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | website-follow-up |
+| 2026-08-03 | 937888449 | BALLANGRUD MASKIN & TRANSPORT | ENK | email | website-follow-up |
+| 2026-08-03 | 937770111 | RENT & PENT I OSLO OG AKERSHUS - FEHRATOVIC | ENK | email | website-follow-up |
+| 2026-08-03 | 937887159 | EMBER RESTAURANT AS | AS | email | website-follow-up |
+| 2026-08-03 | 837848342 | HUMMERHUSET AS | AS | email | website-follow-up |
+| 2026-08-03 | 937887167 | DIRGIS HOLDING AS | AS | email | website-follow-up |
+| 2026-08-03 | 938123500 | URDALEN & CO | ENK | email | website-follow-up |
+| 2026-08-03 | 938127832 | RS BYGG OG INNREDNING AS | AS | email | website-follow-up |
+| 2026-08-03 | 837942942 | CHRISTOPH GÜNDERA | ENK | email | website-follow-up |
+| 2026-08-03 | 938197776 | MELING ULL OG KLIPP | ENK | email | website-offer |
+| 2026-08-03 | 937742568 | UNISON, STAVANGER INTERNATIONAL CHOIR | FLI | email | website-offer |
+| 2026-08-03 | 938195439 | JAMAC AHMED OLAD | ENK | email | website-offer |
+| 2026-08-03 | 938197733 | MARITA POULSEN | ENK | email | website-offer |
+| 2026-08-03 | 938195498 | LOBEKK TOMT & HAGE | ENK | email | website-offer |
+| 2026-08-03 | 938174342 | TRONDHEIM FOTBALLKORTKLUBB | FLI | email | website-offer |
+| 2026-08-03 | 938197083 | STINE MALMO | ENK | email | website-offer |
+| 2026-08-03 | 938196869 | L. THRONDSEN | ENK | email | website-offer |
+| 2026-08-03 | 838195512 | HAUGEN KULTUR | ENK | email | website-offer |
+| 2026-08-03 | 938197016 | EUROFARGE GOMEZ SOLANO | ENK | email | website-offer |
+| 2026-08-03 | 938195587 | EKSTRØM ADV | ENK | email | website-offer |
+| 2026-08-03 | 938197725 | EIKER TAKMESTER, DOSHLAKU | ENK | email | website-offer |
+| 2026-08-03 | 938195420 | ANDERSEN AUTOSCAN | ENK | email | website-offer |
 | 2026-08-02 | 938028478 | T ROGNLI CONSULT | ENK | email | website-follow-up |
 | 2026-08-02 | 938131724 | RANDI RASMUSSEN VEVKJÆRRING | ENK | email | website-follow-up |
 | 2026-08-02 | 838100252 | BLACK (BERGEN LAIVE ACTION COSPLAY KLUBB) | FLI | email | website-follow-up |
@@ -58,6 +111,112 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-03 13:02 | sent | 937988338 | HOT CLUB DE FOSSEFALL AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:02 | sending | 937988338 | HOT CLUB DE FOSSEFALL AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:02 | sent | 937875479 | ANDERSEN RÅDGIVINGSTJENESTE OG SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:02 | sending | 937875479 | ANDERSEN RÅDGIVINGSTJENESTE OG SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937888333 | ANDJELA RAJKOVIC RÅDGIVNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937888333 | ANDJELA RAJKOVIC RÅDGIVNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937921268 | KLEAN KODE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937921268 | KLEAN KODE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937870965 | MEDICMIDT NORDBAKK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937870965 | MEDICMIDT NORDBAKK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937889038 | MICHELLE FOSS DESIGN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937889038 | MICHELLE FOSS DESIGN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937882106 | STIEN HJEM - SABINA HAALAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937882106 | STIEN HJEM - SABINA HAALAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937671040 | BEAUTY CLINIC CECILIE GOFFENG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937671040 | BEAUTY CLINIC CECILIE GOFFENG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 937857209 | ERNTZEN LASER OG HOBBY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 937857209 | ERNTZEN LASER OG HOBBY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:01 | sent | 837848652 | FLORENTIN MEDRIANE FYSIOTERAPI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:01 | sending | 837848652 | FLORENTIN MEDRIANE FYSIOTERAPI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 937915985 | ORKLAND DISTRIKTSFORUM | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 937915985 | ORKLAND DISTRIKTSFORUM | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 937816006 | UAB AUTOMOBIL LT NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 937850239 | WÆTHE-HAGEN GÅRD OG SKOG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 937858221 | ART BY LIZ AINA KJELLAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 935645743 | ROSEMARY ONOIKHUA SUNDBAKKEN NAIJA KITCHEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 935645743 | ROSEMARY ONOIKHUA SUNDBAKKEN NAIJA KITCHEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 838124712 | ADNAN SCHULLER TRANSPORT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 838124712 | ADNAN SCHULLER TRANSPORT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 938128065 | JENNIFER JOLINE SPOOR | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 938128065 | JENNIFER JOLINE SPOOR | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 838130542 | MAKHNIUK VVS & BYGG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 838130542 | MAKHNIUK VVS & BYGG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 13:00 | sent | 938124442 | M. M. VÅGENES BYGG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 13:00 | sending | 938124442 | M. M. VÅGENES BYGG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:59 | sent | 938075387 | TRYGG RENHOLD V/ IBRAHIM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:59 | sending | 938075387 | TRYGG RENHOLD V/ IBRAHIM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:57 | sent | 937469543 | GENVICO CARE | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:57 | sending | 937469543 | GENVICO CARE | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:57 | sent | 938128820 | METRION AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:57 | sending | 938128820 | METRION AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:57 | sent | 938060711 | MARI LARSEN PROSJEKT OG DOKUMENTASJON | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:57 | sending | 938060711 | MARI LARSEN PROSJEKT OG DOKUMENTASJON | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:57 | sent | 937923570 | KIA CONNECT GMBH | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:57 | sending | 937923570 | KIA CONNECT GMBH | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:56 | sent | 937889933 | PADELPORTEN BERNTSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:56 | sending | 937889933 | PADELPORTEN BERNTSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:56 | sent | 937903081 | BG MASKIN GRØNVOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:56 | sending | 937903081 | BG MASKIN GRØNVOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:56 | sent | 936968597 | BEST SOLUTION AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:56 | sending | 936968597 | BEST SOLUTION AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:56 | sent | 937919999 | SAGAU FOTTERAPI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:56 | sending | 937919999 | SAGAU FOTTERAPI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:56 | sent | 937880626 | SAMEIET TRONESHØYDEN | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:56 | sending | 937880626 | SAMEIET TRONESHØYDEN | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:56 | sent | 937846576 | TOMASZ S GOLKIEWICZ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:56 | sending | 937846576 | TOMASZ S GOLKIEWICZ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:55 | sent | 837763932 | UAB ELLA GROUP | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:55 | sending | 837763932 | UAB ELLA GROUP | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:55 | sent | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:55 | sending | 937279426 | BLUEFIN TUNA SWEDEN AB NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:55 | sent | 937888449 | BALLANGRUD MASKIN & TRANSPORT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:55 | sending | 937888449 | BALLANGRUD MASKIN & TRANSPORT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:55 | sent | 937770111 | RENT & PENT I OSLO OG AKERSHUS - FEHRATOVIC | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:55 | sending | 937770111 | RENT & PENT I OSLO OG AKERSHUS - FEHRATOVIC | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:54 | sent | 937887159 | EMBER RESTAURANT AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:54 | sending | 937887159 | EMBER RESTAURANT AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:54 | sent | 837848342 | HUMMERHUSET AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:54 | sending | 837848342 | HUMMERHUSET AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:54 | sent | 937887167 | DIRGIS HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:54 | sending | 937887167 | DIRGIS HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:54 | sent | 938123500 | URDALEN & CO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:54 | sending | 938123500 | URDALEN & CO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:54 | sent | 938127832 | RS BYGG OG INNREDNING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:54 | sending | 938127832 | RS BYGG OG INNREDNING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:54 | sent | 837942942 | CHRISTOPH GÜNDERA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-03 12:54 | sending | 837942942 | CHRISTOPH GÜNDERA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938197776 | MELING ULL OG KLIPP | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938197776 | MELING ULL OG KLIPP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 937742568 | UNISON, STAVANGER INTERNATIONAL CHOIR | FLI | email | - |
+| 2026-08-03 12:53 | sending | 937742568 | UNISON, STAVANGER INTERNATIONAL CHOIR | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938195439 | JAMAC AHMED OLAD | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938195439 | JAMAC AHMED OLAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938197733 | MARITA POULSEN | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938197733 | MARITA POULSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938195498 | LOBEKK TOMT & HAGE | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938195498 | LOBEKK TOMT & HAGE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938174342 | TRONDHEIM FOTBALLKORTKLUBB | FLI | email | - |
+| 2026-08-03 12:53 | sending | 938174342 | TRONDHEIM FOTBALLKORTKLUBB | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938197083 | STINE MALMO | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938197083 | STINE MALMO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938196869 | L. THRONDSEN | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938196869 | L. THRONDSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 838195512 | HAUGEN KULTUR | ENK | email | - |
+| 2026-08-03 12:53 | sending | 838195512 | HAUGEN KULTUR | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938197016 | EUROFARGE GOMEZ SOLANO | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938197016 | EUROFARGE GOMEZ SOLANO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938195587 | EKSTRØM ADV | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938195587 | EKSTRØM ADV | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938197725 | EIKER TAKMESTER, DOSHLAKU | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938197725 | EIKER TAKMESTER, DOSHLAKU | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-03 12:53 | sent | 938195420 | ANDERSEN AUTOSCAN | ENK | email | - |
+| 2026-08-03 12:53 | sending | 938195420 | ANDERSEN AUTOSCAN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-03 12:46 | replied | 938159432 | YELDA MOUBAREZ RETT OG RÅD | ENK | email | Svar mottatt 2026-08-02: Ber om tid til å svare på spørsmålene. Avventer hennes svar; ingen automatisk oppfølging. |
 | 2026-08-03 12:45 | replied | 938148694 | INGRID QIULI LARSEN | ENK | email | Svar mottatt 2026-08-03: Takket nei for nå etter å ha mottatt tekstbasert skisse. |
 | 2026-08-03 12:42 | replied | 937689527 | FARAASEN MULTISERVICE | ENK | email | Svar mottatt 2026-08-02: Ikke interessert nå; tar selv kontakt ved eventuell senere interesse. |

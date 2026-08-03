@@ -195,7 +195,7 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
-const EMAIL_BATCH_SEND_DELAY_MS = 2_000;
+const EMAIL_BATCH_SEND_DELAY_MS = 1_000;
 const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
 const MAX_FOLLOW_UP_BATCH_SIZE = 10;
 type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "batch_excluded";
@@ -1365,7 +1365,9 @@ export function CompanyCheckShell() {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to mark ${entry.orgNumber} as not relevant`);
+        console.error(`Failed to mark ${entry.orgNumber} as not relevant: HTTP ${response.status}`);
+        setOutreachListError("Klarte ikke markere virksomheten som ikke aktuell.");
+        return false;
       }
 
       const payload = (await response.json()) as OutreachStatus;
@@ -1393,7 +1395,8 @@ export function CompanyCheckShell() {
       window.alert(`Velg maks ${MAX_FOLLOW_UP_BATCH_SIZE} virksomheter per oppfølgingsbatch.`);
       return;
     }
-    if (!window.confirm(`Sender én oppfølgingsmail til ${entries.length} virksomheter med 2 sekunders pause mellom hver. Fortsette?`)) {
+    const delaySeconds = Math.round(EMAIL_BATCH_SEND_DELAY_MS / 1000);
+    if (!window.confirm(`Sender én oppfølgingsmail til ${entries.length} virksomheter med ${delaySeconds} sekunds pause mellom hver. Fortsette?`)) {
       return;
     }
 
