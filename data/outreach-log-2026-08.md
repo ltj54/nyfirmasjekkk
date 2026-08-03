@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 94
+- Antall hendelser: 98
 - Sendt: 42
 - Angret: 0
-- Aktive kontaktede selskaper: 42
+- Aktive kontaktede selskaper: 40
 
 ## Aktive kontaktede selskaper
 
@@ -36,8 +36,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-02 | 937881703 | DRONNINGENS GATE 48 BODØ AS | AS | email | website-follow-up |
 | 2026-08-02 | 937800444 | BRREG QUALITY CREW | FLI | email | website-follow-up |
 | 2026-08-02 | 937685416 | GRAND CAR CARE SWEDEN AB | UTLA | email | website-follow-up |
-| 2026-08-02 | 937689527 | FARAASEN MULTISERVICE | ENK | email | website-follow-up |
-| 2026-08-02 | 937664508 | YSTAD RAFFERTY STUDIOS | ENK | email | website-follow-up |
 | 2026-08-02 | 937642695 | IRISH HOMES II AS | AS | email | website-follow-up |
 | 2026-08-02 | 937679971 | ADRIAN-HOLDING II AS | AS | email | website-follow-up |
 | 2026-08-02 | 937754663 | UNGE KONSERVATIVE TRØNDELAG | FLI | email | website-follow-up |
@@ -60,6 +58,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-03 12:46 | replied | 938159432 | YELDA MOUBAREZ RETT OG RÅD | ENK | email | Svar mottatt 2026-08-02: Ber om tid til å svare på spørsmålene. Avventer hennes svar; ingen automatisk oppfølging. |
+| 2026-08-03 12:45 | replied | 938148694 | INGRID QIULI LARSEN | ENK | email | Svar mottatt 2026-08-03: Takket nei for nå etter å ha mottatt tekstbasert skisse. |
+| 2026-08-03 12:42 | replied | 937689527 | FARAASEN MULTISERVICE | ENK | email | Svar mottatt 2026-08-02: Ikke interessert nå; tar selv kontakt ved eventuell senere interesse. |
+| 2026-08-03 12:41 | replied | 937664508 | YSTAD RAFFERTY STUDIOS | ENK | email | Svar mottatt 2026-08-02: Har allerede nettside. |
 | 2026-08-02 18:17 | sent | 938028478 | T ROGNLI CONSULT | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-02 18:17 | sending | 938028478 | T ROGNLI CONSULT | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-02 18:17 | sent | 938131724 | RANDI RASMUSSEN VEVKJÆRRING | ENK | email | Oppfølging sendt – avslutt hvis stille |
