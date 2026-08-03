@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 final class WebsiteCandidateGenerator {
     private static final String HTTPS_PREFIX = "https://";
+    private static final String SERVICE_SUFFIX = "service";
     private static final Set<String> COMPANY_FORM_WORDS = Set.of("as", "enk", "nuf", "sa", "fli", "da", "ans");
     private static final Set<String> TRAILING_QUALIFIERS = Set.of(
             "ny", "drift", "holding", "holdings", "eiendom", "eiendommer", "invest",
@@ -21,11 +22,11 @@ final class WebsiteCandidateGenerator {
             "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"
     );
     private static final Map<String, String> COMPOUND_SUFFIX_REPLACEMENTS = Map.of(
-            "vedlikeholdsservice", "service",
-            "renholdsservice", "service",
-            "batservice", "service",
-            "byggservice", "service",
-            "vaktmesterservice", "service"
+            "vedlikeholdsservice", SERVICE_SUFFIX,
+            "renholdsservice", SERVICE_SUFFIX,
+            "batservice", SERVICE_SUFFIX,
+            "byggservice", SERVICE_SUFFIX,
+            "vaktmesterservice", SERVICE_SUFFIX
     );
     private static final Pattern NON_ALPHANUMERIC_SPACE_PATTERN = Pattern.compile("[^a-z0-9 ]");
 

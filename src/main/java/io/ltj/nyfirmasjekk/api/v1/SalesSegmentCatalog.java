@@ -2,6 +2,7 @@ package io.ltj.nyfirmasjekk.api.v1;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public final class SalesSegmentCatalog {
     private static final SalesSegment HANDVERK = new SalesSegment(
@@ -101,6 +102,20 @@ public final class SalesSegmentCatalog {
     private static final Set<String> PERSONLIG_CODES = Set.of("96.010", "96.020", "96.030", "96.090");
     private static final Set<String> KONSULENT_CODES = Set.of("70.220", "71.111", "71.112", "71.121", "71.129", "74.200", "74.300", "74.900");
     private static final List<String> DEPRIORITIZED_PREFIXES = List.of("01", "02", "03", "46", "64", "65", "66", "84", "97", "98", "99");
+    private static final List<NaceRule> NACE_RULES = List.of(
+            new NaceRule(code -> code.startsWith("94"), FORENING_KLUBB),
+            new NaceRule(code -> HANDVERK_CODES.contains(code) || startsWithAny(code, "41", "42", "43"), HANDVERK),
+            new NaceRule(code -> code.equals("81.300") || code.startsWith("81.3"), HAGE_OG_GRONTANLEGG),
+            new NaceRule(code -> RENHOLD_CODES.contains(code) || code.startsWith("81"), RENHOLD_OG_DRIFT),
+            new NaceRule(code -> "96.040".equals(code) || startsWithAny(code, "86", "88"), HELSE_VELVAERE),
+            new NaceRule(code -> PERSONLIG_CODES.contains(code) || code.startsWith("96"), PERSONLIG_TJENESTE),
+            new NaceRule(code -> KONSULENT_CODES.contains(code) || startsWithAny(code, "62", "63", "69", "70", "71", "72", "74"), KONSULENT),
+            new NaceRule(code -> code.startsWith("56"), MAT_SERVERING),
+            new NaceRule(code -> code.startsWith("47"), BUTIKK_LOKALHANDEL),
+            new NaceRule(code -> startsWithAny(code, "49", "52", "53"), TRANSPORT),
+            new NaceRule(code -> code.startsWith("68"), EIENDOM),
+            new NaceRule(code -> DEPRIORITIZED_PREFIXES.stream().anyMatch(code::startsWith), IKKE_PRIORITERT)
+    );
 
     private SalesSegmentCatalog() {
     }
@@ -110,43 +125,11 @@ public final class SalesSegmentCatalog {
         if (code == null) {
             return ANNET;
         }
-        if (code.startsWith("94")) {
-            return FORENING_KLUBB;
-        }
-        if (HANDVERK_CODES.contains(code) || startsWithAny(code, "41", "42", "43")) {
-            return HANDVERK;
-        }
-        if (code.equals("81.300") || code.startsWith("81.3")) {
-            return HAGE_OG_GRONTANLEGG;
-        }
-        if (RENHOLD_CODES.contains(code) || code.startsWith("81")) {
-            return RENHOLD_OG_DRIFT;
-        }
-        if ("96.040".equals(code) || code.startsWith("86") || code.startsWith("88")) {
-            return HELSE_VELVAERE;
-        }
-        if (PERSONLIG_CODES.contains(code) || code.startsWith("96")) {
-            return PERSONLIG_TJENESTE;
-        }
-        if (KONSULENT_CODES.contains(code) || startsWithAny(code, "62", "63", "69", "70", "71", "72", "74")) {
-            return KONSULENT;
-        }
-        if (code.startsWith("56")) {
-            return MAT_SERVERING;
-        }
-        if (code.startsWith("47")) {
-            return BUTIKK_LOKALHANDEL;
-        }
-        if (startsWithAny(code, "49", "52", "53")) {
-            return TRANSPORT;
-        }
-        if (code.startsWith("68")) {
-            return EIENDOM;
-        }
-        if (DEPRIORITIZED_PREFIXES.stream().anyMatch(code::startsWith)) {
-            return IKKE_PRIORITERT;
-        }
-        return ANNET;
+        return NACE_RULES.stream()
+                .filter(rule -> rule.matches(code))
+                .map(NaceRule::segment)
+                .findFirst()
+                .orElse(ANNET);
     }
 
     private static boolean startsWithAny(String code, String... prefixes) {
@@ -173,5 +156,11 @@ public final class SalesSegmentCatalog {
             return digits.substring(0, 2) + "." + digits.substring(2, 4);
         }
         return digits.substring(0, 2);
+    }
+
+    private record NaceRule(Predicate<String> predicate, SalesSegment segment) {
+        private boolean matches(String code) {
+            return predicate.test(code);
+        }
     }
 }

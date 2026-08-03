@@ -31,6 +31,9 @@ import java.util.stream.Stream;
 import java.util.regex.Pattern;
 
 @Component
+// This boundary intentionally assembles the public API projection from several domain models.
+// Splitting it only to satisfy a one-dependency threshold would scatter the mapping contract.
+@SuppressWarnings("java:S6539")
 public class CompanyApiV1Mapper {
     private static final String SERVICE_SUFFIX = "service";
     private static final String HTTPS_PREFIX = "https://";
@@ -128,10 +131,9 @@ public class CompanyApiV1Mapper {
     private static final String ROLE_DAGLIG_LEDER = "DAGLIG_LEDER";
     private static final String ROLE_STYRELEDER = "STYRELEDER";
     private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,63}\\b", Pattern.CASE_INSENSITIVE);
-    private static final Pattern PHONE_PATTERN = Pattern.compile("(?:\\+47\\s*+)?(?:\\d[\\s-]?+){7}\\d");
-    private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*(20\\d{2})");
-    private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]{1,2048}\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern FOREIGN_ORGANIZATION_NUMBER_PATTERN = Pattern.compile("\\b(?:\\d{6}\\s\\d{4}|se\\d{10,12})\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*+(20\\d{2})");
+    private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]{1,2048}+\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FOREIGN_ORGANIZATION_NUMBER_PATTERN = Pattern.compile("\\b(?:\\d{6}\\s++\\d{4}|se\\d{10,12})\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern NON_ALPHANUMERIC_SPACE_PATTERN = Pattern.compile("[^a-z0-9 ]");
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
     private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
@@ -581,7 +583,6 @@ public class CompanyApiV1Mapper {
             ));
             return contentUnreadableAssessment(signals);
         }
-
         addContentQualitySignals(signals, snapshot);
         addSharePreviewSignal(signals, snapshot);
         addStructuredDataSignal(signals, snapshot);
@@ -675,7 +676,6 @@ public class CompanyApiV1Mapper {
             ));
             return new WebsiteInspectionResponse(rawUrl, website, contentUnreadableAssessment(signals), List.of());
         }
-
         addContentQualitySignals(signals, snapshot);
         addSharePreviewSignal(signals, snapshot);
         addStructuredDataSignal(signals, snapshot);
@@ -782,29 +782,46 @@ public class CompanyApiV1Mapper {
                 "snapshot must be present when summarizing website quality"
         );
         if (WEBSITE_STATUS_OK.equals(status)) {
-            if (hasConfirmedMinorWebsiteSignals(signals)) {
-                return "Nettsiden fremstår i hovedsak god og gir tydelig informasjon om virksomheten. Analysen fant enkelte mulige forbedringer innen metadata og universell utforming som bør kontrolleres manuelt.";
-            }
-            if (hasOnlyTechnicalHardeningSignals(signals)) {
-                return "Nettsiden fremstår i hovedsak grei. Analysen fant tekniske hardening- og konfigurasjonspunkter som kan vurderes ved en teknisk gjennomgang, men som ikke alene sier at siden er svak for vanlige besøkende.";
-            }
-            return fallback;
+            return okWebsiteQualitySummary(signals, fallback);
         }
         if (hasSignal(signals, "PUBLIC_SECTOR_CONTEXT")) {
             return "Siden fremstår som et offentlig eller stort etablert tjenestenettsted. Funnene bør brukes som teknisk/UU-revisjon, ikke som vanlig salgs- eller småbedriftsvurdering.";
         }
-        boolean ecommerce = isEffectiveEcommerceWebsite(requiredSnapshot);
-        if (ecommerce) {
-            if (hasSignal(signals, SIGNAL_INCOMPLETE_MARKET_OR_CHECKOUT)) {
-                return "Siden fremstår som en aktiv nettbutikk, men analysen fant tegn på uferdig markedstilpasning eller checkout. Det bør sjekkes før kundedialog.";
-            }
-            return "Siden fremstår som en aktiv nettbutikk, ikke en tom eller svak side. Muligheten ligger i tydeligere tillit, tilgjengelighet, personvern, kjøpsinformasjon og teknisk kvalitet.";
+        String contextualSummary = contextualWebsiteQualitySummary(signals, requiredSnapshot);
+        if (contextualSummary != null) {
+            return contextualSummary;
+        }
+        return generalWebsiteQualitySummary(signals, fallback);
+    }
+
+    private String okWebsiteQualitySummary(List<WebsiteQualitySignal> signals, String fallback) {
+        if (hasConfirmedMinorWebsiteSignals(signals)) {
+            return "Nettsiden fremstår i hovedsak god og gir tydelig informasjon om virksomheten. Analysen fant enkelte mulige forbedringer innen metadata og universell utforming som bør kontrolleres manuelt.";
+        }
+        if (hasOnlyTechnicalHardeningSignals(signals)) {
+            return "Nettsiden fremstår i hovedsak grei. Analysen fant tekniske hardening- og konfigurasjonspunkter som kan vurderes ved en teknisk gjennomgang, men som ikke alene sier at siden er svak for vanlige besøkende.";
+        }
+        return fallback;
+    }
+
+    private String contextualWebsiteQualitySummary(
+            List<WebsiteQualitySignal> signals,
+            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot
+    ) {
+        if (isEffectiveEcommerceWebsite(snapshot)) {
+            return hasSignal(signals, SIGNAL_INCOMPLETE_MARKET_OR_CHECKOUT)
+                    ? "Siden fremstår som en aktiv nettbutikk, men analysen fant tegn på uferdig markedstilpasning eller checkout. Det bør sjekkes før kundedialog."
+                    : "Siden fremstår som en aktiv nettbutikk, ikke en tom eller svak side. Muligheten ligger i tydeligere tillit, tilgjengelighet, personvern, kjøpsinformasjon og teknisk kvalitet.";
         }
         if (hasSignal(signals, SIGNAL_SENSITIVE_HEALTH_CONTEXT)
                 || hasSignal(signals, "MEDICAL_REGULATORY_STATUS")
                 || hasSignal(signals, "MEDICAL_REGULATORY_CONTEXT_MISSING")) {
             return "Siden berører et mer tillitsbasert eller sensitivt fagområde. Personvern, skjema, dokumentasjon og tilgjengelighet bør vurderes ekstra nøye.";
         }
+        return null;
+    }
+
+    private String generalWebsiteQualitySummary(List<WebsiteQualitySignal> signals, String fallback) {
         if (hasSignal(signals, SIGNAL_AI_LIKE_PRESENTATION_RISK)) {
             return "Nettsiden svarer, men førsteinntrykket kan virke AI-lignende eller mønsterpreget. Mer konkret innhold, ekte virksomhetsspesifikke detaljer og tydelige tillitssignaler bør vurderes.";
         }
@@ -1209,7 +1226,7 @@ public class CompanyApiV1Mapper {
     private void addContactQualitySignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
         String text = (visibleWebsiteText(snapshot) + " " + (snapshot.html() == null ? "" : snapshot.html())).toLowerCase(Locale.ROOT);
         boolean hasEmail = EMAIL_PATTERN.matcher(text).find();
-        boolean hasPhone = PHONE_PATTERN.matcher(text).find();
+        boolean hasPhone = containsPhoneNumber(text);
         boolean hasContactWords = text.contains("kontakt") || text.contains("contact") || text.contains("ring oss") || text.contains("send e-post");
         if (!hasEmail && !hasPhone && !hasContactWords && (hasText(enhet.epostadresse()) || hasText(enhet.telefon()) || hasText(enhet.mobil()))) {
             signals.add(new WebsiteQualitySignal(
@@ -1241,7 +1258,7 @@ public class CompanyApiV1Mapper {
         if (isEffectiveEcommerceWebsite(snapshot)) {
             return;
         }
-        String location = firstNonBlank(enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().kommune(), enhet.forretningsadresse() == null ? null : enhet.forretningsadresse().fylke());
+        String location = businessLocation(enhet);
         if (!hasText(location)) {
             return;
         }
@@ -1274,6 +1291,14 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    private String businessLocation(EnhetResponse enhet) {
+        EnhetResponse.Adresse address = enhet.forretningsadresse();
+        if (address == null) {
+            return null;
+        }
+        return firstNonBlank(address.kommune(), address.fylke());
+    }
+
     private void addServiceDescriptionSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
         String bodyText = normalizeForWebsiteQuality(visibleWebsiteText(snapshot));
         if (!hasText(bodyText)) {
@@ -1297,6 +1322,17 @@ public class CompanyApiV1Mapper {
 
     private void addTrustSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, CompanyCheck companyCheck, EnhetResponse enhet) {
         String text = normalizeForWebsiteQuality(visibleWebsiteText(snapshot) + " " + (snapshot.html() == null ? "" : snapshot.html()));
+        addLegalIdentitySignals(signals, snapshot, companyCheck, enhet, text);
+        addAddressTrustSignal(signals, snapshot, enhet, text);
+    }
+
+    private void addLegalIdentitySignals(
+            List<WebsiteQualitySignal> signals,
+            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
+            CompanyCheck companyCheck,
+            EnhetResponse enhet,
+            String text
+    ) {
         String orgNumber = companyCheck.organisasjonsnummer();
         if (hasText(orgNumber) && !hasVisibleOrganizationIdentifier(text, orgNumber, companyCheck, enhet)) {
             signals.add(new WebsiteQualitySignal(
@@ -1318,6 +1354,14 @@ public class CompanyApiV1Mapper {
                     "INFO"
             ));
         }
+    }
+
+    private void addAddressTrustSignal(
+            List<WebsiteQualitySignal> signals,
+            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
+            EnhetResponse enhet,
+            String text
+    ) {
         String businessAddress = addressText(enhet.forretningsadresse());
         String postalAddress = addressText(enhet.postadresse());
         if (!hasText(businessAddress) && !hasText(postalAddress)) {
@@ -1344,6 +1388,8 @@ public class CompanyApiV1Mapper {
                 || addressTokens(enhet.postadresse()).stream().anyMatch(normalizedText::contains);
     }
 
+    // Flat rule collector: each branch contributes an independent, auditable signal.
+    @SuppressWarnings({"java:S3776", "PMD.CognitiveComplexity"})
     private void addCommercialTrustSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
         String rawHtml = snapshot.html() == null ? "" : snapshot.html();
         String rawBody = visibleWebsiteText(snapshot);
@@ -1459,7 +1505,7 @@ public class CompanyApiV1Mapper {
             ));
         }
 
-        if ((hasText(enhet.telefon()) || hasText(enhet.mobil())) && PHONE_PATTERN.matcher(rawBody + " " + rawHtml).find() && !rawHtml.toLowerCase(Locale.ROOT).contains("tel:")) {
+        if ((hasText(enhet.telefon()) || hasText(enhet.mobil())) && containsPhoneNumber(rawBody + " " + rawHtml) && !rawHtml.toLowerCase(Locale.ROOT).contains("tel:")) {
             signals.add(new WebsiteQualitySignal(
                     "PHONE_NOT_CLICKABLE",
                     "Telefon er ikke klikkbar",
@@ -1562,11 +1608,23 @@ public class CompanyApiV1Mapper {
             WebsiteContentInspectionService.WebsiteContentSnapshot snapshot,
             boolean stricterContext
     ) {
-        if (signals.stream().anyMatch(signal -> SIGNAL_GENERIC_PRESENTATION_TRUST_RISK.equals(signal.code())
-                || SIGNAL_AI_LIKE_PRESENTATION_RISK.equals(signal.code()))) {
+        if (hasPresentationTrustSignal(signals)) {
             return;
         }
+        PresentationAssessment assessment = presentationAssessment(snapshot);
+        if (!assessment.hasFinding()) {
+            return;
+        }
+        addTextPresentationSignal(signals, assessment, stricterContext);
+        addVisualPresentationSignal(signals, assessment, stricterContext);
+    }
 
+    private boolean hasPresentationTrustSignal(List<WebsiteQualitySignal> signals) {
+        return signals.stream().anyMatch(signal -> SIGNAL_GENERIC_PRESENTATION_TRUST_RISK.equals(signal.code())
+                || SIGNAL_AI_LIKE_PRESENTATION_RISK.equals(signal.code()));
+    }
+
+    private PresentationAssessment presentationAssessment(WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         String rawHtml = snapshot.html() == null ? "" : snapshot.html();
         String combinedText = visibleWebsiteText(snapshot);
         String bodyText = normalizeForWebsiteQuality(combinedText);
@@ -1591,18 +1649,22 @@ public class CompanyApiV1Mapper {
         boolean textLooksGeneric = (genericWords >= 4 || genericPhrases >= 4) && (!hasAbout || !hasSocialProof);
         boolean visualLooksGeneric = (hasGenericImageSource || imageAssetCount >= 18) && !hasSocialProof;
         boolean textLooksAiLike = aiLikePhrases >= 4 && (genericWords >= 4 || genericPhrases >= 3) && (!hasAbout || !hasSocialProof);
-        if (!textLooksGeneric && !visualLooksGeneric && !textLooksAiLike) {
-            return;
-        }
+        return new PresentationAssessment(textLooksGeneric, visualLooksGeneric, textLooksAiLike);
+    }
 
-        if (textLooksAiLike) {
+    private void addTextPresentationSignal(
+            List<WebsiteQualitySignal> signals,
+            PresentationAssessment assessment,
+            boolean stricterContext
+    ) {
+        if (assessment.textLooksAiLike()) {
             signals.add(new WebsiteQualitySignal(
                     SIGNAL_AI_LIKE_PRESENTATION_RISK,
                     "Mulig AI-lignende eller mønsterpreget tekst",
                     "Teksten har mange brede, mønsterpregede formuleringer og lite konkret virksomhetsspesifikt innhold. Det er ikke et bevis på AI-bruk, men et signal om at teksten bør vurderes manuelt.",
                     stricterContext ? CONFIDENCE_MEDIUM : "INFO"
             ));
-        } else if (textLooksGeneric) {
+        } else if (assessment.textLooksGeneric()) {
             signals.add(new WebsiteQualitySignal(
                     SIGNAL_GENERIC_PRESENTATION_TRUST_RISK,
                     "Mulig generisk uttrykk",
@@ -1610,13 +1672,30 @@ public class CompanyApiV1Mapper {
                     stricterContext ? CONFIDENCE_MEDIUM : "INFO"
             ));
         }
-        if (visualLooksGeneric) {
+    }
+
+    private void addVisualPresentationSignal(
+            List<WebsiteQualitySignal> signals,
+            PresentationAssessment assessment,
+            boolean stricterContext
+    ) {
+        if (assessment.visualLooksGeneric()) {
             signals.add(new WebsiteQualitySignal(
                     SIGNAL_GENERIC_OR_AI_IMAGE_RISK,
                     "Mulig generisk bildebruk",
                     "Bildespor peker mot stock-, AI- eller generiske visualiseringer. Det er ikke nødvendigvis feil, men kan svekke tillit hvis bildene ikke tydelig viser virksomheten, produktet eller arbeidet.",
                     stricterContext ? CONFIDENCE_MEDIUM : "INFO"
             ));
+        }
+    }
+
+    private record PresentationAssessment(
+            boolean textLooksGeneric,
+            boolean visualLooksGeneric,
+            boolean textLooksAiLike
+    ) {
+        private boolean hasFinding() {
+            return textLooksGeneric || visualLooksGeneric || textLooksAiLike;
         }
     }
 
@@ -1794,6 +1873,8 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    // Flat rule collector: keeping the accessibility checks together makes the audit surface explicit.
+    @SuppressWarnings({"java:S3776", "PMD.CognitiveComplexity"})
     private void addAccessibilitySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (snapshot.accessibilityViolationCount() != null && snapshot.accessibilityRequirementCount() != null) {
             signals.add(new WebsiteQualitySignal(
@@ -1940,6 +2021,8 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    // Flat rule collector: security findings are independent and deliberately evaluated in one pass.
+    @SuppressWarnings({"java:S3776", "PMD.CognitiveComplexity"})
     private void addSecuritySignals(List<WebsiteQualitySignal> signals, String website, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!website.startsWith(HTTPS_PREFIX) && (snapshot.finalUrl() == null || !snapshot.finalUrl().startsWith(HTTPS_PREFIX))) {
             signals.add(new WebsiteQualitySignal(
@@ -2089,13 +2172,7 @@ public class CompanyApiV1Mapper {
             signals.add(new WebsiteQualitySignal(
                     "EMAIL_SECURITY_DNS_REVIEW",
                     "E-postsikkerhet i DNS bør sjekkes",
-                    (!snapshot.spfRecord() && !snapshot.dkimRecord() && !snapshot.dmarcRecord()
-                            ? "Vi fant ikke tydelige SPF-, DKIM- eller DMARC-spor"
-                            : !snapshot.spfRecord()
-                            ? "Vi fant ikke tydelig SPF-spor"
-                            : !snapshot.dkimRecord()
-                            ? "Vi fant ikke tydelig DKIM-spor med vanlige selector-navn"
-                            : "Vi fant ikke tydelig DMARC-spor")
+                    missingEmailSecurityDnsText(snapshot)
                             + " for domenet. Dette bør vurderes for å redusere risiko for spoofing og spamproblemer.",
                     "INFO"
             ));
@@ -2278,6 +2355,19 @@ public class CompanyApiV1Mapper {
         addSecurityHeaderSignals(signals, snapshot);
     }
 
+    private String missingEmailSecurityDnsText(WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
+        if (!snapshot.spfRecord() && !snapshot.dkimRecord() && !snapshot.dmarcRecord()) {
+            return "Vi fant ikke tydelige SPF-, DKIM- eller DMARC-spor";
+        }
+        if (!snapshot.spfRecord()) {
+            return "Vi fant ikke tydelig SPF-spor";
+        }
+        if (!snapshot.dkimRecord()) {
+            return "Vi fant ikke tydelig DKIM-spor med vanlige selector-navn";
+        }
+        return "Vi fant ikke tydelig DMARC-spor";
+    }
+
     private void addSecurityHeaderSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         if (!snapshot.hstsHeader()) {
             signals.add(new WebsiteQualitySignal(
@@ -2329,6 +2419,8 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    // Flat rule collector: privacy checks share one normalized snapshot and produce independent findings.
+    @SuppressWarnings({"java:S3776", "PMD.CognitiveComplexity"})
     private void addPrivacySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         String text = normalizeForWebsiteQuality((snapshot.bodyText() == null ? "" : snapshot.bodyText()) + " " + (snapshot.html() == null ? "" : snapshot.html()));
         boolean hasContactForm = snapshot.formControlCount() > 0 || text.contains("send melding") || text.contains("kontakt oss");
@@ -2869,6 +2961,22 @@ public class CompanyApiV1Mapper {
         return value != null && !value.isBlank();
     }
 
+    private boolean containsPhoneNumber(String text) {
+        int consecutiveDigits = 0;
+        for (int index = 0; index < text.length(); index++) {
+            char character = text.charAt(index);
+            if (Character.isDigit(character)) {
+                consecutiveDigits++;
+                if (consecutiveDigits >= 8) {
+                    return true;
+                }
+            } else if (character != ' ' && character != '-') {
+                consecutiveDigits = 0;
+            }
+        }
+        return false;
+    }
+
     private List<ScoreEvidence> scoreEvidence(CompanyCheck companyCheck, EnhetResponse enhet, List<CompanyEvent> events) {
         Map<String, ScoreEvidence> evidence = new LinkedHashMap<>();
 
@@ -2940,6 +3048,8 @@ public class CompanyApiV1Mapper {
         }
     }
 
+    // Flat domain rule collector: every branch adds a separately named structure signal.
+    @SuppressWarnings({"java:S3776", "PMD.CognitiveComplexity"})
     private List<StructureSignal> structureSignals(
             CompanyCheck companyCheck,
             EnhetResponse enhet,

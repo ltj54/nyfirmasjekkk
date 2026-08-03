@@ -20,6 +20,100 @@ public class CompanyRiskScoringService {
 
     TrafficLight determineStatus(
             EnhetResponse enhet,
+            RiskEvaluation evaluation
+    ) {
+        int score = calculateScore(enhet, evaluation);
+        if (evaluation.bankruptcy() || evaluation.forcedDissolution() || evaluation.actorRisk().riskLevel() == TrafficLight.RED) {
+            return TrafficLight.RED;
+        }
+        if (evaluation.voluntaryDissolution() && !evaluation.hasFissionOrMerger() && !evaluation.veryNew()) {
+            return TrafficLight.RED;
+        }
+        if (isCentralOrganizationForm(enhet) && !evaluation.hasRoles() && !evaluation.veryNew()) {
+            return TrafficLight.RED;
+        }
+        if (evaluation.veryNew() && hasThinData(enhet, evaluation.hasRoles())) {
+            return TrafficLight.YELLOW;
+        }
+        if (!hasMinimumPositiveStructure(enhet, evaluation.hasRoles())) {
+            return TrafficLight.YELLOW;
+        }
+        if (score < 80 || evaluation.actorRisk().riskLevel() == TrafficLight.YELLOW) {
+            return TrafficLight.YELLOW;
+        }
+        return TrafficLight.GREEN;
+    }
+
+    int calculateScore(
+            EnhetResponse enhet,
+            RiskEvaluation evaluation
+    ) {
+        int score = 100;
+        score += OrganizationFormCatalog.scoreAdjustment(evaluation.organizationFormCode());
+        score += riskScoreAdjustment(enhet, evaluation);
+        score += maturityScoreAdjustment(enhet);
+        score += lifecycleScoreAdjustment(evaluation);
+        if (shouldApplyNewCompanyFloor(enhet, evaluation, score)) {
+            score = 55;
+        }
+        return Math.clamp(score, 0, 100);
+    }
+
+    private int riskScoreAdjustment(EnhetResponse enhet, RiskEvaluation evaluation) {
+        int adjustment = 0;
+        if (evaluation.bankruptcy()) {
+            adjustment -= 70;
+        }
+        if (evaluation.forcedDissolution()) {
+            adjustment -= 60;
+        }
+        if (isCentralOrganizationForm(enhet) && !evaluation.hasRoles()) {
+            adjustment -= 50;
+        }
+        if (evaluation.actorRisk().riskLevel() == TrafficLight.RED) {
+            adjustment -= 40;
+        }
+        if (evaluation.actorRisk().riskLevel() == TrafficLight.YELLOW) {
+            adjustment -= 15;
+        }
+        return adjustment;
+    }
+
+    private int maturityScoreAdjustment(EnhetResponse enhet) {
+        long maturityAge = maturityAgeDays(enhet);
+        if (maturityAge < NEW_COMPANY_DAYS) {
+            return -15;
+        }
+        if (!hasText(enhet.sisteInnsendteAarsregnskap())) {
+            return -10;
+        }
+        return 0;
+    }
+
+    private int lifecycleScoreAdjustment(RiskEvaluation evaluation) {
+        int adjustment = 0;
+        if (evaluation.hasFissionOrMerger()) {
+            adjustment -= 5;
+        }
+        if (evaluation.voluntaryDissolution() && !evaluation.bankruptcy() && !evaluation.forcedDissolution()) {
+            adjustment -= 10;
+        }
+        return adjustment;
+    }
+
+    private boolean shouldApplyNewCompanyFloor(
+            EnhetResponse enhet,
+            RiskEvaluation evaluation,
+            int score
+    ) {
+        return evaluation.veryNew()
+                && !evaluation.bankruptcy()
+                && !evaluation.forcedDissolution()
+                && !(isCentralOrganizationForm(enhet) && !evaluation.hasRoles())
+                && score < 55;
+    }
+
+    record RiskEvaluation(
             String organizationFormCode,
             boolean hasRoles,
             boolean bankruptcy,
@@ -29,73 +123,6 @@ public class CompanyRiskScoringService {
             boolean veryNew,
             ActorRiskSummary actorRisk
     ) {
-        int score = calculateScore(enhet, organizationFormCode, hasRoles, bankruptcy, forcedDissolution, voluntaryDissolution, hasFissionOrMerger, actorRisk, veryNew);
-        if (bankruptcy || forcedDissolution || actorRisk.riskLevel() == TrafficLight.RED) {
-            return TrafficLight.RED;
-        }
-        if (voluntaryDissolution && !hasFissionOrMerger && !veryNew) {
-            return TrafficLight.RED;
-        }
-        if (isCentralOrganizationForm(enhet) && !hasRoles && !veryNew) {
-            return TrafficLight.RED;
-        }
-        if (veryNew && hasThinData(enhet, hasRoles)) {
-            return TrafficLight.YELLOW;
-        }
-        if (!hasMinimumPositiveStructure(enhet, hasRoles)) {
-            return TrafficLight.YELLOW;
-        }
-        if (score < 80 || actorRisk.riskLevel() == TrafficLight.YELLOW) {
-            return TrafficLight.YELLOW;
-        }
-        return TrafficLight.GREEN;
-    }
-
-    int calculateScore(
-            EnhetResponse enhet,
-            String organizationFormCode,
-            boolean hasRoles,
-            boolean bankruptcy,
-            boolean forcedDissolution,
-            boolean voluntaryDissolution,
-            boolean hasFissionOrMerger,
-            ActorRiskSummary actorRisk,
-            boolean veryNew
-    ) {
-        int score = 100;
-        score += OrganizationFormCatalog.scoreAdjustment(organizationFormCode);
-        if (bankruptcy) {
-            score -= 70;
-        }
-        if (forcedDissolution) {
-            score -= 60;
-        }
-        if (isCentralOrganizationForm(enhet) && !hasRoles) {
-            score -= 50;
-        }
-        if (actorRisk.riskLevel() == TrafficLight.RED) {
-            score -= 40;
-        }
-        if (actorRisk.riskLevel() == TrafficLight.YELLOW) {
-            score -= 15;
-        }
-        long maturityAge = maturityAgeDays(enhet);
-        if (maturityAge < NEW_COMPANY_DAYS) {
-            score -= 15;
-        }
-        if (maturityAge >= NEW_COMPANY_DAYS && !hasText(enhet.sisteInnsendteAarsregnskap())) {
-            score -= 10;
-        }
-        if (hasFissionOrMerger) {
-            score -= 5;
-        }
-        if (voluntaryDissolution && !bankruptcy && !forcedDissolution) {
-            score -= 10;
-        }
-        if (veryNew && !bankruptcy && !forcedDissolution && !(isCentralOrganizationForm(enhet) && !hasRoles) && score < 55) {
-            score = 55;
-        }
-        return Math.clamp(score, 0, 100);
     }
 
     boolean isCentralOrganizationForm(EnhetResponse enhet) {

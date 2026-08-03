@@ -20,14 +20,7 @@ class CompanyRiskScoringServiceTests {
     void konkursGirRodStatus() {
         var status = service.determineStatus(
                 establishedAs(),
-                "AS",
-                true,
-                true,
-                false,
-                false,
-                false,
-                false,
-                ActorRiskSummary.none()
+                risk(true, true, false, ActorRiskSummary.none())
         );
 
         assertThat(status).isEqualTo(TrafficLight.RED);
@@ -37,14 +30,7 @@ class CompanyRiskScoringServiceTests {
     void etablertSentraltSelskapUtenRollerGirRodStatus() {
         var status = service.determineStatus(
                 establishedAs(),
-                "AS",
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                ActorRiskSummary.none()
+                risk(false, false, false, ActorRiskSummary.none())
         );
 
         assertThat(status).isEqualTo(TrafficLight.RED);
@@ -78,14 +64,7 @@ class CompanyRiskScoringServiceTests {
 
         var status = service.determineStatus(
                 enhet,
-                "AS",
-                false,
-                false,
-                false,
-                false,
-                false,
-                true,
-                ActorRiskSummary.none()
+                risk(false, false, true, ActorRiskSummary.none())
         );
 
         assertThat(status).isEqualTo(TrafficLight.YELLOW);
@@ -96,14 +75,7 @@ class CompanyRiskScoringServiceTests {
     void ryddigEtablertSelskapMedRollerGirGronnStatus() {
         var status = service.determineStatus(
                 establishedAs(),
-                "AS",
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                ActorRiskSummary.none()
+                risk(true, false, false, ActorRiskSummary.none())
         );
 
         assertThat(status).isEqualTo(TrafficLight.GREEN);
@@ -113,26 +85,14 @@ class CompanyRiskScoringServiceTests {
     void aktorrisikoLofterStatusTilGulEllerRod() {
         var yellowStatus = service.determineStatus(
                 establishedAs(),
-                "AS",
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                new ActorRiskSummary(TrafficLight.YELLOW, 2, 1, 0, 0)
+                risk(true, false, false,
+                        new ActorRiskSummary(TrafficLight.YELLOW, 2, 1, 0, 0))
         );
 
         var redStatus = service.determineStatus(
                 establishedAs(),
-                "AS",
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                new ActorRiskSummary(TrafficLight.RED, 3, 2, 1, 0)
+                risk(true, false, false,
+                        new ActorRiskSummary(TrafficLight.RED, 3, 2, 1, 0))
         );
 
         assertThat(yellowStatus).isEqualTo(TrafficLight.YELLOW);
@@ -193,6 +153,24 @@ class CompanyRiskScoringServiceTests {
                 LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
+        );
+    }
+
+    private CompanyRiskScoringService.RiskEvaluation risk(
+            boolean hasRoles,
+            boolean bankruptcy,
+            boolean veryNew,
+            ActorRiskSummary actorRisk
+    ) {
+        return new CompanyRiskScoringService.RiskEvaluation(
+                "AS",
+                hasRoles,
+                bankruptcy,
+                false,
+                false,
+                false,
+                veryNew,
+                actorRisk
         );
     }
 }

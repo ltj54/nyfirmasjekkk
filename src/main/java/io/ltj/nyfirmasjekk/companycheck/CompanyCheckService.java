@@ -195,38 +195,24 @@ public class CompanyCheckService {
 
             List<EnhetResponse> sourceItems = hentEnheter(searchResponse);
             var pageMatches = deduplicateMatches(vurderSideUtenScoreFilter(searchResponse, request, diagnostics), seenMatches);
-
-            if (matchedBeforePage + pageMatches.size() > requestedOffset) {
-                int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
-                int toIndex = Math.min(pageMatches.size(), fromIndex + (request.resultSize() - matches.size()));
-                if (fromIndex < toIndex) {
-                    matches.addAll(pageMatches.subList(fromIndex, toIndex));
-                }
-            }
+            addRequestedPageSlice(matches, pageMatches, requestedOffset, matchedBeforePage, request.resultSize());
             matchedBeforePage += pageMatches.size();
 
             var pageInfo = searchResponse.page();
             boolean textSearchHasMatchesForRequestedPage = hasText(request.navn()) && !matches.isEmpty();
-            boolean noMorePages = pageInfo == null
-                    || sourcePage >= pageInfo.totalPages() - 1
-                    || textSearchHasMatchesForRequestedPage;
-            if (noMorePages || sourceItems.isEmpty()) {
-                reachedEnd = true;
+            SourceCursor cursor = nextSourceCursor(
+                    pageInfo,
+                    sourceItems,
+                    sourcePage,
+                    SOURCE_PAGE_SIZE,
+                    textSearchHasMatchesForRequestedPage
+            );
+            reachedEnd = cursor.reachedEnd();
+            sourcePage = cursor.page();
+            upperRegistrationDate = cursor.upperRegistrationDate();
+            if (reachedEnd) {
                 break;
             }
-
-            if (sourcePage >= maxBrregSourcePage()) {
-                upperRegistrationDate = oldestRegistrationDate(sourceItems);
-                if (upperRegistrationDate == null) {
-                    reachedEnd = true;
-                    break;
-                }
-                upperRegistrationDate = upperRegistrationDate.minusDays(1);
-                sourcePage = 0;
-                continue;
-            }
-
-            sourcePage += 1;
         }
 
         long totalElements = !reachedEnd && matches.size() == request.resultSize()
@@ -255,31 +241,17 @@ public class CompanyCheckService {
 
             List<EnhetResponse> sourceItems = hentEnheter(searchResponse);
             var pageMatches = deduplicateMatches(vurderSide(searchResponse, request, diagnostics), seenMatches);
-            if (matchedBeforePage + pageMatches.size() > requestedOffset) {
-                int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
-                matches.addAll(pageMatches.subList(fromIndex, pageMatches.size()));
-            }
+            addRequestedPageSlice(matches, pageMatches, requestedOffset, matchedBeforePage, Integer.MAX_VALUE);
             matchedBeforePage += pageMatches.size();
 
             var pageInfo = searchResponse.page();
-            boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
-            if (noMorePages || sourceItems.isEmpty()) {
-                reachedEnd = true;
+            SourceCursor cursor = nextSourceCursor(pageInfo, sourceItems, sourcePage, FILTERED_SOURCE_PAGE_SIZE, false);
+            reachedEnd = cursor.reachedEnd();
+            sourcePage = cursor.page();
+            upperRegistrationDate = cursor.upperRegistrationDate();
+            if (reachedEnd) {
                 break;
             }
-
-            if (sourcePage >= maxBrregSourcePage(FILTERED_SOURCE_PAGE_SIZE)) {
-                upperRegistrationDate = oldestRegistrationDate(sourceItems);
-                if (upperRegistrationDate == null) {
-                    reachedEnd = true;
-                    break;
-                }
-                upperRegistrationDate = upperRegistrationDate.minusDays(1);
-                sourcePage = 0;
-                continue;
-            }
-
-            sourcePage += 1;
         }
 
         List<CompanyCheck> items = matches.stream()
@@ -299,6 +271,46 @@ public class CompanyCheckService {
             }
         }
         return uniqueMatches;
+    }
+
+    private void addRequestedPageSlice(
+            List<CompanyCheck> target,
+            List<CompanyCheck> pageMatches,
+            int requestedOffset,
+            int matchedBeforePage,
+            int resultSize
+    ) {
+        if (matchedBeforePage + pageMatches.size() <= requestedOffset) {
+            return;
+        }
+        int fromIndex = Math.max(0, requestedOffset - matchedBeforePage);
+        int remainingCapacity = resultSize == Integer.MAX_VALUE
+                ? pageMatches.size()
+                : Math.max(resultSize - target.size(), 0);
+        int toIndex = Math.min(pageMatches.size(), fromIndex + remainingCapacity);
+        if (fromIndex < toIndex) {
+            target.addAll(pageMatches.subList(fromIndex, toIndex));
+        }
+    }
+
+    private SourceCursor nextSourceCursor(
+            EnheterSearchResponse.Page pageInfo,
+            List<EnhetResponse> sourceItems,
+            int sourcePage,
+            int pageSize,
+            boolean stopAfterTextMatch
+    ) {
+        boolean noMorePages = pageInfo == null || sourcePage >= pageInfo.totalPages() - 1;
+        if (noMorePages || sourceItems.isEmpty() || stopAfterTextMatch) {
+            return SourceCursor.finished();
+        }
+        if (sourcePage < maxBrregSourcePage(pageSize)) {
+            return new SourceCursor(sourcePage + 1, null, false);
+        }
+        LocalDate oldestDate = oldestRegistrationDate(sourceItems);
+        return oldestDate == null
+                ? SourceCursor.finished()
+                : new SourceCursor(0, oldestDate.minusDays(1), false);
     }
 
     private CompanySearchPage buildSearchPage(List<CompanyCheck> items, int page, int size, long totalElements) {
@@ -511,10 +523,19 @@ public class CompanyCheckService {
         boolean isVeryNew = alderDager < CompanyRiskScoringService.NEW_COMPANY_DAYS;
 
         ActorRiskSummary actorRisk = actorRiskService.summarize(enhet.organisasjonsnummer(), roller);
+        var riskEvaluation = new CompanyRiskScoringService.RiskEvaluation(
+                organisasjonsformKode,
+                hasRoles,
+                isBankruptcy,
+                isForcedDissolution,
+                isVoluntaryDissolution,
+                hasFissionOrMerger,
+                isVeryNew,
+                actorRisk
+        );
         List<CheckFinding> funn = new ArrayList<>();
-        byggFunn(enhet, organisasjonsformKode, roller, hasRoles, isBankruptcy, isForcedDissolution, isVoluntaryDissolution, hasFissionOrMerger, isVeryNew, actorRisk, funn);
-
-        var status = riskScoringService.determineStatus(enhet, organisasjonsformKode, hasRoles, isBankruptcy, isForcedDissolution, isVoluntaryDissolution, hasFissionOrMerger, isVeryNew, actorRisk);
+        byggFunn(enhet, roller, riskEvaluation, funn);
+        var status = riskScoringService.determineStatus(enhet, riskEvaluation);
         int greenCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.GREEN).count();
         int yellowCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.YELLOW).count();
         int redCount = (int) funn.stream().filter(f -> f.severity() == TrafficLight.RED).count();
@@ -602,10 +623,11 @@ public class CompanyCheckService {
 
     private CompanyFacts byggCompanyFacts(EnhetResponse enhet, RollerResponse roller, boolean hasRoles, boolean hasSeriousSignals) {
         long alderDager = modenhetsAlderDager(enhet);
+        String ageLabel = alderDager < CompanyRiskScoringService.NEW_COMPANY_DAYS ? "Nytt selskap" : "Etablert selskap";
         return new CompanyFacts(
                 hentOrganisasjonsformKode(enhet),
                 enhet.registreringsdatoEnhetsregisteret(),
-                alderDager < CompanyRiskScoringService.NEW_COMPANY_DAYS ? "Nytt selskap" : "Etablert selskap",
+                ageLabel,
                 hentNaeringskodeBeskrivelse(enhet),
                 hentPrimarAktivitet(enhet),
                 hentDagligLeder(roller),
@@ -626,20 +648,33 @@ public class CompanyCheckService {
         );
     }
 
-    private void byggFunn(EnhetResponse enhet, String organisasjonsformKode, RollerResponse roller, boolean hasRoles, boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, ActorRiskSummary ar, List<CheckFinding> funn) {
+    private void byggFunn(
+            EnhetResponse enhet,
+            RollerResponse roller,
+            CompanyRiskScoringService.RiskEvaluation evaluation,
+            List<CheckFinding> funn
+    ) {
         funn.add(new CheckFinding(TrafficLight.GREEN, FINDING_ORG_NUMBER, "OK"));
-        leggTilOrganisasjonsformFunn(organisasjonsformKode, funn);
-        leggTilStrukturelleFunn(isB, isF, isV, hasFM, isN, funn);
+        leggTilOrganisasjonsformFunn(evaluation.organizationFormCode(), funn);
+        leggTilStrukturelleFunn(
+                evaluation.bankruptcy(),
+                evaluation.forcedDissolution(),
+                evaluation.voluntaryDissolution(),
+                evaluation.hasFissionOrMerger(),
+                evaluation.veryNew(),
+                funn
+        );
         leggTilAldersfunn(enhet, funn);
-        leggTilAktorrisikoFunn(ar, funn);
-        leggTilRollefunn(enhet, roller, hasRoles, funn);
+        leggTilAktorrisikoFunn(evaluation.actorRisk(), funn);
+        leggTilRollefunn(enhet, roller, evaluation.hasRoles(), funn);
     }
 
     private void leggTilStrukturelleFunn(boolean isB, boolean isF, boolean isV, boolean hasFM, boolean isN, List<CheckFinding> funn) {
         if (isB || isF) {
             funn.add(new CheckFinding(TrafficLight.RED, "Alvorlige signaler", "Konkurs eller tvangsoppløsning."));
         } else if (isV) {
-            funn.add(new CheckFinding(hasFM || isN ? TrafficLight.YELLOW : TrafficLight.RED, "Avvikling", "Selskapet er under oppløsning."));
+            TrafficLight severity = hasFM || isN ? TrafficLight.YELLOW : TrafficLight.RED;
+            funn.add(new CheckFinding(severity, "Avvikling", "Selskapet er under oppløsning."));
         } else if (hasFM) {
             funn.add(new CheckFinding(TrafficLight.GREEN, "Struktur", "Fisjon/Fusjon."));
         }
@@ -679,11 +714,10 @@ public class CompanyCheckService {
             label = organisasjonsformKode;
         }
 
-        funn.add(new CheckFinding(
-                adjustment > 0 ? TrafficLight.GREEN : TrafficLight.YELLOW,
-                "Organisasjonsform",
-                label + (adjustment > 0 ? " trekker svakt opp" : " trekker ned") + " (" + formatScoreAdjustment(adjustment) + ")."
-        ));
+        TrafficLight severity = adjustment > 0 ? TrafficLight.GREEN : TrafficLight.YELLOW;
+        String direction = adjustment > 0 ? " trekker svakt opp" : " trekker ned";
+        String detail = label + direction + " (" + formatScoreAdjustment(adjustment) + ").";
+        funn.add(new CheckFinding(severity, "Organisasjonsform", detail));
     }
 
     private String formatScoreAdjustment(int adjustment) {
@@ -703,11 +737,17 @@ public class CompanyCheckService {
     }
 
     private String hentNaeringskodeBeskrivelse(EnhetResponse en) {
-        return (en.naeringskode1() != null) ? en.naeringskode1().kode() + " - " + en.naeringskode1().beskrivelse() : null;
+        if (en.naeringskode1() == null) {
+            return null;
+        }
+        return en.naeringskode1().kode() + " - " + en.naeringskode1().beskrivelse();
     }
 
     private String hentPrimarAktivitet(EnhetResponse en) {
-        return (en.aktivitet() != null && !en.aktivitet().isEmpty()) ? en.aktivitet().getFirst() : null;
+        if (en.aktivitet() == null || en.aktivitet().isEmpty()) {
+            return null;
+        }
+        return en.aktivitet().getFirst();
     }
 
     private String hentDagligLeder(RollerResponse r) {
@@ -719,10 +759,14 @@ public class CompanyCheckService {
             return List.of();
         }
         return r.rollegrupper().stream().filter(Objects::nonNull)
-                .flatMap(g -> g.roller() == null ? Stream.empty() : g.roller().stream())
+                .flatMap(this::rolesForGroup)
                 .filter(rolle -> !Boolean.TRUE.equals(rolle.fratraadt()) && !Boolean.TRUE.equals(rolle.avregistrert()))
                 .filter(rolle -> rolle.type() != null && hasText(rolle.type().beskrivelse()) && rolle.type().beskrivelse().toLowerCase(Locale.ROOT).contains(needle))
                 .map(this::rollenavn).filter(Objects::nonNull).distinct().toList();
+    }
+
+    private Stream<RollerResponse.Rolle> rolesForGroup(RollerResponse.Rollegruppe group) {
+        return group.roller() == null ? Stream.empty() : group.roller().stream();
     }
 
     private String rollenavn(RollerResponse.Rolle r) {
@@ -730,7 +774,10 @@ public class CompanyCheckService {
             return Stream.of(r.person().navn().fornavn(), r.person().navn().mellomnavn(), r.person().navn().etternavn())
                     .filter(this::hasText).reduce((l, ri) -> l + " " + ri).orElse(null);
         }
-        return (r.enhet() != null && r.enhet().navn() != null && !r.enhet().navn().isEmpty()) ? r.enhet().navn().getFirst() : null;
+        if (r.enhet() == null || r.enhet().navn() == null || r.enhet().navn().isEmpty()) {
+            return null;
+        }
+        return r.enhet().navn().getFirst();
     }
 
     private long modenhetsAlderDager(EnhetResponse enhet) {
@@ -900,20 +947,28 @@ public class CompanyCheckService {
         boolean isVeryNew = modenhetsAlderDager(enhet) < CompanyRiskScoringService.NEW_COMPANY_DAYS;
         TrafficLight approximateStatus = riskScoringService.determineStatus(
                 enhet,
-                hentOrganisasjonsformKode(enhet),
-                false,
-                false,
-                false,
-                isVoluntaryDissolution,
-                false,
-                isVeryNew,
-                ActorRiskSummary.none()
+                new CompanyRiskScoringService.RiskEvaluation(
+                        hentOrganisasjonsformKode(enhet),
+                        false,
+                        false,
+                        false,
+                        isVoluntaryDissolution,
+                        false,
+                        isVeryNew,
+                        ActorRiskSummary.none()
+                )
         );
         return approximateStatus == TrafficLight.YELLOW;
     }
 
     private boolean hasEnhetOnlyPositiveStructure(EnhetResponse enhet) {
         return riskScoringService.hasMinimumPositiveStructure(enhet, false);
+    }
+
+    private record SourceCursor(int page, LocalDate upperRegistrationDate, boolean reachedEnd) {
+        private static SourceCursor finished() {
+            return new SourceCursor(0, null, true);
+        }
     }
 
     private static final class SearchDiagnostics {

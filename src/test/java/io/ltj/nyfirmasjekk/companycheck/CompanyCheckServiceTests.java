@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +47,8 @@ class CompanyCheckServiceTests {
                                 4,
                                 true,
                                 "2024",
-                                LocalDate.of(2025, 1, 10),
-                                LocalDate.of(2025, 1, 8),
+                                LocalDate.of(2025, Month.JANUARY, 10),
+                                LocalDate.of(2025, Month.JANUARY, 8),
                                 null,
                                 null
                         ),
@@ -85,8 +86,8 @@ class CompanyCheckServiceTests {
                                 null,
                                 false,
                                 null,
-                                LocalDate.of(2026, 4, 10),
-                                LocalDate.of(2026, 4, 10),
+                                LocalDate.of(2026, Month.APRIL, 10),
+                                LocalDate.of(2026, Month.APRIL, 10),
                                 null,
                                 null
                         ),
@@ -124,8 +125,8 @@ class CompanyCheckServiceTests {
                                 0,
                                 false,
                                 null,
-                                LocalDate.of(2025, 1, 10),
-                                LocalDate.of(2025, 1, 8),
+                                LocalDate.of(2025, Month.JANUARY, 10),
+                                LocalDate.of(2025, Month.JANUARY, 8),
                                 null,
                                 null
                         ),
@@ -164,8 +165,8 @@ class CompanyCheckServiceTests {
                                 null,
                                 false,
                                 null,
-                                LocalDate.of(2026, 3, 15),
-                                LocalDate.of(2026, 3, 15),
+                                LocalDate.of(2026, Month.MARCH, 15),
+                                LocalDate.of(2026, Month.MARCH, 15),
                                 null,
                                 null
                         ),
@@ -203,8 +204,8 @@ class CompanyCheckServiceTests {
                                 3,
                                 true,
                                 "2024",
-                                LocalDate.of(2022, 1, 5),
-                                LocalDate.of(2021, 12, 20),
+                                LocalDate.of(2022, Month.JANUARY, 5),
+                                LocalDate.of(2021, Month.DECEMBER, 20),
                                 null,
                                 null
                         ),
@@ -264,8 +265,8 @@ class CompanyCheckServiceTests {
                                 null,
                                 false,
                                 null,
-                                LocalDate.of(2026, 3, 20),
-                                LocalDate.of(2026, 3, 18),
+                                LocalDate.of(2026, Month.MARCH, 20),
+                                LocalDate.of(2026, Month.MARCH, 18),
                                 null,
                                 null
                         ),
@@ -303,8 +304,8 @@ class CompanyCheckServiceTests {
                                 null,
                                 false,
                                 "2024",
-                                LocalDate.of(2023, 3, 20),
-                                LocalDate.of(2023, 3, 20),
+                                LocalDate.of(2023, Month.MARCH, 20),
+                                LocalDate.of(2023, Month.MARCH, 20),
                                 null,
                                 null
                         ),
@@ -357,8 +358,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         );
@@ -380,8 +381,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
+                LocalDate.of(2024, Month.JANUARY, 1),
                 null,
                 null
         );
@@ -424,8 +425,8 @@ class CompanyCheckServiceTests {
                 2,
                 true,
                 null,
-                LocalDate.of(2025, 10, 1),
-                LocalDate.of(2025, 9, 20),
+                LocalDate.of(2025, Month.OCTOBER, 1),
+                LocalDate.of(2025, Month.SEPTEMBER, 20),
                 null,
                 null
         );
@@ -447,8 +448,8 @@ class CompanyCheckServiceTests {
                 2,
                 true,
                 null,
-                LocalDate.of(2025, 10, 1),
-                LocalDate.of(2025, 9, 20),
+                LocalDate.of(2025, Month.OCTOBER, 1),
+                LocalDate.of(2025, Month.SEPTEMBER, 20),
                 null,
                 null
         );
@@ -492,8 +493,8 @@ class CompanyCheckServiceTests {
                                 2,
                                 true,
                                 null,
-                                LocalDate.of(2025, 10, 1),
-                                LocalDate.of(2025, 9, 20),
+                                LocalDate.of(2025, Month.OCTOBER, 1),
+                                LocalDate.of(2025, Month.SEPTEMBER, 20),
                                 null,
                                 null
                         ),
@@ -544,8 +545,8 @@ class CompanyCheckServiceTests {
                                 2,
                                 true,
                                 null,
-                                LocalDate.of(2026, 3, 20),
-                                LocalDate.of(2025, 1, 10),
+                                LocalDate.of(2026, Month.MARCH, 20),
+                                LocalDate.of(2025, Month.JANUARY, 10),
                                 null,
                                 null
                         ),
@@ -598,8 +599,8 @@ class CompanyCheckServiceTests {
                                 null,
                                 false,
                                 null,
-                                LocalDate.of(2025, 10, 1),
-                                LocalDate.of(2025, 9, 20),
+                                LocalDate.of(2025, Month.OCTOBER, 1),
+                                LocalDate.of(2025, Month.SEPTEMBER, 20),
                                 null,
                                 null
                         ),
@@ -637,8 +638,8 @@ class CompanyCheckServiceTests {
                                 0,
                                 true,
                                 null,
-                                LocalDate.of(2024, 1, 5),
-                                LocalDate.of(2024, 1, 1),
+                                LocalDate.of(2024, Month.JANUARY, 5),
+                                LocalDate.of(2024, Month.JANUARY, 1),
                                 null,
                                 null
                         ),
@@ -703,8 +704,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2013, 11, 4),
-                LocalDate.of(2013, 11, 4),
+                LocalDate.of(2013, Month.NOVEMBER, 4),
+                LocalDate.of(2013, Month.NOVEMBER, 4),
                 null,
                 null
         );
@@ -726,8 +727,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2015, 6, 29),
-                LocalDate.of(2015, 6, 29),
+                LocalDate.of(2015, Month.JUNE, 29),
+                LocalDate.of(2015, Month.JUNE, 29),
                 null,
                 null
         );
@@ -782,8 +783,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2025, 1, 10),
-                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
                 null,
                 null
         );
@@ -805,8 +806,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2026, 4, 10),
-                LocalDate.of(2026, 4, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
                 null,
                 null
         );
@@ -853,8 +854,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2026, 4, 10),
-                LocalDate.of(2026, 4, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
                 null,
                 null
         );
@@ -876,8 +877,8 @@ class CompanyCheckServiceTests {
                 1,
                 true,
                 "2024",
-                LocalDate.of(2024, 1, 10),
-                LocalDate.of(2024, 1, 10),
+                LocalDate.of(2024, Month.JANUARY, 10),
+                LocalDate.of(2024, Month.JANUARY, 10),
                 null,
                 null
         );
@@ -929,8 +930,8 @@ class CompanyCheckServiceTests {
                 2,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 10),
-                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
                 null,
                 null
         );
@@ -952,8 +953,8 @@ class CompanyCheckServiceTests {
                 1,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 9),
-                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
                 null,
                 null
         );
@@ -1010,8 +1011,8 @@ class CompanyCheckServiceTests {
                 0,
                 false,
                 "2024",
-                LocalDate.of(2025, 1, 10),
-                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
                 null,
                 null
         );
@@ -1056,8 +1057,8 @@ class CompanyCheckServiceTests {
                 10,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 10),
-                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
                 null,
                 null
         );
@@ -1104,8 +1105,8 @@ class CompanyCheckServiceTests {
                 2,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 10),
-                LocalDate.of(2025, 1, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
+                LocalDate.of(2025, Month.JANUARY, 10),
                 null,
                 null
         );
@@ -1127,8 +1128,8 @@ class CompanyCheckServiceTests {
                 1,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 9),
-                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
                 null,
                 null
         );
@@ -1185,8 +1186,8 @@ class CompanyCheckServiceTests {
                 2,
                 true,
                 "2024",
-                LocalDate.of(2026, 4, 10),
-                LocalDate.of(2026, 4, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
                 null,
                 null
         );
@@ -1208,8 +1209,8 @@ class CompanyCheckServiceTests {
                 null,
                 false,
                 null,
-                LocalDate.of(2026, 4, 10),
-                LocalDate.of(2026, 4, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
+                LocalDate.of(2026, Month.APRIL, 10),
                 null,
                 null
         );
@@ -1258,8 +1259,8 @@ class CompanyCheckServiceTests {
                                 3,
                                 true,
                                 "2024",
-                                LocalDate.of(2022, 1, 5),
-                                LocalDate.of(2021, 12, 20),
+                                LocalDate.of(2022, Month.JANUARY, 5),
+                                LocalDate.of(2021, Month.DECEMBER, 20),
                                 null,
                                 null
                         ),
@@ -1310,8 +1311,8 @@ class CompanyCheckServiceTests {
                                 3,
                                 true,
                                 "2024",
-                                LocalDate.of(2022, 1, 5),
-                                LocalDate.of(2021, 12, 20),
+                                LocalDate.of(2022, Month.JANUARY, 5),
+                                LocalDate.of(2021, Month.DECEMBER, 20),
                                 null,
                                 null
                         ),
@@ -1363,8 +1364,8 @@ class CompanyCheckServiceTests {
                                 null,
                                 false,
                                 null,
-                                LocalDate.of(2026, 3, 1), // Nylig registrert
-                                LocalDate.of(2025, 12, 1),
+                                LocalDate.of(2026, Month.MARCH, 1), // Nylig registrert
+                                LocalDate.of(2025, Month.DECEMBER, 1),
                                 null,
                                 null
                         ),
@@ -1403,8 +1404,8 @@ class CompanyCheckServiceTests {
                 1,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 9),
-                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
                 null,
                 null
         );
@@ -1426,8 +1427,8 @@ class CompanyCheckServiceTests {
                 1,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 9),
-                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
                 null,
                 null
         );
@@ -1449,8 +1450,8 @@ class CompanyCheckServiceTests {
                 1,
                 true,
                 "2024",
-                LocalDate.of(2025, 1, 9),
-                LocalDate.of(2025, 1, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
+                LocalDate.of(2025, Month.JANUARY, 9),
                 null,
                 null
         );

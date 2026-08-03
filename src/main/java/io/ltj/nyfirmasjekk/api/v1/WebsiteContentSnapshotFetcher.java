@@ -44,13 +44,12 @@ public class WebsiteContentSnapshotFetcher {
     private static final String TERM_RETUR = "retur";
     private static final String TERM_VILLKOR = "villkor";
     private static final String TERM_VILKAR = "vilkår";
-    private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s+p[åa]\\s+(\\d+)\\s+av\\s+(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+    private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s++p[åa]\\s++(\\d++)\\s++av\\s++(\\d++)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     private static final java.util.List<Pattern> FIXED_WIDTH_LAYOUT_PATTERNS = java.util.List.of(
             Pattern.compile("\\b(?:width|min-width)\\s*+:\\s*+9\\d{2}px", Pattern.CASE_INSENSITIVE),
             Pattern.compile("\\b(?:width|min-width)\\s*+:\\s*+[1-9]\\d{3,}+px", Pattern.CASE_INSENSITIVE)
     );
     private static final Pattern OUTLINE_NONE_PATTERN = Pattern.compile("outline\\s*:\\s*(?:0|none)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern CSP_WILDCARD_SCRIPT_PATTERN = Pattern.compile("(?:^|;)\\s*+script-src[^;*]*+\\*", Pattern.CASE_INSENSITIVE);
     private static final java.util.List<Pattern> CMS_VERSION_PATTERNS = java.util.List.of(
             Pattern.compile("wordpress\\s+\\d+\\.\\d", Pattern.CASE_INSENSITIVE),
             Pattern.compile("wp-(?:includes|content)/[^?\\s]++\\?ver=\\d+\\.\\d", Pattern.CASE_INSENSITIVE),
@@ -62,6 +61,16 @@ public class WebsiteContentSnapshotFetcher {
             Pattern.compile("bootstrap[-.]3\\.\\d\\D", Pattern.CASE_INSENSITIVE),
             Pattern.compile("angular(?:\\.min)?\\.js\\?ver=1\\.[0-7]", Pattern.CASE_INSENSITIVE),
             Pattern.compile("angular[-.]1\\.[0-7]\\D", Pattern.CASE_INSENSITIVE)
+    );
+    private static final java.util.List<BuilderSignature> BUILDER_SIGNATURES = java.util.List.of(
+            new BuilderSignature("Emergent", "emergent.sh", "made with emergent", "a product of emergent"),
+            new BuilderSignature("Webflow", "webflow"),
+            new BuilderSignature("Wix", "wix.com", "wixstatic", "x-wix"),
+            new BuilderSignature("WordPress", "wp-content", "wordpress"),
+            new BuilderSignature("Framer", "framerusercontent", "data-framer"),
+            new BuilderSignature("Squarespace", "squarespace"),
+            new BuilderSignature("Shopify", "shopify"),
+            new BuilderSignature("Next.js", "next/static", "__next")
     );
     private static final java.util.List<String> STANDARD_REVIEW_PATHS = java.util.List.of(
             "/kontakt",
@@ -452,42 +461,31 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     static String detectBuilder(String generator, String html) {
-        String combined = ((generator == null ? "" : generator) + " " + (html == null ? "" : html)).toLowerCase();
-        if (combined.contains("emergent.sh") || combined.contains("made with emergent") || combined.contains("a product of emergent")) {
-            return "Emergent";
+        String combined = ((generator == null ? "" : generator) + " " + (html == null ? "" : html)).toLowerCase(Locale.ROOT);
+        String knownBuilder = BUILDER_SIGNATURES.stream()
+                .filter(signature -> signature.matches(combined))
+                .map(BuilderSignature::name)
+                .findFirst()
+                .orElse(null);
+        if (knownBuilder != null) {
+            return knownBuilder;
         }
-        if (combined.contains("webflow")) {
-            return "Webflow";
-        }
-        if (combined.contains("wix.com") || combined.contains("wixstatic") || combined.contains("x-wix")) {
-            return "Wix";
-        }
-        if (combined.contains("wp-content") || combined.contains("wordpress")) {
-            return "WordPress";
-        }
-        if (combined.contains("framerusercontent") || combined.contains("data-framer")) {
-            return "Framer";
-        }
-        if (combined.contains("squarespace")) {
-            return "Squarespace";
-        }
-        if (combined.contains("shopify")) {
-            return "Shopify";
-        }
-        if (combined.contains("next/static") || combined.contains("__next")) {
-            return "Next.js";
-        }
-        if ((generator != null && generator.toLowerCase(Locale.ROOT).contains("vite"))
-                || combined.contains("/@vite/")
-                || combined.contains("/vite.svg")
-                || combined.contains("type=\"module\" crossorigin src=\"/assets/")
-                || combined.contains("type='module' crossorigin src='/assets/")
-                || combined.contains("type=\"module\" src=\"/assets/")
-                || combined.contains("type='module' src='/assets/")
-                || combined.contains("/assets/index-")) {
+        if (hasViteSignature(generator, combined)) {
             return "Vite";
         }
         return generator == null || generator.isBlank() ? null : generator.trim();
+    }
+
+    private static boolean hasViteSignature(String generator, String combined) {
+        return (generator != null && generator.toLowerCase(Locale.ROOT).contains("vite"))
+                || hasAny(combined,
+                "/@vite/",
+                "/vite.svg",
+                "type=\"module\" crossorigin src=\"/assets/",
+                "type='module' crossorigin src='/assets/",
+                "type=\"module\" src=\"/assets/",
+                "type='module' src='/assets/",
+                "/assets/index-");
     }
 
     private static boolean hasCookieOrTrackingSignal(String html) {
@@ -648,8 +646,18 @@ public class WebsiteContentSnapshotFetcher {
         String normalized = csp.toLowerCase(Locale.ROOT);
         return normalized.contains("'unsafe-inline'")
                 || normalized.contains("'unsafe-eval'")
-                || CSP_WILDCARD_SCRIPT_PATTERN.matcher(normalized).find()
+                || hasWildcardScriptSource(normalized)
                 || !normalized.contains("frame-ancestors");
+    }
+
+    private static boolean hasWildcardScriptSource(String contentSecurityPolicy) {
+        for (String directive : contentSecurityPolicy.split(";", -1)) {
+            String normalizedDirective = directive.trim();
+            if (normalizedDirective.startsWith("script-src") && normalizedDirective.contains("*")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean hasAny(String value, String... needles) {
@@ -1171,25 +1179,6 @@ public class WebsiteContentSnapshotFetcher {
         return accumulator.result();
     }
 
-    private static void appendCrawledBodyText(StringBuilder target, Document document) {
-        if (target.length() >= EXTENDED_CRAWL_TEXT_BYTES) {
-            return;
-        }
-        String text = document.body().text();
-        if (text.isBlank()) {
-            return;
-        }
-        int remaining = EXTENDED_CRAWL_TEXT_BYTES - target.length();
-        if (remaining <= 0) {
-            return;
-        }
-        if (!target.isEmpty()) {
-            target.append(' ');
-            remaining--;
-        }
-        target.append(text, 0, Math.min(text.length(), remaining));
-    }
-
     private static String normalizedMetaDescription(Document document) {
         Element description = document.selectFirst("meta[name=description]");
         String value = attrOrNull(description, ATTRIBUTE_CONTENT);
@@ -1348,6 +1337,16 @@ public class WebsiteContentSnapshotFetcher {
     private record LinkCheckResult(int checkedCount, int brokenCount) {
     }
 
+    private record BuilderSignature(String name, java.util.List<String> markers) {
+        private BuilderSignature(String name, String... markers) {
+            this(name, java.util.List.of(markers));
+        }
+
+        private boolean matches(String content) {
+            return markers.stream().anyMatch(content::contains);
+        }
+    }
+
     private static final class ExtendedCrawlAccumulator {
         private final String baseUrl;
         private final String frontPageMetaDescription;
@@ -1379,7 +1378,7 @@ public class WebsiteContentSnapshotFetcher {
             String normalizedContent = html.toLowerCase(Locale.ROOT);
             String searchableContent = normalizedUrl + " " + normalizedContent;
             Document crawledDocument = Jsoup.parse(html, candidate);
-            appendCrawledBodyText(crawledBodyText, crawledDocument);
+            appendCrawledBodyText(crawledDocument);
             captureMetaDescription(candidate, crawledDocument);
             privacyPageFound |= hasAny(searchableContent, TERM_PERSONVERN, TERM_PRIVACY, "gdpr", "datenschutz", "integritetspolicy");
             contactPageFound |= hasAny(searchableContent, "kontakt", "contact", "kundeservice", "support");
@@ -1400,6 +1399,22 @@ public class WebsiteContentSnapshotFetcher {
                     && !candidate.equals(baseUrl)) {
                 repeatedMetaDescriptionCount++;
             }
+        }
+
+        private void appendCrawledBodyText(Document document) {
+            if (crawledBodyText.length() >= EXTENDED_CRAWL_TEXT_BYTES) {
+                return;
+            }
+            String text = document.body().text();
+            if (text.isBlank()) {
+                return;
+            }
+            int remaining = EXTENDED_CRAWL_TEXT_BYTES - crawledBodyText.length();
+            if (!crawledBodyText.isEmpty()) {
+                crawledBodyText.append(' ');
+                remaining--;
+            }
+            crawledBodyText.append(text, 0, Math.min(text.length(), remaining));
         }
 
         private ExtendedCrawlResult result() {

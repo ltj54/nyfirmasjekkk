@@ -1,5 +1,25 @@
 # TODO
 
+## Status 2026-08-02
+
+### Levert
+
+- Outreach-loggen for juli ble arkivert i `data/archive/outreach-log-2026-07.jsonl`, og månedsrapporten for august ble generert.
+- Utsendelsesoversikten ble oppdatert med støtte for statusen `replied` (`Svar mottatt`). Virksomheter med denne statusen beholdes i kontakthistorikken, sperres mot ny utsendelse og skjules fra det ordinære søket.
+- Virksomheter kan nå markeres som `Ikke aktuell` direkte fra oppfølgingskøen og kolonnene `Til vurdering`, `Kontaktet` og `Følg opp`.
+- Oppfølgingsoversikten viser besvarte henvendelser som kontaktet og har tydeligere statusvisning.
+- Backendens validering og frontendens typer ble utvidet med `replied`, med test som bekrefter at tidligere kontakthistorikk og utsendelsessperre beholdes.
+- Outreach-dataene ble oppdatert med 94 hendelser 2. august, hvorav 42 fullførte utsendelser registrert i augustrapporten.
+
+### Pågående i arbeidskopien
+
+- Backend-koden for selskapsvurdering, risikoscore, salgsegmenter, nettsidekandidater og nettsideanalyse ble refaktorert for enklere og mer eksplisitt flyt.
+- Nettsideanalyse-mapperen ble delt opp i mindre hjelpemetoder for blant annet oppsummeringer, kontaktinformasjon, tillitssignaler, presentasjonsrisiko og e-postsikkerhet.
+- Regexer og nullhåndtering ble strammet inn, og enkelte komplekse regelinnsamlere fikk dokumenterte analyseunntak.
+- Risikovurderingen ble samlet i et eget `RiskEvaluation`-objekt, og tilhørende tester ble tilpasset.
+- Testdata for datoer ble gjort mer lesbare ved å bruke navngitte måneder.
+- Disse endringene lå fortsatt ucommittet etter arbeidet 2. august og bør verifiseres før commit.
+
 ## Status 2026-05-25
 
 ### Beslutning
