@@ -131,8 +131,6 @@ public class CompanyApiV1Mapper {
     private static final String ROLE_DAGLIG_LEDER = "DAGLIG_LEDER";
     private static final String ROLE_STYRELEDER = "STYRELEDER";
     private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,63}\\b", Pattern.CASE_INSENSITIVE);
-    private static final Pattern COPYRIGHT_YEAR_PATTERN = Pattern.compile("(?i)(copyright|©|&copy;)\\s*+(20\\d{2})");
-    private static final Pattern WEBSITE_IMAGE_ASSET_PATTERN = Pattern.compile("https?://[^\"'\\s;]{1,2048}+\\.(?:avif|webp|png|jpe?g)", Pattern.CASE_INSENSITIVE);
     private static final Pattern FOREIGN_ORGANIZATION_NUMBER_PATTERN = Pattern.compile("\\b(?:\\d{6}\\s++\\d{4}|se\\d{10,12})\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern NON_ALPHANUMERIC_SPACE_PATTERN = Pattern.compile("[^a-z0-9 ]");
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
@@ -573,8 +571,8 @@ public class CompanyApiV1Mapper {
             );
         }
 
-        WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = websiteContentInspectionService.fetchSnapshot(website);
-        if (snapshot == null) {
+        Object snapshot = websiteContentInspectionService.fetchSnapshot(website);
+        if (!(snapshot instanceof WebsiteContentInspectionService.WebsiteContentSnapshot readableSnapshot)) {
             signals.add(new WebsiteQualitySignal(
                     "CONTENT_UNREADABLE",
                     "Innhold kunne ikke leses",
@@ -583,31 +581,31 @@ public class CompanyApiV1Mapper {
             ));
             return contentUnreadableAssessment(signals);
         }
-        addContentQualitySignals(signals, snapshot);
-        addSharePreviewSignal(signals, snapshot);
-        addStructuredDataSignal(signals, snapshot);
-        addNavigationSignal(signals, snapshot);
-        addContactQualitySignal(signals, snapshot, enhet);
-        addLocalRelevanceSignal(signals, snapshot, enhet);
-        addIndustryRelevanceSignal(signals, snapshot, enhet);
-        addServiceDescriptionSignal(signals, snapshot, enhet);
-        addTrustSignal(signals, snapshot, companyCheck, enhet);
-        addCommercialTrustSignals(signals, snapshot, enhet);
-        addActionSignal(signals, snapshot);
+        addContentQualitySignals(signals, readableSnapshot);
+        addSharePreviewSignal(signals, readableSnapshot);
+        addStructuredDataSignal(signals, readableSnapshot);
+        addNavigationSignal(signals, readableSnapshot);
+        addContactQualitySignal(signals, readableSnapshot, enhet);
+        addLocalRelevanceSignal(signals, readableSnapshot, enhet);
+        addIndustryRelevanceSignal(signals, readableSnapshot, enhet);
+        addServiceDescriptionSignal(signals, readableSnapshot, enhet);
+        addTrustSignal(signals, readableSnapshot, companyCheck, enhet);
+        addCommercialTrustSignals(signals, readableSnapshot, enhet);
+        addActionSignal(signals, readableSnapshot);
         addBrandDomainSignal(signals, companyCheck, website);
-        addEmailDomainSignal(signals, snapshot, website);
-        addFreshnessSignal(signals, snapshot);
-        addResponsiveSignals(signals, snapshot);
-        addAccessibilitySignals(signals, snapshot);
-        addSecuritySignals(signals, website, snapshot);
-        addPrivacySignals(signals, snapshot);
-        addMedicalTrustSignals(signals, snapshot);
-        addTechnologySignals(signals, snapshot);
-        addPublicSectorContextSignal(signals, snapshot);
+        addEmailDomainSignal(signals, readableSnapshot, website);
+        addFreshnessSignal(signals, readableSnapshot);
+        addResponsiveSignals(signals, readableSnapshot);
+        addAccessibilitySignals(signals, readableSnapshot);
+        addSecuritySignals(signals, website, readableSnapshot);
+        addPrivacySignals(signals, readableSnapshot);
+        addMedicalTrustSignals(signals, readableSnapshot);
+        addTechnologySignals(signals, readableSnapshot);
+        addPublicSectorContextSignal(signals, readableSnapshot);
 
         return assessmentFromSignals(signals, signals.isEmpty()
                 ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
-                : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", snapshot);
+                : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", readableSnapshot);
     }
 
     public WebsiteInspectionResponse inspectWebsite(String rawUrl) {
@@ -664,10 +662,10 @@ public class CompanyApiV1Mapper {
             );
         }
 
-        WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = extended
+        Object snapshot = extended
                 ? websiteContentInspectionService.fetchExtendedSnapshot(website)
                 : websiteContentInspectionService.fetchSnapshot(website);
-        if (snapshot == null) {
+        if (!(snapshot instanceof WebsiteContentInspectionService.WebsiteContentSnapshot readableSnapshot)) {
             signals.add(new WebsiteQualitySignal(
                     "CONTENT_UNREADABLE",
                     "Innhold kunne ikke leses",
@@ -676,27 +674,27 @@ public class CompanyApiV1Mapper {
             ));
             return new WebsiteInspectionResponse(rawUrl, website, contentUnreadableAssessment(signals), List.of());
         }
-        addContentQualitySignals(signals, snapshot);
-        addSharePreviewSignal(signals, snapshot);
-        addStructuredDataSignal(signals, snapshot);
-        addNavigationSignal(signals, snapshot);
-        addActionSignal(signals, snapshot);
-        addFreshnessSignal(signals, snapshot);
-        addResponsiveSignals(signals, snapshot);
-        addAccessibilitySignals(signals, snapshot);
-        addSecuritySignals(signals, website, snapshot);
-        addPrivacySignals(signals, snapshot);
-        addMedicalTrustSignals(signals, snapshot);
-        addTechnologySignals(signals, snapshot);
-        addPublicSectorContextSignal(signals, snapshot);
-        addStandaloneWebsiteSignals(signals, snapshot);
+        addContentQualitySignals(signals, readableSnapshot);
+        addSharePreviewSignal(signals, readableSnapshot);
+        addStructuredDataSignal(signals, readableSnapshot);
+        addNavigationSignal(signals, readableSnapshot);
+        addActionSignal(signals, readableSnapshot);
+        addFreshnessSignal(signals, readableSnapshot);
+        addResponsiveSignals(signals, readableSnapshot);
+        addAccessibilitySignals(signals, readableSnapshot);
+        addSecuritySignals(signals, website, readableSnapshot);
+        addPrivacySignals(signals, readableSnapshot);
+        addMedicalTrustSignals(signals, readableSnapshot);
+        addTechnologySignals(signals, readableSnapshot);
+        addPublicSectorContextSignal(signals, readableSnapshot);
+        addStandaloneWebsiteSignals(signals, readableSnapshot);
 
         return new WebsiteInspectionResponse(
                 rawUrl,
                 website,
                 assessmentFromSignals(signals, signals.isEmpty()
                         ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
-                        : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", snapshot),
+                        : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", readableSnapshot),
                 List.of()
         );
     }
@@ -1846,20 +1844,38 @@ public class CompanyApiV1Mapper {
 
     private void addFreshnessSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
         String html = snapshot.html() == null ? "" : snapshot.html();
-        var matcher = COPYRIGHT_YEAR_PATTERN.matcher(html);
         int currentYear = LocalDate.now(clock).getYear();
-        while (matcher.find()) {
-            int year = Integer.parseInt(matcher.group(2));
-            if (year <= currentYear - 3) {
-                signals.add(new WebsiteQualitySignal(
-                        "OUTDATED_COPYRIGHT",
-                        "Utdatert årstall",
-                        "Siden ser ut til å ha utdatert årstall i bunnteksten. Det kan gi inntrykk av at siden ikke vedlikeholdes.",
-                        "INFO"
-                ));
-                return;
+        if (hasOutdatedCopyrightYear(html, currentYear)) {
+            signals.add(new WebsiteQualitySignal(
+                    "OUTDATED_COPYRIGHT",
+                    "Utdatert årstall",
+                    "Siden ser ut til å ha utdatert årstall i bunnteksten. Det kan gi inntrykk av at siden ikke vedlikeholdes.",
+                    "INFO"
+            ));
+        }
+    }
+
+    private boolean hasOutdatedCopyrightYear(String html, int currentYear) {
+        String normalizedHtml = html.toLowerCase(Locale.ROOT);
+        for (String marker : List.of("copyright", "©", "&copy;")) {
+            int markerIndex = normalizedHtml.indexOf(marker);
+            while (markerIndex >= 0) {
+                int yearStart = markerIndex + marker.length();
+                while (yearStart < normalizedHtml.length() && Character.isWhitespace(normalizedHtml.charAt(yearStart))) {
+                    yearStart++;
+                }
+                if (yearStart + 4 <= normalizedHtml.length()) {
+                    String candidate = normalizedHtml.substring(yearStart, yearStart + 4);
+                    if (candidate.chars().allMatch(Character::isDigit)
+                            && candidate.startsWith("20")
+                            && Integer.parseInt(candidate) <= currentYear - 3) {
+                        return true;
+                    }
+                }
+                markerIndex = normalizedHtml.indexOf(marker, markerIndex + marker.length());
             }
         }
+        return false;
     }
 
     private void addResponsiveSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -2675,12 +2691,54 @@ public class CompanyApiV1Mapper {
         if (!hasText(html)) {
             return 0;
         }
+        String normalizedHtml = html.toLowerCase(Locale.ROOT);
         Set<String> imageUrls = new LinkedHashSet<>();
-        var matcher = WEBSITE_IMAGE_ASSET_PATTERN.matcher(html);
-        while (matcher.find()) {
-            imageUrls.add(matcher.group());
+        int searchFrom = 0;
+        while (searchFrom < normalizedHtml.length()) {
+            int httpIndex = normalizedHtml.indexOf("http://", searchFrom);
+            int httpsIndex = normalizedHtml.indexOf(HTTPS_PREFIX, searchFrom);
+            int urlStart = firstUrlIndex(httpIndex, httpsIndex);
+            if (urlStart < 0) {
+                break;
+            }
+            int urlEnd = urlStart;
+            int maximumEnd = Math.min(normalizedHtml.length(), urlStart + 2048);
+            while (urlEnd < maximumEnd && !isUrlDelimiter(normalizedHtml.charAt(urlEnd))) {
+                urlEnd++;
+            }
+            String candidate = normalizedHtml.substring(urlStart, urlEnd);
+            String imageAssetUrl = imageAssetUrl(candidate);
+            if (imageAssetUrl != null) {
+                imageUrls.add(imageAssetUrl);
+            }
+            searchFrom = Math.max(urlEnd, urlStart + 1);
         }
         return imageUrls.size();
+    }
+
+    private int firstUrlIndex(int httpIndex, int httpsIndex) {
+        if (httpIndex < 0) {
+            return httpsIndex;
+        }
+        if (httpsIndex < 0) {
+            return httpIndex;
+        }
+        return Math.min(httpIndex, httpsIndex);
+    }
+
+    private boolean isUrlDelimiter(char character) {
+        return character == '"' || character == '\'' || character == ';' || Character.isWhitespace(character);
+    }
+
+    private String imageAssetUrl(String url) {
+        int extensionEnd = -1;
+        for (String extension : List.of(".avif", ".webp", ".png", ".jpg", ".jpeg")) {
+            int extensionStart = url.lastIndexOf(extension);
+            if (extensionStart >= 0) {
+                extensionEnd = Math.max(extensionEnd, extensionStart + extension.length());
+            }
+        }
+        return extensionEnd < 0 ? null : url.substring(0, extensionEnd);
     }
 
     private void addTechnologySignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {

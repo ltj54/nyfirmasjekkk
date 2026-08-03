@@ -154,10 +154,12 @@ export interface BrregWebsiteMatch {
   matchReason: string;
 }
 
+export type OutreachStatusValue = "sent" | "replied" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | null;
+
 export interface OutreachStatus {
   orgNumber: string;
   sent: boolean;
-  status: "sent" | "replied" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | null;
+  status: OutreachStatusValue;
   companyName: string | null;
   organizationForm: string | null;
   price: number | null;

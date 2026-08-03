@@ -80,13 +80,7 @@ public class CompanyCheckService {
     public CompanySearchPage sokPage(CompanySearchRequest request, int page) {
         long startedAt = System.nanoTime();
         SearchDiagnostics diagnostics = new SearchDiagnostics(request, page);
-        CompanySearchPage results = hasText(request.navn()) && !harTekst(request.score())
-                ? sokMedNavnefilter(request, page, diagnostics)
-                : isHardRedSearch(request)
-                ? sokMedRegisterdrevetRedFilter(request, page, diagnostics)
-                : harTekst(request.score())
-                ? sokMedScoreFilter(request, page, diagnostics)
-                : sokUtenScoreFilter(request, page, diagnostics);
+        CompanySearchPage results = executeSearch(request, page, diagnostics);
 
         long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
         log.info("Search completed in {} ms: score={}, page={}, results={}", 
@@ -94,6 +88,19 @@ public class CompanyCheckService {
         diagnostics.logSummary(durationMs, results.items().size());
         
         return results;
+    }
+
+    private CompanySearchPage executeSearch(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
+        if (hasText(request.navn()) && !harTekst(request.score())) {
+            return sokMedNavnefilter(request, page, diagnostics);
+        }
+        if (isHardRedSearch(request)) {
+            return sokMedRegisterdrevetRedFilter(request, page, diagnostics);
+        }
+        if (harTekst(request.score())) {
+            return sokMedScoreFilter(request, page, diagnostics);
+        }
+        return sokUtenScoreFilter(request, page, diagnostics);
     }
 
     private CompanySearchPage sokMedRegisterdrevetRedFilter(CompanySearchRequest request, int page, SearchDiagnostics diagnostics) {
