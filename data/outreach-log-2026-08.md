@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 522
+- Antall hendelser: 523
 - Sendt: 243
 - Angret: 1
-- Aktive kontaktede selskaper: 226
+- Aktive kontaktede selskaper: 225
 
 ## Aktive kontaktede selskaper
 
@@ -23,7 +23,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 938068763 | MUSIKK MED MENING | FLI | email | website-follow-up |
 | 2026-08-04 | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | website-follow-up |
 | 2026-08-04 | 938068364 | RØST HUSFLIDSLAG | FLI | email | website-follow-up |
-| 2026-08-04 | 938061092 | BARE KAFFE NYGAARD | ENK | email | website-follow-up |
 | 2026-08-04 | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | website-follow-up |
 | 2026-08-04 | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | website-follow-up |
 | 2026-08-04 | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | website-follow-up |
@@ -244,6 +243,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 16:56 | replied | 938061092 | BARE KAFFE NYGAARD | ENK | email | Avslag: ikke interessert. |
 | 2026-08-04 16:41 | sent | 938080216 | PETROSERVICE | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-04 16:41 | sending | 938080216 | PETROSERVICE | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-04 16:41 | sent | 938019606 | ZUBE VEDLIKEHOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
