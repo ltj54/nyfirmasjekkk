@@ -62,6 +62,8 @@ Emne: `Et forslag til nettside for {{companyName}}`
 
 [Skriv én konkret observasjon om virksomheten her.]
 
+{{salesSegmentPitch}}
+
 Jeg lager enkle nettsider som gjør det lettere for nye kunder å forstå hva virksomheten tilbyr og ta kontakt.
 
 En enkel førsteside koster fast {{priceValue}} kr. Jeg tilpasser den til virksomheten, sørger for at den fungerer godt på mobil og hjelper med publisering. Hvis dere ønsker booking, nettbutikk eller flere sider, kan jeg også hjelpe med det – så finner vi omfang og pris sammen. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
@@ -84,6 +86,8 @@ Emne: `Nettsiden til {{companyName}} svarte ikke`
 {{greetingLine}}
 
 [Skriv én konkret observasjon om virksomheten her.]
+
+{{salesSegmentPitch}}
 
 Jeg så også at {{registeredWebsite}} er registrert som nettside, men siden svarte ikke da jeg sjekket. Det kan selvfølgelig være midlertidig.
 

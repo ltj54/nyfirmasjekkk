@@ -56,6 +56,75 @@ export function personalObservation(company: OutreachEmailCompany) {
   return `Jeg kom over ${companyName} i virksomhetsopplysningene fra BRREG.`;
 }
 
+export function industryOutreachPitch(company: OutreachEmailCompany) {
+  const context = normalizeContextText([
+    company.name,
+    company.naceDescription,
+    company.salesSegment?.label,
+  ].filter(Boolean).join(" "));
+  const naceCode = company.naceCode?.trim() ?? "";
+  const segmentCode = company.salesSegment?.code ?? "";
+
+  if (hasAnyContext(context, "psykolog", "psykoter", "psykisk helse", "samtaleterapi")) {
+    return "For psykologtjenester er tillit og trygg kommunikasjon spesielt viktig. Hvis nettsiden har kontaktskjema, bør personvern og GDPR også ivaretas fordi henvendelser kan inneholde sensitive opplysninger.";
+  }
+  if (hasAnyContext(context, "fotterapi", "fotterapeut", "fotpleie")) {
+    return "For en fotterapeut bør nettsiden gjøre det enkelt å forstå behandlingstilbudet, finne praktisk informasjon og bestille eller spørre om en time.";
+  }
+  if (hasAnyContext(context, "fysioter", "kiropr", "osteopat", "naprapat", "akupunkt", "ergoter")) {
+    return "For en behandlingspraksis er en tydelig presentasjon av behandlingstilbudet, praktisk informasjon og en trygg kontakt- eller bestillingsvei viktig for nye kunder.";
+  }
+  if (segmentCode === "HELSE_VELVAERE" || naceCode.startsWith("86") || naceCode.startsWith("88") || naceCode === "96.040") {
+    return "For helse- og behandlingstjenester er tillit, tydelig informasjon og en trygg vei til kontakt viktig. Hvis nettsiden har skjemaer, bør personvern og GDPR samtidig ivaretas på en ryddig måte.";
+  }
+  if (hasAnyContext(context, "snackbar", "gatekjokken", "hurtigmat", "kafe", "cafe", "restaurant", "catering", "servering")) {
+    return "For et serveringssted kan gode bilder, en tydelig meny og lett tilgjengelige åpningstider gjøre det enklere for nye kunder å velge stedet og finne frem.";
+  }
+  if (segmentCode === "MAT_SERVERING" || naceCode.startsWith("56")) {
+    return "For en mat- og serveringsvirksomhet kan gode bilder, tydelig informasjon om tilbudet og lett tilgjengelige åpningstider og adresse være særlig viktig.";
+  }
+  if (hasAnyContext(context, "snekker", "tomrer", "byggmester", "mobelsnekker", "trearbeid")) {
+    return "For et snekkerfirma er gode bilder og referanser fra tidligere oppdrag viktige for å vise kvaliteten på arbeidet og skape tillit hos nye kunder.";
+  }
+  if (segmentCode === "HANDVERK" || naceCode.startsWith("41") || naceCode.startsWith("42") || naceCode.startsWith("43")) {
+    return "For en håndverksbedrift kan bilder og referanser fra tidligere oppdrag, en tydelig tjenesteoversikt og informasjon om området dere dekker gjøre det enklere å få relevante forespørsler.";
+  }
+  if (hasAnyContext(context, "forlag", "oversett", "translator", "publisher")) {
+    return "For et forlag eller en oversettelsesvirksomhet kan nettsiden presentere språk og tjenester, bygge faglig tillit og etter hvert vise frem forfattere og utgivelser.";
+  }
+  if (hasAnyContext(context, "fotograf", "foto", "videograf", "filmproduksjon")) {
+    return "For foto- og medietjenester er en ryddig portefølje med gode arbeidsprøver viktig for å vise stil, kvalitet og hva nye kunder kan bestille.";
+  }
+  if (hasAnyContext(context, "frisor", "barber", "hudpleie", "skjonnhet", "negledesign", "salong")) {
+    return "For en salong eller skjønnhetsvirksomhet kan gode bilder, tydelig behandlingsoversikt, priser og enkel timebestilling gjøre det lettere for nye kunder å velge dere.";
+  }
+  if (segmentCode === "RENHOLD_OG_DRIFT") {
+    return "For renhold og drift er det viktig å vise hvilke tjenester dere tilbyr, området dere dekker og hvordan privat- eller bedriftskunder kan be om et tilbud.";
+  }
+  if (segmentCode === "HAGE_OG_GRONTANLEGG") {
+    return "For hage- og grøntarbeid kan bilder av tidligere oppdrag, sesongtjenester og tydelig informasjon om området dere dekker gjøre tilbudet mer konkret.";
+  }
+  if (segmentCode === "BUTIKK_LOKALHANDEL" || naceCode.startsWith("47")) {
+    return "For en butikk eller produktvirksomhet kan gode produktbilder, tydelig vareutvalg, åpningstider og praktisk kjøpsinformasjon gjøre det enklere for kundene å handle.";
+  }
+  if (segmentCode === "TRANSPORT") {
+    return "For transport- og budtjenester bør nettsiden raskt vise hvilke oppdrag dere tar, området dere dekker og hvordan kunder kan be om pris eller bestille.";
+  }
+  if (segmentCode === "KONSULENT") {
+    return "For en konsulent- eller fagvirksomhet er det særlig viktig å forklare kompetansen, hvem dere hjelper og hvilke oppdrag kunder kan ta kontakt om.";
+  }
+  if (segmentCode === "PERSONLIG_TJENESTE") {
+    return "For personlige tjenester kan en tydelig presentasjon av tilbudet, priser eller praktisk informasjon og enkel kontakt eller booking gjøre valget tryggere for nye kunder.";
+  }
+
+  return company.salesSegment?.emailPitch
+    ?? "For en ny virksomhet er en nettside nyttig for å vise hva dere tilbyr, hvem dere hjelper og hvordan kunder kan ta kontakt.";
+}
+
+function hasAnyContext(context: string, ...phrases: string[]) {
+  return phrases.some((phrase) => context.includes(normalizeContextText(phrase)));
+}
+
 export function buildOutreachEmailSubject(markdown: string, company: OutreachEmailCompany) {
   const config = outreachEmailTemplateConfig(company);
   const template = extractMailSubject(markdown, config.heading) ?? config.subjectFallback;
@@ -624,7 +693,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{naceCode}}": company.naceCode?.trim() || "",
     "{{naceDescription}}": company.naceDescription?.trim() || "",
     "{{salesSegment}}": company.salesSegment?.label ?? "Annet",
-    "{{salesSegmentPitch}}": company.salesSegment?.emailPitch ?? "For nye virksomheter er en nettside nyttig for å vise hva dere tilbyr, hvem dere hjelper og hvordan kunder kan ta kontakt.",
+    "{{salesSegmentPitch}}": industryOutreachPitch(company),
     "{{salesSegmentExplanation}}": company.salesSegment?.explanation ?? "",
     "{{domainExample}}": domainExamplesForCompany(company)[0] ?? "firmanavn.no",
     "{{domainLine}}": domainLineForCompany(company),
@@ -687,6 +756,8 @@ function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
 ${PERSONAL_OBSERVATION_PLACEHOLDER}
+
+{{salesSegmentPitch}}
 
 Jeg så også at {{registeredWebsite}} er registrert som nettside, men siden svarte ikke da jeg sjekket. Det kan selvfølgelig være midlertidig.
 
@@ -768,6 +839,8 @@ function defaultOutreachEmailTemplate() {
   return `{{greetingLine}}
 
 ${PERSONAL_OBSERVATION_PLACEHOLDER}
+
+{{salesSegmentPitch}}
 
 Jeg lager enkle nettsider som gjør det lettere for nye kunder å forstå hva virksomheten tilbyr og ta kontakt.
 
