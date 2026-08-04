@@ -4,15 +4,35 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 482
-- Sendt: 223
+- Antall hendelser: 522
+- Sendt: 243
 - Angret: 1
-- Aktive kontaktede selskaper: 206
+- Aktive kontaktede selskaper: 226
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 | 938080216 | PETROSERVICE | UTLA | email | website-follow-up |
+| 2026-08-04 | 938019606 | ZUBE VEDLIKEHOLD | ENK | email | website-follow-up |
+| 2026-08-04 | 937944500 | COPE GUIDES AS | AS | email | website-follow-up |
+| 2026-08-04 | 937969635 | ELLA AALTONEN LEGETJENESTER | ENK | email | website-follow-up |
+| 2026-08-04 | 937903359 | FEIE AS | AS | email | website-follow-up |
+| 2026-08-04 | 838072682 | HEGGENES GÅRD ANS | ANS | email | website-follow-up |
+| 2026-08-04 | 938071896 | LEIA ELLINOR MOEN DESIGN & CREATE | ENK | email | website-follow-up |
+| 2026-08-04 | 938068763 | MUSIKK MED MENING | FLI | email | website-follow-up |
+| 2026-08-04 | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | website-follow-up |
+| 2026-08-04 | 938068364 | RØST HUSFLIDSLAG | FLI | email | website-follow-up |
+| 2026-08-04 | 938061092 | BARE KAFFE NYGAARD | ENK | email | website-follow-up |
+| 2026-08-04 | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | website-follow-up |
+| 2026-08-04 | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | website-follow-up |
+| 2026-08-04 | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | website-follow-up |
+| 2026-08-04 | 938076162 | ERLEND WILLMANN | ENK | email | website-follow-up |
+| 2026-08-04 | 938085749 | LEGE ØRJAN WALDENSTRØM | ENK | email | website-follow-up |
+| 2026-08-04 | 938085412 | JELLE APOSTEL | ENK | email | website-follow-up |
+| 2026-08-04 | 938083576 | DELEAN AB | UTLA | email | website-follow-up |
+| 2026-08-04 | 938068941 | JACOBSENS GATEKJØKKEN | ENK | email | website-follow-up |
+| 2026-08-04 | 938061076 | MC BALTZERSEN ASSIST | ENK | email | website-follow-up |
 | 2026-08-04 | 938066787 | YOGA ANNA GORSKA | ENK | email | website-follow-up |
 | 2026-08-04 | 938050724 | ANDREAS FURU | ENK | email | website-follow-up |
 | 2026-08-04 | 938067260 | SYLAIEV SERVICE PRO | ENK | email | website-follow-up |
@@ -224,6 +244,46 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 16:41 | sent | 938080216 | PETROSERVICE | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 938080216 | PETROSERVICE | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 938019606 | ZUBE VEDLIKEHOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 938019606 | ZUBE VEDLIKEHOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 937944500 | COPE GUIDES AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 937944500 | COPE GUIDES AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 937969635 | ELLA AALTONEN LEGETJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 937969635 | ELLA AALTONEN LEGETJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 937903359 | FEIE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 937903359 | FEIE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 838072682 | HEGGENES GÅRD ANS | ANS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 838072682 | HEGGENES GÅRD ANS | ANS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 938071896 | LEIA ELLINOR MOEN DESIGN & CREATE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 938071896 | LEIA ELLINOR MOEN DESIGN & CREATE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 938068763 | MUSIKK MED MENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 938068763 | MUSIKK MED MENING | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:41 | sent | 938068364 | RØST HUSFLIDSLAG | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:41 | sending | 938068364 | RØST HUSFLIDSLAG | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938061092 | BARE KAFFE NYGAARD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938061092 | BARE KAFFE NYGAARD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938085358 | APPELKVIST ULVANG PRESTASJON OG TRENING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938084467 | BRYNJAR HEIBERG TEATER- OG MUSIKK-PRODUKSJONER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938076162 | ERLEND WILLMANN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938076162 | ERLEND WILLMANN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938085749 | LEGE ØRJAN WALDENSTRØM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938085749 | LEGE ØRJAN WALDENSTRØM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938085412 | JELLE APOSTEL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938085412 | JELLE APOSTEL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938083576 | DELEAN AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938083576 | DELEAN AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938068941 | JACOBSENS GATEKJØKKEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938068941 | JACOBSENS GATEKJØKKEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 16:40 | sent | 938061076 | MC BALTZERSEN ASSIST | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 16:40 | sending | 938061076 | MC BALTZERSEN ASSIST | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-04 11:34 | replied | 937848455 | ISLANDSTONE VENTURES AS | AS | email | Svar mottatt – ikke interessert; kun holdingselskap |
 | 2026-08-04 11:32 | replied | 938117411 | SEAHOUSE ANDREASSEN | ENK | email | Svar mottatt – ikke interessert |
 | 2026-08-04 11:16 | replied | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | Svar mottatt – kvalifisert interesse; spør om plattform, admin/eierskap, drift, utvidelser, nettbutikk og fire språk |
