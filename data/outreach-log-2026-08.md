@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 452
-- Sendt: 213
-- Angret: 0
-- Aktive kontaktede selskaper: 205
+- Antall hendelser: 479
+- Sendt: 223
+- Angret: 1
+- Aktive kontaktede selskaper: 208
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 | 938066787 | YOGA ANNA GORSKA | ENK | email | website-follow-up |
+| 2026-08-04 | 938050724 | ANDREAS FURU | ENK | email | website-follow-up |
+| 2026-08-04 | 938067260 | SYLAIEV SERVICE PRO | ENK | email | website-follow-up |
+| 2026-08-04 | 938067872 | EDGEON AS | AS | email | website-follow-up |
+| 2026-08-04 | 938065861 | ELISABETH JACOBSEN | ENK | email | website-follow-up |
+| 2026-08-04 | 938061297 | MORTENSEN AI & DATA | ENK | email | website-follow-up |
+| 2026-08-04 | 938066604 | SARA WRIGHTOVA - SARA WRIGHT VISUALS | ENK | email | website-follow-up |
+| 2026-08-04 | 938085064 | ISMAEIL TAXI | ENK | email | website-follow-up |
+| 2026-08-04 | 938086478 | MICHAEL TESFAZGI | ENK | email | website-follow-up |
+| 2026-08-04 | 838066372 | ALFRED DOKKEN FILM | ENK | email | website-follow-up |
 | 2026-08-04 | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | website-follow-up |
 | 2026-08-04 | 937848447 | GREEN DIGITAL OP AS | AS | email | website-follow-up |
 | 2026-08-04 | 937886950 | BOLIGLØFT AS | AS | email | website-follow-up |
@@ -26,7 +36,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 938092966 | TOMMY LEE RUDQVIST | ENK | email | website-follow-up |
 | 2026-08-04 | 938085390 | VESTNES SPRÅK- OG INTEGRERINGSTJENESTER | ENK | email | website-follow-up |
 | 2026-08-04 | 938089094 | SUNDE BYGG OG MONTERING | ENK | email | website-follow-up |
-| 2026-08-04 | 938094128 | BILSPA NORDLAND DANCHENKO | ENK | email | website-follow-up |
 | 2026-08-04 | 938090688 | KRISTIANE AAVIK MASSASJE | ENK | email | website-follow-up |
 | 2026-08-04 | 838076262 | FIREFLY TECHNOLOGY BALSNES | ENK | email | website-follow-up |
 | 2026-08-04 | 937887000 | ABR HOLDCO AS | AS | email | website-follow-up |
@@ -48,10 +57,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 837461332 | MATELIS BYGG OG SERVICE | ENK | email | website-follow-up |
 | 2026-08-04 | 937466684 | DEEPSKIN VADIVELU | ENK | email | website-follow-up |
 | 2026-08-04 | 937471203 | ALFRED AAMODT-BORGERSEN | ENK | email | website-follow-up |
-| 2026-08-04 | 936433731 | MALVIK SANITETSFORENING | FLI | email | website-follow-up |
 | 2026-08-04 | 937315171 | SUNDESKOGEN FIBERLAG | FLI | email | website-follow-up |
 | 2026-08-04 | 937455534 | KRINGLEHAUG OG RYGG VELFORENING | FLI | email | website-follow-up |
-| 2026-08-04 | 938093784 | IVAN HUMENIUK BILPLEIE | ENK | email | website-follow-up |
 | 2026-08-04 | 938094098 | SINNES FLIS&SJØMAT | ENK | email | website-follow-up |
 | 2026-08-04 | 938109885 | VILDESIGN BY VILDE HELMERSEN | ENK | email | website-follow-up |
 | 2026-08-04 | 938105278 | AIMEI AB | UTLA | email | website-follow-up |
@@ -60,7 +67,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 937921691 | ING. LUBOMIR OVCIARIK | UTLA | email | website-follow-up |
 | 2026-08-04 | 937816588 | ING. LUBOMIR OVCIARIK NUF | NUF | email | website-follow-up |
 | 2026-08-04 | 938105553 | MYRONENKO BEAUTY STUDIO | ENK | email | website-follow-up |
-| 2026-08-04 | 937982976 | PER-OLOF LUDVIG SAMUELSSON | UTLA | email | website-follow-up |
 | 2026-08-04 | 938108382 | PSYKIATRITJENESTER, GRETE LARSEN | ENK | email | website-follow-up |
 | 2026-08-04 | 838103162 | RAOUFI ARKITEKTUR | ENK | email | website-follow-up |
 | 2026-08-04 | 938087679 | ARENACONSULTAGENCY TREIDER | ENK | email | website-follow-up |
@@ -82,16 +88,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 838110312 | NEDRE HOLAND GÅRD - BERGE | ENK | email | website-follow-up |
 | 2026-08-04 | 938115478 | NZO WAS B.V. | UTLA | email | website-follow-up |
 | 2026-08-04 | 937817614 | NZO WAS B.V. NUF | NUF | email | website-follow-up |
-| 2026-08-04 | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | website-follow-up |
 | 2026-08-04 | 938201692 | ARNEGÅRD UNDERHOLDNING | ENK | email | website-offer |
-| 2026-08-04 | 938192669 | ERDAL HAGEBY DRIFTSLAG | FLI | email | website-offer |
 | 2026-08-04 | 938202257 | GEIRHILD SNILDAL ENGEN | ENK | email | website-offer |
 | 2026-08-04 | 838196462 | IVERSEN SYRIAN FLAVOURS | ENK | email | website-offer |
 | 2026-08-04 | 938201498 | DR MOBIL IRSHAD | ENK | email | website-offer |
 | 2026-08-04 | 938110336 | ARCHEA AS | AS | email | website-offer |
 | 2026-08-04 | 938203210 | STØLAN OG HUSTVEIT | ENK | email | website-offer |
 | 2026-08-04 | 938202737 | STUDIO ES SHAMOLLI | ENK | email | website-offer |
-| 2026-08-04 | 938203172 | SOLBREKKE PERTINENT | ENK | email | website-offer |
 | 2026-08-04 | 938191107 | KATOLSK STUDENTLAG I OSLO | FLI | email | website-offer |
 | 2026-08-03 | 938117446 | SVAHN SOUND | ENK | email | website-follow-up |
 | 2026-08-03 | 937887086 | EVBEE ENERGY AS | AS | email | website-follow-up |
@@ -223,6 +226,33 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 11:06 | replied | 936433731 | MALVIK SANITETSFORENING | FLI | email | Svar mottatt – ikke interessert nå; tar kontakt ved behov |
+| 2026-08-04 11:01 | replied | 938094128 | BILSPA NORDLAND DANCHENKO | ENK | email | Svar mottatt – interessert; ønsker mer informasjon |
+| 2026-08-04 10:55 | replied | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | Svar mottatt – interessert; ønsker tekstskisse og eksempler på tidligere nettsider |
+| 2026-08-04 10:50 | replied | 938093784 | IVAN HUMENIUK BILPLEIE | ENK | email | Svar mottatt – interessert; ønsker beskrivelse og priser |
+| 2026-08-04 10:48 | reverted | 937982976 | PER-OLOF LUDVIG SAMUELSSON | UTLA | email | Permanent feillevering – SMTP 550 5.5.0 mailbox unavailable; ikke send til adressen igjen |
+| 2026-08-04 10:47 | replied | 938203172 | SOLBREKKE PERTINENT | ENK | email | Svar mottatt – ønsker ikke tilbud |
+| 2026-08-04 10:46 | replied | 938192669 | ERDAL HAGEBY DRIFTSLAG | FLI | email | Svar mottatt – ikke interessert; lite sameie som bruker Facebook-gruppe |
+| 2026-08-04 10:44 | sent | 938066787 | YOGA ANNA GORSKA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938066787 | YOGA ANNA GORSKA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938050724 | ANDREAS FURU | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938050724 | ANDREAS FURU | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938067260 | SYLAIEV SERVICE PRO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938067260 | SYLAIEV SERVICE PRO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938067872 | EDGEON AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938067872 | EDGEON AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938065861 | ELISABETH JACOBSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938065861 | ELISABETH JACOBSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938061297 | MORTENSEN AI & DATA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938061297 | MORTENSEN AI & DATA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938066604 | SARA WRIGHTOVA - SARA WRIGHT VISUALS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938066604 | SARA WRIGHTOVA - SARA WRIGHT VISUALS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938085064 | ISMAEIL TAXI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938085064 | ISMAEIL TAXI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 938086478 | MICHAEL TESFAZGI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 938086478 | MICHAEL TESFAZGI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:44 | sent | 838066372 | ALFRED DOKKEN FILM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:44 | sending | 838066372 | ALFRED DOKKEN FILM | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-04 10:42 | sent | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-04 10:42 | sending | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-04 10:42 | sent | 937848447 | GREEN DIGITAL OP AS | AS | email | Oppfølging sendt – avslutt hvis stille |
