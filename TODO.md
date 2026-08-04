@@ -45,6 +45,15 @@
 - Dersom svaret krever handling, skal registreringen gjøres først og et kort svarutkast leveres etterpå. Hvis mottakeren bare avslår høflig, er nytt svar normalt ikke nødvendig.
 - Bekreft kort til brukeren hvilken status og hvilket utfall som ble registrert.
 
+### Leveransemodell for nettsider
+
+- Nettsider bygges som skreddersydd frontend og backend i IntelliJ, ikke i WordPress som standard.
+- Under utviklingen publiseres løsningen via LTJ Productions GitHub slik at kunden kan kontrollere resultatet og gi tilbakemeldinger.
+- Når kunden er fornøyd og leveransen er godkjent, publiseres løsningen på kundens eget domene, for eksempel `domene.no`.
+- Ikke lov et WordPress-administrasjonspanel. Hvis kunden skal redigere innhold selv, må et eget administrasjonsgrensesnitt eller en annen avtalt innholdsløsning inngå i omfanget.
+- Frontend, backend, database, nettbutikk, flerspråklighet og teknisk drift skal prises og avgrenses etter faktisk behov. Den enkle førstesiden til 1 990 kr omfatter ikke automatisk disse utvidelsene.
+- Ved spørsmål om eierskap skal det avklares skriftlig hva kunden får overlevert etter betaling, inkludert kildekode, innhold, repository, domene- og driftskontoer samt eventuelle tredjepartslisenser.
+
 ### Levert
 
 - Hovedsiden er forenklet og visuelt strammet inn.

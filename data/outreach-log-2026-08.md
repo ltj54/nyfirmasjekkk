@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 479
+- Antall hendelser: 482
 - Sendt: 223
 - Angret: 1
-- Aktive kontaktede selskaper: 208
+- Aktive kontaktede selskaper: 206
 
 ## Aktive kontaktede selskaper
 
@@ -28,7 +28,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 937886950 | BOLIGLØFT AS | AS | email | website-follow-up |
 | 2026-08-04 | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | website-follow-up |
 | 2026-08-04 | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | website-follow-up |
-| 2026-08-04 | 937848455 | ISLANDSTONE VENTURES AS | AS | email | website-follow-up |
 | 2026-08-04 | 937848420 | TENSIONE AS | AS | email | website-follow-up |
 | 2026-08-04 | 937848749 | ÅSEN HOLDING AS | AS | email | website-follow-up |
 | 2026-08-04 | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | website-follow-up |
@@ -83,7 +82,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 938097097 | FEMLONE ACADEMY AS | AS | email | website-follow-up |
 | 2026-08-04 | 938098395 | FROMREIDE LANDBRUK OG MASKIN | ENK | email | website-follow-up |
 | 2026-08-04 | 938098352 | MICHAL WITEMBERG | UTLA | email | website-follow-up |
-| 2026-08-04 | 938117411 | SEAHOUSE ANDREASSEN | ENK | email | website-follow-up |
 | 2026-08-04 | 937950632 | NASSAU PARC B.V. NUF | NUF | email | website-follow-up |
 | 2026-08-04 | 838110312 | NEDRE HOLAND GÅRD - BERGE | ENK | email | website-follow-up |
 | 2026-08-04 | 938115478 | NZO WAS B.V. | UTLA | email | website-follow-up |
@@ -226,6 +224,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 11:34 | replied | 937848455 | ISLANDSTONE VENTURES AS | AS | email | Svar mottatt – ikke interessert; kun holdingselskap |
+| 2026-08-04 11:32 | replied | 938117411 | SEAHOUSE ANDREASSEN | ENK | email | Svar mottatt – ikke interessert |
+| 2026-08-04 11:16 | replied | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | Svar mottatt – kvalifisert interesse; spør om plattform, admin/eierskap, drift, utvidelser, nettbutikk og fire språk |
 | 2026-08-04 11:06 | replied | 936433731 | MALVIK SANITETSFORENING | FLI | email | Svar mottatt – ikke interessert nå; tar kontakt ved behov |
 | 2026-08-04 11:01 | replied | 938094128 | BILSPA NORDLAND DANCHENKO | ENK | email | Svar mottatt – interessert; ønsker mer informasjon |
 | 2026-08-04 10:55 | replied | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | Svar mottatt – interessert; ønsker tekstskisse og eksempler på tidligere nettsider |
