@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 431
-- Sendt: 203
+- Antall hendelser: 452
+- Sendt: 213
 - Angret: 0
-- Aktive kontaktede selskaper: 195
+- Aktive kontaktede selskaper: 205
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | website-follow-up |
+| 2026-08-04 | 937848447 | GREEN DIGITAL OP AS | AS | email | website-follow-up |
+| 2026-08-04 | 937886950 | BOLIGLØFT AS | AS | email | website-follow-up |
+| 2026-08-04 | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | website-follow-up |
+| 2026-08-04 | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | website-follow-up |
+| 2026-08-04 | 937848455 | ISLANDSTONE VENTURES AS | AS | email | website-follow-up |
+| 2026-08-04 | 937848420 | TENSIONE AS | AS | email | website-follow-up |
+| 2026-08-04 | 937848749 | ÅSEN HOLDING AS | AS | email | website-follow-up |
+| 2026-08-04 | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | website-follow-up |
+| 2026-08-04 | 838086322 | TOFTAKER CONTENT | ENK | email | website-follow-up |
 | 2026-08-04 | 938092966 | TOMMY LEE RUDQVIST | ENK | email | website-follow-up |
 | 2026-08-04 | 938085390 | VESTNES SPRÅK- OG INTEGRERINGSTJENESTER | ENK | email | website-follow-up |
 | 2026-08-04 | 938089094 | SUNDE BYGG OG MONTERING | ENK | email | website-follow-up |
@@ -213,6 +223,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04 10:42 | sent | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937805918 | PSYKOLOGSPESIALIST KRISTINE KÅRVIK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937848447 | GREEN DIGITAL OP AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937848447 | GREEN DIGITAL OP AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937886950 | BOLIGLØFT AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937886950 | BOLIGLØFT AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937848455 | ISLANDSTONE VENTURES AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937848455 | ISLANDSTONE VENTURES AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937848420 | TENSIONE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937848420 | TENSIONE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 937848749 | ÅSEN HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 937848749 | ÅSEN HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:42 | sent | 838086322 | TOFTAKER CONTENT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-04 10:42 | sending | 838086322 | TOFTAKER CONTENT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-04 10:38 | replied | 937017979 | NORTHHAVEN MANAGEMENT AS | AS | email | Svar mottatt – ikke interessert nå; tar kontakt ved behov |
 | 2026-08-04 10:36 | sent | 938092966 | TOMMY LEE RUDQVIST | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-04 10:36 | sending | 938092966 | TOMMY LEE RUDQVIST | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-04 10:36 | sent | 938085390 | VESTNES SPRÅK- OG INTEGRERINGSTJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |

@@ -34,6 +34,17 @@
 - Dagens oppsett uten database, aktørrisiko, historikk og CRM-integrasjon fungerer som ønsket nå.
 - Loggfilene i `data/` er historikk. Applikasjonen kan skrive til dem, men de skal ikke redigeres, nullstilles eller ryddes manuelt.
 
+### Arbeidsrutine for innlimte svarmailer
+
+- Når brukeren limer inn en mottatt svarmail i samtalen, skal svaret klassifiseres og registreres direkte i outreach-loggen via applikasjonens API. Det er ikke nok å bare foreslå hva brukeren bør gjøre.
+- Bekreft organisasjonsnummer og eksisterende utsendelse i loggen før ny svarhendelse registreres.
+- Alle reelle svar fra mottakeren registreres som `replied`, også høflige avslag og «ikke nå». Utfallet beskrives kort i notatet, for eksempel `interessert`, `ønsker pris`, `har annen hjelp`, `ikke interessert nå` eller `tar kontakt senere`.
+- `not_relevant` brukes når vi selv forkaster et lead, ikke når mottakeren faktisk har svart.
+- Autosvar, feillevering og returmail skal ikke registreres som et reelt svar; bruk passende leveringsstatus og notat.
+- En registrert svarhendelse skal beholde kontakthistorikken, sperre nye utsendelser og fjerne virksomheten fra automatisk oppfølging.
+- Dersom svaret krever handling, skal registreringen gjøres først og et kort svarutkast leveres etterpå. Hvis mottakeren bare avslår høflig, er nytt svar normalt ikke nødvendig.
+- Bekreft kort til brukeren hvilken status og hvilket utfall som ble registrert.
+
 ### Levert
 
 - Hovedsiden er forenklet og visuelt strammet inn.
@@ -122,7 +133,7 @@
 
 ### Utsendelseslogg
 
-rii- [ ] Fjern virksomheter fra `Send oppfølging` så snart mottakeren har svart på den opprinnelige e-posten. Oppdag innkommende svar (typisk emne med `SV:` eller `Re:`), koble svaret til riktig virksomhet/utsendelse og registrer en append-only svarhendelse slik at mottakeren ikke får automatisert oppfølging.
+- [ ] Automatiser fjerning fra `Send oppfølging` når mottakeren svarer. Oppdag innkommende svar (typisk emne med `SV:` eller `Re:`), koble svaret til riktig virksomhet/utsendelse og registrer en append-only svarhendelse. Inntil dette er automatisert brukes rutinen for innlimte svarmailer over.
 - [x] Lag filbasert logg for utsendelser.
 - [x] Lag månedlig Markdown-rapport.
 - [x] Arkiver eldre måneder automatisk.
