@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 621
+- Antall hendelser: 622
 - Sendt: 288
 - Angret: 1
-- Aktive kontaktede selskaper: 266
+- Aktive kontaktede selskaper: 265
 
 ## Aktive kontaktede selskaper
 
@@ -46,7 +46,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-05 | 937919204 | RUNE OLSEN | ENK | email | website-follow-up |
 | 2026-08-05 | 937918321 | UAB AUTOMOBIL LT | UTLA | email | website-follow-up |
 | 2026-08-05 | 937918461 | KVINNESLAND SERVICE | ENK | email | website-follow-up |
-| 2026-08-05 | 937881150 | MAGNAR STIEN AI | ENK | email | website-follow-up |
 | 2026-08-05 | 937847572 | BLOOM CAPITAL AS | AS | email | website-follow-up |
 | 2026-08-05 | 837848172 | SERVICETEAM BYGG OG ANLEGG AS | AS | email | website-follow-up |
 | 2026-08-05 | 937917813 | ET NORDLIG TRE M. ZOCZEK | ENK | email | website-follow-up |
@@ -284,6 +283,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-05 10:11 | replied | 937881150 | MAGNAR STIEN AI | ENK | email | Svar mottatt 2026-08-05: Spør hvilken melding oppfølgingen viser til. Første e-post ble sendt 2026-07-07. Krever manuelt svar; ingen automatisk oppfølging. |
 | 2026-08-05 09:42 | sent | 838051642 | HÅKENSTAD MASKIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-05 09:42 | sending | 838051642 | HÅKENSTAD MASKIN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-05 09:42 | sent | 938056757 | KARINA SIWY | ENK | email | Oppfølging sendt – avslutt hvis stille |
