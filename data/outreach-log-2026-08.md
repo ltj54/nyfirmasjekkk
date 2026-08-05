@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 622
-- Sendt: 288
+- Antall hendelser: 642
+- Sendt: 298
 - Angret: 1
-- Aktive kontaktede selskaper: 265
+- Aktive kontaktede selskaper: 275
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-05 | 937946406 | HYPAK AS | AS | email | website-follow-up |
+| 2026-08-05 | 937947801 | ISAK MACODY FALCK | ENK | email | website-follow-up |
+| 2026-08-05 | 937919905 | AAS SKOG OG TJENESTER | ENK | email | website-follow-up |
+| 2026-08-05 | 937807961 | SURFBOARD PAYMENTS AB | NUF | email | website-follow-up |
+| 2026-08-05 | 937797028 | TIME BETONG | ENK | email | website-follow-up |
+| 2026-08-05 | 937888112 | NOTØY SLIT & SJAU | ENK | email | website-follow-up |
+| 2026-08-05 | 937853017 | ROBERTS SOLUTIONS | ENK | email | website-follow-up |
+| 2026-08-05 | 937847882 | COLLECTION HOLDCO AS | AS | email | website-follow-up |
+| 2026-08-05 | 938058512 | DERVISHI | ENK | email | website-follow-up |
+| 2026-08-05 | 937759142 | ESPELAND FORSAMLINGSHUS | FLI | email | website-follow-up |
 | 2026-08-05 | 838051642 | HÅKENSTAD MASKIN | ENK | email | website-follow-up |
 | 2026-08-05 | 938056757 | KARINA SIWY | ENK | email | website-follow-up |
 | 2026-08-05 | 938051895 | LILLESTRØM STUDENTBY BEBOERFORENING | FLI | email | website-follow-up |
@@ -283,6 +293,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-05 16:19 | sent | 937946406 | HYPAK AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937946406 | HYPAK AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937947801 | ISAK MACODY FALCK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937947801 | ISAK MACODY FALCK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937919905 | AAS SKOG OG TJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937919905 | AAS SKOG OG TJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937807961 | SURFBOARD PAYMENTS AB | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937807961 | SURFBOARD PAYMENTS AB | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937797028 | TIME BETONG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937797028 | TIME BETONG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937888112 | NOTØY SLIT & SJAU | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937888112 | NOTØY SLIT & SJAU | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937853017 | ROBERTS SOLUTIONS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937853017 | ROBERTS SOLUTIONS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937847882 | COLLECTION HOLDCO AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937847882 | COLLECTION HOLDCO AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 938058512 | DERVISHI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 938058512 | DERVISHI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-05 16:19 | sent | 937759142 | ESPELAND FORSAMLINGSHUS | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-05 16:19 | sending | 937759142 | ESPELAND FORSAMLINGSHUS | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-05 10:11 | replied | 937881150 | MAGNAR STIEN AI | ENK | email | Svar mottatt 2026-08-05: Spør hvilken melding oppfølgingen viser til. Første e-post ble sendt 2026-07-07. Krever manuelt svar; ingen automatisk oppfølging. |
 | 2026-08-05 09:42 | sent | 838051642 | HÅKENSTAD MASKIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-05 09:42 | sending | 838051642 | HÅKENSTAD MASKIN | ENK | email | Oppfølging reservert før SMTP-levering. |
