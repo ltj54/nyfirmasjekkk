@@ -31,19 +31,26 @@ class WebsiteReachabilityServiceTests {
             send(exchange, 200, "ok");
         });
 
-        assertThat(new WebsiteReachabilityService().isReachable(serverUrl())).isTrue();
+        assertThat(new WebsiteReachabilityService(true).isReachable(serverUrl())).isTrue();
     }
 
     @Test
     void regnerBlokkertMenSvarendeNettsideSomReachable() throws IOException {
         startServer(exchange -> send(exchange, 403, "blocked"));
 
-        assertThat(new WebsiteReachabilityService().isReachable(serverUrl())).isTrue();
+        assertThat(new WebsiteReachabilityService(true).isReachable(serverUrl())).isTrue();
     }
 
     @Test
     void returnererFalseNarBadeHeadOgGetFeiler() throws IOException {
         startServer(exchange -> send(exchange, 404, "not found"));
+
+        assertThat(new WebsiteReachabilityService(true).isReachable(serverUrl())).isFalse();
+    }
+
+    @Test
+    void blokkererLokaleMalIProduksjonsmodus() throws IOException {
+        startServer(exchange -> send(exchange, 200, "internt"));
 
         assertThat(new WebsiteReachabilityService().isReachable(serverUrl())).isFalse();
     }

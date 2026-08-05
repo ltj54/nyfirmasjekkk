@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import {
   Building2,
   CalendarDays,
@@ -20,6 +20,10 @@ import {
   CheckCircle2,
   AlertTriangle,
   ArrowLeft,
+  ClipboardCopy,
+  Eye,
+  FileText,
+  MessageSquareText,
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -1885,7 +1889,7 @@ export function CompanyCheckShell() {
                   <p className="text-[12px] font-semibold uppercase text-[#52606D]">Nettsidesjekk</p>
                   <h1 className="mt-1 text-2xl font-semibold text-[#1F2933]">Vurder en nettside</h1>
                   <p className="mt-2 text-[14px] leading-6 text-[#52606D]">
-                    Kontroller teknisk trygghet, tilgjengelighet, personvern, innhold, skjema og sikkerhetsheadere.
+                    Automatisk førstesjekk av teknisk trygghet, tilgjengelighet, personvern, innhold, skjema og sikkerhetsheadere.
                   </p>
                 </div>
                 <form
@@ -1912,6 +1916,12 @@ export function CompanyCheckShell() {
                     {choose(isWebsiteInspectionLoading, "Sjekker...", "Sjekk nettside")}
                   </Button>
                 </form>
+                <Show when={isWebsiteInspectionLoading}>
+                  <div aria-live="polite" className="mt-3 border border-blue-100 bg-[#F8FBFF] px-4 py-3 text-[12px] leading-5 text-[#334E68]">
+                    <p className="font-semibold text-[#1F5FA9]">Analyserer nettsiden …</p>
+                    <p className="mt-1">Vi kontrollerer forsiden, prioriterte undersider, interne lenker og tekniske signaler. En grundig sjekk kan ta opptil 20–30 sekunder.</p>
+                  </div>
+                </Show>
                 <Show when={Boolean(websiteInspectionError)}>
                   <p className="mt-3 border border-rose-100 bg-rose-50 px-3 py-2 text-[12px] font-medium text-rose-700">{websiteInspectionError}</p>
                 </Show>
@@ -2288,9 +2298,39 @@ function WebsiteInspectionDetail({
           </div>
         </div>
         <div className="mt-4 border border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3 text-[12px] leading-5 text-[#52606D]">
-          Sjekken inkluderer teknisk trygghet, UU/WCAG-signaler, personvern, innhold, skjema, sikkerhetsheadere og publisert tilgjengelighetserklæring fra uustatus.no når siden lenker dit.
+          Automatisk førstesjekk av teknisk trygghet, UU/WCAG-signaler, personvern, innhold, skjema, sikkerhetsheadere og publisert tilgjengelighetserklæring fra uustatus.no når siden lenker dit.
         </div>
-        <WebsiteQualityPanel className="mt-6" quality={currentInspection.websiteQuality} />
+        {currentInspection.coverage ? (
+          <section aria-labelledby="inspection-coverage-heading" className="mt-4 border border-[#D9E2EC] bg-white px-4 py-4">
+            <h3 className="text-[14px] font-semibold text-[#1F2933]" id="inspection-coverage-heading">Hva ble kontrollert?</h3>
+            <p className="mt-1 text-[11px] leading-5 text-[#52606D]">Dekningen viser hvor bredt den automatiske analysen kom på dette nettstedet.</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#7B8794]">Sider kontrollert</p>
+                <p className="mt-1 text-lg font-semibold text-[#1F2933]">
+                  {currentInspection.coverage.pagesInspected} av inntil {currentInspection.coverage.pageLimit}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#7B8794]">Interne lenker testet</p>
+                <p className="mt-1 text-lg font-semibold text-[#1F2933]">{currentInspection.coverage.internalLinksChecked}</p>
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#7B8794]">Metode</p>
+                <p className="mt-1 text-[13px] font-semibold text-[#1F2933]">{currentInspection.coverage.method}</p>
+              </div>
+            </div>
+            <details className="mt-3 border-t border-[#E4E7EB] pt-3 text-[11px] text-[#52606D]">
+              <summary className="cursor-pointer font-semibold text-[#334E68]">Begrensninger ved automatisk sjekk</summary>
+              <ul className="mt-2 space-y-1 leading-5">
+                {currentInspection.coverage.limitations.map((limitation) => (
+                  <li key={limitation}>• {limitation}</li>
+                ))}
+              </ul>
+            </details>
+          </section>
+        ) : null}
+        <WebsiteQualityPanel className="mt-6" quality={currentInspection.websiteQuality} reportContext={currentInspection} />
         <BrregWebsiteMatchesPanel
           inspection={currentInspection}
           matches={currentInspection.brregMatches ?? []}
@@ -2536,16 +2576,26 @@ function BrregWebsiteMatchesPanel({
   );
 }
 
-async function copyWebsiteReport(text: string, onCopied: (value: boolean) => void) {
+async function copyWebsiteReport(
+  text: string,
+  onCopied: (value: boolean) => void,
+  onError: (message: string | null) => void,
+) {
   if (!text) {
+    return;
+  }
+  if (!navigator.clipboard?.writeText) {
+    onError("Nettleseren støtter ikke automatisk kopiering. Åpne forhåndsvisningen og marker teksten manuelt.");
     return;
   }
   try {
     await navigator.clipboard.writeText(text);
+    onError(null);
     onCopied(true);
     window.setTimeout(() => onCopied(false), 1800);
   } catch (error) {
     console.error("Failed to copy website report", error);
+    onError("Kunne ikke kopiere automatisk. Åpne forhåndsvisningen og marker teksten manuelt.");
   }
 }
 
@@ -2569,11 +2619,13 @@ function BrregSendBlockNotice({ blocked, email, reason }: Readonly<{
 function WebsiteQualityPanel({
   quality,
   className = "",
+  reportContext,
 }: Readonly<{
   quality: WebsiteQualityAssessment;
   className?: string;
+  reportContext?: Pick<WebsiteInspectionResponse, "normalizedUrl" | "coverage">;
 }>) {
-  const visibleSignals = prioritizedWebsiteQualitySignals(quality.signals, 10);
+  const visibleSignals = prioritizedWebsiteQualitySignals(quality.signals, 6);
   const visibleSignalCodes = new Set(visibleSignals.map((signal) => signal.code));
   const hiddenSignals = quality.signals.filter((signal) => !visibleSignalCodes.has(signal.code));
   const groupedSignals = groupWebsiteQualitySignals(visibleSignals);
@@ -2584,47 +2636,61 @@ function WebsiteQualityPanel({
     ? [{ title: "Avanserte tekniske signaler", signals: advancedSignals }]
     : [];
   const reportSummary = websiteQualityReportSummary(quality.signals);
-  const [showShortReport, setShowShortReport] = useState(false);
+  const [visibleReport, setVisibleReport] = useState<"analysis" | "customer" | null>(null);
   const [showAllSignals, setShowAllSignals] = useState(false);
   const [copiedShortReport, setCopiedShortReport] = useState(false);
   const [copiedCustomerReport, setCopiedCustomerReport] = useState(false);
-  const shortReport = buildWebsiteShortReport(quality);
-  const customerReport = buildWebsiteCustomerReport(quality);
+  const [copyError, setCopyError] = useState<string | null>(null);
+  const shortReport = buildWebsiteShortReport(quality, reportContext);
+  const customerReport = buildWebsiteCustomerReport(quality, reportContext);
   const statusClassName = websiteQualityStatusClassName(quality.status);
 
   return (
     <div className={`border border-[#D9E2EC] bg-white p-5 ${className}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-[12px] font-medium text-[#52606D]">Nettsidekvalitet</p>
-          <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{quality.label}</h4>
+          <p className="text-[12px] font-medium text-[#52606D]">Samlet vurdering</p>
+          <h3 className="mt-1 text-[17px] font-semibold text-[#1F2933]">{quality.label}</h3>
         </div>
         <span className={`inline-flex w-fit rounded-sm px-2 py-1 text-[10px] font-semibold ${statusClassName}`}>
-          {quality.status === "OK" ? "OK" : "Bør sjekkes"}
+          {websiteQualityStatusLabel(quality.status)}
         </span>
       </div>
       <p className="mt-3 text-[13px] leading-relaxed text-[#52606D]">{quality.summary}</p>
-      <WebsiteReportControls
-        copiedCustomerReport={copiedCustomerReport}
-        copiedShortReport={copiedShortReport}
-        customerReport={customerReport}
-        onCopyCustomer={() => void copyWebsiteReport(customerReport, setCopiedCustomerReport)}
-        onCopyShort={() => void copyWebsiteReport(shortReport, setCopiedShortReport)}
-        onToggle={() => setShowShortReport((current) => !current)}
-        shortReport={shortReport}
-        showShortReport={showShortReport}
-      />
       {reportSummary.length > 0 ? (
-        <div className="mt-4 grid gap-3 border border-[#D9E2EC] bg-[#F8FBFF] p-4 md:grid-cols-3">
+        <section aria-label="Kort oppsummert" className="mt-5">
+          <h4 className="text-[13px] font-semibold text-[#1F2933]">Kort oppsummert</h4>
+          <div className="mt-2 grid gap-3 border border-[#D9E2EC] bg-[#F8FBFF] p-4 md:grid-cols-3">
           {reportSummary.map((item) => (
             <div key={item.label}>
               <p className="text-[10px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{item.label}</p>
               <p className="mt-1 text-[13px] font-semibold leading-5 text-[#1F2933]">{item.value}</p>
             </div>
           ))}
-        </div>
+          </div>
+        </section>
       ) : null}
-      <WebsiteSignalGroups className="mt-4" groups={groupedSignals} />
+      <WebsiteReportControls
+        copiedCustomerReport={copiedCustomerReport}
+        copiedShortReport={copiedShortReport}
+        copyError={copyError}
+        customerReport={customerReport}
+        onCopyCustomer={() => void copyWebsiteReport(customerReport, setCopiedCustomerReport, setCopyError)}
+        onCopyShort={() => void copyWebsiteReport(shortReport, setCopiedShortReport, setCopyError)}
+        onToggleCustomer={() => setVisibleReport((current) => current === "customer" ? null : "customer")}
+        onToggleShort={() => setVisibleReport((current) => current === "analysis" ? null : "analysis")}
+        shortReport={shortReport}
+        visibleReport={visibleReport}
+      />
+      {groupedSignals.length > 0 ? (
+        <section className="mt-6" aria-label="Viktigste funn">
+          <div className="mb-3">
+            <h4 className="text-[14px] font-semibold text-[#1F2933]">Viktigste funn</h4>
+            <p className="mt-1 text-[12px] leading-5 text-[#52606D]">Start her. Hvert funn forklarer hvorfor det betyr noe og hva som bør gjøres.</p>
+          </div>
+          <WebsiteSignalGroups groups={groupedSignals} />
+        </section>
+      ) : null}
       {hiddenSignals.length > 0 ? (
         <div className="mt-4 border-t border-[#E4E7EB] pt-4">
           <Button
@@ -2634,10 +2700,10 @@ function WebsiteQualityPanel({
             type="button"
             variant="outline"
           >
-            {showAllSignals ? "Skjul avansert detaljnivå" : `Vis avansert detaljnivå (${hiddenSignals.length})`}
+            {showAllSignals ? "Skjul øvrige funn" : `Vis alle funn (${hiddenSignals.length} til)`}
           </Button>
           <p className="mt-2 text-[12px] leading-5 text-[#52606D]">
-            Standardvisningen viser de viktigste funnene. Resten er tekniske signaler som kan være nyttige ved manuell gjennomgang, men som ofte blir støy i første kundedialog.
+            Standardvisningen viser de seks viktigste funnene. Her finner du resten, inkludert mer tekniske detaljer for manuell gjennomgang.
           </p>
           {showAllSignals ? <WebsiteSignalGroups className="mt-4" groups={[...hiddenGroupedSignals, ...advancedGroupedSignals]} /> : null}
         </div>
@@ -2668,16 +2734,30 @@ function websiteQualityReportSummary(signals: WebsiteQualitySignal[]) {
   ];
 }
 
-function buildWebsiteShortReport(quality: WebsiteQualityAssessment) {
+function buildWebsiteShortReport(
+  quality: WebsiteQualityAssessment,
+  reportContext?: Pick<WebsiteInspectionResponse, "normalizedUrl" | "coverage">,
+) {
   if (quality.signals.length === 0) {
     return "";
   }
 
   const topSignals = prioritizeWebsiteReportSignals(quality.signals).slice(0, 3);
   const signalCodes = new Set(quality.signals.map((signal) => signal.code));
+  const contextLines = reportContext
+    ? [
+        "Nettside",
+        reportContext.normalizedUrl,
+        ...(reportContext.coverage
+          ? ["", "Kontrollert", `${reportContext.coverage.pagesInspected} sider og ${reportContext.coverage.internalLinksChecked} interne lenker (${reportContext.coverage.method.toLowerCase()}).`]
+          : []),
+        "",
+      ]
+    : [];
   const lines = [
     "Kort nettsiderapport",
     "",
+    ...contextLines,
     "Kort vurdering",
     quality.summary,
     "",
@@ -2697,7 +2777,10 @@ function buildWebsiteShortReport(quality: WebsiteQualityAssessment) {
   return lines.join("\n");
 }
 
-function buildWebsiteCustomerReport(quality: WebsiteQualityAssessment) {
+function buildWebsiteCustomerReport(
+  quality: WebsiteQualityAssessment,
+  reportContext?: Pick<WebsiteInspectionResponse, "normalizedUrl" | "coverage">,
+) {
   if (quality.signals.length === 0) {
     return "";
   }
@@ -2711,7 +2794,9 @@ function buildWebsiteCustomerReport(quality: WebsiteQualityAssessment) {
     .join(" og ");
 
   return [
-    "Jeg tok en rask og overordnet sjekk av nettsiden.",
+    reportContext
+      ? `Jeg tok en rask og overordnet sjekk av ${stripWebsiteProtocol(reportContext.normalizedUrl)}.`
+      : "Jeg tok en rask og overordnet sjekk av nettsiden.",
     "",
     findingsLine
       ? `Det jeg ville sett nærmere på først, er ${findingsLine}.`
@@ -2824,45 +2909,32 @@ const ADVANCED_WEBSITE_SIGNAL_CODES = new Set([
   "MISSING_FRAME_PROTECTION",
 ]);
 
+type SignalTextGroup = readonly [codes: readonly string[], text: string];
+
+function createSignalTextLookup(groups: readonly SignalTextGroup[]): ReadonlyMap<string, string> {
+  return new Map(groups.flatMap(([codes, text]) => codes.map((code) => [code, text] as const)));
+}
+
+const CUSTOMER_FRIENDLY_SIGNAL_PHRASES = createSignalTextLookup([
+  [["AI_LIKE_PRESENTATION_RISK"], "å gjøre teksten mer virksomhetsspesifikk og mindre mønsterpreget"],
+  [["GENERIC_PRESENTATION_TRUST_RISK", "GENERIC_OR_AI_IMAGE_RISK"], "å gjøre uttrykket mer konkret og tillitvekkende"],
+  [["FORM_LABEL_RISK"], "å gjøre skjemaene enklere å bruke"],
+  [["EMPTY_BUTTON_RISK"], "å kontrollere at knapper har tydelig tekst eller tilgjengelig navn"],
+  [["IFRAME_TITLE_RISK"], "å gi innebygd innhold tydelig tittel for skjermlesere"],
+  [["WEAK_TITLE", "MISSING_META_DESCRIPTION", "WEAK_SHARE_PREVIEW"], "å rydde sidetittel, metadata og delingsvisning"],
+  [["IMAGE_ALT_RISK"], "å rydde noen tilgjengelighetspunkter rundt bilder"],
+  [["MISSING_CSP_HEADER", "MISSING_HSTS_HEADER", "WEAK_CSP_HEADER"], "å se på noen enkle tekniske trygghetspunkter"],
+  [["MISSING_PRIVACY_NOTICE", "COOKIE_CONSENT_RISK"], "å gjøre personvern og samtykke mer ryddig"],
+  [["WEAK_HOMEPAGE_STRUCTURE"], "å gjøre førstesiden tydeligere"],
+  [["WEAK_INDUSTRY_RELEVANCE", "GENERIC_SERVICE_TEXT"], "å beskrive tjenestene mer konkret"],
+  [["MISSING_ORG_NUMBER", "LEGAL_NAME_NOT_VISIBLE"], "å gjøre virksomheten lettere å verifisere"],
+]);
+
 function customerFriendlySignalPhrase(signal: WebsiteQualitySignal) {
-  switch (signal.code) {
-    case "AI_LIKE_PRESENTATION_RISK":
-      return "å gjøre teksten mer virksomhetsspesifikk og mindre mønsterpreget";
-    case "GENERIC_PRESENTATION_TRUST_RISK":
-    case "GENERIC_OR_AI_IMAGE_RISK":
-      return "å gjøre uttrykket mer konkret og tillitvekkende";
-    case "FORM_LABEL_RISK":
-      return "å gjøre skjemaene enklere å bruke";
-    case "EMPTY_BUTTON_RISK":
-      return "å kontrollere at knapper har tydelig tekst eller tilgjengelig navn";
-    case "IFRAME_TITLE_RISK":
-      return "å gi innebygd innhold tydelig tittel for skjermlesere";
-    case "WEAK_TITLE":
-    case "MISSING_META_DESCRIPTION":
-    case "WEAK_SHARE_PREVIEW":
-      return "å rydde sidetittel, metadata og delingsvisning";
-    case "IMAGE_ALT_RISK":
-      return "å rydde noen tilgjengelighetspunkter rundt bilder";
-    case "MISSING_CSP_HEADER":
-    case "MISSING_HSTS_HEADER":
-    case "WEAK_CSP_HEADER":
-      return "å se på noen enkle tekniske trygghetspunkter";
-    case "MISSING_PRIVACY_NOTICE":
-    case "COOKIE_CONSENT_RISK":
-      return "å gjøre personvern og samtykke mer ryddig";
-    case "WEAK_HOMEPAGE_STRUCTURE":
-      return "å gjøre førstesiden tydeligere";
-    case "WEAK_INDUSTRY_RELEVANCE":
-    case "GENERIC_SERVICE_TEXT":
-      return "å beskrive tjenestene mer konkret";
-    case "MISSING_ORG_NUMBER":
-    case "LEGAL_NAME_NOT_VISIBLE":
-      return "å gjøre virksomheten lettere å verifisere";
-    default:
-      return signal.severity === "HIGH" || signal.severity === "MEDIUM"
-        ? signal.title.toLowerCase()
-        : "";
-  }
+  return CUSTOMER_FRIENDLY_SIGNAL_PHRASES.get(signal.code)
+    ?? (signal.severity === "HIGH" || signal.severity === "MEDIUM"
+      ? signal.title.toLowerCase()
+      : "");
 }
 
 function prioritizeWebsiteReportSignals(signals: WebsiteQualitySignal[]) {
@@ -3096,47 +3168,102 @@ function websiteSignalWhyPrimary(signal: WebsiteQualitySignal): string | null {
 function websiteQualityStatusClassName(status: WebsiteQualityAssessment["status"]) {
   if (status === "WEAK") return "bg-rose-50 text-rose-700";
   if (status === "NEEDS_REVIEW") return "bg-amber-50 text-amber-700";
-  return "bg-slate-100 text-slate-700";
+  return "bg-emerald-50 text-emerald-700";
+}
+
+function websiteQualityStatusLabel(status: WebsiteQualityAssessment["status"]) {
+  if (status === "WEAK") return "Krever oppfølging";
+  if (status === "NEEDS_REVIEW") return "Bør gjennomgås";
+  return "Ser hovedsakelig bra ut";
 }
 
 function WebsiteReportControls({
   copiedCustomerReport,
   copiedShortReport,
+  copyError,
+  customerReport,
   onCopyCustomer,
   onCopyShort,
-  onToggle,
+  onToggleCustomer,
+  onToggleShort,
   shortReport,
-  showShortReport,
+  visibleReport,
 }: Readonly<{
   copiedCustomerReport: boolean;
   copiedShortReport: boolean;
+  copyError: string | null;
   customerReport: string;
   onCopyCustomer: () => void;
   onCopyShort: () => void;
-  onToggle: () => void;
+  onToggleCustomer: () => void;
+  onToggleShort: () => void;
   shortReport: string;
-  showShortReport: boolean;
+  visibleReport: "analysis" | "customer" | null;
 }>) {
+  const previewId = useId();
+  const headingId = `${previewId}-heading`;
   if (!shortReport) return null;
+  let copyStatusMessage = "";
+  if (copiedShortReport) {
+    copyStatusMessage = "Fagrapport kopiert.";
+  } else if (copiedCustomerReport) {
+    copyStatusMessage = "Kundemelding kopiert.";
+  }
+  const previewText = visibleReport === "customer" ? customerReport : shortReport;
+  const previewTitle = visibleReport === "customer" ? "Forslag til kundemelding" : "Fagrapport";
   return (
-    <>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button className="rounded-sm text-[12px] font-semibold" onClick={onToggle} size="sm" type="button" variant="outline">
-          {showShortReport ? "Skjul kort rapport" : "Lag kort rapport"}
-        </Button>
-        <Button className="rounded-sm text-[12px] font-semibold" onClick={onCopyShort} size="sm" type="button" variant="outline">
-          {copiedShortReport ? "Rapport kopiert" : "Kopier rapport"}
-        </Button>
-        <Button className="rounded-sm text-[12px] font-semibold" onClick={onCopyCustomer} size="sm" type="button" variant="outline">
-          {copiedCustomerReport ? "Kundetekst kopiert" : "Kopier kundetekst"}
-        </Button>
+    <section className="mt-6 border-t border-[#E4E7EB] pt-5" aria-labelledby={headingId}>
+      <h4 className="text-[14px] font-semibold text-[#1F2933]" id={headingId}>Bruk resultatet videre</h4>
+      <p className="mt-1 text-[12px] leading-5 text-[#52606D]">
+        Velg fagrapport for intern oppfølging, eller kundemelding når du vil dele en kort og forsiktig formulert oppsummering.
+      </p>
+      <div className="mt-3 grid gap-3 lg:grid-cols-2">
+        <article className="border border-[#D9E2EC] bg-[#F8FBFF] p-4">
+          <div className="flex items-start gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-white text-[#1F5FA9]"><FileText className="size-4" /></span>
+            <div>
+              <h5 className="text-[13px] font-semibold text-[#1F2933]">Fagrapport</h5>
+              <p className="mt-1 text-[11px] leading-5 text-[#52606D]">Tre viktigste funn, anbefalte tiltak og forbehold. Passer til intern vurdering eller arbeidsliste.</p>
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button aria-controls={previewId} aria-expanded={visibleReport === "analysis"} className="gap-1.5 rounded-sm text-[12px] font-semibold" onClick={onToggleShort} size="sm" type="button" variant="outline">
+              <Eye className="size-3.5" /> {visibleReport === "analysis" ? "Skjul fagrapport" : "Se fagrapport"}
+            </Button>
+            <Button className="gap-1.5 rounded-sm text-[12px] font-semibold" onClick={onCopyShort} size="sm" type="button">
+              <ClipboardCopy className="size-3.5" /> {copiedShortReport ? "Fagrapport kopiert" : "Kopier fagrapport"}
+            </Button>
+          </div>
+        </article>
+        <article className="border border-[#D9E2EC] bg-[#F8FBFF] p-4">
+          <div className="flex items-start gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-white text-[#1F5FA9]"><MessageSquareText className="size-4" /></span>
+            <div>
+              <h5 className="text-[13px] font-semibold text-[#1F2933]">Kundemelding</h5>
+              <p className="mt-1 text-[11px] leading-5 text-[#52606D]">Kort tekst uten bastante påstander. Passer som utgangspunkt i e-post eller melding til virksomheten.</p>
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button aria-controls={previewId} aria-expanded={visibleReport === "customer"} className="gap-1.5 rounded-sm text-[12px] font-semibold" onClick={onToggleCustomer} size="sm" type="button" variant="outline">
+              <Eye className="size-3.5" /> {visibleReport === "customer" ? "Skjul kundemelding" : "Se kundemelding"}
+            </Button>
+            <Button className="gap-1.5 rounded-sm text-[12px] font-semibold" onClick={onCopyCustomer} size="sm" type="button">
+              <ClipboardCopy className="size-3.5" /> {copiedCustomerReport ? "Kundemelding kopiert" : "Kopier kundemelding"}
+            </Button>
+          </div>
+        </article>
       </div>
-      {showShortReport ? (
-        <pre className="mt-3 whitespace-pre-wrap border border-[#D9E2EC] bg-[#F8FBFF] p-4 text-[12px] leading-5 text-[#334E68]">
-          {shortReport}
-        </pre>
+      <span aria-live="polite" className="sr-only">
+        {copyStatusMessage}
+      </span>
+      {copyError ? <p aria-live="assertive" className="mt-3 border border-rose-100 bg-rose-50 px-3 py-2 text-[11px] font-medium text-rose-700">{copyError}</p> : null}
+      {visibleReport ? (
+        <div className="mt-3 border border-[#D9E2EC] bg-white" id={previewId}>
+          <div className="border-b border-[#E4E7EB] bg-[#F8FBFF] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#52606D]">{previewTitle}</div>
+          <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap p-4 text-[12px] leading-6 text-[#334E68]">{previewText}</pre>
+        </div>
       ) : null}
-    </>
+    </section>
   );
 }
 
@@ -3209,110 +3336,54 @@ function websiteSignalWhyDiscovery(signal: WebsiteQualitySignal): string | null 
   }
 }
 
+const WEBSITE_SIGNAL_WHY_TECHNICAL = createSignalTextLookup([
+  [["FIXED_WIDTH_LAYOUT"], "Fast bredde i HTML/CSS kan gi dårlig mobilvisning selv om siden ser grei ut på stor skjerm."],
+  [["MISSING_MAIN_LANDMARK", "WEAK_PAGE_LANDMARKS"], "Landemerker hjelper skjermleser- og tastaturbrukere å hoppe direkte til hovedinnhold."],
+  [["MISSING_LANGUAGE", "LANGUAGE_MISMATCH_RISK"], "Riktig språkmerking hjelper skjermlesere med uttale og gjør siden mer robust for hjelpeteknologi."],
+  [["SKIPPED_HEADING_LEVELS"], "Riktig overskriftsrekkefølge gjør siden lettere å skumme og mer forståelig for skjermlesere."],
+  [["VAGUE_LINK_TEXT"], "Lenketekst bør gi mening uten kontekst, slik at brukeren forstår hvor lenken leder."],
+  [["IFRAME_TITLE_RISK"], "Iframe uten tittel gjør det vanskeligere for skjermleserbrukere å forstå hva det innebygde innholdet er."],
+  [["FOCUS_STYLE_RISK"], "Synlig fokusmarkering er nødvendig for brukere som navigerer med tastatur."],
+  [["MOTION_ACCESSIBILITY_RISK"], "Brukere som reagerer på bevegelse bør kunne få redusert animasjon når nettleseren ber om det."],
+  [["MANY_EXTERNAL_SCRIPTS", "EXTERNAL_IFRAME_RISK", "THIRD_PARTY_EMBED_CONSENT_RISK"], "Tredjepartsinnhold kan påvirke ytelse, personvern, samtykke og feilkilder."],
+  [["TLS_CERTIFICATE_REVIEW", "TLS_CERTIFICATE_EXPIRING"], "Sertifikatproblemer kan gi nettleservarsler eller nedetid hvis HTTPS ikke fornyes og valideres riktig."],
+  [["THIRD_PARTY_FORM_RISK"], "Eksterne skjema-, booking- eller markedsføringstjenester kan innebære databehandling utenfor selve nettstedet."],
+  [["SERVER_TECH_HEADER_EXPOSED", "CMS_VERSION_EXPOSED"], "Eksponert teknologi er sjelden kritisk alene, men kan gi unødvendig informasjon ved teknisk kartlegging."],
+  [["SECURITY_TXT_MISSING"], "security.txt er ikke påkrevd, men gir en ryddig kanal for ansvarlig sikkerhetshenvendelse."],
+  [["ROBOTS_SENSITIVE_PATHS"], "Robots.txt skal ikke brukes som skjulested; sensitive stier der kan gi unødvendige hint."],
+  [["ADMIN_OR_LOGIN_PATH_EXPOSED", "LOGIN_FORM_SECURITY_REVIEW"], "Synlig innlogging er normalt, men bør ha sterke passord, 2FA, rate limiting og ryddige sesjoner."],
+  [["API_ENDPOINTS_VISIBLE"], "Synlige API-spor er vanlige i moderne sider, men tilgang, CORS og rate limiting bør være kontrollert."],
+  [["SPF_POLICY_SOFT", "DMARC_POLICY_NONE", "EMAIL_SECURITY_DNS_REVIEW", "EMAIL_MX_MISSING", "SPF_LOOKUP_RISK", "DUPLICATE_SPF_RECORDS", "DMARC_RUA_MISSING"], "E-postdomener bør ha ryddig SPF, DKIM og DMARC for å redusere spoofing og leveringsproblemer."],
+  [["DNS_CAA_MISSING"], "CAA er et ekstra DNS-signal som kan redusere risikoen for uønsket sertifikatutstedelse."],
+  [["SOURCE_MAP_EXPOSED", "DEVELOPMENT_REFERENCE_EXPOSED"], "Utviklingsspor er sjelden kritisk alene, men kan gi unødvendig innsikt i kildekode, filstruktur eller miljø."],
+  [["TARGET_BLANK_NOOPENER_MISSING"], "Lenker som åpnes i ny fane bør isoleres slik at den nye siden ikke kan påvirke den opprinnelige fanen."],
+  [["PERSONAL_DATA_GET_FORM"], "GET-skjema kan legge personopplysninger i URL, nettleserhistorikk, logger og analyseverktøy."],
+  [["EXTERNAL_FORM_ACTION"], "Når skjema sendes til annet domene, bør databehandler og personvern være tydelig avklart."],
+]);
+
 function websiteSignalWhyTechnical(signal: WebsiteQualitySignal): string | null {
-  switch (signal.code) {
-    case "FIXED_WIDTH_LAYOUT":
-      return "Fast bredde i HTML/CSS kan gi dårlig mobilvisning selv om siden ser grei ut på stor skjerm.";
-    case "MISSING_MAIN_LANDMARK":
-    case "WEAK_PAGE_LANDMARKS":
-      return "Landemerker hjelper skjermleser- og tastaturbrukere å hoppe direkte til hovedinnhold.";
-    case "MISSING_LANGUAGE":
-    case "LANGUAGE_MISMATCH_RISK":
-      return "Riktig språkmerking hjelper skjermlesere med uttale og gjør siden mer robust for hjelpeteknologi.";
-    case "SKIPPED_HEADING_LEVELS":
-      return "Riktig overskriftsrekkefølge gjør siden lettere å skumme og mer forståelig for skjermlesere.";
-    case "VAGUE_LINK_TEXT":
-      return "Lenketekst bør gi mening uten kontekst, slik at brukeren forstår hvor lenken leder.";
-    case "IFRAME_TITLE_RISK":
-      return "Iframe uten tittel gjør det vanskeligere for skjermleserbrukere å forstå hva det innebygde innholdet er.";
-    case "FOCUS_STYLE_RISK":
-      return "Synlig fokusmarkering er nødvendig for brukere som navigerer med tastatur.";
-    case "MOTION_ACCESSIBILITY_RISK":
-      return "Brukere som reagerer på bevegelse bør kunne få redusert animasjon når nettleseren ber om det.";
-    case "MANY_EXTERNAL_SCRIPTS":
-    case "EXTERNAL_IFRAME_RISK":
-    case "THIRD_PARTY_EMBED_CONSENT_RISK":
-      return "Tredjepartsinnhold kan påvirke ytelse, personvern, samtykke og feilkilder.";
-    case "TLS_CERTIFICATE_REVIEW":
-    case "TLS_CERTIFICATE_EXPIRING":
-      return "Sertifikatproblemer kan gi nettleservarsler eller nedetid hvis HTTPS ikke fornyes og valideres riktig.";
-    case "THIRD_PARTY_FORM_RISK":
-      return "Eksterne skjema-, booking- eller markedsføringstjenester kan innebære databehandling utenfor selve nettstedet.";
-    case "SERVER_TECH_HEADER_EXPOSED":
-    case "CMS_VERSION_EXPOSED":
-      return "Eksponert teknologi er sjelden kritisk alene, men kan gi unødvendig informasjon ved teknisk kartlegging.";
-    case "SECURITY_TXT_MISSING":
-      return "security.txt er ikke påkrevd, men gir en ryddig kanal for ansvarlig sikkerhetshenvendelse.";
-    case "ROBOTS_SENSITIVE_PATHS":
-      return "Robots.txt skal ikke brukes som skjulested; sensitive stier der kan gi unødvendige hint.";
-    case "ADMIN_OR_LOGIN_PATH_EXPOSED":
-    case "LOGIN_FORM_SECURITY_REVIEW":
-      return "Synlig innlogging er normalt, men bør ha sterke passord, 2FA, rate limiting og ryddige sesjoner.";
-    case "API_ENDPOINTS_VISIBLE":
-      return "Synlige API-spor er vanlige i moderne sider, men tilgang, CORS og rate limiting bør være kontrollert.";
-    case "SPF_POLICY_SOFT":
-    case "DMARC_POLICY_NONE":
-    case "EMAIL_SECURITY_DNS_REVIEW":
-    case "EMAIL_MX_MISSING":
-    case "SPF_LOOKUP_RISK":
-    case "DUPLICATE_SPF_RECORDS":
-    case "DMARC_RUA_MISSING":
-      return "E-postdomener bør ha ryddig SPF, DKIM og DMARC for å redusere spoofing og leveringsproblemer.";
-    case "DNS_CAA_MISSING":
-      return "CAA er et ekstra DNS-signal som kan redusere risikoen for uønsket sertifikatutstedelse.";
-    case "SOURCE_MAP_EXPOSED":
-    case "DEVELOPMENT_REFERENCE_EXPOSED":
-      return "Utviklingsspor er sjelden kritisk alene, men kan gi unødvendig innsikt i kildekode, filstruktur eller miljø.";
-    case "TARGET_BLANK_NOOPENER_MISSING":
-      return "Lenker som åpnes i ny fane bør isoleres slik at den nye siden ikke kan påvirke den opprinnelige fanen.";
-    case "PERSONAL_DATA_GET_FORM":
-      return "GET-skjema kan legge personopplysninger i URL, nettleserhistorikk, logger og analyseverktøy.";
-    case "EXTERNAL_FORM_ACTION":
-      return "Når skjema sendes til annet domene, bør databehandler og personvern være tydelig avklart.";
-    default:
-      return null;
-  }
+  return WEBSITE_SIGNAL_WHY_TECHNICAL.get(signal.code) ?? null;
 }
 
+const WEBSITE_SIGNAL_WHY_SECURITY = createSignalTextLookup([
+  [["DOM_XSS_SURFACE_REVIEW"], "XSS oppstår ofte når URL-, skjema- eller brukerdata ender i HTML/JavaScript uten trygg escaping. Dette er et passivt signal om angrepsflate, ikke et bevis."],
+  [["DANGEROUS_JS_SINK_REVIEW"], "Dynamiske JavaScript-sinks kan være trygge, men blir risikable hvis de kombineres med ufiltrert brukerinput."],
+  [["INLINE_EVENT_HANDLER_REVIEW"], "Inline event handlers gjør streng CSP vanskeligere og kan øke konsekvensen av injeksjonsfeil."],
+  [["JAVASCRIPT_HREF_REVIEW"], "javascript:-lenker blander navigasjon og kode og er et gammelt mønster som bør vurderes ved sikkerhetsherding."],
+  [["THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW"], "Tredjeparts-script er en forsyningskjederisiko: hvis leverandøren eller CDN-et endres, kjører koden i brukerens nettleser."],
+  [["MANY_THIRD_PARTY_SCRIPT_HOSTS"], "Mange script-leverandører gir flere feilkilder, mer personvernflate og større avhengighet av eksterne domener."],
+  [["MANY_INLINE_SCRIPTS_WITHOUT_CSP"], "Inline scripts gjør streng CSP vanskeligere, og manglende CSP gir svakere skadebegrensning ved script-injeksjon."],
+  [["POST_FORM_CSRF_REVIEW"], "Skjema som sender data med POST bør vurderes for CSRF dersom det endrer data, logger inn eller sender sensitive opplysninger."],
+  [["OUTDATED_JS_LIBRARY_REVIEW"], "Gamle frontend-biblioteker kan ha kjente sårbarheter og bør verifiseres mot faktisk versjon og bruk."],
+  [["GOOGLE_ANALYTICS_WITHOUT_CONSENT", "META_PIXEL_WITHOUT_CONSENT", "SESSION_TRACKING_WITHOUT_CONSENT"], "Analyse- og sporingsverktøy bør kobles til en ryddig samtykkeflyt der det er relevant."],
+  [["MISSING_REFERRER_POLICY", "MISSING_PERMISSIONS_POLICY", "MISSING_CONTENT_TYPE_OPTIONS", "MISSING_FRAME_PROTECTION"], "Dette er enkle sikkerhetsheadere som kan redusere unødvendig eksponering i nettleseren."],
+  [["TECHNOLOGY_STACK_DETECTED"], "Teknologispor sier noe om plattform og vedlikeholdsbehov, men ikke sikkert hvem som har laget siden."],
+  [["SENSITIVE_HEALTH_CONTEXT", "HEALTH_TRACKING_CONTEXT"], "Når siden berører helse, behandling eller personopplysninger, bør personvern og skjema vurderes ekstra varsomt."],
+  [["PRIVACY_LINK_REVIEW"], "En policy- eller vilkårslenke er funnet, men innholdet må bekreftes når skjema, cookies eller kontaktdata brukes."],
+]);
+
 function websiteSignalWhySecurity(signal: WebsiteQualitySignal): string | null {
-  switch (signal.code) {
-    case "DOM_XSS_SURFACE_REVIEW":
-      return "XSS oppstår ofte når URL-, skjema- eller brukerdata ender i HTML/JavaScript uten trygg escaping. Dette er et passivt signal om angrepsflate, ikke et bevis.";
-    case "DANGEROUS_JS_SINK_REVIEW":
-      return "Dynamiske JavaScript-sinks kan være trygge, men blir risikable hvis de kombineres med ufiltrert brukerinput.";
-    case "INLINE_EVENT_HANDLER_REVIEW":
-      return "Inline event handlers gjør streng CSP vanskeligere og kan øke konsekvensen av injeksjonsfeil.";
-    case "JAVASCRIPT_HREF_REVIEW":
-      return "javascript:-lenker blander navigasjon og kode og er et gammelt mønster som bør vurderes ved sikkerhetsherding.";
-    case "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW":
-      return "Tredjeparts-script er en forsyningskjederisiko: hvis leverandøren eller CDN-et endres, kjører koden i brukerens nettleser.";
-    case "MANY_THIRD_PARTY_SCRIPT_HOSTS":
-      return "Mange script-leverandører gir flere feilkilder, mer personvernflate og større avhengighet av eksterne domener.";
-    case "MANY_INLINE_SCRIPTS_WITHOUT_CSP":
-      return "Inline scripts gjør streng CSP vanskeligere, og manglende CSP gir svakere skadebegrensning ved script-injeksjon.";
-    case "POST_FORM_CSRF_REVIEW":
-      return "Skjema som sender data med POST bør vurderes for CSRF dersom det endrer data, logger inn eller sender sensitive opplysninger.";
-    case "OUTDATED_JS_LIBRARY_REVIEW":
-      return "Gamle frontend-biblioteker kan ha kjente sårbarheter og bør verifiseres mot faktisk versjon og bruk.";
-    case "GOOGLE_ANALYTICS_WITHOUT_CONSENT":
-    case "META_PIXEL_WITHOUT_CONSENT":
-    case "SESSION_TRACKING_WITHOUT_CONSENT":
-      return "Analyse- og sporingsverktøy bør kobles til en ryddig samtykkeflyt der det er relevant.";
-    case "MISSING_REFERRER_POLICY":
-    case "MISSING_PERMISSIONS_POLICY":
-    case "MISSING_CONTENT_TYPE_OPTIONS":
-    case "MISSING_FRAME_PROTECTION":
-      return "Dette er enkle sikkerhetsheadere som kan redusere unødvendig eksponering i nettleseren.";
-    case "TECHNOLOGY_STACK_DETECTED":
-      return "Teknologispor sier noe om plattform og vedlikeholdsbehov, men ikke sikkert hvem som har laget siden.";
-    case "SENSITIVE_HEALTH_CONTEXT":
-    case "HEALTH_TRACKING_CONTEXT":
-      return "Når siden berører helse, behandling eller personopplysninger, bør personvern og skjema vurderes ekstra varsomt.";
-    case "PRIVACY_LINK_REVIEW":
-      return "En policy- eller vilkårslenke er funnet, men innholdet må bekreftes når skjema, cookies eller kontaktdata brukes.";
-    default:
-      return null;
-  }
+  return WEBSITE_SIGNAL_WHY_SECURITY.get(signal.code) ?? null;
 }
 
 function websiteSignalWhy(signal: WebsiteQualitySignal) {
@@ -3556,48 +3627,28 @@ function websiteSignalActionEmailAndData(signal: WebsiteQualitySignal): string |
   }
 }
 
+const WEBSITE_SIGNAL_ACTION_SECURITY = createSignalTextLookup([
+  [["DOM_XSS_SURFACE_REVIEW"], "Gå gjennom JavaScript som leser URL/hash/query og sjekk at verdier ikke settes inn i HTML uten trygg escaping/sanitering."],
+  [["DANGEROUS_JS_SINK_REVIEW"], "Unngå eval/document.write og bruk sikre DOM-metoder eller sanitering hvis HTML må settes dynamisk."],
+  [["INLINE_EVENT_HANDLER_REVIEW"], "Flytt inline onclick/onload til bundne event listeners og stram CSP når koden er ryddet."],
+  [["JAVASCRIPT_HREF_REVIEW"], "Erstatt javascript:-lenker med knapper eller vanlige lenker med event handlers i JavaScript-koden."],
+  [["THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW"], "Vurder Subresource Integrity for statiske tredjepartsressurser, eller host kritiske scripts selv."],
+  [["MANY_THIRD_PARTY_SCRIPT_HOSTS"], "Gå gjennom alle script-leverandører og fjern måling, widgets eller plugins som ikke er nødvendige."],
+  [["MANY_INLINE_SCRIPTS_WITHOUT_CSP"], "Rydd inline scripts og innfør CSP gradvis, gjerne først i report-only-modus."],
+  [["POST_FORM_CSRF_REVIEW"], "Verifiser CSRF-beskyttelse på POST-skjema, særlig ved innlogging, konto, skjema med persondata eller dataendringer."],
+  [["OUTDATED_JS_LIBRARY_REVIEW"], "Bekreft versjonen og oppdater eller fjern gamle JavaScript-biblioteker hvis de faktisk er i bruk."],
+  [["GOOGLE_ANALYTICS_WITHOUT_CONSENT", "META_PIXEL_WITHOUT_CONSENT", "SESSION_TRACKING_WITHOUT_CONSENT"], "Verifiser at måling/tracking først aktiveres etter riktig samtykke, eller dokumenter hvorfor det ikke kreves."],
+  [["MISSING_REFERRER_POLICY"], "Sett Referrer-Policy, for eksempel strict-origin-when-cross-origin, etter behov."],
+  [["MISSING_PERMISSIONS_POLICY"], "Sett Permissions-Policy for å begrense unødvendige nettleserfunksjoner."],
+  [["MISSING_CONTENT_TYPE_OPTIONS"], "Sett X-Content-Type-Options: nosniff."],
+  [["MISSING_FRAME_PROTECTION"], "Bruk CSP frame-ancestors eller X-Frame-Options for å styre innbygging."],
+  [["TECHNOLOGY_STACK_DETECTED"], "Bruk teknologisporet som vedlikeholds- og kostnadsinfo, ikke som bevis på feil eller leverandør."],
+  [["SENSITIVE_HEALTH_CONTEXT", "HEALTH_TRACKING_CONTEXT"], "Verifiser personverntekst, skjema, samtykke og databehandling manuelt før dette omtales konkret."],
+  [["PRIVACY_LINK_REVIEW"], "Åpne policylenken og sjekk at den faktisk dekker personvern, skjema, cookies og databehandlerforhold."],
+]);
+
 function websiteSignalActionSecurity(signal: WebsiteQualitySignal): string | null {
-  switch (signal.code) {
-    case "DOM_XSS_SURFACE_REVIEW":
-      return "Gå gjennom JavaScript som leser URL/hash/query og sjekk at verdier ikke settes inn i HTML uten trygg escaping/sanitering.";
-    case "DANGEROUS_JS_SINK_REVIEW":
-      return "Unngå eval/document.write og bruk sikre DOM-metoder eller sanitering hvis HTML må settes dynamisk.";
-    case "INLINE_EVENT_HANDLER_REVIEW":
-      return "Flytt inline onclick/onload til bundne event listeners og stram CSP når koden er ryddet.";
-    case "JAVASCRIPT_HREF_REVIEW":
-      return "Erstatt javascript:-lenker med knapper eller vanlige lenker med event handlers i JavaScript-koden.";
-    case "THIRD_PARTY_SCRIPT_INTEGRITY_REVIEW":
-      return "Vurder Subresource Integrity for statiske tredjepartsressurser, eller host kritiske scripts selv.";
-    case "MANY_THIRD_PARTY_SCRIPT_HOSTS":
-      return "Gå gjennom alle script-leverandører og fjern måling, widgets eller plugins som ikke er nødvendige.";
-    case "MANY_INLINE_SCRIPTS_WITHOUT_CSP":
-      return "Rydd inline scripts og innfør CSP gradvis, gjerne først i report-only-modus.";
-    case "POST_FORM_CSRF_REVIEW":
-      return "Verifiser CSRF-beskyttelse på POST-skjema, særlig ved innlogging, konto, skjema med persondata eller dataendringer.";
-    case "OUTDATED_JS_LIBRARY_REVIEW":
-      return "Bekreft versjonen og oppdater eller fjern gamle JavaScript-biblioteker hvis de faktisk er i bruk.";
-    case "GOOGLE_ANALYTICS_WITHOUT_CONSENT":
-    case "META_PIXEL_WITHOUT_CONSENT":
-    case "SESSION_TRACKING_WITHOUT_CONSENT":
-      return "Verifiser at måling/tracking først aktiveres etter riktig samtykke, eller dokumenter hvorfor det ikke kreves.";
-    case "MISSING_REFERRER_POLICY":
-      return "Sett Referrer-Policy, for eksempel strict-origin-when-cross-origin, etter behov.";
-    case "MISSING_PERMISSIONS_POLICY":
-      return "Sett Permissions-Policy for å begrense unødvendige nettleserfunksjoner.";
-    case "MISSING_CONTENT_TYPE_OPTIONS":
-      return "Sett X-Content-Type-Options: nosniff.";
-    case "MISSING_FRAME_PROTECTION":
-      return "Bruk CSP frame-ancestors eller X-Frame-Options for å styre innbygging.";
-    case "TECHNOLOGY_STACK_DETECTED":
-      return "Bruk teknologisporet som vedlikeholds- og kostnadsinfo, ikke som bevis på feil eller leverandør.";
-    case "SENSITIVE_HEALTH_CONTEXT":
-    case "HEALTH_TRACKING_CONTEXT":
-      return "Verifiser personverntekst, skjema, samtykke og databehandling manuelt før dette omtales konkret.";
-    case "PRIVACY_LINK_REVIEW":
-      return "Åpne policylenken og sjekk at den faktisk dekker personvern, skjema, cookies og databehandlerforhold.";
-    default:
-      return null;
-  }
+  return WEBSITE_SIGNAL_ACTION_SECURITY.get(signal.code) ?? null;
 }
 
 function websiteSignalAction(signal: WebsiteQualitySignal) {

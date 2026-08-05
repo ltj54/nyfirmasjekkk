@@ -343,7 +343,8 @@ public class CompanyCheckController {
                 inspection.inputUrl(),
                 inspection.normalizedUrl(),
                 inspection.websiteQuality(),
-                findBrregWebsiteMatches(inspection.normalizedUrl())
+                findBrregWebsiteMatches(inspection.normalizedUrl()),
+                inspection.coverage()
         );
     }
 
@@ -355,7 +356,8 @@ public class CompanyCheckController {
                 inspection.inputUrl(),
                 inspection.normalizedUrl(),
                 inspection.websiteQuality(),
-                findBrregWebsiteMatches(inspection.normalizedUrl())
+                findBrregWebsiteMatches(inspection.normalizedUrl()),
+                inspection.coverage()
         );
     }
 

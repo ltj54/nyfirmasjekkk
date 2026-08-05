@@ -6,6 +6,15 @@ public record WebsiteInspectionResponse(
         String inputUrl,
         String normalizedUrl,
         WebsiteQualityAssessment websiteQuality,
-        List<BrregWebsiteMatch> brregMatches
+        List<BrregWebsiteMatch> brregMatches,
+        WebsiteInspectionCoverage coverage
 ) {
+    public WebsiteInspectionResponse(
+            String inputUrl,
+            String normalizedUrl,
+            WebsiteQualityAssessment websiteQuality,
+            List<BrregWebsiteMatch> brregMatches
+    ) {
+        this(inputUrl, normalizedUrl, websiteQuality, brregMatches, null);
+    }
 }

@@ -136,7 +136,18 @@ export interface WebsiteInspectionResponse {
   normalizedUrl: string;
   websiteQuality: WebsiteQualityAssessment;
   brregMatches: BrregWebsiteMatch[];
+  coverage?: OptionalWebsiteInspectionCoverage;
 }
+
+export interface WebsiteInspectionCoverage {
+  pagesInspected: number;
+  pageLimit: number;
+  internalLinksChecked: number;
+  method: string;
+  limitations: string[];
+}
+
+export type OptionalWebsiteInspectionCoverage = WebsiteInspectionCoverage | null;
 
 export interface BrregWebsiteMatch {
   orgNumber: string;

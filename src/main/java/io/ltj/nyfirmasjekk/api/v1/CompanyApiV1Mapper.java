@@ -695,12 +695,28 @@ public class CompanyApiV1Mapper {
                 assessmentFromSignals(signals, signals.isEmpty()
                         ? "Nettsiden svarte og de viktigste grunnsignalene ser greie ut."
                         : "Nettsiden svarte, men har noen signaler som bør vurderes manuelt.", readableSnapshot),
-                List.of()
+                List.of(),
+                new WebsiteInspectionCoverage(
+                        1 + readableSnapshot.crawledPageCount(),
+                        extended ? 1 + WebsiteContentSnapshotFetcher.extendedCrawlLimit() : 1,
+                        readableSnapshot.checkedInternalLinkCount(),
+                        extended ? "Budsjettstyrt HTML-crawl" : "Forsidekontroll",
+                        extended
+                                ? List.of(
+                                        "JavaScript-renderte endringer og innhold bak innlogging er ikke kontrollert.",
+                                        "UU-, personvern- og sikkerhetsfunn er automatiske signaler, ikke full revisjon eller pentest."
+                                )
+                                : List.of("Bare forsiden er analysert i denne kontrollen.")
+                )
         );
     }
 
     private void addStandaloneWebsiteSignals(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
-        if (snapshot.platformDomainSignal()) {
+        WebsiteContentInspectionService.WebsiteContentSnapshot requiredSnapshot = Objects.requireNonNull(
+                snapshot,
+                "snapshot must be present when adding standalone website signals"
+        );
+        if (requiredSnapshot.platformDomainSignal()) {
             signals.add(new WebsiteQualitySignal(
                     "PLATFORM_DOMAIN_RISK",
                     "Bruker plattformdomene",
@@ -708,16 +724,16 @@ public class CompanyApiV1Mapper {
                     CONFIDENCE_MEDIUM
             ));
         }
-        if (snapshot.placeholderSocialLinkCount() > 0) {
+        if (requiredSnapshot.placeholderSocialLinkCount() > 0) {
             signals.add(new WebsiteQualitySignal(
                     "PLACEHOLDER_SOCIAL_LINKS",
                     "Mulig uferdige sosiale lenker",
-                    snapshot.placeholderSocialLinkCount() + " sosial lenke ser ut til å peke til en generisk eller uferdig profil.",
+                    requiredSnapshot.placeholderSocialLinkCount() + " sosial lenke ser ut til å peke til en generisk eller uferdig profil.",
                     "INFO"
             ));
         }
-        if (isEffectiveEcommerceWebsite(snapshot)) {
-            addCommerceSignals(signals, snapshot);
+        if (isEffectiveEcommerceWebsite(requiredSnapshot)) {
+            addCommerceSignals(signals, requiredSnapshot);
         }
     }
 
@@ -2814,7 +2830,7 @@ public class CompanyApiV1Mapper {
         if (!hasText(description)) {
             return List.of();
         }
-        return Arrays.stream(normalizeForWebsiteQuality(description).split("\\s+"))
+        return Arrays.stream(normalizeForWebsiteQuality(description).split("\\s++"))
                 .filter(token -> token.length() >= 5)
                 .filter(token -> !Set.of("annen", "andre", "virksomhet", "tjenester", "arbeid", "egen", "leid").contains(token))
                 .limit(4)
@@ -2863,7 +2879,7 @@ public class CompanyApiV1Mapper {
                 .replace('ø', 'o')
                 .replace('å', 'a')
                 .transform(normalized -> NON_ALPHANUMERIC_SPACE_PATTERN.matcher(normalized).replaceAll(" "))
-                .replaceAll("\\s+", " ")
+                .replaceAll("\\s++", " ")
                 .trim();
     }
 
@@ -3009,10 +3025,12 @@ public class CompanyApiV1Mapper {
             throw new IllegalArgumentException("URL mangler.");
         }
         String normalized = website.trim();
-        if (normalized.startsWith("http://") || normalized.startsWith(HTTPS_PREFIX)) {
-            return normalized;
-        }
-        return HTTPS_PREFIX + normalized;
+        String candidate = normalized.startsWith("http://") || normalized.startsWith(HTTPS_PREFIX)
+                ? normalized
+                : HTTPS_PREFIX + normalized;
+        // Network services resolve and revalidate every target and redirect immediately before I/O.
+        // Normalization itself stays DNS-free so temporary DNS failure can be reported as reachability failure.
+        return SafeWebTargetPolicy.requireHttpUri(candidate, true).toString();
     }
 
     private boolean hasText(String value) {
@@ -3488,7 +3506,7 @@ public class CompanyApiV1Mapper {
                 .replace('Æ', 'E')
                 .replace('Ø', 'O')
                 .replace('Å', 'A')
-                .replaceAll("[^A-Z0-9]+", "_")
+                .replaceAll("[^A-Z0-9]++", "_")
                 .replaceAll("^_++", "")
                 .replaceAll("_++$", "");
     }
@@ -3636,7 +3654,7 @@ public class CompanyApiV1Mapper {
         if (normalized.contains("PROKURA")) {
             return "PROKURA";
         }
-        return description.trim().toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]+", "_");
+        return description.trim().toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]++", "_");
     }
 
     private String firstNonBlank(String... values) {

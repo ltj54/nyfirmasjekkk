@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.naming.NamingException;
@@ -23,10 +24,16 @@ import javax.net.ssl.HttpsURLConnection;
 
 @Component
 public class WebsiteContentSnapshotFetcher {
-    private static final int EXTENDED_CRAWL_LIMIT = 6;
-    private static final int EXTENDED_CRAWL_TIMEOUT_MS = 900;
-    private static final int EXTENDED_CRAWL_BYTES = 12_000;
-    private static final int EXTENDED_CRAWL_TEXT_BYTES = 16_000;
+    private static final int EXTENDED_CRAWL_LIMIT = 12;
+    private static final int EXTENDED_CRAWL_ATTEMPT_LIMIT = 30;
+    private static final int EXTENDED_CRAWL_TIMEOUT_MS = 2_500;
+    private static final int EXTENDED_CRAWL_BYTES = 256_000;
+    private static final int EXTENDED_CRAWL_TEXT_BYTES = 64_000;
+    private static final long EXTENDED_CRAWL_TOTAL_MS = 20_000;
+
+    static int extendedCrawlLimit() {
+        return EXTENDED_CRAWL_LIMIT;
+    }
     private static final String SELECTOR_FORM_CONTROLS = "input:not([type=hidden]), textarea, select";
     private static final String SELECTOR_EXTERNAL_SCRIPTS = "script[src^=http]";
     private static final String SELECTOR_URL_ATTRIBUTES = "[href], [src], form[action]";
@@ -37,7 +44,29 @@ public class WebsiteContentSnapshotFetcher {
     private static final String ATTRIBUTE_PLACEHOLDER = "placeholder";
     private static final String ATTRIBUTE_ACTION = "action";
     private static final String ATTRIBUTE_CONTENT = "content";
+    private static final String ATTRIBUTE_ABSOLUTE_HREF = "abs:href";
+    private static final String HEADER_LOCATION = "Location";
     private static final String HTTPS_PREFIX = "https://";
+    private static final String PATH_ABOUT = "/about";
+    private static final String PATH_CASE = "/case";
+    private static final String PATH_CONTACT = "/contact";
+    private static final String PATH_COOKIES = "/cookies";
+    private static final String PATH_KONTAKT = "/kontakt";
+    private static final String PATH_LOGIN = "/login";
+    private static final String PATH_MENNESKENE = "/menneskene";
+    private static final String PATH_PERSONVERN = "/personvern";
+    private static final String PATH_PRICING = "/pricing";
+    private static final String PATH_PRIS = "/pris";
+    private static final String PATH_PRIVACY = "/privacy";
+    private static final String PATH_PROSJEKTER = "/prosjekter";
+    private static final String PATH_REFERANSER = "/referanser";
+    private static final String PATH_SERVICES = "/services";
+    private static final String PATH_TEAM = "/team";
+    private static final String PATH_TERMS = "/terms";
+    private static final String PATH_TJENESTER = "/tjenester";
+    private static final String PATH_VILKAR = "/vilkar";
+    private static final String PATH_VILKAR_ACCENTED = "/vilkår";
+    private static final String PATH_WP_ADMIN = "/wp-admin";
     private static final String TERM_PRIVACY = "privacy";
     private static final String TERM_PERSONVERN = "personvern";
     private static final String TERM_POLICY = "policy";
@@ -73,28 +102,28 @@ public class WebsiteContentSnapshotFetcher {
             new BuilderSignature("Next.js", "next/static", "__next")
     );
     private static final java.util.List<String> STANDARD_REVIEW_PATHS = java.util.List.of(
-            "/kontakt",
-            "/contact",
+            PATH_KONTAKT,
+            PATH_CONTACT,
             "/om-oss",
-            "/about",
-            "/personvern",
-            "/privacy",
-            "/cookies",
-            "/vilkar",
-            "/vilkår",
-            "/terms",
-            "/tjenester",
-            "/services",
-            "/menneskene",
-            "/team",
-            "/referanser",
+            PATH_ABOUT,
+            PATH_PERSONVERN,
+            PATH_PRIVACY,
+            PATH_COOKIES,
+            PATH_VILKAR,
+            PATH_VILKAR_ACCENTED,
+            PATH_TERMS,
+            PATH_TJENESTER,
+            PATH_SERVICES,
+            PATH_MENNESKENE,
+            PATH_TEAM,
+            PATH_REFERANSER,
             "/referanse",
             "/references",
-            "/case",
-            "/prosjekter",
+            PATH_CASE,
+            PATH_PROSJEKTER,
             "/faq",
-            "/pris",
-            "/pricing",
+            PATH_PRIS,
+            PATH_PRICING,
             "/arbeidshelsesjekken",
             "/arbeidshelseradaren"
     );
@@ -104,11 +133,7 @@ public class WebsiteContentSnapshotFetcher {
         }
 
         try {
-            Connection.Response response = Jsoup.connect(url)
-                    .userAgent(USER_AGENT_VALUE)
-                    .timeout(4000)
-                    .followRedirects(true)
-                    .execute();
+            Connection.Response response = executeSafeJsoup(url);
             Document document = response.parse();
 
             String title = document.title();
@@ -236,7 +261,9 @@ public class WebsiteContentSnapshotFetcher {
             boolean securityTxtSignal = hasSecurityTxt(response.url().toString());
             boolean robotsSensitivePathSignal = robotsSensitivePathSignal(response.url().toString());
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
-            ExtendedCrawlResult crawlResult = extendedCrawl(document, response.url().toString());
+            ExtendedCrawlResult crawlResult = extended
+                    ? extendedCrawl(document, response.url().toString())
+                    : ExtendedCrawlResult.empty();
             boolean healthPlatformSignal = hasAny(htmlSnapshot + " " + crawlResult.bodyText(),
                     "pasientsky.no", "helseboka.no", "helsenorge.no", "conveniens.no", "pridok.no", "visitlege.no");
             String accessibilityDeclarationUrl = accessibilityDeclarationUrl(document, response.url().toString());
@@ -387,6 +414,31 @@ public class WebsiteContentSnapshotFetcher {
         }
     }
 
+    private static Connection.Response executeSafeJsoup(String value) throws IOException {
+        URI current = SafeWebTargetPolicy.requirePublicHttpUri(value);
+        for (int redirect = 0; redirect <= 5; redirect++) {
+            Connection.Response response = Jsoup.connect(current.toString())
+                    .userAgent(USER_AGENT_VALUE)
+                    .timeout(4_000)
+                    .followRedirects(false)
+                    .ignoreHttpErrors(true)
+                    .maxBodySize(2_000_000)
+                    .execute();
+            if (response.statusCode() < 300 || response.statusCode() >= 400) {
+                if (response.statusCode() >= 400) {
+                    throw new IOException("Nettsiden svarte med HTTP " + response.statusCode());
+                }
+                return response;
+            }
+            String location = response.header(HEADER_LOCATION);
+            if (location == null || location.isBlank()) {
+                throw new IOException("Redirect mangler Location-header.");
+            }
+            current = SafeWebTargetPolicy.requirePublicHttpUri(current.resolve(location).toString());
+        }
+        throw new IOException("For mange redirects.");
+    }
+
     private static String attrOrNull(Element element, String attribute) {
         if (element == null) {
             return null;
@@ -438,15 +490,16 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static AccessibilityDeclarationResult accessibilityDeclarationResult(String url) {
-        if (url == null || url.isBlank() || !url.toLowerCase(Locale.ROOT).contains("uustatus.no")) {
+        if (url == null || url.isBlank()) {
             return new AccessibilityDeclarationResult(null, null);
         }
         try {
-            Connection.Response response = Jsoup.connect(url)
-                    .userAgent("Mozilla/5.0 (compatible; Nyfirmasjekk-App)")
-                    .timeout(2500)
-                    .followRedirects(true)
-                    .execute();
+            URI declarationUri = SafeWebTargetPolicy.requirePublicHttpUri(url);
+            if (!(declarationUri.getHost().equalsIgnoreCase("uustatus.no")
+                    || declarationUri.getHost().toLowerCase(Locale.ROOT).endsWith(".uustatus.no"))) {
+                return new AccessibilityDeclarationResult(null, null);
+            }
+            Connection.Response response = executeSafeJsoup(declarationUri.toString());
             Matcher matcher = ACCESSIBILITY_VIOLATION_PATTERN.matcher(Jsoup.parse(response.body()).text());
             if (matcher.find()) {
                 return new AccessibilityDeclarationResult(
@@ -769,12 +822,12 @@ public class WebsiteContentSnapshotFetcher {
                 + " " + String.join(" ", document.select("form[action]").eachAttr(ATTRIBUTE_ACTION))
                 + " " + html;
         return hasAny(links,
-                "/wp-admin",
+                PATH_WP_ADMIN,
                 "/wp-login",
                 "/admin",
                 "/administrator",
                 "/user/login",
-                "/login",
+                PATH_LOGIN,
                 "/signin",
                 "/dashboard");
     }
@@ -1053,9 +1106,10 @@ public class WebsiteContentSnapshotFetcher {
             return new TlsCertificateResult(false, null);
         }
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) URI.create(url).toURL().openConnection();
+            URI safeUri = SafeWebTargetPolicy.requirePublicHttpUri(url);
+            HttpsURLConnection connection = (HttpsURLConnection) safeUri.toURL().openConnection();
             connection.setRequestMethod("HEAD");
-            connection.setInstanceFollowRedirects(true);
+            connection.setInstanceFollowRedirects(false);
             connection.setConnectTimeout(1500);
             connection.setReadTimeout(1500);
             connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
@@ -1074,6 +1128,7 @@ public class WebsiteContentSnapshotFetcher {
             return false;
         }
         try {
+            SafeWebTargetPolicy.requirePublicHost(host);
             HttpURLConnection connection = (HttpURLConnection) URI.create("http://" + host).toURL().openConnection();
             connection.setRequestMethod("HEAD");
             connection.setInstanceFollowRedirects(false);
@@ -1081,7 +1136,7 @@ public class WebsiteContentSnapshotFetcher {
             connection.setReadTimeout(1200);
             connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
             int status = connection.getResponseCode();
-            String location = connection.getHeaderField("Location");
+            String location = connection.getHeaderField(HEADER_LOCATION);
             return status >= 300 && status < 400 && location != null && location.toLowerCase(Locale.ROOT).startsWith(HTTPS_PREFIX);
         } catch (IOException | IllegalArgumentException exception) {
             return false;
@@ -1090,26 +1145,26 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean hasSecurityTxt(String finalUrl) {
         URI baseUri = URI.create(finalUrl);
-        String origin = baseUri.getScheme() + "://" + baseUri.getHost();
+        String origin = origin(baseUri);
         return hasReadableTextResource(origin + "/.well-known/security.txt")
                 || hasReadableTextResource(origin + "/security.txt");
     }
 
     private static boolean hasSitemap(String finalUrl) {
         URI baseUri = URI.create(finalUrl);
-        String origin = baseUri.getScheme() + "://" + baseUri.getHost();
+        String origin = origin(baseUri);
         return hasReadableTextResource(origin + "/sitemap.xml")
                 || hasReadableTextResource(origin + "/sitemap_index.xml");
     }
 
     private static boolean robotsSensitivePathSignal(String finalUrl) {
         URI baseUri = URI.create(finalUrl);
-        String origin = baseUri.getScheme() + "://" + baseUri.getHost();
+        String origin = origin(baseUri);
         String robots = readSmallTextResource(origin + "/robots.txt");
         if (robots.isBlank()) {
             return false;
         }
-        return hasAny(robots, "/admin", "/wp-admin", "/login", "/user", "/api", "/backup", "/private", "/config");
+        return hasAny(robots, "/admin", PATH_WP_ADMIN, PATH_LOGIN, "/user", "/api", "/backup", "/private", "/config");
     }
 
     private static boolean hasReadableTextResource(String url) {
@@ -1118,18 +1173,13 @@ public class WebsiteContentSnapshotFetcher {
 
     private static String readSmallTextResource(String url) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
-            connection.setRequestMethod("GET");
-            connection.setInstanceFollowRedirects(true);
-            connection.setConnectTimeout(1200);
-            connection.setReadTimeout(1200);
-            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
+            HttpURLConnection connection = openSafeConnection(url, "GET", 1_500, 1_500, false);
             int status = connection.getResponseCode();
             if (status < 200 || status >= 300) {
                 return "";
             }
             try (java.io.InputStream stream = connection.getInputStream()) {
-                return new String(stream.readNBytes(4096), java.nio.charset.StandardCharsets.UTF_8);
+                return new String(stream.readNBytes(512_000), java.nio.charset.StandardCharsets.UTF_8);
             }
         } catch (IOException | IllegalArgumentException exception) {
             return "";
@@ -1137,6 +1187,17 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static ExtendedCrawlResult extendedCrawl(Document document, String baseUrl) {
+        return extendedCrawl(document, baseUrl,
+                WebsiteContentSnapshotFetcher::readSmallHtmlResource,
+                WebsiteContentSnapshotFetcher::readSmallTextResource);
+    }
+
+    static ExtendedCrawlResult extendedCrawl(
+            Document document,
+            String baseUrl,
+            UnaryOperator<String> htmlReader,
+            UnaryOperator<String> textReader
+    ) {
         URI baseUri;
         try {
             baseUri = URI.create(baseUrl);
@@ -1148,35 +1209,289 @@ public class WebsiteContentSnapshotFetcher {
             return ExtendedCrawlResult.empty();
         }
 
-        Set<String> candidates = new java.util.LinkedHashSet<>();
-        STANDARD_REVIEW_PATHS.stream()
-                .map(path -> origin + path)
-                .forEach(candidates::add);
-        document.select(SELECTOR_LINKS).stream()
-                .map(link -> link.attr("abs:href"))
+        java.util.List<String> homepageLinks = document.select(SELECTOR_LINKS).stream()
+                .map(link -> link.attr(ATTRIBUTE_ABSOLUTE_HREF))
                 .filter(java.util.function.Predicate.not(String::isBlank))
                 .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
                 .filter(href -> sameHost(baseUri, href))
-                .filter(href -> !href.contains("#"))
-                .filter(WebsiteContentSnapshotFetcher::isLikelyReviewPage)
-                .forEach(candidates::add);
+                .map(WebsiteContentSnapshotFetcher::canonicalCrawlUrl)
+                .filter(java.util.function.Predicate.not(String::isBlank))
+                .filter(WebsiteContentSnapshotFetcher::isCrawlablePage)
+                .distinct()
+                .sorted(java.util.Comparator.comparingInt(WebsiteContentSnapshotFetcher::crawlPriority).reversed())
+                .toList();
+
+        java.util.PriorityQueue<CrawlCandidate> candidates = new java.util.PriorityQueue<>(
+                java.util.Comparator.comparingInt(CrawlCandidate::score)
+                        .reversed()
+                        .thenComparing(CrawlCandidate::url)
+        );
+        homepageLinks.stream().map(url -> new CrawlCandidate(url, 20)).forEach(candidates::add);
+        sitemapUrls(origin, baseUri, textReader).stream().map(url -> new CrawlCandidate(url, 10)).forEach(candidates::add);
+        STANDARD_REVIEW_PATHS.stream().map(path -> new CrawlCandidate(origin + path, 0)).forEach(candidates::add);
 
         ExtendedCrawlAccumulator accumulator = new ExtendedCrawlAccumulator(
                 baseUrl,
                 normalizedMetaDescription(document)
         );
 
-        for (String candidate : candidates) {
-            if (accumulator.limitReached()) {
-                break;
-            }
-            String html = readSmallHtmlResource(candidate);
-            if (!html.isBlank()) {
-                accumulator.capture(candidate, html);
+        Set<String> visited = new java.util.LinkedHashSet<>();
+        Set<String> fingerprints = new java.util.HashSet<>();
+        fingerprints.add(contentFingerprint(document));
+        String robots = textReader.apply(origin + "/robots.txt");
+        long deadlineNanos = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(EXTENDED_CRAWL_TOTAL_MS);
+        int attempts = 0;
+
+        while (!candidates.isEmpty() && !accumulator.limitReached()
+                && attempts < EXTENDED_CRAWL_ATTEMPT_LIMIT && System.nanoTime() < deadlineNanos) {
+            String candidate = canonicalCrawlUrl(candidates.remove().url());
+            if (isEligibleCrawlCandidate(candidate, baseUrl, baseUri, robots, visited)) {
+                attempts++;
+                crawlCandidate(candidate, baseUri, htmlReader, fingerprints, visited, candidates, accumulator);
             }
         }
 
         return accumulator.result();
+    }
+
+    private static boolean isEligibleCrawlCandidate(
+            String candidate,
+            String baseUrl,
+            URI baseUri,
+            String robots,
+            Set<String> visited
+    ) {
+        return !candidate.isBlank()
+                && visited.add(candidate)
+                && !candidate.equals(canonicalCrawlUrl(baseUrl))
+                && sameHost(baseUri, candidate)
+                && robotsAllows(robots, URI.create(candidate));
+    }
+
+    private static void crawlCandidate(
+            String candidate,
+            URI baseUri,
+            UnaryOperator<String> htmlReader,
+            Set<String> fingerprints,
+            Set<String> visited,
+            java.util.PriorityQueue<CrawlCandidate> candidates,
+            ExtendedCrawlAccumulator accumulator
+    ) {
+        String html = htmlReader.apply(candidate);
+        if (html.isBlank()) {
+            return;
+        }
+        Document crawledDocument = Jsoup.parse(html, candidate);
+        String fingerprint = contentFingerprint(crawledDocument);
+        if (fingerprint.isBlank() || !fingerprints.add(fingerprint) || isSoftNotFound(crawledDocument)) {
+            return;
+        }
+        accumulator.capture(candidate, crawledDocument);
+        crawledDocument.select(SELECTOR_LINKS).stream()
+                .map(link -> link.attr(ATTRIBUTE_ABSOLUTE_HREF))
+                .filter(java.util.function.Predicate.not(String::isBlank))
+                .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
+                .filter(href -> sameHost(baseUri, href))
+                .map(WebsiteContentSnapshotFetcher::canonicalCrawlUrl)
+                .filter(WebsiteContentSnapshotFetcher::isCrawlablePage)
+                .filter(java.util.function.Predicate.not(visited::contains))
+                .sorted(java.util.Comparator.comparingInt(WebsiteContentSnapshotFetcher::crawlPriority).reversed())
+                .limit(30)
+                .map(url -> new CrawlCandidate(url, 15))
+                .forEach(candidates::add);
+    }
+
+    private static java.util.List<String> sitemapUrls(
+            String origin,
+            URI baseUri,
+            UnaryOperator<String> textReader
+    ) {
+        java.util.LinkedHashSet<String> urls = new java.util.LinkedHashSet<>();
+        java.util.ArrayDeque<String> sitemaps = new java.util.ArrayDeque<>();
+        sitemaps.add(origin + "/sitemap.xml");
+        sitemaps.add(origin + "/sitemap_index.xml");
+        Set<String> visitedSitemaps = new java.util.HashSet<>();
+        while (!sitemaps.isEmpty() && visitedSitemaps.size() < 8 && urls.size() < 200) {
+            String sitemapUrl = sitemaps.removeFirst();
+            if (visitedSitemaps.add(sitemapUrl)) {
+                addSitemapEntries(textReader.apply(sitemapUrl), origin, baseUri, sitemaps, urls);
+            }
+        }
+        return urls.stream()
+                .sorted(java.util.Comparator.comparingInt(WebsiteContentSnapshotFetcher::crawlPriority).reversed())
+                .limit(200)
+                .toList();
+    }
+
+    private static void addSitemapEntries(
+            String xml,
+            String origin,
+            URI baseUri,
+            java.util.ArrayDeque<String> sitemaps,
+            Set<String> urls
+    ) {
+        if (xml.isBlank()) {
+            return;
+        }
+        Document sitemap = Jsoup.parse(xml, origin, org.jsoup.parser.Parser.xmlParser());
+        sitemap.select("loc").stream().map(Element::text)
+                .map(WebsiteContentSnapshotFetcher::canonicalCrawlUrl)
+                .filter(java.util.function.Predicate.not(String::isBlank))
+                .filter(url -> sameHost(baseUri, url))
+                .limit(250)
+                .forEach(url -> addSitemapEntry(url, sitemaps, urls));
+    }
+
+    private static void addSitemapEntry(
+            String url,
+            java.util.ArrayDeque<String> sitemaps,
+            Set<String> urls
+    ) {
+        if (url.toLowerCase(Locale.ROOT).endsWith(".xml")) {
+            sitemaps.addLast(url);
+        } else if (isCrawlablePage(url)) {
+            urls.add(url);
+        }
+    }
+
+    static String canonicalCrawlUrl(String value) {
+        try {
+            URI uri = URI.create(value).normalize();
+            if (uri.getScheme() == null || uri.getHost() == null) return "";
+            String scheme = uri.getScheme().toLowerCase(Locale.ROOT);
+            String host = uri.getHost().toLowerCase(Locale.ROOT);
+            int port = uri.getPort();
+            boolean defaultPort = ("http".equals(scheme) && port == 80) || ("https".equals(scheme) && port == 443);
+            String path = uri.getRawPath();
+            if (path == null || path.isBlank()) path = "/";
+            if (path.length() > 1 && path.endsWith("/")) path = path.substring(0, path.length() - 1);
+            String query = uri.getRawQuery();
+            if (query != null && hasAny(query.toLowerCase(Locale.ROOT), "utm_", "fbclid=", "gclid=", "mc_cid=")) query = null;
+            return new URI(scheme, null, host, defaultPort ? -1 : port, path, query, null).toString();
+        } catch (Exception exception) {
+            return "";
+        }
+    }
+
+    static int crawlPriority(String url) {
+        String normalized = url.toLowerCase(Locale.ROOT);
+        if (hasAny(normalized, PATH_PERSONVERN, PATH_PRIVACY, PATH_COOKIES, "/gdpr")) return 100;
+        if (hasAny(normalized, PATH_KONTAKT, PATH_CONTACT)) return 95;
+        if (hasAny(normalized, PATH_VILKAR, PATH_VILKAR_ACCENTED, PATH_TERMS, "/retur", "/refund")) return 90;
+        if (hasAny(normalized, "/om-oss", PATH_ABOUT, PATH_TEAM, PATH_MENNESKENE)) return 80;
+        if (hasAny(normalized, PATH_TJENESTER, PATH_SERVICES, "/produkt", PATH_PRICING, PATH_PRIS)) return 70;
+        if (hasAny(normalized, "/faq", PATH_REFERANSER, PATH_CASE, PATH_PROSJEKTER)) return 60;
+        return 10;
+    }
+
+    static boolean robotsAllows(String robots, URI uri) {
+        if (robots == null || robots.isBlank()) return true;
+        java.util.List<RobotsRule> rules = parseRobotsRules(robots);
+        int bestAgent = rules.stream().mapToInt(RobotsRule::specificity).max().orElse(0);
+        String target = uri.getRawPath() + (uri.getRawQuery() == null ? "" : "?" + uri.getRawQuery());
+        return rules.stream()
+                .filter(rule -> rule.specificity() == bestAgent)
+                .filter(rule -> robotsPathMatches(rule.path(), target))
+                .max(java.util.Comparator.comparingInt((RobotsRule rule) -> rule.path().length())
+                        .thenComparing(RobotsRule::allow))
+                .map(RobotsRule::allow)
+                .orElse(true);
+    }
+
+    private static java.util.List<RobotsRule> parseRobotsRules(String robots) {
+        RobotsRulesParser parser = new RobotsRulesParser();
+        robots.lines().forEach(parser::accept);
+        return parser.rules();
+    }
+
+    private static final class RobotsRulesParser {
+        private final java.util.List<RobotsRule> rules = new java.util.ArrayList<>();
+        private int groupSpecificity;
+        private boolean groupHasRules;
+
+        private void accept(String rawLine) {
+            String line = stripRobotsComment(rawLine).trim();
+            int separator = line.indexOf(':');
+            if (separator < 0) {
+                return;
+            }
+            String field = line.substring(0, separator).trim().toLowerCase(Locale.ROOT);
+            String value = line.substring(separator + 1).trim();
+            if ("user-agent".equals(field)) {
+                acceptUserAgent(value);
+            } else if ("allow".equals(field) || "disallow".equals(field)) {
+                acceptRule(field, value);
+            }
+        }
+
+        private void acceptUserAgent(String value) {
+            if (groupHasRules) {
+                groupSpecificity = 0;
+                groupHasRules = false;
+            }
+            String agent = value.toLowerCase(Locale.ROOT);
+            if (agent.contains("nyfirmasjekk")) {
+                groupSpecificity = Math.max(groupSpecificity, 2);
+            } else if ("*".equals(agent)) {
+                groupSpecificity = Math.max(groupSpecificity, 1);
+            }
+        }
+
+        private void acceptRule(String field, String value) {
+            groupHasRules = true;
+            if (groupSpecificity > 0 && !value.isBlank()) {
+                rules.add(new RobotsRule(groupSpecificity, "allow".equals(field), value));
+            }
+        }
+
+        private java.util.List<RobotsRule> rules() {
+            return rules;
+        }
+    }
+
+    private static String stripRobotsComment(String line) {
+        int commentStart = line.indexOf('#');
+        return commentStart < 0 ? line : line.substring(0, commentStart);
+    }
+
+    private static boolean robotsPathMatches(String rule, String target) {
+        StringBuilder regex = new StringBuilder("^");
+        boolean anchoredAtEnd = rule.endsWith("$");
+        String pattern = anchoredAtEnd ? rule.substring(0, rule.length() - 1) : rule;
+        for (String part : pattern.split("\\*", -1)) {
+            if (!regex.toString().endsWith("^")) regex.append(".*");
+            regex.append(Pattern.quote(part));
+        }
+        if (anchoredAtEnd) regex.append('$');
+        return Pattern.compile(regex.toString()).matcher(target).find();
+    }
+
+    private static boolean isCrawlablePage(String url) {
+        String normalized = url.toLowerCase(Locale.ROOT);
+        return !hasAny(normalized, "mailto:", "tel:", PATH_WP_ADMIN, PATH_LOGIN, "/logout", "/cart", "/checkout",
+                ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".pdf", ".zip", ".xml", ".json",
+                ".css", ".js", ".woff", ".mp4", ".mp3");
+    }
+
+    private static String contentFingerprint(Document document) {
+        String title = collapseWhitespace(document.title().toLowerCase(Locale.ROOT));
+        String text = collapseWhitespace(document.body().text().toLowerCase(Locale.ROOT));
+        if (text.length() > 2_000) text = text.substring(0, 2_000);
+        return text.isBlank() ? "" : Integer.toHexString((title + "\n" + text).hashCode());
+    }
+
+    private static boolean isSoftNotFound(Document document) {
+        String titleAndHeading = (document.title() + " " + document.select("h1").text()).toLowerCase(Locale.ROOT);
+        return hasAny(titleAndHeading, "404", "page not found", "side ikke funnet", "siden finnes ikke", "not found");
+    }
+
+    private record CrawlCandidate(String url, int sourceBonus) {
+        private int score() {
+            return crawlPriority(url) + sourceBonus;
+        }
+    }
+
+    private record RobotsRule(int specificity, boolean allow, String path) {
     }
 
     private static String normalizedMetaDescription(Document document) {
@@ -1207,52 +1522,13 @@ public class WebsiteContentSnapshotFetcher {
         if (uri.getScheme() == null || uri.getHost() == null) {
             return null;
         }
-        return uri.getScheme() + "://" + uri.getHost();
-    }
-
-    private static boolean isLikelyReviewPage(String url) {
-        String normalized = url.toLowerCase(Locale.ROOT);
-        return hasAny(normalized,
-                "/kontakt",
-                "/contact",
-                "/om",
-                "/about",
-                "/personvern",
-                "/privacy",
-                "/cookies",
-                "/vilkar",
-                "/vilkår",
-                "/villkor",
-                "/terms",
-                "/policy",
-                "/tjenester",
-                "/services",
-                "/menneskene",
-                "/team",
-                "/referanser",
-                "/referanse",
-                "/references",
-                "/case",
-                "/cases",
-                "/prosjekter",
-                "/kunder",
-                "/faq",
-                "/pris",
-                "/pricing",
-                "/arbeidshelsesjekken",
-                "/arbeidshelseradaren",
-                "/retur",
-                "/refund");
+        return uri.getScheme() + "://" + uri.getHost() + (uri.getPort() >= 0 ? ":" + uri.getPort() : "");
     }
 
     private static String readSmallHtmlResource(String url) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
-            connection.setRequestMethod("GET");
-            connection.setInstanceFollowRedirects(true);
-            connection.setConnectTimeout(EXTENDED_CRAWL_TIMEOUT_MS);
-            connection.setReadTimeout(EXTENDED_CRAWL_TIMEOUT_MS);
-            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
+            HttpURLConnection connection = openSafeConnection(url, "GET", EXTENDED_CRAWL_TIMEOUT_MS,
+                    EXTENDED_CRAWL_TIMEOUT_MS, true);
             int status = connection.getResponseCode();
             if (status < 200 || status >= 300) {
                 return "";
@@ -1269,10 +1545,44 @@ public class WebsiteContentSnapshotFetcher {
         }
     }
 
+    private static HttpURLConnection openSafeConnection(
+            String value,
+            String method,
+            int connectTimeout,
+            int readTimeout,
+            boolean sameHostOnly
+    ) throws IOException {
+        URI current = SafeWebTargetPolicy.requirePublicHttpUri(value);
+        String originalHost = current.getHost();
+        for (int redirect = 0; redirect <= 5; redirect++) {
+            HttpURLConnection connection = (HttpURLConnection) current.toURL().openConnection();
+            connection.setRequestMethod(method);
+            connection.setInstanceFollowRedirects(false);
+            connection.setConnectTimeout(connectTimeout);
+            connection.setReadTimeout(readTimeout);
+            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
+            int status = connection.getResponseCode();
+            if (status < 300 || status >= 400) {
+                return connection;
+            }
+            String location = connection.getHeaderField(HEADER_LOCATION);
+            connection.disconnect();
+            if (location == null || location.isBlank()) {
+                throw new IOException("Redirect mangler Location-header.");
+            }
+            URI next = SafeWebTargetPolicy.requirePublicHttpUri(current.resolve(location).toString());
+            if (sameHostOnly && !originalHost.equalsIgnoreCase(next.getHost())) {
+                throw new IOException("Undersiden redirectet til et annet domene.");
+            }
+            current = next;
+        }
+        throw new IOException("For mange redirects.");
+    }
+
     private static LinkCheckResult checkInternalLinks(Document document, String baseUrl) {
         URI baseUri = URI.create(baseUrl);
         Set<String> links = document.select(SELECTOR_LINKS).stream()
-                .map(link -> link.attr("abs:href"))
+                .map(link -> link.attr(ATTRIBUTE_ABSOLUTE_HREF))
                 .filter(java.util.function.Predicate.not(String::isBlank))
                 .filter(WebsiteContentSnapshotFetcher::isHttpUrl)
                 .filter(href -> sameHost(baseUri, href))
@@ -1304,12 +1614,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean isBrokenLink(String url) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setInstanceFollowRedirects(true);
-            connection.setConnectTimeout(1200);
-            connection.setReadTimeout(1200);
-            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
+            HttpURLConnection connection = openSafeConnection(url, "HEAD", 1_500, 1_500, true);
             int status = connection.getResponseCode();
             if (status == HttpURLConnection.HTTP_BAD_METHOD) {
                 return isBrokenLinkWithGet(url);
@@ -1322,12 +1627,7 @@ public class WebsiteContentSnapshotFetcher {
 
     private static boolean isBrokenLinkWithGet(String url) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
-            connection.setRequestMethod("GET");
-            connection.setInstanceFollowRedirects(true);
-            connection.setConnectTimeout(1200);
-            connection.setReadTimeout(1200);
-            connection.setRequestProperty(HEADER_USER_AGENT, USER_AGENT_VALUE);
+            HttpURLConnection connection = openSafeConnection(url, "GET", 1_500, 1_500, true);
             return connection.getResponseCode() >= 400;
         } catch (IOException | IllegalArgumentException exception) {
             return false;
@@ -1372,12 +1672,11 @@ public class WebsiteContentSnapshotFetcher {
             return crawled >= EXTENDED_CRAWL_LIMIT;
         }
 
-        private void capture(String candidate, String html) {
+        private void capture(String candidate, Document crawledDocument) {
             crawled++;
             String normalizedUrl = candidate.toLowerCase(Locale.ROOT);
-            String normalizedContent = html.toLowerCase(Locale.ROOT);
+            String normalizedContent = crawledDocument.outerHtml().toLowerCase(Locale.ROOT);
             String searchableContent = normalizedUrl + " " + normalizedContent;
-            Document crawledDocument = Jsoup.parse(html, candidate);
             appendCrawledBodyText(crawledDocument);
             captureMetaDescription(candidate, crawledDocument);
             privacyPageFound |= hasAny(searchableContent, TERM_PERSONVERN, TERM_PRIVACY, "gdpr", "datenschutz", "integritetspolicy");
@@ -1424,7 +1723,7 @@ public class WebsiteContentSnapshotFetcher {
         }
     }
 
-    private record ExtendedCrawlResult(
+    record ExtendedCrawlResult(
             int pageCount,
             boolean privacyPageFound,
             boolean contactPageFound,
