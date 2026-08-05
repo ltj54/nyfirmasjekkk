@@ -94,7 +94,7 @@ public final class SalesSegmentCatalog {
             "Annet",
             40,
             "Ingen spesifikk salgsgruppe er definert for denne NACE-koden ennå.",
-            "For nye virksomheter er en nettside nyttig for å vise hva dere tilbyr, hvem dere hjelper og hvordan kunder kan ta kontakt."
+            "En ryddig nettside kan gjøre det enkelt å vise hva dere tilbyr, hvem tilbudet passer for og hvordan interesserte kan ta kontakt."
     );
 
     private static final Set<String> HANDVERK_CODES = Set.of("43.210", "43.221", "43.222", "43.320", "43.341", "43.342", "43.390", "43.990");
@@ -103,7 +103,7 @@ public final class SalesSegmentCatalog {
     private static final Set<String> KONSULENT_CODES = Set.of("70.220", "71.111", "71.112", "71.121", "71.129", "74.200", "74.300", "74.900");
     private static final List<String> DEPRIORITIZED_PREFIXES = List.of("01", "02", "03", "46", "64", "65", "66", "84", "97", "98", "99");
     private static final List<NaceRule> NACE_RULES = List.of(
-            new NaceRule(code -> code.startsWith("94"), FORENING_KLUBB),
+            new NaceRule(code -> code.startsWith("93.12") || code.startsWith("94"), FORENING_KLUBB),
             new NaceRule(code -> HANDVERK_CODES.contains(code) || startsWithAny(code, "41", "42", "43"), HANDVERK),
             new NaceRule(code -> code.equals("81.300") || code.startsWith("81.3"), HAGE_OG_GRONTANLEGG),
             new NaceRule(code -> RENHOLD_CODES.contains(code) || code.startsWith("81"), RENHOLD_OG_DRIFT),

@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 523
+- Antall hendelser: 531
 - Sendt: 243
 - Angret: 1
-- Aktive kontaktede selskaper: 225
+- Aktive kontaktede selskaper: 221
 
 ## Aktive kontaktede selskaper
 
@@ -20,7 +20,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 937903359 | FEIE AS | AS | email | website-follow-up |
 | 2026-08-04 | 838072682 | HEGGENES GÅRD ANS | ANS | email | website-follow-up |
 | 2026-08-04 | 938071896 | LEIA ELLINOR MOEN DESIGN & CREATE | ENK | email | website-follow-up |
-| 2026-08-04 | 938068763 | MUSIKK MED MENING | FLI | email | website-follow-up |
 | 2026-08-04 | 938075786 | PSYKOLOGSPESIALIST KARINA BREKKE SKOGVANG | ENK | email | website-follow-up |
 | 2026-08-04 | 938068364 | RØST HUSFLIDSLAG | FLI | email | website-follow-up |
 | 2026-08-04 | 938084718 | LATINOS VIKINGOS RENHOLD MARTINEZ PERDOMO | ENK | email | website-follow-up |
@@ -48,7 +47,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 937886918 | STOKHOLM RAVNDAL HOLDING AS | AS | email | website-follow-up |
 | 2026-08-04 | 937855370 | GREEN DIGITAL HOLDING AS | AS | email | website-follow-up |
 | 2026-08-04 | 937848420 | TENSIONE AS | AS | email | website-follow-up |
-| 2026-08-04 | 937848749 | ÅSEN HOLDING AS | AS | email | website-follow-up |
 | 2026-08-04 | 938085986 | OLAFSSON MARITIM SERVICE | ENK | email | website-follow-up |
 | 2026-08-04 | 838086322 | TOFTAKER CONTENT | ENK | email | website-follow-up |
 | 2026-08-04 | 938092966 | TOMMY LEE RUDQVIST | ENK | email | website-follow-up |
@@ -58,7 +56,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 838076262 | FIREFLY TECHNOLOGY BALSNES | ENK | email | website-follow-up |
 | 2026-08-04 | 937887000 | ABR HOLDCO AS | AS | email | website-follow-up |
 | 2026-08-04 | 937886977 | LILLEGULL HØILI AS | AS | email | website-follow-up |
-| 2026-08-04 | 937706014 | VETERINÆR KRISTIN LEIN AS | AS | email | website-follow-up |
 | 2026-08-04 | 837459052 | ELLINGSEN BETONG AS | AS | email | website-follow-up |
 | 2026-08-04 | 937456395 | BJØRNSTAD TJENESTER AS | AS | email | website-follow-up |
 | 2026-08-04 | 937537697 | FEMTECH AS | AS | email | website-follow-up |
@@ -68,7 +65,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-04 | 937537662 | NIDA KAPITAL AS | AS | email | website-follow-up |
 | 2026-08-04 | 837440742 | TRYGBO AS | AS | email | website-follow-up |
 | 2026-08-04 | 937403240 | VERBAAN MUSIKK AS | AS | email | website-follow-up |
-| 2026-08-04 | 937536461 | MAGNUS SØRNES | ENK | email | website-follow-up |
 | 2026-08-04 | 937391218 | STEIN AKERS IDRETTSSERVICE | ENK | email | website-follow-up |
 | 2026-08-04 | 937503210 | SAMEIET PERSAUNVEGEN 43 | ESEK | email | website-follow-up |
 | 2026-08-04 | 937460368 | BREBENEL BYGG PROFF | ENK | email | website-follow-up |
@@ -243,6 +239,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-05 09:35 | not_relevant | 937706014 | VETERINÆR KRISTIN LEIN AS | AS | email | Avsluttet etter svar: Dekkes av klinikkens eksisterende nettside og logistikk. Ingen videre oppfølging. |
+| 2026-08-05 09:35 | replied | 937706014 | VETERINÆR KRISTIN LEIN AS | AS | email | Svar mottatt 2026-08-04: Ikke aktuelt; arbeider under en klinikk som allerede har en velfungerende nettside og logistikk. |
+| 2026-08-05 09:34 | not_relevant | 938068763 | MUSIKK MED MENING | FLI | email | Avsluttet etter svar: Ikke aktuelt nå. Ingen videre oppfølging uten at mottakeren tar kontakt. |
+| 2026-08-05 09:34 | replied | 938068763 | MUSIKK MED MENING | FLI | email | Svar mottatt 2026-08-04: Det er ikke aktuelt nå. |
+| 2026-08-05 09:33 | not_relevant | 937848749 | ÅSEN HOLDING AS | AS | email | Avsluttet etter svar: Ikke interessert. Ingen videre oppfølging. |
+| 2026-08-05 09:33 | replied | 937848749 | ÅSEN HOLDING AS | AS | email | Svar mottatt 2026-08-04: Ikke interessert. |
+| 2026-08-05 09:32 | not_relevant | 937536461 | MAGNUS SØRNES | ENK | email | Avsluttet etter svar: Kun en bi-jobb og ikke interessert. Ingen videre oppfølging. |
+| 2026-08-05 09:32 | replied | 937536461 | MAGNUS SØRNES | ENK | email | Svar mottatt 2026-08-04: Ellers takk; virksomheten er kun en bi-jobb. |
 | 2026-08-04 16:56 | replied | 938061092 | BARE KAFFE NYGAARD | ENK | email | Avslag: ikke interessert. |
 | 2026-08-04 16:41 | sent | 938080216 | PETROSERVICE | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-04 16:41 | sending | 938080216 | PETROSERVICE | UTLA | email | Oppfølging reservert før SMTP-levering. |

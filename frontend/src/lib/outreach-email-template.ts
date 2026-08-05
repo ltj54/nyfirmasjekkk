@@ -27,33 +27,10 @@ export function hasUnresolvedPersonalObservation(body: string) {
 
 export function personalObservation(company: OutreachEmailCompany) {
   const companyName = displayCompanyName(company);
-  const municipality = company.municipality?.trim();
-  const naceCode = company.naceCode?.trim();
-  const naceDescription = company.naceDescription?.trim();
-  const registrationYear = company.registrationDate?.match(/^\d{4}/)?.[0];
-
-  if (naceCode && naceDescription && municipality) {
-    return `Jeg la merke til at ${companyName} er registrert i BRREG med næringskode ${naceCode} (${lowercaseFirst(naceDescription)}) i ${municipality}.`;
+  if (company.website) {
+    return `Jeg kom over ${companyName} og tok en titt på nettsiden deres.`;
   }
-  if (naceDescription && municipality) {
-    return `Jeg la merke til at BRREG beskriver ${companyName} som en virksomhet innen ${lowercaseFirst(naceDescription)} i ${municipality}.`;
-  }
-  if (naceCode && naceDescription) {
-    return `Jeg la merke til at ${companyName} er registrert i BRREG med næringskode ${naceCode} (${lowercaseFirst(naceDescription)}).`;
-  }
-  if (municipality && registrationYear) {
-    return `Jeg la merke til at ${companyName} har vært registrert i BRREG i ${municipality} siden ${registrationYear}.`;
-  }
-  if (naceDescription) {
-    return `Jeg la merke til at BRREG beskriver ${companyName} som en virksomhet innen ${lowercaseFirst(naceDescription)}.`;
-  }
-  if (municipality) {
-    return `Jeg kom over ${companyName} blant virksomhetene som er registrert i BRREG i ${municipality}.`;
-  }
-  if (registrationYear) {
-    return `Jeg la merke til at ${companyName} har vært registrert i BRREG siden ${registrationYear}.`;
-  }
-  return `Jeg kom over ${companyName} i virksomhetsopplysningene fra BRREG.`;
+  return `Jeg kom over ${companyName} og ville høre om dere har vurdert å få laget en nettside for ${companyEntityDefinite(company)}.`;
 }
 
 export function industryOutreachPitch(company: OutreachEmailCompany) {
@@ -65,6 +42,12 @@ export function industryOutreachPitch(company: OutreachEmailCompany) {
   const naceCode = company.naceCode?.trim() ?? "";
   const segmentCode = company.salesSegment?.code ?? "";
 
+  if (naceCode.startsWith("93.12") || hasAnyContext(context, "idrettslag", "sportsklubb", "idrettsklubb", "sports club")) {
+    return "En ryddig nettside kan gjøre det enkelt å presentere aktivitetene deres, informere om treningstilbud og medlemskap – og vise interesserte hvordan de kan bli med eller ta kontakt.";
+  }
+  if (segmentCode === "FORENING_KLUBB" || naceCode.startsWith("94")) {
+    return "En ryddig nettside kan samle informasjon om aktiviteter, arrangementer og medlemskap – og gjøre det enkelt for interesserte å finne kontaktpersoner eller bli med.";
+  }
   if (hasAnyContext(context, "psykolog", "psykoter", "psykisk helse", "samtaleterapi")) {
     return "For psykologtjenester er tillit og trygg kommunikasjon spesielt viktig. Hvis nettsiden har kontaktskjema, bør personvern og GDPR også ivaretas fordi henvendelser kan inneholde sensitive opplysninger.";
   }
@@ -117,8 +100,18 @@ export function industryOutreachPitch(company: OutreachEmailCompany) {
     return "For personlige tjenester kan en tydelig presentasjon av tilbudet, priser eller praktisk informasjon og enkel kontakt eller booking gjøre valget tryggere for nye kunder.";
   }
 
-  return company.salesSegment?.emailPitch
-    ?? "For en ny virksomhet er en nettside nyttig for å vise hva dere tilbyr, hvem dere hjelper og hvordan kunder kan ta kontakt.";
+  if (segmentCode === "ANNET" || !company.salesSegment?.emailPitch) {
+    return "En ryddig nettside kan gjøre det enkelt å vise hva dere tilbyr, hvem tilbudet passer for og hvordan interesserte kan ta kontakt.";
+  }
+  return company.salesSegment.emailPitch;
+}
+
+function companyEntityDefinite(company: OutreachEmailCompany) {
+  const context = normalizeContextText([company.name, company.naceDescription, company.salesSegment?.label].filter(Boolean).join(" "));
+  const naceCode = company.naceCode?.trim() ?? "";
+  if (naceCode.startsWith("93.12") || hasAnyContext(context, "idrettslag", "sportsklubb", "idrettsklubb")) return "klubben";
+  if (company.salesSegment?.code === "FORENING_KLUBB" || naceCode.startsWith("94")) return "foreningen";
+  return "virksomheten";
 }
 
 function hasAnyContext(context: string, ...phrases: string[]) {
@@ -738,14 +731,14 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 Dette er ikke en full gjennomgang, men det kan være verdt å se nærmere på.
 
-Hvis dere ønsker det, kan jeg sende en kort rapport med konkrete funn og forslag til forbedringer.
+Hvis dette kan være interessant, sender jeg gjerne en kort og uforpliktende rapport med konkrete funn og forslag til forbedringer.
 
 Her er et eksempel på hva jeg ser etter:
 {{websiteCheckSenderWebsite}}
 
-Skal jeg sende rapporten?
+Skal jeg sende den?
 
-Mvh
+Med vennlig hilsen
 {{senderName}}
 LTJ Production
 {{senderPhone}}
@@ -761,16 +754,16 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 Jeg så også at {{registeredWebsite}} er registrert som nettside, men siden svarte ikke da jeg sjekket. Det kan selvfølgelig være midlertidig.
 
-Jeg kan lage en enkel nettside som gjør det lettere for nye kunder å forstå hva dere tilbyr og ta kontakt.
+Jeg lager profesjonelle og mobiltilpassede nettsider for små virksomheter og organisasjoner.
 
-En enkel førsteside koster fast {{priceValue}} kr. Jeg tilpasser den til virksomheten, sørger for at den fungerer godt på mobil og hjelper med publisering. Hvis dere ønsker booking, nettbutikk eller flere sider, kan jeg også hjelpe med det – så finner vi omfang og pris sammen. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+En førsteside koster fast {{priceValue}} kr og tilpasses med deres innhold, bilder og kontaktinformasjon. Jeg hjelper også med publisering. Dersom dere senere ønsker flere sider, påmelding, booking, nettbutikk eller andre funksjoner, kan dette bygges ut etter avtale. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
 
 Her kan dere se hvordan jeg jobber:
 {{senderWebsite}}
 
-Er det greit at jeg sender et kort, tekstbasert forslag til hvordan siden kan bygges opp?
+Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan nettsiden for {{companyName}} kan bygges opp.
 
-Mvh
+Med vennlig hilsen
 {{senderName}}
 LTJ Production
 {{senderPhone}}
@@ -821,14 +814,14 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 Jeg tilbyr korte nettsidesjekker med vurdering av blant annet mobilbruk, kontaktinformasjon, teknisk kvalitet og personvern.
 
-Hvis det er interessant, kan jeg ta en nærmere titt på siden deres og sende noen konkrete punkter.
+Hvis dette kan være interessant, tar jeg gjerne en nærmere titt på siden deres og sender noen konkrete og uforpliktende forslag.
 
 Her kan dere se hva sjekken omfatter:
 {{websiteCheckSenderWebsite}}
 
-Er det aktuelt?
+Kan det være interessant?
 
-Mvh
+Med vennlig hilsen
 {{senderName}}
 LTJ Production
 {{senderPhone}}
@@ -842,16 +835,18 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 {{salesSegmentPitch}}
 
-Jeg lager enkle nettsider som gjør det lettere for nye kunder å forstå hva virksomheten tilbyr og ta kontakt.
+Jeg lager profesjonelle og mobiltilpassede nettsider for små virksomheter og organisasjoner.
 
-En enkel førsteside koster fast {{priceValue}} kr. Jeg tilpasser den til virksomheten, sørger for at den fungerer godt på mobil og hjelper med publisering. Hvis dere ønsker booking, nettbutikk eller flere sider, kan jeg også hjelpe med det – så finner vi omfang og pris sammen. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+En førsteside koster fast {{priceValue}} kr og tilpasses med deres innhold, bilder og kontaktinformasjon. Jeg hjelper også med publisering.
 
-Her er et eksempel på hvordan jeg jobber:
+Dersom dere senere ønsker flere sider, påmelding, booking, nettbutikk eller andre funksjoner, kan dette bygges ut etter avtale. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+
+Her kan dere se et eksempel på hvordan jeg arbeider:
 {{senderWebsite}}
 
-Er det greit at jeg sender et kort, tekstbasert forslag til hvordan siden kan bygges opp?
+Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan nettsiden for {{companyName}} kan bygges opp.
 
-Mvh
+Med vennlig hilsen
 {{senderName}}
 LTJ Production
 {{senderPhone}}
@@ -861,13 +856,13 @@ LTJ Production
 function defaultFollowUpEmailTemplate() {
   return `{{greetingLine}}
 
-Ville bare høre om du fikk sett meldingen min om nettside for {{companyName}}.
+Ville bare høre om {{recipientSubject}} fikk sett meldingen min om nettside for {{companyName}}.
 
 Jeg tror det kan løses ryddig uten å gjøre prosjektet større enn nødvendig.
 
-Gi gjerne beskjed dersom du vil at jeg skal sende en kort, tekstbasert skisse av hvordan siden kan bygges opp.
+Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan siden kan bygges opp.
 
-Mvh
+Med vennlig hilsen
 {{senderName}}
 LTJ Production
 {{senderPhone}}
@@ -879,16 +874,23 @@ function firstNameFromContactName(value: string) {
   return firstSpace < 0 ? value : value.slice(0, firstSpace);
 }
 
-function lowercaseFirst(value: string) {
-  return value ? value.charAt(0).toLocaleLowerCase("nb-NO") + value.slice(1) : value;
-}
-
 function displayCompanyName(company: Pick<OutreachEmailCompany, "name" | "organizationForm">) {
   const suffixes = ["AS", "ASA", "ENK", "NUF", "DA", "ANS", "SA", "BA", "LTD", "LIMITED", "LLC", "INC", "GMBH", "OU", "OÜ"];
   const trimmedName = company.name.trim();
   const upperName = trimmedName.toUpperCase();
   const suffix = suffixes.find((candidate) => upperName.endsWith(` ${candidate}`) || upperName.endsWith(`.${candidate}`));
-  return suffix ? trimmedName.slice(0, -(suffix.length + 1)).trim() : trimmedName;
+  const nameWithoutSuffix = suffix ? trimmedName.slice(0, -(suffix.length + 1)).trim() : trimmedName;
+  return naturalCompanyName(nameWithoutSuffix);
+}
+
+function naturalCompanyName(value: string) {
+  const letters = value.match(/\p{L}/gu) ?? [];
+  if (letters.length === 0 || letters.some((letter) => letter !== letter.toLocaleUpperCase("nb-NO"))) {
+    return value;
+  }
+  return value
+    .toLocaleLowerCase("nb-NO")
+    .replace(/(^|[\s/\-–(])\p{L}/gu, (letter) => letter.toLocaleUpperCase("nb-NO"));
 }
 
 function domainExamplesForCompany(company: OutreachEmailCompany) {

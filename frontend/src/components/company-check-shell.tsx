@@ -2137,8 +2137,9 @@ export function CompanyCheckShell() {
               </div>
               <div className="overflow-hidden border border-[#D9E2EC] bg-white">
                 <Show when={!isListLoading && visibleSearchCompanies.length > 0}>
-                  <div className="hidden grid-cols-[minmax(240px,1.5fr)_minmax(170px,1fr)_minmax(190px,1fr)_minmax(150px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
+                  <div className="hidden grid-cols-[minmax(210px,1.3fr)_minmax(160px,1fr)_minmax(150px,.9fr)_minmax(180px,1fr)_minmax(140px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
                     <span>Virksomhet</span>
+                    <span>Virksomhetstype</span>
                     <span>Prioritet</span>
                     <span>Kontakt</span>
                     <span>Registerrisiko</span>
@@ -3948,10 +3949,14 @@ function LeadResultsBody({
 }>) {
   if (isLoading && !hasLoadedCompanies) {
     return ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"].map((skeletonKey) => (
-      <div key={skeletonKey} className="grid animate-pulse gap-3 border-b border-[#E4E7EB] p-4 last:border-b-0 lg:grid-cols-4">
+      <div key={skeletonKey} className="grid animate-pulse gap-3 border-b border-[#E4E7EB] p-4 last:border-b-0 lg:grid-cols-5">
         <div className="space-y-2">
           <div className="h-4 w-3/4 bg-[#E4E7EB]" />
           <div className="h-3 w-1/2 bg-[#E4E7EB]" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 w-28 bg-[#E4E7EB]" />
+          <div className="h-3 w-40 bg-[#E4E7EB]" />
         </div>
         <div className="h-4 w-24 bg-[#E4E7EB]" />
         <div className="h-4 w-36 bg-[#E4E7EB]" />
@@ -4037,7 +4042,7 @@ function LeadResultRow({
   }[company.scoreColor];
 
   return (
-    <div className="grid gap-3 border-b border-[#E4E7EB] px-4 py-3.5 transition-colors last:border-b-0 hover:bg-[#F8FBFF] lg:grid-cols-[minmax(240px,1.5fr)_minmax(170px,1fr)_minmax(190px,1fr)_minmax(150px,.8fr)_44px] lg:items-center lg:gap-4">
+    <div className="grid gap-3 border-b border-[#E4E7EB] px-4 py-3.5 transition-colors last:border-b-0 hover:bg-[#F8FBFF] lg:grid-cols-[minmax(210px,1.3fr)_minmax(160px,1fr)_minmax(150px,.9fr)_minmax(180px,1fr)_minmax(140px,.8fr)_44px] lg:items-center lg:gap-4">
       <div className="flex min-w-0 items-start gap-3">
         {batchSelectable || batchValidation?.status === "checking" ? (
           <input
@@ -4056,8 +4061,17 @@ function LeadResultRow({
           <span className="mt-1 block truncate text-[11px] text-[#52606D]">
             {company.orgNumber} · {company.organizationForm || "Ukjent form"} · {company.municipality || "Ukjent sted"}
           </span>
-          {company.naceDescription ? <span className="mt-1 block truncate text-[11px] text-[#829AB1]">{company.naceDescription}</span> : null}
         </button>
+      </div>
+
+      <div className="min-w-0">
+        <span className="mb-1 block text-[10px] font-semibold uppercase text-[#829AB1] lg:hidden">Virksomhetstype</span>
+        <p className="truncate text-[12px] font-semibold text-[#1F2933]">
+          {company.salesSegment?.label || company.naceDescription || "Ikke oppgitt"}
+        </p>
+        <p className="mt-1 truncate text-[11px] text-[#52606D]" title={company.naceDescription || undefined}>
+          {[company.naceCode, company.naceDescription].filter(Boolean).join(" · ") || "Mangler næringskode"}
+        </p>
       </div>
 
       <div className="min-w-0">
@@ -4090,7 +4104,7 @@ function LeadResultRow({
         <ChevronRight className="size-4" />
       </Button>
       {(batchValidation?.status === "blocked" && batchValidation.reason) || (batchExcluded && outreachStatus?.note) ? (
-        <p className="text-[11px] text-amber-700 lg:col-span-5">
+        <p className="text-[11px] text-amber-700 lg:col-span-6">
           {batchValidation?.status === "blocked" ? "Batch-sperret" : "Tidligere vurdering"}: {batchValidation?.reason || outreachStatus?.note}
         </p>
       ) : null}

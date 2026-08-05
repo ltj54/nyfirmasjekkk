@@ -23,6 +23,7 @@ class SalesSegmentCatalogTests {
     @Test
     void nedprioritererLiteRelevantePrefixer() {
         assertThat(SalesSegmentCatalog.fromNaceCode("94.991").code()).isEqualTo("FORENING_KLUBB");
+        assertThat(SalesSegmentCatalog.fromNaceCode("93.120").code()).isEqualTo("FORENING_KLUBB");
         assertThat(SalesSegmentCatalog.fromNaceCode("94.991").score()).isEqualTo(15);
         assertThat(SalesSegmentCatalog.fromNaceCode("01.110").score()).isLessThan(50);
         assertThat(SalesSegmentCatalog.fromNaceCode("85.590").score()).isEqualTo(40);
