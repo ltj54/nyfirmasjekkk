@@ -13,7 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Clock;
+import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -249,7 +251,7 @@ public class OutreachLogService {
 
     public synchronized boolean reserveFollowUp(OutreachStatusRequest request) {
         validateRequest(request);
-        if (!everSentOrgNumbers.contains(request.orgNumber())) {
+        if (!isWithinFollowUpWindow(request.orgNumber())) {
             return false;
         }
         boolean alreadyAttempted = indexedEntries.stream().anyMatch(entry ->
@@ -264,6 +266,33 @@ public class OutreachLogService {
         }
         appendInternalStatus(request, STATUS_SENDING, "Oppfølging reservert før SMTP-levering.");
         return true;
+    }
+
+    private boolean isWithinFollowUpWindow(String orgNumber) {
+        OutreachLogEntry initialOffer = indexedEntries.stream()
+                .filter(entry -> orgNumber.equals(entry.orgNumber()))
+                .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
+                .filter(entry -> !OFFER_TYPE_FOLLOW_UP.equals(entry.offerType()))
+                .max(Comparator.comparing(OutreachLogEntry::timestamp))
+                .orElse(null);
+        if (initialOffer == null) {
+            return false;
+        }
+
+        try {
+            LocalDate sentDate = Instant.parse(initialOffer.timestamp()).atZone(clock.getZone()).toLocalDate();
+            LocalDate today = LocalDate.now(clock);
+            int businessDays = 0;
+            for (LocalDate cursor = sentDate; cursor.isBefore(today); cursor = cursor.plusDays(1)) {
+                DayOfWeek day = cursor.getDayOfWeek();
+                if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+                    businessDays += 1;
+                }
+            }
+            return businessDays >= 4 && businessDays <= 6;
+        } catch (DateTimeParseException exception) {
+            return false;
+        }
     }
 
     public synchronized void markDeliveryUncertain(

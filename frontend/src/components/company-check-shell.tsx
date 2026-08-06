@@ -1395,6 +1395,12 @@ export function CompanyCheckShell() {
 
   async function runFollowUpBatch(entries: OutreachStatus[]) {
     if (isFollowUpBatchSending || entries.length === 0) return;
+    const dueOrgNumbers = new Set(getOutreachEntriesDueForFollowUp(outreachEntries).map((entry) => entry.orgNumber));
+    const eligibleEntries = entries.filter((entry) => dueOrgNumbers.has(entry.orgNumber));
+    if (eligibleEntries.length !== entries.length) {
+      window.alert("Listen er endret. Gamle tilbud eller virksomheter utenfor oppfølgingsvinduet på 4–6 arbeidsdager er fjernet. Oppdater siden og prøv igjen.");
+      return;
+    }
     if (entries.length > MAX_FOLLOW_UP_BATCH_SIZE) {
       window.alert(`Velg maks ${MAX_FOLLOW_UP_BATCH_SIZE} virksomheter per oppfølgingsbatch.`);
       return;

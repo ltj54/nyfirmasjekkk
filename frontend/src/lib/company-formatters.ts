@@ -103,8 +103,28 @@ export function getOutreachEntriesDueForFollowUp(entries: OutreachStatus[]) {
     if (entry.status !== "sent" || /oppfølging sendt|avsluttet|ikke interessert|tilbud sendt|kunde/i.test(entry.note ?? "")) {
       return false;
     }
-    return businessDaysSince(entry.timestamp ?? entry.sentAt) >= 4;
+    const ageInBusinessDays = businessDaysSince(entry.timestamp ?? entry.sentAt);
+    return ageInBusinessDays >= 4 && ageInBusinessDays <= 6;
   });
+}
+
+export function getLatestInitialOfferSentAtByOrg(entries: OutreachStatus[]) {
+  const sentAtByOrg = new Map<string, string>();
+  const sortedEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
+
+  for (const entry of sortedEntries) {
+    const sentAt = entry.timestamp ?? entry.sentAt;
+    if (
+      entry.status === "sent"
+      && entry.offerType !== "website-follow-up"
+      && sentAt
+      && !sentAtByOrg.has(entry.orgNumber)
+    ) {
+      sentAtByOrg.set(entry.orgNumber, sentAt);
+    }
+  }
+
+  return sentAtByOrg;
 }
 
 function businessDaysSince(value: string | null | undefined) {

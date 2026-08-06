@@ -298,9 +298,13 @@ class OutreachLogServiceTests {
     }
 
     @Test
-    void reserveFollowUpRequiresInitialSendAndAllowsOnlyOneAttempt() {
+    void reserveFollowUpRequiresEligibleInitialSendAndAllowsOnlyOneAttempt() throws Exception {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Files.writeString(logPath, """
+                {"timestamp":"2026-04-17T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
+                """);
         OutreachLogService service = new OutreachLogService(
-                tempDir.resolve("outreach-log.jsonl"),
+                logPath,
                 tempDir,
                 tempDir.resolve("archive"),
                 Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
@@ -310,16 +314,34 @@ class OutreachLogServiceTests {
                 "123456789", "Test AS", "AS", true, "sent", null,
                 "email", "website-follow-up", "Oppfølging sendt – avslutt hvis stille"
         );
-        assertThat(service.reserveFollowUp(followUp)).isFalse();
-
-        service.register(new OutreachStatusRequest(
-                "123456789", "Test AS", "AS", true, "sent", null,
-                "email", "website-offer", null
-        ));
-
         assertThat(service.reserveFollowUp(followUp)).isTrue();
         assertThat(service.reserveFollowUp(followUp)).isFalse();
         assertThat(service.statusFor("123456789").status()).isEqualTo("sending");
+    }
+
+    @Test
+    void reserveFollowUpRejectsOffersOutsideFourToSixBusinessDayWindow() throws Exception {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Files.writeString(logPath, """
+                {"timestamp":"2026-04-16T10:15:30Z","orgNumber":"111111111","companyName":"Gammel AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
+                {"timestamp":"2026-04-24T10:15:30Z","orgNumber":"222222222","companyName":"Ny AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
+                """);
+        OutreachLogService service = new OutreachLogService(
+                logPath,
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-27T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        assertThat(service.reserveFollowUp(new OutreachStatusRequest(
+                "111111111", "Gammel AS", "AS", true, "sent", null,
+                "email", "website-follow-up", null
+        ))).isFalse();
+        assertThat(service.reserveFollowUp(new OutreachStatusRequest(
+                "222222222", "Ny AS", "AS", true, "sent", null,
+                "email", "website-follow-up", null
+        ))).isFalse();
     }
 
     @Test

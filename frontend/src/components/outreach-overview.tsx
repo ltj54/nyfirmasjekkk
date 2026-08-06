@@ -6,7 +6,9 @@ import { Download, FileUp, Mail, RefreshCw, Settings2, XCircle } from "lucide-re
 import type { OutreachStatus } from "@/lib/company-check";
 import {
   formatLogDateTime,
+  formatLogDate,
   formatOutreachOfferType,
+  getLatestInitialOfferSentAtByOrg,
   getLatestOutreachEntriesByOrg,
   getOutreachEntriesDueForFollowUp,
   getOutreachSortValue,
@@ -47,6 +49,7 @@ export function OutreachOverview({
   const [selectedFollowUpByOrg, setSelectedFollowUpByOrg] = useState<Record<string, boolean>>({});
   const logEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
   const latestEntries = getLatestOutreachEntriesByOrg(logEntries);
+  const initialOfferSentAtByOrg = getLatestInitialOfferSentAtByOrg(logEntries);
   const reviewEntries = latestEntries.filter((entry) => entry.status === "reverted" || entry.status === "batch_excluded");
   const followUpEntries = getOutreachEntriesDueForFollowUp(logEntries);
   const followUpOrgNumbers = new Set(followUpEntries.map((entry) => entry.orgNumber));
@@ -73,7 +76,7 @@ export function OutreachOverview({
         <div>
           <p className="text-[12px] font-semibold uppercase text-[#52606D]">Utsendelser</p>
           <h1 className="mt-1 text-2xl font-semibold text-[#1F2933]">Arbeidskø og oppfølging</h1>
-          <p className="mt-2 text-[13px] text-[#52606D]">Siste status per virksomhet. Første oppfølging blir synlig etter fire arbeidsdager.</p>
+          <p className="mt-2 text-[13px] text-[#52606D]">Siste status per virksomhet. Oppfølging kan bare sendes 4–6 arbeidsdager etter tilbudet.</p>
         </div>
         <div className="flex gap-2">
           <Button className="rounded-sm" disabled={isLoading} onClick={onRefreshAction} type="button" variant="outline">
@@ -100,7 +103,7 @@ export function OutreachOverview({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-[16px] font-semibold text-[#1F2933]">Oppfølgingsbatch</h2>
-            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet. Inntil ti mottakere per utsending.</p>
+            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet, kun 4–6 arbeidsdager etter tilbudet. Inntil ti mottakere per utsending.</p>
           </div>
           <Button
             className="rounded-sm bg-[#1F5FA9] text-white hover:bg-[#2F6FB2]"
@@ -134,6 +137,7 @@ export function OutreachOverview({
                     <span className="min-w-0">
                       <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
                       <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
+                      <span className="mt-1 block text-[11px] font-medium text-[#52606D]">Tilbud sendt {formatLogDate(initialOfferSentAtByOrg.get(entry.orgNumber))}</span>
                     </span>
                   </label>
                   <Button
@@ -159,10 +163,10 @@ export function OutreachOverview({
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <PipelineColumn emptyText="Ingen virksomheter til ny vurdering." entries={reviewEntries} heading="Til vurdering" onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="review" />
-        <PipelineColumn emptyText="Ingen kontaktede virksomheter." entries={contactedEntries} heading="Kontaktet" onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="contacted" />
-        <PipelineColumn emptyText="Ingen markert for oppfølging." entries={followUpEntries} heading="Følg opp" onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="followup" />
-        <PipelineColumn emptyText="Ingen er markert som ikke aktuell." entries={notRelevantEntries} heading="Ikke aktuell" onOpenCompany={onOpenCompanyAction} tone="inactive" />
+        <PipelineColumn emptyText="Ingen virksomheter til ny vurdering." entries={reviewEntries} heading="Til vurdering" initialOfferSentAtByOrg={initialOfferSentAtByOrg} onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="review" />
+        <PipelineColumn emptyText="Ingen kontaktede virksomheter." entries={contactedEntries} heading="Kontaktet" initialOfferSentAtByOrg={initialOfferSentAtByOrg} onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="contacted" />
+        <PipelineColumn emptyText="Ingen markert for oppfølging." entries={followUpEntries} heading="Følg opp" initialOfferSentAtByOrg={initialOfferSentAtByOrg} onMarkNotRelevant={onMarkNotRelevantAction} onOpenCompany={onOpenCompanyAction} tone="followup" />
+        <PipelineColumn emptyText="Ingen er markert som ikke aktuell." entries={notRelevantEntries} heading="Ikke aktuell" initialOfferSentAtByOrg={initialOfferSentAtByOrg} onOpenCompany={onOpenCompanyAction} tone="inactive" />
       </div>
 
       {showAdministration ? (
@@ -228,6 +232,7 @@ function PipelineColumn({
   emptyText,
   entries,
   heading,
+  initialOfferSentAtByOrg,
   onMarkNotRelevant,
   onOpenCompany,
   tone,
@@ -235,6 +240,7 @@ function PipelineColumn({
   emptyText: string;
   entries: OutreachStatus[];
   heading: string;
+  initialOfferSentAtByOrg: Map<string, string>;
   onMarkNotRelevant?: (entry: OutreachStatus) => Promise<boolean>;
   onOpenCompany: (orgNumber: string) => void;
   tone: PipelineTone;
@@ -261,6 +267,9 @@ function PipelineColumn({
               <button className="block w-full text-left" onClick={() => onOpenCompany(entry.orgNumber)} type="button">
                 <span className="block truncate text-[12px] font-semibold text-[#1F2933]">{entry.companyName || "Ukjent selskap"}</span>
                 <span className="mt-1 block font-mono text-[10px] text-[#829AB1]">{entry.orgNumber}</span>
+                {initialOfferSentAtByOrg.get(entry.orgNumber) ? (
+                  <span className="mt-1 block text-[11px] font-medium text-[#52606D]">Tilbud sendt {formatLogDate(initialOfferSentAtByOrg.get(entry.orgNumber))}</span>
+                ) : null}
                 {entry.note ? <span className="mt-2 line-clamp-2 block text-[11px] leading-4 text-[#52606D]">{entry.note}</span> : null}
               </button>
               {onMarkNotRelevant ? (
