@@ -40,7 +40,7 @@
 - Bekreft organisasjonsnummer og eksisterende utsendelse i loggen før ny svarhendelse registreres.
 - Alle reelle svar fra mottakeren registreres som `replied`, også høflige avslag og «ikke nå». Utfallet beskrives kort i notatet, for eksempel `interessert`, `ønsker pris`, `har annen hjelp`, `ikke interessert nå` eller `tar kontakt senere`.
 - `not_relevant` brukes når vi selv forkaster et lead, ikke når mottakeren faktisk har svart.
-- Autosvar, feillevering og returmail skal ikke registreres som et reelt svar; bruk passende leveringsstatus og notat.
+- Autosvar registreres som `auto_replied` med et kort notat, uten å flytte datoen for ordinær oppfølging. Permanent feillevering eller returmail registreres som `delivery_failed`, sperrer nye utsendelser og skal ikke regnes som et reelt svar.
 - En registrert svarhendelse skal beholde kontakthistorikken, sperre nye utsendelser og fjerne virksomheten fra automatisk oppfølging.
 - Dersom svaret krever handling, skal registreringen gjøres først og et kort svarutkast leveres etterpå. Hvis mottakeren bare avslår høflig, er nytt svar normalt ikke nødvendig.
 - Bekreft kort til brukeren hvilken status og hvilket utfall som ble registrert.

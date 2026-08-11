@@ -571,6 +571,8 @@ public class CompanyCheckController {
     private boolean isHiddenFromSearch(OutreachStatusResponse status) {
         return status != null && (status.sent()
                 || "replied".equalsIgnoreCase(status.status())
+                || "auto_replied".equalsIgnoreCase(status.status())
+                || "delivery_failed".equalsIgnoreCase(status.status())
                 || "not_relevant".equalsIgnoreCase(status.status()));
     }
 

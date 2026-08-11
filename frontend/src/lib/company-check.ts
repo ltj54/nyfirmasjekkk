@@ -165,7 +165,7 @@ export interface BrregWebsiteMatch {
   matchReason: string;
 }
 
-export type OutreachStatusValue = "sent" | "replied" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | null;
+export type OutreachStatusValue = "sent" | "replied" | "auto_replied" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | "delivery_failed" | null;
 
 export interface OutreachStatus {
   orgNumber: string;

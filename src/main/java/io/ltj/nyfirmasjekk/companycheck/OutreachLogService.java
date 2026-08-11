@@ -41,9 +41,11 @@ public class OutreachLogService {
     private static final String STATUS_REVERTED = "reverted";
     private static final String STATUS_NOT_RELEVANT = "not_relevant";
     private static final String STATUS_REPLIED = "replied";
+    private static final String STATUS_AUTO_REPLIED = "auto_replied";
     private static final String STATUS_BATCH_EXCLUDED = "batch_excluded";
     private static final String STATUS_SENDING = "sending";
     private static final String STATUS_DELIVERY_UNCERTAIN = "delivery_uncertain";
+    private static final String STATUS_DELIVERY_FAILED = "delivery_failed";
     private static final String OFFER_TYPE_FOLLOW_UP = "website-follow-up";
     private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
@@ -363,9 +365,11 @@ public class OutreachLogService {
             case STATUS_REVERTED -> STATUS_REVERTED;
             case STATUS_NOT_RELEVANT -> STATUS_NOT_RELEVANT;
             case STATUS_REPLIED -> STATUS_REPLIED;
+            case STATUS_AUTO_REPLIED -> STATUS_AUTO_REPLIED;
             case STATUS_BATCH_EXCLUDED -> STATUS_BATCH_EXCLUDED;
             case STATUS_SENDING -> STATUS_SENDING;
             case STATUS_DELIVERY_UNCERTAIN -> STATUS_DELIVERY_UNCERTAIN;
+            case STATUS_DELIVERY_FAILED -> STATUS_DELIVERY_FAILED;
             default -> throw new IllegalArgumentException("Ugyldig outreach-status");
         };
     }
@@ -568,9 +572,11 @@ public class OutreachLogService {
                 STATUS_REVERTED,
                 STATUS_NOT_RELEVANT,
                 STATUS_REPLIED,
+                STATUS_AUTO_REPLIED,
                 STATUS_BATCH_EXCLUDED,
                 STATUS_SENDING,
-                STATUS_DELIVERY_UNCERTAIN
+                STATUS_DELIVERY_UNCERTAIN,
+                STATUS_DELIVERY_FAILED
         )
                 .contains(normalizedStatus)) {
             throw new IllegalArgumentException("Importfilen inneholder ugyldig status");
@@ -583,7 +589,8 @@ public class OutreachLogService {
 
     private boolean isBlockingDeliveryStatus(String status) {
         return STATUS_SENDING.equalsIgnoreCase(status)
-                || STATUS_DELIVERY_UNCERTAIN.equalsIgnoreCase(status);
+                || STATUS_DELIVERY_UNCERTAIN.equalsIgnoreCase(status)
+                || STATUS_DELIVERY_FAILED.equalsIgnoreCase(status);
     }
 
     private void rebuildIndex(List<OutreachLogEntry> entries) {
@@ -697,7 +704,15 @@ public class OutreachLogService {
         }
 
         List<OutreachLogEntry> activeCompanies = latestMonthlyEntryByOrgNumber.values().stream()
-                .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
+                .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status())
+                        || STATUS_AUTO_REPLIED.equalsIgnoreCase(entry.status()))
+                .map(entry -> STATUS_AUTO_REPLIED.equalsIgnoreCase(entry.status())
+                        ? entries.stream()
+                        .filter(candidate -> entry.orgNumber().equals(candidate.orgNumber()))
+                        .filter(candidate -> STATUS_SENT.equalsIgnoreCase(candidate.status()))
+                        .max(Comparator.comparing(OutreachLogEntry::timestamp))
+                        .orElse(entry)
+                        : entry)
                 .sorted(Comparator.comparing(OutreachLogEntry::timestamp).reversed())
                 .toList();
 

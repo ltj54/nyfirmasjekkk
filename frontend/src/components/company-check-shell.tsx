@@ -268,6 +268,7 @@ function isOutreachSendBlocked(status: OutreachStatus | null | undefined) {
     hasEverSentOutreach(status)
     || status?.status === "sending"
     || status?.status === "delivery_uncertain"
+    || status?.status === "delivery_failed"
   );
 }
 

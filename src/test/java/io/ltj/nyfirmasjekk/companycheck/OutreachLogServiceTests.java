@@ -202,6 +202,37 @@ class OutreachLogServiceTests {
     }
 
     @Test
+    void registerAutoReplyKeepsOriginalOfferEligibleForFollowUp() throws Exception {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Files.writeString(logPath, """
+                {"timestamp":"2026-04-21T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}
+                """);
+        OutreachLogService service = new OutreachLogService(
+                logPath,
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-27T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+
+        OutreachStatusResponse response = service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, "auto_replied", null,
+                "email", "website-offer", "Automatisk mottaksbekreftelse; avventer reelt svar."
+        ));
+
+        assertThat(response.status()).isEqualTo("auto_replied");
+        assertThat(response.everSent()).isTrue();
+        assertThat(response.sendBlocked()).isTrue();
+        assertThat(Files.readString(tempDir.resolve("outreach-log-2026-04.md")))
+                .contains("Aktive kontaktede selskaper: 1")
+                .contains("Test AS");
+        assertThat(service.reserveFollowUp(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", true, "sent", null,
+                "email", "website-follow-up", null
+        ))).isTrue();
+    }
+
+    @Test
     void statusesReturnsAllOutreachEventsInReverseTimestampOrder() {
         OutreachLogService service = new OutreachLogService(
                 tempDir.resolve("outreach-log.jsonl"),
@@ -369,5 +400,31 @@ class OutreachLogServiceTests {
         assertThat(status.sent()).isFalse();
         assertThat(status.everSent()).isFalse();
         assertThat(restartedService.reserveSend(request)).isFalse();
+    }
+
+    @Test
+    void permanentDeliveryFailureRemainsBlockedAfterRestart() {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Path archivePath = tempDir.resolve("archive");
+        Clock clock = Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC);
+        OutreachLogService service = new OutreachLogService(
+                logPath, tempDir, archivePath, clock, new ObjectMapper()
+        );
+
+        OutreachStatusResponse response = service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, "delivery_failed", null,
+                "email", "website-offer", "Permanent feillevering: 550 5.1.1 adressen finnes ikke."
+        ));
+
+        assertThat(response.status()).isEqualTo("delivery_failed");
+        assertThat(response.sendBlocked()).isTrue();
+        OutreachLogService restartedService = new OutreachLogService(
+                logPath, tempDir, archivePath, clock, new ObjectMapper()
+        );
+        assertThat(restartedService.statusFor("123456789").sendBlocked()).isTrue();
+        assertThat(restartedService.reserveSend(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, null, null,
+                "email", "website-offer", null
+        ))).isFalse();
     }
 }

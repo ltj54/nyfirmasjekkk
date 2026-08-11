@@ -99,11 +99,22 @@ export function getLatestOutreachEntriesByOrg(entries: OutreachStatus[]) {
 }
 
 export function getOutreachEntriesDueForFollowUp(entries: OutreachStatus[]) {
+  const initialOfferSentAtByOrg = getLatestInitialOfferSentAtByOrg(entries);
+  const followUpAttemptedOrgNumbers = new Set(entries
+    .filter((entry) => entry.offerType === "website-follow-up"
+      && ["sent", "sending", "delivery_uncertain"].includes(entry.status ?? ""))
+    .map((entry) => entry.orgNumber));
+
   return getLatestOutreachEntriesByOrg(entries).filter((entry) => {
-    if (entry.status !== "sent" || /oppfølging sendt|avsluttet|ikke interessert|tilbud sendt|kunde/i.test(entry.note ?? "")) {
+    if (!["sent", "auto_replied"].includes(entry.status ?? "")
+      || followUpAttemptedOrgNumbers.has(entry.orgNumber)
+      || /oppfølging sendt|avsluttet|ikke interessert|tilbud sendt|kunde/i.test(entry.note ?? "")) {
       return false;
     }
-    const ageInBusinessDays = businessDaysSince(entry.timestamp ?? entry.sentAt);
+    const sentAt = entry.status === "auto_replied"
+      ? initialOfferSentAtByOrg.get(entry.orgNumber)
+      : entry.timestamp ?? entry.sentAt;
+    const ageInBusinessDays = businessDaysSince(sentAt);
     return ageInBusinessDays >= 4 && ageInBusinessDays <= 6;
   });
 }

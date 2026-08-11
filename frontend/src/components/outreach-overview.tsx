@@ -54,9 +54,10 @@ export function OutreachOverview({
   const followUpEntries = getOutreachEntriesDueForFollowUp(logEntries);
   const followUpOrgNumbers = new Set(followUpEntries.map((entry) => entry.orgNumber));
   const contactedEntries = latestEntries.filter((entry) =>
-    entry.status === "replied" || (entry.status === "sent" && !followUpOrgNumbers.has(entry.orgNumber))
+    entry.status === "replied"
+      || (["sent", "auto_replied"].includes(entry.status ?? "") && !followUpOrgNumbers.has(entry.orgNumber))
   );
-  const notRelevantEntries = latestEntries.filter((entry) => entry.status === "not_relevant");
+  const notRelevantEntries = latestEntries.filter((entry) => entry.status === "not_relevant" || entry.status === "delivery_failed");
   const followUpKey = followUpEntries.map((entry) => entry.orgNumber).join("|");
   const selectedFollowUpEntries = followUpEntries.filter((entry) => selectedFollowUpByOrg[entry.orgNumber]);
 
@@ -301,11 +302,13 @@ function formatPipelineStatus(entry: OutreachStatus) {
   switch (entry.status) {
     case "sent": return "Kontaktet";
     case "replied": return "Svar mottatt";
+    case "auto_replied": return "Autosvar mottatt";
     case "not_relevant": return "Ikke aktuell";
     case "batch_excluded": return "Batch-sperret";
     case "reverted": return "Til vurdering";
     case "sending": return "Utsendelse reservert";
     case "delivery_uncertain": return "Levering uavklart";
+    case "delivery_failed": return "Feillevert";
     default: return "Uten status";
   }
 }
