@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 836
+- Antall hendelser: 837
 - Sendt: 389
 - Angret: 1
-- Aktive kontaktede selskaper: 330
+- Aktive kontaktede selskaper: 329
 
 ## Aktive kontaktede selskaper
 
@@ -46,7 +46,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-10 | 938197725 | EIKER TAKMESTER, DOSHLAKU | ENK | email | website-follow-up |
 | 2026-08-10 | 938195587 | EKSTRØM ADV | ENK | email | website-follow-up |
 | 2026-08-10 | 938197016 | EUROFARGE GOMEZ SOLANO | ENK | email | website-follow-up |
-| 2026-08-10 | 838195512 | HAUGEN KULTUR | ENK | email | website-follow-up |
 | 2026-08-10 | 938197083 | STINE MALMO | ENK | email | website-follow-up |
 | 2026-08-10 | 938174342 | TRONDHEIM FOTBALLKORTKLUBB | FLI | email | website-follow-up |
 | 2026-08-10 | 938195498 | LOBEKK TOMT & HAGE | ENK | email | website-follow-up |
@@ -348,6 +347,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-12 19:44 | replied | 838195512 | HAUGEN KULTUR | ENK | email | Svar mottatt 2026-08-12 kl. 13:40 fra Håkon Aspen Haugen: Takker nei fordi nettside allerede er under utvikling med en annen samarbeidspartner. Ingen videre oppfølging. |
 | 2026-08-11 10:04 | replied | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | email | Svar mottatt 2026-08-10: Kunde – akseptert oppstart av profesjonell førsteside til avtalt fastpris 1 990 kr. Logo, tjenesteinformasjon, språk, bokutgivelser, bilder og øvrig innhold ettersendes. Flere språk, undersider og andre funksjoner avklares og prises separat. |
 | 2026-08-11 09:58 | replied | 938196869 | L. THRONDSEN | ENK | email | Svar mottatt 2026-08-10 fra Ludvik Throndsen: Har ikke behov for nettside nå og takker nei; kan ta kontakt senere dersom behovet oppstår. Ingen videre oppfølging. |
 | 2026-08-11 09:57 | delivery_failed | 938196419 | KINE EMILIE JONASSON | ENK | email | Permanent feillevering mottatt 2026-08-10: Gmail svarte 550 5.1.1 NoSuchUser for kineemiliecontact@gmail.com; e-postkontoen finnes ikke. Ingen flere utsendelser til adressen. |
