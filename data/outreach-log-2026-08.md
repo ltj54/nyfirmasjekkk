@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 921
-- Sendt: 427
+- Antall hendelser: 925
+- Sendt: 429
 - Angret: 1
-- Aktive kontaktede selskaper: 357
+- Aktive kontaktede selskaper: 359
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-13 | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | website-offer |
+| 2026-08-13 | 938255180 | UAB GS FAMILY FOUND | UTLA | email | website-offer |
 | 2026-08-13 | 837944872 | VENTO NORDIC A/S NUF | NUF | email | website-offer |
 | 2026-08-13 | 938210284 | ORVIKÅSEN VEILAG | FLI | email | website-offer |
 | 2026-08-13 | 938090041 | BONGUSTA | NUF | email | website-offer |
@@ -375,6 +377,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-13 11:56 | sent | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | - |
+| 2026-08-13 11:56 | sending | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-13 11:56 | sent | 938255180 | UAB GS FAMILY FOUND | UTLA | email | - |
+| 2026-08-13 11:56 | sending | 938255180 | UAB GS FAMILY FOUND | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-13 09:38 | sent | 837944872 | VENTO NORDIC A/S NUF | NUF | email | - |
 | 2026-08-13 09:38 | sending | 837944872 | VENTO NORDIC A/S NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-13 09:27 | replied | 938215650 | TILLER KULTURLIV | FLI | email | Svar mottatt 2026-08-13 fra Janet Arabinare: Takker for henvendelsen og roser arbeidet, men takker nei fordi de allerede lager nettside med gratis AI-verktøy og som frivillig organisasjon må holde kostnadene nede. Oppgir tilknytning til Tillerdagen / Julehjelpa Trondheim, org.nr. 936867383. Ingen videre oppfølging. |
