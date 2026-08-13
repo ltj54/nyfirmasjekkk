@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 919
-- Sendt: 426
+- Antall hendelser: 921
+- Sendt: 427
 - Angret: 1
-- Aktive kontaktede selskaper: 356
+- Aktive kontaktede selskaper: 357
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-13 | 837944872 | VENTO NORDIC A/S NUF | NUF | email | website-offer |
 | 2026-08-13 | 938210284 | ORVIKÅSEN VEILAG | FLI | email | website-offer |
 | 2026-08-13 | 938090041 | BONGUSTA | NUF | email | website-offer |
 | 2026-08-13 | 838127592 | B GREEN BY CALLAPOR | NUF | email | website-offer |
@@ -374,6 +375,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-13 09:38 | sent | 837944872 | VENTO NORDIC A/S NUF | NUF | email | - |
+| 2026-08-13 09:38 | sending | 837944872 | VENTO NORDIC A/S NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-13 09:27 | replied | 938215650 | TILLER KULTURLIV | FLI | email | Svar mottatt 2026-08-13 fra Janet Arabinare: Takker for henvendelsen og roser arbeidet, men takker nei fordi de allerede lager nettside med gratis AI-verktøy og som frivillig organisasjon må holde kostnadene nede. Oppgir tilknytning til Tillerdagen / Julehjelpa Trondheim, org.nr. 936867383. Ingen videre oppfølging. |
 | 2026-08-13 09:25 | auto_replied | 938100047 | TEKLA | NUF | email | Autosvar mottatt 2026-08-13 fra TIMEVAT: Mottak bekreftet; opplyser om svar normalt innen 2–4 arbeidsdager. Avventer reelt svar; ordinær oppfølging beholdes. |
 | 2026-08-13 09:25 | delivery_failed | 938234493 | LOFGREN TECHNOLOGY AB | UTLA | email | Permanent feillevering mottatt 2026-08-13: Domenet lofgrenas.se for post@lofgrenas.se finnes ikke (SMTP 5.4.4, Host not found). Ingen flere utsendelser til adressen. |
