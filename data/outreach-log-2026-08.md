@@ -4,15 +4,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 925
-- Sendt: 429
+- Antall hendelser: 936
+- Sendt: 434
 - Angret: 1
-- Aktive kontaktede selskaper: 359
+- Aktive kontaktede selskaper: 363
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-13 | 938257337 | DRM EIENDOM AS | AS | email | website-offer |
+| 2026-08-13 | 838259502 | SILJE KROGH | ENK | email | website-offer |
+| 2026-08-13 | 938162085 | RAJALLA MC FINNSKOGEN | FLI | email | website-offer |
+| 2026-08-13 | 938259933 | CHEF VIJAY SAREEN FOOD & CATERING | ENK | email | website-offer |
+| 2026-08-13 | 938257884 | BEX ECOM LLC | UTLA | email | website-offer |
 | 2026-08-13 | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | website-offer |
 | 2026-08-13 | 938255180 | UAB GS FAMILY FOUND | UTLA | email | website-offer |
 | 2026-08-13 | 837944872 | VENTO NORDIC A/S NUF | NUF | email | website-offer |
@@ -27,7 +32,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-13 | 938245118 | AYOUB MAHAMED FILM | ENK | email | website-offer |
 | 2026-08-13 | 938229112 | MASSASJE MONASTYRSKA | ENK | email | website-offer |
 | 2026-08-13 | 938228388 | HAAVIK ERIKSEN HELSE | ENK | email | website-offer |
-| 2026-08-13 | 938244065 | VIBEKE KRISTIANSEN - BEKES KURATIVE PULS | ENK | email | website-offer |
 | 2026-08-13 | 938100047 | TEKLA | NUF | email | website-offer |
 | 2026-08-13 | 938096317 | H&C ANLAGENMONTAGEN GMBH | NUF | email | website-offer |
 | 2026-08-13 | 938063621 | ERCA NUF | NUF | email | website-offer |
@@ -377,6 +381,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-13 19:56 | sent | 938257337 | DRM EIENDOM AS | AS | email | - |
+| 2026-08-13 19:56 | sending | 938257337 | DRM EIENDOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-13 19:56 | sent | 838259502 | SILJE KROGH | ENK | email | - |
+| 2026-08-13 19:56 | sending | 838259502 | SILJE KROGH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-13 19:56 | sent | 938162085 | RAJALLA MC FINNSKOGEN | FLI | email | - |
+| 2026-08-13 19:56 | sending | 938162085 | RAJALLA MC FINNSKOGEN | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-13 19:56 | sent | 938259933 | CHEF VIJAY SAREEN FOOD & CATERING | ENK | email | - |
+| 2026-08-13 19:56 | sending | 938259933 | CHEF VIJAY SAREEN FOOD & CATERING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-13 19:56 | sent | 938257884 | BEX ECOM LLC | UTLA | email | - |
+| 2026-08-13 19:56 | sending | 938257884 | BEX ECOM LLC | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-13 19:54 | replied | 938244065 | VIBEKE KRISTIANSEN - BEKES KURATIVE PULS | ENK | email | Svar mottatt 2026-08-13 fra Vibeke Kristiansen: Takker for tilbudet, men opplyser at det ikke er aktuelt nå. Ingen videre oppfølging. |
 | 2026-08-13 11:56 | sent | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | - |
 | 2026-08-13 11:56 | sending | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-13 11:56 | sent | 938255180 | UAB GS FAMILY FOUND | UTLA | email | - |
