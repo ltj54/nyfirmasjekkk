@@ -1399,7 +1399,7 @@ export function CompanyCheckShell() {
     const dueOrgNumbers = new Set(getOutreachEntriesDueForFollowUp(outreachEntries).map((entry) => entry.orgNumber));
     const eligibleEntries = entries.filter((entry) => dueOrgNumbers.has(entry.orgNumber));
     if (eligibleEntries.length !== entries.length) {
-      window.alert("Listen er endret. Gamle tilbud eller virksomheter utenfor oppfølgingsvinduet på 4–6 arbeidsdager er fjernet. Oppdater siden og prøv igjen.");
+      window.alert("Listen er endret. Gamle tilbud eller virksomheter utenfor oppfølgingsvinduet på 6–8 arbeidsdager er fjernet. Oppdater siden og prøv igjen.");
       return;
     }
     if (entries.length > MAX_FOLLOW_UP_BATCH_SIZE) {
@@ -4188,7 +4188,7 @@ function OutreachCheckbox({
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
   const noteSuggestions = [
     "Sendt til firmapost",
-    "Følg opp om 4–6 arbeidsdager",
+    "Følg opp om 6–8 arbeidsdager",
     "Ingen svar ennå",
     "Oppfølging sendt – avslutt hvis stille",
     "Interessert",

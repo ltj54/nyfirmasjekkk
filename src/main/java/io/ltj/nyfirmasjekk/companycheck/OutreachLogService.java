@@ -287,11 +287,11 @@ public class OutreachLogService {
             int businessDays = 0;
             for (LocalDate cursor = sentDate; cursor.isBefore(today); cursor = cursor.plusDays(1)) {
                 DayOfWeek day = cursor.getDayOfWeek();
-                if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+                if (!DayOfWeek.SATURDAY.equals(day) && !DayOfWeek.SUNDAY.equals(day)) {
                     businessDays += 1;
                 }
             }
-            return businessDays >= 4 && businessDays <= 6;
+            return businessDays >= 6 && businessDays <= 8;
         } catch (DateTimeParseException exception) {
             return false;
         }

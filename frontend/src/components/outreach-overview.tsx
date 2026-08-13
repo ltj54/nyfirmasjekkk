@@ -77,7 +77,7 @@ export function OutreachOverview({
         <div>
           <p className="text-[12px] font-semibold uppercase text-[#52606D]">Utsendelser</p>
           <h1 className="mt-1 text-2xl font-semibold text-[#1F2933]">Arbeidskø og oppfølging</h1>
-          <p className="mt-2 text-[13px] text-[#52606D]">Siste status per virksomhet. Oppfølging kan bare sendes 4–6 arbeidsdager etter tilbudet.</p>
+          <p className="mt-2 text-[13px] text-[#52606D]">Siste status per virksomhet. Oppfølging kan bare sendes 6–8 arbeidsdager etter tilbudet.</p>
         </div>
         <div className="flex gap-2">
           <Button className="rounded-sm" disabled={isLoading} onClick={onRefreshAction} type="button" variant="outline">
@@ -104,7 +104,7 @@ export function OutreachOverview({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-[16px] font-semibold text-[#1F2933]">Oppfølgingsbatch</h2>
-            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet, kun 4–6 arbeidsdager etter tilbudet. Inntil ti mottakere per utsending.</p>
+            <p className="mt-1 text-[12px] text-[#52606D]">Én oppfølging per virksomhet, kun 6–8 arbeidsdager etter tilbudet. Inntil ti mottakere per utsending.</p>
           </div>
           <Button
             className="rounded-sm bg-[#1F5FA9] text-white hover:bg-[#2F6FB2]"

@@ -42,6 +42,11 @@ export function industryOutreachPitch(company: OutreachEmailCompany) {
   const naceCode = company.naceCode?.trim() ?? "";
   const segmentCode = company.salesSegment?.code ?? "";
 
+  return earlyIndustryOutreachPitch(context, naceCode, segmentCode)
+    ?? laterIndustryOutreachPitch(context, naceCode, segmentCode, company.salesSegment?.emailPitch);
+}
+
+function earlyIndustryOutreachPitch(context: string, naceCode: string, segmentCode: string) {
   if (naceCode.startsWith("93.12") || hasAnyContext(context, "idrettslag", "sportsklubb", "idrettsklubb", "sports club")) {
     return "En ryddig nettside kan gjøre det enkelt å presentere aktivitetene deres, informere om treningstilbud og medlemskap – og vise interesserte hvordan de kan bli med eller ta kontakt.";
   }
@@ -72,6 +77,11 @@ export function industryOutreachPitch(company: OutreachEmailCompany) {
   if (segmentCode === "HANDVERK" || naceCode.startsWith("41") || naceCode.startsWith("42") || naceCode.startsWith("43")) {
     return "For en håndverksbedrift kan bilder og referanser fra tidligere oppdrag, en tydelig tjenesteoversikt og informasjon om området dere dekker gjøre det enklere å få relevante forespørsler.";
   }
+
+  return null;
+}
+
+function laterIndustryOutreachPitch(context: string, naceCode: string, segmentCode: string, emailPitch: string | null | undefined) {
   if (hasAnyContext(context, "forlag", "oversett", "translator", "publisher")) {
     return "For et forlag eller en oversettelsesvirksomhet kan nettsiden presentere språk og tjenester, bygge faglig tillit og etter hvert vise frem forfattere og utgivelser.";
   }
@@ -100,10 +110,10 @@ export function industryOutreachPitch(company: OutreachEmailCompany) {
     return "For personlige tjenester kan en tydelig presentasjon av tilbudet, priser eller praktisk informasjon og enkel kontakt eller booking gjøre valget tryggere for nye kunder.";
   }
 
-  if (segmentCode === "ANNET" || !company.salesSegment?.emailPitch) {
+  if (segmentCode === "ANNET" || !emailPitch) {
     return "En ryddig nettside kan gjøre det enkelt å vise hva dere tilbyr, hvem tilbudet passer for og hvordan interesserte kan ta kontakt.";
   }
-  return company.salesSegment.emailPitch;
+  return emailPitch;
 }
 
 function companyEntityDefinite(company: OutreachEmailCompany) {
@@ -132,13 +142,13 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
 }
 
 export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
-  const template = extractMailSubject(markdown, "Oppfølging etter 4–6 arbeidsdager")
+  const template = extractMailSubject(markdown, "Oppfølging etter 6–8 arbeidsdager")
     ?? "Oppfølging: nettside for {{companyName}}";
   return applyOutreachTemplate(template, company);
 }
 
 export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailCompany) {
-  const template = extractMarkdownSection(markdown, "Oppfølging etter 4–6 arbeidsdager")
+  const template = extractMarkdownSection(markdown, "Oppfølging etter 6–8 arbeidsdager")
     ?? defaultFollowUpEmailTemplate();
   return applyOutreachTemplate(removeMailSubjectLine(template), company);
 }
