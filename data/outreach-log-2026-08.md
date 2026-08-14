@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1104
+- Antall hendelser: 1105
 - Sendt: 516
 - Angret: 1
-- Aktive kontaktede selskaper: 400
+- Aktive kontaktede selskaper: 399
 
 ## Aktive kontaktede selskaper
 
@@ -47,7 +47,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-14 | 938166129 | STOKKE MUSIKKFORUM | ENK | email | website-follow-up |
 | 2026-08-14 | 938231338 | K WINDASSISTANCE AB | UTLA | email | website-follow-up |
 | 2026-08-14 | 938228027 | W. HATLEN CO | ENK | email | website-follow-up |
-| 2026-08-14 | 938230412 | SEBASTIAN SMEBY | ENK | email | website-follow-up |
 | 2026-08-14 | 937942656 | ALLSOPP INCORPORATED | ENK | email | website-follow-up |
 | 2026-08-14 | 838222722 | BARSIEBA GHEBRU TAXI | ENK | email | website-follow-up |
 | 2026-08-14 | 938225451 | BRASTADS FABRIKK | ENK | email | website-follow-up |
@@ -418,6 +417,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-14 12:47 | replied | 938230412 | SEBASTIAN SMEBY | ENK | email | Svar mottatt 2026-08-14 fra Sebastian Smeby: Har ikke behov for nettside nå, men vil tenke på LTJ Production dersom det blir aktuelt i fremtiden. Ingen ny automatisk oppfølging; kan ta kontakt på eget initiativ. |
 | 2026-08-14 12:19 | replied | 938213909 | JARBEGOOD REKKEBO MUSIC PRODUCTION | ENK | email | Svar mottatt 2026-08-14 fra John Andreas Rekkebo: Positiv til tilbudet og opplyser at nettside fort kan bli aktuelt, men ønsker å avvente foreløpig. Viser til YouTube @rekkebojohnandreas8650 og rekkebo.johnandreas på Spotify/SoundCloud som eksempler på musikken. Ingen ny automatisk oppfølging; aktuell for manuell kontakt senere. |
 | 2026-08-14 12:16 | replied | 938131392 | BNP INVEST AS | AS | email | Svar mottatt 2026-08-14 fra Brede: Takker for forespørselen, men opplyser at det ikke er aktuelt. Ingen videre oppfølging. |
 | 2026-08-14 12:15 | sent | 938188645 | NORDIC AIRCLEAN JASKOWSKI | ENK | email | Oppfølging sendt – avslutt hvis stille |
