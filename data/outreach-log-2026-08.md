@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1103
+- Antall hendelser: 1104
 - Sendt: 516
 - Angret: 1
-- Aktive kontaktede selskaper: 401
+- Aktive kontaktede selskaper: 400
 
 ## Aktive kontaktede selskaper
 
@@ -65,7 +65,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-14 | 938221154 | STUDIO DIGERNES | ENK | email | website-follow-up |
 | 2026-08-14 | 938215332 | ELFIE UHLANDER | ENK | email | website-follow-up |
 | 2026-08-14 | 938216444 | ENGEBRÅTEN GROUP | ENK | email | website-follow-up |
-| 2026-08-14 | 938213909 | JARBEGOOD REKKEBO MUSIC PRODUCTION | ENK | email | website-follow-up |
 | 2026-08-14 | 938215030 | LAMAI SOLAAS THAICAFE | ENK | email | website-follow-up |
 | 2026-08-14 | 937395094 | LILLESOPP DA | DA | email | website-follow-up |
 | 2026-08-14 | 938214646 | BAKKEN BYGG & HYTTESERVICE | ENK | email | website-follow-up |
@@ -419,6 +418,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-14 12:19 | replied | 938213909 | JARBEGOOD REKKEBO MUSIC PRODUCTION | ENK | email | Svar mottatt 2026-08-14 fra John Andreas Rekkebo: Positiv til tilbudet og opplyser at nettside fort kan bli aktuelt, men ønsker å avvente foreløpig. Viser til YouTube @rekkebojohnandreas8650 og rekkebo.johnandreas på Spotify/SoundCloud som eksempler på musikken. Ingen ny automatisk oppfølging; aktuell for manuell kontakt senere. |
 | 2026-08-14 12:16 | replied | 938131392 | BNP INVEST AS | AS | email | Svar mottatt 2026-08-14 fra Brede: Takker for forespørselen, men opplyser at det ikke er aktuelt. Ingen videre oppfølging. |
 | 2026-08-14 12:15 | sent | 938188645 | NORDIC AIRCLEAN JASKOWSKI | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-14 12:15 | sending | 938188645 | NORDIC AIRCLEAN JASKOWSKI | ENK | email | Oppfølging reservert før SMTP-levering. |
