@@ -142,13 +142,13 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
 }
 
 export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
-  const template = extractMailSubject(markdown, "Oppfølging etter 6–8 arbeidsdager")
+  const template = extractMailSubject(markdown, "Oppfølging etter 4–14 arbeidsdager")
     ?? "Oppfølging: nettside for {{companyName}}";
   return applyOutreachTemplate(template, company);
 }
 
 export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailCompany) {
-  const template = extractMarkdownSection(markdown, "Oppfølging etter 6–8 arbeidsdager")
+  const template = extractMarkdownSection(markdown, "Oppfølging etter 4–14 arbeidsdager")
     ?? defaultFollowUpEmailTemplate();
   return applyOutreachTemplate(removeMailSubjectLine(template), company);
 }

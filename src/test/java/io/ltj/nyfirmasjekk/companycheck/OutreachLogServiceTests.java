@@ -205,7 +205,7 @@ class OutreachLogServiceTests {
     void registerAutoReplyKeepsOriginalOfferEligibleForFollowUp() throws Exception {
         Path logPath = tempDir.resolve("outreach-log.jsonl");
         Files.writeString(logPath, """
-                {"timestamp":"2026-04-17T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}
+                {"timestamp":"2026-04-10T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}
                 """);
         OutreachLogService service = new OutreachLogService(
                 logPath,
@@ -332,7 +332,7 @@ class OutreachLogServiceTests {
     void reserveFollowUpRequiresEligibleInitialSendAndAllowsOnlyOneAttempt() throws Exception {
         Path logPath = tempDir.resolve("outreach-log.jsonl");
         Files.writeString(logPath, """
-                {"timestamp":"2026-04-15T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
+                {"timestamp":"2026-04-08T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
                 """);
         OutreachLogService service = new OutreachLogService(
                 logPath,
@@ -351,10 +351,10 @@ class OutreachLogServiceTests {
     }
 
     @Test
-    void reserveFollowUpRejectsOffersOutsideSixToEightBusinessDayWindow() throws Exception {
+    void reserveFollowUpRejectsOffersOutsideFourToFourteenBusinessDayWindow() throws Exception {
         Path logPath = tempDir.resolve("outreach-log.jsonl");
         Files.writeString(logPath, """
-                {"timestamp":"2026-04-14T10:15:30Z","orgNumber":"111111111","companyName":"Gammel AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
+                {"timestamp":"2026-04-06T10:15:30Z","orgNumber":"111111111","companyName":"Gammel AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
                 {"timestamp":"2026-04-24T10:15:30Z","orgNumber":"222222222","companyName":"Ny AS","organizationForm":"AS","status":"sent","price":4500,"channel":"email","offerType":"website-offer","note":null}
                 """);
         OutreachLogService service = new OutreachLogService(

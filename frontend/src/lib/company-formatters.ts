@@ -115,7 +115,7 @@ export function getOutreachEntriesDueForFollowUp(entries: OutreachStatus[]) {
       ? initialOfferSentAtByOrg.get(entry.orgNumber)
       : entry.timestamp ?? entry.sentAt;
     const ageInBusinessDays = businessDaysSince(sentAt);
-    return ageInBusinessDays >= 6 && ageInBusinessDays <= 8;
+    return ageInBusinessDays >= 4 && ageInBusinessDays <= 14;
   });
 }
 

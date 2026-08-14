@@ -288,7 +288,7 @@ public class CompanyCheckController {
             throw new org.springframework.web.server.ResponseStatusException(
                     HttpStatus.CONFLICT,
                     followUp
-                            ? "Oppfølging kan bare sendes 6–8 arbeidsdager etter førstegangshenvendelsen, og bare én gang."
+                            ? "Oppfølging kan bare sendes 4–14 arbeidsdager etter førstegangshenvendelsen, og bare én gang."
                             : "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse."
             );
         }

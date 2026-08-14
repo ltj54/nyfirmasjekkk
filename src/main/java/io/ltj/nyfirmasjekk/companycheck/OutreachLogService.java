@@ -291,7 +291,7 @@ public class OutreachLogService {
                     businessDays += 1;
                 }
             }
-            return businessDays >= 6 && businessDays <= 8;
+            return businessDays >= 4 && businessDays <= 14;
         } catch (DateTimeParseException exception) {
             return false;
         }

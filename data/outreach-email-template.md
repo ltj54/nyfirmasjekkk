@@ -159,7 +159,7 @@ LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
-## Oppfølging etter 6–8 arbeidsdager
+## Oppfølging etter 4–14 arbeidsdager
 
 Send bare én oppfølging. Tilpass første setning og avslutt kontakten dersom det fortsatt er stille.
 
