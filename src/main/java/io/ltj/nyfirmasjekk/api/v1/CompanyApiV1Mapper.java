@@ -43,6 +43,7 @@ public class CompanyApiV1Mapper {
     private static final String SOURCE_BRREG_BASE_DATA = "BRREG grunndata";
     private static final String SOURCE_INTERNAL_NETWORK_SNAPSHOT = "Intern nettverkssnapshot / BRREG";
     private static final String CONFIDENCE_MEDIUM = "MEDIUM";
+    private static final String DISCOVERY_REGISTERED = "REGISTERED";
     private static final String DISCOVERY_POSSIBLE_MATCH = "POSSIBLE_MATCH";
     private static final String DISCOVERY_UNVERIFIED_SUGGESTION = "UNVERIFIED_SUGGESTION";
     private static final String SIGNAL_TECHNICAL_FAILURE = "TECHNICAL_FAILURE";
@@ -130,8 +131,6 @@ public class CompanyApiV1Mapper {
     private static final String SIGNAL_CLUSTERED_NEW_COMPANY_PATTERN = "CLUSTERED_NEW_COMPANY_PATTERN";
     private static final String ROLE_DAGLIG_LEDER = "DAGLIG_LEDER";
     private static final String ROLE_STYRELEDER = "STYRELEDER";
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,63}\\b", Pattern.CASE_INSENSITIVE);
-    private static final Pattern FOREIGN_ORGANIZATION_NUMBER_PATTERN = Pattern.compile("\\b(?:\\d{6}\\s++\\d{4}|se\\d{10,12})\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern NON_ALPHANUMERIC_SPACE_PATTERN = Pattern.compile("[^a-z0-9 ]");
     private static final Set<String> WEAK_PAGE_TITLES = Set.of("home", "hjem", "untitled", "index", "velkommen", "coming soon");
     private static final Set<String> CALL_TO_ACTION_WORDS = Set.of(
@@ -399,7 +398,11 @@ public class CompanyApiV1Mapper {
 
     private WebsiteDiscovery websiteDiscovery(CompanyCheck companyCheck, EnhetResponse enhet, boolean inspectAllCandidates) {
         if (hasText(enhet.hjemmeside())) {
-            return registeredWebsiteDiscovery(companyCheck, enhet, inspectAllCandidates);
+            try {
+                return registeredWebsiteDiscovery(companyCheck, enhet, inspectAllCandidates);
+            } catch (IllegalArgumentException exception) {
+                return invalidRegisteredWebsiteDiscovery();
+            }
         }
 
         String emailDomain = extractEmailDomain(enhet.epostadresse());
@@ -427,12 +430,29 @@ public class CompanyApiV1Mapper {
         );
     }
 
+    private WebsiteDiscovery invalidRegisteredWebsiteDiscovery() {
+        String reason = "BRREG har en registrert nettsideverdi, men den er ikke en gyldig nettadresse.";
+        return new WebsiteDiscovery(
+                DISCOVERY_REGISTERED,
+                "LOW",
+                List.of(),
+                null,
+                false,
+                false,
+                reason,
+                null,
+                List.of(),
+                reason,
+                SOURCE_BRREG
+        );
+    }
+
     private WebsiteDiscovery registeredWebsiteDiscovery(CompanyCheck companyCheck, EnhetResponse enhet, boolean inspect) {
         String website = normalizeWebsiteCandidate(enhet.hjemmeside());
         if (!inspect) {
             WebsiteCandidateCheck candidateCheck = new WebsiteCandidateCheck(
                     website, true, true, null, REGISTERED_WEBSITE_REASON);
-            return new WebsiteDiscovery("REGISTERED", "HIGH", List.of(website), website, true, true,
+            return new WebsiteDiscovery(DISCOVERY_REGISTERED, "HIGH", List.of(website), website, true, true,
                     REGISTERED_WEBSITE_REASON, null, List.of(candidateCheck), REGISTERED_WEBSITE_REASON, SOURCE_BRREG);
         }
         boolean reachable = websiteReachabilityService.isReachable(website);
@@ -442,7 +462,7 @@ public class CompanyApiV1Mapper {
         String reason = reachable
                 ? "Nettsiden er registrert i BRREG og svarte ved teknisk sjekk."
                 : "Nettsiden er registrert i BRREG, men svarte ikke ved teknisk sjekk.";
-        return new WebsiteDiscovery("REGISTERED", reachable ? "HIGH" : "LOW", List.of(website),
+        return new WebsiteDiscovery(DISCOVERY_REGISTERED, reachable ? "HIGH" : "LOW", List.of(website),
                 reachable ? website : null, reachable, reachable, contentMatch.reason(), contentMatch.pageTitle(),
                 List.of(toWebsiteCandidateCheck(website, reachable, contentMatch)), reason, SOURCE_BRREG);
     }
@@ -527,8 +547,24 @@ public class CompanyApiV1Mapper {
             return null;
         }
 
-        String website = normalizeWebsiteCandidate(enhet.hjemmeside());
         List<WebsiteQualitySignal> signals = new ArrayList<>();
+        final String website;
+        try {
+            website = normalizeWebsiteCandidate(enhet.hjemmeside());
+        } catch (IllegalArgumentException exception) {
+            signals.add(new WebsiteQualitySignal(
+                    "INVALID_REGISTERED_WEBSITE",
+                    "Ugyldig nettadresse",
+                    "Nettsideverdien som er registrert i BRREG, er ikke en gyldig nettadresse.",
+                    "HIGH"
+            ));
+            return new WebsiteQualityAssessment(
+                    WEBSITE_STATUS_WEAK,
+                    "Ugyldig registrert nettadresse",
+                    "BRREG har en nettsideverdi som ikke kan brukes som nettadresse.",
+                    signals
+            );
+        }
         String thirdPartyPlatform = thirdPartyPlatform(website);
         if (thirdPartyPlatform != null) {
             signals.add(new WebsiteQualitySignal(
@@ -1064,7 +1100,7 @@ public class CompanyApiV1Mapper {
     }
 
     private boolean isEffectiveEcommerceWebsite(WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
-        return snapshot != null && snapshot.ecommerceSignal() && !isInsuranceOrFinanceWebsite(snapshot);
+        return snapshot.ecommerceSignal() && !isInsuranceOrFinanceWebsite(snapshot);
     }
 
     private void addPublicSectorContextSignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
@@ -1239,7 +1275,7 @@ public class CompanyApiV1Mapper {
 
     private void addContactQualitySignal(List<WebsiteQualitySignal> signals, WebsiteContentInspectionService.WebsiteContentSnapshot snapshot, EnhetResponse enhet) {
         String text = (visibleWebsiteText(snapshot) + " " + (snapshot.html() == null ? "" : snapshot.html())).toLowerCase(Locale.ROOT);
-        boolean hasEmail = EMAIL_PATTERN.matcher(text).find();
+        boolean hasEmail = containsEmailAddress(text);
         boolean hasPhone = containsPhoneNumber(text);
         boolean hasContactWords = text.contains("kontakt") || text.contains("contact") || text.contains("ring oss") || text.contains("send e-post");
         if (!hasEmail && !hasPhone && !hasContactWords && (hasText(enhet.epostadresse()) || hasText(enhet.telefon()) || hasText(enhet.mobil()))) {
@@ -1510,7 +1546,7 @@ public class CompanyApiV1Mapper {
                     "E-post ser ut til å være skjult via Cloudflare email protection. Det kan redusere spam, men gjør også e-post mindre tilgjengelig for brukere uten JavaScript, skjermleser/noscript og enkel kopiering.",
                     "INFO"
             ));
-        } else if (hasText(enhet.epostadresse()) && EMAIL_PATTERN.matcher(rawBody + " " + rawHtml).find() && !rawHtml.toLowerCase(Locale.ROOT).contains("mailto:")) {
+        } else if (hasText(enhet.epostadresse()) && containsEmailAddress(rawBody + " " + rawHtml) && !rawHtml.toLowerCase(Locale.ROOT).contains("mailto:")) {
             signals.add(new WebsiteQualitySignal(
                     "EMAIL_NOT_CLICKABLE",
                     "E-post er ikke klikkbar",
@@ -2583,7 +2619,10 @@ public class CompanyApiV1Mapper {
                     CONFIDENCE_MEDIUM
             ));
         }
-        if (isEffectiveEcommerceWebsite(snapshot) && snapshot.crawledPageCount() > 0 && !snapshot.crawlTermsPageFound() && !snapshot.termsLink()) {
+        if (isEffectiveEcommerceWebsite(snapshot)
+                && snapshot.crawledPageCount() > 0
+                && !snapshot.crawlTermsPageFound()
+                && !snapshot.termsLink()) {
             signals.add(new WebsiteQualitySignal(
                     "CRAWL_TERMS_PAGE_NOT_FOUND",
                     "Vilkår bør verifiseres",
@@ -2844,7 +2883,7 @@ public class CompanyApiV1Mapper {
         if (!isForeignRegisteredUnit(companyCheck, enhet)) {
             return false;
         }
-        return FOREIGN_ORGANIZATION_NUMBER_PATTERN.matcher(text).find()
+        return containsForeignOrganizationNumber(text)
                 || text.contains("organisationsnummer")
                 || text.contains("organisasjonsnummer")
                 || text.contains("mva")
@@ -2892,15 +2931,140 @@ public class CompanyApiV1Mapper {
             return Set.of();
         }
         Set<String> domains = new LinkedHashSet<>();
-        var matcher = EMAIL_PATTERN.matcher(text);
-        while (matcher.find()) {
-            String email = matcher.group().toLowerCase(Locale.ROOT);
-            int atIndex = email.indexOf('@');
-            if (atIndex > 0 && atIndex + 1 < email.length()) {
-                domains.add(email.substring(atIndex + 1));
+        for (int atIndex = text.indexOf('@'); atIndex >= 0; atIndex = text.indexOf('@', atIndex + 1)) {
+            String domain = emailDomainAt(text, atIndex);
+            if (domain != null) {
+                domains.add(domain);
             }
         }
         return domains;
+    }
+
+    private String emailDomainAt(String text, int atIndex) {
+        if (!hasEmailLocalPart(text, atIndex)) {
+            return null;
+        }
+        int domainEnd = emailDomainEnd(text, atIndex + 1);
+        String domain = text.substring(atIndex + 1, domainEnd).toLowerCase(Locale.ROOT);
+        return isValidEmailDomain(domain) ? domain : null;
+    }
+
+    private boolean hasEmailLocalPart(String text, int atIndex) {
+        return atIndex > 0 && isEmailLocalCharacter(text.charAt(atIndex - 1));
+    }
+
+    private int emailDomainEnd(String text, int domainStart) {
+        int domainEnd = domainStart;
+        while (domainEnd < text.length() && isEmailDomainCharacter(text.charAt(domainEnd))) {
+            domainEnd += 1;
+        }
+        while (domainEnd > domainStart && text.charAt(domainEnd - 1) == '.') {
+            domainEnd -= 1;
+        }
+        return domainEnd;
+    }
+
+    private boolean containsEmailAddress(String text) {
+        return !emailDomains(text).isEmpty();
+    }
+
+    private boolean isEmailLocalCharacter(char character) {
+        return Character.isLetterOrDigit(character)
+                || character == '.'
+                || character == '_'
+                || character == '%'
+                || character == '+'
+                || character == '-';
+    }
+
+    private boolean isEmailDomainCharacter(char character) {
+        return Character.isLetterOrDigit(character) || character == '.' || character == '-';
+    }
+
+    private boolean isValidEmailDomain(String domain) {
+        int lastDot = domain.lastIndexOf('.');
+        if (lastDot <= 0 || lastDot == domain.length() - 1) {
+            return false;
+        }
+        String topLevelDomain = domain.substring(lastDot + 1);
+        if (topLevelDomain.length() < 2 || topLevelDomain.length() > 63
+                || !topLevelDomain.chars().allMatch(Character::isLetter)) {
+            return false;
+        }
+        return hasValidEmailDomainLabels(domain);
+    }
+
+    private boolean hasValidEmailDomainLabels(String domain) {
+        int labelStart = 0;
+        for (int index = 0; index <= domain.length(); index += 1) {
+            if (index == domain.length() || domain.charAt(index) == '.') {
+                if (!isValidEmailDomainLabel(domain, labelStart, index)) {
+                    return false;
+                }
+                labelStart = index + 1;
+            }
+        }
+        return true;
+    }
+
+    private boolean isValidEmailDomainLabel(String domain, int start, int end) {
+        return start < end
+                && domain.charAt(start) != '-'
+                && domain.charAt(end - 1) != '-';
+    }
+
+    private boolean containsForeignOrganizationNumber(String text) {
+        for (int index = 0; index < text.length(); index += 1) {
+            if (isWordCharacterBefore(text, index)) {
+                continue;
+            }
+            if (hasSwedishOrganizationNumberAt(text, index) || hasSpacedOrganizationNumberAt(text, index)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSwedishOrganizationNumberAt(String text, int start) {
+        if (start + 2 > text.length() || !text.regionMatches(true, start, "se", 0, 2)) {
+            return false;
+        }
+        int end = digitRunEnd(text, start + 2, 12);
+        int digitCount = end - start - 2;
+        return digitCount >= 10 && isWordBoundaryAt(text, end);
+    }
+
+    private boolean hasSpacedOrganizationNumberAt(String text, int start) {
+        int firstRunEnd = digitRunEnd(text, start, 6);
+        if (firstRunEnd - start != 6 || firstRunEnd >= text.length() || !Character.isWhitespace(text.charAt(firstRunEnd))) {
+            return false;
+        }
+        int secondRunStart = firstRunEnd;
+        while (secondRunStart < text.length() && Character.isWhitespace(text.charAt(secondRunStart))) {
+            secondRunStart += 1;
+        }
+        int end = digitRunEnd(text, secondRunStart, 4);
+        return end - secondRunStart == 4 && isWordBoundaryAt(text, end);
+    }
+
+    private int digitRunEnd(String text, int start, int maximumDigits) {
+        int end = start;
+        while (end < text.length() && end - start < maximumDigits && Character.isDigit(text.charAt(end))) {
+            end += 1;
+        }
+        return end;
+    }
+
+    private boolean isWordCharacterBefore(String text, int index) {
+        return index > 0 && isWordCharacter(text.charAt(index - 1));
+    }
+
+    private boolean isWordBoundaryAt(String text, int index) {
+        return index >= text.length() || !isWordCharacter(text.charAt(index));
+    }
+
+    private boolean isWordCharacter(char character) {
+        return Character.isLetterOrDigit(character) || character == '_';
     }
 
     private String addressText(EnhetResponse.Adresse adresse) {
@@ -3501,14 +3665,25 @@ public class CompanyApiV1Mapper {
     }
 
     private String toRuleName(String label) {
-        return label.trim()
+        String normalized = label.trim()
                 .toUpperCase(Locale.ROOT)
                 .replace('Æ', 'E')
                 .replace('Ø', 'O')
                 .replace('Å', 'A')
-                .replaceAll("[^A-Z0-9]++", "_")
-                .replaceAll("^_++", "")
-                .replaceAll("_++$", "");
+                .replaceAll("[^A-Z0-9]++", "_");
+        return trimUnderscores(normalized);
+    }
+
+    private String trimUnderscores(String value) {
+        int start = 0;
+        while (start < value.length() && value.charAt(start) == '_') {
+            start += 1;
+        }
+        int end = value.length();
+        while (end > start && value.charAt(end - 1) == '_') {
+            end -= 1;
+        }
+        return value.substring(start, end);
     }
 
     private List<String> flags(EnhetResponse enhet, CompanyFacts facts) {

@@ -151,6 +151,79 @@ class CompanyApiV1MapperTests {
     }
 
     @Test
+    void ugyldigRegistrertNettsideStopperIkkeListevisningen() {
+        var mapper = new CompanyApiV1Mapper(
+                new StubAnnouncementService(List.of()),
+                new StubWebsiteReachabilityService(),
+                new StubWebsiteContentInspectionService()
+        );
+        var facts = new CompanyFacts(
+                "ENK",
+                LocalDate.of(2026, Month.AUGUST, 1),
+                "Begrenset info.",
+                "90.011",
+                "Kunstnerisk virksomhet",
+                null,
+                List.of(),
+                "kontakt@example.no",
+                null,
+                null,
+                false,
+                true,
+                0,
+                false,
+                null,
+                null,
+                false,
+                false,
+                false,
+                "Oslo"
+        );
+        var check = new CompanyCheck(
+                "987654321",
+                "Testvirksomhet",
+                "ENK",
+                TrafficLight.YELLOW,
+                "Begrenset info.",
+                facts,
+                new CompanyMetrics(0, 0, 0),
+                List.of(),
+                List.of(),
+                List.of()
+        );
+        var enhet = new EnhetResponse(
+                "987654321",
+                "Testvirksomhet",
+                new EnhetResponse.Organisasjonsform("ENK", "Enkeltpersonforetak"),
+                null,
+                List.of(),
+                "kontakt@example.no",
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                true,
+                true,
+                0,
+                false,
+                null,
+                LocalDate.of(2026, Month.AUGUST, 1),
+                LocalDate.of(2026, Month.AUGUST, 1),
+                null,
+                null
+        );
+
+        var summary = mapper.toSummary(check, enhet);
+
+        assertThat(summary.websiteDiscovery().status()).isEqualTo("REGISTERED");
+        assertThat(summary.websiteDiscovery().confidence()).isEqualTo("LOW");
+        assertThat(summary.websiteDiscovery().verifiedReachable()).isFalse();
+        assertThat(summary.websiteDiscovery().candidates()).isEmpty();
+    }
+
+    @Test
     void detaljresponsVurdererKvalitetPaRegistrertNettside() {
         var mapper = new CompanyApiV1Mapper(
                 new StubAnnouncementService(List.of()),

@@ -2,10 +2,20 @@ package io.ltj.nyfirmasjekk.api.v1;
 
 import org.junit.jupiter.api.Test;
 
+import java.net.IDN;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SafeWebTargetPolicyTests {
+    @Test
+    void normalisererInternasjonaleDomenenavn() {
+        var uri = SafeWebTargetPolicy.requireHttpUri("https://følka.no/om-oss", true);
+
+        assertThat(uri.getHost()).isEqualTo(IDN.toASCII("følka.no"));
+        assertThat(uri.getPath()).isEqualTo("/om-oss");
+    }
+
     @Test
     void godtarKunOffentligHttpOgHttps() {
         assertThat(SafeWebTargetPolicy.requirePublicHttpUri("https://93.184.216.34/path").getHost())

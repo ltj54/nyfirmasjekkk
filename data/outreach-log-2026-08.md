@@ -4,19 +4,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1121
-- Sendt: 523
+- Antall hendelser: 1140
+- Sendt: 532
 - Angret: 1
-- Aktive kontaktede selskaper: 404
+- Aktive kontaktede selskaper: 412
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-15 | 938145709 | JORIN HOLDING AS | AS | email | website-offer |
+| 2026-08-15 | 938168067 | UNITED AUTOMATION AS | AS | email | website-offer |
+| 2026-08-15 | 938049718 | ATMOSFER MAKINA SANAYI VE TICARET ANONIM SIRKETI NUF | NUF | email | website-offer |
+| 2026-08-15 | 938158223 | LEO CASANOVA BARBER | ENK | email | website-offer |
+| 2026-08-15 | 938161410 | BRFITNO FARIAS DA SILVA RIBEIRO | ENK | email | website-offer |
+| 2026-08-15 | 938161976 | ARCTIC ARENA EIENDOM AS | AS | email | website-offer |
+| 2026-08-15 | 938164290 | BERGEN TELUGU SPORTS CLUB | FLI | email | website-offer |
+| 2026-08-15 | 938187398 | GRØNN PLAN / V LUNDH FORBERG | ENK | email | website-offer |
+| 2026-08-15 | 938205124 | ERYK SP. Z O.O. | UTLA | email | website-offer |
 | 2026-08-15 | 938238065 | NORI INVEST AS | AS | email | website-offer |
 | 2026-08-15 | 938230498 | SAMEIET TELTHUSSMAUET 2A | ESEK | email | website-offer |
 | 2026-08-15 | 938267707 | AAGOT NYHUS NORDKVELLE | ENK | email | website-offer |
-| 2026-08-15 | 938268053 | JONATAN JACOBSEN | ENK | email | website-offer |
 | 2026-08-15 | 838268072 | BENEDICTE SÆTRANG VELDE | ENK | email | website-offer |
 | 2026-08-15 | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | website-offer |
 | 2026-08-15 | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | website-offer |
@@ -422,6 +430,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-15 16:27 | sent | 938145709 | JORIN HOLDING AS | AS | email | - |
+| 2026-08-15 16:27 | sending | 938145709 | JORIN HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:27 | sent | 938168067 | UNITED AUTOMATION AS | AS | email | - |
+| 2026-08-15 16:27 | sending | 938168067 | UNITED AUTOMATION AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:27 | sent | 938049718 | ATMOSFER MAKINA SANAYI VE TICARET ANONIM SIRKETI NUF | NUF | email | - |
+| 2026-08-15 16:27 | sending | 938049718 | ATMOSFER MAKINA SANAYI VE TICARET ANONIM SIRKETI NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:27 | sent | 938158223 | LEO CASANOVA BARBER | ENK | email | - |
+| 2026-08-15 16:27 | sending | 938158223 | LEO CASANOVA BARBER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:27 | sent | 938161410 | BRFITNO FARIAS DA SILVA RIBEIRO | ENK | email | - |
+| 2026-08-15 16:27 | sending | 938161410 | BRFITNO FARIAS DA SILVA RIBEIRO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:27 | sent | 938161976 | ARCTIC ARENA EIENDOM AS | AS | email | - |
+| 2026-08-15 16:27 | sending | 938161976 | ARCTIC ARENA EIENDOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:16 | sent | 938164290 | BERGEN TELUGU SPORTS CLUB | FLI | email | - |
+| 2026-08-15 16:16 | sending | 938164290 | BERGEN TELUGU SPORTS CLUB | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:16 | sent | 938187398 | GRØNN PLAN / V LUNDH FORBERG | ENK | email | - |
+| 2026-08-15 16:16 | sending | 938187398 | GRØNN PLAN / V LUNDH FORBERG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:16 | sent | 938205124 | ERYK SP. Z O.O. | UTLA | email | - |
+| 2026-08-15 16:16 | sending | 938205124 | ERYK SP. Z O.O. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 16:13 | replied | 938268053 | JONATAN JACOBSEN | ENK | email | Svar mottatt 2026-08-15 fra Jonatan Jacobsen: Er allerede i kontakt med en annen som skal lage nettside for virksomheten, men setter pris på tilbudet. Ingen videre oppfølging. |
 | 2026-08-15 10:40 | sent | 938238065 | NORI INVEST AS | AS | email | - |
 | 2026-08-15 10:40 | sending | 938238065 | NORI INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-15 10:40 | sent | 938230498 | SAMEIET TELTHUSSMAUET 2A | ESEK | email | - |

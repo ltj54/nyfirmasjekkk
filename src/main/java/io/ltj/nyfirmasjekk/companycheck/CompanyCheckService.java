@@ -211,6 +211,7 @@ public class CompanyCheckService {
                     pageInfo,
                     sourceItems,
                     sourcePage,
+                    upperRegistrationDate,
                     SOURCE_PAGE_SIZE,
                     textSearchHasMatchesForRequestedPage
             );
@@ -252,7 +253,14 @@ public class CompanyCheckService {
             matchedBeforePage += pageMatches.size();
 
             var pageInfo = searchResponse.page();
-            SourceCursor cursor = nextSourceCursor(pageInfo, sourceItems, sourcePage, FILTERED_SOURCE_PAGE_SIZE, false);
+            SourceCursor cursor = nextSourceCursor(
+                    pageInfo,
+                    sourceItems,
+                    sourcePage,
+                    upperRegistrationDate,
+                    FILTERED_SOURCE_PAGE_SIZE,
+                    false
+            );
             reachedEnd = cursor.reachedEnd();
             sourcePage = cursor.page();
             upperRegistrationDate = cursor.upperRegistrationDate();
@@ -304,6 +312,7 @@ public class CompanyCheckService {
             EnheterSearchResponse.Page pageInfo,
             List<EnhetResponse> sourceItems,
             int sourcePage,
+            LocalDate upperRegistrationDate,
             int pageSize,
             boolean stopAfterTextMatch
     ) {
@@ -312,7 +321,7 @@ public class CompanyCheckService {
             return SourceCursor.finished();
         }
         if (sourcePage < maxBrregSourcePage(pageSize)) {
-            return new SourceCursor(sourcePage + 1, null, false);
+            return new SourceCursor(sourcePage + 1, upperRegistrationDate, false);
         }
         LocalDate oldestDate = oldestRegistrationDate(sourceItems);
         return oldestDate == null

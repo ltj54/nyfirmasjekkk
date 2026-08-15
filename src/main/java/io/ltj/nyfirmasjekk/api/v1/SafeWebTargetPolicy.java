@@ -3,7 +3,9 @@ package io.ltj.nyfirmasjekk.api.v1;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.IDN;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
@@ -16,12 +18,13 @@ final class SafeWebTargetPolicy {
     }
 
     static URI requireHttpUri(String value, boolean allowPrivateTargets) {
-        final URI uri;
+        final URI parsedUri;
         try {
-            uri = URI.create(value).normalize();
+            parsedUri = URI.create(value).normalize();
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException("Ugyldig URL.", exception);
         }
+        URI uri = normalizeInternationalHost(parsedUri);
         String scheme = uri.getScheme();
         if (scheme == null || !(scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https"))) {
             throw new IllegalArgumentException("Bare HTTP- og HTTPS-adresser kan kontrolleres.");
@@ -36,6 +39,43 @@ final class SafeWebTargetPolicy {
             requirePublicHost(uri.getHost());
         }
         return uri;
+    }
+
+    private static URI normalizeInternationalHost(URI uri) {
+        if (uri.getHost() != null || uri.getRawAuthority() == null || uri.getRawAuthority().contains("@")) {
+            return uri;
+        }
+
+        String authority = uri.getRawAuthority();
+        String host = authority;
+        int port = -1;
+        int colonIndex = authority.lastIndexOf(':');
+        if (colonIndex > 0 && authority.indexOf(':') == colonIndex) {
+            String portText = authority.substring(colonIndex + 1);
+            if (portText.matches("\\d+")) {
+                host = authority.substring(0, colonIndex);
+                try {
+                    port = Integer.parseInt(portText);
+                } catch (NumberFormatException exception) {
+                    throw new IllegalArgumentException("URL-en har ugyldig port.", exception);
+                }
+            }
+        }
+
+        try {
+            String asciiHost = IDN.toASCII(host, IDN.USE_STD3_ASCII_RULES);
+            return new URI(
+                    uri.getScheme(),
+                    null,
+                    asciiHost,
+                    port,
+                    uri.getPath(),
+                    uri.getQuery(),
+                    uri.getFragment()
+            ).normalize();
+        } catch (IllegalArgumentException | URISyntaxException exception) {
+            return uri;
+        }
     }
 
     static void requirePublicHost(String host) {

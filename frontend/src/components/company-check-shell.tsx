@@ -392,8 +392,11 @@ function recentSearchParams(options: RecentSearchOptions) {
 
   const hasWebsite = options.quickFilters.includes("HAS_WEBSITE");
   const missingWebsite = options.quickFilters.includes("MISSING_WEBSITE");
-  if (hasWebsite !== missingWebsite) {
-    params.set("hasWebsite", hasWebsite.toString());
+  if (hasWebsite && !missingWebsite) {
+    params.set("hasWebsite", "true");
+  }
+  if (missingWebsite && !hasWebsite) {
+    params.set("missingWebsite", "true");
   }
   return params;
 }

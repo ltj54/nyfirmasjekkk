@@ -1035,6 +1035,9 @@ class CompanyCheckServiceTests {
         assertThat(result.items()).isEmpty();
         assertThat(client.requestedSearchPages()).contains(99);
         assertThat(client.requestedSearchPages()).doesNotContain(100);
+        assertThat(client.requestedSearchFilters()).anySatisfy(filter -> assertThat(filter)
+                .containsEntry("page", "1")
+                .containsEntry("tilRegistreringsdatoEnhetsregisteret", "2025-01-09"));
     }
 
     @Test
@@ -1494,6 +1497,7 @@ class CompanyCheckServiceTests {
         private final Map<String, RollerResponse> rollerByOrgNumber;
         private final AtomicInteger roleLookups = new AtomicInteger(0);
         private final List<Integer> requestedSearchPages = new ArrayList<>();
+        private final List<Map<String, String>> requestedSearchFilters = new ArrayList<>();
         private Map<String, String> lastSearchFilter;
 
         private StubBrregClient(EnhetResponse enhet, RollerResponse roller) {
@@ -1552,6 +1556,7 @@ class CompanyCheckServiceTests {
         @Override
         public EnheterSearchResponse sok(Map<String, String> filter) {
             lastSearchFilter = Map.copyOf(filter);
+            requestedSearchFilters.add(lastSearchFilter);
             if (!searchResponsesByPage.isEmpty()) {
                 int page = Integer.parseInt(filter.getOrDefault("page", "0"));
                 requestedSearchPages.add(page);
@@ -1574,6 +1579,10 @@ class CompanyCheckServiceTests {
 
         private List<Integer> requestedSearchPages() {
             return List.copyOf(requestedSearchPages);
+        }
+
+        private List<Map<String, String>> requestedSearchFilters() {
+            return List.copyOf(requestedSearchFilters);
         }
     }
 
