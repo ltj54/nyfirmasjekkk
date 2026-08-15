@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1107
-- Sendt: 516
+- Antall hendelser: 1121
+- Sendt: 523
 - Angret: 1
-- Aktive kontaktede selskaper: 397
+- Aktive kontaktede selskaper: 404
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-15 | 938238065 | NORI INVEST AS | AS | email | website-offer |
+| 2026-08-15 | 938230498 | SAMEIET TELTHUSSMAUET 2A | ESEK | email | website-offer |
+| 2026-08-15 | 938267707 | AAGOT NYHUS NORDKVELLE | ENK | email | website-offer |
+| 2026-08-15 | 938268053 | JONATAN JACOBSEN | ENK | email | website-offer |
+| 2026-08-15 | 838268072 | BENEDICTE SÆTRANG VELDE | ENK | email | website-offer |
+| 2026-08-15 | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | website-offer |
+| 2026-08-15 | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | website-offer |
 | 2026-08-14 | 938188645 | NORDIC AIRCLEAN JASKOWSKI | ENK | email | website-follow-up |
 | 2026-08-14 | 838180752 | CLAUDIA MARGARET WISNIEWSKA TANNLEGE | ENK | email | website-follow-up |
 | 2026-08-14 | 938186154 | TFG PERFORMANCE FOLMER | ENK | email | website-follow-up |
@@ -415,6 +422,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-15 10:40 | sent | 938238065 | NORI INVEST AS | AS | email | - |
+| 2026-08-15 10:40 | sending | 938238065 | NORI INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 10:40 | sent | 938230498 | SAMEIET TELTHUSSMAUET 2A | ESEK | email | - |
+| 2026-08-15 10:40 | sending | 938230498 | SAMEIET TELTHUSSMAUET 2A | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 10:40 | sent | 938267707 | AAGOT NYHUS NORDKVELLE | ENK | email | - |
+| 2026-08-15 10:40 | sending | 938267707 | AAGOT NYHUS NORDKVELLE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 10:40 | sent | 938268053 | JONATAN JACOBSEN | ENK | email | - |
+| 2026-08-15 10:40 | sending | 938268053 | JONATAN JACOBSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 10:39 | sent | 838268072 | BENEDICTE SÆTRANG VELDE | ENK | email | - |
+| 2026-08-15 10:39 | sending | 838268072 | BENEDICTE SÆTRANG VELDE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 10:39 | sent | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | - |
+| 2026-08-15 10:39 | sending | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-15 10:39 | sent | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | - |
+| 2026-08-15 10:39 | sending | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-15 10:37 | replied | 938186014 | ROSENLØW EEG STUDIO | ENK | email | Svar mottatt 2026-08-14 fra Kristin Rosenløw Eeg: Takker for henvendelsen, men trenger ikke hjelp i denne omgang. Ingen videre oppfølging. |
 | 2026-08-15 10:36 | replied | 838264212 | PARLATORNOR NINA ROSENLUND | ENK | email | Svar mottatt 2026-08-14 fra Nina Rosenlund: Spør hvordan LTJ Production fant foretaket omtrent én time etter registrering. Krever manuelt svar om offentlig tilgjengelige virksomhetsopplysninger fra Brønnøysundregistrene. Ingen automatisk oppfølging. |
 | 2026-08-14 12:47 | replied | 938230412 | SEBASTIAN SMEBY | ENK | email | Svar mottatt 2026-08-14 fra Sebastian Smeby: Har ikke behov for nettside nå, men vil tenke på LTJ Production dersom det blir aktuelt i fremtiden. Ingen ny automatisk oppfølging; kan ta kontakt på eget initiativ. |
