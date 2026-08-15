@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1105
+- Antall hendelser: 1107
 - Sendt: 516
 - Angret: 1
-- Aktive kontaktede selskaper: 399
+- Aktive kontaktede selskaper: 397
 
 ## Aktive kontaktede selskaper
 
@@ -15,7 +15,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | --- | --- | --- | --- | --- | --- |
 | 2026-08-14 | 938188645 | NORDIC AIRCLEAN JASKOWSKI | ENK | email | website-follow-up |
 | 2026-08-14 | 838180752 | CLAUDIA MARGARET WISNIEWSKA TANNLEGE | ENK | email | website-follow-up |
-| 2026-08-14 | 938186014 | ROSENLØW EEG STUDIO | ENK | email | website-follow-up |
 | 2026-08-14 | 938186154 | TFG PERFORMANCE FOLMER | ENK | email | website-follow-up |
 | 2026-08-14 | 938178704 | BIGDOG JOHNSEN | ENK | email | website-follow-up |
 | 2026-08-14 | 938174733 | ELTERVÅG SLIPP OG MARITIME TJENESTER | ENK | email | website-follow-up |
@@ -83,7 +82,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-14 | 938196036 | SNERTINGDAL REVYGRUPPE | FLI | email | website-follow-up |
 | 2026-08-14 | 938222363 | KONGSHAUGVEIEN 4 | ESEK | email | website-follow-up |
 | 2026-08-14 | 938034141 | NORCO GROUP LIMITED | NUF | email | website-follow-up |
-| 2026-08-14 | 838264212 | PARLATORNOR NINA ROSENLUND | ENK | email | website-offer |
 | 2026-08-14 | 938127107 | VIROQUE BIOENERGY SL | NUF | email | website-offer |
 | 2026-08-14 | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | website-offer |
 | 2026-08-14 | 938261210 | PERANDER UTVIKLING | ENK | email | website-offer |
@@ -417,6 +415,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-15 10:37 | replied | 938186014 | ROSENLØW EEG STUDIO | ENK | email | Svar mottatt 2026-08-14 fra Kristin Rosenløw Eeg: Takker for henvendelsen, men trenger ikke hjelp i denne omgang. Ingen videre oppfølging. |
+| 2026-08-15 10:36 | replied | 838264212 | PARLATORNOR NINA ROSENLUND | ENK | email | Svar mottatt 2026-08-14 fra Nina Rosenlund: Spør hvordan LTJ Production fant foretaket omtrent én time etter registrering. Krever manuelt svar om offentlig tilgjengelige virksomhetsopplysninger fra Brønnøysundregistrene. Ingen automatisk oppfølging. |
 | 2026-08-14 12:47 | replied | 938230412 | SEBASTIAN SMEBY | ENK | email | Svar mottatt 2026-08-14 fra Sebastian Smeby: Har ikke behov for nettside nå, men vil tenke på LTJ Production dersom det blir aktuelt i fremtiden. Ingen ny automatisk oppfølging; kan ta kontakt på eget initiativ. |
 | 2026-08-14 12:19 | replied | 938213909 | JARBEGOOD REKKEBO MUSIC PRODUCTION | ENK | email | Svar mottatt 2026-08-14 fra John Andreas Rekkebo: Positiv til tilbudet og opplyser at nettside fort kan bli aktuelt, men ønsker å avvente foreløpig. Viser til YouTube @rekkebojohnandreas8650 og rekkebo.johnandreas på Spotify/SoundCloud som eksempler på musikken. Ingen ny automatisk oppfølging; aktuell for manuell kontakt senere. |
 | 2026-08-14 12:16 | replied | 938131392 | BNP INVEST AS | AS | email | Svar mottatt 2026-08-14 fra Brede: Takker for forespørselen, men opplyser at det ikke er aktuelt. Ingen videre oppfølging. |
