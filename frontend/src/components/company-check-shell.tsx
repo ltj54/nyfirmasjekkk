@@ -4074,6 +4074,26 @@ function WorkspaceTabButton({
   );
 }
 
+function formatEstablishedDate(value: string | null) {
+  if (!value) {
+    return "Ikke oppgitt";
+  }
+  const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (dateOnlyMatch) {
+    const [, year, month, day] = dateOnlyMatch;
+    return `${day}.${month}.${year}`;
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return new Intl.DateTimeFormat("nb-NO", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
 function LeadResultRow({
   batchSelectable,
   batchSelected,
@@ -4121,6 +4141,9 @@ function LeadResultRow({
           <span className="block truncate text-[14px] font-semibold text-[#1F2933] hover:text-[#1F5FA9]">{company.name}</span>
           <span className="mt-1 block truncate text-[11px] text-[#52606D]">
             {company.orgNumber} · {company.organizationForm || "Ukjent form"} · {company.municipality || "Ukjent sted"}
+          </span>
+          <span className="mt-1 block text-[11px] font-medium text-[#52606D]">
+            Etablert: {formatEstablishedDate(company.registrationDate)}
           </span>
         </button>
       </div>

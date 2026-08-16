@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1140
-- Sendt: 532
+- Antall hendelser: 1188
+- Sendt: 556
 - Angret: 1
-- Aktive kontaktede selskaper: 412
+- Aktive kontaktede selskaper: 436
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-16 | 937980582 | SØDRING HOLDING AS | AS | email | website-offer |
+| 2026-08-16 | 937980868 | SKJELVIK HOLDING AS | AS | email | website-offer |
+| 2026-08-16 | 937980833 | RESPIRARE DIGIHUB AS | AS | email | website-offer |
+| 2026-08-16 | 937980647 | RAN GB AS | AS | email | website-offer |
+| 2026-08-16 | 937980558 | FEKERMAND INVEST AS | AS | email | website-offer |
+| 2026-08-16 | 938021678 | VISITSKJELVIK AS | AS | email | website-offer |
+| 2026-08-16 | 937980779 | SALVOR AS | AS | email | website-offer |
+| 2026-08-16 | 937980566 | NORGESDRIFT AS | AS | email | website-offer |
+| 2026-08-16 | 938021813 | ELL COLLECTION AS | AS | email | website-offer |
+| 2026-08-16 | 938021805 | APPOINT UTVIKLING AS | AS | email | website-offer |
+| 2026-08-16 | 937995245 | SIMONSEN VARE-EXPRESS | ENK | email | website-offer |
+| 2026-08-16 | 938021783 | TAKSTINGENIØR SIGURD SIVERTSEN AS | AS | email | website-offer |
+| 2026-08-16 | 937980809 | BARBERHUSET AS | AS | email | website-offer |
+| 2026-08-16 | 837979102 | LANGE MEK & MASKIN | ENK | email | website-offer |
+| 2026-08-16 | 937989911 | TEN THIJE LEGETJENESTER | ENK | email | website-offer |
+| 2026-08-16 | 937977484 | SAID DROSJETJENESTER | ENK | email | website-offer |
+| 2026-08-16 | 938016534 | EVLI OYJ | UTLA | email | website-offer |
+| 2026-08-16 | 938128901 | TUNAAL PARTNERS AS | AS | email | website-offer |
+| 2026-08-16 | 938087857 | TIST WELDING PARTNER AS | AS | email | website-offer |
+| 2026-08-16 | 938116822 | NEKAS DYKK KASTÅS | ENK | email | website-offer |
+| 2026-08-16 | 838074472 | SENGEVERDEN APS | UTLA | email | website-offer |
+| 2026-08-16 | 937978758 | RISHØJ & DE LORENZO | NUF | email | website-offer |
+| 2026-08-16 | 938172161 | ELLEBIE INTERNATIONAL LTD | UTLA | email | website-offer |
+| 2026-08-16 | 938193657 | SHIELD SCIENTIFIC HOLDING B.V NUF | NUF | email | website-offer |
 | 2026-08-15 | 938145709 | JORIN HOLDING AS | AS | email | website-offer |
 | 2026-08-15 | 938168067 | UNITED AUTOMATION AS | AS | email | website-offer |
 | 2026-08-15 | 938049718 | ATMOSFER MAKINA SANAYI VE TICARET ANONIM SIRKETI NUF | NUF | email | website-offer |
@@ -430,6 +454,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-16 08:28 | sent | 937980582 | SØDRING HOLDING AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980582 | SØDRING HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937980868 | SKJELVIK HOLDING AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980868 | SKJELVIK HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937980833 | RESPIRARE DIGIHUB AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980833 | RESPIRARE DIGIHUB AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937980647 | RAN GB AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980647 | RAN GB AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937980558 | FEKERMAND INVEST AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980558 | FEKERMAND INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 938021678 | VISITSKJELVIK AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 938021678 | VISITSKJELVIK AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937980779 | SALVOR AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980779 | SALVOR AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937980566 | NORGESDRIFT AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 937980566 | NORGESDRIFT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 938021813 | ELL COLLECTION AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 938021813 | ELL COLLECTION AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 938021805 | APPOINT UTVIKLING AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 938021805 | APPOINT UTVIKLING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 937995245 | SIMONSEN VARE-EXPRESS | ENK | email | - |
+| 2026-08-16 08:28 | sending | 937995245 | SIMONSEN VARE-EXPRESS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:28 | sent | 938021783 | TAKSTINGENIØR SIGURD SIVERTSEN AS | AS | email | - |
+| 2026-08-16 08:28 | sending | 938021783 | TAKSTINGENIØR SIGURD SIVERTSEN AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:25 | sent | 937980809 | BARBERHUSET AS | AS | email | - |
+| 2026-08-16 08:25 | sending | 937980809 | BARBERHUSET AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:25 | sent | 837979102 | LANGE MEK & MASKIN | ENK | email | - |
+| 2026-08-16 08:25 | sending | 837979102 | LANGE MEK & MASKIN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:25 | sent | 937989911 | TEN THIJE LEGETJENESTER | ENK | email | - |
+| 2026-08-16 08:25 | sending | 937989911 | TEN THIJE LEGETJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:25 | sent | 937977484 | SAID DROSJETJENESTER | ENK | email | - |
+| 2026-08-16 08:25 | sending | 937977484 | SAID DROSJETJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:25 | sent | 938016534 | EVLI OYJ | UTLA | email | - |
+| 2026-08-16 08:25 | sending | 938016534 | EVLI OYJ | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 938128901 | TUNAAL PARTNERS AS | AS | email | - |
+| 2026-08-16 08:23 | sending | 938128901 | TUNAAL PARTNERS AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 938087857 | TIST WELDING PARTNER AS | AS | email | - |
+| 2026-08-16 08:23 | sending | 938087857 | TIST WELDING PARTNER AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 938116822 | NEKAS DYKK KASTÅS | ENK | email | - |
+| 2026-08-16 08:23 | sending | 938116822 | NEKAS DYKK KASTÅS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 838074472 | SENGEVERDEN APS | UTLA | email | - |
+| 2026-08-16 08:23 | sending | 838074472 | SENGEVERDEN APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 937978758 | RISHØJ & DE LORENZO | NUF | email | - |
+| 2026-08-16 08:23 | sending | 937978758 | RISHØJ & DE LORENZO | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 938172161 | ELLEBIE INTERNATIONAL LTD | UTLA | email | - |
+| 2026-08-16 08:23 | sending | 938172161 | ELLEBIE INTERNATIONAL LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-16 08:23 | sent | 938193657 | SHIELD SCIENTIFIC HOLDING B.V NUF | NUF | email | - |
+| 2026-08-16 08:23 | sending | 938193657 | SHIELD SCIENTIFIC HOLDING B.V NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-15 16:27 | sent | 938145709 | JORIN HOLDING AS | AS | email | - |
 | 2026-08-15 16:27 | sending | 938145709 | JORIN HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-15 16:27 | sent | 938168067 | UNITED AUTOMATION AS | AS | email | - |
