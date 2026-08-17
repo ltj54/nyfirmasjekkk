@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1213
-- Sendt: 567
+- Antall hendelser: 1220
+- Sendt: 570
 - Angret: 1
-- Aktive kontaktede selskaper: 445
+- Aktive kontaktede selskaper: 447
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-17 | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | website-offer |
+| 2026-08-17 | 938274894 | CHARLIE SKIN CLINIC AS | AS | email | website-offer |
+| 2026-08-17 | 938276862 | INTERNATIONAL NDT SOLUTIONS IN SERVICE LTD | UTLA | email | website-offer |
 | 2026-08-17 | 938275483 | LINDA ROSSOW BERG | ENK | email | website-offer |
 | 2026-08-17 | 938274282 | GUNNSTEIN UELAND | ENK | email | website-offer |
 | 2026-08-17 | 938274517 | SCIA ANDERSEN | ENK | email | website-offer |
@@ -20,7 +23,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-17 | 938274118 | RUDRUD KONSULTING AS | AS | email | website-offer |
 | 2026-08-17 | 938274274 | BYGGINGENIØR HOVDE | ENK | email | website-offer |
 | 2026-08-17 | 938275688 | MAINTAINING POWER AB | UTLA | email | website-offer |
-| 2026-08-17 | 938273332 | LAND ENTREPRENØR AS | AS | email | website-offer |
 | 2026-08-17 | 938191875 | ANTAM AIRBNB AS | AS | email | website-offer |
 | 2026-08-17 | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | website-offer |
 | 2026-08-17 | 938270201 | ALBIN SKOE HEIBERG LEGETJENESTER | ENK | email | website-offer |
@@ -463,6 +465,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-17 21:12 | sent | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | - |
+| 2026-08-17 21:12 | sending | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 21:12 | sent | 938274894 | CHARLIE SKIN CLINIC AS | AS | email | - |
+| 2026-08-17 21:12 | sending | 938274894 | CHARLIE SKIN CLINIC AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 21:12 | sent | 938276862 | INTERNATIONAL NDT SOLUTIONS IN SERVICE LTD | UTLA | email | - |
+| 2026-08-17 21:12 | sending | 938276862 | INTERNATIONAL NDT SOLUTIONS IN SERVICE LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 21:10 | replied | 938273332 | LAND ENTREPRENØR AS | AS | email | Svar mottatt 2026-08-17 fra Marius Engelund: Land Entreprenør ønsker ikke nettside. Tydelig avslag; ingen videre automatisk oppfølging. |
 | 2026-08-17 13:37 | sent | 938275483 | LINDA ROSSOW BERG | ENK | email | - |
 | 2026-08-17 13:37 | sending | 938275483 | LINDA ROSSOW BERG | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-17 13:36 | sent | 938274282 | GUNNSTEIN UELAND | ENK | email | - |
