@@ -4,15 +4,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1195
-- Sendt: 558
+- Antall hendelser: 1213
+- Sendt: 567
 - Angret: 1
-- Aktive kontaktede selskaper: 436
+- Aktive kontaktede selskaper: 445
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-17 | 938275483 | LINDA ROSSOW BERG | ENK | email | website-offer |
+| 2026-08-17 | 938274282 | GUNNSTEIN UELAND | ENK | email | website-offer |
+| 2026-08-17 | 938274517 | SCIA ANDERSEN | ENK | email | website-offer |
+| 2026-08-17 | 938275106 | HAZIR ENK | ENK | email | website-offer |
+| 2026-08-17 | 938274118 | RUDRUD KONSULTING AS | AS | email | website-offer |
+| 2026-08-17 | 938274274 | BYGGINGENIØR HOVDE | ENK | email | website-offer |
+| 2026-08-17 | 938275688 | MAINTAINING POWER AB | UTLA | email | website-offer |
+| 2026-08-17 | 938273332 | LAND ENTREPRENØR AS | AS | email | website-offer |
+| 2026-08-17 | 938191875 | ANTAM AIRBNB AS | AS | email | website-offer |
 | 2026-08-17 | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | website-offer |
 | 2026-08-17 | 938270201 | ALBIN SKOE HEIBERG LEGETJENESTER | ENK | email | website-offer |
 | 2026-08-16 | 937980582 | SØDRING HOLDING AS | AS | email | website-offer |
@@ -454,6 +463,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-17 13:37 | sent | 938275483 | LINDA ROSSOW BERG | ENK | email | - |
+| 2026-08-17 13:37 | sending | 938275483 | LINDA ROSSOW BERG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938274282 | GUNNSTEIN UELAND | ENK | email | - |
+| 2026-08-17 13:36 | sending | 938274282 | GUNNSTEIN UELAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938274517 | SCIA ANDERSEN | ENK | email | - |
+| 2026-08-17 13:36 | sending | 938274517 | SCIA ANDERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938275106 | HAZIR ENK | ENK | email | - |
+| 2026-08-17 13:36 | sending | 938275106 | HAZIR ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938274118 | RUDRUD KONSULTING AS | AS | email | - |
+| 2026-08-17 13:36 | sending | 938274118 | RUDRUD KONSULTING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938274274 | BYGGINGENIØR HOVDE | ENK | email | - |
+| 2026-08-17 13:36 | sending | 938274274 | BYGGINGENIØR HOVDE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938275688 | MAINTAINING POWER AB | UTLA | email | - |
+| 2026-08-17 13:36 | sending | 938275688 | MAINTAINING POWER AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938273332 | LAND ENTREPRENØR AS | AS | email | - |
+| 2026-08-17 13:36 | sending | 938273332 | LAND ENTREPRENØR AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 13:36 | sent | 938191875 | ANTAM AIRBNB AS | AS | email | - |
+| 2026-08-17 13:36 | sending | 938191875 | ANTAM AIRBNB AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-17 10:40 | sent | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | - |
 | 2026-08-17 10:40 | sending | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-17 10:40 | sent | 938270201 | ALBIN SKOE HEIBERG LEGETJENESTER | ENK | email | - |
