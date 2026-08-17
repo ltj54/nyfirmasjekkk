@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1188
-- Sendt: 556
+- Antall hendelser: 1195
+- Sendt: 558
 - Angret: 1
 - Aktive kontaktede selskaper: 436
 
@@ -13,10 +13,11 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-17 | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | website-offer |
+| 2026-08-17 | 938270201 | ALBIN SKOE HEIBERG LEGETJENESTER | ENK | email | website-offer |
 | 2026-08-16 | 937980582 | SØDRING HOLDING AS | AS | email | website-offer |
 | 2026-08-16 | 937980868 | SKJELVIK HOLDING AS | AS | email | website-offer |
 | 2026-08-16 | 937980833 | RESPIRARE DIGIHUB AS | AS | email | website-offer |
-| 2026-08-16 | 937980647 | RAN GB AS | AS | email | website-offer |
 | 2026-08-16 | 937980558 | FEKERMAND INVEST AS | AS | email | website-offer |
 | 2026-08-16 | 938021678 | VISITSKJELVIK AS | AS | email | website-offer |
 | 2026-08-16 | 937980779 | SALVOR AS | AS | email | website-offer |
@@ -28,7 +29,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-16 | 937980809 | BARBERHUSET AS | AS | email | website-offer |
 | 2026-08-16 | 837979102 | LANGE MEK & MASKIN | ENK | email | website-offer |
 | 2026-08-16 | 937989911 | TEN THIJE LEGETJENESTER | ENK | email | website-offer |
-| 2026-08-16 | 937977484 | SAID DROSJETJENESTER | ENK | email | website-offer |
 | 2026-08-16 | 938016534 | EVLI OYJ | UTLA | email | website-offer |
 | 2026-08-16 | 938128901 | TUNAAL PARTNERS AS | AS | email | website-offer |
 | 2026-08-16 | 938087857 | TIST WELDING PARTNER AS | AS | email | website-offer |
@@ -454,6 +454,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-17 10:40 | sent | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | - |
+| 2026-08-17 10:40 | sending | 938269793 | NINA FREDRIKSEN - DANSER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 10:40 | sent | 938270201 | ALBIN SKOE HEIBERG LEGETJENESTER | ENK | email | - |
+| 2026-08-17 10:40 | sending | 938270201 | ALBIN SKOE HEIBERG LEGETJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-17 10:39 | replied | 838264212 | PARLATORNOR NINA ROSENLUND | ENK | email | Nytt svar mottatt 2026-08-17 fra Nina Rosenlund: Takker for forklaringen og opplyser at hun ikke vurderer å lage nettside ennå. Ingen videre automatisk oppfølging. |
+| 2026-08-17 10:37 | replied | 937980647 | RAN GB AS | AS | email | Svar mottatt 2026-08-17 fra Lars Bjerke Tho: Ran GB AS er datterselskap av Rán Offshore AS og dekkes av konsernets nettside https://www.ranoffshore.no/. Ikke aktuell for egen nettside og ingen videre automatisk oppfølging. |
+| 2026-08-17 10:36 | delivery_failed | 937977484 | SAID DROSJETJENESTER | ENK | email | Leveringsfeil mottatt 2026-08-16: drosjetjenester@gamail.com svarte med 421 Downstream server error. Domenet gamail.com ser ut som en skrivefeil for gmail.com. Ingen automatisk oppfølging før korrekt adresse er bekreftet. |
 | 2026-08-16 08:28 | sent | 937980582 | SØDRING HOLDING AS | AS | email | - |
 | 2026-08-16 08:28 | sending | 937980582 | SØDRING HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-16 08:28 | sent | 937980868 | SKJELVIK HOLDING AS | AS | email | - |
