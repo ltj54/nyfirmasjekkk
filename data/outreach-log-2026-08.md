@@ -4,15 +4,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1220
-- Sendt: 570
+- Antall hendelser: 1230
+- Sendt: 575
 - Angret: 1
-- Aktive kontaktede selskaper: 447
+- Aktive kontaktede selskaper: 452
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-18 | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | website-offer |
+| 2026-08-18 | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | website-offer |
+| 2026-08-18 | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | website-offer |
+| 2026-08-18 | 938236801 | ANJULI DOBBELAERE | ENK | email | website-offer |
+| 2026-08-18 | 938278628 | LEGE ANDERS GRUNDT | ENK | email | website-offer |
 | 2026-08-17 | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | website-offer |
 | 2026-08-17 | 938274894 | CHARLIE SKIN CLINIC AS | AS | email | website-offer |
 | 2026-08-17 | 938276862 | INTERNATIONAL NDT SOLUTIONS IN SERVICE LTD | UTLA | email | website-offer |
@@ -465,6 +470,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-18 09:48 | sent | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | - |
+| 2026-08-18 09:48 | sending | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 09:48 | sent | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | - |
+| 2026-08-18 09:48 | sending | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 09:48 | sent | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | - |
+| 2026-08-18 09:48 | sending | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 09:48 | sent | 938236801 | ANJULI DOBBELAERE | ENK | email | - |
+| 2026-08-18 09:48 | sending | 938236801 | ANJULI DOBBELAERE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 09:48 | sent | 938278628 | LEGE ANDERS GRUNDT | ENK | email | - |
+| 2026-08-18 09:48 | sending | 938278628 | LEGE ANDERS GRUNDT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-17 21:12 | sent | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | - |
 | 2026-08-17 21:12 | sending | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-17 21:12 | sent | 938274894 | CHARLIE SKIN CLINIC AS | AS | email | - |
