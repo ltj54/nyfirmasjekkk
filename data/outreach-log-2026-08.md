@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1230
-- Sendt: 575
+- Antall hendelser: 1244
+- Sendt: 582
 - Angret: 1
-- Aktive kontaktede selskaper: 452
+- Aktive kontaktede selskaper: 459
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-18 | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | website-offer |
+| 2026-08-18 | 938283478 | RENHOLD IVANYSHYN | ENK | email | website-offer |
+| 2026-08-18 | 838230172 | ND BYGG PETROVIC | ENK | email | website-offer |
+| 2026-08-18 | 938286418 | SANNAN RESEARCH AS | AS | email | website-offer |
+| 2026-08-18 | 938232644 | MINDE MOMENTUM MINDE | ENK | email | website-offer |
+| 2026-08-18 | 837977282 | HOEN PROGRAMVAREUTVIKLING | ENK | email | website-offer |
+| 2026-08-18 | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | website-offer |
 | 2026-08-18 | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | website-offer |
 | 2026-08-18 | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | website-offer |
 | 2026-08-18 | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | website-offer |
@@ -470,6 +477,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-18 22:22 | sent | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | - |
+| 2026-08-18 22:22 | sending | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 22:22 | sent | 938283478 | RENHOLD IVANYSHYN | ENK | email | - |
+| 2026-08-18 22:22 | sending | 938283478 | RENHOLD IVANYSHYN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 22:22 | sent | 838230172 | ND BYGG PETROVIC | ENK | email | - |
+| 2026-08-18 22:22 | sending | 838230172 | ND BYGG PETROVIC | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 22:22 | sent | 938286418 | SANNAN RESEARCH AS | AS | email | - |
+| 2026-08-18 22:22 | sending | 938286418 | SANNAN RESEARCH AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 22:22 | sent | 938232644 | MINDE MOMENTUM MINDE | ENK | email | - |
+| 2026-08-18 22:22 | sending | 938232644 | MINDE MOMENTUM MINDE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 22:22 | sent | 837977282 | HOEN PROGRAMVAREUTVIKLING | ENK | email | - |
+| 2026-08-18 22:22 | sending | 837977282 | HOEN PROGRAMVAREUTVIKLING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-18 22:22 | sent | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | - |
+| 2026-08-18 22:22 | sending | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-18 09:48 | sent | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | - |
 | 2026-08-18 09:48 | sending | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-18 09:48 | sent | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | - |
