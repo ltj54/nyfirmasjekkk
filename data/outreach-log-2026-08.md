@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1348
+- Antall hendelser: 1350
 - Sendt: 632
 - Angret: 1
-- Aktive kontaktede selskaper: 470
+- Aktive kontaktede selskaper: 469
 
 ## Aktive kontaktede selskaper
 
@@ -24,7 +24,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-19 | 938111421 | ANSKAFFELSER OG PROSJEKTADMINISTRASJON MIDT-NORGE AS | AS | email | website-follow-up |
 | 2026-08-19 | 938252009 | DIN DIGITALE JURIST JENSSEN | ENK | email | website-follow-up |
 | 2026-08-19 | 938246424 | RASTI HSE CONSULTING | ENK | email | website-follow-up |
-| 2026-08-19 | 938247536 | ADRIAN AASGAARD AS | AS | email | website-follow-up |
 | 2026-08-19 | 938252203 | INGRID VEREIDE DVERGSDAL | ENK | email | website-follow-up |
 | 2026-08-19 | 938246440 | LILLEENGEN TEACHINGS | ENK | email | website-follow-up |
 | 2026-08-19 | 838246222 | STEMMENMARKA BBB1 & BBB2 SAMEIE | ESEK | email | website-follow-up |
@@ -488,6 +487,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-19 22:32 | replied | 938232644 | MINDE MOMENTUM MINDE | ENK | email | Mottaksbekreftelse mottatt 2026-08-19 fra Liv Minde: Takker for oversendt testlenke og bekrefter mottak. Ingen ny innholdsmessig avklaring eller godkjenning; prosjektet følges videre manuelt. |
+| 2026-08-19 22:31 | replied | 938247536 | ADRIAN AASGAARD AS | AS | email | Svar mottatt 2026-08-19 fra Adrian Aasgaard: Opplyser at han ordner nettside selv. Ingen videre automatisk oppfølging. |
 | 2026-08-19 15:20 | sent | 938247722 | BOIJEBYGG AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-19 15:20 | sending | 938247722 | BOIJEBYGG AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-19 15:20 | sent | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | Oppfølging sendt – avslutt hvis stille |
