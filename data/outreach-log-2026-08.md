@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1300
-- Sendt: 608
+- Antall hendelser: 1348
+- Sendt: 632
 - Angret: 1
-- Aktive kontaktede selskaper: 461
+- Aktive kontaktede selskaper: 470
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-19 | 938247722 | BOIJEBYGG AB | UTLA | email | website-follow-up |
+| 2026-08-19 | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | website-follow-up |
+| 2026-08-19 | 938248109 | NOCOUNT KOLAGKIS | ENK | email | website-follow-up |
+| 2026-08-19 | 938250545 | OLLE GRÖNVALL KULTURBYGG | UTLA | email | website-follow-up |
+| 2026-08-19 | 837795532 | SKÅLVIK GÅRDEN | ENK | email | website-follow-up |
+| 2026-08-19 | 938127115 | VIROQUE ENERGY SA | NUF | email | website-follow-up |
+| 2026-08-19 | 938252564 | FURHOLT DRIFT | ENK | email | website-follow-up |
+| 2026-08-19 | 838252532 | TANNPLEIER CELINA H. FRØYTLOG | ENK | email | website-follow-up |
+| 2026-08-19 | 938111421 | ANSKAFFELSER OG PROSJEKTADMINISTRASJON MIDT-NORGE AS | AS | email | website-follow-up |
+| 2026-08-19 | 938252009 | DIN DIGITALE JURIST JENSSEN | ENK | email | website-follow-up |
+| 2026-08-19 | 938246424 | RASTI HSE CONSULTING | ENK | email | website-follow-up |
+| 2026-08-19 | 938247536 | ADRIAN AASGAARD AS | AS | email | website-follow-up |
+| 2026-08-19 | 938252203 | INGRID VEREIDE DVERGSDAL | ENK | email | website-follow-up |
+| 2026-08-19 | 938246440 | LILLEENGEN TEACHINGS | ENK | email | website-follow-up |
+| 2026-08-19 | 838246222 | STEMMENMARKA BBB1 & BBB2 SAMEIE | ESEK | email | website-follow-up |
+| 2026-08-19 | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | website-offer |
+| 2026-08-19 | 938293228 | STA LOGISTICS AS | AS | email | website-offer |
+| 2026-08-19 | 938295018 | ENGLUND ROMLAB | ENK | email | website-offer |
+| 2026-08-19 | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | website-offer |
+| 2026-08-19 | 938257191 | ØSTERÅS LINEDANCE | FLI | email | website-offer |
+| 2026-08-19 | 938235171 | SVABOVA GUIDING | ENK | email | website-offer |
+| 2026-08-19 | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | website-offer |
+| 2026-08-19 | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | website-offer |
+| 2026-08-19 | 938237530 | CASA LATINA TRONDHEIM | FLI | email | website-offer |
 | 2026-08-19 | 938065306 | VIS COMMODITIES APS | NUF | email | website-follow-up |
 | 2026-08-19 | 938158150 | BILLTON DESIGN | ENK | email | website-follow-up |
 | 2026-08-19 | 938063621 | ERCA NUF | NUF | email | website-follow-up |
@@ -176,21 +200,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-13 | 938205035 | BAHIZIRE ENT | ENK | email | website-follow-up |
 | 2026-08-13 | 938204489 | DAGANE RISKFLOW | ENK | email | website-follow-up |
 | 2026-08-13 | 938205043 | GRØNVIK FRUKT | ENK | email | website-follow-up |
-| 2026-08-13 | 838246222 | STEMMENMARKA BBB1 & BBB2 SAMEIE | ESEK | email | website-offer |
-| 2026-08-13 | 938246440 | LILLEENGEN TEACHINGS | ENK | email | website-offer |
-| 2026-08-13 | 938252203 | INGRID VEREIDE DVERGSDAL | ENK | email | website-offer |
-| 2026-08-13 | 938247536 | ADRIAN AASGAARD AS | AS | email | website-offer |
-| 2026-08-13 | 938246424 | RASTI HSE CONSULTING | ENK | email | website-offer |
-| 2026-08-13 | 938252009 | DIN DIGITALE JURIST JENSSEN | ENK | email | website-offer |
-| 2026-08-13 | 938111421 | ANSKAFFELSER OG PROSJEKTADMINISTRASJON MIDT-NORGE AS | AS | email | website-offer |
-| 2026-08-13 | 838252532 | TANNPLEIER CELINA H. FRØYTLOG | ENK | email | website-offer |
-| 2026-08-13 | 938252564 | FURHOLT DRIFT | ENK | email | website-offer |
-| 2026-08-13 | 938127115 | VIROQUE ENERGY SA | NUF | email | website-offer |
-| 2026-08-13 | 837795532 | SKÅLVIK GÅRDEN | ENK | email | website-offer |
-| 2026-08-13 | 938250545 | OLLE GRÖNVALL KULTURBYGG | UTLA | email | website-offer |
-| 2026-08-13 | 938248109 | NOCOUNT KOLAGKIS | ENK | email | website-offer |
-| 2026-08-13 | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | website-offer |
-| 2026-08-13 | 938247722 | BOIJEBYGG AB | UTLA | email | website-offer |
 | 2026-08-10 | 938172021 | HOEM LANDBRUKSSERVICE | ENK | email | website-follow-up |
 | 2026-08-10 | 938166595 | INGRID NYVOLL HOBBY | ENK | email | website-follow-up |
 | 2026-08-10 | 937969791 | KAT BEDEK TATTOO | ENK | email | website-follow-up |
@@ -479,6 +488,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-19 15:20 | sent | 938247722 | BOIJEBYGG AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 938247722 | BOIJEBYGG AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 938248109 | NOCOUNT KOLAGKIS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 938248109 | NOCOUNT KOLAGKIS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 938250545 | OLLE GRÖNVALL KULTURBYGG | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 938250545 | OLLE GRÖNVALL KULTURBYGG | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 837795532 | SKÅLVIK GÅRDEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 837795532 | SKÅLVIK GÅRDEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 938127115 | VIROQUE ENERGY SA | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 938127115 | VIROQUE ENERGY SA | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 938252564 | FURHOLT DRIFT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 938252564 | FURHOLT DRIFT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:20 | sent | 838252532 | TANNPLEIER CELINA H. FRØYTLOG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:20 | sending | 838252532 | TANNPLEIER CELINA H. FRØYTLOG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938111421 | ANSKAFFELSER OG PROSJEKTADMINISTRASJON MIDT-NORGE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 938111421 | ANSKAFFELSER OG PROSJEKTADMINISTRASJON MIDT-NORGE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938252009 | DIN DIGITALE JURIST JENSSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 938252009 | DIN DIGITALE JURIST JENSSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938246424 | RASTI HSE CONSULTING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 938246424 | RASTI HSE CONSULTING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938247536 | ADRIAN AASGAARD AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 938247536 | ADRIAN AASGAARD AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938252203 | INGRID VEREIDE DVERGSDAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 938252203 | INGRID VEREIDE DVERGSDAL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938246440 | LILLEENGEN TEACHINGS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 938246440 | LILLEENGEN TEACHINGS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 838246222 | STEMMENMARKA BBB1 & BBB2 SAMEIE | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-19 15:19 | sending | 838246222 | STEMMENMARKA BBB1 & BBB2 SAMEIE | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | - |
+| 2026-08-19 15:19 | sending | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938293228 | STA LOGISTICS AS | AS | email | - |
+| 2026-08-19 15:19 | sending | 938293228 | STA LOGISTICS AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938295018 | ENGLUND ROMLAB | ENK | email | - |
+| 2026-08-19 15:19 | sending | 938295018 | ENGLUND ROMLAB | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:19 | sent | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | - |
+| 2026-08-19 15:19 | sending | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:18 | sent | 938257191 | ØSTERÅS LINEDANCE | FLI | email | - |
+| 2026-08-19 15:18 | sending | 938257191 | ØSTERÅS LINEDANCE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:18 | sent | 938235171 | SVABOVA GUIDING | ENK | email | - |
+| 2026-08-19 15:18 | sending | 938235171 | SVABOVA GUIDING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:18 | sent | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | - |
+| 2026-08-19 15:18 | sending | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:18 | sent | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | - |
+| 2026-08-19 15:18 | sending | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-19 15:18 | sent | 938237530 | CASA LATINA TRONDHEIM | FLI | email | - |
+| 2026-08-19 15:18 | sending | 938237530 | CASA LATINA TRONDHEIM | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-19 11:59 | replied | 938210284 | ORVIKÅSEN VEILAG | FLI | email | Svar mottatt 2026-08-19 fra Marianne Torgersrud: Takker for henvendelsen, men veilaget ønsker ikke å opprette nettside. Ingen videre kontakt eller automatisk oppfølging. |
 | 2026-08-19 09:28 | replied | 938255180 | UAB GS FAMILY FOUND | UTLA | email | Svar mottatt 2026-08-19 fra Edmundas Ambras på litauisk: Opplyser at de ikke snakker norsk, at dette er en utenlandsk virksomhet og reagerer på henvendelsen som spam og bortkastet tid. Negativ respons; ingen videre kontakt eller automatisk oppfølging. |
 | 2026-08-19 09:12 | sent | 938065306 | VIS COMMODITIES APS | NUF | email | Oppfølging sendt – avslutt hvis stille |
