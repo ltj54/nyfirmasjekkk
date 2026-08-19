@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1299
+- Antall hendelser: 1300
 - Sendt: 608
 - Angret: 1
-- Aktive kontaktede selskaper: 462
+- Aktive kontaktede selskaper: 461
 
 ## Aktive kontaktede selskaper
 
@@ -24,7 +24,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-19 | 938235082 | LARS KRUM TROMPET | ENK | email | website-follow-up |
 | 2026-08-19 | 838127592 | B GREEN BY CALLAPOR | NUF | email | website-follow-up |
 | 2026-08-19 | 938090041 | BONGUSTA | NUF | email | website-follow-up |
-| 2026-08-19 | 938210284 | ORVIKÅSEN VEILAG | FLI | email | website-follow-up |
 | 2026-08-19 | 938100047 | TEKLA | NUF | email | website-follow-up |
 | 2026-08-19 | 837944872 | VENTO NORDIC A/S NUF | NUF | email | website-follow-up |
 | 2026-08-19 | 938254966 | WOJCIECH MIZGIER PRZEDSIEBIORSTWO HANDLOWO-USLUGOWE "WOMAR" | UTLA | email | website-follow-up |
@@ -480,6 +479,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-19 11:59 | replied | 938210284 | ORVIKÅSEN VEILAG | FLI | email | Svar mottatt 2026-08-19 fra Marianne Torgersrud: Takker for henvendelsen, men veilaget ønsker ikke å opprette nettside. Ingen videre kontakt eller automatisk oppfølging. |
 | 2026-08-19 09:28 | replied | 938255180 | UAB GS FAMILY FOUND | UTLA | email | Svar mottatt 2026-08-19 fra Edmundas Ambras på litauisk: Opplyser at de ikke snakker norsk, at dette er en utenlandsk virksomhet og reagerer på henvendelsen som spam og bortkastet tid. Negativ respons; ingen videre kontakt eller automatisk oppfølging. |
 | 2026-08-19 09:12 | sent | 938065306 | VIS COMMODITIES APS | NUF | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-19 09:12 | sending | 938065306 | VIS COMMODITIES APS | NUF | email | Oppfølging reservert før SMTP-levering. |
