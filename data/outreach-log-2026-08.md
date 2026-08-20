@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1370
+- Antall hendelser: 1372
 - Sendt: 642
 - Angret: 1
-- Aktive kontaktede selskaper: 472
+- Aktive kontaktede selskaper: 470
 
 ## Aktive kontaktede selskaper
 
@@ -15,9 +15,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 | --- | --- | --- | --- | --- | --- |
 | 2026-08-20 | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | website-follow-up |
 | 2026-08-20 | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | website-follow-up |
-| 2026-08-20 | 938047464 | BEX ECOM LLC NUF | NUF | email | website-follow-up |
 | 2026-08-20 | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | website-follow-up |
-| 2026-08-20 | 938261210 | PERANDER UTVIKLING | ENK | email | website-follow-up |
 | 2026-08-20 | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | website-follow-up |
 | 2026-08-20 | 938127107 | VIROQUE BIOENERGY SL | NUF | email | website-follow-up |
 | 2026-08-20 | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | website-offer |
@@ -490,6 +488,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-20 15:34 | replied | 938261210 | PERANDER UTVIKLING | ENK | email | Svar mottatt 2026-08-20 fra Knut Perander: Takker for interessen, men opplyser at det ikke er aktuelt å ha egen nettside. Ingen videre automatisk oppfølging. |
+| 2026-08-20 15:34 | replied | 938047464 | BEX ECOM LLC NUF | NUF | email | Svar mottatt 2026-08-20 fra Oliver: Takker for tilbudet, men opplyser at nettside ikke er av interesse. Ingen videre automatisk oppfølging. |
 | 2026-08-20 08:40 | sent | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-20 08:40 | sending | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-20 08:40 | sent | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |

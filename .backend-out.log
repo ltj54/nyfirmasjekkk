@@ -1,4 +1,4 @@
-Starting a Gradle Daemon, 4 busy Daemons could not be reused, use --status for details
+Starting a Gradle Daemon, 5 busy Daemons could not be reused, use --status for details
 > Task :compileJava UP-TO-DATE
 > Task :processResources UP-TO-DATE
 > Task :classes UP-TO-DATE
@@ -15,26 +15,26 @@ Starting a Gradle Daemon, 4 busy Daemons could not be reused, use --status for d
 
  :: Spring Boot ::                (v3.4.1)
 
-2026-08-19T09:03:51.807+02:00  INFO 8508 --- [nyfirmasjekk] [           main] i.l.n.NyfirmasjekkApplication            : Starting NyfirmasjekkApplication using Java 21.0.10 with PID 8508 (C:\Prosjekt\nyfirmasjekk\build\classes\java\main started by lataj in C:\Prosjekt\nyfirmasjekk)
-2026-08-19T09:03:51.814+02:00  INFO 8508 --- [nyfirmasjekk] [           main] i.l.n.NyfirmasjekkApplication            : No active profile set, falling back to 1 default profile: "default"
-2026-08-19T09:03:53.939+02:00  INFO 8508 --- [nyfirmasjekk] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-08-19T09:03:53.958+02:00  INFO 8508 --- [nyfirmasjekk] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-08-19T09:03:53.959+02:00  INFO 8508 --- [nyfirmasjekk] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
-2026-08-19T09:03:54.048+02:00  INFO 8508 --- [nyfirmasjekk] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-08-19T09:03:54.049+02:00  INFO 8508 --- [nyfirmasjekk] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2163 ms
-2026-08-19T09:03:55.318+02:00  INFO 8508 --- [nyfirmasjekk] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2026-08-19T09:03:55.384+02:00  INFO 8508 --- [nyfirmasjekk] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-08-19T09:03:55.397+02:00  INFO 8508 --- [nyfirmasjekk] [           main] i.l.n.NyfirmasjekkApplication            : Started NyfirmasjekkApplication in 4.21 seconds (process running for 4.963)
-2026-08-19T09:03:55.768+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-6] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-08-19T09:03:55.768+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-08-19T09:03:55.770+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2026-08-19T09:05:31.476+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search completed in 1276 ms: score=ALL, page=0, results=25
-2026-08-19T09:05:31.477+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=0, fetchCalls=6, fetchedCandidates=600, prefilteredCandidates=34, scoredCandidates=34, matchedCandidates=34, returnedCount=25, fetchMs=1262, prefilterMs=0, scoringMs=5, totalMs=1276
-2026-08-19T09:05:31.850+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search completed in 373 ms: score=ALL, page=1, results=19
-2026-08-19T09:05:31.850+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=1, fetchCalls=11, fetchedCandidates=1029, prefilteredCandidates=54, scoredCandidates=54, matchedCandidates=54, returnedCount=19, fetchMs=360, prefilterMs=0, scoringMs=2, totalMs=373
-2026-08-19T09:05:31.911+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.c.CompanyCheckController           : company-check search completed in 1711 ms: dager=5, page=0, hasEmail=true, missingWebsite=true, results=7, totalElements=7, scoreCounts={YELLOW=4, GREEN=3}
-2026-08-19T09:05:32.743+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-4] i.l.n.companycheck.CompanyCheckService   : Search completed in 2 ms: score=ALL, page=0, results=25
-2026-08-19T09:05:32.743+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-4] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=0, fetchCalls=6, fetchedCandidates=600, prefilteredCandidates=34, scoredCandidates=34, matchedCandidates=34, returnedCount=25, fetchMs=0, prefilterMs=0, scoringMs=0, totalMs=2
-2026-08-19T09:05:32.748+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-4] i.l.n.companycheck.CompanyCheckService   : Search completed in 5 ms: score=ALL, page=1, results=19
-2026-08-19T09:05:32.749+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-4] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=1, fetchCalls=11, fetchedCandidates=1029, prefilteredCandidates=54, scoredCandidates=54, matchedCandidates=54, returnedCount=19, fetchMs=0, prefilterMs=0, scoringMs=0, totalMs=5
-2026-08-19T09:05:32.751+02:00  INFO 8508 --- [nyfirmasjekk] [nio-8080-exec-4] i.l.n.c.CompanyCheckController           : company-check search completed in 11 ms: dager=5, page=0, hasEmail=true, missingWebsite=true, results=7, totalElements=7, scoreCounts={YELLOW=4, GREEN=3}
+2026-08-20T15:34:25.026+02:00  INFO 18336 --- [nyfirmasjekk] [           main] i.l.n.NyfirmasjekkApplication            : Starting NyfirmasjekkApplication using Java 21.0.10 with PID 18336 (C:\Prosjekt\nyfirmasjekk\build\classes\java\main started by lataj in C:\Prosjekt\nyfirmasjekk)
+2026-08-20T15:34:25.030+02:00  INFO 18336 --- [nyfirmasjekk] [           main] i.l.n.NyfirmasjekkApplication            : No active profile set, falling back to 1 default profile: "default"
+2026-08-20T15:34:26.318+02:00  INFO 18336 --- [nyfirmasjekk] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-08-20T15:34:26.335+02:00  INFO 18336 --- [nyfirmasjekk] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-20T15:34:26.335+02:00  INFO 18336 --- [nyfirmasjekk] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2026-08-20T15:34:26.409+02:00  INFO 18336 --- [nyfirmasjekk] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-08-20T15:34:26.410+02:00  INFO 18336 --- [nyfirmasjekk] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1337 ms
+2026-08-20T15:34:27.503+02:00  INFO 18336 --- [nyfirmasjekk] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-08-20T15:34:27.569+02:00  INFO 18336 --- [nyfirmasjekk] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-08-20T15:34:27.581+02:00  INFO 18336 --- [nyfirmasjekk] [           main] i.l.n.NyfirmasjekkApplication            : Started NyfirmasjekkApplication in 2.884 seconds (process running for 3.178)
+2026-08-20T15:34:27.750+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20T15:34:27.750+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-08-20T15:34:27.752+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-08-20T15:36:37.032+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search completed in 870 ms: score=ALL, page=0, results=25
+2026-08-20T15:36:37.034+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=0, fetchCalls=4, fetchedCandidates=400, prefilteredCandidates=29, scoredCandidates=29, matchedCandidates=29, returnedCount=25, fetchMs=859, prefilterMs=0, scoringMs=5, totalMs=870
+2026-08-20T15:36:37.375+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search completed in 340 ms: score=ALL, page=1, results=25
+2026-08-20T15:36:37.376+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=1, fetchCalls=8, fetchedCandidates=800, prefilteredCandidates=56, scoredCandidates=56, matchedCandidates=56, returnedCount=25, fetchMs=331, prefilterMs=0, scoringMs=1, totalMs=340
+2026-08-20T15:36:37.432+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-8] i.l.n.c.CompanyCheckController           : company-check search completed in 1269 ms: dager=5, page=0, hasEmail=true, results=25, totalElements=26, scoreCounts={YELLOW=19, GREEN=6}
+2026-08-20T15:36:37.706+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-2] i.l.n.companycheck.CompanyCheckService   : Search completed in 4 ms: score=ALL, page=0, results=25
+2026-08-20T15:36:37.707+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-2] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=0, fetchCalls=4, fetchedCandidates=400, prefilteredCandidates=29, scoredCandidates=29, matchedCandidates=29, returnedCount=25, fetchMs=0, prefilterMs=0, scoringMs=1, totalMs=4
+2026-08-20T15:36:37.721+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-2] i.l.n.companycheck.CompanyCheckService   : Search completed in 12 ms: score=ALL, page=1, results=25
+2026-08-20T15:36:37.721+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-2] i.l.n.companycheck.CompanyCheckService   : Search diagnostics: score=ALL, requestedPage=1, fetchCalls=8, fetchedCandidates=800, prefilteredCandidates=56, scoredCandidates=56, matchedCandidates=56, returnedCount=25, fetchMs=3, prefilterMs=0, scoringMs=3, totalMs=12
+2026-08-20T15:36:37.728+02:00  INFO 18336 --- [nyfirmasjekk] [nio-8080-exec-2] i.l.n.c.CompanyCheckController           : company-check search completed in 27 ms: dager=5, page=0, hasEmail=true, results=25, totalElements=26, scoreCounts={YELLOW=19, GREEN=6}
