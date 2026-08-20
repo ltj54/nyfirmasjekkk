@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1350
-- Sendt: 632
+- Antall hendelser: 1370
+- Sendt: 642
 - Angret: 1
-- Aktive kontaktede selskaper: 469
+- Aktive kontaktede selskaper: 472
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-20 | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | website-follow-up |
+| 2026-08-20 | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | website-follow-up |
+| 2026-08-20 | 938047464 | BEX ECOM LLC NUF | NUF | email | website-follow-up |
+| 2026-08-20 | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | website-follow-up |
+| 2026-08-20 | 938261210 | PERANDER UTVIKLING | ENK | email | website-follow-up |
+| 2026-08-20 | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | website-follow-up |
+| 2026-08-20 | 938127107 | VIROQUE BIOENERGY SL | NUF | email | website-follow-up |
+| 2026-08-20 | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | website-offer |
+| 2026-08-20 | 938301174 | GRØTERUD RØR | ENK | email | website-offer |
+| 2026-08-20 | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | website-offer |
 | 2026-08-19 | 938247722 | BOIJEBYGG AB | UTLA | email | website-follow-up |
 | 2026-08-19 | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | website-follow-up |
 | 2026-08-19 | 938248109 | NOCOUNT KOLAGKIS | ENK | email | website-follow-up |
@@ -189,13 +199,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-14 | 938196036 | SNERTINGDAL REVYGRUPPE | FLI | email | website-follow-up |
 | 2026-08-14 | 938222363 | KONGSHAUGVEIEN 4 | ESEK | email | website-follow-up |
 | 2026-08-14 | 938034141 | NORCO GROUP LIMITED | NUF | email | website-follow-up |
-| 2026-08-14 | 938127107 | VIROQUE BIOENERGY SL | NUF | email | website-offer |
-| 2026-08-14 | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | website-offer |
-| 2026-08-14 | 938261210 | PERANDER UTVIKLING | ENK | email | website-offer |
-| 2026-08-14 | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | website-offer |
-| 2026-08-14 | 938047464 | BEX ECOM LLC NUF | NUF | email | website-offer |
-| 2026-08-14 | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | website-offer |
-| 2026-08-14 | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | website-offer |
 | 2026-08-13 | 938205035 | BAHIZIRE ENT | ENK | email | website-follow-up |
 | 2026-08-13 | 938204489 | DAGANE RISKFLOW | ENK | email | website-follow-up |
 | 2026-08-13 | 938205043 | GRØNVIK FRUKT | ENK | email | website-follow-up |
@@ -487,6 +490,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-20 08:40 | sent | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:40 | sent | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:40 | sent | 938047464 | BEX ECOM LLC NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 938047464 | BEX ECOM LLC NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:40 | sent | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:40 | sent | 938261210 | PERANDER UTVIKLING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 938261210 | PERANDER UTVIKLING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:40 | sent | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:40 | sent | 938127107 | VIROQUE BIOENERGY SL | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-20 08:40 | sending | 938127107 | VIROQUE BIOENERGY SL | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-20 08:38 | sent | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | - |
+| 2026-08-20 08:38 | sending | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 08:38 | sent | 938301174 | GRØTERUD RØR | ENK | email | - |
+| 2026-08-20 08:38 | sending | 938301174 | GRØTERUD RØR | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 08:38 | sent | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | - |
+| 2026-08-20 08:38 | sending | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-19 22:32 | replied | 938232644 | MINDE MOMENTUM MINDE | ENK | email | Mottaksbekreftelse mottatt 2026-08-19 fra Liv Minde: Takker for oversendt testlenke og bekrefter mottak. Ingen ny innholdsmessig avklaring eller godkjenning; prosjektet følges videre manuelt. |
 | 2026-08-19 22:31 | replied | 938247536 | ADRIAN AASGAARD AS | AS | email | Svar mottatt 2026-08-19 fra Adrian Aasgaard: Opplyser at han ordner nettside selv. Ingen videre automatisk oppfølging. |
 | 2026-08-19 15:20 | sent | 938247722 | BOIJEBYGG AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
