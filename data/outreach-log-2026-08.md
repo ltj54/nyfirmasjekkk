@@ -4,15 +4,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1372
-- Sendt: 642
+- Antall hendelser: 1394
+- Sendt: 653
 - Angret: 1
-- Aktive kontaktede selskaper: 470
+- Aktive kontaktede selskaper: 481
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-20 | 838297722 | RAGNAROK SYSTEM AS | AS | email | website-offer |
+| 2026-08-20 | 838259812 | DUTSKYI BYGG | ENK | email | website-offer |
+| 2026-08-20 | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | website-offer |
+| 2026-08-20 | 938236364 | SUNDE SUNDANZ | ENK | email | website-offer |
+| 2026-08-20 | 938236682 | STRANDBERGS SIRUP | ENK | email | website-offer |
+| 2026-08-20 | 938236267 | RUUDS BARN OG BARSEL | ENK | email | website-offer |
+| 2026-08-20 | 938308586 | OLEGS PILATS | UTLA | email | website-offer |
+| 2026-08-20 | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | website-offer |
+| 2026-08-20 | 938295182 | GUNN LARSSON ONLINE | ENK | email | website-offer |
+| 2026-08-20 | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | website-offer |
+| 2026-08-20 | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | website-offer |
 | 2026-08-20 | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | website-follow-up |
 | 2026-08-20 | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | website-follow-up |
 | 2026-08-20 | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | website-follow-up |
@@ -488,6 +499,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-20 15:38 | sent | 838297722 | RAGNAROK SYSTEM AS | AS | email | - |
+| 2026-08-20 15:38 | sending | 838297722 | RAGNAROK SYSTEM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 838259812 | DUTSKYI BYGG | ENK | email | - |
+| 2026-08-20 15:38 | sending | 838259812 | DUTSKYI BYGG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | - |
+| 2026-08-20 15:38 | sending | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 938236364 | SUNDE SUNDANZ | ENK | email | - |
+| 2026-08-20 15:38 | sending | 938236364 | SUNDE SUNDANZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 938236682 | STRANDBERGS SIRUP | ENK | email | - |
+| 2026-08-20 15:38 | sending | 938236682 | STRANDBERGS SIRUP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 938236267 | RUUDS BARN OG BARSEL | ENK | email | - |
+| 2026-08-20 15:38 | sending | 938236267 | RUUDS BARN OG BARSEL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 938308586 | OLEGS PILATS | UTLA | email | - |
+| 2026-08-20 15:38 | sending | 938308586 | OLEGS PILATS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:38 | sent | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | - |
+| 2026-08-20 15:38 | sending | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:37 | sent | 938295182 | GUNN LARSSON ONLINE | ENK | email | - |
+| 2026-08-20 15:37 | sending | 938295182 | GUNN LARSSON ONLINE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:37 | sent | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | - |
+| 2026-08-20 15:37 | sending | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-20 15:37 | sent | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | - |
+| 2026-08-20 15:37 | sending | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-20 15:34 | replied | 938261210 | PERANDER UTVIKLING | ENK | email | Svar mottatt 2026-08-20 fra Knut Perander: Takker for interessen, men opplyser at det ikke er aktuelt å ha egen nettside. Ingen videre automatisk oppfølging. |
 | 2026-08-20 15:34 | replied | 938047464 | BEX ECOM LLC NUF | NUF | email | Svar mottatt 2026-08-20 fra Oliver: Takker for tilbudet, men opplyser at nettside ikke er av interesse. Ingen videre automatisk oppfølging. |
 | 2026-08-20 08:40 | sent | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | Oppfølging sendt – avslutt hvis stille |
