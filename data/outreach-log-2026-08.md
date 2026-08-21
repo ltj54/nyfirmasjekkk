@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1508
-- Sendt: 710
+- Antall hendelser: 1515
+- Sendt: 713
 - Angret: 1
-- Aktive kontaktede selskaper: 489
+- Aktive kontaktede selskaper: 491
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-21 | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | website-offer |
+| 2026-08-21 | 938265534 | NESTIAN FOOD | ENK | email | website-offer |
+| 2026-08-21 | 938311757 | AR ENERGY APS | UTLA | email | website-offer |
 | 2026-08-21 | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | website-follow-up |
 | 2026-08-21 | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | website-follow-up |
 | 2026-08-21 | 838268072 | BENEDICTE SÆTRANG VELDE | ENK | email | website-follow-up |
@@ -25,7 +28,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-21 | 938161976 | ARCTIC ARENA EIENDOM AS | AS | email | website-follow-up |
 | 2026-08-21 | 938161410 | BRFITNO FARIAS DA SILVA RIBEIRO | ENK | email | website-follow-up |
 | 2026-08-21 | 938158223 | LEO CASANOVA BARBER | ENK | email | website-follow-up |
-| 2026-08-21 | 938049718 | ATMOSFER MAKINA SANAYI VE TICARET ANONIM SIRKETI NUF | NUF | email | website-follow-up |
 | 2026-08-21 | 938168067 | UNITED AUTOMATION AS | AS | email | website-follow-up |
 | 2026-08-21 | 938145709 | JORIN HOLDING AS | AS | email | website-follow-up |
 | 2026-08-21 | 938193657 | SHIELD SCIENTIFIC HOLDING B.V NUF | NUF | email | website-follow-up |
@@ -507,6 +509,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-21 11:45 | sent | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | - |
+| 2026-08-21 11:45 | sending | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-21 11:45 | sent | 938265534 | NESTIAN FOOD | ENK | email | - |
+| 2026-08-21 11:45 | sending | 938265534 | NESTIAN FOOD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-21 11:45 | sent | 938311757 | AR ENERGY APS | UTLA | email | - |
+| 2026-08-21 11:45 | sending | 938311757 | AR ENERGY APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-21 11:40 | replied | 938049718 | ATMOSFER MAKINA SANAYI VE TICARET ANONIM SIRKETI NUF | NUF | email | Svar mottatt 2026-08-21 fra Fatih: Opplyser at virksomheten har egen nettside og digital tjenestepartner i Tyrkia, og derfor ikke er interessert nå. Kan ta kontakt senere dersom de trenger service for nettsiden. Ingen videre automatisk oppfølging. |
 | 2026-08-21 09:53 | sent | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-21 09:53 | sending | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-21 09:53 | sent | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
