@@ -67,6 +67,7 @@ public class WebsiteContentSnapshotFetcher {
     private static final String PATH_VILKAR = "/vilkar";
     private static final String PATH_VILKAR_ACCENTED = "/vilkår";
     private static final String PATH_WP_ADMIN = "/wp-admin";
+    private static final String ROBOTS_TXT_PATH = "/robots.txt";
     private static final String TERM_PRIVACY = "privacy";
     private static final String TERM_PERSONVERN = "personvern";
     private static final String TERM_POLICY = "policy";
@@ -549,8 +550,7 @@ public class WebsiteContentSnapshotFetcher {
                 || normalized.contains("fbq(")
                 || normalized.contains("facebook.net")
                 || normalized.contains("hotjar")
-                || normalized.contains("clarity.ms")
-                || normalized.contains("cookie");
+                || normalized.contains("clarity.ms");
     }
 
     private static boolean hasCookieConsentSignal(String html) {
@@ -752,8 +752,13 @@ public class WebsiteContentSnapshotFetcher {
     private static boolean hasEcommerceSignal(Document document, String html) {
         String normalized = html == null ? "" : html.toLowerCase(Locale.ROOT);
         boolean cartOrCheckoutSignal = hasCartOrCheckoutSignal(document, html);
+        boolean activePurchaseControl = document.selectFirst(
+                "a[href*=checkout], a[href*=cart], a[href*=handlekurv], "
+                        + "form[class*=cart], form[action*=cart], form[action*=checkout], "
+                        + "button[data-product], button[data-product-id], "
+                        + "button[formaction*=cart], button[formaction*=checkout]") != null;
         boolean productOrCommerceIntent = hasAny(normalized, "add-to-cart", "add_to_cart", "product_id", "single-product", "wc-block-cart")
-                || document.selectFirst("button:contains(Kjøp), a:contains(Legg i handlekurv), form[class*=cart], form[action*=cart]") != null;
+                || activePurchaseControl;
         boolean ecommercePlatform = hasAny(normalized, "shopify", "myshopify")
                 || (hasAny(normalized, "woocommerce") && (cartOrCheckoutSignal || productOrCommerceIntent));
         return ecommercePlatform || cartOrCheckoutSignal || productOrCommerceIntent;
@@ -1076,12 +1081,14 @@ public class WebsiteContentSnapshotFetcher {
         if (host == null || host.isBlank()) {
             return null;
         }
-        String normalized = host.toLowerCase(Locale.ROOT).replaceFirst("^www\\.", "");
-        String[] parts = normalized.split("\\.");
-        if (parts.length < 2) {
+        String normalized = host.toLowerCase(Locale.ROOT);
+        if (normalized.startsWith("www.")) normalized = normalized.substring(4);
+        int lastDot = normalized.lastIndexOf('.');
+        int secondLastDot = normalized.lastIndexOf('.', lastDot - 1);
+        if (lastDot < 0) {
             return null;
         }
-        return parts[parts.length - 2] + "." + parts[parts.length - 1];
+        return normalized.substring(secondLastDot < 0 ? 0 : secondLastDot + 1);
     }
 
     private static java.util.List<String> txtRecords(String name) {
@@ -1158,9 +1165,13 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static boolean robotsSensitivePathSignal(String finalUrl) {
+        return robotsSensitivePathSignal(finalUrl, ROBOTS_TXT_PATH);
+    }
+
+    private static boolean robotsSensitivePathSignal(String finalUrl, String robotsPath) {
         URI baseUri = URI.create(finalUrl);
         String origin = origin(baseUri);
-        String robots = readSmallTextResource(origin + "/robots.txt");
+        String robots = readSmallTextResource(origin + robotsPath);
         if (robots.isBlank()) {
             return false;
         }
@@ -1189,7 +1200,7 @@ public class WebsiteContentSnapshotFetcher {
     private static ExtendedCrawlResult extendedCrawl(Document document, String baseUrl) {
         return extendedCrawl(document, baseUrl,
                 WebsiteContentSnapshotFetcher::readSmallHtmlResource,
-                WebsiteContentSnapshotFetcher::readSmallTextResource);
+                WebsiteContentSnapshotFetcher::readSmallTextResource, ROBOTS_TXT_PATH);
     }
 
     static ExtendedCrawlResult extendedCrawl(
@@ -1197,6 +1208,16 @@ public class WebsiteContentSnapshotFetcher {
             String baseUrl,
             UnaryOperator<String> htmlReader,
             UnaryOperator<String> textReader
+    ) {
+        return extendedCrawl(document, baseUrl, htmlReader, textReader, ROBOTS_TXT_PATH);
+    }
+
+    static ExtendedCrawlResult extendedCrawl(
+            Document document,
+            String baseUrl,
+            UnaryOperator<String> htmlReader,
+            UnaryOperator<String> textReader,
+            String robotsPath
     ) {
         URI baseUri;
         try {
@@ -1238,7 +1259,7 @@ public class WebsiteContentSnapshotFetcher {
         Set<String> visited = new java.util.LinkedHashSet<>();
         Set<String> fingerprints = new java.util.HashSet<>();
         fingerprints.add(contentFingerprint(document));
-        String robots = textReader.apply(origin + "/robots.txt");
+        String robots = textReader.apply(origin + robotsPath);
         long deadlineNanos = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(EXTENDED_CRAWL_TOTAL_MS);
         int attempts = 0;
 
@@ -1386,22 +1407,16 @@ public class WebsiteContentSnapshotFetcher {
 
     static boolean robotsAllows(String robots, URI uri) {
         if (robots == null || robots.isBlank()) return true;
-        java.util.List<RobotsRule> rules = parseRobotsRules(robots);
+        java.util.List<RobotsRule> rules = RobotsRulesParser.parse(robots);
         int bestAgent = rules.stream().mapToInt(RobotsRule::specificity).max().orElse(0);
         String target = uri.getRawPath() + (uri.getRawQuery() == null ? "" : "?" + uri.getRawQuery());
         return rules.stream()
                 .filter(rule -> rule.specificity() == bestAgent)
-                .filter(rule -> robotsPathMatches(rule.path(), target))
+                .filter(rule -> RobotsRulesParser.pathMatches(rule.path(), target))
                 .max(java.util.Comparator.comparingInt((RobotsRule rule) -> rule.path().length())
                         .thenComparing(RobotsRule::allow))
                 .map(RobotsRule::allow)
                 .orElse(true);
-    }
-
-    private static java.util.List<RobotsRule> parseRobotsRules(String robots) {
-        RobotsRulesParser parser = new RobotsRulesParser();
-        robots.lines().forEach(parser::accept);
-        return parser.rules();
     }
 
     private static final class RobotsRulesParser {
@@ -1410,7 +1425,7 @@ public class WebsiteContentSnapshotFetcher {
         private boolean groupHasRules;
 
         private void accept(String rawLine) {
-            String line = stripRobotsComment(rawLine).trim();
+            String line = stripComment(rawLine).trim();
             int separator = line.indexOf(':');
             if (separator < 0) {
                 return;
@@ -1447,23 +1462,47 @@ public class WebsiteContentSnapshotFetcher {
         private java.util.List<RobotsRule> rules() {
             return rules;
         }
-    }
 
-    private static String stripRobotsComment(String line) {
-        int commentStart = line.indexOf('#');
-        return commentStart < 0 ? line : line.substring(0, commentStart);
-    }
-
-    private static boolean robotsPathMatches(String rule, String target) {
-        StringBuilder regex = new StringBuilder("^");
-        boolean anchoredAtEnd = rule.endsWith("$");
-        String pattern = anchoredAtEnd ? rule.substring(0, rule.length() - 1) : rule;
-        for (String part : pattern.split("\\*", -1)) {
-            if (!regex.toString().endsWith("^")) regex.append(".*");
-            regex.append(Pattern.quote(part));
+        private static java.util.List<RobotsRule> parse(String robots) {
+            RobotsRulesParser parser = new RobotsRulesParser();
+            robots.lines().forEach(parser::accept);
+            return parser.rules();
         }
-        if (anchoredAtEnd) regex.append('$');
-        return Pattern.compile(regex.toString()).matcher(target).find();
+
+        private static String stripComment(String line) {
+            int commentStart = line.indexOf('#');
+            return commentStart < 0 ? line : line.substring(0, commentStart);
+        }
+
+        private static boolean pathMatches(String rule, String target) {
+            boolean anchoredAtEnd = rule.endsWith("$");
+            String pattern = anchoredAtEnd ? rule.substring(0, rule.length() - 1) : rule;
+            int targetPosition = matchSegments(pattern, target);
+            return targetPosition >= 0
+                    && (!anchoredAtEnd || pattern.endsWith("*") || targetPosition == target.length());
+        }
+
+        private static int matchSegments(String pattern, String target) {
+            int patternPosition = 0;
+            int targetPosition = 0;
+            boolean first = true;
+            while (patternPosition <= pattern.length()) {
+                int nextWildcard = pattern.indexOf('*', patternPosition);
+                String part = pattern.substring(patternPosition, nextWildcard < 0 ? pattern.length() : nextWildcard);
+                if (first) {
+                    if (!target.startsWith(part)) return -1;
+                    targetPosition = part.length();
+                    first = false;
+                } else if (!part.isEmpty()) {
+                    int match = target.indexOf(part, targetPosition);
+                    if (match < 0) return -1;
+                    targetPosition = match + part.length();
+                }
+                if (nextWildcard < 0) return targetPosition;
+                patternPosition = nextWildcard + 1;
+            }
+            return targetPosition;
+        }
     }
 
     private static boolean isCrawlablePage(String url) {

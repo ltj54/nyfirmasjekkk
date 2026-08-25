@@ -230,15 +230,10 @@ public class CompanyApiV1Mapper {
             "terapi",
             "klinikk",
             "reiseklinikk",
-            "timebestilling",
-            "konsultasjon",
-            "behandling",
             "medisin",
             "vaksine",
             "vaksinasjon",
             "pasientjournal",
-            "personopplysninger",
-            "sensitive opplysninger",
             "helseopplysninger"
     );
     private static final Set<String> MEDICAL_DEVICE_CONTEXT_WORDS = Set.of(
