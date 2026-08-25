@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1607
-- Sendt: 758
+- Antall hendelser: 1627
+- Sendt: 768
 - Angret: 1
-- Aktive kontaktede selskaper: 510
+- Aktive kontaktede selskaper: 520
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-25 | 938337845 | YHY INVEST AS | AS | email | website-offer |
+| 2026-08-25 | 937957270 | BM 26 EIENDOMSINVEST AS | AS | email | website-offer |
+| 2026-08-25 | 938305978 | ENKRA AS | AS | email | website-offer |
+| 2026-08-25 | 938317674 | XRB ENGINEERING CONSULTANTS LTD | UTLA | email | website-offer |
+| 2026-08-25 | 938315531 | OPOLSKI ZAKLAD MONTAZOWO SPAWALNICZY ANNA BUSZYNSKA, ANNA BUSZYNSKA SPOLKA JAWNA | UTLA | email | website-offer |
+| 2026-08-25 | 938273618 | CONSTRUCTION LOGISTICS GROUP LIMITED | NUF | email | website-offer |
+| 2026-08-25 | 938347646 | WILLE FORSIKRINGSPARTNER AS | AS | email | website-offer |
+| 2026-08-25 | 938344825 | SKODDAJAZZ DA | DA | email | website-offer |
+| 2026-08-25 | 938347972 | E. ROELSE HOLDING B.V. | UTLA | email | website-offer |
+| 2026-08-25 | 938346739 | ANETCAKE KOLONTAIEVSKA | ENK | email | website-offer |
 | 2026-08-25 | 938278628 | LEGE ANDERS GRUNDT | ENK | email | website-follow-up |
 | 2026-08-25 | 938236801 | ANJULI DOBBELAERE | ENK | email | website-follow-up |
 | 2026-08-25 | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | website-follow-up |
@@ -528,6 +538,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-25 15:42 | sent | 938337845 | YHY INVEST AS | AS | email | - |
+| 2026-08-25 15:42 | sending | 938337845 | YHY INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 937957270 | BM 26 EIENDOMSINVEST AS | AS | email | - |
+| 2026-08-25 15:42 | sending | 937957270 | BM 26 EIENDOMSINVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938305978 | ENKRA AS | AS | email | - |
+| 2026-08-25 15:42 | sending | 938305978 | ENKRA AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938317674 | XRB ENGINEERING CONSULTANTS LTD | UTLA | email | - |
+| 2026-08-25 15:42 | sending | 938317674 | XRB ENGINEERING CONSULTANTS LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938315531 | OPOLSKI ZAKLAD MONTAZOWO SPAWALNICZY ANNA BUSZYNSKA, ANNA BUSZYNSKA SPOLKA JAWNA | UTLA | email | - |
+| 2026-08-25 15:42 | sending | 938315531 | OPOLSKI ZAKLAD MONTAZOWO SPAWALNICZY ANNA BUSZYNSKA, ANNA BUSZYNSKA SPOLKA JAWNA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938273618 | CONSTRUCTION LOGISTICS GROUP LIMITED | NUF | email | - |
+| 2026-08-25 15:42 | sending | 938273618 | CONSTRUCTION LOGISTICS GROUP LIMITED | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938347646 | WILLE FORSIKRINGSPARTNER AS | AS | email | - |
+| 2026-08-25 15:42 | sending | 938347646 | WILLE FORSIKRINGSPARTNER AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938344825 | SKODDAJAZZ DA | DA | email | - |
+| 2026-08-25 15:42 | sending | 938344825 | SKODDAJAZZ DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938347972 | E. ROELSE HOLDING B.V. | UTLA | email | - |
+| 2026-08-25 15:42 | sending | 938347972 | E. ROELSE HOLDING B.V. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 15:42 | sent | 938346739 | ANETCAKE KOLONTAIEVSKA | ENK | email | - |
+| 2026-08-25 15:42 | sending | 938346739 | ANETCAKE KOLONTAIEVSKA | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-25 08:40 | sent | 938278628 | LEGE ANDERS GRUNDT | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-25 08:40 | sending | 938278628 | LEGE ANDERS GRUNDT | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-25 08:40 | sent | 938236801 | ANJULI DOBBELAERE | ENK | email | Oppfølging sendt – avslutt hvis stille |
