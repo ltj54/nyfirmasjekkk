@@ -4,15 +4,60 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1515
-- Sendt: 713
+- Antall hendelser: 1607
+- Sendt: 758
 - Angret: 1
-- Aktive kontaktede selskaper: 491
+- Aktive kontaktede selskaper: 510
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-25 | 938278628 | LEGE ANDERS GRUNDT | ENK | email | website-follow-up |
+| 2026-08-25 | 938236801 | ANJULI DOBBELAERE | ENK | email | website-follow-up |
+| 2026-08-25 | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | website-follow-up |
+| 2026-08-25 | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | website-follow-up |
+| 2026-08-25 | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | website-follow-up |
+| 2026-08-25 | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | website-follow-up |
+| 2026-08-25 | 938286418 | SANNAN RESEARCH AS | AS | email | website-follow-up |
+| 2026-08-25 | 838230172 | ND BYGG PETROVIC | ENK | email | website-follow-up |
+| 2026-08-25 | 938283478 | RENHOLD IVANYSHYN | ENK | email | website-follow-up |
+| 2026-08-25 | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | website-follow-up |
+| 2026-08-25 | 938291659 | NORTHFISHING TOMASZ HEKERT | ENK | email | website-follow-up |
+| 2026-08-25 | 938291861 | SRS SKANDINAVIA REHABILITERING SENTER IVAN ILYKUV | ENK | email | website-follow-up |
+| 2026-08-25 | 938211558 | ANWB ENERGIE B.V. | NUF | email | website-follow-up |
+| 2026-08-25 | 938289654 | AHMADI VASK | ENK | email | website-follow-up |
+| 2026-08-25 | 938279187 | EMIL EKELAND TRANSPORT | ENK | email | website-follow-up |
+| 2026-08-25 | 938237530 | CASA LATINA TRONDHEIM | FLI | email | website-follow-up |
+| 2026-08-25 | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | website-follow-up |
+| 2026-08-25 | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | website-follow-up |
+| 2026-08-25 | 938235171 | SVABOVA GUIDING | ENK | email | website-follow-up |
+| 2026-08-25 | 938257191 | ØSTERÅS LINEDANCE | FLI | email | website-follow-up |
+| 2026-08-25 | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | website-follow-up |
+| 2026-08-25 | 938295018 | ENGLUND ROMLAB | ENK | email | website-follow-up |
+| 2026-08-25 | 938293228 | STA LOGISTICS AS | AS | email | website-follow-up |
+| 2026-08-25 | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | website-follow-up |
+| 2026-08-25 | 938237212 | ANANDI SANATANA DHARMA MANDIR NORGE | FLI | email | website-offer |
+| 2026-08-25 | 938333343 | AKVILON HOLDING AS | AS | email | website-offer |
+| 2026-08-25 | 938323046 | VALENTINA POSTILNA | ENK | email | website-offer |
+| 2026-08-25 | 938323402 | LØNES ESTETIKK | ENK | email | website-offer |
+| 2026-08-25 | 938320527 | BJERKNES VVS | ENK | email | website-offer |
+| 2026-08-25 | 838324622 | YES SØR AS | AS | email | website-offer |
+| 2026-08-25 | 938341060 | HUS OG VARME BENGT JACOBSEN | ENK | email | website-offer |
+| 2026-08-25 | 938268959 | LILANDS HONNING OG BIER | ENK | email | website-offer |
+| 2026-08-25 | 938269270 | KHWAJA | ENK | email | website-offer |
+| 2026-08-25 | 938148074 | SAFOP S.P.A. NUF | NUF | email | website-offer |
+| 2026-08-25 | 938198489 | OPOLSKI ZAKLAD MONTAZOWO SPAWALNICZY ANNA BUSZYNSKA, ANNA BUSZYNSKA SP.J. NUF | NUF | email | website-offer |
+| 2026-08-25 | 938071403 | IOTMOTION KFT | NUF | email | website-offer |
+| 2026-08-25 | 938322740 | KELZ CUTZ NIYONZIMA | ENK | email | website-offer |
+| 2026-08-25 | 938172110 | SIA SK EVENTS NUF | NUF | email | website-offer |
+| 2026-08-25 | 938326142 | MONA LINDVIKSMOEN | TVAM | email | website-offer |
+| 2026-08-25 | 938240949 | MIRANDA MARIE GONZALEZ RUIZ | ENK | email | website-offer |
+| 2026-08-25 | 938245185 | MASSASJETERAPEUT OG PT RICCARDO LO BARTOLO | ENK | email | website-offer |
+| 2026-08-25 | 938255075 | KTB INTERNATIONAL SÀRL | NUF | email | website-offer |
+| 2026-08-25 | 938218072 | GLECO AB | NUF | email | website-offer |
+| 2026-08-25 | 838239412 | GJUKA LEGETJENESTER | ENK | email | website-offer |
+| 2026-08-25 | 938338078 | GABRIEL DIEZ PÉREZ | UTLA | email | website-offer |
 | 2026-08-21 | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | website-offer |
 | 2026-08-21 | 938265534 | NESTIAN FOOD | ENK | email | website-offer |
 | 2026-08-21 | 938311757 | AR ENERGY APS | UTLA | email | website-offer |
@@ -105,15 +150,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-19 | 938252203 | INGRID VEREIDE DVERGSDAL | ENK | email | website-follow-up |
 | 2026-08-19 | 938246440 | LILLEENGEN TEACHINGS | ENK | email | website-follow-up |
 | 2026-08-19 | 838246222 | STEMMENMARKA BBB1 & BBB2 SAMEIE | ESEK | email | website-follow-up |
-| 2026-08-19 | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | website-offer |
-| 2026-08-19 | 938293228 | STA LOGISTICS AS | AS | email | website-offer |
-| 2026-08-19 | 938295018 | ENGLUND ROMLAB | ENK | email | website-offer |
-| 2026-08-19 | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | website-offer |
-| 2026-08-19 | 938257191 | ØSTERÅS LINEDANCE | FLI | email | website-offer |
-| 2026-08-19 | 938235171 | SVABOVA GUIDING | ENK | email | website-offer |
-| 2026-08-19 | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | website-offer |
-| 2026-08-19 | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | website-offer |
-| 2026-08-19 | 938237530 | CASA LATINA TRONDHEIM | FLI | email | website-offer |
 | 2026-08-19 | 938065306 | VIS COMMODITIES APS | NUF | email | website-follow-up |
 | 2026-08-19 | 938158150 | BILLTON DESIGN | ENK | email | website-follow-up |
 | 2026-08-19 | 938063621 | ERCA NUF | NUF | email | website-follow-up |
@@ -132,23 +168,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-19 | 938259933 | CHEF VIJAY SAREEN FOOD & CATERING | ENK | email | website-follow-up |
 | 2026-08-19 | 838259502 | SILJE KROGH | ENK | email | website-follow-up |
 | 2026-08-19 | 938257337 | DRM EIENDOM AS | AS | email | website-follow-up |
-| 2026-08-19 | 938279187 | EMIL EKELAND TRANSPORT | ENK | email | website-offer |
-| 2026-08-19 | 938289654 | AHMADI VASK | ENK | email | website-offer |
-| 2026-08-19 | 938290385 | UKSTINS ENTREPRENØR | ENK | email | website-offer |
-| 2026-08-19 | 938211558 | ANWB ENERGIE B.V. | NUF | email | website-offer |
-| 2026-08-19 | 938291861 | SRS SKANDINAVIA REHABILITERING SENTER IVAN ILYKUV | ENK | email | website-offer |
-| 2026-08-19 | 938291659 | NORTHFISHING TOMASZ HEKERT | ENK | email | website-offer |
-| 2026-08-18 | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | website-offer |
-| 2026-08-18 | 938283478 | RENHOLD IVANYSHYN | ENK | email | website-offer |
-| 2026-08-18 | 838230172 | ND BYGG PETROVIC | ENK | email | website-offer |
-| 2026-08-18 | 938286418 | SANNAN RESEARCH AS | AS | email | website-offer |
-| 2026-08-18 | 837977282 | HOEN PROGRAMVAREUTVIKLING | ENK | email | website-offer |
-| 2026-08-18 | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | website-offer |
-| 2026-08-18 | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | website-offer |
-| 2026-08-18 | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | website-offer |
-| 2026-08-18 | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | website-offer |
-| 2026-08-18 | 938236801 | ANJULI DOBBELAERE | ENK | email | website-offer |
-| 2026-08-18 | 938278628 | LEGE ANDERS GRUNDT | ENK | email | website-offer |
 | 2026-08-14 | 938188645 | NORDIC AIRCLEAN JASKOWSKI | ENK | email | website-follow-up |
 | 2026-08-14 | 838180752 | CLAUDIA MARGARET WISNIEWSKA TANNLEGE | ENK | email | website-follow-up |
 | 2026-08-14 | 938186154 | TFG PERFORMANCE FOLMER | ENK | email | website-follow-up |
@@ -509,6 +528,98 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-25 08:40 | sent | 938278628 | LEGE ANDERS GRUNDT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938278628 | LEGE ANDERS GRUNDT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938236801 | ANJULI DOBBELAERE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938236801 | ANJULI DOBBELAERE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938278660 | MATO TIMRAZ-OLSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938277419 | LUNDSTEIN HELSE OG PRESTASJON | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938277869 | SAMEIET SOLTOPPEN | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938283486 | BREDE LIE REIME CONSULTING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938286418 | SANNAN RESEARCH AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938286418 | SANNAN RESEARCH AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 838230172 | ND BYGG PETROVIC | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 838230172 | ND BYGG PETROVIC | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938283478 | RENHOLD IVANYSHYN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938283478 | RENHOLD IVANYSHYN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938284520 | MUHAMMAD FAISAL NAWAZ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938291659 | NORTHFISHING TOMASZ HEKERT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938291659 | NORTHFISHING TOMASZ HEKERT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938291861 | SRS SKANDINAVIA REHABILITERING SENTER IVAN ILYKUV | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938291861 | SRS SKANDINAVIA REHABILITERING SENTER IVAN ILYKUV | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938211558 | ANWB ENERGIE B.V. | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938211558 | ANWB ENERGIE B.V. | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:40 | sent | 938289654 | AHMADI VASK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:40 | sending | 938289654 | AHMADI VASK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | not_relevant | 837977282 | HOEN PROGRAMVAREUTVIKLING | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-08-25 08:39 | sent | 938279187 | EMIL EKELAND TRANSPORT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938279187 | EMIL EKELAND TRANSPORT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938237530 | CASA LATINA TRONDHEIM | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938237530 | CASA LATINA TRONDHEIM | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938293082 | HVIDSTEN MANAGEMENT CONSULTING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938235171 | SVABOVA GUIDING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938235171 | SVABOVA GUIDING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938257191 | ØSTERÅS LINEDANCE | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938257191 | ØSTERÅS LINEDANCE | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938295018 | ENGLUND ROMLAB | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938295018 | ENGLUND ROMLAB | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938293228 | STA LOGISTICS AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938293228 | STA LOGISTICS AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:39 | sent | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-25 08:39 | sending | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938237212 | ANANDI SANATANA DHARMA MANDIR NORGE | FLI | email | - |
+| 2026-08-25 08:38 | sending | 938237212 | ANANDI SANATANA DHARMA MANDIR NORGE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938333343 | AKVILON HOLDING AS | AS | email | - |
+| 2026-08-25 08:38 | sending | 938333343 | AKVILON HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938323046 | VALENTINA POSTILNA | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938323046 | VALENTINA POSTILNA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938323402 | LØNES ESTETIKK | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938323402 | LØNES ESTETIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938320527 | BJERKNES VVS | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938320527 | BJERKNES VVS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 838324622 | YES SØR AS | AS | email | - |
+| 2026-08-25 08:38 | sending | 838324622 | YES SØR AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938341060 | HUS OG VARME BENGT JACOBSEN | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938341060 | HUS OG VARME BENGT JACOBSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938268959 | LILANDS HONNING OG BIER | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938268959 | LILANDS HONNING OG BIER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938269270 | KHWAJA | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938269270 | KHWAJA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938148074 | SAFOP S.P.A. NUF | NUF | email | - |
+| 2026-08-25 08:38 | sending | 938148074 | SAFOP S.P.A. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938198489 | OPOLSKI ZAKLAD MONTAZOWO SPAWALNICZY ANNA BUSZYNSKA, ANNA BUSZYNSKA SP.J. NUF | NUF | email | - |
+| 2026-08-25 08:38 | sending | 938198489 | OPOLSKI ZAKLAD MONTAZOWO SPAWALNICZY ANNA BUSZYNSKA, ANNA BUSZYNSKA SP.J. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938071403 | IOTMOTION KFT | NUF | email | - |
+| 2026-08-25 08:38 | sending | 938071403 | IOTMOTION KFT | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938322740 | KELZ CUTZ NIYONZIMA | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938322740 | KELZ CUTZ NIYONZIMA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938172110 | SIA SK EVENTS NUF | NUF | email | - |
+| 2026-08-25 08:38 | sending | 938172110 | SIA SK EVENTS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938326142 | MONA LINDVIKSMOEN | TVAM | email | - |
+| 2026-08-25 08:38 | sending | 938326142 | MONA LINDVIKSMOEN | TVAM | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938240949 | MIRANDA MARIE GONZALEZ RUIZ | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938240949 | MIRANDA MARIE GONZALEZ RUIZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938245185 | MASSASJETERAPEUT OG PT RICCARDO LO BARTOLO | ENK | email | - |
+| 2026-08-25 08:38 | sending | 938245185 | MASSASJETERAPEUT OG PT RICCARDO LO BARTOLO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938255075 | KTB INTERNATIONAL SÀRL | NUF | email | - |
+| 2026-08-25 08:38 | sending | 938255075 | KTB INTERNATIONAL SÀRL | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938218072 | GLECO AB | NUF | email | - |
+| 2026-08-25 08:38 | sending | 938218072 | GLECO AB | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 838239412 | GJUKA LEGETJENESTER | ENK | email | - |
+| 2026-08-25 08:38 | sending | 838239412 | GJUKA LEGETJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:38 | sent | 938338078 | GABRIEL DIEZ PÉREZ | UTLA | email | - |
+| 2026-08-25 08:38 | sending | 938338078 | GABRIEL DIEZ PÉREZ | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 08:34 | replied | 938290385 | UKSTINS ENTREPRENØR | ENK | email | Svar mottatt 2026-08-25 fra Vladislavs: Kort avslag, «Nei takk». Ingen videre automatisk oppfølging. |
 | 2026-08-21 11:45 | sent | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | - |
 | 2026-08-21 11:45 | sending | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-21 11:45 | sent | 938265534 | NESTIAN FOOD | ENK | email | - |
