@@ -4,15 +4,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1627
-- Sendt: 768
+- Antall hendelser: 1637
+- Sendt: 773
 - Angret: 1
-- Aktive kontaktede selskaper: 520
+- Aktive kontaktede selskaper: 525
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-25 | 938350639 | LANGELAND CREATIVE | ENK | email | website-offer |
+| 2026-08-25 | 938347026 | GROUNDSHIFT AS | AS | email | website-offer |
+| 2026-08-25 | 938325146 | TEKLNJ APS | UTLA | email | website-offer |
+| 2026-08-25 | 938325707 | SIA SK EVENTS | UTLA | email | website-offer |
+| 2026-08-25 | 938228221 | OSLO MALERSERVICE BODIN | ENK | email | website-offer |
 | 2026-08-25 | 938337845 | YHY INVEST AS | AS | email | website-offer |
 | 2026-08-25 | 937957270 | BM 26 EIENDOMSINVEST AS | AS | email | website-offer |
 | 2026-08-25 | 938305978 | ENKRA AS | AS | email | website-offer |
@@ -538,6 +543,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-25 19:47 | sent | 938350639 | LANGELAND CREATIVE | ENK | email | - |
+| 2026-08-25 19:47 | sending | 938350639 | LANGELAND CREATIVE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 19:47 | sent | 938347026 | GROUNDSHIFT AS | AS | email | - |
+| 2026-08-25 19:47 | sending | 938347026 | GROUNDSHIFT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 19:47 | sent | 938325146 | TEKLNJ APS | UTLA | email | - |
+| 2026-08-25 19:47 | sending | 938325146 | TEKLNJ APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 19:47 | sent | 938325707 | SIA SK EVENTS | UTLA | email | - |
+| 2026-08-25 19:47 | sending | 938325707 | SIA SK EVENTS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-25 19:47 | sent | 938228221 | OSLO MALERSERVICE BODIN | ENK | email | - |
+| 2026-08-25 19:47 | sending | 938228221 | OSLO MALERSERVICE BODIN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-25 15:42 | sent | 938337845 | YHY INVEST AS | AS | email | - |
 | 2026-08-25 15:42 | sending | 938337845 | YHY INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-25 15:42 | sent | 937957270 | BM 26 EIENDOMSINVEST AS | AS | email | - |
