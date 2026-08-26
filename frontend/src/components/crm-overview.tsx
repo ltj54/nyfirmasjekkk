@@ -19,7 +19,7 @@ const projects: CrmProject[] = [
   { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", outreach: "Forslag sendt", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Klar for faktura · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
   { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Forslag sendt", progress: "Kunde vurderer – frist 28.–31. august", invoice: "Ikke fakturert", tone: "border-amber-200 bg-amber-50" },
   { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", outreach: "Forslag sendt", progress: "Arbeidsutkast sendt 25. august", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
-  { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", contact: "Sandra Yineth Morales Guerrero", email: "Ikke registrert", proposalDate: "Ikke sendt", outreach: "Ikke sendt ennå", progress: "Oppsett skal utarbeides", invoice: "Ikke fakturert", tone: "border-slate-200 bg-slate-50" },
+  { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Forslag sendt", progress: "Utkast sendt – avventer styrets vurdering", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
 ];
 
 export function CrmOverview() {
