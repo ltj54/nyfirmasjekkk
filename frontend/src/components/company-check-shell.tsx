@@ -3,6 +3,7 @@
 import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import {
   Building2,
+  BriefcaseBusiness,
   CalendarDays,
   ChevronDown,
   ChevronRight,
@@ -91,6 +92,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { OutreachOverview } from "@/components/outreach-overview";
+import { CrmOverview } from "@/components/crm-overview";
 
 const dayOptions = ["5", "10", "30", "60", "180", "365", "0"];
 const countyOptions = [
@@ -110,7 +112,7 @@ const countyOptions = [
   "Vestland",
   "Østfold",
 ];
-type WorkspaceTab = "leads" | "website" | "outreach";
+type WorkspaceTab = "leads" | "website" | "outreach" | "crm";
 type BatchValidation = {
   status: "checking" | "blocked" | "ready";
   reason?: string;
@@ -1699,6 +1701,12 @@ export function CompanyCheckShell() {
               label="Utsendelser"
               onClick={() => setActiveTab("outreach")}
             />
+            <WorkspaceTabButton
+              active={activeTab === "crm"}
+              icon={BriefcaseBusiness}
+              label="CRM"
+              onClick={() => setActiveTab("crm")}
+            />
           </nav>
         </div>
       </header>
@@ -1953,6 +1961,10 @@ export function CompanyCheckShell() {
             onRefreshAction={() => void fetchOutreachEntries()}
             onSendFollowUpBatchAction={(entries) => void runFollowUpBatch(entries)}
           />
+          </Show>
+
+          <Show when={activeTab === "crm"}>
+            <CrmOverview />
           </Show>
 
           {/* Dynamic Content */}

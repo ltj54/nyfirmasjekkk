@@ -4,15 +4,35 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1637
-- Sendt: 773
+- Antall hendelser: 1679
+- Sendt: 793
 - Angret: 1
-- Aktive kontaktede selskaper: 525
+- Aktive kontaktede selskaper: 531
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-26 | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | website-follow-up |
+| 2026-08-26 | 938301174 | GRØTERUD RØR | ENK | email | website-follow-up |
+| 2026-08-26 | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | website-follow-up |
+| 2026-08-26 | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | website-follow-up |
+| 2026-08-26 | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | website-follow-up |
+| 2026-08-26 | 938295182 | GUNN LARSSON ONLINE | ENK | email | website-follow-up |
+| 2026-08-26 | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | website-follow-up |
+| 2026-08-26 | 938308586 | OLEGS PILATS | UTLA | email | website-follow-up |
+| 2026-08-26 | 938236267 | RUUDS BARN OG BARSEL | ENK | email | website-follow-up |
+| 2026-08-26 | 938236682 | STRANDBERGS SIRUP | ENK | email | website-follow-up |
+| 2026-08-26 | 938236364 | SUNDE SUNDANZ | ENK | email | website-follow-up |
+| 2026-08-26 | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | website-follow-up |
+| 2026-08-26 | 838259812 | DUTSKYI BYGG | ENK | email | website-follow-up |
+| 2026-08-26 | 838297722 | RAGNAROK SYSTEM AS | AS | email | website-follow-up |
+| 2026-08-26 | 937674848 | SUPERTUSCH CPH APS NUF | NUF | email | website-offer |
+| 2026-08-26 | 938174911 | LOLA'S LOLO'S KITCHEN DA | DA | email | website-offer |
+| 2026-08-26 | 938351872 | SLO.KEN MONTAZA KOVINSKIH KONSTRUKCIJ, D.O.O. | UTLA | email | website-offer |
+| 2026-08-26 | 938351910 | MARKUS LØYNING OLSEN | ENK | email | website-offer |
+| 2026-08-26 | 938272840 | KLOSINSKI IRENEUSZ MACIEJ NUF | UTLA | email | website-offer |
+| 2026-08-26 | 938245592 | HOMME CONSULTING | ENK | email | website-offer |
 | 2026-08-25 | 938350639 | LANGELAND CREATIVE | ENK | email | website-offer |
 | 2026-08-25 | 938347026 | GROUNDSHIFT AS | AS | email | website-offer |
 | 2026-08-25 | 938325146 | TEKLNJ APS | UTLA | email | website-offer |
@@ -132,25 +152,11 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-21 | 938224668 | FABIAN TRADING | NUF | email | website-offer |
 | 2026-08-21 | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | website-offer |
 | 2026-08-21 | 938312028 | EWOK AB | UTLA | email | website-offer |
-| 2026-08-20 | 838297722 | RAGNAROK SYSTEM AS | AS | email | website-offer |
-| 2026-08-20 | 838259812 | DUTSKYI BYGG | ENK | email | website-offer |
-| 2026-08-20 | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | website-offer |
-| 2026-08-20 | 938236364 | SUNDE SUNDANZ | ENK | email | website-offer |
-| 2026-08-20 | 938236682 | STRANDBERGS SIRUP | ENK | email | website-offer |
-| 2026-08-20 | 938236267 | RUUDS BARN OG BARSEL | ENK | email | website-offer |
-| 2026-08-20 | 938308586 | OLEGS PILATS | UTLA | email | website-offer |
-| 2026-08-20 | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | website-offer |
-| 2026-08-20 | 938295182 | GUNN LARSSON ONLINE | ENK | email | website-offer |
-| 2026-08-20 | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | website-offer |
-| 2026-08-20 | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | website-offer |
 | 2026-08-20 | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | website-follow-up |
 | 2026-08-20 | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | website-follow-up |
 | 2026-08-20 | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | website-follow-up |
 | 2026-08-20 | 838259952 | FISKEBETT FORLAG ARNTSEN | ENK | email | website-follow-up |
 | 2026-08-20 | 938127107 | VIROQUE BIOENERGY SL | NUF | email | website-follow-up |
-| 2026-08-20 | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | website-offer |
-| 2026-08-20 | 938301174 | GRØTERUD RØR | ENK | email | website-offer |
-| 2026-08-20 | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | website-offer |
 | 2026-08-19 | 938247722 | BOIJEBYGG AB | UTLA | email | website-follow-up |
 | 2026-08-19 | 938250944 | FERGEFJELLET LØVLIE FORLAG | ENK | email | website-follow-up |
 | 2026-08-19 | 938248109 | NOCOUNT KOLAGKIS | ENK | email | website-follow-up |
@@ -543,6 +549,48 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-26 09:00 | sent | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 09:00 | sending | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 09:00 | sent | 938301174 | GRØTERUD RØR | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 09:00 | sending | 938301174 | GRØTERUD RØR | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 09:00 | sent | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 09:00 | sending | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 09:00 | sent | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 09:00 | sending | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 09:00 | sent | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 09:00 | sending | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938295182 | GUNN LARSSON ONLINE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938295182 | GUNN LARSSON ONLINE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938308586 | OLEGS PILATS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938308586 | OLEGS PILATS | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938236267 | RUUDS BARN OG BARSEL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938236267 | RUUDS BARN OG BARSEL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938236682 | STRANDBERGS SIRUP | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938236682 | STRANDBERGS SIRUP | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938236364 | SUNDE SUNDANZ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938236364 | SUNDE SUNDANZ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 938236291 | ØSTERÅS SERVICE &#65286;UTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 838259812 | DUTSKYI BYGG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 838259812 | DUTSKYI BYGG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:59 | sent | 838297722 | RAGNAROK SYSTEM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-26 08:59 | sending | 838297722 | RAGNAROK SYSTEM AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-26 08:58 | sent | 937674848 | SUPERTUSCH CPH APS NUF | NUF | email | - |
+| 2026-08-26 08:58 | sending | 937674848 | SUPERTUSCH CPH APS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 08:58 | sent | 938174911 | LOLA'S LOLO'S KITCHEN DA | DA | email | - |
+| 2026-08-26 08:58 | sending | 938174911 | LOLA'S LOLO'S KITCHEN DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 08:58 | sent | 938351872 | SLO.KEN MONTAZA KOVINSKIH KONSTRUKCIJ, D.O.O. | UTLA | email | - |
+| 2026-08-26 08:58 | sending | 938351872 | SLO.KEN MONTAZA KOVINSKIH KONSTRUKCIJ, D.O.O. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 08:58 | sent | 938351910 | MARKUS LØYNING OLSEN | ENK | email | - |
+| 2026-08-26 08:58 | sending | 938351910 | MARKUS LØYNING OLSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 08:58 | sent | 938272840 | KLOSINSKI IRENEUSZ MACIEJ NUF | UTLA | email | - |
+| 2026-08-26 08:58 | sending | 938272840 | KLOSINSKI IRENEUSZ MACIEJ NUF | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 08:58 | sent | 938245592 | HOMME CONSULTING | ENK | email | - |
+| 2026-08-26 08:58 | sending | 938245592 | HOMME CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 08:58 | not_relevant | 938237220 | LOHNE PROFILMONTERING | ENK | email | - |
+| 2026-08-26 08:58 | not_relevant | 938239096 | ING.KJELL JUVIK | ENK | email | - |
 | 2026-08-25 19:47 | sent | 938350639 | LANGELAND CREATIVE | ENK | email | - |
 | 2026-08-25 19:47 | sending | 938350639 | LANGELAND CREATIVE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-08-25 19:47 | sent | 938347026 | GROUNDSHIFT AS | AS | email | - |
