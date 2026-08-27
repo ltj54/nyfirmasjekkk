@@ -10,6 +10,8 @@ type CrmProject = {
   contact: string;
   email: string;
   proposalDate: string;
+  followUpDate?: string;
+  responseDeadline?: string;
   paymentDate?: string;
   tone: string;
 };
@@ -18,7 +20,7 @@ const projects: CrmProject[] = [
   { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
   { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", outreach: "Forslag sendt", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Klar for faktura · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
   { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Forslag sendt", progress: "Kunde vurderer – frist 28.–31. august", invoice: "Ikke fakturert", tone: "border-amber-200 bg-amber-50" },
-  { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", outreach: "Forslag sendt", progress: "Arbeidsutkast sendt 25. august", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
+  { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Purring sendt", progress: "Avventer svar på arbeidsutkast", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
   { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Forslag sendt", progress: "Utkast sendt – avventer styrets vurdering", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
 ];
 
@@ -56,6 +58,8 @@ export function CrmOverview() {
               <Row icon={UserRound} label="Kontakt" value={project.contact} />
               <Row icon={Mail} label="E-post" value={project.email} />
               <Row icon={CalendarDays} label="Dato" value={project.proposalDate} />
+              {project.followUpDate ? <Row icon={CalendarDays} label="Purring" value={project.followUpDate} /> : null}
+              {project.responseDeadline ? <Row icon={CalendarDays} label="Svarfrist" value={project.responseDeadline} /> : null}
               {project.paymentDate ? <Row icon={CalendarDays} label="Betalt" value={project.paymentDate} /> : null}
               <Row icon={FileText} label="Dialog" value={project.outreach} />
               <Row icon={Globe2} label="Fremdrift" value={project.progress} />

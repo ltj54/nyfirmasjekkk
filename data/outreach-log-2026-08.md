@@ -4,22 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1679
-- Sendt: 793
+- Antall hendelser: 1721
+- Sendt: 812
 - Angret: 1
-- Aktive kontaktede selskaper: 531
+- Aktive kontaktede selskaper: 537
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-27 | 938312028 | EWOK AB | UTLA | email | website-follow-up |
+| 2026-08-27 | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | website-follow-up |
+| 2026-08-27 | 938224668 | FABIAN TRADING | NUF | email | website-follow-up |
+| 2026-08-27 | 938309892 | GILHUUS MEDIERÅDGIVNING | ENK | email | website-follow-up |
+| 2026-08-27 | 937923198 | SG SVETSTEKNIK GRUPPEN AB NUF | NUF | email | website-follow-up |
+| 2026-08-27 | 938295492 | FARBERG SERVICE | ENK | email | website-follow-up |
+| 2026-08-27 | 938310939 | ARTIST ANITA DAHL-WIGER | ENK | email | website-follow-up |
+| 2026-08-27 | 838310702 | KIM JOHNSEN | ENK | email | website-follow-up |
+| 2026-08-27 | 938311757 | AR ENERGY APS | UTLA | email | website-follow-up |
+| 2026-08-27 | 938265534 | NESTIAN FOOD | ENK | email | website-follow-up |
+| 2026-08-27 | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | website-follow-up |
+| 2026-08-27 | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | website-offer |
+| 2026-08-27 | 938200106 | OK BEIL HOLDING AS | AS | email | website-offer |
+| 2026-08-27 | 838353282 | GARN AS | AS | email | website-offer |
+| 2026-08-27 | 938273693 | TOMAS DUSEVICIUS | ENK | email | website-offer |
+| 2026-08-27 | 938278229 | PETTER RØHR | ENK | email | website-offer |
+| 2026-08-27 | 938239207 | INTERTERMO HOLLAND B.V. NUF | NUF | email | website-offer |
+| 2026-08-27 | 938267782 | FØDE FOLK FEST FORENING | FLI | email | website-offer |
+| 2026-08-27 | 938290350 | BELINDA FRANKE | ENK | email | website-offer |
 | 2026-08-26 | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | website-follow-up |
 | 2026-08-26 | 938301174 | GRØTERUD RØR | ENK | email | website-follow-up |
 | 2026-08-26 | 938299919 | FRIDTJOF TANGEN CORP | ENK | email | website-follow-up |
 | 2026-08-26 | 938304955 | ATHERA INTELLIGENCE LTD | UTLA | email | website-follow-up |
-| 2026-08-26 | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | website-follow-up |
 | 2026-08-26 | 938295182 | GUNN LARSSON ONLINE | ENK | email | website-follow-up |
-| 2026-08-26 | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | website-follow-up |
 | 2026-08-26 | 938308586 | OLEGS PILATS | UTLA | email | website-follow-up |
 | 2026-08-26 | 938236267 | RUUDS BARN OG BARSEL | ENK | email | website-follow-up |
 | 2026-08-26 | 938236682 | STRANDBERGS SIRUP | ENK | email | website-follow-up |
@@ -93,9 +110,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-25 | 938218072 | GLECO AB | NUF | email | website-offer |
 | 2026-08-25 | 838239412 | GJUKA LEGETJENESTER | ENK | email | website-offer |
 | 2026-08-25 | 938338078 | GABRIEL DIEZ PÉREZ | UTLA | email | website-offer |
-| 2026-08-21 | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | website-offer |
-| 2026-08-21 | 938265534 | NESTIAN FOOD | ENK | email | website-offer |
-| 2026-08-21 | 938311757 | AR ENERGY APS | UTLA | email | website-offer |
 | 2026-08-21 | 838168752 | NAVAL EDGE S.R.L. NUF | NUF | email | website-follow-up |
 | 2026-08-21 | 938265135 | TANGEN BYGG STEVNEBØ | ENK | email | website-follow-up |
 | 2026-08-21 | 838268072 | BENEDICTE SÆTRANG VELDE | ENK | email | website-follow-up |
@@ -144,14 +158,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-21 | 938276862 | INTERNATIONAL NDT SOLUTIONS IN SERVICE LTD | UTLA | email | website-follow-up |
 | 2026-08-21 | 938274894 | CHARLIE SKIN CLINIC AS | AS | email | website-follow-up |
 | 2026-08-21 | 938253986 | BRANDSLIEN KJÆR INVEST AS | AS | email | website-follow-up |
-| 2026-08-21 | 838310702 | KIM JOHNSEN | ENK | email | website-offer |
-| 2026-08-21 | 938310939 | ARTIST ANITA DAHL-WIGER | ENK | email | website-offer |
-| 2026-08-21 | 938295492 | FARBERG SERVICE | ENK | email | website-offer |
-| 2026-08-21 | 937923198 | SG SVETSTEKNIK GRUPPEN AB NUF | NUF | email | website-offer |
-| 2026-08-21 | 938309892 | GILHUUS MEDIERÅDGIVNING | ENK | email | website-offer |
-| 2026-08-21 | 938224668 | FABIAN TRADING | NUF | email | website-offer |
-| 2026-08-21 | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | website-offer |
-| 2026-08-21 | 938312028 | EWOK AB | UTLA | email | website-offer |
 | 2026-08-20 | 938230269 | HOLMESTRANDSDAMENE2027 | FLI | email | website-follow-up |
 | 2026-08-20 | 938264643 | KOBAL SOLUTIONS AB | UTLA | email | website-follow-up |
 | 2026-08-20 | 838260322 | BRAUTEN BYGGSERVICE | ENK | email | website-follow-up |
@@ -549,6 +555,48 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-27 07:59 | sent | 938312028 | EWOK AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 938312028 | EWOK AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 938224668 | FABIAN TRADING | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 938224668 | FABIAN TRADING | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 938309892 | GILHUUS MEDIERÅDGIVNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 938309892 | GILHUUS MEDIERÅDGIVNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 937923198 | SG SVETSTEKNIK GRUPPEN AB NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 937923198 | SG SVETSTEKNIK GRUPPEN AB NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 938295492 | FARBERG SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 938295492 | FARBERG SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 938310939 | ARTIST ANITA DAHL-WIGER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 938310939 | ARTIST ANITA DAHL-WIGER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:59 | sent | 838310702 | KIM JOHNSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:59 | sending | 838310702 | KIM JOHNSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:58 | sent | 938311757 | AR ENERGY APS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:58 | sending | 938311757 | AR ENERGY APS | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:58 | sent | 938265534 | NESTIAN FOOD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:58 | sending | 938265534 | NESTIAN FOOD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:58 | sent | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-08-27 07:58 | sending | 938314225 | BJG PROSJEKT TJENESTER VED BJØRN JENSEN GURHOLT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-08-27 07:56 | sent | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | - |
+| 2026-08-27 07:56 | sending | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:56 | sent | 938200106 | OK BEIL HOLDING AS | AS | email | - |
+| 2026-08-27 07:56 | sending | 938200106 | OK BEIL HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:56 | sent | 838353282 | GARN AS | AS | email | - |
+| 2026-08-27 07:56 | sending | 838353282 | GARN AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:56 | sent | 938273693 | TOMAS DUSEVICIUS | ENK | email | - |
+| 2026-08-27 07:56 | sending | 938273693 | TOMAS DUSEVICIUS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:56 | sent | 938278229 | PETTER RØHR | ENK | email | - |
+| 2026-08-27 07:56 | sending | 938278229 | PETTER RØHR | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:56 | sent | 938239207 | INTERTERMO HOLLAND B.V. NUF | NUF | email | - |
+| 2026-08-27 07:56 | sending | 938239207 | INTERTERMO HOLLAND B.V. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:55 | sent | 938267782 | FØDE FOLK FEST FORENING | FLI | email | - |
+| 2026-08-27 07:55 | sending | 938267782 | FØDE FOLK FEST FORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-27 07:55 | sent | 938290350 | BELINDA FRANKE | ENK | email | - |
+| 2026-08-27 07:55 | sending | 938290350 | BELINDA FRANKE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-08-26 10:17 | not_relevant | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | Avsluttet etter svar: Ikke interessert. |
+| 2026-08-26 10:17 | replied | 938303568 | HUNTER SUBSEA CONSULTING LTD | UTLA | email | Svar mottatt 2026-08-26: No thank you. |
+| 2026-08-26 09:22 | not_relevant | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | Avsluttet etter svar: Ønsker ikke hjemmeside. |
+| 2026-08-26 09:22 | replied | 925783560 | BRU - FLATEN VANNVERK SA | SA | email | Svar mottatt 2026-08-26: Privat vannverk for 11 husstander; ønsker ikke hjemmeside. |
 | 2026-08-26 09:00 | sent | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-26 09:00 | sending | 938301719 | TURQUOISE COMPUTING S.R.L. | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-26 09:00 | sent | 938301174 | GRØTERUD RØR | ENK | email | Oppfølging sendt – avslutt hvis stille |
