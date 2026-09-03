@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1721
-- Sendt: 812
+- Antall hendelser: 1722
+- Sendt: 813
 - Angret: 1
 - Aktive kontaktede selskaper: 537
 
@@ -13,6 +13,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-08-27 | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | website-follow-up |
 | 2026-08-27 | 938312028 | EWOK AB | UTLA | email | website-follow-up |
 | 2026-08-27 | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | website-follow-up |
 | 2026-08-27 | 938224668 | FABIAN TRADING | NUF | email | website-follow-up |
@@ -85,7 +86,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-08-25 | 938239703 | SLIWINSKI LEARNING AND DEVELOPMENT | ENK | email | website-follow-up |
 | 2026-08-25 | 938235171 | SVABOVA GUIDING | ENK | email | website-follow-up |
 | 2026-08-25 | 938257191 | ØSTERÅS LINEDANCE | FLI | email | website-follow-up |
-| 2026-08-25 | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | website-follow-up |
 | 2026-08-25 | 938295018 | ENGLUND ROMLAB | ENK | email | website-follow-up |
 | 2026-08-25 | 938293228 | STA LOGISTICS AS | AS | email | website-follow-up |
 | 2026-08-25 | 938245231 | SAMEIET ØVRE BJERGGATE 2 | ESEK | email | website-follow-up |
@@ -555,6 +555,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-27 10:00 | sent | 938245932 | SKIFJELDS HÅNDVERK | ENK | email | Purring sendt med lenke til arbeidsutkast. Svarfrist 2026-09-02; avsluttes hvis ingen respons. |
 | 2026-08-27 07:59 | sent | 938312028 | EWOK AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-08-27 07:59 | sending | 938312028 | EWOK AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-08-27 07:59 | sent | 938128804 | ATHERA INTELLIGENCE LTD NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |

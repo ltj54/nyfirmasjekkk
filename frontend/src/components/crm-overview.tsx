@@ -25,6 +25,7 @@ const projects: CrmProject[] = [
   { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", domainRemoved: "03.09.2026", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Avsluttet", progress: "Fjernet 03.09.2026 – ingen avklaring mottatt", invoice: "Ikke fakturert", tone: "border-slate-200 bg-slate-50" },
   { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", domainRemoved: "03.09.2026", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Avsluttet", progress: "Fjernet 03.09.2026 – ingen svar mottatt", invoice: "Ikke fakturert", tone: "border-slate-200 bg-slate-50" },
   { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Forslag sendt", progress: "Utkast sendt – avventer styrets vurdering", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
+  { name: "Akvilon Holding", domain: "akvilon.no", contact: "Sindre Rånes", email: "sindre@akvilon.no", proposalDate: "03.09.2026", followUpDate: "03.09.2026", outreach: "Avsluttet – ikke ønsket", progress: "Ingen videre oppfølging etter mottakers avslag", invoice: "Ikke fakturert", tone: "border-slate-200 bg-slate-50" },
 ];
 
 export function CrmOverview() {
@@ -38,7 +39,7 @@ export function CrmOverview() {
             <p className="mt-2 max-w-2xl text-[13px] leading-6 text-[#52606D]">Samlet oversikt over nettsideforslag, domener, fremdrift og fakturering.</p>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
-            <Summary value="5" label="Prosjekter" />
+            <Summary value="6" label="Prosjekter" />
             <Summary value="1" label="Godkjent" />
             <Summary value="1 990 kr" label="Betalt" />
           </div>
