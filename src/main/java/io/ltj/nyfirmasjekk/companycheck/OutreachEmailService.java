@@ -36,10 +36,10 @@ public class OutreachEmailService {
 
     public OutreachEmailService(
             ObjectProvider<JavaMailSender> mailSenderProvider,
-            @Value("${company-check.mail.from}") String from,
-            @Value("${company-check.mail.from-name}") String fromName,
-            @Value("${company-check.mail.reply-to}") String replyTo,
-            @Value("${company-check.mail.test-recipient:}") String testRecipient
+            @Value("${APP_MAIL_FROM:kontakt@ltj-production.no}") String from,
+            @Value("${APP_MAIL_FROM_NAME:Lars Johannessen}") String fromName,
+            @Value("${APP_MAIL_REPLY_TO:kontakt@ltj-production.no}") String replyTo,
+            @Value("${APP_MAIL_TEST_RECIPIENT:}") String testRecipient
     ) {
         this.mailSenderProvider = mailSenderProvider;
         this.from = from;

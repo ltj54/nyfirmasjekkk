@@ -750,7 +750,6 @@ Skal jeg sende den?
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
@@ -775,7 +774,6 @@ Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende for
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
@@ -833,7 +831,6 @@ Kan det være interessant?
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
@@ -858,7 +855,6 @@ Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende for
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }
@@ -874,7 +870,6 @@ Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende for
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}`;
 }

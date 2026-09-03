@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 166
+- Antall hendelser: 167
 - Sendt: 83
 - Angret: 0
 - Aktive kontaktede selskaper: 83
@@ -101,6 +101,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-03 14:57 | not_relevant | 938269734 | TERJESEN MUSIKK | ENK | email | - |
 | 2026-09-03 11:19 | sent | 938338078 | GABRIEL DIEZ PÉREZ | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-03 11:19 | sending | 938338078 | GABRIEL DIEZ PÉREZ | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-03 11:19 | sent | 838239412 | GJUKA LEGETJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
