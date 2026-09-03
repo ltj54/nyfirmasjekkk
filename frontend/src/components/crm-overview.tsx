@@ -12,15 +12,18 @@ type CrmProject = {
   proposalDate: string;
   followUpDate?: string;
   responseDeadline?: string;
+  domainRemoved?: string;
   paymentDate?: string;
+  invoiceNumber?: string;
+  invoiceFile?: string;
   tone: string;
 };
 
 const projects: CrmProject[] = [
-  { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
-  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", outreach: "Forslag sendt", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Klar for faktura · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
-  { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Forslag sendt", progress: "Kunde vurderer – frist 28.–31. august", invoice: "Ikke fakturert", tone: "border-amber-200 bg-amber-50" },
-  { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Purring sendt", progress: "Avventer svar på arbeidsutkast", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
+  { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
+  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", outreach: "Forslag sendt", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Klar for utsending · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
+  { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", domainRemoved: "03.09.2026", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Avsluttet", progress: "Fjernet 03.09.2026 – ingen avklaring mottatt", invoice: "Ikke fakturert", tone: "border-slate-200 bg-slate-50" },
+  { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", domainRemoved: "03.09.2026", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Avsluttet", progress: "Fjernet 03.09.2026 – ingen svar mottatt", invoice: "Ikke fakturert", tone: "border-slate-200 bg-slate-50" },
   { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Forslag sendt", progress: "Utkast sendt – avventer styrets vurdering", invoice: "Ikke fakturert", tone: "border-blue-200 bg-blue-50" },
 ];
 
@@ -48,9 +51,7 @@ export function CrmOverview() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2933]">{project.name}</h2>
-                <a className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#1F5FA9] underline underline-offset-2" href={`https://${project.domain}`} target="_blank" rel="noreferrer">
-                  <Globe2 className="size-3" />{project.domain}<ExternalLink className="size-3" />
-                </a>
+                {project.domainRemoved ? <p className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#829AB1]"><Globe2 className="size-3" />{project.domain} · fjernet {project.domainRemoved}</p> : <a className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#1F5FA9] underline underline-offset-2" href={`https://${project.domain}`} target="_blank" rel="noreferrer"><Globe2 className="size-3" />{project.domain}<ExternalLink className="size-3" /></a>}
               </div>
               <span className="rounded-full bg-white/80 px-2 py-1 text-[10px] font-semibold text-[#52606D]">CNAME · 14400</span>
             </div>
@@ -65,6 +66,8 @@ export function CrmOverview() {
               <Row icon={Globe2} label="Fremdrift" value={project.progress} />
               {project.provider ? <Row icon={Globe2} label="Skjema" value={project.provider} /> : null}
               <Row icon={ReceiptText} label="Fakturering" value={project.invoice} />
+              {project.invoiceNumber ? <Row icon={ReceiptText} label="Fakturanr." value={project.invoiceNumber} /> : null}
+              {project.invoiceFile ? <div className="flex items-start gap-2"><ReceiptText className="mt-0.5 size-3.5 text-[#1F5FA9]" /><span className="w-20 shrink-0 font-medium text-[#829AB1]">Dokument</span><a className="font-medium text-[#1F5FA9] underline underline-offset-2" href={project.invoiceFile} target="_blank" rel="noreferrer">Åpne faktura <ExternalLink className="ml-1 inline size-3" /></a></div> : null}
             </dl>
           </article>
         ))}
