@@ -203,6 +203,7 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
 ];
 const EMAIL_BATCH_SEND_DELAY_MS = 1_000;
 const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
+const MAX_EMAIL_BATCH_SIZE = 25;
 const MAX_FOLLOW_UP_BATCH_SIZE = 10;
 type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "batch_excluded";
 type OutreachEmailSendResult = "sent" | "skipped" | "failed";
@@ -774,6 +775,10 @@ export function CompanyCheckShell() {
     if (isBatchSending) {
       return;
     }
+    if (companies.length > MAX_EMAIL_BATCH_SIZE) {
+      window.alert(`Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per e-postutsending.`);
+      return;
+    }
 
     const eligibleCompanies = companies.filter(
       (company) => canSelectEmailBatchCandidate(company)
@@ -848,6 +853,12 @@ export function CompanyCheckShell() {
         ...current,
         [company.orgNumber]: { status: "ready" },
       }));
+      return;
+    }
+
+    const selectedCount = Object.values(batchSelectionByOrg).filter(Boolean).length;
+    if (selectedCount >= MAX_EMAIL_BATCH_SIZE) {
+      window.alert(`Du kan sende maks ${MAX_EMAIL_BATCH_SIZE} e-poster per utsending.`);
       return;
     }
 

@@ -4,15 +4,35 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 205
-- Sendt: 102
+- Antall hendelser: 245
+- Sendt: 122
 - Angret: 0
-- Aktive kontaktede selskaper: 102
+- Aktive kontaktede selskaper: 122
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-04 | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | website-offer |
+| 2026-09-04 | 938403988 | PERSONLIG TRENER KAROLINE SAMUELSEN | ENK | email | website-offer |
+| 2026-09-04 | 938404747 | B. NTWALI | ENK | email | website-offer |
+| 2026-09-04 | 938415560 | SANDRINE MARSTEIN ANDERSEN | ENK | email | website-offer |
+| 2026-09-04 | 938413126 | NOMI GRYDELAND | ENK | email | website-offer |
+| 2026-09-04 | 938411417 | LEONA YIBRAH NILSEN | ENK | email | website-offer |
+| 2026-09-04 | 938401187 | HAVBLIKKET RESORT AS | AS | email | website-offer |
+| 2026-09-04 | 938416311 | STOKKA CONSULTING | ENK | email | website-offer |
+| 2026-09-04 | 938278873 | HALVORSEN-KVIVESEN EKSTENSIONS | ENK | email | website-offer |
+| 2026-09-04 | 938411522 | MARIA RENHOLD EL MOUTAOUAKKIL | ENK | email | website-offer |
+| 2026-09-04 | 938415854 | NILS OLAV LANGETEIG ENK | ENK | email | website-offer |
+| 2026-09-04 | 938252580 | WASOWSKA WEDDINGS | ENK | email | website-offer |
+| 2026-09-04 | 838375502 | SV PELSAR SP. Z O.O. | UTLA | email | website-offer |
+| 2026-09-04 | 938110093 | BORG BERGHOLTZ ART STUDIO | ENK | email | website-offer |
+| 2026-09-04 | 838415962 | VASILE AUTOFIX | ENK | email | website-offer |
+| 2026-09-04 | 938413355 | UAB GOOD GUYS | UTLA | email | website-offer |
+| 2026-09-04 | 938340986 | SHAPHASA PRIME SOLUTIONS | ENK | email | website-offer |
+| 2026-09-04 | 938317844 | MITI MITAANI NORGE | FLI | email | website-offer |
+| 2026-09-04 | 938412634 | HANA TRAN THE SEA | ENK | email | website-offer |
+| 2026-09-04 | 938279195 | EMIL FLÅUM FJELLHEIM GÅRD | ENK | email | website-offer |
 | 2026-09-03 | 938383979 | JUVO KULTURMINNELAG | FLI | email | website-offer |
 | 2026-09-03 | 938377863 | KOBBEL NILSEN COACHING | ENK | email | website-offer |
 | 2026-09-03 | 938377979 | MARK SMITH | ENK | email | website-offer |
@@ -120,6 +140,46 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-04 09:12 | sent | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | - |
+| 2026-09-04 09:12 | sending | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938403988 | PERSONLIG TRENER KAROLINE SAMUELSEN | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938403988 | PERSONLIG TRENER KAROLINE SAMUELSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938404747 | B. NTWALI | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938404747 | B. NTWALI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938415560 | SANDRINE MARSTEIN ANDERSEN | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938415560 | SANDRINE MARSTEIN ANDERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938413126 | NOMI GRYDELAND | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938413126 | NOMI GRYDELAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938411417 | LEONA YIBRAH NILSEN | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938411417 | LEONA YIBRAH NILSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938401187 | HAVBLIKKET RESORT AS | AS | email | - |
+| 2026-09-04 09:12 | sending | 938401187 | HAVBLIKKET RESORT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938416311 | STOKKA CONSULTING | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938416311 | STOKKA CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938278873 | HALVORSEN-KVIVESEN EKSTENSIONS | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938278873 | HALVORSEN-KVIVESEN EKSTENSIONS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938411522 | MARIA RENHOLD EL MOUTAOUAKKIL | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938411522 | MARIA RENHOLD EL MOUTAOUAKKIL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938415854 | NILS OLAV LANGETEIG ENK | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938415854 | NILS OLAV LANGETEIG ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938252580 | WASOWSKA WEDDINGS | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938252580 | WASOWSKA WEDDINGS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 838375502 | SV PELSAR SP. Z O.O. | UTLA | email | - |
+| 2026-09-04 09:12 | sending | 838375502 | SV PELSAR SP. Z O.O. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938110093 | BORG BERGHOLTZ ART STUDIO | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938110093 | BORG BERGHOLTZ ART STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 838415962 | VASILE AUTOFIX | ENK | email | - |
+| 2026-09-04 09:12 | sending | 838415962 | VASILE AUTOFIX | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938413355 | UAB GOOD GUYS | UTLA | email | - |
+| 2026-09-04 09:12 | sending | 938413355 | UAB GOOD GUYS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938340986 | SHAPHASA PRIME SOLUTIONS | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938340986 | SHAPHASA PRIME SOLUTIONS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938317844 | MITI MITAANI NORGE | FLI | email | - |
+| 2026-09-04 09:12 | sending | 938317844 | MITI MITAANI NORGE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938412634 | HANA TRAN THE SEA | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938412634 | HANA TRAN THE SEA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 09:12 | sent | 938279195 | EMIL FLÅUM FJELLHEIM GÅRD | ENK | email | - |
+| 2026-09-04 09:12 | sending | 938279195 | EMIL FLÅUM FJELLHEIM GÅRD | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-03 15:20 | sent | 938383979 | JUVO KULTURMINNELAG | FLI | email | - |
 | 2026-09-03 15:20 | sending | 938383979 | JUVO KULTURMINNELAG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-03 15:20 | sent | 938377863 | KOBBEL NILSEN COACHING | ENK | email | - |
