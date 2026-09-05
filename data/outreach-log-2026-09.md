@@ -4,16 +4,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 245
-- Sendt: 122
+- Antall hendelser: 272
+- Sendt: 134
 - Angret: 0
-- Aktive kontaktede selskaper: 122
+- Aktive kontaktede selskaper: 131
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
-| 2026-09-04 | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | website-offer |
+| 2026-09-05 | 938365342 | RØDT HOLMESTRAND | FLI | email | website-offer |
+| 2026-09-05 | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | email | website-offer |
+| 2026-09-05 | 938394326 | FRU FONGEN | ENK | email | website-offer |
+| 2026-09-05 | 938419477 | HUCHOK 69 NORTH RENHOLD | ENK | email | website-offer |
+| 2026-09-05 | 938415021 | UAB VEJOMAINA | UTLA | email | website-offer |
+| 2026-09-05 | 938027544 | STATLIG FORETAK "DOKUMENT" NUF | NUF | email | website-offer |
+| 2026-09-05 | 938423628 | VOLLAN FYSIOTERAPI | ENK | email | website-offer |
+| 2026-09-05 | 938418632 | UAB RV CONSULTING & RECRUITMENT | UTLA | email | website-offer |
+| 2026-09-05 | 938294879 | SOLHAGEN GRIMSTAD | ENK | email | website-offer |
+| 2026-09-05 | 938272123 | MELKVIKA HEIMGARD AS | AS | email | website-offer |
+| 2026-09-05 | 938406421 | LORENZA CHIMENTO | ENK | email | website-offer |
+| 2026-09-05 | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | website-offer |
 | 2026-09-04 | 938403988 | PERSONLIG TRENER KAROLINE SAMUELSEN | ENK | email | website-offer |
 | 2026-09-04 | 938404747 | B. NTWALI | ENK | email | website-offer |
 | 2026-09-04 | 938415560 | SANDRINE MARSTEIN ANDERSEN | ENK | email | website-offer |
@@ -23,7 +34,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-04 | 938416311 | STOKKA CONSULTING | ENK | email | website-offer |
 | 2026-09-04 | 938278873 | HALVORSEN-KVIVESEN EKSTENSIONS | ENK | email | website-offer |
 | 2026-09-04 | 938411522 | MARIA RENHOLD EL MOUTAOUAKKIL | ENK | email | website-offer |
-| 2026-09-04 | 938415854 | NILS OLAV LANGETEIG ENK | ENK | email | website-offer |
 | 2026-09-04 | 938252580 | WASOWSKA WEDDINGS | ENK | email | website-offer |
 | 2026-09-04 | 838375502 | SV PELSAR SP. Z O.O. | UTLA | email | website-offer |
 | 2026-09-04 | 938110093 | BORG BERGHOLTZ ART STUDIO | ENK | email | website-offer |
@@ -122,7 +132,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-03 | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | website-offer |
 | 2026-09-03 | 838308112 | ROCK AIVE PROMOTION BODIN | ENK | email | website-offer |
 | 2026-09-03 | 938269092 | PAZIURA HUNDEFRISØR | ENK | email | website-offer |
-| 2026-09-03 | 938260230 | OPPDRAGSPARTNER LØNDAL HAUGAN | ENK | email | website-offer |
 | 2026-09-03 | 838361072 | NÅD OCH SANNING NILSSON | ENK | email | website-offer |
 | 2026-09-03 | 938357730 | MOE REISER | ENK | email | website-offer |
 | 2026-09-03 | 938268304 | FREBERG-THOMSEN EQ-MASSASJE | ENK | email | website-offer |
@@ -140,6 +149,33 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-05 12:07 | replied | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | Svar mottatt 04.09.2026 kl. 09:29 fra Sverre M. Sejersted: Ikke aktuelt nå på grunn av salgsprosess. Tar vare på tilbudet; situasjonen kan endre seg. Mulig senere, kunden tar selv kontakt. Ingen videre oppfølging, som avtalt med bruker. |
+| 2026-09-05 12:07 | not_relevant | 938260230 | OPPDRAGSPARTNER LØNDAL HAUGAN | ENK | email | Svar mottatt 04.09.2026 kl. 07:53 fra Laila Løndal Haugan: Takk for tilbudet, men nei takk. Ingen videre oppfølging, som avtalt med bruker. |
+| 2026-09-05 12:00 | sent | 938365342 | RØDT HOLMESTRAND | FLI | email | - |
+| 2026-09-05 12:00 | sending | 938365342 | RØDT HOLMESTRAND | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938394326 | FRU FONGEN | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938394326 | FRU FONGEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938419477 | HUCHOK 69 NORTH RENHOLD | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938419477 | HUCHOK 69 NORTH RENHOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938415021 | UAB VEJOMAINA | UTLA | email | - |
+| 2026-09-05 12:00 | sending | 938415021 | UAB VEJOMAINA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938027544 | STATLIG FORETAK "DOKUMENT" NUF | NUF | email | - |
+| 2026-09-05 12:00 | sending | 938027544 | STATLIG FORETAK "DOKUMENT" NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938423628 | VOLLAN FYSIOTERAPI | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938423628 | VOLLAN FYSIOTERAPI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938418632 | UAB RV CONSULTING & RECRUITMENT | UTLA | email | - |
+| 2026-09-05 12:00 | sending | 938418632 | UAB RV CONSULTING & RECRUITMENT | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938294879 | SOLHAGEN GRIMSTAD | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938294879 | SOLHAGEN GRIMSTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938272123 | MELKVIKA HEIMGARD AS | AS | email | - |
+| 2026-09-05 12:00 | sending | 938272123 | MELKVIKA HEIMGARD AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938406421 | LORENZA CHIMENTO | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938406421 | LORENZA CHIMENTO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-05 12:00 | sent | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | - |
+| 2026-09-05 12:00 | sending | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-04 10:25 | not_relevant | 938415854 | NILS OLAV LANGETEIG ENK | ENK | email | Svar mottatt: nettside er ikke interessant. Ingen videre oppfølging. |
 | 2026-09-04 09:12 | sent | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | - |
 | 2026-09-04 09:12 | sending | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-04 09:12 | sent | 938403988 | PERSONLIG TRENER KAROLINE SAMUELSEN | ENK | email | - |
