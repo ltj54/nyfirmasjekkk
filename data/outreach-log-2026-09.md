@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 272
-- Sendt: 134
+- Antall hendelser: 280
+- Sendt: 138
 - Angret: 0
-- Aktive kontaktede selskaper: 131
+- Aktive kontaktede selskaper: 135
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-06 | 938419493 | PERSEUSZ SP. Z.O.O | UTLA | email | website-offer |
+| 2026-09-06 | 938303010 | THE NET A PORTER GROUP ITALY S.R.L. | NUF | email | website-offer |
+| 2026-09-06 | 938314772 | MYEXTENSIONS NUF | NUF | email | website-offer |
+| 2026-09-06 | 938282382 | ALTO DYNAMICS AS | AS | email | website-offer |
 | 2026-09-05 | 938365342 | RØDT HOLMESTRAND | FLI | email | website-offer |
 | 2026-09-05 | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | email | website-offer |
 | 2026-09-05 | 938394326 | FRU FONGEN | ENK | email | website-offer |
@@ -149,6 +153,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-06 13:23 | sent | 938419493 | PERSEUSZ SP. Z.O.O | UTLA | email | - |
+| 2026-09-06 13:23 | sending | 938419493 | PERSEUSZ SP. Z.O.O | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-06 13:23 | sent | 938303010 | THE NET A PORTER GROUP ITALY S.R.L. | NUF | email | - |
+| 2026-09-06 13:23 | sending | 938303010 | THE NET A PORTER GROUP ITALY S.R.L. | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-06 13:23 | sent | 938314772 | MYEXTENSIONS NUF | NUF | email | - |
+| 2026-09-06 13:23 | sending | 938314772 | MYEXTENSIONS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-06 13:23 | sent | 938282382 | ALTO DYNAMICS AS | AS | email | - |
+| 2026-09-06 13:23 | sending | 938282382 | ALTO DYNAMICS AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-05 12:07 | replied | 938368899 | ØRSNESVIKA HOLDING AS | AS | email | Svar mottatt 04.09.2026 kl. 09:29 fra Sverre M. Sejersted: Ikke aktuelt nå på grunn av salgsprosess. Tar vare på tilbudet; situasjonen kan endre seg. Mulig senere, kunden tar selv kontakt. Ingen videre oppfølging, som avtalt med bruker. |
 | 2026-09-05 12:07 | not_relevant | 938260230 | OPPDRAGSPARTNER LØNDAL HAUGAN | ENK | email | Svar mottatt 04.09.2026 kl. 07:53 fra Laila Løndal Haugan: Takk for tilbudet, men nei takk. Ingen videre oppfølging, som avtalt med bruker. |
 | 2026-09-05 12:00 | sent | 938365342 | RØDT HOLMESTRAND | FLI | email | - |
