@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 302
-- Sendt: 149
+- Antall hendelser: 306
+- Sendt: 151
 - Angret: 0
-- Aktive kontaktede selskaper: 146
+- Aktive kontaktede selskaper: 148
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-07 | 938424063 | AUNE NAUTICA | ENK | email | website-offer |
+| 2026-09-07 | 938302111 | FRITZ SAMUELSEN DHLR KURS | ENK | email | website-offer |
 | 2026-09-07 | 938426635 | VANJA SIMONSEN | ENK | email | website-offer |
 | 2026-09-07 | 838426042 | GIUSEPPE VENTURA | ENK | email | website-offer |
 | 2026-09-07 | 938299412 | ABOUELHAMAIL LOGISTICS | ENK | email | website-offer |
@@ -164,6 +166,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-07 11:40 | sent | 938424063 | AUNE NAUTICA | ENK | email | - |
+| 2026-09-07 11:40 | sending | 938424063 | AUNE NAUTICA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 11:40 | sent | 938302111 | FRITZ SAMUELSEN DHLR KURS | ENK | email | - |
+| 2026-09-07 11:40 | sending | 938302111 | FRITZ SAMUELSEN DHLR KURS | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-07 08:55 | sent | 938426635 | VANJA SIMONSEN | ENK | email | - |
 | 2026-09-07 08:55 | sending | 938426635 | VANJA SIMONSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-07 08:55 | sent | 838426042 | GIUSEPPE VENTURA | ENK | email | - |
