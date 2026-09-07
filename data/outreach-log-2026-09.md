@@ -4,15 +4,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 280
-- Sendt: 138
+- Antall hendelser: 302
+- Sendt: 149
 - Angret: 0
-- Aktive kontaktede selskaper: 135
+- Aktive kontaktede selskaper: 146
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-07 | 938426635 | VANJA SIMONSEN | ENK | email | website-offer |
+| 2026-09-07 | 838426042 | GIUSEPPE VENTURA | ENK | email | website-offer |
+| 2026-09-07 | 938299412 | ABOUELHAMAIL LOGISTICS | ENK | email | website-offer |
+| 2026-09-07 | 938427488 | JOHANNE ISAKSEN KIHLE | ENK | email | website-offer |
+| 2026-09-07 | 938426120 | PRIBADI SERVICES | ENK | email | website-offer |
+| 2026-09-07 | 938306109 | NIELSEN & HARDELAND DA | DA | email | website-offer |
+| 2026-09-07 | 938427011 | SCOTT LANDBRUK | ENK | email | website-offer |
+| 2026-09-07 | 938299420 | REALFAG MED RATHAKRISHNARAJAH | ENK | email | website-offer |
+| 2026-09-07 | 938299935 | MESTER'N VEST TOFTE | ENK | email | website-offer |
+| 2026-09-07 | 938152519 | KOPPANG BADSTUE OG KALDBADFORENING | FLI | email | website-offer |
+| 2026-09-07 | 938299862 | HEGGESTAD DYKK OG BETONG | ENK | email | website-offer |
 | 2026-09-06 | 938419493 | PERSEUSZ SP. Z.O.O | UTLA | email | website-offer |
 | 2026-09-06 | 938303010 | THE NET A PORTER GROUP ITALY S.R.L. | NUF | email | website-offer |
 | 2026-09-06 | 938314772 | MYEXTENSIONS NUF | NUF | email | website-offer |
@@ -153,6 +164,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-07 08:55 | sent | 938426635 | VANJA SIMONSEN | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938426635 | VANJA SIMONSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 838426042 | GIUSEPPE VENTURA | ENK | email | - |
+| 2026-09-07 08:55 | sending | 838426042 | GIUSEPPE VENTURA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938299412 | ABOUELHAMAIL LOGISTICS | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938299412 | ABOUELHAMAIL LOGISTICS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938427488 | JOHANNE ISAKSEN KIHLE | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938427488 | JOHANNE ISAKSEN KIHLE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938426120 | PRIBADI SERVICES | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938426120 | PRIBADI SERVICES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938306109 | NIELSEN & HARDELAND DA | DA | email | - |
+| 2026-09-07 08:55 | sending | 938306109 | NIELSEN & HARDELAND DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938427011 | SCOTT LANDBRUK | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938427011 | SCOTT LANDBRUK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938299420 | REALFAG MED RATHAKRISHNARAJAH | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938299420 | REALFAG MED RATHAKRISHNARAJAH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938299935 | MESTER'N VEST TOFTE | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938299935 | MESTER'N VEST TOFTE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938152519 | KOPPANG BADSTUE OG KALDBADFORENING | FLI | email | - |
+| 2026-09-07 08:55 | sending | 938152519 | KOPPANG BADSTUE OG KALDBADFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 08:55 | sent | 938299862 | HEGGESTAD DYKK OG BETONG | ENK | email | - |
+| 2026-09-07 08:55 | sending | 938299862 | HEGGESTAD DYKK OG BETONG | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-06 13:23 | sent | 938419493 | PERSEUSZ SP. Z.O.O | UTLA | email | - |
 | 2026-09-06 13:23 | sending | 938419493 | PERSEUSZ SP. Z.O.O | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-06 13:23 | sent | 938303010 | THE NET A PORTER GROUP ITALY S.R.L. | NUF | email | - |
