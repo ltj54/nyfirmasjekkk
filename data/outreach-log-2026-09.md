@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 306
+- Antall hendelser: 307
 - Sendt: 151
 - Angret: 0
-- Aktive kontaktede selskaper: 148
+- Aktive kontaktede selskaper: 147
 
 ## Aktive kontaktede selskaper
 
@@ -157,7 +157,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-03 | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | website-offer |
 | 2026-09-03 | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | website-offer |
 | 2026-09-03 | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | website-offer |
-| 2026-09-03 | 838270352 | IDSØE RÅDGIVNING | ENK | email | website-offer |
 | 2026-09-03 | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | website-offer |
 | 2026-09-03 | 938354456 | ASTERISCO.WLD | FLI | email | website-offer |
 | 2026-09-03 | 938405840 | AGNIESZKA HELENA STANKIEWICZ | TVAM | email | website-offer |
@@ -166,6 +165,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-07 12:47 | replied | 838270352 | IDSØE RÅDGIVNING | ENK | email | Positivt svar fra Ella Maria Cosmovici Idsøe (e.m.c.idsoe@naturfagsenteret.no). Ønsker forslag og dialog om egne ideer. Ønsker en prat i uke 40 (28.09.–04.10.2026). Ingen automatisk oppfølging; møte er ikke avtalt. |
 | 2026-09-07 11:40 | sent | 938424063 | AUNE NAUTICA | ENK | email | - |
 | 2026-09-07 11:40 | sending | 938424063 | AUNE NAUTICA | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-07 11:40 | sent | 938302111 | FRITZ SAMUELSEN DHLR KURS | ENK | email | - |
