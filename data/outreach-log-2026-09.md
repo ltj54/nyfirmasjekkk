@@ -4,15 +4,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 345
-- Sendt: 170
+- Antall hendelser: 371
+- Sendt: 183
 - Angret: 0
-- Aktive kontaktede selskaper: 166
+- Aktive kontaktede selskaper: 179
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | website-offer |
+| 2026-09-08 | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | website-offer |
+| 2026-09-08 | 938432376 | BERGQUIST KONSULT AS | AS | email | website-offer |
+| 2026-09-08 | 938442649 | AASERUD SERVICE | ENK | email | website-offer |
+| 2026-09-08 | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | website-offer |
+| 2026-09-08 | 938323674 | ROGSTAD DRIFT | ENK | email | website-offer |
+| 2026-09-08 | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | website-offer |
+| 2026-09-08 | 938320942 | LARSENS HENGERUTLEIE | ENK | email | website-offer |
+| 2026-09-08 | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | website-offer |
+| 2026-09-08 | 938442703 | JIMMY GREEN TAXI | UTLA | email | website-offer |
+| 2026-09-08 | 938322449 | HOLTHE TEKNISK | ENK | email | website-offer |
+| 2026-09-08 | 938323461 | E.R. VIGNES STUDIO | ENK | email | website-offer |
+| 2026-09-08 | 938322716 | ANDERS HAGEN | ENK | email | website-offer |
 | 2026-09-08 | 938435979 | YTTERLI RANCH | ENK | email | website-offer |
 | 2026-09-08 | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | website-offer |
 | 2026-09-08 | 938434514 | HARAR HOLDING AS | AS | email | website-offer |
@@ -184,6 +197,32 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 14:37 | sent | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | - |
+| 2026-09-08 14:37 | sending | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:37 | sent | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938432376 | BERGQUIST KONSULT AS | AS | email | - |
+| 2026-09-08 14:36 | sending | 938432376 | BERGQUIST KONSULT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938442649 | AASERUD SERVICE | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938442649 | AASERUD SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938323674 | ROGSTAD DRIFT | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938323674 | ROGSTAD DRIFT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | - |
+| 2026-09-08 14:36 | sending | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938320942 | LARSENS HENGERUTLEIE | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938320942 | LARSENS HENGERUTLEIE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938442703 | JIMMY GREEN TAXI | UTLA | email | - |
+| 2026-09-08 14:36 | sending | 938442703 | JIMMY GREEN TAXI | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938322449 | HOLTHE TEKNISK | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938322449 | HOLTHE TEKNISK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938323461 | E.R. VIGNES STUDIO | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938323461 | E.R. VIGNES STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 14:36 | sent | 938322716 | ANDERS HAGEN | ENK | email | - |
+| 2026-09-08 14:36 | sending | 938322716 | ANDERS HAGEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-08 08:37 | sent | 938435979 | YTTERLI RANCH | ENK | email | - |
 | 2026-09-08 08:37 | sending | 938435979 | YTTERLI RANCH | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-08 08:16 | sent | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | - |
