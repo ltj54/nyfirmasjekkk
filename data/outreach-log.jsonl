@@ -341,3 +341,5 @@
 {"timestamp":"2026-09-08T06:16:09.487969800Z","orgNumber":"938434514","companyName":"HARAR HOLDING AS","organizationForm":"AS","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}
 {"timestamp":"2026-09-08T06:16:12.631480900Z","orgNumber":"938435766","companyName":"SAMEIET NEDRE EIKREM B19","organizationForm":"ESEK","status":"sending","price":null,"channel":"email","offerType":"website-offer","note":"Utsendelse reservert før SMTP-levering."}
 {"timestamp":"2026-09-08T06:16:12.861133700Z","orgNumber":"938435766","companyName":"SAMEIET NEDRE EIKREM B19","organizationForm":"ESEK","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}
+{"timestamp":"2026-09-08T06:37:08.830231400Z","orgNumber":"938435979","companyName":"YTTERLI RANCH","organizationForm":"ENK","status":"sending","price":null,"channel":"email","offerType":"website-offer","note":"Utsendelse reservert før SMTP-levering."}
+{"timestamp":"2026-09-08T06:37:09.115085800Z","orgNumber":"938435979","companyName":"YTTERLI RANCH","organizationForm":"ENK","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}

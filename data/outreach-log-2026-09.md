@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 343
-- Sendt: 169
+- Antall hendelser: 345
+- Sendt: 170
 - Angret: 0
-- Aktive kontaktede selskaper: 165
+- Aktive kontaktede selskaper: 166
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 | 938435979 | YTTERLI RANCH | ENK | email | website-offer |
 | 2026-09-08 | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | website-offer |
 | 2026-09-08 | 938434514 | HARAR HOLDING AS | AS | email | website-offer |
 | 2026-09-08 | 938435367 | VUCKIC VENTURES | ENK | email | website-offer |
@@ -183,6 +184,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 08:37 | sent | 938435979 | YTTERLI RANCH | ENK | email | - |
+| 2026-09-08 08:37 | sending | 938435979 | YTTERLI RANCH | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-08 08:16 | sent | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | - |
 | 2026-09-08 08:16 | sending | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-08 08:16 | sent | 938434514 | HARAR HOLDING AS | AS | email | - |
