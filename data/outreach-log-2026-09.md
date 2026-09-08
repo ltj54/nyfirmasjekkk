@@ -4,15 +4,33 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 307
-- Sendt: 151
+- Antall hendelser: 343
+- Sendt: 169
 - Angret: 0
-- Aktive kontaktede selskaper: 147
+- Aktive kontaktede selskaper: 165
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | website-offer |
+| 2026-09-08 | 938434514 | HARAR HOLDING AS | AS | email | website-offer |
+| 2026-09-08 | 938435367 | VUCKIC VENTURES | ENK | email | website-offer |
+| 2026-09-08 | 938313210 | VINSALONGEN AS | AS | email | website-offer |
+| 2026-09-08 | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | website-offer |
+| 2026-09-08 | 938314861 | SPILLING ADVISORY | ENK | email | website-offer |
+| 2026-09-08 | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | website-offer |
+| 2026-09-08 | 838309062 | OWIDIA WESENBERG | ENK | email | website-offer |
+| 2026-09-08 | 938119546 | OK FREMSTAD AS | AS | email | website-offer |
+| 2026-09-08 | 938433631 | NORWAY ROLLCO LLC | UTLA | email | website-offer |
+| 2026-09-08 | 938292183 | NICOLAS STOCKER | ENK | email | website-offer |
+| 2026-09-08 | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | website-offer |
+| 2026-09-08 | 938314640 | INDRELAND UTDANNING | ENK | email | website-offer |
+| 2026-09-08 | 938311943 | HAKVOORT FISKERISELSKAP LYKKENS ØY | ENK | email | website-offer |
+| 2026-09-08 | 838258042 | DRUMS & PERCUSSIONS ALLAL | ENK | email | website-offer |
+| 2026-09-08 | 938315205 | DI TRANI VARGEL | ENK | email | website-offer |
+| 2026-09-08 | 938309876 | BJERGE DRIFT | ENK | email | website-offer |
+| 2026-09-08 | 938402094 | JAKUB RYCZYNSKI REACHPOINT | UTLA | email | website-offer |
 | 2026-09-07 | 938424063 | AUNE NAUTICA | ENK | email | website-offer |
 | 2026-09-07 | 938302111 | FRITZ SAMUELSEN DHLR KURS | ENK | email | website-offer |
 | 2026-09-07 | 938426635 | VANJA SIMONSEN | ENK | email | website-offer |
@@ -165,7 +183,43 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-07 12:47 | replied | 838270352 | IDSØE RÅDGIVNING | ENK | email | Positivt svar fra Ella Maria Cosmovici Idsøe (e.m.c.idsoe@naturfagsenteret.no). Ønsker forslag og dialog om egne ideer. Ønsker en prat i uke 40 (28.09.–04.10.2026). Ingen automatisk oppfølging; møte er ikke avtalt. |
+| 2026-09-08 08:16 | sent | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | - |
+| 2026-09-08 08:16 | sending | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:16 | sent | 938434514 | HARAR HOLDING AS | AS | email | - |
+| 2026-09-08 08:16 | sending | 938434514 | HARAR HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:16 | sent | 938435367 | VUCKIC VENTURES | ENK | email | - |
+| 2026-09-08 08:16 | sending | 938435367 | VUCKIC VENTURES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:16 | sent | 938313210 | VINSALONGEN AS | AS | email | - |
+| 2026-09-08 08:16 | sending | 938313210 | VINSALONGEN AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:16 | sent | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | - |
+| 2026-09-08 08:16 | sending | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:16 | sent | 938314861 | SPILLING ADVISORY | ENK | email | - |
+| 2026-09-08 08:16 | sending | 938314861 | SPILLING ADVISORY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:16 | sent | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | - |
+| 2026-09-08 08:16 | sending | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 838309062 | OWIDIA WESENBERG | ENK | email | - |
+| 2026-09-08 08:15 | sending | 838309062 | OWIDIA WESENBERG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938119546 | OK FREMSTAD AS | AS | email | - |
+| 2026-09-08 08:15 | sending | 938119546 | OK FREMSTAD AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938433631 | NORWAY ROLLCO LLC | UTLA | email | - |
+| 2026-09-08 08:15 | sending | 938433631 | NORWAY ROLLCO LLC | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938292183 | NICOLAS STOCKER | ENK | email | - |
+| 2026-09-08 08:15 | sending | 938292183 | NICOLAS STOCKER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | - |
+| 2026-09-08 08:15 | sending | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938314640 | INDRELAND UTDANNING | ENK | email | - |
+| 2026-09-08 08:15 | sending | 938314640 | INDRELAND UTDANNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938311943 | HAKVOORT FISKERISELSKAP LYKKENS ØY | ENK | email | - |
+| 2026-09-08 08:15 | sending | 938311943 | HAKVOORT FISKERISELSKAP LYKKENS ØY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 838258042 | DRUMS & PERCUSSIONS ALLAL | ENK | email | - |
+| 2026-09-08 08:15 | sending | 838258042 | DRUMS & PERCUSSIONS ALLAL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938315205 | DI TRANI VARGEL | ENK | email | - |
+| 2026-09-08 08:15 | sending | 938315205 | DI TRANI VARGEL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938309876 | BJERGE DRIFT | ENK | email | - |
+| 2026-09-08 08:15 | sending | 938309876 | BJERGE DRIFT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 08:15 | sent | 938402094 | JAKUB RYCZYNSKI REACHPOINT | UTLA | email | - |
+| 2026-09-08 08:15 | sending | 938402094 | JAKUB RYCZYNSKI REACHPOINT | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-07 12:47 | replied | 838270352 | IDSØE RÅDGIVNING | ENK | email | Positivt svar mottatt 07.09.2026 kl. 12:47 fra Ella Maria Cosmovici Idsøe (e.m.c.idsoe@naturfagsenteret.no). Ønsker forslag til nettside og har egne ideer som kan diskuteres sammen. Opptatt de neste to ukene; ønsker en prat en dag i uke 40 (28.09.–04.10.2026). Ingen automatisk oppfølging. Videre dialog håndteres manuelt; møte er ikke avtalt. |
 | 2026-09-07 11:40 | sent | 938424063 | AUNE NAUTICA | ENK | email | - |
 | 2026-09-07 11:40 | sending | 938424063 | AUNE NAUTICA | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-07 11:40 | sent | 938302111 | FRITZ SAMUELSEN DHLR KURS | ENK | email | - |
