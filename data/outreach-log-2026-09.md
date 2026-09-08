@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 371
-- Sendt: 183
+- Antall hendelser: 379
+- Sendt: 187
 - Angret: 0
-- Aktive kontaktede selskaper: 179
+- Aktive kontaktede selskaper: 183
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | website-offer |
+| 2026-09-08 | 938449147 | OCONNER - PELASYN | ENK | email | website-offer |
+| 2026-09-08 | 938350108 | NORSKTCG MYRSETH | ENK | email | website-offer |
+| 2026-09-08 | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | website-offer |
 | 2026-09-08 | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | website-offer |
 | 2026-09-08 | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | website-offer |
 | 2026-09-08 | 938432376 | BERGQUIST KONSULT AS | AS | email | website-offer |
@@ -197,6 +201,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-08 18:32 | sent | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | - |
+| 2026-09-08 18:32 | sending | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 18:32 | sent | 938449147 | OCONNER - PELASYN | ENK | email | - |
+| 2026-09-08 18:32 | sending | 938449147 | OCONNER - PELASYN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 18:32 | sent | 938350108 | NORSKTCG MYRSETH | ENK | email | - |
+| 2026-09-08 18:32 | sending | 938350108 | NORSKTCG MYRSETH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-08 18:32 | sent | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | - |
+| 2026-09-08 18:32 | sending | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-08 14:37 | sent | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | - |
 | 2026-09-08 14:37 | sending | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-08 14:37 | sent | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | - |
