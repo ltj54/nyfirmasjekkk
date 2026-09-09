@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 445
-- Sendt: 220
+- Antall hendelser: 465
+- Sendt: 230
 - Angret: 0
-- Aktive kontaktede selskaper: 191
+- Aktive kontaktede selskaper: 201
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-09 | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | website-offer |
+| 2026-09-09 | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | website-offer |
+| 2026-09-09 | 938344396 | SC - CONTROL S.R.O. | NUF | email | website-offer |
+| 2026-09-09 | 938354987 | RABENS SALONER NUF | NUF | email | website-offer |
+| 2026-09-09 | 938360006 | L'USINE BLEUE AB | NUF | email | website-offer |
+| 2026-09-09 | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | website-offer |
+| 2026-09-09 | 838357792 | MESTAD AKTIV HELSE | ENK | email | website-offer |
+| 2026-09-09 | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | website-offer |
+| 2026-09-09 | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | website-offer |
+| 2026-09-09 | 938452172 | BYE A.O. | ENK | email | website-offer |
 | 2026-09-09 | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | website-offer |
 | 2026-09-09 | 938352518 | SARA WETTRE MEDIA | ENK | email | website-offer |
 | 2026-09-09 | 938355312 | THEODOR TVEIT MEDIA | ENK | email | website-offer |
@@ -209,6 +219,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-09 15:02 | sent | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | - |
+| 2026-09-09 15:02 | sending | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | - |
+| 2026-09-09 15:02 | sending | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938344396 | SC - CONTROL S.R.O. | NUF | email | - |
+| 2026-09-09 15:02 | sending | 938344396 | SC - CONTROL S.R.O. | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938354987 | RABENS SALONER NUF | NUF | email | - |
+| 2026-09-09 15:02 | sending | 938354987 | RABENS SALONER NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938360006 | L'USINE BLEUE AB | NUF | email | - |
+| 2026-09-09 15:02 | sending | 938360006 | L'USINE BLEUE AB | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | - |
+| 2026-09-09 15:02 | sending | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 838357792 | MESTAD AKTIV HELSE | ENK | email | - |
+| 2026-09-09 15:02 | sending | 838357792 | MESTAD AKTIV HELSE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | - |
+| 2026-09-09 15:02 | sending | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | - |
+| 2026-09-09 15:02 | sending | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-09 15:02 | sent | 938452172 | BYE A.O. | ENK | email | - |
+| 2026-09-09 15:02 | sending | 938452172 | BYE A.O. | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-09 08:59 | sent | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | - |
 | 2026-09-09 08:59 | sending | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-09 08:59 | sent | 938352518 | SARA WETTRE MEDIA | ENK | email | - |
