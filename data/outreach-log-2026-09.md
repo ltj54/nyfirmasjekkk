@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 624
+- Antall hendelser: 625
 - Sendt: 307
 - Angret: 0
-- Aktive kontaktede selskaper: 217
+- Aktive kontaktede selskaper: 216
 
 ## Aktive kontaktede selskaper
 
@@ -17,7 +17,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-11 | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | website-follow-up |
 | 2026-09-11 | 938406421 | LORENZA CHIMENTO | ENK | email | website-follow-up |
 | 2026-09-11 | 938272123 | MELKVIKA HEIMGARD AS | AS | email | website-follow-up |
-| 2026-09-11 | 938294879 | SOLHAGEN GRIMSTAD | ENK | email | website-follow-up |
 | 2026-09-11 | 938418632 | UAB RV CONSULTING & RECRUITMENT | UTLA | email | website-follow-up |
 | 2026-09-11 | 938423628 | VOLLAN FYSIOTERAPI | ENK | email | website-follow-up |
 | 2026-09-11 | 938027544 | STATLIG FORETAK "DOKUMENT" NUF | NUF | email | website-follow-up |
@@ -235,6 +234,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-11 09:48 | replied | 938294879 | SOLHAGEN GRIMSTAD | ENK | email | Svar mottatt 11.09.2026 kl. 09:36 fra Leiv Arne Grimstad: Har ordnet nettside selv og takker for tilbudet. Endelig avslag; ingen videre kontakt eller automatisk oppfølging. |
 | 2026-09-11 08:59 | sent | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-11 08:59 | sending | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-11 08:59 | sent | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | Oppfølging sendt – avslutt hvis stille |
