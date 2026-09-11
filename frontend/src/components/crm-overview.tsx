@@ -3,6 +3,7 @@ import { CalendarDays, ExternalLink, FileText, Globe2, Mail, ReceiptText, UserRo
 type CrmProject = {
   name: string;
   domain?: string;
+  previewUrl?: string;
   outreach: string;
   progress: string;
   invoice: string;
@@ -25,6 +26,7 @@ type CrmProject = {
 const projects: CrmProject[] = [
   {
     name: "Idsøe Rådgivning",
+    previewUrl: "https://ltj54.github.io/idsoe-radgivning-nettside/index.html",
     contact: "Ella Maria Cosmovici Idsøe",
     email: "e.m.c.idsoe@naturfagsenteret.no",
     proposalDate: "03.09.2026",
@@ -43,11 +45,24 @@ const projects: CrmProject[] = [
     proposalDate: "09.09.2026",
     dateLabel: "Henvendelse",
     replyDate: "09.09.2026 kl. 15:20",
-    outreach: "Positiv interesse – vurderer enkel nettside",
-    progress: "Henning vurderer en enkel side. Omfang og innhold er ikke avklart ennå.",
-    nextStep: "Avventer videre dialog fra Henning. Ingen automatisk oppfølging.",
+    outreach: "Positiv interesse – ber om forslag",
+    progress: "Henning har bedt om at et forslag til en enkel side settes opp.",
+    nextStep: "Sette opp forslag og avklare innhold manuelt. Ingen automatisk oppfølging.",
     invoice: "Ikke fakturert",
     tone: "border-blue-200 bg-blue-50",
+  },
+  {
+    name: "SV Pelsar Sp. z o.o.",
+    contact: "Serhii Siedin",
+    email: "sv.pelsar@gmail.com",
+    proposalDate: "03.09.2026",
+    dateLabel: "Første henvendelse",
+    replyDate: "10.09.2026 kl. 18:52",
+    outreach: "Positiv interesse – spør om pris",
+    progress: "Ber om pris på nettside. Svarsignaturen bruker både Serhii og Sergey; kontaktopplysningene bør avklares før oppstart.",
+    nextStep: "Svar manuelt med fastpris 1 990 kr og be om grunnlagsopplysninger. Ingen automatisk oppfølging.",
+    invoice: "Ikke fakturert",
+    tone: "border-amber-200 bg-amber-50",
   },
   { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
   { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", outreach: "Forslag sendt", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Klar for utsending · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
@@ -81,6 +96,7 @@ export function CrmOverview() {
               <div>
                 <h2 className="text-lg font-semibold text-[#1F2933]">{project.name}</h2>
                 <ProjectWebsite domain={project.domain} domainRemoved={project.domainRemoved} />
+                {project.previewUrl ? <ProjectPreview url={project.previewUrl} /> : null}
               </div>
               {project.domain && !project.domainRemoved ? <span className="rounded-full bg-white/80 px-2 py-1 text-[10px] font-semibold text-[#52606D]">CNAME · 14400</span> : null}
             </div>
@@ -116,6 +132,10 @@ function ProjectWebsite({ domain, domainRemoved }: Readonly<Pick<CrmProject, "do
     return <p className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#829AB1]"><Globe2 className="size-3" />{domain} · fjernet {domainRemoved}</p>;
   }
   return <a className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#1F5FA9] underline underline-offset-2" href={`https://${domain}`} target="_blank" rel="noreferrer"><Globe2 className="size-3" />{domain}<ExternalLink className="size-3" /></a>;
+}
+
+function ProjectPreview({ url }: Readonly<{ url: string }>) {
+  return <a className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#1F5FA9] underline underline-offset-2" href={url} target="_blank" rel="noreferrer"><Globe2 className="size-3" />Åpne forslag<ExternalLink className="size-3" /></a>;
 }
 
 function Summary({ value, label }: Readonly<{ value: string; label: string }>) {
