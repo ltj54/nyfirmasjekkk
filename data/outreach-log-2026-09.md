@@ -4,15 +4,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 625
-- Sendt: 307
+- Antall hendelser: 704
+- Sendt: 346
 - Angret: 0
-- Aktive kontaktede selskaper: 216
+- Aktive kontaktede selskaper: 225
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-12 | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | website-follow-up |
+| 2026-09-12 | 938292183 | NICOLAS STOCKER | ENK | email | website-follow-up |
+| 2026-09-12 | 938433631 | NORWAY ROLLCO LLC | UTLA | email | website-follow-up |
+| 2026-09-12 | 938119546 | OK FREMSTAD AS | AS | email | website-follow-up |
+| 2026-09-12 | 838309062 | OWIDIA WESENBERG | ENK | email | website-follow-up |
+| 2026-09-12 | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | website-follow-up |
+| 2026-09-12 | 938314861 | SPILLING ADVISORY | ENK | email | website-follow-up |
+| 2026-09-12 | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | website-follow-up |
+| 2026-09-12 | 938313210 | VINSALONGEN AS | AS | email | website-follow-up |
+| 2026-09-12 | 938435367 | VUCKIC VENTURES | ENK | email | website-follow-up |
+| 2026-09-12 | 938434514 | HARAR HOLDING AS | AS | email | website-follow-up |
+| 2026-09-12 | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | website-follow-up |
+| 2026-09-12 | 938435979 | YTTERLI RANCH | ENK | email | website-follow-up |
+| 2026-09-12 | 938322716 | ANDERS HAGEN | ENK | email | website-follow-up |
+| 2026-09-12 | 938323461 | E.R. VIGNES STUDIO | ENK | email | website-follow-up |
+| 2026-09-12 | 938322449 | HOLTHE TEKNISK | ENK | email | website-follow-up |
+| 2026-09-12 | 938442703 | JIMMY GREEN TAXI | UTLA | email | website-follow-up |
+| 2026-09-12 | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | website-follow-up |
+| 2026-09-12 | 938320942 | LARSENS HENGERUTLEIE | ENK | email | website-follow-up |
+| 2026-09-12 | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | website-follow-up |
+| 2026-09-12 | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | website-follow-up |
+| 2026-09-12 | 938442649 | AASERUD SERVICE | ENK | email | website-follow-up |
+| 2026-09-12 | 938432376 | BERGQUIST KONSULT AS | AS | email | website-follow-up |
+| 2026-09-12 | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | website-follow-up |
+| 2026-09-12 | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | website-follow-up |
+| 2026-09-12 | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | website-follow-up |
+| 2026-09-12 | 938350108 | NORSKTCG MYRSETH | ENK | email | website-follow-up |
+| 2026-09-12 | 938449147 | OCONNER - PELASYN | ENK | email | website-follow-up |
+| 2026-09-12 | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | website-follow-up |
+| 2026-09-12 | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | website-offer |
+| 2026-09-12 | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | website-offer |
+| 2026-09-12 | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | website-offer |
+| 2026-09-12 | 938396361 | VIKEN ENTERTAINMENT | ENK | email | website-offer |
+| 2026-09-12 | 838475132 | TORE ØVERLAND | ENK | email | website-offer |
+| 2026-09-12 | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | website-offer |
+| 2026-09-12 | 838471072 | NORDBY INTERIØR AS | AS | email | website-offer |
+| 2026-09-12 | 938404593 | LØFF MULTISERVICE | ENK | email | website-offer |
+| 2026-09-12 | 938406464 | KONOR AS | AS | email | website-offer |
+| 2026-09-12 | 938399042 | GROVEN DIGITAL | ENK | email | website-offer |
 | 2026-09-11 | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | website-follow-up |
 | 2026-09-11 | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | website-follow-up |
 | 2026-09-11 | 938406421 | LORENZA CHIMENTO | ENK | email | website-follow-up |
@@ -130,36 +169,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-09 | 938377979 | MARK SMITH | ENK | email | website-follow-up |
 | 2026-09-09 | 938377863 | KOBBEL NILSEN COACHING | ENK | email | website-follow-up |
 | 2026-09-09 | 938383979 | JUVO KULTURMINNELAG | FLI | email | website-follow-up |
-| 2026-09-08 | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | website-offer |
-| 2026-09-08 | 938449147 | OCONNER - PELASYN | ENK | email | website-offer |
-| 2026-09-08 | 938350108 | NORSKTCG MYRSETH | ENK | email | website-offer |
-| 2026-09-08 | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | website-offer |
-| 2026-09-08 | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | website-offer |
-| 2026-09-08 | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | website-offer |
-| 2026-09-08 | 938432376 | BERGQUIST KONSULT AS | AS | email | website-offer |
-| 2026-09-08 | 938442649 | AASERUD SERVICE | ENK | email | website-offer |
-| 2026-09-08 | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | website-offer |
-| 2026-09-08 | 938323674 | ROGSTAD DRIFT | ENK | email | website-offer |
-| 2026-09-08 | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | website-offer |
-| 2026-09-08 | 938320942 | LARSENS HENGERUTLEIE | ENK | email | website-offer |
-| 2026-09-08 | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | website-offer |
-| 2026-09-08 | 938442703 | JIMMY GREEN TAXI | UTLA | email | website-offer |
-| 2026-09-08 | 938322449 | HOLTHE TEKNISK | ENK | email | website-offer |
-| 2026-09-08 | 938323461 | E.R. VIGNES STUDIO | ENK | email | website-offer |
-| 2026-09-08 | 938322716 | ANDERS HAGEN | ENK | email | website-offer |
-| 2026-09-08 | 938435979 | YTTERLI RANCH | ENK | email | website-offer |
-| 2026-09-08 | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | website-offer |
-| 2026-09-08 | 938434514 | HARAR HOLDING AS | AS | email | website-offer |
-| 2026-09-08 | 938435367 | VUCKIC VENTURES | ENK | email | website-offer |
-| 2026-09-08 | 938313210 | VINSALONGEN AS | AS | email | website-offer |
-| 2026-09-08 | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | website-offer |
-| 2026-09-08 | 938314861 | SPILLING ADVISORY | ENK | email | website-offer |
-| 2026-09-08 | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | website-offer |
-| 2026-09-08 | 838309062 | OWIDIA WESENBERG | ENK | email | website-offer |
-| 2026-09-08 | 938119546 | OK FREMSTAD AS | AS | email | website-offer |
-| 2026-09-08 | 938433631 | NORWAY ROLLCO LLC | UTLA | email | website-offer |
-| 2026-09-08 | 938292183 | NICOLAS STOCKER | ENK | email | website-offer |
-| 2026-09-08 | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | website-offer |
 | 2026-09-08 | 938314640 | INDRELAND UTDANNING | ENK | email | website-offer |
 | 2026-09-08 | 938311943 | HAKVOORT FISKERISELSKAP LYKKENS ØY | ENK | email | website-offer |
 | 2026-09-08 | 838258042 | DRUMS & PERCUSSIONS ALLAL | ENK | email | website-offer |
@@ -234,6 +243,85 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-12 14:02 | sent | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938292183 | NICOLAS STOCKER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938292183 | NICOLAS STOCKER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938433631 | NORWAY ROLLCO LLC | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938433631 | NORWAY ROLLCO LLC | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938119546 | OK FREMSTAD AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938119546 | OK FREMSTAD AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 838309062 | OWIDIA WESENBERG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 838309062 | OWIDIA WESENBERG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938314861 | SPILLING ADVISORY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938314861 | SPILLING ADVISORY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938313210 | VINSALONGEN AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938313210 | VINSALONGEN AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:02 | sent | 938435367 | VUCKIC VENTURES | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:02 | sending | 938435367 | VUCKIC VENTURES | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938434514 | HARAR HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938434514 | HARAR HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938435766 | SAMEIET NEDRE EIKREM B19 | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938435979 | YTTERLI RANCH | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938435979 | YTTERLI RANCH | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938322716 | ANDERS HAGEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938322716 | ANDERS HAGEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938323461 | E.R. VIGNES STUDIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938323461 | E.R. VIGNES STUDIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938322449 | HOLTHE TEKNISK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938322449 | HOLTHE TEKNISK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938442703 | JIMMY GREEN TAXI | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938442703 | JIMMY GREEN TAXI | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938346089 | KRISTIAN MELING AUTOVETT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938320942 | LARSENS HENGERUTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938320942 | LARSENS HENGERUTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938436770 | OPAKER BUTIKKEIENDOM AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | not_relevant | 938323674 | ROGSTAD DRIFT | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-09-12 14:01 | sent | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938321035 | WILSES FOTSPOR - ORAUG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938442649 | AASERUD SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938442649 | AASERUD SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:01 | sent | 938432376 | BERGQUIST KONSULT AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:01 | sending | 938432376 | BERGQUIST KONSULT AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:00 | sending | 938322759 | ALEXANDRA SPYROPOULOU PILATES | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:00 | sending | 938438439 | JON GRIMSBY MUSIKK & TEATER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:00 | sending | 938301581 | COFFEEWITHMARIIE - LERHO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938350108 | NORSKTCG MYRSETH | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:00 | sending | 938350108 | NORSKTCG MYRSETH | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938449147 | OCONNER - PELASYN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:00 | sending | 938449147 | OCONNER - PELASYN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-12 14:00 | sending | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | - |
+| 2026-09-12 14:00 | sending | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | - |
+| 2026-09-12 14:00 | sending | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | - |
+| 2026-09-12 14:00 | sending | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938396361 | VIKEN ENTERTAINMENT | ENK | email | - |
+| 2026-09-12 14:00 | sending | 938396361 | VIKEN ENTERTAINMENT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 838475132 | TORE ØVERLAND | ENK | email | - |
+| 2026-09-12 14:00 | sending | 838475132 | TORE ØVERLAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | - |
+| 2026-09-12 14:00 | sending | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 838471072 | NORDBY INTERIØR AS | AS | email | - |
+| 2026-09-12 14:00 | sending | 838471072 | NORDBY INTERIØR AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938404593 | LØFF MULTISERVICE | ENK | email | - |
+| 2026-09-12 14:00 | sending | 938404593 | LØFF MULTISERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 14:00 | sent | 938406464 | KONOR AS | AS | email | - |
+| 2026-09-12 14:00 | sending | 938406464 | KONOR AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-12 13:59 | sent | 938399042 | GROVEN DIGITAL | ENK | email | - |
+| 2026-09-12 13:59 | sending | 938399042 | GROVEN DIGITAL | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-11 09:48 | replied | 938294879 | SOLHAGEN GRIMSTAD | ENK | email | Svar mottatt 11.09.2026 kl. 09:36 fra Leiv Arne Grimstad: Har ordnet nettside selv og takker for tilbudet. Endelig avslag; ingen videre kontakt eller automatisk oppfølging. |
 | 2026-09-11 08:59 | sent | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-11 08:59 | sending | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | Oppfølging reservert før SMTP-levering. |
