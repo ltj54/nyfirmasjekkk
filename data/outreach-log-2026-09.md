@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 704
+- Antall hendelser: 711
 - Sendt: 346
 - Angret: 0
-- Aktive kontaktede selskaper: 225
+- Aktive kontaktede selskaper: 223
 
 ## Aktive kontaktede selskaper
 
@@ -19,7 +19,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-12 | 938119546 | OK FREMSTAD AS | AS | email | website-follow-up |
 | 2026-09-12 | 838309062 | OWIDIA WESENBERG | ENK | email | website-follow-up |
 | 2026-09-12 | 938301271 | PERMANENTLUX BY RICOVA | ENK | email | website-follow-up |
-| 2026-09-12 | 938314861 | SPILLING ADVISORY | ENK | email | website-follow-up |
 | 2026-09-12 | 938265798 | TARZAN GJENVINNING, TRANSPORT, RIVING, METALL AMET | ENK | email | website-follow-up |
 | 2026-09-12 | 938313210 | VINSALONGEN AS | AS | email | website-follow-up |
 | 2026-09-12 | 938435367 | VUCKIC VENTURES | ENK | email | website-follow-up |
@@ -42,7 +41,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-12 | 938350108 | NORSKTCG MYRSETH | ENK | email | website-follow-up |
 | 2026-09-12 | 938449147 | OCONNER - PELASYN | ENK | email | website-follow-up |
 | 2026-09-12 | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | website-follow-up |
-| 2026-09-12 | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | website-offer |
 | 2026-09-12 | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | website-offer |
 | 2026-09-12 | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | website-offer |
 | 2026-09-12 | 938396361 | VIKEN ENTERTAINMENT | ENK | email | website-offer |
@@ -243,6 +241,13 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-13 11:48 | replied | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | Nytt svar mottatt 13.09.2026 kl. 10:45 fra Mariusz Leszczynski: Kvalifisert interesse og ønsker uforpliktende forslag til enkel profesjonell énside for Vestfold. Tjenester: takvask/mosefjerning, fasadevask, takrenner, terrasser, belegningsstein og klargjøring før salg. Har egne før-/etterbilder. Spør eksplisitt om fullt eierskap til nettside, kildekode og filer etter betaling. Ingen automatisk oppfølging; prosjekt opprettes manuelt. |
+| 2026-09-13 11:44 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Førsteutkast sendt 13.09.2026 til Henning Stockmann Ness: https://ltj54.github.io/varneth-management-ness/. Utkastet følger kravene om eksklusiv én-forside, norsk/engelsk innhold, KI-musikk, Brøken Veil, Black Veil Hart, rådgivning, publishing og Spotify-/artistlenker. Avventer manuell tilbakemelding; ingen automatisk oppfølging. |
+| 2026-09-13 10:36 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Svar sendt 13.09.2026: Opplyste om ca. 4–6 timers arbeid for enkel førsteside, fastpris 1 990 kr, ingen MVA, skjulte kostnader, bindingstid eller abonnement. Bekreftet at eksisterende domene/hosting kan brukes og at e-postoppsettet ivaretas. Ingen automatisk oppfølging. |
+| 2026-09-13 10:31 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Svar mottatt 13.09.2026 kl. 08:23 fra Knut Erik Spilling: Har kjøpt domener og hosting for nettside og e-post, ønsker enkel hjemmeside og spør om estimert timebruk/kostnad. Opplyser at andre også har tilbudt hjelp. Ingen automatisk oppfølging; svar manuelt. |
+| 2026-09-13 10:27 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Svar mottatt 12.09.2026 kl. 17:21 og 17:26 fra Henning Stockmann Ness: Har sendt stikkord og ønsker eksklusivt uttrykk, én forside, norsk og engelsk, Spotify-lenker til KI-gruppene Brøken Veil og Black Veil Hart, lenke til favorittartister innen KI (Gravel N Bones, Iron West og Abdysall), samt presentasjon av KI-musikkproduksjon/-utgivelser, rådgivning og egen publisher/forfattervirksomhet. Ingen automatisk oppfølging; kravene følges opp manuelt i prosjektet. |
+| 2026-09-13 10:25 | replied | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | Svar sendt 13.09.2026: Forklarte totalpris, MVA-status, domene, hosting/drift, Formspree, manglende bindingstid og at kravspesifikasjon/forslag lages kostnadsfritt før eventuell godkjenning. Ingen automatisk oppfølging. |
+| 2026-09-13 10:17 | replied | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | Svar mottatt 12.09.2026 kl. 15:11 fra Mariusz Leszczynski: Kvalifisert interesse. Ber om total kostnadsoversikt, inkludert domene, hosting/drift, publisering, oppsett, eventuelle årlige kostnader, MVA, bindingstid og abonnement. Ingen automatisk oppfølging; svar manuelt og utarbeid kravspesifikasjon før forslag. |
 | 2026-09-12 14:02 | sent | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-12 14:02 | sending | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-12 14:02 | sent | 938292183 | NICOLAS STOCKER | ENK | email | Oppfølging sendt – avslutt hvis stille |
