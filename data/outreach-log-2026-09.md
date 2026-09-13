@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 711
+- Antall hendelser: 712
 - Sendt: 346
 - Angret: 0
 - Aktive kontaktede selskaper: 223
@@ -241,6 +241,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-13 17:58 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Nytt svar mottatt 13.09.2026 kl. 13:54 fra Knut Erik Spilling: Ønsker gjerne et uforpliktende forslag og viser til LinkedIn-profilen https://www.linkedin.com/in/knut-erik-spilling-aba6937/. Positiv interesse; forslag kan utarbeides manuelt. Ingen automatisk oppfølging. |
 | 2026-09-13 11:48 | replied | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | Nytt svar mottatt 13.09.2026 kl. 10:45 fra Mariusz Leszczynski: Kvalifisert interesse og ønsker uforpliktende forslag til enkel profesjonell énside for Vestfold. Tjenester: takvask/mosefjerning, fasadevask, takrenner, terrasser, belegningsstein og klargjøring før salg. Har egne før-/etterbilder. Spør eksplisitt om fullt eierskap til nettside, kildekode og filer etter betaling. Ingen automatisk oppfølging; prosjekt opprettes manuelt. |
 | 2026-09-13 11:44 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Førsteutkast sendt 13.09.2026 til Henning Stockmann Ness: https://ltj54.github.io/varneth-management-ness/. Utkastet følger kravene om eksklusiv én-forside, norsk/engelsk innhold, KI-musikk, Brøken Veil, Black Veil Hart, rådgivning, publishing og Spotify-/artistlenker. Avventer manuell tilbakemelding; ingen automatisk oppfølging. |
 | 2026-09-13 10:36 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Svar sendt 13.09.2026: Opplyste om ca. 4–6 timers arbeid for enkel førsteside, fastpris 1 990 kr, ingen MVA, skjulte kostnader, bindingstid eller abonnement. Bekreftet at eksisterende domene/hosting kan brukes og at e-postoppsettet ivaretas. Ingen automatisk oppfølging. |

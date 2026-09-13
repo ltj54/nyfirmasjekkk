@@ -87,7 +87,7 @@ const projects: CrmProject[] = [
     replyDate: "13.09.2026 kl. 08:23",
     outreach: "Positiv interesse – ber om estimat",
     progress: "Har allerede kjøpt domener og hosting for nettside og e-post. Ønsker en enkel hjemmeside.",
-    nextStep: "Svar sendt 13.09.2026 med ca. 4–6 timer og fastpris 1 990 kr. Avventer Knut manuelt; ingen automatisk oppfølging.",
+    nextStep: "Uforpliktende forslag ønskes. LinkedIn: linkedin.com/in/knut-erik-spilling-aba6937. Avventer Knut manuelt; ingen automatisk oppfølging.",
     invoice: "Ikke fakturert",
     tone: "border-blue-200 bg-blue-50",
   },
