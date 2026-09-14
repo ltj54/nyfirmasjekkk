@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 714
+- Antall hendelser: 715
 - Sendt: 346
 - Angret: 0
 - Aktive kontaktede selskaper: 223
@@ -241,6 +241,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-14 10:54 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Testlenke sendt 14.09.2026: https://ltj54.github.io/spilling-advisory/. Utkastet viser en enkel førsteside og avventer Knut Erik Spillings tilbakemelding på innhold, uttrykk, tjenester, bilder og valg av domene. Ingen automatisk oppfølging. |
 | 2026-09-14 09:57 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Oppdatert prosjektmail sendt 14.09.2026: Informerte om mobiltilpasning, tydeligere musikk-/coverfokus, forbedret navigasjon, kontaktløsning til bhstockmann@gmail.com, nytt favicon og GitHub Pages-hosting. Anbefalte at Henning registrerer eget .no-domene hos valgfri leverandør, eksempel varnethness.no, med organisasjonsnummer 938358311. Avventer domenevalg og eventuell tilbakemelding; ingen automatisk oppfølging. |
 | 2026-09-14 08:44 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Svar mottatt 14.09.2026 kl. 21:11 fra Henning Stockmann Ness: Godkjenner retningen og opplyser at nettsiden først skal presentere foretaket og deretter ham personlig. Coverbilder skal knyttes til Brøken Veil, med unntak av «Home to You» som tilhører Black Veil Hart. Ber om kreditering av LTJ Production og spør om prisen fortsatt er 1 990 kr. Opplyser at lenkene fungerer. Ingen automatisk oppfølging; endringer håndteres manuelt i prosjektet. |
 | 2026-09-13 17:58 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Nytt svar mottatt 13.09.2026 kl. 13:54 fra Knut Erik Spilling: Ønsker gjerne et uforpliktende forslag og viser til LinkedIn-profilen https://www.linkedin.com/in/knut-erik-spilling-aba6937/. Positiv interesse; forslag kan utarbeides manuelt. Ingen automatisk oppfølging. |
