@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 712
+- Antall hendelser: 714
 - Sendt: 346
 - Angret: 0
 - Aktive kontaktede selskaper: 223
@@ -241,6 +241,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-14 09:57 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Oppdatert prosjektmail sendt 14.09.2026: Informerte om mobiltilpasning, tydeligere musikk-/coverfokus, forbedret navigasjon, kontaktløsning til bhstockmann@gmail.com, nytt favicon og GitHub Pages-hosting. Anbefalte at Henning registrerer eget .no-domene hos valgfri leverandør, eksempel varnethness.no, med organisasjonsnummer 938358311. Avventer domenevalg og eventuell tilbakemelding; ingen automatisk oppfølging. |
+| 2026-09-14 08:44 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Svar mottatt 14.09.2026 kl. 21:11 fra Henning Stockmann Ness: Godkjenner retningen og opplyser at nettsiden først skal presentere foretaket og deretter ham personlig. Coverbilder skal knyttes til Brøken Veil, med unntak av «Home to You» som tilhører Black Veil Hart. Ber om kreditering av LTJ Production og spør om prisen fortsatt er 1 990 kr. Opplyser at lenkene fungerer. Ingen automatisk oppfølging; endringer håndteres manuelt i prosjektet. |
 | 2026-09-13 17:58 | replied | 938314861 | SPILLING ADVISORY | ENK | email | Nytt svar mottatt 13.09.2026 kl. 13:54 fra Knut Erik Spilling: Ønsker gjerne et uforpliktende forslag og viser til LinkedIn-profilen https://www.linkedin.com/in/knut-erik-spilling-aba6937/. Positiv interesse; forslag kan utarbeides manuelt. Ingen automatisk oppfølging. |
 | 2026-09-13 11:48 | replied | 938381631 | MLC EIENDOMSFORNYING LESZCZYNSKI | ENK | email | Nytt svar mottatt 13.09.2026 kl. 10:45 fra Mariusz Leszczynski: Kvalifisert interesse og ønsker uforpliktende forslag til enkel profesjonell énside for Vestfold. Tjenester: takvask/mosefjerning, fasadevask, takrenner, terrasser, belegningsstein og klargjøring før salg. Har egne før-/etterbilder. Spør eksplisitt om fullt eierskap til nettside, kildekode og filer etter betaling. Ingen automatisk oppfølging; prosjekt opprettes manuelt. |
 | 2026-09-13 11:44 | replied | 938358311 | VARNETH MANAGEMENT NESS | ENK | email | Førsteutkast sendt 13.09.2026 til Henning Stockmann Ness: https://ltj54.github.io/varneth-management-ness/. Utkastet følger kravene om eksklusiv én-forside, norsk/engelsk innhold, KI-musikk, Brøken Veil, Black Veil Hart, rådgivning, publishing og Spotify-/artistlenker. Avventer manuell tilbakemelding; ingen automatisk oppfølging. |
