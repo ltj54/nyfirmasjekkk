@@ -4,15 +4,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 781
-- Sendt: 378
+- Antall hendelser: 803
+- Sendt: 389
 - Angret: 0
-- Aktive kontaktede selskaper: 245
+- Aktive kontaktede selskaper: 256
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-14 | 938393796 | SAMMEN I NAMSOS | FLI | email | website-offer |
+| 2026-09-14 | 938390835 | SUNNIVA DAHL PETTERSEN | ENK | email | website-offer |
+| 2026-09-14 | 938477116 | SIGURD LYGREN BØRRESEN MUSIKK | ENK | email | website-offer |
+| 2026-09-14 | 938477477 | HEDDA S. STEIEN TEATER | ENK | email | website-offer |
+| 2026-09-14 | 938476357 | ØYÅS TJENESTER | ENK | email | website-offer |
+| 2026-09-14 | 938470774 | HASANI VISIONS | ENK | email | website-offer |
+| 2026-09-14 | 838424082 | LAMPECUTS ODIN LAMPE | ENK | email | website-offer |
+| 2026-09-14 | 938425817 | ØYGARDSBAKK AUTO | ENK | email | website-offer |
+| 2026-09-14 | 938424101 | VIK SAU OG MUSIKK | ENK | email | website-offer |
+| 2026-09-14 | 938487685 | HUSSEIN SERVICE | ENK | email | website-offer |
+| 2026-09-14 | 938382964 | DRIFT & BYGG DRAMMEN BEKTESHI | ENK | email | website-offer |
 | 2026-09-14 | 938479488 | ERCAN AYBAK | ENK | email | website-offer |
 | 2026-09-14 | 938469911 | CHARLES CONSULT | ENK | email | website-offer |
 | 2026-09-14 | 938477493 | BERGERHOFF CONSULTING | ENK | email | website-offer |
@@ -263,6 +274,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-14 22:16 | sent | 938393796 | SAMMEN I NAMSOS | FLI | email | - |
+| 2026-09-14 22:16 | sending | 938393796 | SAMMEN I NAMSOS | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:16 | sent | 938390835 | SUNNIVA DAHL PETTERSEN | ENK | email | - |
+| 2026-09-14 22:16 | sending | 938390835 | SUNNIVA DAHL PETTERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:16 | sent | 938477116 | SIGURD LYGREN BØRRESEN MUSIKK | ENK | email | - |
+| 2026-09-14 22:16 | sending | 938477116 | SIGURD LYGREN BØRRESEN MUSIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:16 | sent | 938477477 | HEDDA S. STEIEN TEATER | ENK | email | - |
+| 2026-09-14 22:16 | sending | 938477477 | HEDDA S. STEIEN TEATER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:16 | sent | 938476357 | ØYÅS TJENESTER | ENK | email | - |
+| 2026-09-14 22:16 | sending | 938476357 | ØYÅS TJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:15 | sent | 938470774 | HASANI VISIONS | ENK | email | - |
+| 2026-09-14 22:15 | sending | 938470774 | HASANI VISIONS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:15 | sent | 838424082 | LAMPECUTS ODIN LAMPE | ENK | email | - |
+| 2026-09-14 22:15 | sending | 838424082 | LAMPECUTS ODIN LAMPE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:15 | sent | 938425817 | ØYGARDSBAKK AUTO | ENK | email | - |
+| 2026-09-14 22:15 | sending | 938425817 | ØYGARDSBAKK AUTO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:15 | sent | 938424101 | VIK SAU OG MUSIKK | ENK | email | - |
+| 2026-09-14 22:15 | sending | 938424101 | VIK SAU OG MUSIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:15 | sent | 938487685 | HUSSEIN SERVICE | ENK | email | - |
+| 2026-09-14 22:15 | sending | 938487685 | HUSSEIN SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-14 22:15 | sent | 938382964 | DRIFT & BYGG DRAMMEN BEKTESHI | ENK | email | - |
+| 2026-09-14 22:15 | sending | 938382964 | DRIFT & BYGG DRAMMEN BEKTESHI | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-14 11:41 | sent | 938479488 | ERCAN AYBAK | ENK | email | - |
 | 2026-09-14 11:41 | sending | 938479488 | ERCAN AYBAK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-14 11:41 | sent | 938469911 | CHARLES CONSULT | ENK | email | - |
