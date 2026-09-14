@@ -67,6 +67,7 @@ const projects: CrmProject[] = [
   },
   {
     name: "MLC Eiendomsfornying Leszczynski",
+    previewUrl: "https://ltj54.github.io/mlc-eiendomsfornying/",
     contact: "Mariusz Leszczynski",
     email: "mkrenpro@gmail.com",
     proposalDate: "12.09.2026",
@@ -74,12 +75,13 @@ const projects: CrmProject[] = [
     replyDate: "12.09.2026 kl. 15:11",
     outreach: "Kvalifisert interesse – ber om totalpris",
     progress: "Ønsker enkel profesjonell énside for Vestfold med takvask, fasadevask, takrenner, terrasser, belegningsstein og klargjøring før salg. Har egne før-/etterbilder.",
-    nextStep: "Rent prosjekt opprettet for kravspesifikasjon og forslag. Mariusz skal eie nettside, kildekode og filer etter betaling; ingen automatisk oppfølging.",
+    nextStep: "Testadresse sendt 14.09.2026: ltj54.github.io/mlc-eiendomsfornying. Avventer Mariusz sin tilbakemelding; kunden skal eie nettside, kode og filer etter betaling.",
     invoice: "Ikke fakturert",
     tone: "border-blue-200 bg-blue-50",
   },
   {
     name: "Spilling Advisory",
+    previewUrl: "https://ltj54.github.io/spilling-advisory/",
     contact: "Knut Erik Spilling",
     email: "knuterikspilling@gmail.com",
     proposalDate: "08.09.2026",
