@@ -4,15 +4,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 857
-- Sendt: 416
+- Antall hendelser: 881
+- Sendt: 428
 - Angret: 0
-- Aktive kontaktede selskaper: 263
+- Aktive kontaktede selskaper: 275
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-15 | 938314985 | INTENT MEDIA AS | AS | email | website-offer |
+| 2026-09-15 | 938489270 | BIRGIDA AS | AS | email | website-offer |
+| 2026-09-15 | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | website-offer |
+| 2026-09-15 | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | website-offer |
+| 2026-09-15 | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | website-offer |
+| 2026-09-15 | 938400970 | AJK ELEKTRO AS | AS | email | website-offer |
+| 2026-09-15 | 938494452 | MK AUTOMATION AB | UTLA | email | website-offer |
+| 2026-09-15 | 938416184 | JISR NORGE | FLI | email | website-offer |
+| 2026-09-15 | 938428166 | GULOWSEN ARK | ENK | email | website-offer |
+| 2026-09-15 | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | website-offer |
+| 2026-09-15 | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | website-offer |
+| 2026-09-15 | 938427003 | AKSNES KYSTFISKE | ENK | email | website-offer |
 | 2026-09-15 | 938480311 | BJØRGE ULVEDAL | ENK | email | website-offer |
 | 2026-09-15 | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | website-offer |
 | 2026-09-15 | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | website-offer |
@@ -281,6 +293,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-15 21:11 | sent | 938314985 | INTENT MEDIA AS | AS | email | - |
+| 2026-09-15 21:11 | sending | 938314985 | INTENT MEDIA AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:11 | sent | 938489270 | BIRGIDA AS | AS | email | - |
+| 2026-09-15 21:11 | sending | 938489270 | BIRGIDA AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:11 | sent | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | - |
+| 2026-09-15 21:11 | sending | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:11 | sent | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | - |
+| 2026-09-15 21:11 | sending | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:11 | sent | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | - |
+| 2026-09-15 21:11 | sending | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:11 | sent | 938400970 | AJK ELEKTRO AS | AS | email | - |
+| 2026-09-15 21:11 | sending | 938400970 | AJK ELEKTRO AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:10 | sent | 938494452 | MK AUTOMATION AB | UTLA | email | - |
+| 2026-09-15 21:10 | sending | 938494452 | MK AUTOMATION AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:10 | sent | 938416184 | JISR NORGE | FLI | email | - |
+| 2026-09-15 21:10 | sending | 938416184 | JISR NORGE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:10 | sent | 938428166 | GULOWSEN ARK | ENK | email | - |
+| 2026-09-15 21:10 | sending | 938428166 | GULOWSEN ARK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:10 | sent | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | - |
+| 2026-09-15 21:10 | sending | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:10 | sent | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | - |
+| 2026-09-15 21:10 | sending | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 21:10 | sent | 938427003 | AKSNES KYSTFISKE | ENK | email | - |
+| 2026-09-15 21:10 | sending | 938427003 | AKSNES KYSTFISKE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-15 09:47 | sent | 938480311 | BJØRGE ULVEDAL | ENK | email | - |
 | 2026-09-15 09:47 | sending | 938480311 | BJØRGE ULVEDAL | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-15 09:47 | sent | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | - |
