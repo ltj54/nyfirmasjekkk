@@ -4,15 +4,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 803
-- Sendt: 389
+- Antall hendelser: 857
+- Sendt: 416
 - Angret: 0
-- Aktive kontaktede selskaper: 256
+- Aktive kontaktede selskaper: 263
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-15 | 938480311 | BJØRGE ULVEDAL | ENK | email | website-offer |
+| 2026-09-15 | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | website-offer |
+| 2026-09-15 | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | website-offer |
+| 2026-09-15 | 938469962 | BAKRI ARAB EXPRESS | ENK | email | website-offer |
+| 2026-09-15 | 938424543 | HANS OLAV LEE EVENTS | ENK | email | website-offer |
+| 2026-09-15 | 938488169 | SIV SANDEN OTTO | ENK | email | website-offer |
+| 2026-09-15 | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | website-offer |
+| 2026-09-15 | 938270600 | STAFSETH RAUS BEVEGELIGHET | ENK | email | website-follow-up |
+| 2026-09-15 | 938405794 | ÅSEN OG HILDE DA | DA | email | website-follow-up |
+| 2026-09-15 | 938268304 | FREBERG-THOMSEN EQ-MASSASJE | ENK | email | website-follow-up |
+| 2026-09-15 | 938350647 | GLITTER GLEDE BRANDY BENNETT | ENK | email | website-follow-up |
+| 2026-09-15 | 837816882 | HANNE NYGÅRDS KAKER VADSØ | ENK | email | website-follow-up |
+| 2026-09-15 | 938355185 | JORDBREKK SØNDRE ANDRINE SKJELDRUM ELGVANG | ENK | email | website-follow-up |
+| 2026-09-15 | 938356793 | MEDJBOURI MEDIA | ENK | email | website-follow-up |
+| 2026-09-15 | 938352895 | SIRI-MARI HORVEI FORMIDLING | ENK | email | website-follow-up |
+| 2026-09-15 | 938355312 | THEODOR TVEIT MEDIA | ENK | email | website-follow-up |
+| 2026-09-15 | 938352518 | SARA WETTRE MEDIA | ENK | email | website-follow-up |
+| 2026-09-15 | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | website-follow-up |
+| 2026-09-15 | 938452172 | BYE A.O. | ENK | email | website-follow-up |
+| 2026-09-15 | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | website-follow-up |
+| 2026-09-15 | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | website-follow-up |
+| 2026-09-15 | 838357792 | MESTAD AKTIV HELSE | ENK | email | website-follow-up |
+| 2026-09-15 | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | website-follow-up |
+| 2026-09-15 | 938360006 | L'USINE BLEUE AB | NUF | email | website-follow-up |
+| 2026-09-15 | 938354987 | RABENS SALONER NUF | NUF | email | website-follow-up |
+| 2026-09-15 | 938344396 | SC - CONTROL S.R.O. | NUF | email | website-follow-up |
+| 2026-09-15 | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | website-follow-up |
 | 2026-09-14 | 938393796 | SAMMEN I NAMSOS | FLI | email | website-offer |
 | 2026-09-14 | 938390835 | SUNNIVA DAHL PETTERSEN | ENK | email | website-offer |
 | 2026-09-14 | 938477116 | SIGURD LYGREN BØRRESEN MUSIKK | ENK | email | website-offer |
@@ -168,23 +195,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-10 | 938378703 | HELGESEN FØRSTEHJELP | ENK | email | website-offer |
 | 2026-09-10 | 938381585 | DANSK BY ROSVALL | ENK | email | website-offer |
 | 2026-09-10 | 938382875 | BILDE TEACHING | ENK | email | website-offer |
-| 2026-09-09 | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | website-offer |
-| 2026-09-09 | 938344396 | SC - CONTROL S.R.O. | NUF | email | website-offer |
-| 2026-09-09 | 938354987 | RABENS SALONER NUF | NUF | email | website-offer |
-| 2026-09-09 | 938360006 | L'USINE BLEUE AB | NUF | email | website-offer |
-| 2026-09-09 | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | website-offer |
-| 2026-09-09 | 838357792 | MESTAD AKTIV HELSE | ENK | email | website-offer |
-| 2026-09-09 | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | website-offer |
-| 2026-09-09 | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | website-offer |
-| 2026-09-09 | 938452172 | BYE A.O. | ENK | email | website-offer |
-| 2026-09-09 | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | website-offer |
-| 2026-09-09 | 938352518 | SARA WETTRE MEDIA | ENK | email | website-offer |
-| 2026-09-09 | 938355312 | THEODOR TVEIT MEDIA | ENK | email | website-offer |
-| 2026-09-09 | 938352895 | SIRI-MARI HORVEI FORMIDLING | ENK | email | website-offer |
-| 2026-09-09 | 938356793 | MEDJBOURI MEDIA | ENK | email | website-offer |
-| 2026-09-09 | 938355185 | JORDBREKK SØNDRE ANDRINE SKJELDRUM ELGVANG | ENK | email | website-offer |
-| 2026-09-09 | 837816882 | HANNE NYGÅRDS KAKER VADSØ | ENK | email | website-offer |
-| 2026-09-09 | 938350647 | BRANDY BENNETT | ENK | email | website-offer |
 | 2026-09-09 | 938373140 | FJORKONGEN LEIF TORE LORENTZEN | ENK | email | website-follow-up |
 | 2026-09-09 | 938372527 | ARDON CONSULTING | ENK | email | website-follow-up |
 | 2026-09-09 | 938371628 | BARSAN RIDER | ENK | email | website-follow-up |
@@ -260,9 +270,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-03 | 838353282 | GARN AS | AS | email | website-follow-up |
 | 2026-09-03 | 938200106 | OK BEIL HOLDING AS | AS | email | website-follow-up |
 | 2026-09-03 | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | website-follow-up |
-| 2026-09-03 | 938268304 | FREBERG-THOMSEN EQ-MASSASJE | ENK | email | website-offer |
-| 2026-09-03 | 938405794 | ÅSEN OG HILDE DA | DA | email | website-offer |
-| 2026-09-03 | 938270600 | STAFSETH RAUS BEVEGELIGHET | ENK | email | website-offer |
 | 2026-09-03 | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | website-offer |
 | 2026-09-03 | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | website-offer |
 | 2026-09-03 | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | website-offer |
@@ -274,6 +281,60 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-15 09:47 | sent | 938480311 | BJØRGE ULVEDAL | ENK | email | - |
+| 2026-09-15 09:47 | sending | 938480311 | BJØRGE ULVEDAL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:47 | sent | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | - |
+| 2026-09-15 09:47 | sending | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:46 | sent | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | - |
+| 2026-09-15 09:46 | sending | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:46 | sent | 938469962 | BAKRI ARAB EXPRESS | ENK | email | - |
+| 2026-09-15 09:46 | sending | 938469962 | BAKRI ARAB EXPRESS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:46 | sent | 938424543 | HANS OLAV LEE EVENTS | ENK | email | - |
+| 2026-09-15 09:46 | sending | 938424543 | HANS OLAV LEE EVENTS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:46 | sent | 938488169 | SIV SANDEN OTTO | ENK | email | - |
+| 2026-09-15 09:46 | sending | 938488169 | SIV SANDEN OTTO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:46 | sent | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | - |
+| 2026-09-15 09:46 | sending | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938270600 | STAFSETH RAUS BEVEGELIGHET | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938270600 | STAFSETH RAUS BEVEGELIGHET | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938405794 | ÅSEN OG HILDE DA | DA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938405794 | ÅSEN OG HILDE DA | DA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938268304 | FREBERG-THOMSEN EQ-MASSASJE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938268304 | FREBERG-THOMSEN EQ-MASSASJE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938350647 | GLITTER GLEDE BRANDY BENNETT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938350647 | GLITTER GLEDE BRANDY BENNETT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 837816882 | HANNE NYGÅRDS KAKER VADSØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 837816882 | HANNE NYGÅRDS KAKER VADSØ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938355185 | JORDBREKK SØNDRE ANDRINE SKJELDRUM ELGVANG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938355185 | JORDBREKK SØNDRE ANDRINE SKJELDRUM ELGVANG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938356793 | MEDJBOURI MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938356793 | MEDJBOURI MEDIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938352895 | SIRI-MARI HORVEI FORMIDLING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938352895 | SIRI-MARI HORVEI FORMIDLING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938355312 | THEODOR TVEIT MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938355312 | THEODOR TVEIT MEDIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:45 | sent | 938352518 | SARA WETTRE MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:45 | sending | 938352518 | SARA WETTRE MEDIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938374112 | GRÜNERLØKKA JAKTLAG | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938452172 | BYE A.O. | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938452172 | BYE A.O. | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938360316 | G ADMINISTRASJON BALCIUTE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938371466 | JIBRAIL BYGGKONSULT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 838357792 | MESTAD AKTIV HELSE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 838357792 | MESTAD AKTIV HELSE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938357323 | PROBABLY AN ARTIST - SELINA BAUMER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938360006 | L'USINE BLEUE AB | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938360006 | L'USINE BLEUE AB | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938354987 | RABENS SALONER NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938354987 | RABENS SALONER NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938344396 | SC - CONTROL S.R.O. | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938344396 | SC - CONTROL S.R.O. | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-15 09:44 | sent | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-15 09:44 | sending | 938358680 | KAPAMBU RENHOLD, PRAKTISK HJELP | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-14 22:16 | sent | 938393796 | SAMMEN I NAMSOS | FLI | email | - |
 | 2026-09-14 22:16 | sending | 938393796 | SAMMEN I NAMSOS | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-14 22:16 | sent | 938390835 | SUNNIVA DAHL PETTERSEN | ENK | email | - |
