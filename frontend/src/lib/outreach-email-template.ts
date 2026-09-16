@@ -147,10 +147,25 @@ export function buildFollowUpEmailSubject(markdown: string, company: OutreachEma
   return applyOutreachTemplate(template, company);
 }
 
-export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailCompany) {
+export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailCompany, originalOfferType?: string | null) {
   const template = extractMarkdownSection(markdown, "Oppfølging etter 4–14 arbeidsdager")
     ?? defaultFollowUpEmailTemplate();
-  return applyOutreachTemplate(removeMailSubjectLine(template), company);
+  const body = removeMailSubjectLine(template).replaceAll("{{followUpQuestion}}", followUpQuestion(originalOfferType));
+  return applyOutreachTemplate(body, company);
+}
+
+function followUpQuestion(originalOfferType: string | null | undefined) {
+  switch (originalOfferType) {
+    case "website-improvement-offer":
+    case "website-registered-review":
+      return "Ønsker dere en kort, gratis og uforpliktende vurdering med noen konkrete forbedringsforslag?";
+    case "website-unavailable-offer":
+      return "Er nettadressen jeg nevnte fortsatt riktig for {{companyName}}?";
+    case "website-offer":
+      return "Ønsker dere et kort, gratis og uforpliktende forslag til innhold, oppbygging og aktuelle funksjoner?";
+    default:
+      return "Er det aktuelt å se nærmere på det jeg foreslo?";
+  }
 }
 
 type OutreachEmailTemplateConfig = {
@@ -163,7 +178,7 @@ function outreachEmailTemplateConfig(company: OutreachEmailCompany): OutreachEma
   if (isRegisteredWebsiteUnavailable(company)) {
     return {
       heading: "E-postmal - registrert nettside svarer ikke",
-      subjectFallback: "Nettsiden til {{companyName}} svarte ikke",
+      subjectFallback: "Spørsmål om nettsiden til {{companyName}}",
       bodyFallback: defaultRegisteredWebsiteUnavailableEmailTemplate,
     };
   }
@@ -183,7 +198,7 @@ function outreachEmailTemplateConfig(company: OutreachEmailCompany): OutreachEma
   }
   return {
     heading: "E-postmal",
-    subjectFallback: "Et forslag til nettside for {{companyName}}",
+    subjectFallback: "Nettside for {{companyName}}?",
     bodyFallback: defaultOutreachEmailTemplate,
   };
 }
@@ -734,19 +749,19 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
 function defaultWebsiteQualityOpportunityEmailTemplate() {
   return `{{greetingLine}}
 
-${PERSONAL_OBSERVATION_PLACEHOLDER}
+En automatisk førstesjekk av nettsiden til {{companyName}} ga følgende signal:
 
 {{websiteQualityMailLine}}
 {{websiteQualityImpactLine}}
 
-Dette er ikke en full gjennomgang, men det kan være verdt å se nærmere på.
+Funnet bør kontrolleres manuelt før vi konkluderer med at noe bør endres.
 
-Hvis dette kan være interessant, sender jeg gjerne en kort og uforpliktende rapport med konkrete funn og forslag til forbedringer.
+Jeg kan først sende en kort, gratis vurdering med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
 
 Her er et eksempel på hva jeg ser etter:
 {{websiteCheckSenderWebsite}}
 
-Skal jeg sende den?
+Skal jeg sende en slik uforpliktende vurdering?
 
 Med vennlig hilsen
 {{senderName}}
@@ -757,20 +772,18 @@ Med vennlig hilsen
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
-${PERSONAL_OBSERVATION_PLACEHOLDER}
+Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {{companyName}}. Det kan være midlertidig eller skyldes selve sjekken.
 
-{{salesSegmentPitch}}
+Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobiltilpasset nettside til en portal med database og CRM. Vi avklarer behovene sammen, med vekt på universell utforming og personvern, inkludert GDPR.
 
-Jeg så også at {{registeredWebsite}} er registrert som nettside, men siden svarte ikke da jeg sjekket. Det kan selvfølgelig være midlertidig.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
 
-Jeg lager profesjonelle og mobiltilpassede nettsider for små virksomheter og organisasjoner.
-
-En førsteside koster fast {{priceValue}} kr og tilpasses med deres innhold, bilder og kontaktinformasjon. Jeg hjelper også med publisering. Dersom dere senere ønsker flere sider, påmelding, booking, nettbutikk eller andre funksjoner, kan dette bygges ut etter avtale. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklarer vi på forhånd.
 
 Her kan dere se hvordan jeg jobber:
 {{senderWebsite}}
 
-Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan nettsiden for {{companyName}} kan bygges opp.
+Er dette fortsatt riktig nettadresse for dere?
 
 Med vennlig hilsen
 {{senderName}}
@@ -818,16 +831,16 @@ function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany
 function defaultRegisteredWebsiteReviewEmailTemplate() {
   return `{{greetingLine}}
 
-${PERSONAL_OBSERVATION_PLACEHOLDER}
+Jeg kom over nettsideadressen til {{companyName}} og vil høre om dere ønsker en kort vurdering av siden.
 
-Jeg tilbyr korte nettsidesjekker med vurdering av blant annet mobilbruk, kontaktinformasjon, teknisk kvalitet og personvern.
+Jeg ser blant annet på tydelig innhold, mobilbruk, kontaktmuligheter og forhold knyttet til universell utforming og personvern.
 
-Hvis dette kan være interessant, tar jeg gjerne en nærmere titt på siden deres og sender noen konkrete og uforpliktende forslag.
+Den første vurderingen er gratis og uforpliktende, med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
 
 Her kan dere se hva sjekken omfatter:
 {{websiteCheckSenderWebsite}}
 
-Kan det være interessant?
+Skal jeg sende en slik vurdering?
 
 Med vennlig hilsen
 {{senderName}}
@@ -842,16 +855,16 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 {{salesSegmentPitch}}
 
-Jeg lager profesjonelle og mobiltilpassede nettsider for små virksomheter og organisasjoner.
+Jeg utvikler mobiltilpassede nettsider og skreddersydde løsninger – fra presentasjonssider til portaler med database og CRM. Vi avklarer behovene sammen, med vekt på universell utforming og personvern, inkludert GDPR.
 
-En førsteside koster fast {{priceValue}} kr og tilpasses med deres innhold, bilder og kontaktinformasjon. Jeg hjelper også med publisering.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
 
-Dersom dere senere ønsker flere sider, påmelding, booking, nettbutikk eller andre funksjoner, kan dette bygges ut etter avtale. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklarer vi på forhånd.
 
-Her kan dere se et eksempel på hvordan jeg arbeider:
+Her kan dere se hvordan jeg arbeider:
 {{senderWebsite}}
 
-Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan nettsiden for {{companyName}} kan bygges opp.
+Skal jeg sende et kort, gratis og uforpliktende forslag til innhold, oppbygging og aktuelle funksjoner?
 
 Med vennlig hilsen
 {{senderName}}
@@ -862,11 +875,11 @@ Med vennlig hilsen
 function defaultFollowUpEmailTemplate() {
   return `{{greetingLine}}
 
-Ville bare høre om {{recipientSubject}} fikk sett meldingen min om nettside for {{companyName}}.
+Ville bare følge opp e-posten min om nettsiden til {{companyName}}.
 
-Jeg tror det kan løses ryddig uten å gjøre prosjektet større enn nødvendig.
+{{followUpQuestion}}
 
-Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan siden kan bygges opp.
+Hvis det ikke er aktuelt, er det helt i orden. Jeg lar saken ligge dersom jeg ikke hører fra dere.
 
 Med vennlig hilsen
 {{senderName}}

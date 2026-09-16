@@ -1,4 +1,4 @@
-# Formular for tilbudsmail
+# Maler for tilbudsmail og oppfølging
 
 Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 
@@ -21,13 +21,14 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Registrert nettside-intro: `{{registeredWebsiteIntro}}`
 - Dokumentert observasjon: `{{websiteQualityMailLine}}`
 - Kort konsekvens: `{{websiteQualityImpactLine}}`
+- Oppfølgingsspørsmål: `{{followUpQuestion}}` (velges ut fra typen første henvendelse i utsendelsesloggen)
 - Eksempel/URL: `{{senderWebsite}}`
 - Hvorfor selskapet er relevant lead:
   - `[For eksempel: nylig registrert]`
   - `[For eksempel: mangler nettside]`
   - `[For eksempel: har e-post eller telefon registrert]`
 - Tilbud:
-  - Produkt: `Nettside`
+  - Produkt: `Nettside, portal eller skreddersydd nettløsning`
   - Innhold:
     - `Nettside`
     - `Hjelp med domene`
@@ -41,8 +42,8 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 
 ## Regler for generering
 
-- Hold e-posten kort, helst 6-9 linjer før signatur.
-- Skriv på norsk bokmal.
+- Hold e-posten kort, med korte avsnitt og ett enkelt spørsmål til slutt.
+- Skriv på norsk bokmål. Bruk «dere» og «deres» konsekvent om virksomheten, også når hilsenen bruker kontaktpersonens fornavn.
 - Ikke bruk overdreven salgstone.
 - Ikke påstå ting du ikke vet sikkert.
 - Hvis kontaktperson mangler, skriv til selskapet generelt.
@@ -51,14 +52,19 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - `[Skriv én konkret observasjon om virksomheten her.]` erstattes automatisk med en naturlig, virksomhetsspesifikk åpning. Næringskode og BRREG skal ikke nevnes i den ferdige e-posten.
 - Bruk næringskode og salgsgruppe internt for å tilpasse teksten til virksomhetstypen, men skriv for mottakeren – ikke som et registerutdrag.
 - Skriv selskapsnavn med naturlig bruk av store og små bokstaver.
-- Et gratis forslag er bare en kort tekstskisse av overskrift, seksjoner og stil. Ikke lag design eller bygg siden før pris og leveranse er akseptert.
+- Et gratis forslag er en kort skisse av innhold, oppbygging og aktuelle funksjoner. Behov og leveranse avklares i en kravspesifikasjon før utviklingen starter.
+- Løsningen kan være en nettside med flere sider, en portal eller et system med database og CRM. Antall sider er ikke en teknisk begrensning; funksjoner velges ut fra kundens behov.
+- Universell utforming og personvern med fokus på GDPR inngår i planleggingen. Ikke lov full etterlevelse uten at krav, faktisk løsning og kundens bruk er vurdert.
+- Fastprisen på {{priceValue}} kr gjelder en avtalt grunnløsning, inkludert utvikling, tilpasning av innhold og publisering. Grunnløsningen er ikke begrenset til én side; innhold og funksjoner avklares i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter. Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklares på forhånd.
+- En gratis nettsidevurdering er en kort innledende vurdering med forbedringsforslag. Den inkluderer ikke retting eller en full gjennomgang.
 - Bruk nøyaktig ett konkret, dokumentert funn i forbedringsmailen.
+- Beskriv automatiske funn som signaler fra en førstesjekk, ikke som manuelt bekreftede feil. Ikke lov bedre Google-plassering eller påstå at kunder går tapt.
 - Registrert nettside uten et godkjent funn skal legges til manuell kontroll og ikke sendes automatisk.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
 
 ## E-postmal
 
-Emne: `Et forslag til nettside for {{companyName}}`
+Emne: `Nettside for {{companyName}}?`
 
 {{greetingLine}}
 
@@ -66,47 +72,43 @@ Emne: `Et forslag til nettside for {{companyName}}`
 
 {{salesSegmentPitch}}
 
-Jeg lager profesjonelle og mobiltilpassede nettsider for små virksomheter og organisasjoner.
+Jeg utvikler mobiltilpassede nettsider og skreddersydde løsninger – fra presentasjonssider til portaler med database og CRM. Vi avklarer behovene sammen, med vekt på universell utforming og personvern, inkludert GDPR.
 
-En førsteside koster fast {{priceValue}} kr og tilpasses med deres innhold, bilder og kontaktinformasjon. Jeg hjelper også med publisering.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
 
-Dersom dere senere ønsker flere sider, påmelding, booking, nettbutikk eller andre funksjoner, kan dette bygges ut etter avtale. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklarer vi på forhånd.
 
-Her kan dere se et eksempel på hvordan jeg arbeider:
+Her kan dere se hvordan jeg arbeider:
 {{senderWebsite}}
 
-Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan nettsiden for {{companyName}} kan bygges opp.
+Skal jeg sende et kort, gratis og uforpliktende forslag til innhold, oppbygging og aktuelle funksjoner?
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}
 
 ## E-postmal - registrert nettside svarer ikke
 
-Emne: `Nettsiden til {{companyName}} svarte ikke`
+Emne: `Spørsmål om nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-[Skriv én konkret observasjon om virksomheten her.]
+Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {{companyName}}. Det kan være midlertidig eller skyldes selve sjekken.
 
-{{salesSegmentPitch}}
+Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobiltilpasset nettside til en portal med database og CRM. Vi avklarer behovene sammen, med vekt på universell utforming og personvern, inkludert GDPR.
 
-Jeg så også at {{registeredWebsite}} er registrert som nettside, men siden svarte ikke da jeg sjekket. Det kan selvfølgelig være midlertidig.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
 
-Jeg lager profesjonelle og mobiltilpassede nettsider for små virksomheter og organisasjoner.
-
-En førsteside koster fast {{priceValue}} kr og tilpasses med deres innhold, bilder og kontaktinformasjon. Jeg hjelper også med publisering. Dersom dere senere ønsker flere sider, påmelding, booking, nettbutikk eller andre funksjoner, kan dette bygges ut etter avtale. Domene og drift avklarer vi ut fra hva dere allerede har og trenger.
+Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklarer vi på forhånd.
 
 Her kan dere se hvordan jeg jobber:
 {{senderWebsite}}
 
-Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan nettsiden for {{companyName}} kan bygges opp.
+Er dette fortsatt riktig nettadresse for dere?
 
 Med vennlig hilsen
 {{senderName}}  
-LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
@@ -116,23 +118,22 @@ Emne: `En observasjon om nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-[Skriv én konkret observasjon om virksomheten her.]
+En automatisk førstesjekk av nettsiden til {{companyName}} ga følgende signal:
 
 {{websiteQualityMailLine}}
 {{websiteQualityImpactLine}}
 
-Dette er ikke en full gjennomgang, men det kan være verdt å se nærmere på.
+Funnet bør kontrolleres manuelt før vi konkluderer med at noe bør endres.
 
-Hvis dette kan være interessant, sender jeg gjerne en kort og uforpliktende rapport med konkrete funn og forslag til forbedringer.
+Jeg kan først sende en kort, gratis vurdering med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
 
 Her er et eksempel på hva jeg ser etter:
 {{websiteCheckSenderWebsite}}
 
-Skal jeg sende den?
+Skal jeg sende en slik uforpliktende vurdering?
 
 Med vennlig hilsen
 {{senderName}}  
-LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
@@ -142,39 +143,37 @@ Emne: `Nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-[Skriv én konkret observasjon om virksomheten her.]
+Jeg kom over nettsideadressen til {{companyName}} og vil høre om dere ønsker en kort vurdering av siden.
 
-Jeg tilbyr korte nettsidesjekker med vurdering av blant annet mobilbruk, kontaktinformasjon, teknisk kvalitet og personvern.
+Jeg ser blant annet på tydelig innhold, mobilbruk, kontaktmuligheter og forhold knyttet til universell utforming og personvern.
 
-Hvis dette kan være interessant, tar jeg gjerne en nærmere titt på siden deres og sender noen konkrete og uforpliktende forslag.
+Den første vurderingen er gratis og uforpliktende, med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
 
 Her kan dere se hva sjekken omfatter:
 {{websiteCheckSenderWebsite}}
 
-Kan det være interessant?
+Skal jeg sende en slik vurdering?
 
 Med vennlig hilsen
 {{senderName}}  
-LTJ Production
 {{senderPhone}}  
 {{senderEmail}}
 
 ## Oppfølging etter 4–14 arbeidsdager
 
-Send bare én oppfølging. Tilpass første setning og avslutt kontakten dersom det fortsatt er stille.
+Send bare én oppfølging, kun når mottakeren ikke har svart. Velg spørsmålet ut fra den første henvendelsen i utsendelsesloggen, og avslutt kontakten dersom det fortsatt er stille.
 
 Emne: `Oppfølging: nettside for {{companyName}}`
 
 {{greetingLine}}
 
-Ville bare høre om {{recipientSubject}} fikk sett meldingen min om nettside for {{companyName}}.
+Ville bare følge opp e-posten min om nettsiden til {{companyName}}.
 
-Jeg tror det kan løses ryddig uten å gjøre prosjektet større enn nødvendig.
+{{followUpQuestion}}
 
-Hvis dette kan være interessant, sender jeg gjerne et kort og uforpliktende forslag til hvordan siden kan bygges opp.
+Hvis det ikke er aktuelt, er det helt i orden. Jeg lar saken ligge dersom jeg ikke hører fra dere.
 
 Med vennlig hilsen
 {{senderName}}
-LTJ Production
 {{senderPhone}}
 {{senderEmail}}

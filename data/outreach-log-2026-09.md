@@ -4,15 +4,49 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 881
-- Sendt: 428
+- Antall hendelser: 949
+- Sendt: 462
 - Angret: 0
-- Aktive kontaktede selskaper: 275
+- Aktive kontaktede selskaper: 289
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-16 | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | website-follow-up |
+| 2026-09-16 | 938382875 | BILDE TEACHING | ENK | email | website-follow-up |
+| 2026-09-16 | 938381585 | DANSK BY ROSVALL | ENK | email | website-follow-up |
+| 2026-09-16 | 938378703 | HELGESEN FØRSTEHJELP | ENK | email | website-follow-up |
+| 2026-09-16 | 938383227 | HUDSON LEWIS ENK | ENK | email | website-follow-up |
+| 2026-09-16 | 938466092 | MANDT RØMER HOLDING APS | UTLA | email | website-follow-up |
+| 2026-09-16 | 938377987 | MARKUS ØSTHUS UTLEIE | ENK | email | website-follow-up |
+| 2026-09-16 | 938379971 | NORDLØKKEN STUDIO | ENK | email | website-follow-up |
+| 2026-09-16 | 938234655 | ROGLAST AS | AS | email | website-follow-up |
+| 2026-09-16 | 838468152 | UAB DORNELA | UTLA | email | website-follow-up |
+| 2026-09-16 | 938465622 | WIE JULETREGARD | ENK | email | website-follow-up |
+| 2026-09-16 | 938459835 | JØSANG MASKIN UTLEIE | ENK | email | website-follow-up |
+| 2026-09-16 | 838370632 | LINGE GLOMNES SPORT | ENK | email | website-follow-up |
+| 2026-09-16 | 938370648 | RIKKE BORREGAARD HINT OF LUXURY | ENK | email | website-follow-up |
+| 2026-09-16 | 938445559 | LT DRAMMEN AS | AS | email | website-follow-up |
+| 2026-09-16 | 838339042 | SKJONG TECH SERVICE | ENK | email | website-follow-up |
+| 2026-09-16 | 838460852 | TN RENHOLD NIKOLAIEVA | ENK | email | website-follow-up |
+| 2026-09-16 | 938462496 | RISNES SVISJ | ENK | email | website-follow-up |
+| 2026-09-16 | 938461295 | JL CONSULTING AS | AS | email | website-follow-up |
+| 2026-09-16 | 938370680 | LEVI RÆDER | ENK | email | website-follow-up |
+| 2026-09-16 | 937601026 | OLSVIKÅSEN VGS. BEDRIFTSIDRETTSLAG | FLI | email | website-offer |
+| 2026-09-16 | 938405042 | SAMEIET NORDBØ 8 | ESEK | email | website-offer |
+| 2026-09-16 | 938426406 | NIKOLAOS STATHOPOULOS PERSONAL TRAINING | ENK | email | website-offer |
+| 2026-09-16 | 838496652 | AKSEL DUELED PIANIST | ENK | email | website-offer |
+| 2026-09-16 | 938467919 | SIRIUS CORP AI AS | AS | email | website-offer |
+| 2026-09-16 | 938497419 | NEGLEROMMET BY CATHERINE JASMIN ALTINCICEK | ENK | email | website-offer |
+| 2026-09-16 | 938386943 | RENATAS BERLETA NUF | NUF | email | website-offer |
+| 2026-09-16 | 938489386 | RENATAS BERLETA | UTLA | email | website-offer |
+| 2026-09-16 | 938434956 | NORDANG PARTNERS | ENK | email | website-offer |
+| 2026-09-16 | 938105898 | ANCHOR POINT CLINICAL CONSULTING INC NUF | NUF | email | website-offer |
+| 2026-09-16 | 937775156 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | NUF | email | website-offer |
+| 2026-09-16 | 938488711 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | UTLA | email | website-offer |
+| 2026-09-16 | 938401829 | JÓZEF SENDOR BASECONTROL | UTLA | email | website-offer |
+| 2026-09-16 | 838436692 | BACHMANN PRESISJON | ENK | email | website-offer |
 | 2026-09-15 | 938314985 | INTENT MEDIA AS | AS | email | website-offer |
 | 2026-09-15 | 938489270 | BIRGIDA AS | AS | email | website-offer |
 | 2026-09-15 | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | website-offer |
@@ -188,25 +222,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-10 | 938415560 | SANDRINE MARSTEIN ANDERSEN | ENK | email | website-follow-up |
 | 2026-09-10 | 938404747 | B. NTWALI | ENK | email | website-follow-up |
 | 2026-09-10 | 938403988 | PERSONLIG TRENER KAROLINE SAMUELSEN | ENK | email | website-follow-up |
-| 2026-09-10 | 938370680 | LEVI RÆDER | ENK | email | website-offer |
-| 2026-09-10 | 938461295 | JL CONSULTING AS | AS | email | website-offer |
-| 2026-09-10 | 938462496 | RISNES SVISJ | ENK | email | website-offer |
-| 2026-09-10 | 838460852 | TN RENHOLD NIKOLAIEVA | ENK | email | website-offer |
-| 2026-09-10 | 838339042 | SKJONG TECH SERVICE | ENK | email | website-offer |
-| 2026-09-10 | 938445559 | LT DRAMMEN AS | AS | email | website-offer |
-| 2026-09-10 | 938370648 | RIKKE BORREGAARD HINT OF LUXURY | ENK | email | website-offer |
-| 2026-09-10 | 838370632 | LINGE GLOMNES SPORT | ENK | email | website-offer |
-| 2026-09-10 | 938459835 | JØSANG MASKIN UTLEIE | ENK | email | website-offer |
-| 2026-09-10 | 938465622 | WIE JULETREGARD | ENK | email | website-offer |
-| 2026-09-10 | 838468152 | UAB DORNELA | UTLA | email | website-offer |
-| 2026-09-10 | 938234655 | ROGLAST AS | AS | email | website-offer |
-| 2026-09-10 | 938379971 | NORDLØKKEN STUDIO | ENK | email | website-offer |
-| 2026-09-10 | 938377987 | MARKUS ØSTHUS UTLEIE | ENK | email | website-offer |
-| 2026-09-10 | 938466092 | MANDT RØMER HOLDING APS | UTLA | email | website-offer |
-| 2026-09-10 | 938383227 | HUDSON LEWIS ENK | ENK | email | website-offer |
-| 2026-09-10 | 938378703 | HELGESEN FØRSTEHJELP | ENK | email | website-offer |
-| 2026-09-10 | 938381585 | DANSK BY ROSVALL | ENK | email | website-offer |
-| 2026-09-10 | 938382875 | BILDE TEACHING | ENK | email | website-offer |
 | 2026-09-09 | 938373140 | FJORKONGEN LEIF TORE LORENTZEN | ENK | email | website-follow-up |
 | 2026-09-09 | 938372527 | ARDON CONSULTING | ENK | email | website-follow-up |
 | 2026-09-09 | 938371628 | BARSAN RIDER | ENK | email | website-follow-up |
@@ -282,7 +297,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-03 | 838353282 | GARN AS | AS | email | website-follow-up |
 | 2026-09-03 | 938200106 | OK BEIL HOLDING AS | AS | email | website-follow-up |
 | 2026-09-03 | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | website-follow-up |
-| 2026-09-03 | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | website-offer |
 | 2026-09-03 | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | website-offer |
 | 2026-09-03 | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | website-offer |
 | 2026-09-03 | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | website-offer |
@@ -293,6 +307,74 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-16 09:16 | sent | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:16 | sending | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938382875 | BILDE TEACHING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938382875 | BILDE TEACHING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938381585 | DANSK BY ROSVALL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938381585 | DANSK BY ROSVALL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938378703 | HELGESEN FØRSTEHJELP | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938378703 | HELGESEN FØRSTEHJELP | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938383227 | HUDSON LEWIS ENK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938383227 | HUDSON LEWIS ENK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938466092 | MANDT RØMER HOLDING APS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938466092 | MANDT RØMER HOLDING APS | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938377987 | MARKUS ØSTHUS UTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938377987 | MARKUS ØSTHUS UTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938379971 | NORDLØKKEN STUDIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938379971 | NORDLØKKEN STUDIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938234655 | ROGLAST AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938234655 | ROGLAST AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 838468152 | UAB DORNELA | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 838468152 | UAB DORNELA | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938465622 | WIE JULETREGARD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938465622 | WIE JULETREGARD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938459835 | JØSANG MASKIN UTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938459835 | JØSANG MASKIN UTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 838370632 | LINGE GLOMNES SPORT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 838370632 | LINGE GLOMNES SPORT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938370648 | RIKKE BORREGAARD HINT OF LUXURY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938370648 | RIKKE BORREGAARD HINT OF LUXURY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:15 | sent | 938445559 | LT DRAMMEN AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:15 | sending | 938445559 | LT DRAMMEN AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 838339042 | SKJONG TECH SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:14 | sending | 838339042 | SKJONG TECH SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 838460852 | TN RENHOLD NIKOLAIEVA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:14 | sending | 838460852 | TN RENHOLD NIKOLAIEVA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938462496 | RISNES SVISJ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:14 | sending | 938462496 | RISNES SVISJ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938461295 | JL CONSULTING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:14 | sending | 938461295 | JL CONSULTING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938370680 | LEVI RÆDER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 09:14 | sending | 938370680 | LEVI RÆDER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 937601026 | OLSVIKÅSEN VGS. BEDRIFTSIDRETTSLAG | FLI | email | - |
+| 2026-09-16 09:14 | sending | 937601026 | OLSVIKÅSEN VGS. BEDRIFTSIDRETTSLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938405042 | SAMEIET NORDBØ 8 | ESEK | email | - |
+| 2026-09-16 09:14 | sending | 938405042 | SAMEIET NORDBØ 8 | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938426406 | NIKOLAOS STATHOPOULOS PERSONAL TRAINING | ENK | email | - |
+| 2026-09-16 09:14 | sending | 938426406 | NIKOLAOS STATHOPOULOS PERSONAL TRAINING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 838496652 | AKSEL DUELED PIANIST | ENK | email | - |
+| 2026-09-16 09:14 | sending | 838496652 | AKSEL DUELED PIANIST | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938467919 | SIRIUS CORP AI AS | AS | email | - |
+| 2026-09-16 09:14 | sending | 938467919 | SIRIUS CORP AI AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938497419 | NEGLEROMMET BY CATHERINE JASMIN ALTINCICEK | ENK | email | - |
+| 2026-09-16 09:14 | sending | 938497419 | NEGLEROMMET BY CATHERINE JASMIN ALTINCICEK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938386943 | RENATAS BERLETA NUF | NUF | email | - |
+| 2026-09-16 09:14 | sending | 938386943 | RENATAS BERLETA NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938489386 | RENATAS BERLETA | UTLA | email | - |
+| 2026-09-16 09:14 | sending | 938489386 | RENATAS BERLETA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938434956 | NORDANG PARTNERS | ENK | email | - |
+| 2026-09-16 09:14 | sending | 938434956 | NORDANG PARTNERS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938105898 | ANCHOR POINT CLINICAL CONSULTING INC NUF | NUF | email | - |
+| 2026-09-16 09:14 | sending | 938105898 | ANCHOR POINT CLINICAL CONSULTING INC NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 937775156 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | NUF | email | - |
+| 2026-09-16 09:14 | sending | 937775156 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:14 | sent | 938488711 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | UTLA | email | - |
+| 2026-09-16 09:14 | sending | 938488711 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:12 | sent | 938401829 | JÓZEF SENDOR BASECONTROL | UTLA | email | - |
+| 2026-09-16 09:12 | sending | 938401829 | JÓZEF SENDOR BASECONTROL | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 09:12 | sent | 838436692 | BACHMANN PRESISJON | ENK | email | - |
+| 2026-09-16 09:12 | sending | 838436692 | BACHMANN PRESISJON | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-15 21:11 | sent | 938314985 | INTENT MEDIA AS | AS | email | - |
 | 2026-09-15 21:11 | sending | 938314985 | INTENT MEDIA AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-15 21:11 | sent | 938489270 | BIRGIDA AS | AS | email | - |

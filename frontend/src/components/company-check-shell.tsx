@@ -1410,6 +1410,24 @@ export function CompanyCheckShell() {
     }
   }
 
+  function markLeadNotRelevant(company: CompanySummary) {
+    const existingStatus = outreachStatusByOrg[company.orgNumber];
+    const entry: OutreachStatus = existingStatus ?? {
+      orgNumber: company.orgNumber,
+      sent: false,
+      status: null,
+      companyName: company.name,
+      organizationForm: company.organizationForm,
+      price: null,
+      channel: "email",
+      offerType: "website-offer",
+      timestamp: null,
+      sentAt: null,
+      note: null,
+    };
+    return markOutreachEntryNotRelevant(entry);
+  }
+
   async function runFollowUpBatch(entries: OutreachStatus[]) {
     if (isFollowUpBatchSending || entries.length === 0) return;
     const dueOrgNumbers = new Set(getOutreachEntriesDueForFollowUp(outreachEntries).map((entry) => entry.orgNumber));
@@ -1445,7 +1463,7 @@ export function CompanyCheckShell() {
           continue;
         }
         const subject = buildFollowUpEmailSubject(content, company);
-        const body = buildFollowUpEmailBody(content, company);
+        const body = buildFollowUpEmailBody(content, company, entry.offerType);
         const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
           method: "POST",
           cache: "no-store",
@@ -2206,6 +2224,8 @@ export function CompanyCheckShell() {
                     key={company.orgNumber}
                     company={company}
                     onClick={() => void openCompanyDetails(company.orgNumber)}
+                    onMarkNotRelevant={() => void markLeadNotRelevant(company)}
+                    savingNotRelevant={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
                     batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])}
                     batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
@@ -4123,16 +4143,20 @@ function LeadResultRow({
   batchValidation,
   company,
   onClick,
+  onMarkNotRelevant,
   onToggleBatch,
   outreachStatus,
+  savingNotRelevant,
 }: Readonly<{
   batchSelectable: boolean;
   batchSelected: boolean;
   batchValidation: BatchValidation | null;
   company: CompanySummary;
   onClick: () => void;
+  onMarkNotRelevant: () => void;
   onToggleBatch: (selected: boolean) => void;
   outreachStatus: OutreachStatus | null;
+  savingNotRelevant: boolean;
 }>) {
   const priority = getLeadPriority(company);
   const commercialOpportunity = getCommercialOpportunity(company);
@@ -4207,9 +4231,21 @@ function LeadResultRow({
         <p className="mt-1 text-[10px] text-[#52606D]">{risk.detail}</p>
       </div>
 
-      <Button aria-label={`Åpne ${company.name}`} className="justify-self-end rounded-sm" onClick={onClick} size="icon" title="Åpne virksomhet" type="button" variant="ghost">
-        <ChevronRight className="size-4" />
-      </Button>
+      <div className="flex items-center justify-end gap-1 lg:justify-self-end">
+        <button
+          aria-label={`Marker ${company.name} som ikke aktuell`}
+          className="rounded-sm border border-[#D9E2EC] bg-white px-2 py-1.5 text-[10px] font-semibold text-[#52606D] transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={savingNotRelevant}
+          onClick={onMarkNotRelevant}
+          title="Marker som ikke aktuell"
+          type="button"
+        >
+          {savingNotRelevant ? "Lagrer …" : "Ikke aktuell"}
+        </button>
+        <Button aria-label={`Åpne ${company.name}`} className="rounded-sm" onClick={onClick} size="icon" title="Åpne virksomhet" type="button" variant="ghost">
+          <ChevronRight className="size-4" />
+        </Button>
+      </div>
       {(batchValidation?.status === "blocked" && batchValidation.reason) || (batchExcluded && outreachStatus?.note) ? (
         <p className="text-[11px] text-amber-700 lg:col-span-6">
           {batchValidation?.status === "blocked" ? "Batch-sperret" : "Tidligere vurdering"}: {batchValidation?.reason || outreachStatus?.note}
