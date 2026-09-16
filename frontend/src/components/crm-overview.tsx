@@ -17,6 +17,8 @@ type CrmProject = {
   followUpDate?: string;
   responseDeadline?: string;
   domainRemoved?: string;
+  invoiceDate?: string;
+  invoiceDueDate?: string;
   paymentDate?: string;
   invoiceNumber?: string;
   invoiceFile?: string;
@@ -49,10 +51,12 @@ const projects: CrmProject[] = [
     replyDate: "09.09.2026 kl. 15:20",
     outreach: "Kunde godkjent – publisert",
     progress: "Publisert på varneth.eu. Norsk/engelsk forside med KI-musikk, Broken Veil, Black Veil Hart, rådgivning, publishing og kontaktløsning.",
-    nextStep: "Faktura sendt/klargjort. Eventuelle innholdsendringer håndteres manuelt.",
+    nextStep: "Faktura sendt 16.09.2026. Avventer betaling innen 30.09.2026. Eventuelle innholdsendringer håndteres manuelt.",
+    invoiceDate: "16.09.2026",
+    invoiceDueDate: "30.09.2026",
     invoiceNumber: "2026-003",
     invoiceFile: "/invoices/faktura-2026-003-varneth-management-ness.pdf",
-    invoice: "Klar for utsending · 1 990 kr",
+    invoice: "Sendt – avventer betaling · 1 990 kr",
     tone: "border-emerald-200 bg-emerald-50",
   },
   {
@@ -141,6 +145,8 @@ export function CrmOverview() {
               {project.replyDate ? <Row icon={CalendarDays} label="Svar mottatt" value={project.replyDate} /> : null}
               {project.followUpDate ? <Row icon={CalendarDays} label="Purring" value={project.followUpDate} /> : null}
               {project.responseDeadline ? <Row icon={CalendarDays} label="Svarfrist" value={project.responseDeadline} /> : null}
+              {project.invoiceDate ? <Row icon={CalendarDays} label="Fakturadato" value={project.invoiceDate} /> : null}
+              {project.invoiceDueDate ? <Row icon={CalendarDays} label="Forfallsdato" value={project.invoiceDueDate} /> : null}
               {project.paymentDate ? <Row icon={CalendarDays} label="Betalt" value={project.paymentDate} /> : null}
               <Row icon={FileText} label="Dialog" value={project.outreach} />
               <Row icon={Globe2} label="Fremdrift" value={project.progress} />
@@ -153,7 +159,7 @@ export function CrmOverview() {
           </article>
         ))}
       </div>
-      <p className="mt-4 text-[11px] leading-5 text-[#829AB1]">Breathe Senja er ferdig, publisert og betalt. De øvrige løsningene er foreløpig ikke godkjent eller betalt.</p>
+      <p className="mt-4 text-[11px] leading-5 text-[#829AB1]">Breathe Senja er ferdig, publisert og betalt. Varneth Management Ness er publisert og fakturert; øvrige aktive forslag avventer kundens godkjenning.</p>
     </section>
   );
 }
