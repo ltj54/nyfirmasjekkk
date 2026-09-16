@@ -4,15 +4,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 949
-- Sendt: 462
+- Antall hendelser: 981
+- Sendt: 478
 - Angret: 0
-- Aktive kontaktede selskaper: 289
+- Aktive kontaktede selskaper: 301
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-16 | 938354456 | ASTERISCO.WLD | FLI | email | website-follow-up |
+| 2026-09-16 | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | website-follow-up |
+| 2026-09-16 | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | website-follow-up |
+| 2026-09-16 | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | website-follow-up |
+| 2026-09-16 | 938502242 | AAKVIK PERSONLIG TRENER | ENK | email | website-offer |
+| 2026-09-16 | 938499861 | TURID WERGE-OLSEN | ENK | email | website-offer |
+| 2026-09-16 | 938501564 | MEFREDZH MUSIKK | ENK | email | website-offer |
+| 2026-09-16 | 838501842 | SEMIRA EMBAYE RENHOLD | ENK | email | website-offer |
+| 2026-09-16 | 838504272 | KR-BYGGSERVICE- SZYMANKIEWICZ | ENK | email | website-offer |
+| 2026-09-16 | 938434484 | MODIASTUDIOS MONSTAD | ENK | email | website-offer |
+| 2026-09-16 | 938447403 | VILLSPOR OLSEN HUSKY | ENK | email | website-offer |
+| 2026-09-16 | 938404070 | THORHEIM SOUVENIRS | ENK | email | website-offer |
+| 2026-09-16 | 938397961 | MELAND GRYTE LANDBRUKSTJENESTER | ENK | email | website-offer |
+| 2026-09-16 | 938447926 | GAUTE LANGELAND MOBERG | ENK | email | website-offer |
+| 2026-09-16 | 938499314 | G.J. VAMOS | UTLA | email | website-offer |
+| 2026-09-16 | 938502943 | BETAR | ENK | email | website-offer |
 | 2026-09-16 | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | website-follow-up |
 | 2026-09-16 | 938382875 | BILDE TEACHING | ENK | email | website-follow-up |
 | 2026-09-16 | 938381585 | DANSK BY ROSVALL | ENK | email | website-follow-up |
@@ -297,16 +313,44 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-03 | 838353282 | GARN AS | AS | email | website-follow-up |
 | 2026-09-03 | 938200106 | OK BEIL HOLDING AS | AS | email | website-follow-up |
 | 2026-09-03 | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | website-follow-up |
-| 2026-09-03 | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | website-offer |
-| 2026-09-03 | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | website-offer |
-| 2026-09-03 | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | website-offer |
-| 2026-09-03 | 938354456 | ASTERISCO.WLD | FLI | email | website-offer |
 | 2026-09-03 | 938405840 | AGNIESZKA HELENA STANKIEWICZ | TVAM | email | website-offer |
 
 ## Hendelser
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-16 22:36 | sent | 938354456 | ASTERISCO.WLD | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 22:36 | sending | 938354456 | ASTERISCO.WLD | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 22:36 | sent | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 22:36 | sending | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 22:36 | sent | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 22:36 | sending | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 22:36 | sent | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-16 22:36 | sending | 938365660 | MAKS EFFEKT MEDIA, AVDELING SLANGELAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938502242 | AAKVIK PERSONLIG TRENER | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938502242 | AAKVIK PERSONLIG TRENER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938499861 | TURID WERGE-OLSEN | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938499861 | TURID WERGE-OLSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938501564 | MEFREDZH MUSIKK | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938501564 | MEFREDZH MUSIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 838501842 | SEMIRA EMBAYE RENHOLD | ENK | email | - |
+| 2026-09-16 22:35 | sending | 838501842 | SEMIRA EMBAYE RENHOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 838504272 | KR-BYGGSERVICE- SZYMANKIEWICZ | ENK | email | - |
+| 2026-09-16 22:35 | sending | 838504272 | KR-BYGGSERVICE- SZYMANKIEWICZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938434484 | MODIASTUDIOS MONSTAD | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938434484 | MODIASTUDIOS MONSTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938447403 | VILLSPOR OLSEN HUSKY | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938447403 | VILLSPOR OLSEN HUSKY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938404070 | THORHEIM SOUVENIRS | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938404070 | THORHEIM SOUVENIRS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938397961 | MELAND GRYTE LANDBRUKSTJENESTER | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938397961 | MELAND GRYTE LANDBRUKSTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938447926 | GAUTE LANGELAND MOBERG | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938447926 | GAUTE LANGELAND MOBERG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938499314 | G.J. VAMOS | UTLA | email | - |
+| 2026-09-16 22:35 | sending | 938499314 | G.J. VAMOS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-16 22:35 | sent | 938502943 | BETAR | ENK | email | - |
+| 2026-09-16 22:35 | sending | 938502943 | BETAR | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-16 09:16 | sent | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-16 09:16 | sending | 838271952 | SCHJOLDENS SPISKAMMER | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-16 09:15 | sent | 938382875 | BILDE TEACHING | ENK | email | Oppfølging sendt – avslutt hvis stille |
