@@ -4,22 +4,21 @@ Denne rutinen brukes når et nettsted eller prosjekt ikke lenger skal være akti
 
 ## Standard prosedyre
 
-1. Kontroller at prosjektmappen finnes lokalt, og at Git-status og remote er kjent.
-2. Behold den lokale kopien som sikkerhetskopi.
-3. Omdøp mappen til:
+1. Kontroller om prosjektmappen finnes lokalt. Hvis den finnes, noter Git-status og remote. Hvis den ikke finnes, søk i vanlige prosjektområder og dokumenter at den ikke ble funnet.
+2. Behold den lokale kopien som sikkerhetskopi når den finnes. Ikke klon automatisk og behandle klonen som den opprinnelige arbeidskopien.
+3. Arkiver GitHub-repositoriet. Hvis lokal mappe mangler, kan arkivering likevel utføres når brukeren uttrykkelig ber om det. Bekreft statusen på GitHub.
+4. Hvis en lokal prosjektmappe finnes, omdøp den til:
 
    `<prosjektnavn>_FJERNET-GITHUB`
 
-4. Kontroller at Git-historikk og remote fortsatt finnes i den omdøpte mappen.
-5. Arkiver GitHub-repositoriet først. Repositoriet skal ikke slettes i første omgang.
-6. Kontroller at GitHub viser repositoriet som arkivert.
-7. Oppdater CRM-kortet:
+5. Kontroller at Git-historikk og remote fortsatt finnes i den omdøpte mappen. Behold også eksisterende, uregistrerte lokale filer.
+6. Oppdater et eksisterende CRM-kort hvis det finnes, men ikke opprett CRM-kort automatisk:
    - behold kortet i CRM
    - bruk hvit/nøytral bakgrunn
    - sett status til «Arkivert i GitHub»
-   - noter nytt lokalt mappenavn
+   - noter nytt lokalt mappenavn, eller at lokal mappe ikke ble funnet
    - noter at repositoriet er beholdt som sikkerhetskopi
-8. Dersom prosjektet også bruker ChatGPT Sites eller annen hosting, fjernes den aktive publiseringen separat etter kontroll.
+7. Dersom prosjektet også bruker ChatGPT Sites eller annen hosting, fjernes den aktive publiseringen separat etter kontroll.
 
 ## Senere sletting
 
@@ -30,3 +29,9 @@ Et arkivert GitHub-repository kan slettes senere dersom den lokale kopien er kon
 - Minde Momentum → `minde-momentum_FJERNET-GITHUB`
 - Skifjelds Håndverk → `skifjelds-handverk_FJERNET-GITHUB`
 - Casa Latina Trondheim → `casa-latina-trondheim_FJERNET-GITHUB`
+- Samlivsbrudd → `samlivsbrudd_FJERNET-GITHUB`
+- Samlivsbrudd TWA → `samlivsbrudd-twa_FJERNET-GITHUB`
+- Samlivsbrudd Legal → `samlivsbrudd-legal_FJERNET-GITHUB`
+- LTJ WS → Lokal mappe ikke funnet; arkivert etter uttrykkelig beskjed.
+- LTJ Intelligpt → Lokal mappe ikke funnet; arkivert etter uttrykkelig beskjed.
+- Shape Drop IntelliJ → `Shape-Drop-IntelliJ_FJERNET-GITHUB`
