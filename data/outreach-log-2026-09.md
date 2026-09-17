@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 981
-- Sendt: 478
+- Antall hendelser: 1000
+- Sendt: 485
 - Angret: 0
-- Aktive kontaktede selskaper: 301
+- Aktive kontaktede selskaper: 306
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-17 | 938503370 | C. SUNDE INVEST AS | AS | email | website-offer |
+| 2026-09-17 | 938504490 | SVALE FLØ | ENK | email | website-offer |
+| 2026-09-17 | 938302995 | SKÅNEVIK FJORDHYTTER AS | AS | email | website-offer |
+| 2026-09-17 | 838270182 | MOEN BYGG OG LAFT. | ENK | email | website-offer |
+| 2026-09-17 | 938299358 | MATHIAS MALLON | ENK | email | website-offer |
+| 2026-09-17 | 938504784 | FJELD DEKK & SERVICE | ENK | email | website-offer |
+| 2026-09-17 | 938438706 | CONNER TAXES | ENK | email | website-offer |
 | 2026-09-16 | 938354456 | ASTERISCO.WLD | FLI | email | website-follow-up |
 | 2026-09-16 | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | website-follow-up |
 | 2026-09-16 | 938276730 | KRISTIANSENS KURS OG LÆRINGSVIRKSOMHET | ENK | email | website-follow-up |
@@ -25,7 +32,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-16 | 938434484 | MODIASTUDIOS MONSTAD | ENK | email | website-offer |
 | 2026-09-16 | 938447403 | VILLSPOR OLSEN HUSKY | ENK | email | website-offer |
 | 2026-09-16 | 938404070 | THORHEIM SOUVENIRS | ENK | email | website-offer |
-| 2026-09-16 | 938397961 | MELAND GRYTE LANDBRUKSTJENESTER | ENK | email | website-offer |
 | 2026-09-16 | 938447926 | GAUTE LANGELAND MOBERG | ENK | email | website-offer |
 | 2026-09-16 | 938499314 | G.J. VAMOS | UTLA | email | website-offer |
 | 2026-09-16 | 938502943 | BETAR | ENK | email | website-offer |
@@ -313,12 +319,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-03 | 838353282 | GARN AS | AS | email | website-follow-up |
 | 2026-09-03 | 938200106 | OK BEIL HOLDING AS | AS | email | website-follow-up |
 | 2026-09-03 | 938278083 | KRISTOFFERSENS RENHOLDSTJENESTER | ENK | email | website-follow-up |
-| 2026-09-03 | 938405840 | AGNIESZKA HELENA STANKIEWICZ | TVAM | email | website-offer |
 
 ## Hendelser
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-17 08:32 | not_relevant | 938405840 | AGNIESZKA HELENA STANKIEWICZ | TVAM | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-09-17 08:31 | sent | 938503370 | C. SUNDE INVEST AS | AS | email | - |
+| 2026-09-17 08:31 | sending | 938503370 | C. SUNDE INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:31 | sent | 938504490 | SVALE FLØ | ENK | email | - |
+| 2026-09-17 08:31 | sending | 938504490 | SVALE FLØ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:31 | sent | 938302995 | SKÅNEVIK FJORDHYTTER AS | AS | email | - |
+| 2026-09-17 08:31 | sending | 938302995 | SKÅNEVIK FJORDHYTTER AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:31 | sent | 838270182 | MOEN BYGG OG LAFT. | ENK | email | - |
+| 2026-09-17 08:31 | sending | 838270182 | MOEN BYGG OG LAFT. | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:30 | sent | 938299358 | MATHIAS MALLON | ENK | email | - |
+| 2026-09-17 08:30 | sending | 938299358 | MATHIAS MALLON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:30 | not_relevant | 938415730 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-09-17 08:29 | delivery_uncertain | 938415730 | H.J ENTREPENØR HILANMO | ENK | email | SMTP-leveringen feilet eller fikk ukjent utfall. Ny utsendelse er sperret for å unngå duplikat. |
+| 2026-09-17 08:29 | sending | 938415730 | H.J ENTREPENØR HILANMO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:29 | sent | 938504784 | FJELD DEKK & SERVICE | ENK | email | - |
+| 2026-09-17 08:29 | sending | 938504784 | FJELD DEKK & SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 08:29 | sent | 938438706 | CONNER TAXES | ENK | email | - |
+| 2026-09-17 08:29 | sending | 938438706 | CONNER TAXES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 07:54 | replied | 938397961 | MELAND GRYTE LANDBRUKSTJENESTER | ENK | email | Svar mottatt 16.09.2026 kl. 22:51: Ikke aktuell i oppstartsfasen, men kan være aktuelt senere. Ingen purring; avventer eventuell kontakt fra virksomheten. |
 | 2026-09-16 22:36 | sent | 938354456 | ASTERISCO.WLD | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-16 22:36 | sending | 938354456 | ASTERISCO.WLD | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-16 22:36 | sent | 938270708 | HAUGHOLT OPERATIV KOMPETANSEUTVIKLING & COACHING | ENK | email | Oppfølging sendt – avslutt hvis stille |

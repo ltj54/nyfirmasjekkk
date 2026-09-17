@@ -47,6 +47,9 @@ export function industryOutreachPitch(company: OutreachEmailCompany) {
 }
 
 function earlyIndustryOutreachPitch(context: string, naceCode: string, segmentCode: string) {
+  if (naceCode.startsWith("01") || hasAnyContext(context, "landbruk", "jordbruk", "gårdsdrift", "garddrift", "gårdbruk", "gardbruk")) {
+    return "For en virksomhet innen landbrukstjenester kan en nettside gjøre det enkelt å vise hvilke tjenester dere tilbyr, hvilke områder dere dekker og hvordan gårdbrukere kan komme i kontakt med dere.";
+  }
   if (naceCode.startsWith("93.12") || hasAnyContext(context, "idrettslag", "sportsklubb", "idrettsklubb", "sports club")) {
     return "En ryddig nettside kan gjøre det enkelt å presentere aktivitetene deres, informere om treningstilbud og medlemskap – og vise interesserte hvordan de kan bli med eller ta kontakt.";
   }
@@ -54,7 +57,7 @@ function earlyIndustryOutreachPitch(context: string, naceCode: string, segmentCo
     return "En ryddig nettside kan samle informasjon om aktiviteter, arrangementer og medlemskap – og gjøre det enkelt for interesserte å finne kontaktpersoner eller bli med.";
   }
   if (hasAnyContext(context, "psykolog", "psykoter", "psykisk helse", "samtaleterapi")) {
-    return "For psykologtjenester er tillit og trygg kommunikasjon spesielt viktig. Hvis nettsiden har kontaktskjema, bør personvern og GDPR også ivaretas fordi henvendelser kan inneholde sensitive opplysninger.";
+    return "For psykologtjenester er tillit og trygg kommunikasjon spesielt viktig. Hvis nettsiden har kontaktskjema, bør det komme tydelig fram hvordan opplysningene i henvendelser behandles, siden de kan være sensitive.";
   }
   if (hasAnyContext(context, "fotterapi", "fotterapeut", "fotpleie")) {
     return "For en fotterapeut bør nettsiden gjøre det enkelt å forstå behandlingstilbudet, finne praktisk informasjon og bestille eller spørre om en time.";
@@ -63,7 +66,7 @@ function earlyIndustryOutreachPitch(context: string, naceCode: string, segmentCo
     return "For en behandlingspraksis er en tydelig presentasjon av behandlingstilbudet, praktisk informasjon og en trygg kontakt- eller bestillingsvei viktig for nye kunder.";
   }
   if (segmentCode === "HELSE_VELVAERE" || naceCode.startsWith("86") || naceCode.startsWith("88") || naceCode === "96.040") {
-    return "For helse- og behandlingstjenester er tillit, tydelig informasjon og en trygg vei til kontakt viktig. Hvis nettsiden har skjemaer, bør personvern og GDPR samtidig ivaretas på en ryddig måte.";
+    return "For helse- og behandlingstjenester er tillit, tydelig informasjon og en trygg vei til kontakt viktig. Hvis nettsiden har skjemaer, bør personopplysninger håndteres på en trygg og tydelig måte.";
   }
   if (hasAnyContext(context, "snackbar", "gatekjokken", "hurtigmat", "kafe", "cafe", "restaurant", "catering", "servering")) {
     return "For et serveringssted kan gode bilder, en tydelig meny og lett tilgjengelige åpningstider gjøre det enklere for nye kunder å velge stedet og finne frem.";
@@ -774,11 +777,11 @@ function defaultRegisteredWebsiteUnavailableEmailTemplate() {
 
 Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {{companyName}}. Det kan være midlertidig eller skyldes selve sjekken.
 
-Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobiltilpasset nettside til en portal med database og CRM. Vi avklarer behovene sammen, med vekt på universell utforming og personvern, inkludert GDPR.
+Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobilvennlig nettside til en portal for bestillinger eller kundehenvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
 
 En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
 
-Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklarer vi på forhånd.
+Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
 
 Her kan dere se hvordan jeg jobber:
 {{senderWebsite}}
@@ -833,7 +836,7 @@ function defaultRegisteredWebsiteReviewEmailTemplate() {
 
 Jeg kom over nettsideadressen til {{companyName}} og vil høre om dere ønsker en kort vurdering av siden.
 
-Jeg ser blant annet på tydelig innhold, mobilbruk, kontaktmuligheter og forhold knyttet til universell utforming og personvern.
+Jeg ser blant annet på tydelig innhold, mobilbruk, kontaktmuligheter og om siden er enkel å bruke for flest mulig.
 
 Den første vurderingen er gratis og uforpliktende, med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
 
@@ -855,11 +858,11 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 {{salesSegmentPitch}}
 
-Jeg utvikler mobiltilpassede nettsider og skreddersydde løsninger – fra presentasjonssider til portaler med database og CRM. Vi avklarer behovene sammen, med vekt på universell utforming og personvern, inkludert GDPR.
+Jeg lager mobilvennlige nettsider og større løsninger, som portaler der dere kan håndtere bestillinger eller holde oversikt over kunder og henvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
 
 En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
 
-Eventuelle kostnader til domene, hosting og betalte tredjepartstjenester avklarer vi på forhånd.
+Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
 
 Her kan dere se hvordan jeg arbeider:
 {{senderWebsite}}
