@@ -4,15 +4,29 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1000
-- Sendt: 485
+- Antall hendelser: 1028
+- Sendt: 499
 - Angret: 0
-- Aktive kontaktede selskaper: 306
+- Aktive kontaktede selskaper: 320
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-17 | 938418616 | MCF TELEMARK | FLI | email | website-offer |
+| 2026-09-17 | 938485046 | SAMEIET STORGATA 16 | ESEK | email | website-offer |
+| 2026-09-17 | 938413398 | HB 18-26 VEILAG | FLI | email | website-offer |
+| 2026-09-17 | 938506558 | SOLHAUG TAXI GELDERBLOM | ENK | email | website-offer |
+| 2026-09-17 | 938372004 | STENERSEN GREVSTAD HUS & HAGESERVICE | ENK | email | website-offer |
+| 2026-09-17 | 938339309 | SKOLE NÆSS MATERIELL | ENK | email | website-offer |
+| 2026-09-17 | 938433968 | PEDERSEN | ENK | email | website-offer |
+| 2026-09-17 | 938432678 | PATULEA S&M | ENK | email | website-offer |
+| 2026-09-17 | 938477000 | NØTTEGULL BORG | ENK | email | website-offer |
+| 2026-09-17 | 938449910 | NANSEN PADEL | ENK | email | website-offer |
+| 2026-09-17 | 938455805 | MOHAMED ATOSH | ENK | email | website-offer |
+| 2026-09-17 | 938510970 | HUGGIN AB | UTLA | email | website-offer |
+| 2026-09-17 | 938509654 | HARRY-JOHN KVASNES - ALLE SKAL FÅ | ENK | email | website-offer |
+| 2026-09-17 | 938452202 | DITT NYE BYGGPROSJEKT HANEGH | ENK | email | website-offer |
 | 2026-09-17 | 938503370 | C. SUNDE INVEST AS | AS | email | website-offer |
 | 2026-09-17 | 938504490 | SVALE FLØ | ENK | email | website-offer |
 | 2026-09-17 | 938302995 | SKÅNEVIK FJORDHYTTER AS | AS | email | website-offer |
@@ -324,6 +338,34 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-17 13:43 | sent | 938418616 | MCF TELEMARK | FLI | email | - |
+| 2026-09-17 13:43 | sending | 938418616 | MCF TELEMARK | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938485046 | SAMEIET STORGATA 16 | ESEK | email | - |
+| 2026-09-17 13:43 | sending | 938485046 | SAMEIET STORGATA 16 | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938413398 | HB 18-26 VEILAG | FLI | email | - |
+| 2026-09-17 13:43 | sending | 938413398 | HB 18-26 VEILAG | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938506558 | SOLHAUG TAXI GELDERBLOM | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938506558 | SOLHAUG TAXI GELDERBLOM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938372004 | STENERSEN GREVSTAD HUS & HAGESERVICE | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938372004 | STENERSEN GREVSTAD HUS & HAGESERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938339309 | SKOLE NÆSS MATERIELL | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938339309 | SKOLE NÆSS MATERIELL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938433968 | PEDERSEN | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938433968 | PEDERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938432678 | PATULEA S&M | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938432678 | PATULEA S&M | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938477000 | NØTTEGULL BORG | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938477000 | NØTTEGULL BORG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938449910 | NANSEN PADEL | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938449910 | NANSEN PADEL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938455805 | MOHAMED ATOSH | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938455805 | MOHAMED ATOSH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938510970 | HUGGIN AB | UTLA | email | - |
+| 2026-09-17 13:43 | sending | 938510970 | HUGGIN AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938509654 | HARRY-JOHN KVASNES - ALLE SKAL FÅ | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938509654 | HARRY-JOHN KVASNES - ALLE SKAL FÅ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-17 13:43 | sent | 938452202 | DITT NYE BYGGPROSJEKT HANEGH | ENK | email | - |
+| 2026-09-17 13:43 | sending | 938452202 | DITT NYE BYGGPROSJEKT HANEGH | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-17 08:32 | not_relevant | 938405840 | AGNIESZKA HELENA STANKIEWICZ | TVAM | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-09-17 08:31 | sent | 938503370 | C. SUNDE INVEST AS | AS | email | - |
 | 2026-09-17 08:31 | sending | 938503370 | C. SUNDE INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
