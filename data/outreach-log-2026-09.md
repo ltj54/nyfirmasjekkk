@@ -4,15 +4,29 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1107
-- Sendt: 538
+- Antall hendelser: 1135
+- Sendt: 552
 - Angret: 0
-- Aktive kontaktede selskaper: 329
+- Aktive kontaktede selskaper: 330
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-18 | 938399042 | GROVEN DIGITAL | ENK | email | website-follow-up |
+| 2026-09-18 | 938406464 | KONOR AS | AS | email | website-follow-up |
+| 2026-09-18 | 938404593 | LØFF MULTISERVICE | ENK | email | website-follow-up |
+| 2026-09-18 | 838471072 | NORDBY INTERIØR AS | AS | email | website-follow-up |
+| 2026-09-18 | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | website-follow-up |
+| 2026-09-18 | 838475132 | TORE ØVERLAND | ENK | email | website-follow-up |
+| 2026-09-18 | 938396361 | VIKEN ENTERTAINMENT | ENK | email | website-follow-up |
+| 2026-09-18 | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | website-follow-up |
+| 2026-09-18 | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | website-follow-up |
+| 2026-09-18 | 938422745 | ABDI FARAH SMART CLEANING | ENK | email | website-follow-up |
+| 2026-09-18 | 938480400 | ANKER DETAILING ANKER-TANUM | ENK | email | website-follow-up |
+| 2026-09-18 | 838423922 | AUD FLEMSÆTER | ENK | email | website-follow-up |
+| 2026-09-18 | 938405565 | BRAFARING THEVIK | ENK | email | website-follow-up |
+| 2026-09-18 | 938513619 | HEDVIG STYVE MJÅNES MUSIKK | ENK | email | website-offer |
 | 2026-09-18 | 938322619 | SAMEIET HÅKONSGATEN 20 | ESEK | email | website-offer |
 | 2026-09-18 | 938513589 | FITJAR DRIFT OG VEDLIKEHOLD PIOTR PRZYGOCKI | ENK | email | website-offer |
 | 2026-09-18 | 938229082 | H.T. HVAMSTAD | ENK | email | website-offer |
@@ -170,10 +184,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-14 | 838258042 | DRUMS & PERCUSSIONS ALLAL | ENK | email | website-follow-up |
 | 2026-09-14 | 938311943 | HAKVOORT FISKERISELSKAP LYKKENS ØY | ENK | email | website-follow-up |
 | 2026-09-14 | 938314640 | INDRELAND UTDANNING | ENK | email | website-follow-up |
-| 2026-09-14 | 938405565 | BRAFARING THEVIK | ENK | email | website-offer |
-| 2026-09-14 | 838423922 | AUD FLEMSÆTER | ENK | email | website-offer |
-| 2026-09-14 | 938480400 | ANKER DETAILING ANKER-TANUM | ENK | email | website-offer |
-| 2026-09-14 | 938422745 | ABDI FARAH SMART CLEANING | ENK | email | website-offer |
 | 2026-09-12 | 938432031 | LUNDS VERKTØYUTLEIE | ENK | email | website-follow-up |
 | 2026-09-12 | 938292183 | NICOLAS STOCKER | ENK | email | website-follow-up |
 | 2026-09-12 | 938433631 | NORWAY ROLLCO LLC | UTLA | email | website-follow-up |
@@ -202,15 +212,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-12 | 938350108 | NORSKTCG MYRSETH | ENK | email | website-follow-up |
 | 2026-09-12 | 938449147 | OCONNER - PELASYN | ENK | email | website-follow-up |
 | 2026-09-12 | 938442940 | ANTOINETTE A. HENRIKSEN | ENK | email | website-follow-up |
-| 2026-09-12 | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | website-offer |
-| 2026-09-12 | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | website-offer |
-| 2026-09-12 | 938396361 | VIKEN ENTERTAINMENT | ENK | email | website-offer |
-| 2026-09-12 | 838475132 | TORE ØVERLAND | ENK | email | website-offer |
-| 2026-09-12 | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | website-offer |
-| 2026-09-12 | 838471072 | NORDBY INTERIØR AS | AS | email | website-offer |
-| 2026-09-12 | 938404593 | LØFF MULTISERVICE | ENK | email | website-offer |
-| 2026-09-12 | 938406464 | KONOR AS | AS | email | website-offer |
-| 2026-09-12 | 938399042 | GROVEN DIGITAL | ENK | email | website-offer |
 | 2026-09-11 | 938311870 | RT AUTOMATION RADOSLAW TOMZIK | UTLA | email | website-follow-up |
 | 2026-09-11 | 938284776 | KJELL INGAR BJØRNSTAD | ENK | email | website-follow-up |
 | 2026-09-11 | 938406421 | LORENZA CHIMENTO | ENK | email | website-follow-up |
@@ -347,6 +348,34 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-18 09:42 | sent | 938399042 | GROVEN DIGITAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:42 | sending | 938399042 | GROVEN DIGITAL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:42 | sent | 938406464 | KONOR AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:42 | sending | 938406464 | KONOR AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:42 | sent | 938404593 | LØFF MULTISERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:42 | sending | 938404593 | LØFF MULTISERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 838471072 | NORDBY INTERIØR AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 838471072 | NORDBY INTERIØR AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938382670 | STAVERN OG LARVIK BLUESKLUBB | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 838475132 | TORE ØVERLAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 838475132 | TORE ØVERLAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938396361 | VIKEN ENTERTAINMENT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938396361 | VIKEN ENTERTAINMENT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938373965 | BRATLAND BOBIL LAGRING OG PARKERING KÅRBØ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938374252 | FOSAAS ANLEGG & UTEMILJØ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938422745 | ABDI FARAH SMART CLEANING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938422745 | ABDI FARAH SMART CLEANING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938480400 | ANKER DETAILING ANKER-TANUM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938480400 | ANKER DETAILING ANKER-TANUM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 838423922 | AUD FLEMSÆTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 838423922 | AUD FLEMSÆTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938405565 | BRAFARING THEVIK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-18 09:41 | sending | 938405565 | BRAFARING THEVIK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-18 09:41 | sent | 938513619 | HEDVIG STYVE MJÅNES MUSIKK | ENK | email | - |
+| 2026-09-18 09:41 | sending | 938513619 | HEDVIG STYVE MJÅNES MUSIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-18 09:10 | sent | 938322619 | SAMEIET HÅKONSGATEN 20 | ESEK | email | - |
 | 2026-09-18 09:10 | sending | 938322619 | SAMEIET HÅKONSGATEN 20 | ESEK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-18 09:10 | sent | 938513589 | FITJAR DRIFT OG VEDLIKEHOLD PIOTR PRZYGOCKI | ENK | email | - |
