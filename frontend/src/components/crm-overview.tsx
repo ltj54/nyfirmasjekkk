@@ -102,7 +102,7 @@ const projects: CrmProject[] = [
     tone: "border-[#D9E2EC] bg-white",
   },
   { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
-  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", outreach: "Forslag sendt", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Klar for utsending · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
+  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", paymentDate: "18.09.2026", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Betalt · 1 990 kr", tone: "border-emerald-200 bg-emerald-50" },
   { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", domainRemoved: "03.09.2026", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Arkivert i GitHub – ingen avklaring mottatt", progress: "Lokal kopi ligger i minde-momentum_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi og kan slettes senere dersom det ikke lenger trengs.", invoice: "Ikke fakturert", tone: "border-[#D9E2EC] bg-white" },
   { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", domainRemoved: "03.09.2026", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i skifjelds-handverk_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", tone: "border-[#D9E2EC] bg-white" },
   { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", domainRemoved: "08.09.2026", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i casa-latina-trondheim_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", tone: "border-[#D9E2EC] bg-white" },
@@ -121,8 +121,8 @@ export function CrmOverview() {
           </div>
           <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
             <Summary value={String(projects.length)} label="Prosjekter" />
-            <Summary value="1" label="Godkjent" />
-            <Summary value="1 990 kr" label="Betalt" />
+            <Summary value={String(projects.filter((project) => project.outreach.startsWith("Kunde godkjent")).length)} label="Godkjent" />
+            <Summary value="3 980 kr" label="Betalt" />
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@ export function CrmOverview() {
           </article>
         ))}
       </div>
-      <p className="mt-4 text-[11px] leading-5 text-[#829AB1]">Breathe Senja er ferdig, publisert og betalt. Varneth Management Ness er publisert og fakturert; øvrige aktive forslag avventer kundens godkjenning.</p>
+      <p className="mt-4 text-[11px] leading-5 text-[#829AB1]">Breathe Senja og Zagros Forlag er ferdige, publiserte og betalt. Varneth Management Ness er publisert og fakturert; øvrige aktive forslag avventer kundens godkjenning.</p>
     </section>
   );
 }

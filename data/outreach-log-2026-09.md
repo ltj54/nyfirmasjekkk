@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1135
-- Sendt: 552
+- Antall hendelser: 1155
+- Sendt: 562
 - Angret: 0
-- Aktive kontaktede selskaper: 330
+- Aktive kontaktede selskaper: 340
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-18 | 938504857 | TONYA OHNSTAD | ENK | email | website-offer |
+| 2026-09-18 | 938470650 | TUCKER ADVISORY | ENK | email | website-offer |
+| 2026-09-18 | 938461732 | SAMSKOTT DRIFT OG SERVICE | ENK | email | website-offer |
+| 2026-09-18 | 938478643 | LILLEVIK MASKIN | ENK | email | website-offer |
+| 2026-09-18 | 938514879 | HØYESVEEN EIENDOM | ENK | email | website-offer |
+| 2026-09-18 | 938516812 | HOLT BONIFACE DESIGN | ENK | email | website-offer |
+| 2026-09-18 | 838367542 | HODNORD AS | AS | email | website-offer |
+| 2026-09-18 | 938462771 | ANNE LOVISE NORDSTOGA | ENK | email | website-offer |
+| 2026-09-18 | 938460728 | AK KOSMETIKK JAHDI | ENK | email | website-offer |
+| 2026-09-18 | 938460841 | ACHARYA VISION | ENK | email | website-offer |
 | 2026-09-18 | 938399042 | GROVEN DIGITAL | ENK | email | website-follow-up |
 | 2026-09-18 | 938406464 | KONOR AS | AS | email | website-follow-up |
 | 2026-09-18 | 938404593 | LØFF MULTISERVICE | ENK | email | website-follow-up |
@@ -348,6 +358,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-18 15:28 | sent | 938504857 | TONYA OHNSTAD | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938504857 | TONYA OHNSTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938470650 | TUCKER ADVISORY | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938470650 | TUCKER ADVISORY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938461732 | SAMSKOTT DRIFT OG SERVICE | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938461732 | SAMSKOTT DRIFT OG SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938478643 | LILLEVIK MASKIN | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938478643 | LILLEVIK MASKIN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938514879 | HØYESVEEN EIENDOM | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938514879 | HØYESVEEN EIENDOM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938516812 | HOLT BONIFACE DESIGN | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938516812 | HOLT BONIFACE DESIGN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 838367542 | HODNORD AS | AS | email | - |
+| 2026-09-18 15:28 | sending | 838367542 | HODNORD AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938462771 | ANNE LOVISE NORDSTOGA | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938462771 | ANNE LOVISE NORDSTOGA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938460728 | AK KOSMETIKK JAHDI | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938460728 | AK KOSMETIKK JAHDI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-18 15:28 | sent | 938460841 | ACHARYA VISION | ENK | email | - |
+| 2026-09-18 15:28 | sending | 938460841 | ACHARYA VISION | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-18 09:42 | sent | 938399042 | GROVEN DIGITAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-18 09:42 | sending | 938399042 | GROVEN DIGITAL | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-18 09:42 | sent | 938406464 | KONOR AS | AS | email | Oppfølging sendt – avslutt hvis stille |
