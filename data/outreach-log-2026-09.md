@@ -4,15 +4,35 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1155
-- Sendt: 562
+- Antall hendelser: 1195
+- Sendt: 582
 - Angret: 0
-- Aktive kontaktede selskaper: 340
+- Aktive kontaktede selskaper: 341
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-19 | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | website-follow-up |
+| 2026-09-19 | 938488169 | SIV SANDEN OTTO | ENK | email | website-follow-up |
+| 2026-09-19 | 938424543 | HANS OLAV LEE EVENTS | ENK | email | website-follow-up |
+| 2026-09-19 | 938469962 | BAKRI ARAB EXPRESS | ENK | email | website-follow-up |
+| 2026-09-19 | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | website-follow-up |
+| 2026-09-19 | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | website-follow-up |
+| 2026-09-19 | 938480311 | BJØRGE ULVEDAL | ENK | email | website-follow-up |
+| 2026-09-19 | 938427003 | AKSNES KYSTFISKE | ENK | email | website-follow-up |
+| 2026-09-19 | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | website-follow-up |
+| 2026-09-19 | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | website-follow-up |
+| 2026-09-19 | 938428166 | GULOWSEN ARK | ENK | email | website-follow-up |
+| 2026-09-19 | 938416184 | JISR NORGE | FLI | email | website-follow-up |
+| 2026-09-19 | 938494452 | MK AUTOMATION AB | UTLA | email | website-follow-up |
+| 2026-09-19 | 938400970 | AJK ELEKTRO AS | AS | email | website-follow-up |
+| 2026-09-19 | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | website-follow-up |
+| 2026-09-19 | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | website-follow-up |
+| 2026-09-19 | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | website-follow-up |
+| 2026-09-19 | 938489270 | BIRGIDA AS | AS | email | website-follow-up |
+| 2026-09-19 | 938314985 | INTENT MEDIA AS | AS | email | website-follow-up |
+| 2026-09-19 | 938517150 | SONDRE NORDLAND MUSIKK | ENK | email | website-offer |
 | 2026-09-18 | 938504857 | TONYA OHNSTAD | ENK | email | website-offer |
 | 2026-09-18 | 938470650 | TUCKER ADVISORY | ENK | email | website-offer |
 | 2026-09-18 | 938461732 | SAMSKOTT DRIFT OG SERVICE | ENK | email | website-offer |
@@ -146,25 +166,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-16 | 938488711 | A.S.ARCHITETTURA E ALLESTIMENTI SRL | UTLA | email | website-offer |
 | 2026-09-16 | 938401829 | JÓZEF SENDOR BASECONTROL | UTLA | email | website-offer |
 | 2026-09-16 | 838436692 | BACHMANN PRESISJON | ENK | email | website-offer |
-| 2026-09-15 | 938314985 | INTENT MEDIA AS | AS | email | website-offer |
-| 2026-09-15 | 938489270 | BIRGIDA AS | AS | email | website-offer |
-| 2026-09-15 | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | website-offer |
-| 2026-09-15 | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | website-offer |
-| 2026-09-15 | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | website-offer |
-| 2026-09-15 | 938400970 | AJK ELEKTRO AS | AS | email | website-offer |
-| 2026-09-15 | 938494452 | MK AUTOMATION AB | UTLA | email | website-offer |
-| 2026-09-15 | 938416184 | JISR NORGE | FLI | email | website-offer |
-| 2026-09-15 | 938428166 | GULOWSEN ARK | ENK | email | website-offer |
-| 2026-09-15 | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | website-offer |
-| 2026-09-15 | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | website-offer |
-| 2026-09-15 | 938427003 | AKSNES KYSTFISKE | ENK | email | website-offer |
-| 2026-09-15 | 938480311 | BJØRGE ULVEDAL | ENK | email | website-offer |
-| 2026-09-15 | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | website-offer |
-| 2026-09-15 | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | website-offer |
-| 2026-09-15 | 938469962 | BAKRI ARAB EXPRESS | ENK | email | website-offer |
-| 2026-09-15 | 938424543 | HANS OLAV LEE EVENTS | ENK | email | website-offer |
-| 2026-09-15 | 938488169 | SIV SANDEN OTTO | ENK | email | website-offer |
-| 2026-09-15 | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | website-offer |
 | 2026-09-15 | 938270600 | STAFSETH RAUS BEVEGELIGHET | ENK | email | website-follow-up |
 | 2026-09-15 | 938405794 | ÅSEN OG HILDE DA | DA | email | website-follow-up |
 | 2026-09-15 | 938268304 | FREBERG-THOMSEN EQ-MASSASJE | ENK | email | website-follow-up |
@@ -358,6 +359,46 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-19 14:28 | sent | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938488169 | SIV SANDEN OTTO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938488169 | SIV SANDEN OTTO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938424543 | HANS OLAV LEE EVENTS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938424543 | HANS OLAV LEE EVENTS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938469962 | BAKRI ARAB EXPRESS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938469962 | BAKRI ARAB EXPRESS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938487723 | GJEMS-ONSTAD LER HØYT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938373922 | PERSONLIG TRENER SIRI TORGERSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938480311 | BJØRGE ULVEDAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938480311 | BJØRGE ULVEDAL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938427003 | AKSNES KYSTFISKE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938427003 | AKSNES KYSTFISKE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938493707 | ANCHOR POINT CLINICAL CONSULTING INC | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:28 | sent | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:28 | sending | 938494541 | BIBBY MARITIME CREWING SERVICES LIMITED | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938428166 | GULOWSEN ARK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938428166 | GULOWSEN ARK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938416184 | JISR NORGE | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938416184 | JISR NORGE | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938494452 | MK AUTOMATION AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938494452 | MK AUTOMATION AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938400970 | AJK ELEKTRO AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938400970 | AJK ELEKTRO AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938496900 | MYHRE-BRUDVIK ANLEGG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938405603 | LOPES GALINDO LYKKE PLASS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938495688 | BEKKER DOCTOR BEAUTY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938489270 | BIRGIDA AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938489270 | BIRGIDA AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938314985 | INTENT MEDIA AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-19 14:27 | sending | 938314985 | INTENT MEDIA AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-19 14:27 | sent | 938517150 | SONDRE NORDLAND MUSIKK | ENK | email | - |
+| 2026-09-19 14:27 | sending | 938517150 | SONDRE NORDLAND MUSIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-18 15:28 | sent | 938504857 | TONYA OHNSTAD | ENK | email | - |
 | 2026-09-18 15:28 | sending | 938504857 | TONYA OHNSTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-18 15:28 | sent | 938470650 | TUCKER ADVISORY | ENK | email | - |
