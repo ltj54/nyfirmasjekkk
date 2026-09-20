@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1195
-- Sendt: 582
+- Antall hendelser: 1201
+- Sendt: 585
 - Angret: 0
-- Aktive kontaktede selskaper: 341
+- Aktive kontaktede selskaper: 344
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-20 | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | website-offer |
+| 2026-09-20 | 838521282 | HVESSER STUDIO | ENK | email | website-offer |
+| 2026-09-20 | 938154805 | USLUGI TRANSPORTOWE WOJCIECH JACKIEWICZ NUF | NUF | email | website-offer |
 | 2026-09-19 | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | website-follow-up |
 | 2026-09-19 | 938488169 | SIV SANDEN OTTO | ENK | email | website-follow-up |
 | 2026-09-19 | 938424543 | HANS OLAV LEE EVENTS | ENK | email | website-follow-up |
@@ -359,6 +362,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-20 11:06 | sent | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | - |
+| 2026-09-20 11:06 | sending | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-20 11:06 | sent | 838521282 | HVESSER STUDIO | ENK | email | - |
+| 2026-09-20 11:06 | sending | 838521282 | HVESSER STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-20 11:06 | sent | 938154805 | USLUGI TRANSPORTOWE WOJCIECH JACKIEWICZ NUF | NUF | email | - |
+| 2026-09-20 11:06 | sending | 938154805 | USLUGI TRANSPORTOWE WOJCIECH JACKIEWICZ NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-19 14:28 | sent | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-19 14:28 | sending | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-19 14:28 | sent | 938488169 | SIV SANDEN OTTO | ENK | email | Oppfølging sendt – avslutt hvis stille |
