@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1201
-- Sendt: 585
+- Antall hendelser: 1205
+- Sendt: 587
 - Angret: 0
-- Aktive kontaktede selskaper: 344
+- Aktive kontaktede selskaper: 346
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-21 | 938467129 | AAKERMANN FORMIDLING | ENK | email | website-offer |
+| 2026-09-21 | 838468632 | ØRVIG MUSIKKTERAPI | ENK | email | website-offer |
 | 2026-09-20 | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | website-offer |
 | 2026-09-20 | 838521282 | HVESSER STUDIO | ENK | email | website-offer |
 | 2026-09-20 | 938154805 | USLUGI TRANSPORTOWE WOJCIECH JACKIEWICZ NUF | NUF | email | website-offer |
@@ -362,6 +364,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-21 08:49 | sent | 938467129 | AAKERMANN FORMIDLING | ENK | email | - |
+| 2026-09-21 08:49 | sending | 938467129 | AAKERMANN FORMIDLING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 08:49 | sent | 838468632 | ØRVIG MUSIKKTERAPI | ENK | email | - |
+| 2026-09-21 08:49 | sending | 838468632 | ØRVIG MUSIKKTERAPI | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-20 11:06 | sent | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | - |
 | 2026-09-20 11:06 | sending | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-20 11:06 | sent | 838521282 | HVESSER STUDIO | ENK | email | - |
