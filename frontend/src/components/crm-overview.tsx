@@ -8,6 +8,8 @@ type CrmProject = {
   name: string;
   domain?: string;
   previewUrl?: string;
+  previewRemoved?: string;
+  inactiveDate?: string;
   outreach: string;
   progress: string;
   invoice: string;
@@ -67,20 +69,23 @@ const projects: CrmProject[] = [
   },
   {
     name: "SV Pelsar Sp. z o.o.",
+    inactiveDate: "21.09.2026",
     contact: "Serhii Siedin",
     email: "sv.pelsar@gmail.com",
     proposalDate: "03.09.2026",
     dateLabel: "Første henvendelse",
     replyDate: "10.09.2026 kl. 18:52",
-    outreach: "Positiv interesse – spør om pris",
+    outreach: "Inaktiv – ingen svar etter purring",
     progress: "Ber om pris på nettside. Svarsignaturen bruker både Serhii og Sergey; kontaktopplysningene bør avklares før oppstart.",
     followUpDate: "16.09.2026",
-    nextStep: "Fastpris og behov for grunnlagsopplysninger er sendt. Purret 16.09.2026; avventer svar og følger ikke opp automatisk videre.",
+    nextStep: "Avsluttet aktiv oppfølging 21.09.2026 etter manglende svar på purring 16.09.2026. Ingen flere purringer. GitHub-repository og lokal prosjektmappe ble ikke funnet; ingen kode eller publisering å arkivere. CRM-kortet beholdes.",
     invoice: "Ikke fakturert",
-    status: "waiting",
+    status: "inactive",
   },
   {
     name: "MLC Eiendomsfornying Leszczynski",
+    inactiveDate: "21.09.2026",
+    previewRemoved: "21.09.2026",
     sentProposalDate: "16.09.2026",
     previewUrl: "https://ltj54.github.io/mlc-eiendomsfornying/",
     contact: "Mariusz Leszczynski",
@@ -88,11 +93,11 @@ const projects: CrmProject[] = [
     proposalDate: "12.09.2026",
     dateLabel: "Henvendelse",
     replyDate: "12.09.2026 kl. 15:11",
-    outreach: "Kvalifisert interesse – ber om totalpris",
+    outreach: "Arkivert i GitHub – ingen svar på forslag",
     progress: "Ønsker enkel profesjonell énside for Vestfold med takvask, fasadevask, takrenner, terrasser, belegningsstein og klargjøring før salg. Har egne før-/etterbilder.",
-    nextStep: "Forslag sendt 16.09.2026: ltj54.github.io/mlc-eiendomsfornying. Avventer Mariusz sin tilbakemelding; kunden skal eie nettside, kode og filer etter betaling.",
+    nextStep: String.raw`Arkivert 21.09.2026 etter manglende svar på forslaget sendt 16.09.2026. GitHub-repositoriet er beholdt som sikkerhetskopi. Lokal kopi: C:\Prosjekt\mlc-eiendomsfornying_FJERNET-GITHUB. GitHub Pages er avpublisert. Ingen flere purringer. Ved eventuell videreføring skal kunden eie nettside, kode og filer etter betaling.`,
     invoice: "Ikke fakturert",
-    status: "waiting",
+    status: "inactive",
   },
   {
     name: "Spilling Advisory",
@@ -141,6 +146,8 @@ function historyFor(project: CrmProject): CrmEvent[] {
     { date: project.invoiceDate, label: "Faktura sendt" },
     { date: project.domainRemoved, label: "Nettside fjernet" },
     { date: project.paymentDate, label: "Betaling mottatt" },
+    { date: project.inactiveDate, label: "Satt inaktiv – ingen videre oppfølging" },
+    { date: project.previewRemoved, label: "Testpublisering fjernet" },
   ];
   return events.filter((event): event is CrmEvent => Boolean(event.date))
     .sort((a, b) => dateValue(b.date) - dateValue(a.date));
@@ -241,7 +248,8 @@ function ProjectCard({ project, group }: Readonly<{
       </dl>
       <div className="mt-4 flex flex-col items-start gap-2 border-t border-slate-200 pt-3 text-sm">
         <ProjectWebsite domain={project.domain} domainRemoved={project.domainRemoved} />
-        {project.previewUrl ? <a className="break-all text-blue-800 underline underline-offset-2" href={project.previewUrl} target="_blank" rel="noreferrer">Åpne forslag <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
+        {project.previewRemoved ? <p className="break-all text-slate-500">Forslag avpublisert {project.previewRemoved} · {project.previewUrl}</p> : null}
+        {project.previewUrl && !project.previewRemoved ? <a className="break-all text-blue-800 underline underline-offset-2" href={project.previewUrl} target="_blank" rel="noreferrer">Åpne forslag <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
         {project.invoiceFile ? <a className="text-blue-800 underline underline-offset-2" href={project.invoiceFile} target="_blank" rel="noreferrer">Åpne faktura <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
       </div>
       <details className="mt-4 border-t border-slate-200 pt-3">

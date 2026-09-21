@@ -35,3 +35,5 @@ Et arkivert GitHub-repository kan slettes senere dersom den lokale kopien er kon
 - LTJ WS → Lokal mappe ikke funnet; arkivert etter uttrykkelig beskjed.
 - LTJ Intelligpt → Lokal mappe ikke funnet; arkivert etter uttrykkelig beskjed.
 - Shape Drop IntelliJ → `Shape-Drop-IntelliJ_FJERNET-GITHUB`
+- MLC Eiendomsfornying Leszczynski → `mlc-eiendomsfornying_FJERNET-GITHUB`. Arkivert i GitHub og GitHub Pages avpublisert 21.09.2026 etter manglende svar. Lokal Git-historikk og remote kontrollert og beholdt; arbeidskopien var ren før og etter omdøping. CRM-kort beholdt som inaktivt uten videre purring.
+- SV Pelsar Sp. z o.o. → Satt inaktiv i CRM 21.09.2026 etter manglende svar på purring. Ingen repository funnet blant repositoriene til `ltj54`; ingen lokal prosjektmappe funnet ved søk i `C:\Prosjekt` og brukerens dokument-/skrivebordsområder. Ingen GitHub-arkivering eller omdøping utført. CRM-kort og dialoghistorikk beholdt uten videre purring.
