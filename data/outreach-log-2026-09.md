@@ -4,15 +4,34 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1205
-- Sendt: 587
+- Antall hendelser: 1243
+- Sendt: 606
 - Angret: 0
-- Aktive kontaktede selskaper: 346
+- Aktive kontaktede selskaper: 365
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-21 | 838530842 | JOHNSEN ATHLETICS | ENK | email | website-offer |
+| 2026-09-21 | 838528392 | EMMY ROBERTSON | ENK | email | website-offer |
+| 2026-09-21 | 938527245 | KOLLTVEIT SEAFOOD | ENK | email | website-offer |
+| 2026-09-21 | 938526621 | ABDULLAH BAYBARS ABDULHAMID | ENK | email | website-offer |
+| 2026-09-21 | 938470448 | TØMRER JOHANSSON | ENK | email | website-offer |
+| 2026-09-21 | 838422772 | OVERLAND ELEKTRO AS | AS | email | website-offer |
+| 2026-09-21 | 938504865 | DR JOHANNE ROLL TANGEN | ENK | email | website-offer |
+| 2026-09-21 | 938477345 | RASTE VEILEDNING | ENK | email | website-offer |
+| 2026-09-21 | 938479259 | POONEH RONAGH STUDIO | ENK | email | website-offer |
+| 2026-09-21 | 937070527 | PERLER PÅ EN SNOR - ANNO 2026 DA | DA | email | website-offer |
+| 2026-09-21 | 938469075 | PATRICIA SVENDSEN CODY | ENK | email | website-offer |
+| 2026-09-21 | 938473722 | OLE EINAR HERMANN | ENK | email | website-offer |
+| 2026-09-21 | 938474737 | JOSHUA C HARRIES | ENK | email | website-offer |
+| 2026-09-21 | 938477949 | HAAVIK JENSSEN TEKST OG INNHOLD | ENK | email | website-offer |
+| 2026-09-21 | 938469121 | HJELPEMANNEN SMEDSRUD | ENK | email | website-offer |
+| 2026-09-21 | 938469709 | BRUKSTUEN KOMPETANSEUTVIKLING | ENK | email | website-offer |
+| 2026-09-21 | 938469806 | BLINK STUDIO SANDNES | ENK | email | website-offer |
+| 2026-09-21 | 938400288 | BENJAMIN LØVSTAD PROSJEKT- & LOGISTIKKTJENESTER | ENK | email | website-offer |
+| 2026-09-21 | 938476691 | AKUTTMEDISIN OG FØRSTEHJELPSUNDERVISNING - KARLSEN | ENK | email | website-offer |
 | 2026-09-21 | 938467129 | AAKERMANN FORMIDLING | ENK | email | website-offer |
 | 2026-09-21 | 838468632 | ØRVIG MUSIKKTERAPI | ENK | email | website-offer |
 | 2026-09-20 | 838521002 | JOHNSKARENG LYD-TEKNIKK | ENK | email | website-offer |
@@ -364,6 +383,44 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-21 17:29 | sent | 838530842 | JOHNSEN ATHLETICS | ENK | email | - |
+| 2026-09-21 17:29 | sending | 838530842 | JOHNSEN ATHLETICS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 838528392 | EMMY ROBERTSON | ENK | email | - |
+| 2026-09-21 17:29 | sending | 838528392 | EMMY ROBERTSON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938527245 | KOLLTVEIT SEAFOOD | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938527245 | KOLLTVEIT SEAFOOD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938526621 | ABDULLAH BAYBARS ABDULHAMID | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938526621 | ABDULLAH BAYBARS ABDULHAMID | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938470448 | TØMRER JOHANSSON | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938470448 | TØMRER JOHANSSON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 838422772 | OVERLAND ELEKTRO AS | AS | email | - |
+| 2026-09-21 17:29 | sending | 838422772 | OVERLAND ELEKTRO AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938504865 | DR JOHANNE ROLL TANGEN | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938504865 | DR JOHANNE ROLL TANGEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938477345 | RASTE VEILEDNING | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938477345 | RASTE VEILEDNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938479259 | POONEH RONAGH STUDIO | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938479259 | POONEH RONAGH STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 937070527 | PERLER PÅ EN SNOR - ANNO 2026 DA | DA | email | - |
+| 2026-09-21 17:29 | sending | 937070527 | PERLER PÅ EN SNOR - ANNO 2026 DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938469075 | PATRICIA SVENDSEN CODY | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938469075 | PATRICIA SVENDSEN CODY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938473722 | OLE EINAR HERMANN | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938473722 | OLE EINAR HERMANN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938474737 | JOSHUA C HARRIES | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938474737 | JOSHUA C HARRIES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938477949 | HAAVIK JENSSEN TEKST OG INNHOLD | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938477949 | HAAVIK JENSSEN TEKST OG INNHOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938469121 | HJELPEMANNEN SMEDSRUD | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938469121 | HJELPEMANNEN SMEDSRUD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:29 | sent | 938469709 | BRUKSTUEN KOMPETANSEUTVIKLING | ENK | email | - |
+| 2026-09-21 17:29 | sending | 938469709 | BRUKSTUEN KOMPETANSEUTVIKLING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:28 | sent | 938469806 | BLINK STUDIO SANDNES | ENK | email | - |
+| 2026-09-21 17:28 | sending | 938469806 | BLINK STUDIO SANDNES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:28 | sent | 938400288 | BENJAMIN LØVSTAD PROSJEKT- & LOGISTIKKTJENESTER | ENK | email | - |
+| 2026-09-21 17:28 | sending | 938400288 | BENJAMIN LØVSTAD PROSJEKT- & LOGISTIKKTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-21 17:28 | sent | 938476691 | AKUTTMEDISIN OG FØRSTEHJELPSUNDERVISNING - KARLSEN | ENK | email | - |
+| 2026-09-21 17:28 | sending | 938476691 | AKUTTMEDISIN OG FØRSTEHJELPSUNDERVISNING - KARLSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-21 08:49 | sent | 938467129 | AAKERMANN FORMIDLING | ENK | email | - |
 | 2026-09-21 08:49 | sending | 938467129 | AAKERMANN FORMIDLING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-21 08:49 | sent | 838468632 | ØRVIG MUSIKKTERAPI | ENK | email | - |
