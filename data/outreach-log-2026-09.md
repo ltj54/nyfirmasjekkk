@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1381
+- Antall hendelser: 1382
 - Sendt: 675
 - Angret: 0
-- Aktive kontaktede selskaper: 394
+- Aktive kontaktede selskaper: 393
 
 ## Aktive kontaktede selskaper
 
@@ -31,7 +31,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-23 | 938491070 | BORISOV BYGG OG SERVICE | ENK | email | website-offer |
 | 2026-09-23 | 938463026 | NASJONALT OG INTERNASJONALT LEIDANGSENTER | FLI | email | website-offer |
 | 2026-09-23 | 938544689 | IMCI BUSINESS LIMITED | UTLA | email | website-offer |
-| 2026-09-23 | 937733585 | DUTCH STOVE TECHNOLOGY B.V. NUF | NUF | email | website-offer |
 | 2026-09-23 | 938492158 | BRANDSTORP SYKEPLEIE OG ERNÆRING | ENK | email | website-offer |
 | 2026-09-23 | 938496315 | AURA BEAUTY ART ABDALLA | ENK | email | website-offer |
 | 2026-09-23 | 938504784 | FJELD DEKK & SERVICE | ENK | email | website-follow-up |
@@ -412,6 +411,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-23 10:29 | not_relevant | 937733585 | DUTCH STOVE TECHNOLOGY B.V. NUF | NUF | email | Svar mottatt 23.09.2026: Nederlandsk selskap drevet av kontaktpersonens bror. Ikke aktuell og skal ikke følges opp. |
 | 2026-09-23 09:19 | sent | 938536082 | TEPURIC FOTBALL | ENK | email | - |
 | 2026-09-23 09:19 | sending | 938536082 | TEPURIC FOTBALL | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-23 09:19 | sent | 938542872 | DANI BERNHARDSEN MUSIC | ENK | email | - |
