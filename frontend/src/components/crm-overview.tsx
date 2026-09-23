@@ -1,6 +1,7 @@
 import { CalendarDays, ExternalLink, FileText, Globe2, ReceiptText, UserRound } from "lucide-react";
 
 type ProjectStatus = "working" | "waiting" | "payment" | "completed" | "inactive";
+type AgreementStatus = "required" | "draft" | "signed" | "not-used";
 
 type CrmEvent = { date: string; label: string };
 
@@ -13,6 +14,8 @@ type CrmProject = {
   outreach: string;
   progress: string;
   invoice: string;
+  agreement: string;
+  agreementStatus: AgreementStatus;
   provider?: string;
   contact: string;
   email: string;
@@ -46,6 +49,8 @@ const projects: CrmProject[] = [
     progress: "Ella ønsker et forslag til oppbygging og har egne ideer vi kan diskutere sammen. Hun er opptatt de neste to ukene og foreslår en prat i uke 40 (28.09.–04.10.2026).",
     nextStep: "Videreutvikle utkastet og avtale tidspunkt for en samtale i uke 40. Ingen møtedato er avtalt. Videre dialog håndteres manuelt; ingen automatisk oppfølging.",
     invoice: "Ikke fakturert",
+    agreement: "Skal tilpasses og avtales før endelig levering eller drift. Ikke sendt.",
+    agreementStatus: "required",
     status: "working",
   },
   {
@@ -61,6 +66,8 @@ const projects: CrmProject[] = [
     progress: "Forslag publisert på ltj54.github.io/fiskerikandidat-gunnar-davidsson. Gunnar ønsker en enkel, mest mulig frossen nettside med kontaktinformasjon og tjenester innen fiskeri og marine næringer, samt minimalt vedlikehold. Han har et eget bildebibliotek.",
     nextStep: "Avklare domenet davidsson.no, e-post, webhotell og hvem som registrerer domenet. Avtaleutkast ligger i prosjektet og sendes etter behovsavklaring. Videre dialog håndteres manuelt; ingen automatisk oppfølging.",
     invoice: "Ikke fakturert",
+    agreement: "Avtaleutkast ligger i prosjektet, men er ikke sendt eller inngått.",
+    agreementStatus: "draft",
     status: "working",
   },
   {
@@ -81,6 +88,8 @@ const projects: CrmProject[] = [
     invoiceAmount: 1990, invoiceNumber: "2026-003",
     invoiceFile: "/invoices/faktura-2026-003-varneth-management-ness.pdf",
     invoice: "Betalt · 1 990 kr",
+    agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.",
+    agreementStatus: "not-used",
     status: "completed",
   },
   {
@@ -96,6 +105,8 @@ const projects: CrmProject[] = [
     followUpDate: "16.09.2026",
     nextStep: "Avsluttet aktiv oppfølging 21.09.2026 etter manglende svar på purring 16.09.2026. Ingen flere purringer. GitHub-repository og lokal prosjektmappe ble ikke funnet; ingen kode eller publisering å arkivere. CRM-kortet beholdes.",
     invoice: "Ikke fakturert",
+    agreement: "Ikke brukt – prosjektet ble ikke videreført.",
+    agreementStatus: "not-used",
     status: "inactive",
   },
   {
@@ -113,6 +124,8 @@ const projects: CrmProject[] = [
     progress: "Ønsker enkel profesjonell énside for Vestfold med takvask, fasadevask, takrenner, terrasser, belegningsstein og klargjøring før salg. Har egne før-/etterbilder.",
     nextStep: String.raw`Arkivert 21.09.2026 etter manglende svar på forslaget sendt 16.09.2026. GitHub-repositoriet er beholdt som sikkerhetskopi. Lokal kopi: C:\Prosjekt\mlc-eiendomsfornying_FJERNET-GITHUB. GitHub Pages er avpublisert. Ingen flere purringer. Ved eventuell videreføring skal kunden eie nettside, kode og filer etter betaling.`,
     invoice: "Ikke fakturert",
+    agreement: "Ikke brukt – prosjektet ble ikke videreført.",
+    agreementStatus: "not-used",
     status: "inactive",
   },
   {
@@ -127,14 +140,16 @@ const projects: CrmProject[] = [
     progress: "Knut så på mock-upen og syntes den var ryddig og grei. En forretningsforbindelse setter nå opp nettsiden gratis som motytelse for tjenester.",
     nextStep: "Knut avventer parallell aktivitet og tar eventuelt kontakt senere. Ingen purring planlagt.",
     invoice: "Ikke fakturert",
+    agreement: "Ikke brukt – prosjektet ble ikke videreført.",
+    agreementStatus: "not-used",
     status: "inactive",
   },
-  { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", invoiceAmount: 1990, invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", status: "completed" },
-  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", paymentDate: "18.09.2026", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceAmount: 1990, invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Betalt · 1 990 kr", status: "completed" },
-  { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", domainRemoved: "03.09.2026", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Arkivert i GitHub – ingen avklaring mottatt", progress: "Lokal kopi ligger i minde-momentum_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi og kan slettes senere dersom det ikke lenger trengs.", invoice: "Ikke fakturert", status: "inactive" },
-  { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", domainRemoved: "03.09.2026", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i skifjelds-handverk_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", status: "inactive" },
-  { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", domainRemoved: "08.09.2026", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i casa-latina-trondheim_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", status: "inactive" },
-  { name: "Sammen for Tromsø sine barn", previewUrl: "https://ltj54.github.io/sammen-for-tromsos-barn/", contact: "Alexandra og Kirsti", email: "Ikke avklart", proposalDate: "14.05.2026", dateLabel: "Første forslag", outreach: "Arkivert i GitHub – avventer finansiering", progress: "Forslag til enkel nettside for initiativet. Alexandra og Kirsti ønsket en løsning i retning smarttelefonfri barndom, men enklere, og søkte støtte til etablering.", nextStep: "Lokal kopi ligger i sammen-for-tromsos-barn_FJERNET-GITHUB. GitHub-repositoriet er arkivert; kontaktadresse, domene og eventuell videreføring må avklares senere.", invoice: "Ikke fakturert", status: "inactive" },
+  { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", invoiceAmount: 1990, invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.", agreementStatus: "not-used", status: "completed" },
+  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", paymentDate: "18.09.2026", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceAmount: 1990, invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Betalt · 1 990 kr", agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.", agreementStatus: "not-used", status: "completed" },
+  { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", domainRemoved: "03.09.2026", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Arkivert i GitHub – ingen avklaring mottatt", progress: "Lokal kopi ligger i minde-momentum_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi og kan slettes senere dersom det ikke lenger trengs.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
+  { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", domainRemoved: "03.09.2026", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i skifjelds-handverk_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
+  { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", domainRemoved: "08.09.2026", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i casa-latina-trondheim_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
+  { name: "Sammen for Tromsø sine barn", previewUrl: "https://ltj54.github.io/sammen-for-tromsos-barn/", contact: "Alexandra og Kirsti", email: "Ikke avklart", proposalDate: "14.05.2026", dateLabel: "Første forslag", outreach: "Arkivert i GitHub – avventer finansiering", progress: "Forslag til enkel nettside for initiativet. Alexandra og Kirsti ønsket en løsning i retning smarttelefonfri barndom, men enklere, og søkte støtte til etablering.", nextStep: "Lokal kopi ligger i sammen-for-tromsos-barn_FJERNET-GITHUB. GitHub-repositoriet er arkivert; kontaktadresse, domene og eventuell videreføring må avklares senere.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
 ];
 
 
@@ -202,7 +217,7 @@ export function CrmOverview() {
       <header className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">CRM · {projects.length} prosjekter</p>
         <h1 className="mt-1 text-2xl font-semibold text-slate-900">Prosjekter og kunder</h1>
-        <p className="mt-2 text-sm text-slate-600">Status først, nærmeste registrerte frist deretter. Uten frist vises de som har ventet lengst først.</p>
+        <p className="mt-2 text-sm text-slate-600">Status først, nærmeste registrerte frist deretter. Nye prosjekter skal ha en tilpasset avtale før endelig levering eller løpende drift.</p>
         <nav aria-label="Prosjektstatuser" className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           {statusGroups.map((group) => (
             <a href={`#crm-${group.status}`} key={group.status} className={`rounded-lg border p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 ${group.tone}`}>
@@ -214,6 +229,7 @@ export function CrmOverview() {
         <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-3 border-t border-slate-200 pt-4">
           <div><dt className="text-xs text-slate-600">Utestående fakturert</dt><dd className="text-lg font-semibold text-orange-900">{money(outstanding)}</dd></div>
           <div><dt className="text-xs text-slate-600">Totalt betalt</dt><dd className="text-lg font-semibold text-emerald-900">{money(paid)}</dd></div>
+          <div><dt className="text-xs text-slate-600">Avtaler inngått</dt><dd className="text-lg font-semibold text-blue-900">{projects.filter((project) => project.agreementStatus === "signed").length}</dd></div>
         </dl>
       </header>
 
@@ -259,6 +275,7 @@ function ProjectCard({ project, group }: Readonly<{
         <Row icon={CalendarDays} label="Sist datert" value={`${latest.date} · ${latest.label}`} />
         {deadline ? <Row icon={CalendarDays} label={project.status === "payment" ? "Forfall" : "Svarfrist"} value={deadline} /> : null}
         <Row icon={FileText} label="Neste steg" value={project.nextStep ?? fallback} />
+        <Row icon={FileText} label="Avtale" value={project.agreement} />
         <Row icon={ReceiptText} label="Fakturering" value={project.invoice} />
         {project.invoiceNumber ? <Row icon={ReceiptText} label="Fakturanr." value={project.invoiceNumber} /> : null}
       </dl>
