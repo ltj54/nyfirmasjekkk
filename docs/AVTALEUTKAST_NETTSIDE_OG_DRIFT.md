@@ -51,25 +51,32 @@ For `.no`-domener er det abonnenten som har bruksretten og ansvaret for domenet 
 
 ## 5. Hosting og driftsmodell
 
-Partene krysser av for ett alternativ:
+Et domeneabonnement og et webhotell er to forskjellige tjenester. En domeneforhandler kan også tilby webhotell, men dette må undersøkes og avtales særskilt. Domenet kan peke til webhotell, GitHub Pages eller en annen hostingleverandør.
 
-### Alternativ A – kunden eier hosting
+Test- og forhåndsvisningslenker på Leverandørens konto er midlertidige arbeidsverktøy og bestemmer ikke hvor den ferdige nettsiden skal driftes.
 
-Kunden oppretter og betaler hostingkontoen eller GitHub-/annen plattformkonto. Kunden står som kontoeier, og Leverandøren får bare den tilgangen som trengs for å utvikle og publisere løsningen. Kunden er ansvarlig for abonnement, fornyelse, kontoens sikkerhet og plattformens vilkår.
+Partene skal velge og fylle ut ett alternativ før endelig publisering:
 
-### Alternativ B – Leverandøren tilbyr separat drift
+- [ ] **Alternativ A – kundens webhotell:** Kunden oppretter og betaler webhotell hos domeneforhandleren eller en annen leverandør. Kunden står som kontoeier. Leverandøren får nødvendig teknisk tilgang for å publisere og vedlikeholde etter avtale.
+- [ ] **Alternativ B – kundens GitHub eller annen statisk hosting:** Kunden oppretter og eier kontoen og repositoryet. Leverandøren får rollen som samarbeidspartner. Dersom en gratis GitHub-plan krever offentlig repository for GitHub Pages, skal kunden uttrykkelig godkjenne at kildekoden blir offentlig tilgjengelig.
+- [ ] **Alternativ C – drift administrert av Leverandøren:** Nettsiden driftes fra Leverandørens konto eller driftsløsning. Dette er en separat, løpende tjeneste. Kunden eier fortsatt de kundespesifikke nettsidefilene etter betaling, men Leverandøren har den praktiske kontrollen over publiseringen så lenge driftsavtalen gjelder.
 
-Leverandøren hoster løsningen som en separat tjeneste.
+- **Valgt alternativ:** [A/B/C]
+- **Hosting-/plattformleverandør:** [fyll inn]
+- **Kontoeier:** [kunden/Leverandøren]
+- **Repository og synlighet:** [ikke relevant/offentlig/privat]
+- **Driftspris:** [beløp] kr per [måned/år/ingen løpende pris]
+- **Fakturering og fornyelse:** [fyll inn]
+- **Hva som inngår:** [publisering, enkel overvåking, sikkerhetskopi, teknisk vedlikehold]
+- **Hva som ikke inngår:** [innholdsarbeid, nye funksjoner, e-post, tredjepartskostnader]
+- **Oppsigelsesfrist:** [antall dager/måneder]
+- **Forventet tilgjengelighet og vedlikeholdsvindu:** [fyll inn eller «ingen særskilt tilgjengelighetsgaranti»]
 
-- Driftspris: [beløp] kr per [måned/år]
-- Hva som inngår: [hosting, enkel overvåking, sikkerhetskopi, teknisk vedlikehold]
-- Hva som ikke inngår: [innholdsarbeid, nye funksjoner, tredjepartskostnader]
-- Oppsigelsesfrist: [antall dager/måneder]
-- Forventet tilgjengelighet og vedlikeholdsvindu: [fyll inn]
+Leverandøren kan ikke garantere at en tredjepartsplattform er tilgjengelig til enhver tid. Plattformens egne vilkår, priser, begrensninger og endringer gjelder i tillegg. Dersom plattformen endrer eller avslutter tjenesten, skal partene avtale eventuell flytting og kostnaden ved dette.
 
-Leverandøren kan ikke garantere at en tredjepartsplattform er tilgjengelig til enhver tid. Plattformens egne vilkår, begrensninger og endringer gjelder i tillegg.
+Ved avslutning av driften skal Leverandøren, når alle utestående beløp er betalt, gi kunden en oppdatert kopi av nettsidefilene og nødvendige opplysninger for å flytte løsningen. Kunden skal ikke være bundet til Leverandørens personlige GitHub-konto for å beholde nettstedet. Eventuelt arbeid med flytting, ny hosting eller DNS avtales og prises separat.
 
-Ved avslutning av driften skal Leverandøren, når alle utestående beløp er betalt, gi kunden nødvendige filer og opplysninger for å flytte løsningen til en annen leverandør. Eventuelle kostnader for selve flyttearbeidet avtales separat.
+Hvis GitHub Pages brukes med kundens domene, skal domenet verifiseres og DNS-oppsettet dokumenteres. DNS-poster må fjernes eller endres dersom GitHub Pages deaktiveres, slik at domenet ikke blir stående med et utrygt eller ødelagt oppsett.
 
 ## 6. Eierskap og lisens
 
