@@ -1,8 +1,10 @@
 # Avtaleutkast – utvikling, eierskap og eventuell drift av nettside
 
-**Arbeidsutkast – bør gjennomgås juridisk før det tas i bruk som standardavtale.**
+**Gjenbrukbar arbeidsmal for avtaler med virksomhetskunder. Malen bør gjennomgås juridisk før den tas i fast bruk. Den må tilpasses dersom kunden opptrer som privat forbruker.**
 
 Denne avtalen skiller mellom leveransen av nettsiden og eventuell løpende drift. Det gjør det tydelig hvem som eier domenet, koden, kontoene og innholdet.
+
+> **Intern bruksanvisning:** Kopier malen til kundens prosjekt, erstatt alle tekster i hakeparenteser, velg ett hostingalternativ og slett alternativer som ikke gjelder. Fjern denne bruksanvisningen og merknaden om arbeidsmal før avtalen sendes til kunden. Søk etter `[` i dokumentet som siste kontroll.
 
 ## 1. Partene
 
@@ -35,11 +37,11 @@ Detaljert innhold, funksjoner og avgrensninger beskrives i en kravspesifikasjon 
 
 ## 3. Pris og betaling
 
-Avtalt pris for grunnleveransen er **[beløp] kr** [inkludert/uten merverdiavgift].
+Avtalt pris for grunnleveransen er **[beløp] kr**. Leverandøren er ved avtaleinngåelsen [ikke registrert / registrert] i Merverdiavgiftsregisteret. [Det beregnes derfor ikke merverdiavgift / Merverdiavgift kommer i tillegg med gjeldende sats].
 
-Prisen omfatter det som står i kravspesifikasjonen, inkludert avtalt utvikling, tilpasning, testing og [publisering dersom dette er avtalt]. Arbeid utenfor avtalt omfang skal avtales skriftlig på forhånd med pris eller estimat.
+Prisen omfatter det som står i kravspesifikasjonen, inkludert avtalt utvikling, tilpasning, testing og [publisering dersom dette er avtalt]. Arbeid utenfor avtalt omfang skal avtales skriftlig på forhånd og faktureres etter Leverandørens avtalte timepris på **[TIMEPRIS] kr per time** [uten merverdiavgift / pluss merverdiavgift], med mindre partene avtaler en egen fastpris skriftlig.
 
-Faktura sendes [ved godkjenning/før levering/annet]. Forfallsfrist er [14] dager dersom ikke annet er avtalt. Eierskap til leveransen overføres først når avtalt betaling er mottatt.
+Faktura sendes når kunden skriftlig har godkjent grunnleveransen, dersom ikke annet er avtalt. Forfallsfristen er **14 kalenderdager**. Rettighetene til den kundespesifikke leveransen overføres først når avtalt betaling er mottatt.
 
 ## 4. Domene
 
@@ -69,7 +71,7 @@ Partene skal velge og fylle ut ett alternativ før endelig publisering:
 - **Fakturering og fornyelse:** [fyll inn]
 - **Hva som inngår:** [publisering, enkel overvåking, sikkerhetskopi, teknisk vedlikehold]
 - **Hva som ikke inngår:** [innholdsarbeid, nye funksjoner, e-post, tredjepartskostnader]
-- **Oppsigelsesfrist:** [antall dager/måneder]
+- **Oppsigelsesfrist for løpende drift:** 30 dager
 - **Forventet tilgjengelighet og vedlikeholdsvindu:** [fyll inn eller «ingen særskilt tilgjengelighetsgaranti»]
 
 Leverandøren kan ikke garantere at en tredjepartsplattform er tilgjengelig til enhver tid. Plattformens egne vilkår, priser, begrensninger og endringer gjelder i tillegg. Dersom plattformen endrer eller avslutter tjenesten, skal partene avtale eventuell flytting og kostnaden ved dette.
@@ -80,7 +82,7 @@ Hvis GitHub Pages brukes med kundens domene, skal domenet verifiseres og DNS-opp
 
 ## 6. Eierskap og lisens
 
-Når grunnleveransen er fullt betalt, får kunden eierskap til de kundespesifikke nettsidefilene, tekstene og tilpasningene som er laget særskilt for kunden. Kunden kan bruke, endre, flytte og videreutvikle disse selv eller med en annen leverandør.
+Når grunnleveransen er fullt betalt, får kunden nettsidefilene og en varig, ubegrenset rett til å bruke, kopiere, publisere, flytte, endre og videreutvikle de kundespesifikke tekstene, tilpasningene og øvrige delene som er laget særskilt for kunden. Kunden kan gjøre dette selv eller ved hjelp av en annen leverandør.
 
 Leverandøren beholder rettighetene til generelle arbeidsmetoder, maler, komponenter, biblioteker, rammeverk, verktøy og kode som er utviklet uavhengig av kunden. Kunden får en varig, nødvendig bruksrett til slike deler når de inngår i den leverte løsningen.
 
@@ -94,7 +96,9 @@ Forsinkelser i kundens materiale eller tilbakemeldinger kan forskyve leveringsti
 
 ## 8. Godkjenning og endringer
 
-Leverandøren sender en arbeidsversjon eller demonstrasjon til kunden. Kunden skal gi samlet tilbakemelding innen [antall] dager. Mindre justeringer som ligger innenfor kravspesifikasjonen inngår i avtalen.
+Leverandøren sender en arbeidsversjon eller demonstrasjon til kunden. Kunden skal gi samlet tilbakemelding innen **7 kalenderdager**. Mindre justeringer som ligger innenfor kravspesifikasjonen inngår i avtalen.
+
+Dersom kunden ikke svarer innen fristen, kan Leverandøren sette prosjektet på pause og flytte planlagt leveringstid tilsvarende. Manglende svar regnes ikke alene som godkjenning av leveransen. Leverandøren skal varsle kunden skriftlig før prosjektet settes på pause.
 
 Nye sider, funksjoner, omfattende tekstbearbeiding, nettbutikk, booking, database, portal, integrasjoner eller annet som ikke står i kravspesifikasjonen, er endringer. Slike endringer skal godkjennes skriftlig med pris eller estimat før arbeidet starter.
 
@@ -120,13 +124,25 @@ Partene skal varsle hverandre uten ugrunnet opphold ved mistanke om uautorisert 
 
 ## 12. Feil og begrensninger
 
-Leverandøren skal rette feil som skyldes avvik fra avtalt kravspesifikasjon og som meldes innen [antall] dager etter levering, uten ekstra kostnad. Dette gjelder ikke feil som skyldes kundens endringer, tredjepartsplattform, manglende fornyelse, feil bruk eller materiale levert av kunden.
+Som **leveringstidspunkt** regnes dagen nettsiden publiseres på kundens avtalte domene. Dersom publisering blir utsatt på grunn av forhold på kundens side, regnes løsningen som levert den dagen Leverandøren skriftlig overleverer den ferdige løsningen til endelig godkjenning og opplyser at den er klar for publisering.
+
+Leverandøren skal uten ekstra kostnad rette dokumenterte feil som skyldes avvik fra avtalt kravspesifikasjon og som meldes skriftlig innen **14 kalenderdager etter leveringstidspunktet**. Fristen begrenser ikke ansvar som følger av ufravikelig lov. Fristen gjelder ikke nye ønsker, innholdsendringer eller feil som skyldes kundens endringer, tredjepartsplattform, manglende fornyelse, feil bruk eller materiale levert av kunden.
 
 Leverandøren er ikke ansvarlig for indirekte tap, tapt fortjeneste eller driftsavbrudd utover det som følger av ufravikelig lov. Begrensningen gjelder ikke ved forsett eller grov uaktsomhet.
 
+Leverandørens samlede erstatningsansvar under avtalen er begrenset til beløpet kunden har betalt for grunnleveransen. Begrensningen gjelder ikke ved forsett eller grov uaktsomhet, eller der annet følger av ufravikelig lov.
+
 ## 13. Avslutning og overføring
 
-Hver part kan avslutte avtalen med [antall] dagers skriftlig varsel. Ved vesentlig mislighold kan avtalen avsluttes med umiddelbar virkning etter skriftlig varsel og rimelig frist til å rette, med mindre misligholdet ikke kan rettes.
+### Avbestilling før grunnleveransen er ferdig
+
+Kunden kan avbestille utviklingsoppdraget skriftlig før grunnleveransen er ferdig. Kunden skal da betale for dokumentert arbeid som er utført, og avtalte kostnader som allerede er påløpt, begrenset oppad til avtalt pris for grunnleveransen med mindre annet er skriftlig avtalt.
+
+### Oppsigelse av løpende drift
+
+Hver part kan si opp den løpende driftsdelen av avtalen med **30 dagers skriftlig varsel**. Oppsigelse av drift opphever ikke en allerede levert og godkjent grunnleveranse.
+
+Ved vesentlig mislighold kan den berørte delen av avtalen heves etter skriftlig varsel og en rimelig frist til å rette, med mindre misligholdet ikke kan rettes.
 
 Ved avslutning skal kunden betale for arbeid som er utført og kostnader som allerede er påløpt. Etter betaling skal Leverandøren utlevere kundens filer og bidra med nødvendig informasjon for overføring av domene, hosting og tredjepartstjenester. Leverandøren kan fakturere avtalt flyttearbeid separat.
 
@@ -136,7 +152,7 @@ Partene skal behandle ikke-offentlig informasjon de får tilgang til gjennom sam
 
 ## 15. Lovvalg og tvister
 
-Avtalen reguleres av norsk rett. Partene skal først forsøke å løse uenighet gjennom dialog. Dersom dette ikke lykkes, kan saken bringes inn for ordinære norske domstoler med [Leverandørens/kundens] verneting, med mindre annet følger av ufravikelige regler.
+Avtalen reguleres av norsk rett. Partene skal først forsøke å løse uenighet gjennom dialog. Dersom dette ikke lykkes, kan saken bringes inn for ordinære norske domstoler med **Leverandørens alminnelige verneting**, med mindre annet følger av ufravikelige regler.
 
 ## 16. Signatur
 
