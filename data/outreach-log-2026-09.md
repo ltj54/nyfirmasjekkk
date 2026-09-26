@@ -4,15 +4,36 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1568
-- Sendt: 768
+- Antall hendelser: 1612
+- Sendt: 789
 - Angret: 0
-- Aktive kontaktede selskaper: 434
+- Aktive kontaktede selskaper: 446
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-26 | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | website-follow-up |
+| 2026-09-26 | 938534381 | HENRY DICKSON | UTLA | email | website-follow-up |
+| 2026-09-26 | 938469229 | CULLHAJ NATURAL MURER OG FLIS | ENK | email | website-follow-up |
+| 2026-09-26 | 938453748 | ODDO BHF SECONDARIES FUND II S.L.P. NUF | NUF | email | website-follow-up |
+| 2026-09-26 | 938528721 | WEIDEL DRIFT | ENK | email | website-follow-up |
+| 2026-09-26 | 938533229 | MALIN BREVIK TEIGE | ENK | email | website-follow-up |
+| 2026-09-26 | 838533132 | SYLVIA FOSS MORGAN | ENK | email | website-follow-up |
+| 2026-09-26 | 937528280 | SALHUSVEGEN 81 | ESEK | email | website-follow-up |
+| 2026-09-26 | 938359482 | VENNER AV LAE | FLI | email | website-offer |
+| 2026-09-26 | 938527326 | LARS HARSTAD | ENK | email | website-offer |
+| 2026-09-26 | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | website-offer |
+| 2026-09-26 | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | website-offer |
+| 2026-09-26 | 938263396 | SØRENSEN TREARBEID | ENK | email | website-offer |
+| 2026-09-26 | 938545286 | LASER SURFACE SOLUTION AS | AS | email | website-offer |
+| 2026-09-26 | 838555802 | SQUARE ROBOT INC. | UTLA | email | website-offer |
+| 2026-09-26 | 938555753 | SCUDERIA TORVESTAD | ENK | email | website-offer |
+| 2026-09-26 | 938526605 | FIKKAN GLUTIA | ENK | email | website-offer |
+| 2026-09-26 | 938565007 | TRITON SUBSEA LTD | UTLA | email | website-offer |
+| 2026-09-26 | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
+| 2026-09-26 | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | website-offer |
+| 2026-09-26 | 938562172 | HRS EIENDOM AS | AS | email | website-offer |
 | 2026-09-25 | 920038395 | MAT OG HELSE I SKOLEN - INNHERRED LOKALLAG | FLI | email | website-offer |
 | 2026-09-25 | 938528683 | QASEMI TRANSPORT TAXI | ENK | email | website-offer |
 | 2026-09-25 | 838250092 | FOTTERAPIKLINIKKEN I ÅSANE NEELAM BHATIA | ENK | email | website-offer |
@@ -29,7 +50,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-25 | 938526850 | HANS OLAV KÅSA TORVTAK OG HYTTE VEDLIKEHOLD | ENK | email | website-offer |
 | 2026-09-25 | 938521603 | GODT PLANTA NJØSEN | ENK | email | website-offer |
 | 2026-09-25 | 938478988 | FANGHOL BOLIGFELT | FLI | email | website-offer |
-| 2026-09-25 | 938515824 | DEANS ART & STEM | ENK | email | website-offer |
 | 2026-09-25 | 938420076 | CONNECT TRANSPORT AGDER BAKSTAD | ENK | email | website-offer |
 | 2026-09-25 | 938433542 | Z&Z KHAN CONSULTING EHSAN ULLAH | ENK | email | website-offer |
 | 2026-09-25 | 938534314 | PROHJUL FREDRIKSEN | ENK | email | website-offer |
@@ -166,14 +186,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-22 | 938501564 | MEFREDZH MUSIKK | ENK | email | website-follow-up |
 | 2026-09-22 | 938499861 | TURID WERGE-OLSEN | ENK | email | website-follow-up |
 | 2026-09-22 | 938502242 | AAKVIK PERSONLIG TRENER | ENK | email | website-follow-up |
-| 2026-09-22 | 937528280 | SALHUSVEGEN 81 | ESEK | email | website-offer |
-| 2026-09-22 | 838533132 | SYLVIA FOSS MORGAN | ENK | email | website-offer |
-| 2026-09-22 | 938533229 | MALIN BREVIK TEIGE | ENK | email | website-offer |
-| 2026-09-22 | 938528721 | WEIDEL DRIFT | ENK | email | website-offer |
-| 2026-09-22 | 938453748 | ODDO BHF SECONDARIES FUND II S.L.P. NUF | NUF | email | website-offer |
-| 2026-09-22 | 938469229 | CULLHAJ NATURAL MURER OG FLIS | ENK | email | website-offer |
-| 2026-09-22 | 938534381 | HENRY DICKSON | UTLA | email | website-offer |
-| 2026-09-22 | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | website-offer |
 | 2026-09-19 | 938426201 | HANSEN DIGITALE TJENESTER | ENK | email | website-follow-up |
 | 2026-09-19 | 938488169 | SIV SANDEN OTTO | ENK | email | website-follow-up |
 | 2026-09-19 | 938424543 | HANS OLAV LEE EVENTS | ENK | email | website-follow-up |
@@ -452,6 +464,50 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-26 09:56 | sent | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938534381 | HENRY DICKSON | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 938534381 | HENRY DICKSON | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938469229 | CULLHAJ NATURAL MURER OG FLIS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 938469229 | CULLHAJ NATURAL MURER OG FLIS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938453748 | ODDO BHF SECONDARIES FUND II S.L.P. NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 938453748 | ODDO BHF SECONDARIES FUND II S.L.P. NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938528721 | WEIDEL DRIFT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 938528721 | WEIDEL DRIFT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938533229 | MALIN BREVIK TEIGE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 938533229 | MALIN BREVIK TEIGE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 838533132 | SYLVIA FOSS MORGAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 838533132 | SYLVIA FOSS MORGAN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 937528280 | SALHUSVEGEN 81 | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-26 09:56 | sending | 937528280 | SALHUSVEGEN 81 | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938359482 | VENNER AV LAE | FLI | email | - |
+| 2026-09-26 09:56 | sending | 938359482 | VENNER AV LAE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938527326 | LARS HARSTAD | ENK | email | - |
+| 2026-09-26 09:56 | sending | 938527326 | LARS HARSTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | - |
+| 2026-09-26 09:56 | sending | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:56 | sent | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | - |
+| 2026-09-26 09:56 | sending | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938263396 | SØRENSEN TREARBEID | ENK | email | - |
+| 2026-09-26 09:55 | sending | 938263396 | SØRENSEN TREARBEID | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938545286 | LASER SURFACE SOLUTION AS | AS | email | - |
+| 2026-09-26 09:55 | sending | 938545286 | LASER SURFACE SOLUTION AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 838555802 | SQUARE ROBOT INC. | UTLA | email | - |
+| 2026-09-26 09:55 | sending | 838555802 | SQUARE ROBOT INC. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938555753 | SCUDERIA TORVESTAD | ENK | email | - |
+| 2026-09-26 09:55 | sending | 938555753 | SCUDERIA TORVESTAD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938526605 | FIKKAN GLUTIA | ENK | email | - |
+| 2026-09-26 09:55 | sending | 938526605 | FIKKAN GLUTIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938565007 | TRITON SUBSEA LTD | UTLA | email | - |
+| 2026-09-26 09:55 | sending | 938565007 | TRITON SUBSEA LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | - |
+| 2026-09-26 09:55 | sending | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | - |
+| 2026-09-26 09:55 | sending | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:55 | sent | 938562172 | HRS EIENDOM AS | AS | email | - |
+| 2026-09-26 09:55 | sending | 938562172 | HRS EIENDOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-26 09:54 | not_relevant | 938513368 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-09-26 09:53 | not_relevant | 938515824 | DEANS ART & STEM | ENK | email | Avslag mottatt 25.09.2026 fra Evert Dean: Nettside er ikke aktuelt. Ingen videre oppfølging. |
 | 2026-09-25 11:14 | sent | 920038395 | MAT OG HELSE I SKOLEN - INNHERRED LOKALLAG | FLI | email | - |
 | 2026-09-25 11:14 | sending | 920038395 | MAT OG HELSE I SKOLEN - INNHERRED LOKALLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-25 11:14 | sent | 938528683 | QASEMI TRANSPORT TAXI | ENK | email | - |
