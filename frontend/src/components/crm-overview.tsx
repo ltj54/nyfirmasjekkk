@@ -1,4 +1,4 @@
-import { CalendarDays, ExternalLink, FileText, Globe2, ReceiptText, UserRound } from "lucide-react";
+import { Building2, CalendarDays, ExternalLink, FileText, Globe2, MapPin, Phone, ReceiptText, UserRound } from "lucide-react";
 
 type ProjectStatus = "working" | "waiting" | "payment" | "completed" | "inactive";
 type AgreementStatus = "required" | "draft" | "signed" | "not-used";
@@ -19,6 +19,9 @@ type CrmProject = {
   provider?: string;
   contact: string;
   email: string;
+  organizationNumber?: string;
+  phone?: string;
+  address?: string;
   proposalDate: string;
   dateLabel?: string;
   replyDate?: string;
@@ -34,9 +37,29 @@ type CrmProject = {
   status: ProjectStatus;
   invoiceAmount?: number;
   sentProposalDate?: string;
+  clarificationDate?: string;
 };
 
 const projects: CrmProject[] = [
+  {
+    name: "Laser Surface Solution AS",
+    contact: "Roger Sandanger",
+    email: "roger.sandanger@lyse.net",
+    organizationNumber: "938 545 286",
+    phone: "415 16 832",
+    address: "Gjerdebakken 32, 4027 Stavanger",
+    proposalDate: "26.09.2026",
+    dateLabel: "Første henvendelse",
+    replyDate: "26.09.2026 kl. 18:26",
+    clarificationDate: "27.09.2026",
+    outreach: "Svar mottatt 26.09.2026. Avklaringsmail med kravpunkter og en kort presentasjon av mulighetene ble sendt 27.09.2026.",
+    progress: "Nyregistrert aksjeselskap, stiftet 01.09.2026 og registrert 23.09.2026. BRREG beskriver virksomheten som presis og miljøvennlig fjerning av rust, maling, fett og belegg med laserteknologi. Formålet omfatter laserrengjøring, overflatebehandling og vedlikehold for landbasert, offshore-, maritim- og verftsindustri. Roger er daglig leder og styremedlem; Amela Sandanger er styreleder. Selskapet har 1 000 000 kr i aksjekapital, ingen registrerte ansatte og er foreløpig ikke registrert i Merverdiavgiftsregisteret.",
+    nextStep: "Avventer Rogers presisering av om han allerede har hjelp, eller ønsker et samarbeid med Lars. Dersom han ønsker hjelp, utarbeides kravspesifikasjonen sammen før noe forslag bygges. Ingen automatisk purring.",
+    invoice: "Ikke fakturert",
+    agreement: "Skal tilpasses og avtales før eventuell utvikling eller drift. Ikke sendt.",
+    agreementStatus: "required",
+    status: "waiting",
+  },
   {
     name: "Idsøe Rådgivning",
     previewUrl: "https://ltj54.github.io/idsoe-radgivning-nettside/index.html",
@@ -173,6 +196,7 @@ function historyFor(project: CrmProject): CrmEvent[] {
     { date: project.proposalDate, label: project.dateLabel ?? "Første registrerte dato" },
     { date: project.replyDate, label: "Svar mottatt" },
     { date: project.sentProposalDate, label: "Forslag sendt" },
+    { date: project.clarificationDate, label: "Avklaringsmail sendt" },
     { date: project.followUpDate, label: "Purring sendt" },
     { date: project.invoiceDate, label: "Faktura sendt" },
     { date: project.domainRemoved, label: "Nettside fjernet" },
@@ -287,18 +311,27 @@ function ProjectCard({ project, group }: Readonly<{
       </div>
       <details className="mt-4 border-t border-slate-200 pt-3">
         <summary className="cursor-pointer text-sm font-medium text-slate-700">Vis historikk og detaljer</summary>
-        <dl className="mt-3 space-y-3 text-sm">
-          <Row icon={FileText} label="Dialog" value={project.outreach} />
-          <Row icon={Globe2} label="Fremdrift" value={project.progress} />
-          {project.provider ? <Row icon={Globe2} label="Skjema" value={project.provider} /> : null}
-          {project.invoiceDueDate ? <Row icon={CalendarDays} label="Forfallsdato" value={project.invoiceDueDate} /> : null}
-          {project.responseDeadline ? <Row icon={CalendarDays} label="Svarfrist" value={project.responseDeadline} /> : null}
-        </dl>
+        <ProjectDetails project={project} />
         <ol className="mt-4 space-y-2 border-l border-slate-300 pl-3 text-xs text-slate-600">
           {history.map((event) => <li key={event.label}><span className="font-medium">{event.date}</span> · {event.label}</li>)}
         </ol>
       </details>
     </article>
+  );
+}
+
+function ProjectDetails({ project }: Readonly<{ project: CrmProject }>) {
+  return (
+    <dl className="mt-3 space-y-3 text-sm">
+      <Row icon={FileText} label="Dialog" value={project.outreach} />
+      <Row icon={Globe2} label="Fremdrift" value={project.progress} />
+      {project.organizationNumber ? <Row icon={Building2} label="Organisasjonsnummer" value={project.organizationNumber} /> : null}
+      {project.phone ? <Row icon={Phone} label="Telefon" value={project.phone} /> : null}
+      {project.address ? <Row icon={MapPin} label="Adresse" value={project.address} /> : null}
+      {project.provider ? <Row icon={Globe2} label="Skjema" value={project.provider} /> : null}
+      {project.invoiceDueDate ? <Row icon={CalendarDays} label="Forfallsdato" value={project.invoiceDueDate} /> : null}
+      {project.responseDeadline ? <Row icon={CalendarDays} label="Svarfrist" value={project.responseDeadline} /> : null}
+    </dl>
   );
 }
 

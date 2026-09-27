@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1612
+- Antall hendelser: 1613
 - Sendt: 789
 - Angret: 0
-- Aktive kontaktede selskaper: 446
+- Aktive kontaktede selskaper: 445
 
 ## Aktive kontaktede selskaper
 
@@ -26,7 +26,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-26 | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | website-offer |
 | 2026-09-26 | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | website-offer |
 | 2026-09-26 | 938263396 | SØRENSEN TREARBEID | ENK | email | website-offer |
-| 2026-09-26 | 938545286 | LASER SURFACE SOLUTION AS | AS | email | website-offer |
 | 2026-09-26 | 838555802 | SQUARE ROBOT INC. | UTLA | email | website-offer |
 | 2026-09-26 | 938555753 | SCUDERIA TORVESTAD | ENK | email | website-offer |
 | 2026-09-26 | 938526605 | FIKKAN GLUTIA | ENK | email | website-offer |
@@ -464,6 +463,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-27 10:15 | replied | 938545286 | LASER SURFACE SOLUTION AS | AS | email | Svar mottatt 26.09.2026 fra Roger Sandanger: «Takker har hjelp til dette». Tvetydig om han allerede har hjelp eller ønsker hjelp. Flyttet til manuell CRM-avklaring; ingen automatisk oppfølging. |
 | 2026-09-26 09:56 | sent | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-26 09:56 | sending | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-26 09:56 | sent | 938534381 | HENRY DICKSON | UTLA | email | Oppfølging sendt – avslutt hvis stille |
