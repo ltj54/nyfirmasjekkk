@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1613
-- Sendt: 789
+- Antall hendelser: 1619
+- Sendt: 792
 - Angret: 0
-- Aktive kontaktede selskaper: 445
+- Aktive kontaktede selskaper: 448
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-27 | 938515476 | EDBLAD & CO AB | NUF | email | website-offer |
+| 2026-09-27 | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | website-offer |
+| 2026-09-27 | 938454108 | ELMONTIA A.S. NUF | NUF | email | website-offer |
 | 2026-09-26 | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | website-follow-up |
 | 2026-09-26 | 938534381 | HENRY DICKSON | UTLA | email | website-follow-up |
 | 2026-09-26 | 938469229 | CULLHAJ NATURAL MURER OG FLIS | ENK | email | website-follow-up |
@@ -463,6 +466,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-27 11:43 | sent | 938515476 | EDBLAD & CO AB | NUF | email | - |
+| 2026-09-27 11:43 | sending | 938515476 | EDBLAD & CO AB | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-27 11:43 | sent | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | - |
+| 2026-09-27 11:43 | sending | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-27 11:43 | sent | 938454108 | ELMONTIA A.S. NUF | NUF | email | - |
+| 2026-09-27 11:43 | sending | 938454108 | ELMONTIA A.S. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-27 10:15 | replied | 938545286 | LASER SURFACE SOLUTION AS | AS | email | Svar mottatt 26.09.2026 fra Roger Sandanger: «Takker har hjelp til dette». Tvetydig om han allerede har hjelp eller ønsker hjelp. Flyttet til manuell CRM-avklaring; ingen automatisk oppfølging. |
 | 2026-09-26 09:56 | sent | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-26 09:56 | sending | 938449295 | FOLKEAKADEMIET HAUGESUND | FLI | email | Oppfølging reservert før SMTP-levering. |
