@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1619
-- Sendt: 792
+- Antall hendelser: 1635
+- Sendt: 800
 - Angret: 0
-- Aktive kontaktede selskaper: 448
+- Aktive kontaktede selskaper: 456
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-28 | 938569746 | SÆTRUM | ENK | email | website-offer |
+| 2026-09-28 | 938570264 | R ØKSNES | ENK | email | website-offer |
+| 2026-09-28 | 938286531 | SASTRANSITION OÜ NUF | NUF | email | website-offer |
+| 2026-09-28 | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | website-offer |
+| 2026-09-28 | 938570701 | AUTO ISHCHENKO | ENK | email | website-offer |
+| 2026-09-28 | 838490352 | ÅS TEKNIKK OG TV-PRODUKSJON | ENK | email | website-offer |
+| 2026-09-28 | 838528422 | HAUGSVÆR KONSULENTVIRKSOMHET | ENK | email | website-offer |
+| 2026-09-28 | 938528357 | FINNBAKK + | ENK | email | website-offer |
 | 2026-09-27 | 938515476 | EDBLAD & CO AB | NUF | email | website-offer |
 | 2026-09-27 | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | website-offer |
 | 2026-09-27 | 938454108 | ELMONTIA A.S. NUF | NUF | email | website-offer |
@@ -466,6 +474,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-28 08:30 | sent | 938569746 | SÆTRUM | ENK | email | - |
+| 2026-09-28 08:30 | sending | 938569746 | SÆTRUM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 938570264 | R ØKSNES | ENK | email | - |
+| 2026-09-28 08:30 | sending | 938570264 | R ØKSNES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 938286531 | SASTRANSITION OÜ NUF | NUF | email | - |
+| 2026-09-28 08:30 | sending | 938286531 | SASTRANSITION OÜ NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | - |
+| 2026-09-28 08:30 | sending | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 938570701 | AUTO ISHCHENKO | ENK | email | - |
+| 2026-09-28 08:30 | sending | 938570701 | AUTO ISHCHENKO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 838490352 | ÅS TEKNIKK OG TV-PRODUKSJON | ENK | email | - |
+| 2026-09-28 08:30 | sending | 838490352 | ÅS TEKNIKK OG TV-PRODUKSJON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 838528422 | HAUGSVÆR KONSULENTVIRKSOMHET | ENK | email | - |
+| 2026-09-28 08:30 | sending | 838528422 | HAUGSVÆR KONSULENTVIRKSOMHET | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-28 08:30 | sent | 938528357 | FINNBAKK + | ENK | email | - |
+| 2026-09-28 08:30 | sending | 938528357 | FINNBAKK + | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-27 11:43 | sent | 938515476 | EDBLAD & CO AB | NUF | email | - |
 | 2026-09-27 11:43 | sending | 938515476 | EDBLAD & CO AB | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-27 11:43 | sent | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | - |

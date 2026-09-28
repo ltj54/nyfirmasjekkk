@@ -42,25 +42,6 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
-    name: "Laser Surface Solution AS",
-    contact: "Roger Sandanger",
-    email: "roger.sandanger@lyse.net",
-    organizationNumber: "938 545 286",
-    phone: "415 16 832",
-    address: "Gjerdebakken 32, 4027 Stavanger",
-    proposalDate: "26.09.2026",
-    dateLabel: "Første henvendelse",
-    replyDate: "26.09.2026 kl. 18:26",
-    clarificationDate: "27.09.2026",
-    outreach: "Svar mottatt 26.09.2026. Avklaringsmail med kravpunkter og en kort presentasjon av mulighetene ble sendt 27.09.2026.",
-    progress: "Nyregistrert aksjeselskap, stiftet 01.09.2026 og registrert 23.09.2026. BRREG beskriver virksomheten som presis og miljøvennlig fjerning av rust, maling, fett og belegg med laserteknologi. Formålet omfatter laserrengjøring, overflatebehandling og vedlikehold for landbasert, offshore-, maritim- og verftsindustri. Roger er daglig leder og styremedlem; Amela Sandanger er styreleder. Selskapet har 1 000 000 kr i aksjekapital, ingen registrerte ansatte og er foreløpig ikke registrert i Merverdiavgiftsregisteret.",
-    nextStep: "Avventer Rogers presisering av om han allerede har hjelp, eller ønsker et samarbeid med Lars. Dersom han ønsker hjelp, utarbeides kravspesifikasjonen sammen før noe forslag bygges. Ingen automatisk purring.",
-    invoice: "Ikke fakturert",
-    agreement: "Skal tilpasses og avtales før eventuell utvikling eller drift. Ikke sendt.",
-    agreementStatus: "required",
-    status: "waiting",
-  },
-  {
     name: "Idsøe Rådgivning",
     previewUrl: "https://ltj54.github.io/idsoe-radgivning-nettside/index.html",
     contact: "Ella Maria Cosmovici Idsøe",
