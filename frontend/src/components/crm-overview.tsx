@@ -64,6 +64,7 @@ const projects: CrmProject[] = [
     previewUrl: "https://ltj54.github.io/idsoe-radgivning-nettside/index.html",
     contact: "Ella Maria Cosmovici Idsøe",
     email: "e.m.c.idsoe@naturfagsenteret.no",
+    phone: "+47 22 84 56 69",
     proposalDate: "03.09.2026",
     dateLabel: "Henvendelse",
     replyDate: "07.09.2026 kl. 12:47",
