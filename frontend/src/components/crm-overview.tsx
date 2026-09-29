@@ -42,6 +42,24 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "Hageservice Tofthagen",
+    contact: "Benjamin V. Tofthagen",
+    email: "benjamin.tofth@icloud.com",
+    organizationNumber: "938 578 494",
+    phone: "+47 991 92 745",
+    address: "Grårudveien 2A, 1636 Gamle Fredrikstad",
+    proposalDate: "29.09.2026",
+    dateLabel: "Første henvendelse",
+    replyDate: "29.09.2026 (telefon)",
+    outreach: "E-post med tilbud om nettside ble sendt 29.09.2026 kl. 08:21. Benjamin V. Tofthagen ringte samme dag fra +47 991 92 745 og fortalte at han var interessert.",
+    progress: "Telefonsamtalen bekreftet interesse for nettside. Lars lovet å utarbeide en kravspesifikasjon. Koblingen til Hageservice Tofthagen er bekreftet ved at telefonnummeret Benjamin ringte fra, samsvarer med mobilnummeret som er registrert på foretaket. Enkeltpersonforetaket ble registrert i Enhetsregisteret 28.09.2026 og driver med beplantning av hager og parkanlegg.",
+    nextStep: "Utarbeide kravspesifikasjon til Benjamin og avklare ønsket innhold, tjenester, bilder, kontaktløsning, domene og videre fremdrift.",
+    invoice: "Ikke fakturert",
+    agreement: "Skal tilpasses og avtales før eventuell utvikling eller drift. Ikke sendt.",
+    agreementStatus: "required",
+    status: "working",
+  },
+  {
     name: "Idsøe Rådgivning",
     previewUrl: "https://ltj54.github.io/idsoe-radgivning-nettside/index.html",
     contact: "Ella Maria Cosmovici Idsøe",
