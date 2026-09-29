@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1707
-- Sendt: 836
+- Antall hendelser: 1709
+- Sendt: 837
 - Angret: 0
-- Aktive kontaktede selskaper: 472
+- Aktive kontaktede selskaper: 473
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-29 | 938532478 | DOMINO TREFELLING ENK | ENK | email | website-offer |
 | 2026-09-29 | 938496315 | AURA BEAUTY ART ABDALLA | ENK | email | website-follow-up |
 | 2026-09-29 | 938492158 | BRANDSTORP SYKEPLEIE OG ERNÆRING | ENK | email | website-follow-up |
 | 2026-09-29 | 938544689 | IMCI BUSINESS LIMITED | UTLA | email | website-follow-up |
@@ -490,6 +491,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-29 09:49 | sent | 938532478 | DOMINO TREFELLING ENK | ENK | email | - |
+| 2026-09-29 09:49 | sending | 938532478 | DOMINO TREFELLING ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-29 08:22 | sent | 938496315 | AURA BEAUTY ART ABDALLA | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-29 08:22 | sending | 938496315 | AURA BEAUTY ART ABDALLA | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-29 08:22 | sent | 938492158 | BRANDSTORP SYKEPLEIE OG ERNÆRING | ENK | email | Oppfølging sendt – avslutt hvis stille |
