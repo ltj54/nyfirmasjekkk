@@ -4,15 +4,41 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1709
-- Sendt: 837
+- Antall hendelser: 1761
+- Sendt: 863
 - Angret: 0
-- Aktive kontaktede selskaper: 473
+- Aktive kontaktede selskaper: 480
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-30 | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | website-follow-up |
+| 2026-09-30 | 938504474 | FORDE ARK | ENK | email | website-follow-up |
+| 2026-09-30 | 938510881 | FOTTERAPEUT MARINA GJERLØW | ENK | email | website-follow-up |
+| 2026-09-30 | 938524130 | GIOTAKOS MEDIA | ENK | email | website-follow-up |
+| 2026-09-30 | 938443459 | HEGE TUNSJØ | ENK | email | website-follow-up |
+| 2026-09-30 | 938504180 | MAGHSOURI INDUSTRIPARTNER | ENK | email | website-follow-up |
+| 2026-09-30 | 938505381 | SIVERTSEN MEKK & SVEIS | ENK | email | website-follow-up |
+| 2026-09-30 | 938503621 | THORENFELDT ARKITEKT | ENK | email | website-follow-up |
+| 2026-09-30 | 838502032 | VILDE A. PETTERSEN | ENK | email | website-follow-up |
+| 2026-09-30 | 938497311 | GEAR TI-GER WELLLIFE GERVACIO | ENK | email | website-follow-up |
+| 2026-09-30 | 938468923 | IRRE FORLAG | FLI | email | website-follow-up |
+| 2026-09-30 | 938485666 | MG SKYLINE GROUP APS | NUF | email | website-follow-up |
+| 2026-09-30 | 938497230 | MÆHRES ØL OG VINFORMIDLING | ENK | email | website-follow-up |
+| 2026-09-30 | 938198756 | FCPR ODDO BHF EUROPEAN SECONDARY NUF | NUF | email | website-follow-up |
+| 2026-09-30 | 938436681 | HENRY DICKSON NUF | NUF | email | website-follow-up |
+| 2026-09-30 | 938487049 | MARIE GUDMUNDSEN LOODTZ | ENK | email | website-follow-up |
+| 2026-09-30 | 938546525 | SAMIA BIBI | ENK | email | website-follow-up |
+| 2026-09-30 | 938497486 | DANYLO HADIUCHKO | ENK | email | website-follow-up |
+| 2026-09-30 | 938496439 | HENNING FAGERVOLD | ENK | email | website-follow-up |
+| 2026-09-30 | 938325014 | GO SYSTEMS AS | AS | email | website-offer |
+| 2026-09-30 | 938586160 | FRISØR ANNIKEN LØLAND | ENK | email | website-offer |
+| 2026-09-30 | 938532079 | ELI BALLONGER DOBROVOLSKYTE | ENK | email | website-offer |
+| 2026-09-30 | 938584400 | NORWEGIAN WIND SA | SA | email | website-offer |
+| 2026-09-30 | 938583951 | MB "OPS NEMAN" | UTLA | email | website-offer |
+| 2026-09-30 | 938543852 | MATTHIESEN INVEST | ENK | email | website-offer |
+| 2026-09-30 | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | website-offer |
 | 2026-09-29 | 938532478 | DOMINO TREFELLING ENK | ENK | email | website-offer |
 | 2026-09-29 | 938496315 | AURA BEAUTY ART ABDALLA | ENK | email | website-follow-up |
 | 2026-09-29 | 938492158 | BRANDSTORP SYKEPLEIE OG ERNÆRING | ENK | email | website-follow-up |
@@ -154,25 +180,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-09-24 | 938461732 | SAMSKOTT DRIFT OG SERVICE | ENK | email | website-follow-up |
 | 2026-09-24 | 938470650 | TUCKER ADVISORY | ENK | email | website-follow-up |
 | 2026-09-24 | 938504857 | TONYA OHNSTAD | ENK | email | website-follow-up |
-| 2026-09-24 | 938496439 | HENNING FAGERVOLD | ENK | email | website-offer |
-| 2026-09-24 | 938497486 | DANYLO HADIUCHKO | ENK | email | website-offer |
-| 2026-09-24 | 938546525 | SAMIA BIBI | ENK | email | website-offer |
-| 2026-09-24 | 938487049 | MARIE GUDMUNDSEN LOODTZ | ENK | email | website-offer |
-| 2026-09-24 | 938436681 | HENRY DICKSON NUF | NUF | email | website-offer |
-| 2026-09-24 | 938198756 | FCPR ODDO BHF EUROPEAN SECONDARY NUF | NUF | email | website-offer |
-| 2026-09-24 | 938497230 | MÆHRES ØL OG VINFORMIDLING | ENK | email | website-offer |
-| 2026-09-24 | 938485666 | MG SKYLINE GROUP APS | NUF | email | website-offer |
-| 2026-09-24 | 938468923 | IRRE FORLAG | FLI | email | website-offer |
-| 2026-09-24 | 938497311 | GEAR TI-GER WELLLIFE GERVACIO | ENK | email | website-offer |
-| 2026-09-24 | 838502032 | VILDE A. PETTERSEN | ENK | email | website-offer |
-| 2026-09-24 | 938503621 | THORENFELDT ARKITEKT | ENK | email | website-offer |
-| 2026-09-24 | 938505381 | SIVERTSEN MEKK & SVEIS | ENK | email | website-offer |
-| 2026-09-24 | 938504180 | MAGHSOURI INDUSTRIPARTNER | ENK | email | website-offer |
-| 2026-09-24 | 938443459 | HEGE TUNSJØ | ENK | email | website-offer |
-| 2026-09-24 | 938524130 | GIOTAKOS MEDIA | ENK | email | website-offer |
-| 2026-09-24 | 938510881 | FOTTERAPEUT MARINA GJERLØW | ENK | email | website-offer |
-| 2026-09-24 | 938504474 | FORDE ARK | ENK | email | website-offer |
-| 2026-09-24 | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | website-offer |
 | 2026-09-23 | 938504784 | FJELD DEKK & SERVICE | ENK | email | website-follow-up |
 | 2026-09-23 | 938299358 | MATHIAS MALLON | ENK | email | website-follow-up |
 | 2026-09-23 | 838270182 | MOEN BYGG OG LAFT. | ENK | email | website-follow-up |
@@ -491,6 +498,58 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-30 07:14 | sent | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938504474 | FORDE ARK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938504474 | FORDE ARK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938510881 | FOTTERAPEUT MARINA GJERLØW | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938510881 | FOTTERAPEUT MARINA GJERLØW | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938524130 | GIOTAKOS MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938524130 | GIOTAKOS MEDIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938443459 | HEGE TUNSJØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938443459 | HEGE TUNSJØ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938504180 | MAGHSOURI INDUSTRIPARTNER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938504180 | MAGHSOURI INDUSTRIPARTNER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938505381 | SIVERTSEN MEKK & SVEIS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938505381 | SIVERTSEN MEKK & SVEIS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938503621 | THORENFELDT ARKITEKT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938503621 | THORENFELDT ARKITEKT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 838502032 | VILDE A. PETTERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 838502032 | VILDE A. PETTERSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938497311 | GEAR TI-GER WELLLIFE GERVACIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938497311 | GEAR TI-GER WELLLIFE GERVACIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938468923 | IRRE FORLAG | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938468923 | IRRE FORLAG | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938485666 | MG SKYLINE GROUP APS | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938485666 | MG SKYLINE GROUP APS | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938497230 | MÆHRES ØL OG VINFORMIDLING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938497230 | MÆHRES ØL OG VINFORMIDLING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938198756 | FCPR ODDO BHF EUROPEAN SECONDARY NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938198756 | FCPR ODDO BHF EUROPEAN SECONDARY NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:14 | sent | 938436681 | HENRY DICKSON NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:14 | sending | 938436681 | HENRY DICKSON NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938487049 | MARIE GUDMUNDSEN LOODTZ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:13 | sending | 938487049 | MARIE GUDMUNDSEN LOODTZ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938546525 | SAMIA BIBI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:13 | sending | 938546525 | SAMIA BIBI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938497486 | DANYLO HADIUCHKO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:13 | sending | 938497486 | DANYLO HADIUCHKO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938496439 | HENNING FAGERVOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-09-30 07:13 | sending | 938496439 | HENNING FAGERVOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938325014 | GO SYSTEMS AS | AS | email | - |
+| 2026-09-30 07:13 | sending | 938325014 | GO SYSTEMS AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938586160 | FRISØR ANNIKEN LØLAND | ENK | email | - |
+| 2026-09-30 07:13 | sending | 938586160 | FRISØR ANNIKEN LØLAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938532079 | ELI BALLONGER DOBROVOLSKYTE | ENK | email | - |
+| 2026-09-30 07:13 | sending | 938532079 | ELI BALLONGER DOBROVOLSKYTE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938584400 | NORWEGIAN WIND SA | SA | email | - |
+| 2026-09-30 07:13 | sending | 938584400 | NORWEGIAN WIND SA | SA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938583951 | MB "OPS NEMAN" | UTLA | email | - |
+| 2026-09-30 07:13 | sending | 938583951 | MB "OPS NEMAN" | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938543852 | MATTHIESEN INVEST | ENK | email | - |
+| 2026-09-30 07:13 | sending | 938543852 | MATTHIESEN INVEST | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 07:13 | sent | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | - |
+| 2026-09-30 07:13 | sending | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-29 09:49 | sent | 938532478 | DOMINO TREFELLING ENK | ENK | email | - |
 | 2026-09-29 09:49 | sending | 938532478 | DOMINO TREFELLING ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-29 08:22 | sent | 938496315 | AURA BEAUTY ART ABDALLA | ENK | email | Oppfølging sendt – avslutt hvis stille |
