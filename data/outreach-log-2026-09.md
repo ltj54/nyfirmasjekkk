@@ -4,15 +4,28 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1761
-- Sendt: 863
+- Antall hendelser: 1787
+- Sendt: 876
 - Angret: 0
-- Aktive kontaktede selskaper: 480
+- Aktive kontaktede selskaper: 493
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-30 | 938561257 | SUNDE MULTISERVICE | ENK | email | website-offer |
+| 2026-09-30 | 938567263 | LINUS ANDERSSEN | ENK | email | website-offer |
+| 2026-09-30 | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | website-offer |
+| 2026-09-30 | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | website-offer |
+| 2026-09-30 | 938533873 | HILDA DEL MAR MONTERRUBIO ROMO | ENK | email | website-offer |
+| 2026-09-30 | 938522766 | BOMA | FLI | email | website-offer |
+| 2026-09-30 | 938527156 | ØSTERLIE HØYDETEKNIKK | ENK | email | website-offer |
+| 2026-09-30 | 938555524 | WORD BY SYLVIA MINDE | ENK | email | website-offer |
+| 2026-09-30 | 938512779 | SNITTS VENNER | FLI | email | website-offer |
+| 2026-09-30 | 938559422 | PHELIX KRAFT | ENK | email | website-offer |
+| 2026-09-30 | 938559414 | NOK ER NOK INNEHAVER S. KJENDLIE | ENK | email | website-offer |
+| 2026-09-30 | 938527865 | MAGNUS EDLAND EIKREM | ENK | email | website-offer |
+| 2026-09-30 | 938510180 | M/S AUSTEVOLL | FLI | email | website-offer |
 | 2026-09-30 | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | website-follow-up |
 | 2026-09-30 | 938504474 | FORDE ARK | ENK | email | website-follow-up |
 | 2026-09-30 | 938510881 | FOTTERAPEUT MARINA GJERLØW | ENK | email | website-follow-up |
@@ -498,6 +511,32 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-30 15:37 | sent | 938561257 | SUNDE MULTISERVICE | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938561257 | SUNDE MULTISERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938567263 | LINUS ANDERSSEN | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938567263 | LINUS ANDERSSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | - |
+| 2026-09-30 15:37 | sending | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | - |
+| 2026-09-30 15:37 | sending | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938533873 | HILDA DEL MAR MONTERRUBIO ROMO | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938533873 | HILDA DEL MAR MONTERRUBIO ROMO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938522766 | BOMA | FLI | email | - |
+| 2026-09-30 15:37 | sending | 938522766 | BOMA | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938527156 | ØSTERLIE HØYDETEKNIKK | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938527156 | ØSTERLIE HØYDETEKNIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938555524 | WORD BY SYLVIA MINDE | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938555524 | WORD BY SYLVIA MINDE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938512779 | SNITTS VENNER | FLI | email | - |
+| 2026-09-30 15:37 | sending | 938512779 | SNITTS VENNER | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938559422 | PHELIX KRAFT | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938559422 | PHELIX KRAFT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938559414 | NOK ER NOK INNEHAVER S. KJENDLIE | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938559414 | NOK ER NOK INNEHAVER S. KJENDLIE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938527865 | MAGNUS EDLAND EIKREM | ENK | email | - |
+| 2026-09-30 15:37 | sending | 938527865 | MAGNUS EDLAND EIKREM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-09-30 15:37 | sent | 938510180 | M/S AUSTEVOLL | FLI | email | - |
+| 2026-09-30 15:37 | sending | 938510180 | M/S AUSTEVOLL | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-09-30 07:14 | sent | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-09-30 07:14 | sending | 938507503 | BRENNA MARINE SERVICE & VEDLIKEHOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-09-30 07:14 | sent | 938504474 | FORDE ARK | ENK | email | Oppfølging sendt – avslutt hvis stille |

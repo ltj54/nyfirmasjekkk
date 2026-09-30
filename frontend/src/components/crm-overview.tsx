@@ -43,6 +43,7 @@ type CrmProject = {
 const projects: CrmProject[] = [
   {
     name: "Hageservice Tofthagen",
+    inactiveDate: "30.09.2026",
     contact: "Benjamin V. Tofthagen",
     email: "benjamin.tofth@icloud.com",
     organizationNumber: "938 578 494",
@@ -51,13 +52,13 @@ const projects: CrmProject[] = [
     proposalDate: "29.09.2026",
     dateLabel: "Første henvendelse",
     replyDate: "29.09.2026 (telefon)",
-    outreach: "E-post med tilbud om nettside ble sendt 29.09.2026 kl. 08:21. Benjamin V. Tofthagen ringte samme dag fra +47 991 92 745 og fortalte at han var interessert.",
-    progress: String.raw`Telefonsamtalen bekreftet interesse, men det er foreløpig bare avtalt å lage en kravspesifikasjon – ikke å utvikle en nettside. Første utkast til kravspesifikasjon ble opprettet 30.09.2026 i C:\Prosjekt\hageservice-tofthagen\KRAVSPESIFIKASJON.md. Koblingen til Hageservice Tofthagen er bekreftet ved at telefonnummeret Benjamin ringte fra, samsvarer med mobilnummeret som er registrert på foretaket.`,
-    nextStep: "Gjennomgå kravspesifikasjonen med Benjamin og avklare mål, tjenester, innhold, bilder, kontaktløsning, domene, omfang, pris og fremdrift. Ikke start utvikling før dette er avtalt.",
+    outreach: "Inaktiv – foretaket er slettet",
+    progress: "E-post med tilbud om nettside ble sendt 29.09.2026, og Benjamin uttrykte interesse per telefon samme dag. Det ble bare laget et utkast til kravspesifikasjon og avtale; ingen nettsideutvikling ble startet. Prosjektet ble avsluttet 30.09.2026 etter opplysning om at foretaket er slettet.",
+    nextStep: String.raw`Ingen videre kontakt, e-post eller purring. Det fantes ikke noe GitHub-repository eller aktiv publisering. Den lokale sikkerhetskopien er beholdt i C:\Prosjekt\hageservice-tofthagen_FJERNET-GITHUB.`,
     invoice: "Ikke fakturert",
-    agreement: "Skal tilpasses og avtales før eventuell utvikling eller drift. Ikke sendt.",
-    agreementStatus: "required",
-    status: "working",
+    agreement: "Ikke brukt – prosjektet ble avsluttet før utvikling eller drift ble avtalt.",
+    agreementStatus: "not-used",
+    status: "inactive",
   },
   {
     name: "Idsøe Rådgivning",
