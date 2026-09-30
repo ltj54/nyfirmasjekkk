@@ -63,6 +63,7 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 - Lag `README.md` med formål, lokal oppstart hvis det finnes kjørbar kode, nødvendige verktøy, mappestruktur og planlagt GitHub-adresse.
 - Dokumenter hvilke kommandoer som bare kjører lokalt, og hvordan publisering eventuelt skal utføres senere.
 - Lag en enkel kravspesifikasjon når kundeopplysninger er gitt. Skill mellom bekreftede ønsker, forslag og åpne spørsmål. Ikke fyll manglende opplysninger med oppdiktede fakta.
+- Lag alltid `AVTALEUTKAST_NETTSIDE_OG_DRIFT.md` i det nye prosjektet med utgangspunkt i `C:\Prosjekt\nyfirmasjekk\docs\AVTALEUTKAST_NETTSIDE_OG_DRIFT.md`. Tilpass avtaleutkastet med riktige kunde-, prosjekt- og kontaktopplysninger som er kjent. Pris, leveranse, domene, hosting, drift, vedlikehold, tidsfrister og andre uavklarte vilkår skal merkes tydelig som uavklart og aldri gjettes. Behold avtalen som et internt utkast inntil innholdet er gjennomgått og godkjent for utsendelse.
 - Legg gjerne en kort `AGENTS.md` i det nye prosjektet som gjentar: selvstendige stier, ingen Sites og ingen commit/push/publisering uten bestilling. Dette gjør reglene tilgjengelige når prosjektet åpnes i et nytt vindu.
 - Ikke opprett et CRM-kort automatisk. Oppdater et eksisterende kort med lokal sti og avtalte prosjektopplysninger når det inngår i oppgaven. Nye CRM-kort opprettes bare når Lars ber om det.
 
@@ -82,7 +83,8 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 2. Søk etter gamle prosjektnavn, absolutte stier til andre prosjekter og feil bruk av `C:\Prosjekt` som rot eller arbeidsmappe.
 3. Kontroller Git-rot, gren, remote dersom satt, `.gitignore` og Git-status.
 4. Kontroller at ingen Sites-konfigurasjon eller automatisk commit/push er lagt inn.
-5. Hvis prosjektet har kjørbar kode, prøv relevante oppstarts-/byggkommandoer. Et rent dokumentasjonsprosjekt trenger ikke en kunstig applikasjon eller testpakke.
-6. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, og om repository, commit, push og publisering faktisk er utført eller bare planlagt.
+5. Kontroller at `AVTALEUTKAST_NETTSIDE_OG_DRIFT.md` finnes og er tilpasset kjente kunde- og prosjektopplysninger uten oppdiktede vilkår.
+6. Hvis prosjektet har kjørbar kode, prøv relevante oppstarts-/byggkommandoer. Et rent dokumentasjonsprosjekt trenger ikke en kunstig applikasjon eller testpakke.
+7. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, og om repository, commit, push og publisering faktisk er utført eller bare planlagt.
 
 Ved senere avvikling brukes `SLETTERUTINER.md` i nyfirmasjekk-prosjektet.
