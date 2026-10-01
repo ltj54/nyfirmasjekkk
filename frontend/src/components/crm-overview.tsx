@@ -42,6 +42,24 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "Linus Anderssen",
+    contact: "Linus Anderssen",
+    email: "linusanderssen@outlook.com",
+    organizationNumber: "938 567 263",
+    phone: "+47 950 17 473",
+    address: "Ekloa 39, 7656 Verdal",
+    proposalDate: "30.09.2026",
+    dateLabel: "Første henvendelse",
+    replyDate: "01.10.2026 kl. 15:14",
+    outreach: "Positiv interesse – ønsker nettside",
+    progress: String.raw`Linus svarte 01.10.2026 at han er interessert i en nettside. Foreløpig skal det bare lages en enkel kravspesifikasjon; ingen utvikling, avtale eller publisering er bestilt. Første utkast ligger i C:\Prosjekt\linus-anderssen\KRAVSPESIFIKASJON.md.`,
+    nextStep: "Gjennomgå kravspesifikasjonen med Linus og avklare mål, tjenester, geografisk område, innhold, bilder, kontaktløsning, domene, omfang og pris. Avklar også hvem som kan inngå en bindende avtale på vegne av virksomheten før eventuell utviklingsstart.",
+    invoice: "Ikke fakturert",
+    agreement: "Ikke sendt. Avtalepart og signaturmyndighet må avklares før eventuell utvikling eller drift avtales.",
+    agreementStatus: "required",
+    status: "working",
+  },
+  {
     name: "Hageservice Tofthagen",
     inactiveDate: "30.09.2026",
     contact: "Benjamin V. Tofthagen",

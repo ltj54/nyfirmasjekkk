@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 75
-- Sendt: 37
+- Antall hendelser: 79
+- Sendt: 38
 - Angret: 0
 - Aktive kontaktede selskaper: 37
 
@@ -13,6 +13,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-01 | 938565082 | K5 EIENDOM AS | AS | email | website-offer |
 | 2026-10-01 | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | website-follow-up |
 | 2026-10-01 | 938562431 | PFC EUROPE HOLDING GMBH | UTLA | email | website-follow-up |
 | 2026-10-01 | 938534314 | PROHJUL FREDRIKSEN | ENK | email | website-follow-up |
@@ -45,7 +46,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-01 | 938593280 | PEAK FITNESS TESTING LTD | UTLA | email | website-offer |
 | 2026-10-01 | 938551855 | MIKKEL PETTERSEN | ENK | email | website-offer |
 | 2026-10-01 | 838550932 | MALY BIL & BILDELER | ENK | email | website-offer |
-| 2026-10-01 | 938497222 | LIV JENNY LINDBERG SALVESEN | ENK | email | website-offer |
 | 2026-10-01 | 938563535 | HIPERBARIC SA | NUF | email | website-offer |
 | 2026-10-01 | 938550743 | ANUND GRINI | ENK | email | website-offer |
 | 2026-10-01 | 938561222 | HIDRI BUD | ENK | email | website-offer |
@@ -55,6 +55,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-01 20:34 | sent | 938565082 | K5 EIENDOM AS | AS | email | - |
+| 2026-10-01 20:34 | sending | 938565082 | K5 EIENDOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-01 20:26 | replied | 938567263 | LINUS ANDERSSEN | ENK | email | Positivt svar mottatt 01.10.2026 kl. 15:14 fra Linus Anderssen: interessert i nettside. Første steg er kun en enkel kravspesifikasjon; ingen utvikling, avtale eller publisering er bestilt. Ingen automatisk oppfølging. |
+| 2026-10-01 20:19 | replied | 938497222 | LIV JENNY LINDBERG SALVESEN | ENK | email | Avslag mottatt 01.10.2026 kl. 20:11 fra Liv J. Lindberg Salvesen: Det er ikke aktuelt med nettside for virksomheten. Ikke interessert; avsluttet og fjernet fra oppfølging. Ingen videre kontakt. |
 | 2026-10-01 19:06 | sent | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-01 19:06 | sending | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-01 19:06 | sent | 938562431 | PFC EUROPE HOLDING GMBH | UTLA | email | Oppfølging sendt – avslutt hvis stille |
