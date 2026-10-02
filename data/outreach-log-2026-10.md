@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 132
-- Sendt: 64
+- Antall hendelser: 138
+- Sendt: 67
 - Angret: 0
-- Aktive kontaktede selskaper: 63
+- Aktive kontaktede selskaper: 66
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | website-offer |
+| 2026-10-02 | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | website-offer |
+| 2026-10-02 | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | website-offer |
 | 2026-10-02 | 938562172 | HRS EIENDOM AS | AS | email | website-follow-up |
 | 2026-10-02 | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | website-follow-up |
 | 2026-10-02 | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-follow-up |
@@ -81,6 +84,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 10:43 | sent | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | - |
+| 2026-10-02 10:43 | sending | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-02 10:43 | sent | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | - |
+| 2026-10-02 10:43 | sending | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-02 10:43 | sent | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | - |
+| 2026-10-02 10:43 | sending | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-02 09:41 | not_relevant | 938513139 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-02 09:24 | sent | 938562172 | HRS EIENDOM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-02 09:24 | sending | 938562172 | HRS EIENDOM AS | AS | email | Oppfølging reservert før SMTP-levering. |
