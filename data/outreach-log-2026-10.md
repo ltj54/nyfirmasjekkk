@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 131
+- Antall hendelser: 132
 - Sendt: 64
 - Angret: 0
 - Aktive kontaktede selskaper: 63
@@ -81,6 +81,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 09:41 | not_relevant | 938513139 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-02 09:24 | sent | 938562172 | HRS EIENDOM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-02 09:24 | sending | 938562172 | HRS EIENDOM AS | AS | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-02 09:24 | sent | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
