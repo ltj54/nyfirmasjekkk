@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 138
+- Antall hendelser: 141
 - Sendt: 67
 - Angret: 0
-- Aktive kontaktede selskaper: 66
+- Aktive kontaktede selskaper: 65
 
 ## Aktive kontaktede selskaper
 
@@ -51,7 +51,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-01 | 938478988 | FANGHOL BOLIGFELT | FLI | email | website-follow-up |
 | 2026-10-01 | 938521603 | GODT PLANTA NJØSEN | ENK | email | website-follow-up |
 | 2026-10-01 | 938526850 | HANS OLAV KÅSA TORVTAK OG HYTTE VEDLIKEHOLD | ENK | email | website-follow-up |
-| 2026-10-01 | 938529426 | HENDEN AUTOTUNING | ENK | email | website-follow-up |
 | 2026-10-01 | 938513724 | HOXHA MEDIA OG UNDERHOLDNING | ENK | email | website-follow-up |
 | 2026-10-01 | 938555079 | INGEBRIGTSEN FYSIOTERAPI | ENK | email | website-follow-up |
 | 2026-10-01 | 938530823 | JØRUND JENSET RØRLEGGERMESTER | ENK | email | website-follow-up |
@@ -84,6 +83,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 11:10 | replied | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | email | Manuell purring på arbeidsutkast sendt 02.10.2026. Ba om tilbakemelding på helhetsinntrykk, tjenester og bakgrunnstekst, og presiserte at bilder, kontaktopplysninger, davidsson.no og endelig publisering kan avklares senere. Avventer svar; ingen automatisk oppfølging. |
+| 2026-10-02 11:04 | replied | 938529426 | HENDEN AUTOTUNING | ENK | email | Avklaringsmail sendt manuelt 02.10.2026. Ba om opplysninger om produktantall, betaling, frakt og retur, Fiken-bruk og ønsket automatisering, custom-forespørsler, visuelt materiell og lanseringstidspunkt. Forklarte at løsningen prises separat, kan bygges trinnvis og at ingen utvikling eller kostnader starter før skriftlig avtale. Avventer svar; ingen automatisk oppfølging. |
+| 2026-10-02 10:52 | replied | 938529426 | HENDEN AUTOTUNING | ENK | email | Positivt svar mottatt 02.10.2026 kl. 09:47 fra Fredrik Henden. Ønsker moderne, skalerbar nettbutikk med produktkategorier og varianter for tuningdeler, MaxxECU-produkter, ledningsnett, 8HP-løsninger og komplette kit; forespørsler for custom arbeid; samt mest mulig sømløs integrasjon mot Fiken. Ber om anbefalt løsning, integrasjonsbeskrivelse, totalpris, løpende kostnader og vedlikehold. Må behovsavklares og prises separat; ingen automatisk oppfølging. |
 | 2026-10-02 10:43 | sent | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | - |
 | 2026-10-02 10:43 | sending | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-02 10:43 | sent | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | - |
