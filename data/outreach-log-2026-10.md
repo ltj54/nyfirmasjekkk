@@ -4,15 +4,41 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 79
-- Sendt: 38
+- Antall hendelser: 131
+- Sendt: 64
 - Angret: 0
-- Aktive kontaktede selskaper: 37
+- Aktive kontaktede selskaper: 63
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 | 938562172 | HRS EIENDOM AS | AS | email | website-follow-up |
+| 2026-10-02 | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | website-follow-up |
+| 2026-10-02 | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-follow-up |
+| 2026-10-02 | 938565007 | TRITON SUBSEA LTD | UTLA | email | website-follow-up |
+| 2026-10-02 | 938526605 | FIKKAN GLUTIA | ENK | email | website-follow-up |
+| 2026-10-02 | 938555753 | SCUDERIA TORVESTAD | ENK | email | website-follow-up |
+| 2026-10-02 | 838555802 | SQUARE ROBOT INC. | UTLA | email | website-follow-up |
+| 2026-10-02 | 938263396 | SØRENSEN TREARBEID | ENK | email | website-follow-up |
+| 2026-10-02 | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | website-follow-up |
+| 2026-10-02 | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | website-follow-up |
+| 2026-10-02 | 938527326 | LARS HARSTAD | ENK | email | website-follow-up |
+| 2026-10-02 | 938359482 | VENNER AV LAE | FLI | email | website-follow-up |
+| 2026-10-02 | 938454108 | ELMONTIA A.S. NUF | NUF | email | website-follow-up |
+| 2026-10-02 | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | website-follow-up |
+| 2026-10-02 | 938515476 | EDBLAD & CO AB | NUF | email | website-follow-up |
+| 2026-10-02 | 938528357 | FINNBAKK + | ENK | email | website-follow-up |
+| 2026-10-02 | 838528422 | HAUGSVÆR KONSULENTVIRKSOMHET | ENK | email | website-follow-up |
+| 2026-10-02 | 838490352 | ÅS TEKNIKK OG TV-PRODUKSJON | ENK | email | website-follow-up |
+| 2026-10-02 | 938570701 | AUTO ISHCHENKO | ENK | email | website-follow-up |
+| 2026-10-02 | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | website-follow-up |
+| 2026-10-02 | 938286531 | SASTRANSITION OÜ NUF | NUF | email | website-follow-up |
+| 2026-10-02 | 938570264 | R ØKSNES | ENK | email | website-follow-up |
+| 2026-10-02 | 938569746 | SÆTRUM | ENK | email | website-follow-up |
+| 2026-10-02 | 938510210 | SPILLORG AS | AS | email | website-offer |
+| 2026-10-02 | 938510164 | NYTT HOLDING NP AS | AS | email | website-offer |
+| 2026-10-02 | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | website-offer |
 | 2026-10-01 | 938565082 | K5 EIENDOM AS | AS | email | website-offer |
 | 2026-10-01 | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | website-follow-up |
 | 2026-10-01 | 938562431 | PFC EUROPE HOLDING GMBH | UTLA | email | website-follow-up |
@@ -55,6 +81,58 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 09:24 | sent | 938562172 | HRS EIENDOM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938562172 | HRS EIENDOM AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938565007 | TRITON SUBSEA LTD | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938565007 | TRITON SUBSEA LTD | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938526605 | FIKKAN GLUTIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938526605 | FIKKAN GLUTIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938555753 | SCUDERIA TORVESTAD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938555753 | SCUDERIA TORVESTAD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 838555802 | SQUARE ROBOT INC. | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 838555802 | SQUARE ROBOT INC. | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938263396 | SØRENSEN TREARBEID | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938263396 | SØRENSEN TREARBEID | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:24 | sent | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:24 | sending | 938437858 | PINEAPPLE TECHNOLOGY LTD NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938532826 | YTREARNE OVERFLATE OG BYGG TEKNIKK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938527326 | LARS HARSTAD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938527326 | LARS HARSTAD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938359482 | VENNER AV LAE | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938359482 | VENNER AV LAE | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938454108 | ELMONTIA A.S. NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938454108 | ELMONTIA A.S. NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938488037 | INNOVASJONSHORISONTER UKRAINA-NORGE (IUN) | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938515476 | EDBLAD & CO AB | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938515476 | EDBLAD & CO AB | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 938528357 | FINNBAKK + | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 938528357 | FINNBAKK + | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 838528422 | HAUGSVÆR KONSULENTVIRKSOMHET | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 838528422 | HAUGSVÆR KONSULENTVIRKSOMHET | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:23 | sent | 838490352 | ÅS TEKNIKK OG TV-PRODUKSJON | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:23 | sending | 838490352 | ÅS TEKNIKK OG TV-PRODUKSJON | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938570701 | AUTO ISHCHENKO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:22 | sending | 938570701 | AUTO ISHCHENKO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:22 | sending | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938286531 | SASTRANSITION OÜ NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:22 | sending | 938286531 | SASTRANSITION OÜ NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938570264 | R ØKSNES | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:22 | sending | 938570264 | R ØKSNES | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938569746 | SÆTRUM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-02 09:22 | sending | 938569746 | SÆTRUM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938510210 | SPILLORG AS | AS | email | - |
+| 2026-10-02 09:22 | sending | 938510210 | SPILLORG AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938510164 | NYTT HOLDING NP AS | AS | email | - |
+| 2026-10-02 09:22 | sending | 938510164 | NYTT HOLDING NP AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-02 09:22 | sent | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | - |
+| 2026-10-02 09:22 | sending | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-01 20:34 | sent | 938565082 | K5 EIENDOM AS | AS | email | - |
 | 2026-10-01 20:34 | sending | 938565082 | K5 EIENDOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-01 20:26 | replied | 938567263 | LINUS ANDERSSEN | ENK | email | Positivt svar mottatt 01.10.2026 kl. 15:14 fra Linus Anderssen: interessert i nettside. Første steg er kun en enkel kravspesifikasjon; ingen utvikling, avtale eller publisering er bestilt. Ingen automatisk oppfølging. |
