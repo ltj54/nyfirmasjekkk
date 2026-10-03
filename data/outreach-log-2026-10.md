@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 178
-- Sendt: 85
+- Antall hendelser: 180
+- Sendt: 86
 - Angret: 0
-- Aktive kontaktede selskaper: 83
+- Aktive kontaktede selskaper: 84
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-03 | 938534926 | LETH KOST FORENINGEN | FLI | email | website-offer |
 | 2026-10-03 | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | website-follow-up |
 | 2026-10-03 | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | website-follow-up |
 | 2026-10-03 | 938576262 | EFTEVAND MARKETING | ENK | email | website-follow-up |
@@ -101,6 +102,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-03 14:08 | sent | 938534926 | LETH KOST FORENINGEN | FLI | email | - |
+| 2026-10-03 14:08 | sending | 938534926 | LETH KOST FORENINGEN | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-03 13:14 | sent | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-03 13:14 | sending | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-03 13:14 | sent | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | Oppfølging sendt – avslutt hvis stille |
