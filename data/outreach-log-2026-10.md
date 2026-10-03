@@ -4,15 +4,33 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 141
-- Sendt: 67
+- Antall hendelser: 178
+- Sendt: 85
 - Angret: 0
-- Aktive kontaktede selskaper: 65
+- Aktive kontaktede selskaper: 83
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-03 | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | website-follow-up |
+| 2026-10-03 | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | website-follow-up |
+| 2026-10-03 | 938576262 | EFTEVAND MARKETING | ENK | email | website-follow-up |
+| 2026-10-03 | 938536643 | HEIM NAUTISK | ENK | email | website-follow-up |
+| 2026-10-03 | 938574200 | KAIZENBYBAAZI AS | AS | email | website-follow-up |
+| 2026-10-03 | 938537704 | LINDE FOTO - ISABEL LINDE JENSEN | ENK | email | website-follow-up |
+| 2026-10-03 | 938534810 | PATRIK STAKEFAR CZAJKOWSKI | ENK | email | website-follow-up |
+| 2026-10-03 | 938563071 | PUST I RO AS | AS | email | website-follow-up |
+| 2026-10-03 | 938481105 | SALU OÜ NUF | NUF | email | website-follow-up |
+| 2026-10-03 | 938529663 | TOM BERGSENG BEDRIFTSRÅDGIVNING | ENK | email | website-follow-up |
+| 2026-10-03 | 938580413 | WALDERHAUG BYGG | ENK | email | website-follow-up |
+| 2026-10-03 | 938570914 | RØED SERVICE | ENK | email | website-follow-up |
+| 2026-10-03 | 938572275 | BESTEFAR OLSEN VAKTMESTER | ENK | email | website-follow-up |
+| 2026-10-03 | 938530750 | OHORODNIICHUK BODY STUDIO | ENK | email | website-follow-up |
+| 2026-10-03 | 938580014 | NOVARIS FREDRIKSEN | ENK | email | website-follow-up |
+| 2026-10-03 | 938532478 | DOMINO TREFELLING ENK | ENK | email | website-follow-up |
+| 2026-10-03 | 938561796 | MCCLURE REGNSKAP | ENK | email | website-offer |
+| 2026-10-03 | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | website-offer |
 | 2026-10-02 | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | website-offer |
 | 2026-10-02 | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | website-offer |
 | 2026-10-02 | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | website-offer |
@@ -83,6 +101,43 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-03 13:14 | sent | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | sent | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | sent | 938576262 | EFTEVAND MARKETING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 938576262 | EFTEVAND MARKETING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | sent | 938536643 | HEIM NAUTISK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 938536643 | HEIM NAUTISK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | sent | 938574200 | KAIZENBYBAAZI AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 938574200 | KAIZENBYBAAZI AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | sent | 938537704 | LINDE FOTO - ISABEL LINDE JENSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 938537704 | LINDE FOTO - ISABEL LINDE JENSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | sent | 938534810 | PATRIK STAKEFAR CZAJKOWSKI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:14 | sending | 938534810 | PATRIK STAKEFAR CZAJKOWSKI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:14 | not_relevant | 938578494 | HAGESERVICE TOFTHAGEN | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-03 13:13 | sent | 938563071 | PUST I RO AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938563071 | PUST I RO AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938481105 | SALU OÜ NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938481105 | SALU OÜ NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938529663 | TOM BERGSENG BEDRIFTSRÅDGIVNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938529663 | TOM BERGSENG BEDRIFTSRÅDGIVNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938580413 | WALDERHAUG BYGG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938580413 | WALDERHAUG BYGG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938570914 | RØED SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938570914 | RØED SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938572275 | BESTEFAR OLSEN VAKTMESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938572275 | BESTEFAR OLSEN VAKTMESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938530750 | OHORODNIICHUK BODY STUDIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938530750 | OHORODNIICHUK BODY STUDIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938580014 | NOVARIS FREDRIKSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938580014 | NOVARIS FREDRIKSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938532478 | DOMINO TREFELLING ENK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-03 13:13 | sending | 938532478 | DOMINO TREFELLING ENK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938561796 | MCCLURE REGNSKAP | ENK | email | - |
+| 2026-10-03 13:13 | sending | 938561796 | MCCLURE REGNSKAP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-03 13:13 | sent | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | - |
+| 2026-10-03 13:13 | sending | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-02 11:10 | replied | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | email | Manuell purring på arbeidsutkast sendt 02.10.2026. Ba om tilbakemelding på helhetsinntrykk, tjenester og bakgrunnstekst, og presiserte at bilder, kontaktopplysninger, davidsson.no og endelig publisering kan avklares senere. Avventer svar; ingen automatisk oppfølging. |
 | 2026-10-02 11:04 | replied | 938529426 | HENDEN AUTOTUNING | ENK | email | Avklaringsmail sendt manuelt 02.10.2026. Ba om opplysninger om produktantall, betaling, frakt og retur, Fiken-bruk og ønsket automatisering, custom-forespørsler, visuelt materiell og lanseringstidspunkt. Forklarte at løsningen prises separat, kan bygges trinnvis og at ingen utvikling eller kostnader starter før skriftlig avtale. Avventer svar; ingen automatisk oppfølging. |
 | 2026-10-02 10:52 | replied | 938529426 | HENDEN AUTOTUNING | ENK | email | Positivt svar mottatt 02.10.2026 kl. 09:47 fra Fredrik Henden. Ønsker moderne, skalerbar nettbutikk med produktkategorier og varianter for tuningdeler, MaxxECU-produkter, ledningsnett, 8HP-løsninger og komplette kit; forespørsler for custom arbeid; samt mest mulig sømløs integrasjon mot Fiken. Ber om anbefalt løsning, integrasjonsbeskrivelse, totalpris, løpende kostnader og vedlikehold. Må behovsavklares og prises separat; ingen automatisk oppfølging. |
