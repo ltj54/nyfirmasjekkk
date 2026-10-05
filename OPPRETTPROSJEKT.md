@@ -1,6 +1,6 @@
 # Rutiner for nye IntelliJ-prosjekter
 
-Bruk denne rutinen når Lars ber om et nytt, blankt prosjekt under `C:\Prosjekt\`. Les hele filen før opprettelsen. Et blankt prosjekt skal være selvstendig og klart for videre arbeid. Det innebærer ikke bestilling av et ferdig nettsted eller publisering.
+Bruk denne rutinen når Lars ber om et nytt, blankt prosjekt under `C:\Prosjekt\`. Les hele filen før opprettelsen. Et blankt prosjekt skal være selvstendig og klart for videre arbeid. For et vanlig nettsideprosjekt er standardmålet en offentlig tilgjengelig forhåndsvisning på GitHub Pages under kontoen `ltj54`, med mindre Lars uttrykkelig sier at prosjektet bare skal være lokalt eller ikke skal publiseres ennå. Dette betyr ikke at manglende innhold eller uavklarte kundekrav skal fylles inn med gjetninger.
 
 ## 1. Navn og plassering
 
@@ -28,8 +28,8 @@ Når oppgaven gjelder en vanlig nettside som kan publiseres statisk, er følgend
 - **TypeScript** for typesikker kode. Unngå JavaScript-filer når det ikke finnes en konkret grunn til å bruke dem.
 - **Vanlig CSS** for en egen, responsiv utforming uten et ferdig designsystem. Ikke legg til Tailwind, Bootstrap eller et komponentbibliotek uten at prosjektet trenger det eller Lars ber om det.
 - **Next Image** for bildehåndtering. Konfigurer bilder slik at de fungerer med statisk eksport og prosjektets GitHub Pages-base path.
-- **GitHub Pages** som foretrukket publiseringsløsning for statiske nettsteder når Lars ber om publisering.
-- **GitHub Actions** for automatisk bygging og publisering til GitHub Pages etter at dette uttrykkelig er bestilt. Workflowen skal ikke opprettes som en skjult automatisk publiseringsmekanisme før publisering er avklart.
+- **GitHub Pages** som standard publiseringsløsning for statiske nettsteder. Målet er en offentlig testlenke på `https://ltj54.github.io/<prosjektnavn>/` som flere kan åpne.
+- **GitHub Actions** for automatisk bygging og publisering til GitHub Pages etter en bevisst push. Workflowen kan inngå i standardoppsettet, men den skal aldri committe eller pushe lokale endringer på egen hånd.
 - **ESLint** for kontroll av kodekvalitet. Tilgjengelighet skal også kontrolleres gjennom semantisk HTML, tastaturbruk, kontraster, bilder og relevante lint-regler.
 - **npm og Node.js** for pakkehåndtering, lokal utvikling og produksjonsbygg. Bruk prosjektets egen `package-lock.json`, og dokumenter nødvendige kommandoer i `README.md`.
 
@@ -52,25 +52,29 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 - Klargjør lokal Git-versjonskontroll med `main` som hovedgren og en tilpasset `.gitignore`.
 - Kontroller at prosjektet har sin egen Git-rot og ikke utilsiktet ligger under et annet repository.
 - Dokumenter planlagt repository som `https://github.com/ltj54/<prosjektnavn>`. Når riktig repository er bekreftet, kan lokal `origin` settes til denne adressen.
-- Ikke opprett repository på GitHub, commit, push eller publiser automatisk. Klargjøring lokalt er standard. Utfør slike handlinger når Lars uttrykkelig ber om dem; en tidligere tydelig bestilling innenfor samme oppgave gjelder fortsatt.
-- Ingen automatisk «Commit and Push» i kjøreskript, IntelliJ-oppgaver eller Git-hooks. Utviklingskommandoer skal ikke publisere.
-- Før en bestilt commit/push: kontroller Git-status, diff, gren, remote og filene som faktisk blir med. Ta bare med oppgavens filer.
+- Når Lars ber om å kjøre `OPPRETTPROSJEKT.md` for et vanlig nettsideprosjekt, regnes dette som bestilling av en første offentlig GitHub Pages-forhåndsvisning under `ltj54`, med mindre han uttrykkelig sier «bare lokalt», «ikke publiser ennå» eller tilsvarende.
+- Førstegangspubliseringen kan derfor omfatte opprettelse av repository og én bevisst første commit og push som er nødvendig for å få GitHub Pages på nett. Dette skal være en kontrollert del av den konkrete oppgaven, ikke en automatisk bakgrunnshandling.
+- Ingen automatisk «Commit and Push» i kjøreskript, IntelliJ-oppgaver, Git-hooks, filovervåkere eller andre arbeidsflyter. Lokale utviklingskommandoer skal aldri committe eller pushe.
+- Etter førstegangspubliseringen skal senere endringer forbli lokale inntil Lars uttrykkelig ber om en ny commit og push. En bestilling om å endre kode er ikke i seg selv en bestilling om å publisere endringen.
+- Før hver commit/push: kontroller Git-status, diff, gren, remote og filene som faktisk blir med. Ta bare med oppgavens filer.
 - `.gitignore` må minst dekke hemmeligheter, lokale miljøfiler, IDE-arbeidsområde, avhengigheter og midlertidige filer. Tillat en ufarlig `.env.example` med plassholdere ved behov.
 - Private kundemails, fakturaer, personopplysninger og interne notater skal holdes utenfor et offentlig repository. Dokumenter hvor slikt lagres lokalt, og hva som ignoreres. Husk at `.gitignore` ikke fjerner allerede sporede filer eller tidligere historikk.
 
 ## 6. Minimum av dokumentasjon
 
 - Lag `README.md` med formål, lokal oppstart hvis det finnes kjørbar kode, nødvendige verktøy, mappestruktur og planlagt GitHub-adresse.
-- Dokumenter hvilke kommandoer som bare kjører lokalt, og hvordan publisering eventuelt skal utføres senere.
+- Dokumenter hvilke kommandoer som bare kjører lokalt, hvordan den første GitHub Pages-publiseringen utføres, og at senere endringer ikke publiseres før en ny uttrykkelig commit/push-bestilling.
 - Lag en enkel kravspesifikasjon når kundeopplysninger er gitt. Skill mellom bekreftede ønsker, forslag og åpne spørsmål. Ikke fyll manglende opplysninger med oppdiktede fakta.
 - Lag alltid `AVTALEUTKAST_NETTSIDE_OG_DRIFT.md` i det nye prosjektet med utgangspunkt i `C:\Prosjekt\nyfirmasjekk\docs\AVTALEUTKAST_NETTSIDE_OG_DRIFT.md`. Tilpass avtaleutkastet med riktige kunde-, prosjekt- og kontaktopplysninger som er kjent. Pris, leveranse, domene, hosting, drift, vedlikehold, tidsfrister og andre uavklarte vilkår skal merkes tydelig som uavklart og aldri gjettes. Behold avtalen som et internt utkast inntil innholdet er gjennomgått og godkjent for utsendelse.
-- Legg gjerne en kort `AGENTS.md` i det nye prosjektet som gjentar: selvstendige stier, ingen Sites og ingen commit/push/publisering uten bestilling. Dette gjør reglene tilgjengelige når prosjektet åpnes i et nytt vindu.
+- Legg gjerne en kort `AGENTS.md` i det nye prosjektet som gjentar: selvstendige stier, ingen Sites, offentlig GitHub Pages som standardmål for første forhåndsvisning, og ingen automatisk eller senere commit/push uten uttrykkelig bestilling. Dette gjør reglene tilgjengelige når prosjektet åpnes i et nytt vindu.
 - Ikke opprett et CRM-kort automatisk. Oppdater et eksisterende kort med lokal sti og avtalte prosjektopplysninger når det inngår i oppgaven. Nye CRM-kort opprettes bare når Lars ber om det.
 
-## 7. Publisering når Lars ber om det
+## 7. Førstegangspublisering til GitHub Pages
 
-- Kontroller GitHub-kontoen `ltj54`, repository-navn og synlighet. Følg Lars' valg om offentlig/private filer og repository.
-- Bruk GitHub Pages for kompatible statiske nettsteder når det er ønsket. Et repository på GitHub alene gjør ikke nettstedet tilgjengelig for kunden.
+- Kontroller GitHub-kontoen `ltj54`, repository-navn og synlighet. For en side som flere skal kunne se, skal repository og GitHub Pages-oppsett være offentlig tilgjengelig, med mindre Lars bestemmer noe annet.
+- Bruk GitHub Pages for kompatible statiske nettsteder som standard ved kjøring av denne rutinen. Et repository på GitHub alene gjør ikke nettstedet tilgjengelig for kunden.
+- Gjør den nødvendige første commit/push som en uttrykkelig og kontrollert del av førstegangspubliseringen. Ikke installer noen mekanisme som senere committer eller pusher automatisk.
+- Etter at den første testlenken er verifisert, skal nye lokale endringer ikke publiseres før Lars ber om en ny commit og push.
 - Backend, database og serverbaserte funksjoner trenger en egnet driftsløsning; avklar denne før publisering. Ikke anta at GitHub Pages kan kjøre dem.
 - Kontroller at bare nettstedets offentlige filer inngår i publiseringen.
 - Verifiser den faktiske nettadressen etter publisering, inkludert intern navigasjon og ressurser. Noter kundens testlenke når den er bekreftet.
@@ -82,9 +86,9 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 1. Bekreft at alle prosjektfiler ligger i riktig mappe, og at IntelliJ kan åpne prosjektet derfra.
 2. Søk etter gamle prosjektnavn, absolutte stier til andre prosjekter og feil bruk av `C:\Prosjekt` som rot eller arbeidsmappe.
 3. Kontroller Git-rot, gren, remote dersom satt, `.gitignore` og Git-status.
-4. Kontroller at ingen Sites-konfigurasjon eller automatisk commit/push er lagt inn.
+4. Kontroller at ingen Sites-konfigurasjon eller automatisk commit/push er lagt inn. En kontrollert første commit/push til GitHub Pages er tillatt og forventet når prosjektet ikke er bestilt som bare lokalt.
 5. Kontroller at `AVTALEUTKAST_NETTSIDE_OG_DRIFT.md` finnes og er tilpasset kjente kunde- og prosjektopplysninger uten oppdiktede vilkår.
 6. Hvis prosjektet har kjørbar kode, prøv relevante oppstarts-/byggkommandoer. Et rent dokumentasjonsprosjekt trenger ikke en kunstig applikasjon eller testpakke.
-7. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, og om repository, commit, push og publisering faktisk er utført eller bare planlagt.
+7. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, den verifiserte offentlige GitHub Pages-lenken, og nøyaktig hvilken commit/push som ble gjort. Hvis Lars ba om bare lokal klargjøring, oppgi tydelig at repository, commit, push og publisering ikke er utført.
 
 Ved senere avvikling brukes `SLETTERUTINER.md` i nyfirmasjekk-prosjektet.
