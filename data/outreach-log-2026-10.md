@@ -4,15 +4,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 191
-- Sendt: 89
+- Antall hendelser: 223
+- Sendt: 105
 - Angret: 0
-- Aktive kontaktede selskaper: 84
+- Aktive kontaktede selskaper: 100
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-05 | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | website-offer |
+| 2026-10-05 | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | website-offer |
+| 2026-10-05 | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | website-offer |
+| 2026-10-05 | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | website-offer |
+| 2026-10-05 | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | website-offer |
+| 2026-10-05 | 938262195 | PAPE CONSULTING | ENK | email | website-offer |
+| 2026-10-05 | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | website-offer |
+| 2026-10-05 | 938617953 | MARTINSEN | ENK | email | website-offer |
+| 2026-10-05 | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | website-offer |
+| 2026-10-05 | 938618763 | LS NORDIC GROUP AB | UTLA | email | website-offer |
+| 2026-10-05 | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | website-offer |
+| 2026-10-05 | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | website-offer |
+| 2026-10-05 | 938571678 | HOEM F | ENK | email | website-offer |
+| 2026-10-05 | 938572437 | FRODE MATHISEN | ENK | email | website-offer |
+| 2026-10-05 | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | website-offer |
+| 2026-10-05 | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | website-offer |
 | 2026-10-04 | 938610509 | NIDERAUS RENHOLD AS | AS | email | website-offer |
 | 2026-10-04 | 938593043 | NORSE PROJECTS | NUF | email | website-offer |
 | 2026-10-03 | 938534926 | LETH KOST FORENINGEN | FLI | email | website-offer |
@@ -102,6 +118,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-05 15:09 | sent | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | - |
+| 2026-10-05 15:09 | sending | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:09 | sent | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | - |
+| 2026-10-05 15:09 | sending | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:09 | sent | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | - |
+| 2026-10-05 15:09 | sending | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:09 | sent | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | - |
+| 2026-10-05 15:09 | sending | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:09 | sent | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | - |
+| 2026-10-05 15:09 | sending | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938262195 | PAPE CONSULTING | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938262195 | PAPE CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938617953 | MARTINSEN | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938617953 | MARTINSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938618763 | LS NORDIC GROUP AB | UTLA | email | - |
+| 2026-10-05 15:08 | sending | 938618763 | LS NORDIC GROUP AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938571678 | HOEM F | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938571678 | HOEM F | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938572437 | FRODE MATHISEN | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938572437 | FRODE MATHISEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-05 15:08 | sent | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | - |
+| 2026-10-05 15:08 | sending | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-05 08:43 | not_relevant | 938529426 | HENDEN AUTOTUNING | ENK | email | Saken avsluttet etter beskjed 05.10.2026 før prosjektopprettelse eller utviklingsstart. Ingen videre kontakt, e-post eller purring. |
 | 2026-10-05 08:39 | not_relevant | 938567263 | LINUS ANDERSSEN | ENK | email | Prosjekt avsluttet etter beskjed 05.10.2026. Lokal kravspesifikasjon arkivert som sikkerhetskopi. Ingen videre kontakt, e-post eller purring. |
 | 2026-10-05 07:39 | not_relevant | 938561796 | MCCLURE REGNSKAP | ENK | email | Avslag mottatt på e-post fra Simon McClure 2026-10-04: har ikke behov for nettside. Fjernet fra oppfølging. |
