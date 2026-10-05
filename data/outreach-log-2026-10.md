@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 189
+- Antall hendelser: 191
 - Sendt: 89
 - Angret: 0
 - Aktive kontaktede selskaper: 84
@@ -102,6 +102,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-05 08:43 | not_relevant | 938529426 | HENDEN AUTOTUNING | ENK | email | Saken avsluttet etter beskjed 05.10.2026 før prosjektopprettelse eller utviklingsstart. Ingen videre kontakt, e-post eller purring. |
+| 2026-10-05 08:39 | not_relevant | 938567263 | LINUS ANDERSSEN | ENK | email | Prosjekt avsluttet etter beskjed 05.10.2026. Lokal kravspesifikasjon arkivert som sikkerhetskopi. Ingen videre kontakt, e-post eller purring. |
 | 2026-10-05 07:39 | not_relevant | 938561796 | MCCLURE REGNSKAP | ENK | email | Avslag mottatt på e-post fra Simon McClure 2026-10-04: har ikke behov for nettside. Fjernet fra oppfølging. |
 | 2026-10-04 18:53 | replied | 938612056 | HJARTHOLM BYGG OG VEDLIKEHALD | ENK | email | Positivt, utsatt svar mottatt 04.10.2026 kl. 13:00 fra Vidar Hjartholm. Han er i oppstart og har fullt opp frem til etter nyttår. En enkel grunnpakke til 1 990 kr kan bli aktuell for småskala virksomhet senere. Vidar tar selv kontakt dersom tidspunktet blir aktuelt; ingen automatisk oppfølging eller purring. |
 | 2026-10-04 10:14 | replied | 938574200 | KAIZENBYBAAZI AS | AS | email | Svar mottatt 03.10.2026 kl. 14:20 fra Amina Jasmin Baazi: virksomheten har allerede nettsiden https://www.kaizenbybaazi.com/ og hun ønsket kort, gratis og uforpliktende tilbakemelding. Manuell tilbakemelding sendt 04.10.2026 kl. 10:06 med ros og automatisk førstevurdering av 13 sider og 5 interne lenker. Mulige forbedringer gjaldt retur-/angrerettinformasjon, meta description og Open Graph/Twitter-metadata, tydelig merket som funn som bør bekreftes manuelt. Ingen automatisk oppfølging. |
