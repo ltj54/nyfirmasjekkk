@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 279
-- Sendt: 133
+- Antall hendelser: 295
+- Sendt: 141
 - Angret: 0
-- Aktive kontaktede selskaper: 128
+- Aktive kontaktede selskaper: 136
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-06 | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | website-offer |
+| 2026-10-06 | 938628823 | STAYCLEAN AOUKAN | ENK | email | website-offer |
+| 2026-10-06 | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | website-offer |
+| 2026-10-06 | 938522588 | THORAJENTENE 2028 | FLI | email | website-offer |
+| 2026-10-06 | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | website-offer |
+| 2026-10-06 | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | website-offer |
+| 2026-10-06 | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | website-offer |
+| 2026-10-06 | 938593884 | BRAARUD ENTERPRISES | ENK | email | website-offer |
 | 2026-10-06 | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | website-follow-up |
 | 2026-10-06 | 938543852 | MATTHIESEN INVEST | ENK | email | website-follow-up |
 | 2026-10-06 | 938583951 | MB "OPS NEMAN" | UTLA | email | website-follow-up |
@@ -146,6 +154,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-06 16:01 | sent | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | - |
+| 2026-10-06 16:01 | sending | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938628823 | STAYCLEAN AOUKAN | ENK | email | - |
+| 2026-10-06 16:01 | sending | 938628823 | STAYCLEAN AOUKAN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | - |
+| 2026-10-06 16:01 | sending | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938522588 | THORAJENTENE 2028 | FLI | email | - |
+| 2026-10-06 16:01 | sending | 938522588 | THORAJENTENE 2028 | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | - |
+| 2026-10-06 16:01 | sending | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | - |
+| 2026-10-06 16:01 | sending | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | - |
+| 2026-10-06 16:01 | sending | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 16:01 | sent | 938593884 | BRAARUD ENTERPRISES | ENK | email | - |
+| 2026-10-06 16:01 | sending | 938593884 | BRAARUD ENTERPRISES | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-06 09:50 | sent | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-06 09:50 | sending | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-06 09:50 | sent | 938543852 | MATTHIESEN INVEST | ENK | email | Oppfølging sendt – avslutt hvis stille |
