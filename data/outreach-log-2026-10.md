@@ -4,15 +4,43 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 223
-- Sendt: 105
+- Antall hendelser: 279
+- Sendt: 133
 - Angret: 0
-- Aktive kontaktede selskaper: 100
+- Aktive kontaktede selskaper: 128
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-06 | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | website-follow-up |
+| 2026-10-06 | 938543852 | MATTHIESEN INVEST | ENK | email | website-follow-up |
+| 2026-10-06 | 938583951 | MB "OPS NEMAN" | UTLA | email | website-follow-up |
+| 2026-10-06 | 938584400 | NORWEGIAN WIND SA | SA | email | website-follow-up |
+| 2026-10-06 | 938532079 | ELI BALLONGER DOBROVOLSKYTE | ENK | email | website-follow-up |
+| 2026-10-06 | 938586160 | FRISØR ANNIKEN LØLAND | ENK | email | website-follow-up |
+| 2026-10-06 | 938325014 | GO SYSTEMS AS | AS | email | website-follow-up |
+| 2026-10-06 | 938510180 | M/S AUSTEVOLL | FLI | email | website-follow-up |
+| 2026-10-06 | 938527865 | MAGNUS EDLAND EIKREM | ENK | email | website-follow-up |
+| 2026-10-06 | 938559414 | NOK ER NOK INNEHAVER S. KJENDLIE | ENK | email | website-follow-up |
+| 2026-10-06 | 938559422 | PHELIX KRAFT | ENK | email | website-follow-up |
+| 2026-10-06 | 938512779 | SNITTS VENNER | FLI | email | website-follow-up |
+| 2026-10-06 | 938555524 | WORD BY SYLVIA MINDE | ENK | email | website-follow-up |
+| 2026-10-06 | 938527156 | ØSTERLIE HØYDETEKNIKK | ENK | email | website-follow-up |
+| 2026-10-06 | 938533873 | HILDA DEL MAR MONTERRUBIO ROMO | ENK | email | website-follow-up |
+| 2026-10-06 | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | website-follow-up |
+| 2026-10-06 | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | website-follow-up |
+| 2026-10-06 | 938561257 | SUNDE MULTISERVICE | ENK | email | website-follow-up |
+| 2026-10-06 | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | website-offer |
+| 2026-10-06 | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | website-offer |
+| 2026-10-06 | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | website-offer |
+| 2026-10-06 | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | website-offer |
+| 2026-10-06 | 938584567 | MYHRER FIKSER | ENK | email | website-offer |
+| 2026-10-06 | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | website-offer |
+| 2026-10-06 | 938586004 | LEKNES SECURITY | ENK | email | website-offer |
+| 2026-10-06 | 938584346 | KVERNMO HALIBUT | ENK | email | website-offer |
+| 2026-10-06 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-offer |
+| 2026-10-06 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-offer |
 | 2026-10-05 | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | website-offer |
 | 2026-10-05 | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | website-offer |
 | 2026-10-05 | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | website-offer |
@@ -118,6 +146,62 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-06 09:50 | sent | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:50 | sending | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:50 | sent | 938543852 | MATTHIESEN INVEST | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:50 | sending | 938543852 | MATTHIESEN INVEST | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938583951 | MB "OPS NEMAN" | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938583951 | MB "OPS NEMAN" | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938584400 | NORWEGIAN WIND SA | SA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938584400 | NORWEGIAN WIND SA | SA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938532079 | ELI BALLONGER DOBROVOLSKYTE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938532079 | ELI BALLONGER DOBROVOLSKYTE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938586160 | FRISØR ANNIKEN LØLAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938586160 | FRISØR ANNIKEN LØLAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938325014 | GO SYSTEMS AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938325014 | GO SYSTEMS AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938510180 | M/S AUSTEVOLL | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938510180 | M/S AUSTEVOLL | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938527865 | MAGNUS EDLAND EIKREM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938527865 | MAGNUS EDLAND EIKREM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938559414 | NOK ER NOK INNEHAVER S. KJENDLIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938559414 | NOK ER NOK INNEHAVER S. KJENDLIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938559422 | PHELIX KRAFT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938559422 | PHELIX KRAFT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938512779 | SNITTS VENNER | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938512779 | SNITTS VENNER | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938555524 | WORD BY SYLVIA MINDE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938555524 | WORD BY SYLVIA MINDE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938527156 | ØSTERLIE HØYDETEKNIKK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:49 | sending | 938527156 | ØSTERLIE HØYDETEKNIKK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:49 | sent | 938533873 | HILDA DEL MAR MONTERRUBIO ROMO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:48 | sending | 938533873 | HILDA DEL MAR MONTERRUBIO ROMO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:48 | sending | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:48 | sending | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938561257 | SUNDE MULTISERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-06 09:48 | sending | 938561257 | SUNDE MULTISERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | - |
+| 2026-10-06 09:48 | sending | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | - |
+| 2026-10-06 09:48 | sending | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | - |
+| 2026-10-06 09:48 | sending | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | - |
+| 2026-10-06 09:48 | sending | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938584567 | MYHRER FIKSER | ENK | email | - |
+| 2026-10-06 09:48 | sending | 938584567 | MYHRER FIKSER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:48 | sent | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | - |
+| 2026-10-06 09:48 | sending | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:47 | sent | 938586004 | LEKNES SECURITY | ENK | email | - |
+| 2026-10-06 09:47 | sending | 938586004 | LEKNES SECURITY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:47 | sent | 938584346 | KVERNMO HALIBUT | ENK | email | - |
+| 2026-10-06 09:47 | sending | 938584346 | KVERNMO HALIBUT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:47 | sent | 938580278 | GULBRANDSEN BRAND | ENK | email | - |
+| 2026-10-06 09:47 | sending | 938580278 | GULBRANDSEN BRAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-06 09:47 | sent | 938586373 | FLOWITHROW ASHDOWN | ENK | email | - |
+| 2026-10-06 09:47 | sending | 938586373 | FLOWITHROW ASHDOWN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-05 15:09 | sent | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | - |
 | 2026-10-05 15:09 | sending | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-05 15:09 | sent | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | - |
