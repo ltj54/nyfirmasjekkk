@@ -31,6 +31,7 @@ type CrmProject = {
   domainRemoved?: string;
   invoiceDate?: string;
   invoiceDueDate?: string;
+  deliveryConfirmedDate?: string;
   paymentDate?: string;
   invoiceNumber?: string;
   invoiceFile?: string;
@@ -119,7 +120,7 @@ const projects: CrmProject[] = [
   },
   {
     name: "Fiskerikandidat Gunnar Davidsson",
-    previewUrl: "https://ltj54.github.io/fiskerikandidat-gunnar-davidsson/",
+    domain: "davidsson.no",
     contact: "Gunnar Davidsson",
     email: "gunnidabb@gmail.com",
     organizationNumber: "938 423 334",
@@ -130,10 +131,11 @@ const projects: CrmProject[] = [
     replyDate: "22.09.2026 kl. 15:55",
     sentProposalDate: "23.09.2026",
     followUpDate: "02.10.2026",
-    outreach: "Arbeidsutkast sendt – purring sendt",
-    progress: "Første arbeidsutkast ble sendt 23.09.2026 på ltj54.github.io/fiskerikandidat-gunnar-davidsson. Gunnar ønsker en enkel, mest mulig frossen nettside med kontaktinformasjon og tjenester innen fiskeri og marine næringer, samt minimalt vedlikehold. Han har et eget bildebibliotek. En kort manuell purring ble sendt 02.10.2026.",
-    nextStep: "Avventer svar på purringen om helhetsinntrykk, tjenester og bakgrunnstekst. Ved positivt svar må bilder, e-postfunksjon, eventuelle faglenker, davidsson.no og permanent hosting avklares. Avtaleutkast ligger i prosjektet og sendes etter behovsavklaring. Ingen automatisk eller ytterligere purring er planlagt.",
-    invoice: "Ikke fakturert",
+    deliveryConfirmedDate: "06.10.2026",
+    outreach: "Leveransen ferdig – fakturering avventer",
+    progress: "Nettsiden er publisert på davidsson.no. Lars opplyste 06.10.2026 at alt ved leveransen er i orden, og at faktura er eneste gjenstående punkt. Lars opplyste også at LTJ-Production ennå ikke er registrert som enkeltpersonforetak eller i Merverdiavgiftsregisteret. Ingen ytterligere purring er planlagt.",
+    nextStep: "Avklar registrering av fakturautsteder og korrekt oppgjørsform. Avtalt grunnpris er 1 990 kr uten MVA. Registrer fakturanummer, dato og forfall først når faktura faktisk er utstedt; flytt deretter saken til avventer betaling.",
+    invoice: "Ikke fakturert · 1 990 kr uten MVA · avventer fakturautsteder",
     agreement: "Avtaleutkast ligger i prosjektet, men er ikke sendt eller inngått.",
     agreementStatus: "draft",
     status: "working",
@@ -245,6 +247,7 @@ function historyFor(project: CrmProject): CrmEvent[] {
     { date: project.sentProposalDate, label: "Forslag sendt" },
     { date: project.clarificationDate, label: "Avklaringsmail sendt" },
     { date: project.followUpDate, label: "Purring sendt" },
+    { date: project.deliveryConfirmedDate, label: "Leveranse ferdig ifølge Lars" },
     { date: project.invoiceDate, label: "Faktura sendt" },
     { date: project.domainRemoved, label: "Nettside fjernet" },
     { date: project.paymentDate, label: "Betaling mottatt" },

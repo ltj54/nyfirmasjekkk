@@ -4,15 +4,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 295
-- Sendt: 141
+- Antall hendelser: 341
+- Sendt: 164
 - Angret: 0
-- Aktive kontaktede selskaper: 136
+- Aktive kontaktede selskaper: 143
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-07 | 938568596 | DYGG SJAMAN | ENK | email | website-follow-up |
+| 2026-10-07 | 938561222 | HIDRI BUD | ENK | email | website-follow-up |
+| 2026-10-07 | 938550743 | ANUND GRINI | ENK | email | website-follow-up |
+| 2026-10-07 | 938563535 | HIPERBARIC SA | NUF | email | website-follow-up |
+| 2026-10-07 | 838550932 | MALY BIL & BILDELER | ENK | email | website-follow-up |
+| 2026-10-07 | 938551855 | MIKKEL PETTERSEN | ENK | email | website-follow-up |
+| 2026-10-07 | 938593280 | PEAK FITNESS TESTING LTD | UTLA | email | website-follow-up |
+| 2026-10-07 | 838550592 | RIAN GITAR OG MANDOLIN | ENK | email | website-follow-up |
+| 2026-10-07 | 938550905 | TOPP THAIMAT SRIPHICHIEN | ENK | email | website-follow-up |
+| 2026-10-07 | 938586217 | DOKSERVICES UG (HAFTUNGSBESCHRÄNKT) | UTLA | email | website-follow-up |
+| 2026-10-07 | 938600384 | ROGSTAD AS | AS | email | website-follow-up |
+| 2026-10-07 | 838551262 | MIRZAKHMETOV RENHOLD & SERVICE | ENK | email | website-follow-up |
+| 2026-10-07 | 838566022 | SAMER AWAD ZARKA | ENK | email | website-follow-up |
+| 2026-10-07 | 937403089 | SAMEIET VILLA SPRINGBANK | ESEK | email | website-follow-up |
+| 2026-10-07 | 938411174 | FLATBRE-BYGDA | FLI | email | website-follow-up |
+| 2026-10-07 | 938565082 | K5 EIENDOM AS | AS | email | website-follow-up |
+| 2026-10-07 | 938524998 | SHANTYKORET DE TVENDE | FLI | email | website-offer |
+| 2026-10-07 | 938627274 | VETHE BYGG & ANLEGG | ENK | email | website-offer |
+| 2026-10-07 | 838598862 | SUN NEE THAIMASSASJE | ENK | email | website-offer |
+| 2026-10-07 | 938629234 | CARAMELAVENTUREIRO UNIPESSOAL LDA. | UTLA | email | website-offer |
+| 2026-10-07 | 938601534 | AROS SPED AB | NUF | email | website-offer |
+| 2026-10-07 | 938631387 | SMEVOLD MEDIA | ENK | email | website-offer |
+| 2026-10-07 | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | website-offer |
 | 2026-10-06 | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | website-offer |
 | 2026-10-06 | 938628823 | STAYCLEAN AOUKAN | ENK | email | website-offer |
 | 2026-10-06 | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | website-offer |
@@ -113,7 +136,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-02 | 938510210 | SPILLORG AS | AS | email | website-offer |
 | 2026-10-02 | 938510164 | NYTT HOLDING NP AS | AS | email | website-offer |
 | 2026-10-02 | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | website-offer |
-| 2026-10-01 | 938565082 | K5 EIENDOM AS | AS | email | website-offer |
 | 2026-10-01 | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | website-follow-up |
 | 2026-10-01 | 938562431 | PFC EUROPE HOLDING GMBH | UTLA | email | website-follow-up |
 | 2026-10-01 | 938534314 | PROHJUL FREDRIKSEN | ENK | email | website-follow-up |
@@ -134,26 +156,57 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-01 | 838250092 | FOTTERAPIKLINIKKEN I ÅSANE NEELAM BHATIA | ENK | email | website-follow-up |
 | 2026-10-01 | 938528683 | QASEMI TRANSPORT TAXI | ENK | email | website-follow-up |
 | 2026-10-01 | 920038395 | MAT OG HELSE I SKOLEN - INNHERRED LOKALLAG | FLI | email | website-follow-up |
-| 2026-10-01 | 938411174 | FLATBRE-BYGDA | FLI | email | website-offer |
-| 2026-10-01 | 937403089 | SAMEIET VILLA SPRINGBANK | ESEK | email | website-offer |
-| 2026-10-01 | 838566022 | SAMER AWAD ZARKA | ENK | email | website-offer |
-| 2026-10-01 | 838551262 | MIRZAKHMETOV RENHOLD & SERVICE | ENK | email | website-offer |
-| 2026-10-01 | 938600384 | ROGSTAD AS | AS | email | website-offer |
-| 2026-10-01 | 938586217 | DOKSERVICES UG (HAFTUNGSBESCHRÄNKT) | UTLA | email | website-offer |
-| 2026-10-01 | 938550905 | TOPP THAIMAT SRIPHICHIEN | ENK | email | website-offer |
-| 2026-10-01 | 838550592 | RIAN GITAR OG MANDOLIN | ENK | email | website-offer |
-| 2026-10-01 | 938593280 | PEAK FITNESS TESTING LTD | UTLA | email | website-offer |
-| 2026-10-01 | 938551855 | MIKKEL PETTERSEN | ENK | email | website-offer |
-| 2026-10-01 | 838550932 | MALY BIL & BILDELER | ENK | email | website-offer |
-| 2026-10-01 | 938563535 | HIPERBARIC SA | NUF | email | website-offer |
-| 2026-10-01 | 938550743 | ANUND GRINI | ENK | email | website-offer |
-| 2026-10-01 | 938561222 | HIDRI BUD | ENK | email | website-offer |
-| 2026-10-01 | 938568596 | DYGG SJAMAN | ENK | email | website-offer |
 
 ## Hendelser
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-07 08:52 | sent | 938568596 | DYGG SJAMAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:52 | sending | 938568596 | DYGG SJAMAN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:52 | sent | 938561222 | HIDRI BUD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:52 | sending | 938561222 | HIDRI BUD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:52 | sent | 938550743 | ANUND GRINI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:52 | sending | 938550743 | ANUND GRINI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:52 | sent | 938563535 | HIPERBARIC SA | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:52 | sending | 938563535 | HIPERBARIC SA | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:52 | sent | 838550932 | MALY BIL & BILDELER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:52 | sending | 838550932 | MALY BIL & BILDELER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:52 | sent | 938551855 | MIKKEL PETTERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:52 | sending | 938551855 | MIKKEL PETTERSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 938593280 | PEAK FITNESS TESTING LTD | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 938593280 | PEAK FITNESS TESTING LTD | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 838550592 | RIAN GITAR OG MANDOLIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 838550592 | RIAN GITAR OG MANDOLIN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 938550905 | TOPP THAIMAT SRIPHICHIEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 938550905 | TOPP THAIMAT SRIPHICHIEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 938586217 | DOKSERVICES UG (HAFTUNGSBESCHRÄNKT) | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 938586217 | DOKSERVICES UG (HAFTUNGSBESCHRÄNKT) | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 938600384 | ROGSTAD AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 938600384 | ROGSTAD AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 838551262 | MIRZAKHMETOV RENHOLD & SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 838551262 | MIRZAKHMETOV RENHOLD & SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 838566022 | SAMER AWAD ZARKA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 838566022 | SAMER AWAD ZARKA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 937403089 | SAMEIET VILLA SPRINGBANK | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 937403089 | SAMEIET VILLA SPRINGBANK | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 938411174 | FLATBRE-BYGDA | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 938411174 | FLATBRE-BYGDA | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:51 | sent | 938565082 | K5 EIENDOM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-07 08:51 | sending | 938565082 | K5 EIENDOM AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 938524998 | SHANTYKORET DE TVENDE | FLI | email | - |
+| 2026-10-07 08:50 | sending | 938524998 | SHANTYKORET DE TVENDE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 938627274 | VETHE BYGG & ANLEGG | ENK | email | - |
+| 2026-10-07 08:50 | sending | 938627274 | VETHE BYGG & ANLEGG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 838598862 | SUN NEE THAIMASSASJE | ENK | email | - |
+| 2026-10-07 08:50 | sending | 838598862 | SUN NEE THAIMASSASJE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 938629234 | CARAMELAVENTUREIRO UNIPESSOAL LDA. | UTLA | email | - |
+| 2026-10-07 08:50 | sending | 938629234 | CARAMELAVENTUREIRO UNIPESSOAL LDA. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 938601534 | AROS SPED AB | NUF | email | - |
+| 2026-10-07 08:50 | sending | 938601534 | AROS SPED AB | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 938631387 | SMEVOLD MEDIA | ENK | email | - |
+| 2026-10-07 08:50 | sending | 938631387 | SMEVOLD MEDIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 08:50 | sent | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | - |
+| 2026-10-07 08:50 | sending | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-06 16:01 | sent | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | - |
 | 2026-10-06 16:01 | sending | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-06 16:01 | sent | 938628823 | STAYCLEAN AOUKAN | ENK | email | - |
