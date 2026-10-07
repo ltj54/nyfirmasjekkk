@@ -4,15 +4,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 342
-- Sendt: 164
+- Antall hendelser: 363
+- Sendt: 174
 - Angret: 0
-- Aktive kontaktede selskaper: 142
+- Aktive kontaktede selskaper: 151
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-07 | 938526788 | SAFE I SHELF DRILLING | FLI | email | website-offer |
+| 2026-10-07 | 938599629 | QAMAR AFTAB | ENK | email | website-offer |
+| 2026-10-07 | 938587744 | KNUDSEN KRAN OG MEK | ENK | email | website-offer |
+| 2026-10-07 | 938626936 | ROBERT LEITE | TVAM | email | website-offer |
+| 2026-10-07 | 938633371 | REMSERV SUBSEA LTD | UTLA | email | website-offer |
+| 2026-10-07 | 938599610 | NORSK AKUTTOPPLÆRING - SCHIBEVAAG ENK | ENK | email | website-offer |
+| 2026-10-07 | 938599440 | METTE VATNE FORMIDLING | ENK | email | website-offer |
+| 2026-10-07 | 938620776 | KASPERSEN NORDLYS BENEFIT SERVICE | ENK | email | website-offer |
+| 2026-10-07 | 938599378 | BAKKE BEVISSTFAMILIE | ENK | email | website-offer |
 | 2026-10-07 | 938568596 | DYGG SJAMAN | ENK | email | website-follow-up |
 | 2026-10-07 | 938561222 | HIDRI BUD | ENK | email | website-follow-up |
 | 2026-10-07 | 938550743 | ANUND GRINI | ENK | email | website-follow-up |
@@ -160,6 +169,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-07 10:48 | not_relevant | 938599718 | MYKJÅLAND MOTOR OG TEKNIKK | ENK | email | Avslag mottatt 07.10.2026 kl. 10:44 fra Torfinn Mykjåland: Han fikser nettsiden selv og takker for tilbudet. Fjernet fra oppfølging; ingen videre kontakt. |
+| 2026-10-07 10:41 | sent | 938526788 | SAFE I SHELF DRILLING | FLI | email | - |
+| 2026-10-07 10:41 | sending | 938526788 | SAFE I SHELF DRILLING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938599629 | QAMAR AFTAB | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938599629 | QAMAR AFTAB | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938587744 | KNUDSEN KRAN OG MEK | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938587744 | KNUDSEN KRAN OG MEK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938626936 | ROBERT LEITE | TVAM | email | - |
+| 2026-10-07 10:41 | sending | 938626936 | ROBERT LEITE | TVAM | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938633371 | REMSERV SUBSEA LTD | UTLA | email | - |
+| 2026-10-07 10:41 | sending | 938633371 | REMSERV SUBSEA LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938599610 | NORSK AKUTTOPPLÆRING - SCHIBEVAAG ENK | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938599610 | NORSK AKUTTOPPLÆRING - SCHIBEVAAG ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938599718 | MYKJÅLAND MOTOR OG TEKNIKK | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938599718 | MYKJÅLAND MOTOR OG TEKNIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938599440 | METTE VATNE FORMIDLING | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938599440 | METTE VATNE FORMIDLING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938620776 | KASPERSEN NORDLYS BENEFIT SERVICE | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938620776 | KASPERSEN NORDLYS BENEFIT SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-07 10:41 | sent | 938599378 | BAKKE BEVISSTFAMILIE | ENK | email | - |
+| 2026-10-07 10:41 | sending | 938599378 | BAKKE BEVISSTFAMILIE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-07 09:07 | replied | 938524998 | SHANTYKORET DE TVENDE | FLI | email | Svar mottatt 07.10.2026 kl. 08:55 fra Øyvind Sjøwall: takker for henvendelsen og tar selv kontakt hvis nettside blir aktuelt. Fjernet fra oppfølging; ingen automatisk oppfølging eller purring. |
 | 2026-10-07 08:52 | sent | 938568596 | DYGG SJAMAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-07 08:52 | sending | 938568596 | DYGG SJAMAN | ENK | email | Oppfølging reservert før SMTP-levering. |
