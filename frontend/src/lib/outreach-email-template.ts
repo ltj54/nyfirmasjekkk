@@ -779,7 +779,7 @@ Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {
 
 Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobilvennlig nettside til en portal for bestillinger eller kundehenvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
 
 Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
 
@@ -860,7 +860,7 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 Jeg lager mobilvennlige nettsider og større løsninger, som portaler der dere kan håndtere bestillinger eller holde oversikt over kunder og henvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
 
 Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
 

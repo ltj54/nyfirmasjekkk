@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 341
+- Antall hendelser: 342
 - Sendt: 164
 - Angret: 0
-- Aktive kontaktede selskaper: 143
+- Aktive kontaktede selskaper: 142
 
 ## Aktive kontaktede selskaper
 
@@ -29,7 +29,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-07 | 937403089 | SAMEIET VILLA SPRINGBANK | ESEK | email | website-follow-up |
 | 2026-10-07 | 938411174 | FLATBRE-BYGDA | FLI | email | website-follow-up |
 | 2026-10-07 | 938565082 | K5 EIENDOM AS | AS | email | website-follow-up |
-| 2026-10-07 | 938524998 | SHANTYKORET DE TVENDE | FLI | email | website-offer |
 | 2026-10-07 | 938627274 | VETHE BYGG & ANLEGG | ENK | email | website-offer |
 | 2026-10-07 | 838598862 | SUN NEE THAIMASSASJE | ENK | email | website-offer |
 | 2026-10-07 | 938629234 | CARAMELAVENTUREIRO UNIPESSOAL LDA. | UTLA | email | website-offer |
@@ -161,6 +160,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-07 09:07 | replied | 938524998 | SHANTYKORET DE TVENDE | FLI | email | Svar mottatt 07.10.2026 kl. 08:55 fra Øyvind Sjøwall: takker for henvendelsen og tar selv kontakt hvis nettside blir aktuelt. Fjernet fra oppfølging; ingen automatisk oppfølging eller purring. |
 | 2026-10-07 08:52 | sent | 938568596 | DYGG SJAMAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-07 08:52 | sending | 938568596 | DYGG SJAMAN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-07 08:52 | sent | 938561222 | HIDRI BUD | ENK | email | Oppfølging sendt – avslutt hvis stille |

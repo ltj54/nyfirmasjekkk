@@ -56,7 +56,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Et gratis forslag er en kort skisse av innhold, oppbygging og aktuelle funksjoner. Behov og leveranse avklares i en kravspesifikasjon før utviklingen starter.
 - Løsningen kan være en nettside med flere sider, en portal eller et system for å samle informasjon og holde oversikt over kunder og henvendelser. Antall sider er ikke en teknisk begrensning; funksjoner velges ut fra kundens behov.
 - Universell utforming og personvern med fokus på GDPR inngår i planleggingen. Ikke lov full etterlevelse uten at krav, faktisk løsning og kundens bruk er vurdert.
-- Fastprisen på {{priceValue}} kr gjelder en avtalt grunnløsning, inkludert utvikling, tilpasning av innhold og publisering. Grunnløsningen er ikke begrenset til én side; innhold og funksjoner avklares i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter. Eventuelle eksterne kostnader avklares tydelig før oppstart.
+- Fastprisen på {{priceValue}} kr gjelder en avtalt grunnløsning, inkludert utvikling, tilpasning av innhold og publisering. Grunnløsningen er ikke begrenset til én side; innhold og funksjoner avklares i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis kunden ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter. Eventuelle eksterne kostnader avklares tydelig før oppstart.
 - En gratis nettsidevurdering er en kort innledende vurdering med forbedringsforslag. Den inkluderer ikke retting eller en full gjennomgang.
 - Bruk nøyaktig ett konkret, dokumentert funn i forbedringsmailen.
 - Beskriv automatiske funn som signaler fra en førstesjekk, ikke som manuelt bekreftede feil. Ikke lov bedre Google-plassering eller påstå at kunder går tapt.
@@ -75,7 +75,7 @@ Emne: `Nettside for {{companyName}}?`
 
 Jeg lager mobilvennlige nettsider og større løsninger, som portaler der dere kan håndtere bestillinger eller holde oversikt over kunder og henvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
 
 Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
 
@@ -99,7 +99,7 @@ Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {
 
 Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobilvennlig nettside til en portal for bestillinger eller kundehenvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Større løsninger prises separat etter behovsavklaring, og prisen avtales før arbeidet starter.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
 
 Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
 
