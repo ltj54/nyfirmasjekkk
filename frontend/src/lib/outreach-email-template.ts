@@ -635,7 +635,7 @@ function renderEmailParagraph(lines: string[], index: number) {
 }
 
 function collectSignatureBlock(lines: string[], startIndex: number) {
-  if (lines[startIndex]?.trim() !== "Mvh") {
+  if (!["Mvh", "Med vennlig hilsen"].includes(lines[startIndex]?.trim() ?? "")) {
     return [];
   }
 
