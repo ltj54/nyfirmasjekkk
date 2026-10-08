@@ -30,7 +30,7 @@ export function personalObservation(company: OutreachEmailCompany) {
   if (company.website) {
     return `Jeg kom over ${companyName} og tok en titt på nettsiden deres.`;
   }
-  return `Jeg kom over ${companyName} og ville høre om dere har vurdert å få laget en nettside for ${companyEntityDefinite(company)}.`;
+  return `Jeg kom over ${companyName} og ville høre om dere har vurdert å få laget en nettside.`;
 }
 
 export function industryOutreachPitch(company: OutreachEmailCompany) {
@@ -117,14 +117,6 @@ function laterIndustryOutreachPitch(context: string, naceCode: string, segmentCo
     return "En ryddig nettside kan gjøre det enkelt å vise hva dere tilbyr, hvem tilbudet passer for og hvordan interesserte kan ta kontakt.";
   }
   return emailPitch;
-}
-
-function companyEntityDefinite(company: OutreachEmailCompany) {
-  const context = normalizeContextText([company.name, company.naceDescription, company.salesSegment?.label].filter(Boolean).join(" "));
-  const naceCode = company.naceCode?.trim() ?? "";
-  if (naceCode.startsWith("93.12") || hasAnyContext(context, "idrettslag", "sportsklubb", "idrettsklubb")) return "klubben";
-  if (company.salesSegment?.code === "FORENING_KLUBB" || naceCode.startsWith("94")) return "foreningen";
-  return "virksomheten";
 }
 
 function hasAnyContext(context: string, ...phrases: string[]) {
@@ -858,16 +850,18 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 {{salesSegmentPitch}}
 
-Jeg lager mobilvennlige nettsider og større løsninger, som portaler der dere kan håndtere bestillinger eller holde oversikt over kunder og henvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
+Jeg kan hjelpe dere med en ryddig, mobilvennlig nettside som viser hva dere tilbyr og gjør det enkelt for kunder å ta kontakt.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
+En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi blir enige om innhold og funksjoner før arbeidet starter, og kan bygge videre senere hvis dere ønsker det.
 
-Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
+Jeg følger også opp etter levering og hjelper med oppdateringer når det er behov, så dere har noen å kontakte også etter at nettsiden er ferdig.
+
+For en vanlig nettside er et eget, betalt webhotell som regel ikke nødvendig. Et eventuelt domene og andre nødvendige tjenester avklarer vi sammen.
 
 Her kan dere se hvordan jeg arbeider:
 {{senderWebsite}}
 
-Skal jeg sende et kort, gratis og uforpliktende forslag til innhold, oppbygging og aktuelle funksjoner?
+Kan jeg sende et kort, gratis og uforpliktende forslag til hvordan nettsiden deres kan se ut og hva den kan inneholde?
 
 Med vennlig hilsen
 {{senderName}}
