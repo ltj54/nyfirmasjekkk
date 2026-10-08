@@ -4,15 +4,41 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 363
-- Sendt: 174
+- Antall hendelser: 415
+- Sendt: 200
 - Angret: 0
-- Aktive kontaktede selskaper: 151
+- Aktive kontaktede selskaper: 171
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-08 | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | website-follow-up |
+| 2026-10-08 | 938510164 | NYTT HOLDING NP AS | AS | email | website-follow-up |
+| 2026-10-08 | 938510210 | SPILLORG AS | AS | email | website-follow-up |
+| 2026-10-08 | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | website-follow-up |
+| 2026-10-08 | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | website-follow-up |
+| 2026-10-08 | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | website-follow-up |
+| 2026-10-08 | 938637407 | FAM NESSET HOLDING AS | AS | email | website-offer |
+| 2026-10-08 | 938609764 | BALIZ INVEST AS | AS | email | website-offer |
+| 2026-10-08 | 938639582 | WAMMER UNDERHOLDNING | ENK | email | website-offer |
+| 2026-10-08 | 938639590 | ISAK GANGSØ MUSIKK | ENK | email | website-offer |
+| 2026-10-08 | 938601127 | CARRETERO LATA | ENK | email | website-offer |
+| 2026-10-08 | 838639682 | USMAN GHANI | ENK | email | website-offer |
+| 2026-10-08 | 938639779 | AL-RAMMAHI LUX | ENK | email | website-offer |
+| 2026-10-08 | 938605513 | VERDIEFFEKT VÅGE | ENK | email | website-offer |
+| 2026-10-08 | 838601952 | ELINA ANDERSEN - HUDTERAPEUT - ELART | ENK | email | website-offer |
+| 2026-10-08 | 938634777 | STUDIO STRÄNG | ENK | email | website-offer |
+| 2026-10-08 | 938534101 | MANDERA PARTNERS GROUP | FLI | email | website-offer |
+| 2026-10-08 | 938634149 | KR SAFETY LIMITED | UTLA | email | website-offer |
+| 2026-10-08 | 838602002 | KNUT RØNNINGENE PRESTASJONSUTVIKLING | ENK | email | website-offer |
+| 2026-10-08 | 938636354 | JAKOBSSON DETALJER | ENK | email | website-offer |
+| 2026-10-08 | 838545262 | BJØRLIEN SKOGFORVALTNING DA | DA | email | website-offer |
+| 2026-10-08 | 938635021 | BARGERVESTE INVESTMENTS B.V. | UTLA | email | website-offer |
+| 2026-10-08 | 938515751 | ANDERS SØRENSEN THERMOTRANSPORT NUF | NUF | email | website-offer |
+| 2026-10-08 | 938613605 | MARJAVARA JOSEFSEN | ENK | email | website-offer |
+| 2026-10-08 | 838603262 | MARIE RØSSLAND GUSTAVSEN | ENK | email | website-offer |
+| 2026-10-08 | 937088884 | ODOO SA NUF | NUF | email | website-offer |
 | 2026-10-07 | 938526788 | SAFE I SHELF DRILLING | FLI | email | website-offer |
 | 2026-10-07 | 938599629 | QAMAR AFTAB | ENK | email | website-offer |
 | 2026-10-07 | 938587744 | KNUDSEN KRAN OG MEK | ENK | email | website-offer |
@@ -115,9 +141,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-03 | 938580014 | NOVARIS FREDRIKSEN | ENK | email | website-follow-up |
 | 2026-10-03 | 938532478 | DOMINO TREFELLING ENK | ENK | email | website-follow-up |
 | 2026-10-03 | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | website-offer |
-| 2026-10-02 | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | website-offer |
-| 2026-10-02 | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | website-offer |
-| 2026-10-02 | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | website-offer |
 | 2026-10-02 | 938562172 | HRS EIENDOM AS | AS | email | website-follow-up |
 | 2026-10-02 | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | website-follow-up |
 | 2026-10-02 | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-follow-up |
@@ -141,9 +164,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-02 | 938286531 | SASTRANSITION OÜ NUF | NUF | email | website-follow-up |
 | 2026-10-02 | 938570264 | R ØKSNES | ENK | email | website-follow-up |
 | 2026-10-02 | 938569746 | SÆTRUM | ENK | email | website-follow-up |
-| 2026-10-02 | 938510210 | SPILLORG AS | AS | email | website-offer |
-| 2026-10-02 | 938510164 | NYTT HOLDING NP AS | AS | email | website-offer |
-| 2026-10-02 | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | website-offer |
 | 2026-10-01 | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | website-follow-up |
 | 2026-10-01 | 938562431 | PFC EUROPE HOLDING GMBH | UTLA | email | website-follow-up |
 | 2026-10-01 | 938534314 | PROHJUL FREDRIKSEN | ENK | email | website-follow-up |
@@ -169,6 +189,58 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-08 08:52 | sent | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-08 08:52 | sending | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-08 08:52 | sent | 938510164 | NYTT HOLDING NP AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-08 08:52 | sending | 938510164 | NYTT HOLDING NP AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-08 08:52 | sent | 938510210 | SPILLORG AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-08 08:52 | sending | 938510210 | SPILLORG AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-08 08:52 | sent | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-08 08:52 | sending | 937581483 | DET ELEKTRISKE SOKKEKOMPAGNIET DA | DA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-08 08:52 | sent | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-08 08:52 | sending | 938559325 | FRILSET SKOG BERNT-JOHAN STRAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-08 08:52 | sent | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-08 08:52 | sending | 936375278 | GJERDEVIKA BÅTLAG SA | SA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938637407 | FAM NESSET HOLDING AS | AS | email | - |
+| 2026-10-08 08:51 | sending | 938637407 | FAM NESSET HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938609764 | BALIZ INVEST AS | AS | email | - |
+| 2026-10-08 08:51 | sending | 938609764 | BALIZ INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938639582 | WAMMER UNDERHOLDNING | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938639582 | WAMMER UNDERHOLDNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938639590 | ISAK GANGSØ MUSIKK | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938639590 | ISAK GANGSØ MUSIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938601127 | CARRETERO LATA | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938601127 | CARRETERO LATA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 838639682 | USMAN GHANI | ENK | email | - |
+| 2026-10-08 08:51 | sending | 838639682 | USMAN GHANI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938639779 | AL-RAMMAHI LUX | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938639779 | AL-RAMMAHI LUX | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938605513 | VERDIEFFEKT VÅGE | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938605513 | VERDIEFFEKT VÅGE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 838601952 | ELINA ANDERSEN - HUDTERAPEUT - ELART | ENK | email | - |
+| 2026-10-08 08:51 | sending | 838601952 | ELINA ANDERSEN - HUDTERAPEUT - ELART | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938634777 | STUDIO STRÄNG | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938634777 | STUDIO STRÄNG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938534101 | MANDERA PARTNERS GROUP | FLI | email | - |
+| 2026-10-08 08:51 | sending | 938534101 | MANDERA PARTNERS GROUP | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938634149 | KR SAFETY LIMITED | UTLA | email | - |
+| 2026-10-08 08:51 | sending | 938634149 | KR SAFETY LIMITED | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 838602002 | KNUT RØNNINGENE PRESTASJONSUTVIKLING | ENK | email | - |
+| 2026-10-08 08:51 | sending | 838602002 | KNUT RØNNINGENE PRESTASJONSUTVIKLING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938636354 | JAKOBSSON DETALJER | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938636354 | JAKOBSSON DETALJER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 838545262 | BJØRLIEN SKOGFORVALTNING DA | DA | email | - |
+| 2026-10-08 08:51 | sending | 838545262 | BJØRLIEN SKOGFORVALTNING DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938635021 | BARGERVESTE INVESTMENTS B.V. | UTLA | email | - |
+| 2026-10-08 08:51 | sending | 938635021 | BARGERVESTE INVESTMENTS B.V. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938515751 | ANDERS SØRENSEN THERMOTRANSPORT NUF | NUF | email | - |
+| 2026-10-08 08:51 | sending | 938515751 | ANDERS SØRENSEN THERMOTRANSPORT NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 938613605 | MARJAVARA JOSEFSEN | ENK | email | - |
+| 2026-10-08 08:51 | sending | 938613605 | MARJAVARA JOSEFSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 838603262 | MARIE RØSSLAND GUSTAVSEN | ENK | email | - |
+| 2026-10-08 08:51 | sending | 838603262 | MARIE RØSSLAND GUSTAVSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-08 08:51 | sent | 937088884 | ODOO SA NUF | NUF | email | - |
+| 2026-10-08 08:51 | sending | 937088884 | ODOO SA NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-07 10:48 | not_relevant | 938599718 | MYKJÅLAND MOTOR OG TEKNIKK | ENK | email | Avslag mottatt 07.10.2026 kl. 10:44 fra Torfinn Mykjåland: Han fikser nettsiden selv og takker for tilbudet. Fjernet fra oppfølging; ingen videre kontakt. |
 | 2026-10-07 10:41 | sent | 938526788 | SAFE I SHELF DRILLING | FLI | email | - |
 | 2026-10-07 10:41 | sending | 938526788 | SAFE I SHELF DRILLING | FLI | email | Utsendelse reservert før SMTP-levering. |
