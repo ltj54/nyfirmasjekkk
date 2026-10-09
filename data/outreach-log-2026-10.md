@@ -4,15 +4,52 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 415
-- Sendt: 200
+- Antall hendelser: 489
+- Sendt: 237
 - Angret: 0
-- Aktive kontaktede selskaper: 171
+- Aktive kontaktede selskaper: 188
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-09 | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | website-follow-up |
+| 2026-10-09 | 938534926 | LETH KOST FORENINGEN | FLI | email | website-follow-up |
+| 2026-10-09 | 938593043 | NORSE PROJECTS | NUF | email | website-follow-up |
+| 2026-10-09 | 938610509 | NIDERAUS RENHOLD AS | AS | email | website-follow-up |
+| 2026-10-09 | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | website-follow-up |
+| 2026-10-09 | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | website-follow-up |
+| 2026-10-09 | 938572437 | FRODE MATHISEN | ENK | email | website-follow-up |
+| 2026-10-09 | 938571678 | HOEM F | ENK | email | website-follow-up |
+| 2026-10-09 | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | website-follow-up |
+| 2026-10-09 | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | website-follow-up |
+| 2026-10-09 | 938618763 | LS NORDIC GROUP AB | UTLA | email | website-follow-up |
+| 2026-10-09 | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | website-follow-up |
+| 2026-10-09 | 938617953 | MARTINSEN | ENK | email | website-follow-up |
+| 2026-10-09 | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | website-follow-up |
+| 2026-10-09 | 938262195 | PAPE CONSULTING | ENK | email | website-follow-up |
+| 2026-10-09 | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | website-follow-up |
+| 2026-10-09 | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | website-follow-up |
+| 2026-10-09 | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | website-follow-up |
+| 2026-10-09 | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | website-follow-up |
+| 2026-10-09 | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | website-follow-up |
+| 2026-10-09 | 938641234 | YOGA MED JAN TORRY SANDE | ENK | email | website-offer |
+| 2026-10-09 | 938605149 | STYRKELYKKE FALCH | ENK | email | website-offer |
+| 2026-10-09 | 938614423 | FAHEEL SAUD IN ACTION | ENK | email | website-offer |
+| 2026-10-09 | 938648581 | HALVORSEN FIXER | ENK | email | website-offer |
+| 2026-10-09 | 938644071 | UAB LANGSET SOLUTIONS LITHUANIA | UTLA | email | website-offer |
+| 2026-10-09 | 938618771 | UAB ARDI LT NUF | NUF | email | website-offer |
+| 2026-10-09 | 938641889 | UAB ARDI LT | UTLA | email | website-offer |
+| 2026-10-09 | 938613117 | PSYKOLOGSPESIALIST STINE BØRHAUG | ENK | email | website-offer |
+| 2026-10-09 | 938640866 | P&P VA-SVETSTEKNIK AB | UTLA | email | website-offer |
+| 2026-10-09 | 938613192 | KERA BAU KERANOVIC | ENK | email | website-offer |
+| 2026-10-09 | 938610789 | JONAS VANVIK | ENK | email | website-offer |
+| 2026-10-09 | 938608075 | HVERDAGSMESTRING OG AKTIVISERING TRONDHEIM IVERSEN | ENK | email | website-offer |
+| 2026-10-09 | 938607028 | GRØSVIK TJENESTER | ENK | email | website-offer |
+| 2026-10-09 | 938612420 | DS HANSEN PRODUCTIONS | ENK | email | website-offer |
+| 2026-10-09 | 938614040 | ASMELASH MALING OG HÅNDTVERKSTJENESTER | ENK | email | website-offer |
+| 2026-10-09 | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | website-offer |
+| 2026-10-09 | 938647577 | REIDAR BERGE | ENK | email | website-offer |
 | 2026-10-08 | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | website-follow-up |
 | 2026-10-08 | 938510164 | NYTT HOLDING NP AS | AS | email | website-follow-up |
 | 2026-10-08 | 938510210 | SPILLORG AS | AS | email | website-follow-up |
@@ -106,25 +143,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-06 | 938584346 | KVERNMO HALIBUT | ENK | email | website-offer |
 | 2026-10-06 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-offer |
 | 2026-10-06 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-offer |
-| 2026-10-05 | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | website-offer |
-| 2026-10-05 | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | website-offer |
-| 2026-10-05 | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | website-offer |
-| 2026-10-05 | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | website-offer |
-| 2026-10-05 | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | website-offer |
-| 2026-10-05 | 938262195 | PAPE CONSULTING | ENK | email | website-offer |
-| 2026-10-05 | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | website-offer |
-| 2026-10-05 | 938617953 | MARTINSEN | ENK | email | website-offer |
-| 2026-10-05 | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | website-offer |
-| 2026-10-05 | 938618763 | LS NORDIC GROUP AB | UTLA | email | website-offer |
-| 2026-10-05 | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | website-offer |
-| 2026-10-05 | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | website-offer |
-| 2026-10-05 | 938571678 | HOEM F | ENK | email | website-offer |
-| 2026-10-05 | 938572437 | FRODE MATHISEN | ENK | email | website-offer |
-| 2026-10-05 | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | website-offer |
-| 2026-10-05 | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | website-offer |
-| 2026-10-04 | 938610509 | NIDERAUS RENHOLD AS | AS | email | website-offer |
-| 2026-10-04 | 938593043 | NORSE PROJECTS | NUF | email | website-offer |
-| 2026-10-03 | 938534926 | LETH KOST FORENINGEN | FLI | email | website-offer |
 | 2026-10-03 | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | website-follow-up |
 | 2026-10-03 | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | website-follow-up |
 | 2026-10-03 | 938576262 | EFTEVAND MARKETING | ENK | email | website-follow-up |
@@ -140,7 +158,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-03 | 938530750 | OHORODNIICHUK BODY STUDIO | ENK | email | website-follow-up |
 | 2026-10-03 | 938580014 | NOVARIS FREDRIKSEN | ENK | email | website-follow-up |
 | 2026-10-03 | 938532478 | DOMINO TREFELLING ENK | ENK | email | website-follow-up |
-| 2026-10-03 | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | website-offer |
 | 2026-10-02 | 938562172 | HRS EIENDOM AS | AS | email | website-follow-up |
 | 2026-10-02 | 938565864 | LUNDSGAARD CONSULTING APS | UTLA | email | website-follow-up |
 | 2026-10-02 | 938565767 | MC GROUP SPÓLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-follow-up |
@@ -189,6 +206,80 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-09 10:16 | sent | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:16 | sending | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:16 | sent | 938534926 | LETH KOST FORENINGEN | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:16 | sending | 938534926 | LETH KOST FORENINGEN | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:16 | sent | 938593043 | NORSE PROJECTS | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:16 | sending | 938593043 | NORSE PROJECTS | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:16 | sent | 938610509 | NIDERAUS RENHOLD AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:16 | sending | 938610509 | NIDERAUS RENHOLD AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:16 | sent | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:16 | sending | 938578486 | AURORA LEONOR JIMENEZ-LORENTE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:16 | sent | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:16 | sending | 938578915 | CORAL CLUB KAMINSKAIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:16 | sent | 938572437 | FRODE MATHISEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938572437 | FRODE MATHISEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938571678 | HOEM F | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938571678 | HOEM F | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938570876 | JURSA ORDEN OG RENHOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938570752 | LINDLAND SMÅBRUK, MELING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938618763 | LS NORDIC GROUP AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938618763 | LS NORDIC GROUP AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938539413 | LUN BAKERI \| MIKROBAKERI KVAALE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938617953 | MARTINSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938617953 | MARTINSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938575169 | MIKALSEN PENSJONSTJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938262195 | PAPE CONSULTING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938262195 | PAPE CONSULTING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 838573282 | SHANTI, PRANA AMBJØRNDALEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938616000 | SIA "RITEX MODULAR CONSTRUCTION" | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938521476 | SKOGVIK GRUNNEIENDOM SAMEIE | SAM | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:15 | sent | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:15 | sending | 938179484 | TOTAL FYSIOTERAPI OG HELSE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-09 10:14 | sending | 938571120 | YASMINE FATIMA ISABELLA ANGELL MORCHID | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938641234 | YOGA MED JAN TORRY SANDE | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938641234 | YOGA MED JAN TORRY SANDE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938605149 | STYRKELYKKE FALCH | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938605149 | STYRKELYKKE FALCH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938614423 | FAHEEL SAUD IN ACTION | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938614423 | FAHEEL SAUD IN ACTION | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938648581 | HALVORSEN FIXER | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938648581 | HALVORSEN FIXER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938644071 | UAB LANGSET SOLUTIONS LITHUANIA | UTLA | email | - |
+| 2026-10-09 10:14 | sending | 938644071 | UAB LANGSET SOLUTIONS LITHUANIA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938618771 | UAB ARDI LT NUF | NUF | email | - |
+| 2026-10-09 10:14 | sending | 938618771 | UAB ARDI LT NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938641889 | UAB ARDI LT | UTLA | email | - |
+| 2026-10-09 10:14 | sending | 938641889 | UAB ARDI LT | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938613117 | PSYKOLOGSPESIALIST STINE BØRHAUG | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938613117 | PSYKOLOGSPESIALIST STINE BØRHAUG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938640866 | P&P VA-SVETSTEKNIK AB | UTLA | email | - |
+| 2026-10-09 10:14 | sending | 938640866 | P&P VA-SVETSTEKNIK AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938613192 | KERA BAU KERANOVIC | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938613192 | KERA BAU KERANOVIC | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938610789 | JONAS VANVIK | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938610789 | JONAS VANVIK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:14 | sent | 938608075 | HVERDAGSMESTRING OG AKTIVISERING TRONDHEIM IVERSEN | ENK | email | - |
+| 2026-10-09 10:14 | sending | 938608075 | HVERDAGSMESTRING OG AKTIVISERING TRONDHEIM IVERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:13 | sent | 938607028 | GRØSVIK TJENESTER | ENK | email | - |
+| 2026-10-09 10:13 | sending | 938607028 | GRØSVIK TJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:13 | sent | 938612420 | DS HANSEN PRODUCTIONS | ENK | email | - |
+| 2026-10-09 10:13 | sending | 938612420 | DS HANSEN PRODUCTIONS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:13 | sent | 938614040 | ASMELASH MALING OG HÅNDTVERKSTJENESTER | ENK | email | - |
+| 2026-10-09 10:13 | sending | 938614040 | ASMELASH MALING OG HÅNDTVERKSTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:13 | sent | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | - |
+| 2026-10-09 10:13 | sending | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 10:13 | sent | 938647577 | REIDAR BERGE | ENK | email | - |
+| 2026-10-09 10:13 | sending | 938647577 | REIDAR BERGE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-08 08:52 | sent | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-08 08:52 | sending | 938418756 | NORDTIC CONSTRUCTION APS NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-08 08:52 | sent | 938510164 | NYTT HOLDING NP AS | AS | email | Oppfølging sendt – avslutt hvis stille |
