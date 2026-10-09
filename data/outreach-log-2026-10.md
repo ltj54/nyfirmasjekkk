@@ -4,15 +4,31 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 489
-- Sendt: 237
+- Antall hendelser: 521
+- Sendt: 253
 - Angret: 0
-- Aktive kontaktede selskaper: 188
+- Aktive kontaktede selskaper: 204
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-09 | 938644810 | LEGE EMMA WESTIN | ENK | email | website-offer |
+| 2026-10-09 | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | website-offer |
+| 2026-10-09 | 938646880 | BASBAS & NILSEN GÅ GODE FØTTER | ENK | email | website-offer |
+| 2026-10-09 | 938647046 | BØLGENHAUGEN | ENK | email | website-offer |
+| 2026-10-09 | 938488797 | BARAZANDEH HOLDING AS | AS | email | website-offer |
+| 2026-10-09 | 938641331 | INSPIRATENE AS | AS | email | website-offer |
+| 2026-10-09 | 938645418 | FLOMEL LIMITED | UTLA | email | website-offer |
+| 2026-10-09 | 838606792 | BERHANE STAYFRESH | ENK | email | website-offer |
+| 2026-10-09 | 938613893 | AL GHARRAWI SERVICE | ENK | email | website-offer |
+| 2026-10-09 | 938176361 | VEVKJERRINGENE | FLI | email | website-offer |
+| 2026-10-09 | 938652465 | SVANHILD HAGEN | ENK | email | website-offer |
+| 2026-10-09 | 938622221 | SHEIKH SKRYDER | ENK | email | website-offer |
+| 2026-10-09 | 938616337 | PETER FREI | ENK | email | website-offer |
+| 2026-10-09 | 938650977 | LAVI SERVICES LTD | UTLA | email | website-offer |
+| 2026-10-09 | 938650926 | HOUSE OF RICH TRIBE AB | UTLA | email | website-offer |
+| 2026-10-09 | 938545936 | BARGERVESTE INVESTMENTS B.V. NUF | NUF | email | website-offer |
 | 2026-10-09 | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | website-follow-up |
 | 2026-10-09 | 938534926 | LETH KOST FORENINGEN | FLI | email | website-follow-up |
 | 2026-10-09 | 938593043 | NORSE PROJECTS | NUF | email | website-follow-up |
@@ -206,6 +222,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-09 15:15 | sent | 938644810 | LEGE EMMA WESTIN | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938644810 | LEGE EMMA WESTIN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938646880 | BASBAS & NILSEN GÅ GODE FØTTER | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938646880 | BASBAS & NILSEN GÅ GODE FØTTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938647046 | BØLGENHAUGEN | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938647046 | BØLGENHAUGEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938488797 | BARAZANDEH HOLDING AS | AS | email | - |
+| 2026-10-09 15:15 | sending | 938488797 | BARAZANDEH HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938641331 | INSPIRATENE AS | AS | email | - |
+| 2026-10-09 15:15 | sending | 938641331 | INSPIRATENE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938645418 | FLOMEL LIMITED | UTLA | email | - |
+| 2026-10-09 15:15 | sending | 938645418 | FLOMEL LIMITED | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 838606792 | BERHANE STAYFRESH | ENK | email | - |
+| 2026-10-09 15:15 | sending | 838606792 | BERHANE STAYFRESH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938613893 | AL GHARRAWI SERVICE | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938613893 | AL GHARRAWI SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938176361 | VEVKJERRINGENE | FLI | email | - |
+| 2026-10-09 15:15 | sending | 938176361 | VEVKJERRINGENE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938652465 | SVANHILD HAGEN | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938652465 | SVANHILD HAGEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938622221 | SHEIKH SKRYDER | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938622221 | SHEIKH SKRYDER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938616337 | PETER FREI | ENK | email | - |
+| 2026-10-09 15:15 | sending | 938616337 | PETER FREI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938650977 | LAVI SERVICES LTD | UTLA | email | - |
+| 2026-10-09 15:15 | sending | 938650977 | LAVI SERVICES LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938650926 | HOUSE OF RICH TRIBE AB | UTLA | email | - |
+| 2026-10-09 15:15 | sending | 938650926 | HOUSE OF RICH TRIBE AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-09 15:15 | sent | 938545936 | BARGERVESTE INVESTMENTS B.V. NUF | NUF | email | - |
+| 2026-10-09 15:15 | sending | 938545936 | BARGERVESTE INVESTMENTS B.V. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-09 10:16 | sent | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-09 10:16 | sending | 938612714 | DAVID ADOLFSEN FYSIO | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-09 10:16 | sent | 938534926 | LETH KOST FORENINGEN | FLI | email | Oppfølging sendt – avslutt hvis stille |
