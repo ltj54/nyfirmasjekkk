@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 521
-- Sendt: 253
+- Antall hendelser: 557
+- Sendt: 271
 - Angret: 0
 - Aktive kontaktede selskaper: 204
 
@@ -13,6 +13,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-10 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-follow-up |
+| 2026-10-10 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-follow-up |
+| 2026-10-10 | 938584346 | KVERNMO HALIBUT | ENK | email | website-follow-up |
+| 2026-10-10 | 938586004 | LEKNES SECURITY | ENK | email | website-follow-up |
+| 2026-10-10 | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | website-follow-up |
+| 2026-10-10 | 938584567 | MYHRER FIKSER | ENK | email | website-follow-up |
+| 2026-10-10 | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | website-follow-up |
+| 2026-10-10 | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | website-follow-up |
+| 2026-10-10 | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | website-follow-up |
+| 2026-10-10 | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | website-follow-up |
+| 2026-10-10 | 938593884 | BRAARUD ENTERPRISES | ENK | email | website-follow-up |
+| 2026-10-10 | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | website-follow-up |
+| 2026-10-10 | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | website-follow-up |
+| 2026-10-10 | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | website-follow-up |
+| 2026-10-10 | 938522588 | THORAJENTENE 2028 | FLI | email | website-follow-up |
+| 2026-10-10 | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | website-follow-up |
+| 2026-10-10 | 938628823 | STAYCLEAN AOUKAN | ENK | email | website-follow-up |
+| 2026-10-10 | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | website-follow-up |
 | 2026-10-09 | 938644810 | LEGE EMMA WESTIN | ENK | email | website-offer |
 | 2026-10-09 | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | website-offer |
 | 2026-10-09 | 938646880 | BASBAS & NILSEN GÅ GODE FØTTER | ENK | email | website-offer |
@@ -123,14 +141,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-07 | 938601534 | AROS SPED AB | NUF | email | website-offer |
 | 2026-10-07 | 938631387 | SMEVOLD MEDIA | ENK | email | website-offer |
 | 2026-10-07 | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | website-offer |
-| 2026-10-06 | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | website-offer |
-| 2026-10-06 | 938628823 | STAYCLEAN AOUKAN | ENK | email | website-offer |
-| 2026-10-06 | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | website-offer |
-| 2026-10-06 | 938522588 | THORAJENTENE 2028 | FLI | email | website-offer |
-| 2026-10-06 | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | website-offer |
-| 2026-10-06 | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | website-offer |
-| 2026-10-06 | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | website-offer |
-| 2026-10-06 | 938593884 | BRAARUD ENTERPRISES | ENK | email | website-offer |
 | 2026-10-06 | 938584311 | MADS QUIST KRISTIANSEN FYSIOTERAPI | ENK | email | website-follow-up |
 | 2026-10-06 | 938543852 | MATTHIESEN INVEST | ENK | email | website-follow-up |
 | 2026-10-06 | 938583951 | MB "OPS NEMAN" | UTLA | email | website-follow-up |
@@ -149,16 +159,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-06 | 938583706 | SANS HUDPLEIE & VELVÆRE AS | AS | email | website-follow-up |
 | 2026-10-06 | 938588953 | HOVIND & SCHRØDER ØKONOMI AS | AS | email | website-follow-up |
 | 2026-10-06 | 938561257 | SUNDE MULTISERVICE | ENK | email | website-follow-up |
-| 2026-10-06 | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | website-offer |
-| 2026-10-06 | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | website-offer |
-| 2026-10-06 | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | website-offer |
-| 2026-10-06 | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | website-offer |
-| 2026-10-06 | 938584567 | MYHRER FIKSER | ENK | email | website-offer |
-| 2026-10-06 | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | website-offer |
-| 2026-10-06 | 938586004 | LEKNES SECURITY | ENK | email | website-offer |
-| 2026-10-06 | 938584346 | KVERNMO HALIBUT | ENK | email | website-offer |
-| 2026-10-06 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-offer |
-| 2026-10-06 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-offer |
 | 2026-10-03 | 838382622 | AUSTRÅTTHAGEN VELFORENING | FLI | email | website-follow-up |
 | 2026-10-03 | 938532923 | CORNELIA RØRVIK ARKITEKTUR | ENK | email | website-follow-up |
 | 2026-10-03 | 938576262 | EFTEVAND MARKETING | ENK | email | website-follow-up |
@@ -222,6 +222,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-10 11:32 | sent | 938586373 | FLOWITHROW ASHDOWN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938586373 | FLOWITHROW ASHDOWN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938580278 | GULBRANDSEN BRAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938580278 | GULBRANDSEN BRAND | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938584346 | KVERNMO HALIBUT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938584346 | KVERNMO HALIBUT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938586004 | LEKNES SECURITY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938586004 | LEKNES SECURITY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938584567 | MYHRER FIKSER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938584567 | MYHRER FIKSER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938570868 | MARIANNE DAHL PROSJEKTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:32 | sent | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:32 | sending | 938623635 | KLINISK ERNÆRINGSFYSIOLOG TRUDE MORTENSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938622175 | BREKKLI PROSJEKT OG EIENDOM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938622841 | HÅKON ANDRÉ LANDSVERK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938593884 | BRAARUD ENTERPRISES | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938593884 | BRAARUD ENTERPRISES | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938592055 | KONGLER OG KVIST NINA ELISABETH BØE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938593876 | LØLAND OCEAN ADVISORY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938526206 | STUDIO B TROMSØ - PERSISK KULTURFORENING | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938522588 | THORAJENTENE 2028 | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938522588 | THORAJENTENE 2028 | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938488118 | MD DEJANOVIC RENHOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938628823 | STAYCLEAN AOUKAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938628823 | STAYCLEAN AOUKAN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:31 | sent | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-10 11:31 | sending | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-09 15:15 | sent | 938644810 | LEGE EMMA WESTIN | ENK | email | - |
 | 2026-10-09 15:15 | sending | 938644810 | LEGE EMMA WESTIN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-09 15:15 | sent | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | - |
