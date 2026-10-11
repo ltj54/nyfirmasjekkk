@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 557
-- Sendt: 271
+- Antall hendelser: 562
+- Sendt: 273
 - Angret: 0
-- Aktive kontaktede selskaper: 204
+- Aktive kontaktede selskaper: 205
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-11 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-offer |
+| 2026-10-11 | 938624720 | BENDING SPOONS US INC | NUF | email | website-offer |
 | 2026-10-10 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-follow-up |
 | 2026-10-10 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-follow-up |
 | 2026-10-10 | 938584346 | KVERNMO HALIBUT | ENK | email | website-follow-up |
@@ -36,7 +38,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-09 | 938646880 | BASBAS & NILSEN GÅ GODE FØTTER | ENK | email | website-offer |
 | 2026-10-09 | 938647046 | BØLGENHAUGEN | ENK | email | website-offer |
 | 2026-10-09 | 938488797 | BARAZANDEH HOLDING AS | AS | email | website-offer |
-| 2026-10-09 | 938641331 | INSPIRATENE AS | AS | email | website-offer |
 | 2026-10-09 | 938645418 | FLOMEL LIMITED | UTLA | email | website-offer |
 | 2026-10-09 | 838606792 | BERHANE STAYFRESH | ENK | email | website-offer |
 | 2026-10-09 | 938613893 | AL GHARRAWI SERVICE | ENK | email | website-offer |
@@ -222,6 +223,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-11 10:31 | sent | 938656150 | VINJE DIGITAL IMPACT | ENK | email | - |
+| 2026-10-11 10:31 | sending | 938656150 | VINJE DIGITAL IMPACT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-11 10:31 | sent | 938624720 | BENDING SPOONS US INC | NUF | email | - |
+| 2026-10-11 10:31 | sending | 938624720 | BENDING SPOONS US INC | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-10 11:32 | sent | 938586373 | FLOWITHROW ASHDOWN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-10 11:32 | sending | 938586373 | FLOWITHROW ASHDOWN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-10 11:32 | sent | 938580278 | GULBRANDSEN BRAND | ENK | email | Oppfølging sendt – avslutt hvis stille |
@@ -258,6 +263,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-10 11:31 | sending | 938628823 | STAYCLEAN AOUKAN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-10 11:31 | sent | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-10 11:31 | sending | 938617600 | BUGGE PROSJEKT LEIF TORE BUGGE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-10 11:29 | not_relevant | 938641331 | INSPIRATENE AS | AS | email | Avslag mottatt 09.10.2026 kl. 16:08 fra Hanne Ch. Forø (hannefo@online.no): Inspiratene takker nei til hjelp på nåværende tidspunkt. AS-et er nystartet og erstatter et NUF fra 2009 som avvikles. Virksomheten lager inspirasjonskalendere som Almanakkforlaget produserer. Fjernet fra oppfølging; ingen videre oppfølging eller purring. |
 | 2026-10-09 15:15 | sent | 938644810 | LEGE EMMA WESTIN | ENK | email | - |
 | 2026-10-09 15:15 | sending | 938644810 | LEGE EMMA WESTIN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-09 15:15 | sent | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | - |
