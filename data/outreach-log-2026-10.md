@@ -4,15 +4,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 572
-- Sendt: 276
+- Antall hendelser: 596
+- Sendt: 288
 - Angret: 0
-- Aktive kontaktede selskaper: 208
+- Aktive kontaktede selskaper: 220
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-12 | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | website-offer |
+| 2026-10-12 | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | website-offer |
+| 2026-10-12 | 938622884 | ØYEN ELEKTROENERGI | ENK | email | website-offer |
+| 2026-10-12 | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | website-offer |
+| 2026-10-12 | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | website-offer |
+| 2026-10-12 | 838658962 | PIA HAUGEN MEDIA | ENK | email | website-offer |
+| 2026-10-12 | 938622868 | NOAH BREDESEN | ENK | email | website-offer |
+| 2026-10-12 | 938660573 | MONA BADAWY | ENK | email | website-offer |
+| 2026-10-12 | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | website-offer |
+| 2026-10-12 | 938627479 | GISKE-HARLEM PERFORMANCE | ENK | email | website-offer |
+| 2026-10-12 | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | website-offer |
+| 2026-10-12 | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | website-offer |
 | 2026-10-12 | 938657971 | AKSEL RISER | ENK | email | website-offer |
 | 2026-10-12 | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | website-offer |
 | 2026-10-12 | 938620857 | HAMMER FOREDRAG | ENK | email | website-offer |
@@ -226,6 +238,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-12 14:24 | sent | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 938622884 | ØYEN ELEKTROENERGI | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938622884 | ØYEN ELEKTROENERGI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | - |
+| 2026-10-12 14:24 | sending | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 838658962 | PIA HAUGEN MEDIA | ENK | email | - |
+| 2026-10-12 14:24 | sending | 838658962 | PIA HAUGEN MEDIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 938622868 | NOAH BREDESEN | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938622868 | NOAH BREDESEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 938660573 | MONA BADAWY | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938660573 | MONA BADAWY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | - |
+| 2026-10-12 14:24 | sending | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 938627479 | GISKE-HARLEM PERFORMANCE | ENK | email | - |
+| 2026-10-12 14:24 | sending | 938627479 | GISKE-HARLEM PERFORMANCE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | - |
+| 2026-10-12 14:24 | sending | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 14:24 | sent | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | - |
+| 2026-10-12 14:24 | sending | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-12 09:00 | sent | 938657971 | AKSEL RISER | ENK | email | - |
 | 2026-10-12 09:00 | sending | 938657971 | AKSEL RISER | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-12 09:00 | sent | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | - |
