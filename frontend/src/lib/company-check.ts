@@ -38,7 +38,8 @@ export interface CompanySearchResponse {
 export interface WebsiteAvailability {
   orgNumber: string;
   website: string | null;
-  status: "REACHABLE" | "PENDING_RECHECK" | "CONFIRMED_UNREACHABLE" | "UNVERIFIABLE";
+  status: "REACHABLE" | "PENDING_RECHECK" | "CONFIRMED_UNREACHABLE"
+    | "CONTACT_PATH_PENDING_RECHECK" | "CONFIRMED_CONTACT_PATH_BROKEN" | "UNVERIFIABLE";
   reasonCode: string;
   httpStatus: number | null;
   firstCheckedAt: string | null;
@@ -46,6 +47,7 @@ export interface WebsiteAvailability {
   nextCheckAt: string | null;
   leadSuitability: "CANDIDATE" | "REVIEW" | "EXCLUDE";
   leadSuitabilityReason: string;
+  issueUrl: string | null;
 }
 
 export interface MetadataFiltersResponse {

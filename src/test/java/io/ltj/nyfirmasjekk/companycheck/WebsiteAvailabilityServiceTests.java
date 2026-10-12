@@ -68,6 +68,50 @@ class WebsiteAvailabilityServiceTests {
     }
 
     @Test
+    void brokenBookingLinkRequiresTwoSeparatedFailures() {
+        givenWebsite("example.no");
+        String homepage = "https://example.no";
+        String booking = "https://example.no/bestill-time";
+        var snapshot = new WebsiteContentInspectionService.WebsiteContentSnapshot(
+                "Hjem", "Bestill time", "<a href='/bestill-time'>Bestill time</a>", null, null, null, null);
+        when(contentInspectionService.fetchSnapshot(homepage)).thenReturn(snapshot);
+        when(reachabilityService.probeNow(homepage)).thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
+        when(reachabilityService.probeNow(booking)).thenReturn(new WebsiteProbeResult(false, "HTTP_ERROR", 404));
+        var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
+
+        var first = service.check("123456789");
+        assertEquals("CONTACT_PATH_PENDING_RECHECK", first.status());
+        assertEquals(booking, first.issueUrl());
+        assertEquals("REVIEW", first.leadSuitability());
+
+        now.set(now.get().plusSeconds(30));
+        var confirmed = service.check("123456789");
+        assertEquals("CONFIRMED_CONTACT_PATH_BROKEN", confirmed.status());
+        assertEquals("CANDIDATE", confirmed.leadSuitability());
+        assertEquals(first.firstCheckedAt(), confirmed.firstCheckedAt());
+        verify(reachabilityService, times(2)).probeNow(booking);
+    }
+
+    @Test
+    void repairedBookingLinkClearsPendingFinding() {
+        givenWebsite("example.no");
+        String homepage = "https://example.no";
+        String booking = "https://example.no/booking";
+        var snapshot = new WebsiteContentInspectionService.WebsiteContentSnapshot(
+                "Hjem", "Booking", "<a href='/booking'>Booking</a>", null, null, null, null);
+        when(contentInspectionService.fetchSnapshot(homepage)).thenReturn(snapshot);
+        when(reachabilityService.probeNow(homepage)).thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
+        when(reachabilityService.probeNow(booking)).thenReturn(
+                new WebsiteProbeResult(false, "HTTP_ERROR", 404),
+                new WebsiteProbeResult(true, "REACHABLE", 200));
+        var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
+
+        assertEquals("CONTACT_PATH_PENDING_RECHECK", service.check("123456789").status());
+        now.set(now.get().plusSeconds(30));
+        assertEquals("REACHABLE", service.check("123456789").status());
+    }
+
+    @Test
     void noWebsiteIsUnverifiableAndDoesNotTriggerProbe() {
         givenWebsite(null);
         var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);

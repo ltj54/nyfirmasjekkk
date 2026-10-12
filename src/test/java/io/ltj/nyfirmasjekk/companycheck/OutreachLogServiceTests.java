@@ -380,6 +380,31 @@ class OutreachLogServiceTests {
     }
 
     @Test
+    void reserveFollowUpRejectsCompanyThatRepliedToInitialOffer() throws Exception {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Files.writeString(logPath, """
+                {"timestamp":"2026-04-08T10:15:30Z","orgNumber":"123456789","companyName":"Test AS","organizationForm":"AS","status":"sent","price":null,"channel":"email","offerType":"website-offer","note":null}
+                """);
+        OutreachLogService service = new OutreachLogService(
+                logPath,
+                tempDir,
+                tempDir.resolve("archive"),
+                Clock.fixed(Instant.parse("2026-04-23T10:15:30Z"), ZoneOffset.UTC),
+                new ObjectMapper()
+        );
+        service.register(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", false, "replied", null,
+                "email", "website-offer", "Avslag mottatt. Ingen videre kontakt."
+        ));
+
+        assertThat(service.reserveFollowUp(new OutreachStatusRequest(
+                "123456789", "Test AS", "AS", true, "sent", null,
+                "email", "website-follow-up", null
+        ))).isFalse();
+        assertThat(service.statusFor("123456789").status()).isEqualTo("replied");
+    }
+
+    @Test
     void reserveFollowUpRejectsOffersOutsideFourToFourteenBusinessDayWindow() throws Exception {
         Path logPath = tempDir.resolve("outreach-log.jsonl");
         Files.writeString(logPath, """

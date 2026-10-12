@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 596
+- Antall hendelser: 597
 - Sendt: 288
 - Angret: 0
-- Aktive kontaktede selskaper: 220
+- Aktive kontaktede selskaper: 219
 
 ## Aktive kontaktede selskaper
 
@@ -22,7 +22,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-12 | 938622868 | NOAH BREDESEN | ENK | email | website-offer |
 | 2026-10-12 | 938660573 | MONA BADAWY | ENK | email | website-offer |
 | 2026-10-12 | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | website-offer |
-| 2026-10-12 | 938627479 | GISKE-HARLEM PERFORMANCE | ENK | email | website-offer |
 | 2026-10-12 | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | website-offer |
 | 2026-10-12 | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | website-offer |
 | 2026-10-12 | 938657971 | AKSEL RISER | ENK | email | website-offer |
@@ -238,6 +237,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-12 16:53 | replied | 938627479 | GISKE-HARLEM PERFORMANCE | ENK | email | Avslag mottatt 12.10.2026 kl. 16:26 fra Fritjof Giske-Harlem: «Ellers takk! Har ikke mulighet til dette nå.» Avsluttet og fjernet fra oppfølging. Ingen videre kontakt. |
 | 2026-10-12 14:24 | sent | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | - |
 | 2026-10-12 14:24 | sending | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-12 14:24 | sent | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | - |

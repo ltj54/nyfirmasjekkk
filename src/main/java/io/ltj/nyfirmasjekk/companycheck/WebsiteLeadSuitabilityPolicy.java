@@ -47,6 +47,9 @@ final class WebsiteLeadSuitabilityPolicy {
                 || WEBSITE_PROVIDER_ENGLISH.matcher(content).find())) {
             return new Assessment(EXCLUDE, "Nettsiden tilbyr selv web-/nettsideutvikling.");
         }
+        if ("CONFIRMED_CONTACT_PATH_BROKEN".equals(status)) {
+            return new Assessment("CANDIDATE", "Kontakt- eller bookinglenke svarte med feil ved to adskilte sjekker; kontroller manuelt.");
+        }
         if ("CONFIRMED_UNREACHABLE".equals(status)) {
             return new Assessment("CANDIDATE", "Registrert URL svarte ikke ved to adskilte sjekker; kontroller manuelt.");
         }

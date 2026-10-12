@@ -12,6 +12,7 @@ public record WebsiteAvailabilityResponse(
         Instant lastCheckedAt,
         Instant nextCheckAt,
         String leadSuitability,
-        String leadSuitabilityReason
+        String leadSuitabilityReason,
+        String issueUrl
 ) {
 }

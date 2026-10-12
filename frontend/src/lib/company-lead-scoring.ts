@@ -107,10 +107,11 @@ export function compareWebsiteLeadQuality(
 
 function availabilityTier(availability: WebsiteAvailability | undefined) {
   if (availability?.status === "CONFIRMED_UNREACHABLE") return 0;
-  if (availability?.status === "PENDING_RECHECK") return 1;
-  if (availability?.status === "REACHABLE") return 2;
-  if (availability?.status === "UNVERIFIABLE") return 3;
-  return 4;
+  if (availability?.status === "CONFIRMED_CONTACT_PATH_BROKEN") return 1;
+  if (availability?.status === "PENDING_RECHECK" || availability?.status === "CONTACT_PATH_PENDING_RECHECK") return 2;
+  if (availability?.status === "REACHABLE") return 3;
+  if (availability?.status === "UNVERIFIABLE") return 4;
+  return 5;
 }
 
 export function applyLeadQuickFilters(

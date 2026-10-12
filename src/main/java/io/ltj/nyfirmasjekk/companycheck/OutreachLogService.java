@@ -259,7 +259,12 @@ public class OutreachLogService {
 
     public synchronized boolean reserveFollowUp(OutreachStatusRequest request) {
         validateRequest(request);
-        if (isWebsiteClient(request.orgNumber()) || !isWithinFollowUpWindow(request.orgNumber())) {
+        OutreachLogEntry latestEntry = latestByOrgNumber.get(request.orgNumber());
+        if (isWebsiteClient(request.orgNumber())
+                || latestEntry == null
+                || (!STATUS_SENT.equalsIgnoreCase(latestEntry.status())
+                && !STATUS_AUTO_REPLIED.equalsIgnoreCase(latestEntry.status()))
+                || !isWithinFollowUpWindow(request.orgNumber())) {
             return false;
         }
         boolean alreadyAttempted = indexedEntries.stream().anyMatch(entry ->

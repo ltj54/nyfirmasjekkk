@@ -299,6 +299,20 @@ function isOutreachSendBlocked(status: OutreachStatus | null | undefined) {
   );
 }
 
+function canSelectWebsiteLeadForEmail(
+  company: CompanySummary,
+  availability: WebsiteAvailability | undefined,
+  outreachStatus: OutreachStatus | undefined,
+) {
+  return Boolean(company.email && company.website && availability)
+    && availability?.leadSuitability !== "EXCLUDE"
+    && availability?.status !== "PENDING_RECHECK"
+    && availability?.status !== "CONTACT_PATH_PENDING_RECHECK"
+    && availability?.status !== "UNVERIFIABLE"
+    && !isOutreachSendBlocked(outreachStatus)
+    && outreachStatus?.status !== "not_relevant";
+}
+
 function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website" | "websiteDiscovery">) {
   if (!company.email) {
     return "mangler e-postadresse";
@@ -465,6 +479,7 @@ export function CompanyCheckShell() {
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
+  const [websiteLeadSelectionByOrg, setWebsiteLeadSelectionByOrg] = useState<Record<string, boolean>>({});
   const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, BatchValidation>>({});
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [isFollowUpBatchSending, setIsFollowUpBatchSending] = useState(false);
@@ -1210,7 +1225,8 @@ export function CompanyCheckShell() {
     }
 
     void checkAll(orgNumbers).then((checked) => {
-      const pending = checked.filter((result) => result.status === "PENDING_RECHECK");
+      const pending = checked.filter((result) => result.status === "PENDING_RECHECK"
+        || result.status === "CONTACT_PATH_PENDING_RECHECK");
       if (cancelled || pending.length === 0) return;
       const latestNextCheck = Math.max(...pending.map((result) => Date.parse(result.nextCheckAt ?? "")));
       const delay = Number.isFinite(latestNextCheck) ? Math.max(1000, latestNextCheck - Date.now() + 1000) : 31_000;
@@ -1650,6 +1666,16 @@ export function CompanyCheckShell() {
       && outreachStatus?.status !== "not_relevant"
       && ((canUseEmailBatch && showBatchExcluded) || !batchBlocked);
   });
+  const selectableWebsiteLeads = websiteLeadCohort
+    ? visibleSearchCompanies.filter((company) => canSelectWebsiteLeadForEmail(
+      company,
+      websiteAvailabilityByOrg[company.orgNumber],
+      outreachStatusByOrg[company.orgNumber],
+    ))
+    : [];
+  const selectedWebsiteLeadsOnPage = selectableWebsiteLeads.filter(
+    (company) => websiteLeadSelectionByOrg[company.orgNumber],
+  );
   const selectedBatchCompanies = canUseEmailBatch
     ? visibleSearchCompanies.filter((company) =>
       batchSelectionByOrg[company.orgNumber]
@@ -1662,7 +1688,8 @@ export function CompanyCheckShell() {
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
   const pendingWebsiteCheckCount = websiteLeadCohort
     ? filteredCompanies.filter((company) => !websiteAvailabilityByOrg[company.orgNumber]
-      || websiteAvailabilityByOrg[company.orgNumber].status === "PENDING_RECHECK").length
+      || websiteAvailabilityByOrg[company.orgNumber].status === "PENDING_RECHECK"
+      || websiteAvailabilityByOrg[company.orgNumber].status === "CONTACT_PATH_PENDING_RECHECK").length
     : 0;
   const visibleBatchValidationKey = canUseEmailBatch
     ? visibleSearchCompanies
@@ -2319,6 +2346,19 @@ export function CompanyCheckShell() {
                 </div>
               </div>
               <div className="overflow-hidden border border-[#D9E2EC] bg-white">
+                <Show when={websiteLeadCohort}>
+                  <WebsiteLeadSelectionToolbar
+                    allSelected={selectableWebsiteLeads.length > 0
+                      && selectedWebsiteLeadsOnPage.length === selectableWebsiteLeads.length}
+                    eligibleCount={selectableWebsiteLeads.length}
+                    onToggleAll={(selected) => setWebsiteLeadSelectionByOrg((current) => {
+                      const next = { ...current };
+                      for (const company of selectableWebsiteLeads) next[company.orgNumber] = selected;
+                      return next;
+                    })}
+                    selectedCount={selectedWebsiteLeadsOnPage.length}
+                  />
+                </Show>
                 <Show when={!isListLoading && visibleSearchCompanies.length > 0}>
                   <div className="hidden grid-cols-[minmax(210px,1.3fr)_minmax(160px,1fr)_minmax(150px,.9fr)_minmax(180px,1fr)_minmax(140px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
                     <span>Virksomhet</span>
@@ -2342,8 +2382,13 @@ export function CompanyCheckShell() {
                   setLeadQuickFilters([]);
                   void fetchRecent(0);
                 }}
-                renderCompany={(company) => (
-                  <LeadResultRow
+                renderCompany={(company) => {
+                  const websiteLeadSelectable = websiteLeadCohort && canSelectWebsiteLeadForEmail(
+                    company,
+                    websiteAvailabilityByOrg[company.orgNumber],
+                    outreachStatusByOrg[company.orgNumber],
+                  );
+                  return <LeadResultRow
                     key={company.orgNumber}
                     company={company}
                     websiteAvailability={websiteLeadCohort ? websiteAvailabilityByOrg[company.orgNumber] ?? null : undefined}
@@ -2351,12 +2396,22 @@ export function CompanyCheckShell() {
                     onMarkNotRelevant={() => void markLeadNotRelevant(company)}
                     savingNotRelevant={Boolean(savingOutreachByOrg[company.orgNumber])}
                     outreachStatus={outreachStatusByOrg[company.orgNumber] ?? null}
-                    batchSelectable={canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])}
-                    batchSelected={Boolean(batchSelectionByOrg[company.orgNumber])}
-                    batchValidation={batchValidationByOrg[company.orgNumber] ?? null}
-                    onToggleBatch={(selected) => void toggleBatchSelectionWithValidation(company, selected)}
-                  />
-                )}
+                    batchSelectable={websiteLeadSelectable || (canUseEmailBatch && canSelectEmailBatchCandidate(company) && batchValidationByOrg[company.orgNumber]?.status !== "blocked" && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber]))}
+                    batchSelected={websiteLeadCohort
+                      ? Boolean(websiteLeadSelectionByOrg[company.orgNumber])
+                      : Boolean(batchSelectionByOrg[company.orgNumber])}
+                    batchValidation={websiteLeadCohort ? null : batchValidationByOrg[company.orgNumber] ?? null}
+                    batchSelectionLabel={websiteLeadCohort ? "e-postvurdering" : "e-postbatch"}
+                    showSelectionCheckbox={websiteLeadCohort}
+                    onToggleBatch={(selected) => {
+                      if (websiteLeadCohort) {
+                        setWebsiteLeadSelectionByOrg((current) => ({ ...current, [company.orgNumber]: selected }));
+                      } else {
+                        void toggleBatchSelectionWithValidation(company, selected);
+                      }
+                    }}
+                  />;
+                }}
               />
               </div>
             </div>
@@ -4274,6 +4329,12 @@ function websiteAvailabilityLabel(availability: WebsiteAvailability | null) {
         INVALID_URL: "ugyldig nettadresse",
       } as Record<string, string>)[availability.reasonCode] ?? "teknisk feil";
   const checkedAt = availability.lastCheckedAt ? ` · ${formatDateTime(availability.lastCheckedAt)}` : "";
+  if (availability.status === "CONFIRMED_CONTACT_PATH_BROKEN") {
+    return `Kontakt-/bookinglenken svarte med ${reason} ved to sjekker: ${availability.issueUrl ?? "ukjent lenke"}${checkedAt}`;
+  }
+  if (availability.status === "CONTACT_PATH_PENDING_RECHECK") {
+    return `Kontakt-/bookinglenken svarte med ${reason} · ny sjekk om kort tid${checkedAt}`;
+  }
   if (availability.status === "CONFIRMED_UNREACHABLE") return `URL svarer ikke ved to sjekker (${reason})${checkedAt}`;
   if (availability.status === "PENDING_RECHECK") return `Svarte ikke (${reason}) · ny sjekk om kort tid${checkedAt}`;
   if (availability.status === "UNVERIFIABLE") return `URL kunne ikke verifiseres (${reason})${checkedAt}`;
@@ -4287,6 +4348,12 @@ function websiteLeadListAssessment(availability: WebsiteAvailability | null) {
   if (availability?.status === "CONFIRMED_UNREACHABLE") {
     return { label: "Krever oppfølging", title: "Nettsiden svarer ikke", badgeClass: "rounded-sm bg-rose-50 px-2.5 py-1 text-[10px] font-semibold text-rose-700" };
   }
+  if (availability?.status === "CONFIRMED_CONTACT_PATH_BROKEN") {
+    return { label: "Krever oppfølging", title: "Kontakt/booking svarer ikke", badgeClass: "rounded-sm bg-rose-50 px-2.5 py-1 text-[10px] font-semibold text-rose-700" };
+  }
+  if (availability?.status === "CONTACT_PATH_PENDING_RECHECK") {
+    return { label: "Ny sjekk pågår", title: "Kontakt/booking svarte ikke ved første sjekk", badgeClass: "rounded-sm bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700" };
+  }
   if (availability?.status === "PENDING_RECHECK") {
     return { label: "Ny sjekk pågår", title: "Svarte ikke ved første sjekk", badgeClass: "rounded-sm bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700" };
   }
@@ -4299,9 +4366,40 @@ function websiteLeadListAssessment(availability: WebsiteAvailability | null) {
   return { label: "Sjekkes", title: "Kontrollerer registrert URL", badgeClass: "rounded-sm bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-700" };
 }
 
+function WebsiteLeadSelectionToolbar({
+  allSelected,
+  eligibleCount,
+  onToggleAll,
+  selectedCount,
+}: Readonly<{
+  allSelected: boolean;
+  eligibleCount: number;
+  onToggleAll: (selected: boolean) => void;
+  selectedCount: number;
+}>) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-3 text-[12px] text-[#334E68]">
+      <label className="inline-flex cursor-pointer items-center gap-2 font-semibold">
+        <input
+          checked={allSelected}
+          className="size-4 accent-[#1F5FA9]"
+          disabled={eligibleCount === 0}
+          onChange={(event) => onToggleAll(event.target.checked)}
+          type="checkbox"
+        />
+        <span>Velg alle aktuelle på denne siden</span>
+      </label>
+      <span aria-live="polite">{selectedCount} av {eligibleCount} valgt for e-postvurdering</span>
+      <p className="w-full text-[#52606D]">Valget sender ingen e-post. Utkast og mottakere må kontrolleres før eventuell utsending.</p>
+    </div>
+  );
+}
+
 function LeadResultRow({
   batchSelectable,
   batchSelected,
+  batchSelectionLabel,
+  showSelectionCheckbox,
   batchValidation,
   company,
   onClick,
@@ -4313,6 +4411,8 @@ function LeadResultRow({
 }: Readonly<{
   batchSelectable: boolean;
   batchSelected: boolean;
+  batchSelectionLabel: string;
+  showSelectionCheckbox: boolean;
   batchValidation: BatchValidation | null;
   company: CompanySummary;
   onClick: () => void;
@@ -4337,9 +4437,11 @@ function LeadResultRow({
   return (
     <div className="grid gap-3 border-b border-[#E4E7EB] px-4 py-3.5 transition-colors last:border-b-0 hover:bg-[#F8FBFF] lg:grid-cols-[minmax(210px,1.3fr)_minmax(160px,1fr)_minmax(150px,.9fr)_minmax(180px,1fr)_minmax(140px,.8fr)_44px] lg:items-center lg:gap-4">
       <div className="flex min-w-0 items-start gap-3">
-        {batchSelectable || batchValidation?.status === "checking" ? (
+        {showSelectionCheckbox || batchSelectable || batchValidation?.status === "checking" ? (
           <input
-            aria-label={`Velg ${company.name} for e-postbatch`}
+            aria-label={batchSelectable
+              ? `Velg ${company.name} for ${batchSelectionLabel}`
+              : `${company.name} kan ikke velges for ${batchSelectionLabel} ennå`}
             checked={batchSelectable && batchSelected}
             className="mt-1 size-4 shrink-0 accent-[#1F5FA9]"
             disabled={!batchSelectable || batchValidation?.status === "checking"}
@@ -4360,7 +4462,8 @@ function LeadResultRow({
           {websiteAvailability !== undefined ? (
             <span className="mt-1 block text-[11px] text-[#52606D]">
               <span className="block font-semibold">Samlet vurdering</span>
-              <span className={websiteAvailability?.status === "PENDING_RECHECK" ? "text-amber-700" : ""}>
+              <span className={websiteAvailability?.status === "PENDING_RECHECK"
+                || websiteAvailability?.status === "CONTACT_PATH_PENDING_RECHECK" ? "text-amber-700" : ""}>
                 {websiteAvailabilityLabel(websiteAvailability)}
               </span>
             </span>
