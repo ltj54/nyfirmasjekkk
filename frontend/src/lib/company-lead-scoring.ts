@@ -1,4 +1,4 @@
-import type { CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
+import type { CompanySummary, OutreachStatus, StructureSignal, WebsiteAvailability } from "@/lib/company-check";
 
 export type LeadQuickFilter = "HAS_EMAIL" | "HAS_WEBSITE" | "MISSING_WEBSITE" | "NOT_SENT" | "NOT_RELEVANT";
 
@@ -86,6 +86,31 @@ export function compareLeadPriority(left: CompanySummary, right: CompanySummary)
   }
 
   return left.name.localeCompare(right.name, "nb");
+}
+
+export function compareWebsiteLeadQuality(
+  left: CompanySummary,
+  right: CompanySummary,
+  availabilityByOrg: Record<string, WebsiteAvailability>,
+) {
+  const excludedDifference = Number(availabilityByOrg[left.orgNumber]?.leadSuitability === "EXCLUDE")
+    - Number(availabilityByOrg[right.orgNumber]?.leadSuitability === "EXCLUDE");
+  if (excludedDifference !== 0) return excludedDifference;
+  const tierDifference = availabilityTier(availabilityByOrg[left.orgNumber])
+    - availabilityTier(availabilityByOrg[right.orgNumber]);
+  if (tierDifference !== 0) return tierDifference;
+  const registrationDateLeft = left.registrationDate ? new Date(left.registrationDate).getTime() : 0;
+  const registrationDateRight = right.registrationDate ? new Date(right.registrationDate).getTime() : 0;
+  if (registrationDateLeft !== registrationDateRight) return registrationDateRight - registrationDateLeft;
+  return left.name.localeCompare(right.name, "nb");
+}
+
+function availabilityTier(availability: WebsiteAvailability | undefined) {
+  if (availability?.status === "CONFIRMED_UNREACHABLE") return 0;
+  if (availability?.status === "PENDING_RECHECK") return 1;
+  if (availability?.status === "REACHABLE") return 2;
+  if (availability?.status === "UNVERIFIABLE") return 3;
+  return 4;
 }
 
 export function applyLeadQuickFilters(

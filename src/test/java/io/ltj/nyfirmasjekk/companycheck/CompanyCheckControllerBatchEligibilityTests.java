@@ -40,7 +40,8 @@ class CompanyCheckControllerBatchEligibilityTests {
                         null,
                         mock(InMemoryRateLimitService.class),
                         null,
-                        websiteContentInspectionService
+                        websiteContentInspectionService,
+                        mock(WebsiteAvailabilityService.class)
                 )
         );
     }

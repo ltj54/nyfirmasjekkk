@@ -11,8 +11,18 @@ public record CompanySearchRequest(
         int resultSize,
         boolean hasEmail,
         boolean hasWebsite,
-        boolean missingWebsite
+        boolean missingWebsite,
+        boolean websiteLeadCohort
 ) {
+    public CompanySearchRequest(
+            String navn, int dager, String kommune, String fylke, String naeringskode,
+            String organisasjonsform, String score, int resultSize,
+            boolean hasEmail, boolean hasWebsite, boolean missingWebsite
+    ) {
+        this(navn, dager, kommune, fylke, naeringskode, organisasjonsform, score,
+                resultSize, hasEmail, hasWebsite, missingWebsite, false);
+    }
+
     public CompanySearchRequest(
             String navn,
             int dager,
@@ -23,6 +33,6 @@ public record CompanySearchRequest(
             String score,
             int resultSize
     ) {
-        this(navn, dager, kommune, fylke, naeringskode, organisasjonsform, score, resultSize, false, false, false);
+        this(navn, dager, kommune, fylke, naeringskode, organisasjonsform, score, resultSize, false, false, false, false);
     }
 }

@@ -41,10 +41,12 @@ import type {
   WebsiteInspectionResponse,
   WebsiteQualityAssessment,
   WebsiteQualitySignal,
+  WebsiteAvailability,
 } from "@/lib/company-check";
 import {
   applyLeadQuickFilters,
   compareLeadPriority,
+  compareWebsiteLeadQuality,
   getBestContactPoint,
   getCommercialOpportunity,
   getLeadPriority,
@@ -194,10 +196,14 @@ const organizationFormHelp: Record<string, { label: string; description: string 
 };
 
 const visibleOrganizationForms = ["AS", "ENK", "DA", "ANS", "NUF", "FLI", "SA", "STI", "ASA", "BA"];
-const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
-  { value: "HAS_EMAIL", label: "Har e-post" },
+type WebsiteQuickFilter = "ALL" | "HAS_WEBSITE" | "MISSING_WEBSITE";
+const websiteQuickFilterOptions: Array<{ value: WebsiteQuickFilter; label: string }> = [
+  { value: "ALL", label: "Alle" },
   { value: "HAS_WEBSITE", label: "Har nettside" },
   { value: "MISSING_WEBSITE", label: "Mangler nettside" },
+];
+const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> = [
+  { value: "HAS_EMAIL", label: "Har e-post" },
   { value: "NOT_SENT", label: "Ikke sendt" },
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
@@ -205,7 +211,7 @@ const EMAIL_BATCH_SEND_DELAY_MS = 1_000;
 const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
 const MAX_EMAIL_BATCH_SIZE = 25;
 const MAX_FOLLOW_UP_BATCH_SIZE = 10;
-type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "batch_excluded";
+type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "website_client" | "batch_excluded";
 type OutreachEmailSendResult = "sent" | "skipped" | "failed";
 
 function wait(ms: number) {
@@ -230,6 +236,24 @@ function RenderCollection<T>({
 
 function choose<T>(condition: boolean, whenTrue: T, whenFalse: T): T {
   return condition ? whenTrue : whenFalse;
+}
+
+function selectedWebsiteFilter(filters: LeadQuickFilter[]): WebsiteQuickFilter {
+  if (filters.includes("HAS_WEBSITE")) return "HAS_WEBSITE";
+  if (filters.includes("MISSING_WEBSITE")) return "MISSING_WEBSITE";
+  return "ALL";
+}
+
+function leadSortComparator(
+  websiteLeadCohort: boolean,
+  canUseEmailBatch: boolean,
+  availabilityByOrg: Record<string, WebsiteAvailability>,
+) {
+  if (websiteLeadCohort) {
+    return (left: CompanySummary, right: CompanySummary) =>
+      compareWebsiteLeadQuality(left, right, availabilityByOrg);
+  }
+  return canUseEmailBatch ? compareEmailBatchPriority : compareLeadPriority;
 }
 
 function scrollToSection(id: string) {
@@ -374,6 +398,7 @@ function websiteSignalSeverityLabel(severity: WebsiteQualitySignal["severity"]) 
 
 type RecentSearchOptions = {
   daysFilter: string;
+  websiteLeadCohort: boolean;
   page: number;
   countyFilter: string;
   organizationFormFilter: string;
@@ -392,6 +417,7 @@ function recentSearchParams(options: RecentSearchOptions) {
   if (options.selectedLegend) params.set("score", options.selectedLegend);
   if (options.nameFilter) params.set("navn", options.nameFilter);
   if (options.quickFilters.includes("HAS_EMAIL")) params.set("hasEmail", "true");
+  if (options.websiteLeadCohort) params.set("websiteLeadCohort", "true");
 
   const hasWebsite = options.quickFilters.includes("HAS_WEBSITE");
   const missingWebsite = options.quickFilters.includes("MISSING_WEBSITE");
@@ -418,6 +444,7 @@ export function CompanyCheckShell() {
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
   const [selectedWebsiteInspection, setSelectedWebsiteInspection] = useState<WebsiteInspectionResponse | null>(null);
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
+  const [websiteAvailabilityByOrg, setWebsiteAvailabilityByOrg] = useState<Record<string, WebsiteAvailability>>({});
   const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
     organizationForms: [],
   });
@@ -426,6 +453,7 @@ export function CompanyCheckShell() {
   const [listLoadProgress, setListLoadProgress] = useState(0);
   const [listLoadSeconds, setListLoadSeconds] = useState(0);
   const [daysFilter, setDaysFilter] = useState("5");
+  const [websiteLeadCohort, setWebsiteLeadCohort] = useState(false);
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
@@ -433,11 +461,7 @@ export function CompanyCheckShell() {
   const [debouncedNameFilter, setDebouncedNameFilter] = useState("");
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showBatchExcluded, setShowBatchExcluded] = useState(true);
-  const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>([
-    "HAS_EMAIL",
-    "MISSING_WEBSITE",
-    "HAS_WEBSITE",
-  ]);
+  const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>(["HAS_EMAIL"]);
   const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
@@ -561,7 +585,7 @@ export function CompanyCheckShell() {
   }
 
   async function updateOutreachStatus(
-    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">,
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "municipality" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality">,
     sent: boolean,
     note?: string,
     statusOverride?: OutreachStatusOverride
@@ -648,7 +672,7 @@ export function CompanyCheckShell() {
   }
 
   async function sendGeneratedOutreachEmail(
-    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "naceCode" | "naceDescription" | "salesSegment" | "email" | "website" | "websiteDiscovery" | "websiteQuality">,
+    company: Pick<CompanySummary, "orgNumber" | "name" | "organizationForm" | "municipality" | "naceCode" | "naceDescription" | "salesSegment" | "email" | "website" | "websiteDiscovery" | "websiteQuality">,
     generatedEmail: { subject: string; body: string } | null
   ): Promise<OutreachEmailSendResult> {
     if (!company.email || !generatedEmail) {
@@ -657,7 +681,7 @@ export function CompanyCheckShell() {
     if (hasUnresolvedPersonalObservation(generatedEmail.body)) {
       setEmailSendErrorByOrg((current) => ({
         ...current,
-        [company.orgNumber]: "Observasjonen ble ikke fylt inn. Generer e-postteksten på nytt før du sender.",
+        [company.orgNumber]: "Utkastet mangler manuell observasjon. Fyll den inn og kontroller alle påstander før bruk.",
       }));
       return "skipped";
     }
@@ -691,29 +715,6 @@ export function CompanyCheckShell() {
     }));
 
     try {
-      if (outreachOfferTypeForCompany(company) === "website-unavailable-offer" && company.website) {
-        const verificationResponse = await fetch(
-          `/api/company-check/website-inspection?url=${encodeURIComponent(normalizeWebsiteUrl(company.website))}`,
-          { cache: "no-store" },
-        );
-        if (!verificationResponse.ok) {
-          setEmailSendErrorByOrg((current) => ({
-            ...current,
-            [company.orgNumber]: "Utsending stoppet fordi nettsiden ikke kunne kontrolleres på nytt.",
-          }));
-          return "skipped";
-        }
-        const verification = (await verificationResponse.json()) as WebsiteInspectionResponse;
-        const stillUnavailable = verification.websiteQuality.signals.some((signal) => signal.code === "TECHNICAL_FAILURE");
-        if (!stillUnavailable) {
-          setEmailSendErrorByOrg((current) => ({
-            ...current,
-            [company.orgNumber]: "Utsending stoppet: Nettsiden svarte ved kontrollen rett før sending.",
-          }));
-          return "skipped";
-        }
-      }
-
       const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
         method: "POST",
         cache: "no-store",
@@ -1102,6 +1103,7 @@ export function CompanyCheckShell() {
     pageNum = 0,
     overrides?: {
       daysFilter?: string;
+      websiteLeadCohort?: boolean;
       countyFilter?: string;
       organizationFormFilter?: string;
       selectedLegend?: keyof typeof legendDetails | null;
@@ -1121,6 +1123,7 @@ export function CompanyCheckShell() {
     const effectiveNameFilter = overrides?.nameFilter ?? debouncedNameFilter;
     const params = recentSearchParams({
       daysFilter: effectiveDaysFilter,
+      websiteLeadCohort: overrides?.websiteLeadCohort ?? websiteLeadCohort,
       page: pageNum,
       countyFilter: effectiveCountyFilter,
       organizationFormFilter: effectiveOrganizationFormFilter,
@@ -1171,7 +1174,56 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     runRefreshRecent();
-  }, [backendReady, initialResultsReady, daysFilter, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, debouncedNameFilter]);
+  }, [backendReady, initialResultsReady, daysFilter, websiteLeadCohort, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, debouncedNameFilter]);
+
+  useEffect(() => {
+    if (!websiteLeadCohort || recentCompanies.length === 0) return;
+    let cancelled = false;
+    let recheckTimer: number | undefined;
+    const orgNumbers = recentCompanies
+      .filter((company) => company.website && company.organizationForm?.toUpperCase() !== "UTLA")
+      .map((company) => company.orgNumber);
+
+    async function checkOne(orgNumber: string) {
+      try {
+        const response = await fetch(`/api/company-check/${orgNumber}/website-availability`, { cache: "no-store" });
+        if (!response.ok) return null;
+        return await response.json() as WebsiteAvailability;
+      } catch {
+        return null;
+      }
+    }
+
+    async function checkAll(numbers: string[]) {
+      const checked: WebsiteAvailability[] = [];
+      for (let index = 0; index < numbers.length && !cancelled; index += 5) {
+        const batch = await Promise.all(numbers.slice(index, index + 5).map(checkOne));
+        if (cancelled) return [];
+        const valid = batch.filter((result): result is WebsiteAvailability => result !== null);
+        checked.push(...valid);
+        setWebsiteAvailabilityByOrg((current) => ({
+          ...current,
+          ...Object.fromEntries(valid.map((result) => [result.orgNumber, result])),
+        }));
+      }
+      return checked;
+    }
+
+    void checkAll(orgNumbers).then((checked) => {
+      const pending = checked.filter((result) => result.status === "PENDING_RECHECK");
+      if (cancelled || pending.length === 0) return;
+      const latestNextCheck = Math.max(...pending.map((result) => Date.parse(result.nextCheckAt ?? "")));
+      const delay = Number.isFinite(latestNextCheck) ? Math.max(1000, latestNextCheck - Date.now() + 1000) : 31_000;
+      recheckTimer = window.setTimeout(() => {
+        void checkAll(pending.map((result) => result.orgNumber));
+      }, delay);
+    });
+
+    return () => {
+      cancelled = true;
+      if (recheckTimer !== undefined) window.clearTimeout(recheckTimer);
+    };
+  }, [recentCompanies, websiteLeadCohort]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -1346,6 +1398,7 @@ export function CompanyCheckShell() {
     setActiveTab("leads");
     setSelectedLegend(null);
     setDaysFilter("5");
+    setWebsiteLeadCohort(false);
     setCountyFilter("");
     setOrganizationFormFilter("");
     setNameFilter("");
@@ -1353,6 +1406,7 @@ export function CompanyCheckShell() {
     setLeadQuickFilters([]);
     void fetchRecent(0, {
       daysFilter: "5",
+      websiteLeadCohort: false,
       countyFilter: "",
       organizationFormFilter: "",
       selectedLegend: null,
@@ -1563,6 +1617,7 @@ export function CompanyCheckShell() {
   }
 
   function toggleLeadQuickFilter(filter: LeadQuickFilter) {
+    setWebsiteLeadCohort(false);
     setLeadQuickFilters((current) =>
       current.includes(filter)
         ? current.filter((item) => item !== filter)
@@ -1570,14 +1625,24 @@ export function CompanyCheckShell() {
     );
   }
 
-  const canUseEmailBatch = leadQuickFilters.includes("HAS_EMAIL")
+  function selectWebsiteQuickFilter(filter: WebsiteQuickFilter) {
+    setWebsiteLeadCohort(false);
+    setLeadQuickFilters((current) => [
+      ...current.filter((item) => item !== "HAS_WEBSITE" && item !== "MISSING_WEBSITE"),
+      ...(filter === "ALL" ? [] : [filter]),
+    ]);
+  }
+
+  const selectedWebsiteQuickFilter = selectedWebsiteFilter(leadQuickFilters);
+  const canUseEmailBatch = !websiteLeadCohort && leadQuickFilters.includes("HAS_EMAIL")
     && (leadQuickFilters.includes("MISSING_WEBSITE") || leadQuickFilters.includes("HAS_WEBSITE"));
   const followUpEntries = getOutreachEntriesDueForFollowUp(outreachEntries);
   const listQuickFilters = leadQuickFilters.filter((filter) => filter !== "NOT_SENT");
   const filteredCompanies = applyLeadQuickFilters((selectedLegend
     ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
     : recentCompanies
-  ), outreachStatusByOrg, listQuickFilters).sort(canUseEmailBatch ? compareEmailBatchPriority : compareLeadPriority);
+  ).filter((company) => !websiteLeadCohort || company.organizationForm?.toUpperCase() !== "UTLA"), outreachStatusByOrg, listQuickFilters)
+    .sort(leadSortComparator(websiteLeadCohort, canUseEmailBatch, websiteAvailabilityByOrg));
   const visibleSearchCompanies = filteredCompanies.filter((company) => {
     const outreachStatus = outreachStatusByOrg[company.orgNumber];
     const batchBlocked = batchValidationByOrg[company.orgNumber]?.status === "blocked";
@@ -1595,19 +1660,19 @@ export function CompanyCheckShell() {
     : [];
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
+  const pendingWebsiteCheckCount = websiteLeadCohort
+    ? filteredCompanies.filter((company) => !websiteAvailabilityByOrg[company.orgNumber]
+      || websiteAvailabilityByOrg[company.orgNumber].status === "PENDING_RECHECK").length
+    : 0;
   const visibleBatchValidationKey = canUseEmailBatch
     ? visibleSearchCompanies
       .filter((company) => company.email && canSelectEmailBatchCandidate(company))
       .map((company) => company.orgNumber)
       .join("|")
     : "";
-  const resultsSummary = buildResultsSummary(
-    daysFilter,
-    countyFilter,
-    organizationFormFilter,
-    metadata.organizationForms,
-    selectedLegend,
-  );
+  const resultsSummary = websiteLeadCohort
+    ? "Registrert for 6–12 måneder siden · har e-post og nettside · uten UTLA · rangert etter nettsidevurdering på denne siden"
+    : buildResultsSummary(daysFilter, countyFilter, organizationFormFilter, metadata.organizationForms, selectedLegend);
   const filterButtonDisabled = !initialResultsReady || isListLoading;
 
   useEffect(() => {
@@ -1809,6 +1874,38 @@ export function CompanyCheckShell() {
                   </div>
                 </div>
 
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <button
+                    aria-pressed={websiteLeadCohort}
+                    className={`rounded-sm border px-3 py-2 text-[13px] font-semibold transition-colors ${choose(websiteLeadCohort,
+                      "border-[#1F5FA9] bg-[#E6F0FA] text-[#1F5FA9]",
+                      "border-[#BCCCDC] bg-white text-[#52606D] hover:border-[#1F5FA9] hover:text-[#1F5FA9]")}`}
+                    disabled={filterButtonDisabled}
+                    onClick={() => {
+                      if (websiteLeadCohort) {
+                        setWebsiteLeadCohort(false);
+                        setDaysFilter("5");
+                        setLeadQuickFilters(["HAS_EMAIL"]);
+                        return;
+                      }
+                      setWebsiteLeadCohort(true);
+                      setDaysFilter("0");
+                      setCountyFilter("");
+                      setOrganizationFormFilter("");
+                      setSelectedLegend(null);
+                      setNameFilter("");
+                      setDebouncedNameFilter("");
+                      setLeadQuickFilters(["HAS_EMAIL", "HAS_WEBSITE", "NOT_SENT"]);
+                    }}
+                    type="button"
+                  >
+                    Nettsideleads · registrert for 6–12 måneder siden
+                  </button>
+                  <Show when={websiteLeadCohort}>
+                    <span className="text-[12px] text-[#52606D]">Har e-post og registrert nettside. Kun vurderingsliste; ingen automatisk utsending.</span>
+                  </Show>
+                </div>
+
                 <Show when={showAdvancedFilters}>
                 <div className="mt-5 border-t border-[#E4E7EB] pt-4">
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]">
@@ -1892,6 +1989,7 @@ export function CompanyCheckShell() {
                         } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:border-[#D9E2EC]`}
                         disabled={filterButtonDisabled}
                         onClick={() => {
+                          setWebsiteLeadCohort(false);
                           setDaysFilter(days);
                         }}
                         type="button"
@@ -1907,6 +2005,7 @@ export function CompanyCheckShell() {
                     className="hover:underline"
                     onClick={() => {
                     setDaysFilter("5");
+                    setWebsiteLeadCohort(false);
                     setCountyFilter("");
                     setOrganizationFormFilter("");
                     setSelectedLegend(null);
@@ -2045,12 +2144,15 @@ export function CompanyCheckShell() {
 
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">Dagens håndplukkede kandidater</h2>
+                  <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">{choose(websiteLeadCohort, "Nettsideleads til vurdering", "Dagens håndplukkede kandidater")}</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
                     Viser {visibleSearchCompanies.length} aktuelle treff på denne siden
                     {choose(hiddenByOutreachCount > 0, ` (${hiddenByOutreachCount} skjult fordi de er sendt eller ikke aktuelle).`, ".")}
                   </p>
+                  {websiteLeadCohort && pendingWebsiteCheckCount > 0 ? (
+                    <p className="mt-1 text-[12px] text-[#52606D]">{pendingWebsiteCheckCount} URL-er venter på første eller andre sjekk.</p>
+                  ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex flex-col gap-2 border border-[#D9E2EC] bg-white px-2 py-2">
@@ -2111,6 +2213,25 @@ export function CompanyCheckShell() {
               <div className="border border-[#D9E2EC] bg-white px-4 py-3">
                 <div className="flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="mr-1 text-[#52606D]">Hurtigfilter:</span>
+                  <fieldset className="inline-flex flex-wrap gap-1 rounded-sm border border-[#D9E2EC] p-1">
+                    <legend className="sr-only">Nettside</legend>
+                    {websiteQuickFilterOptions.map((option) => {
+                      const active = selectedWebsiteQuickFilter === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          aria-pressed={active}
+                          className={`rounded-sm px-3 py-1.5 text-[12px] font-medium transition-colors ${active
+                            ? "bg-[#E6F0FA] text-[#1F5FA9]"
+                            : "text-[#52606D] hover:bg-[#F0F4F8] hover:text-[#1F2933]"}`}
+                          onClick={() => selectWebsiteQuickFilter(option.value)}
+                          type="button"
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </fieldset>
                   {leadQuickFilterOptions.map((option) => {
                     const active = leadQuickFilters.includes(option.value);
                     return (
@@ -2133,7 +2254,10 @@ export function CompanyCheckShell() {
                   <Show when={leadQuickFilters.length > 0}>
                     <button
                       className="ml-1 text-[12px] font-semibold text-[#1F5FA9] hover:underline"
-                      onClick={() => setLeadQuickFilters([])}
+                      onClick={() => {
+                        setWebsiteLeadCohort(false);
+                        setLeadQuickFilters([]);
+                      }}
                       type="button"
                     >
                       Nullstill hurtigfilter
@@ -2152,7 +2276,7 @@ export function CompanyCheckShell() {
                   </Button>
                   <label
                     className={`ml-1 inline-flex h-8 items-center gap-2 whitespace-nowrap text-[12px] font-semibold ${
-                      canUseEmailBatch ? "cursor-pointer text-[#52606D]" : "cursor-not-allowed text-[#9FB3C8]"
+                      choose(canUseEmailBatch, "cursor-pointer text-[#52606D]", "cursor-not-allowed text-[#9FB3C8]")
                     }`}
                     title={canUseEmailBatch ? undefined : "Velg Har e-post og enten Mangler nettside eller Har nettside for å bruke batch."}
                   >
@@ -2168,15 +2292,13 @@ export function CompanyCheckShell() {
                     <span
                       aria-hidden="true"
                       className={`relative inline-flex h-5 w-9 shrink-0 rounded-full border transition-colors ${
-                        showBatchExcluded
-                          ? "border-[#1F5FA9] bg-[#1F5FA9]"
-                          : "border-[#BCCCDC] bg-[#E4E7EB]"
-                      } ${canUseEmailBatch ? "" : "opacity-50"}`}
+                        choose(showBatchExcluded, "border-[#1F5FA9] bg-[#1F5FA9]", "border-[#BCCCDC] bg-[#E4E7EB]")
+                      } ${choose(canUseEmailBatch, "", "opacity-50")}`}
                     >
                       <span
                         aria-hidden="true"
                         className={`absolute left-0.5 top-0.5 size-3.5 rounded-full bg-white shadow-sm transition-transform ${
-                          showBatchExcluded ? "translate-x-4" : "translate-x-0"
+                          choose(showBatchExcluded, "translate-x-4", "translate-x-0")
                         }`}
                       />
                     </span>
@@ -2191,7 +2313,7 @@ export function CompanyCheckShell() {
                     type="button"
                     variant="outline"
                   >
-                    {isBatchSending ? "Sender batch..." : "Kjør e-post batch"}
+                    {choose(isBatchSending, "Sender batch...", "Kjør e-post batch")}
                     {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
                   </Button>
                 </div>
@@ -2201,7 +2323,7 @@ export function CompanyCheckShell() {
                   <div className="hidden grid-cols-[minmax(210px,1.3fr)_minmax(160px,1fr)_minmax(150px,.9fr)_minmax(180px,1fr)_minmax(140px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
                     <span>Virksomhet</span>
                     <span>Virksomhetstype</span>
-                    <span>Prioritet</span>
+                    <span>{choose(websiteLeadCohort, "Nettsidevurdering", "Prioritet")}</span>
                     <span>Kontakt</span>
                     <span>Registerrisiko</span>
                     <span className="sr-only">Handling</span>
@@ -2213,6 +2335,7 @@ export function CompanyCheckShell() {
                 isLoading={isListLoading}
                 onReset={() => {
                   setDaysFilter("5");
+                  setWebsiteLeadCohort(false);
                   setCountyFilter("");
                   setOrganizationFormFilter("");
                   setSelectedLegend(null);
@@ -2223,6 +2346,7 @@ export function CompanyCheckShell() {
                   <LeadResultRow
                     key={company.orgNumber}
                     company={company}
+                    websiteAvailability={websiteLeadCohort ? websiteAvailabilityByOrg[company.orgNumber] ?? null : undefined}
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     onMarkNotRelevant={() => void markLeadNotRelevant(company)}
                     savingNotRelevant={Boolean(savingOutreachByOrg[company.orgNumber])}
@@ -4137,6 +4261,44 @@ function formatEstablishedDate(value: string | null) {
   }).format(date);
 }
 
+function websiteAvailabilityLabel(availability: WebsiteAvailability | null) {
+  if (!availability) return "Kontrollerer registrert URL …";
+  if (availability.leadSuitability === "EXCLUDE") return `Lavere prioritet: ${availability.leadSuitabilityReason}`;
+  const reason = availability.httpStatus
+    ? `HTTP ${availability.httpStatus}`
+    : ({
+        DNS_ERROR: "DNS-feil",
+        TLS_ERROR: "sertifikat-/TLS-feil",
+        TIMEOUT: "tidsavbrudd",
+        CONNECTION_ERROR: "tilkoblingsfeil",
+        INVALID_URL: "ugyldig nettadresse",
+      } as Record<string, string>)[availability.reasonCode] ?? "teknisk feil";
+  const checkedAt = availability.lastCheckedAt ? ` · ${formatDateTime(availability.lastCheckedAt)}` : "";
+  if (availability.status === "CONFIRMED_UNREACHABLE") return `URL svarer ikke ved to sjekker (${reason})${checkedAt}`;
+  if (availability.status === "PENDING_RECHECK") return `Svarte ikke (${reason}) · ny sjekk om kort tid${checkedAt}`;
+  if (availability.status === "UNVERIFIABLE") return `URL kunne ikke verifiseres (${reason})${checkedAt}`;
+  return `Registrert URL svarer${checkedAt} · forbedringsbehov må kontrolleres manuelt`;
+}
+
+function websiteLeadListAssessment(availability: WebsiteAvailability | null) {
+  if (availability?.leadSuitability === "EXCLUDE") {
+    return { label: "Lav prioritet", title: "Nettsiden krever manuell avklaring", badgeClass: "rounded-sm bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-700" };
+  }
+  if (availability?.status === "CONFIRMED_UNREACHABLE") {
+    return { label: "Krever oppfølging", title: "Nettsiden svarer ikke", badgeClass: "rounded-sm bg-rose-50 px-2.5 py-1 text-[10px] font-semibold text-rose-700" };
+  }
+  if (availability?.status === "PENDING_RECHECK") {
+    return { label: "Ny sjekk pågår", title: "Svarte ikke ved første sjekk", badgeClass: "rounded-sm bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700" };
+  }
+  if (availability?.status === "REACHABLE") {
+    return { label: "Manuell vurdering", title: "Registrert nettside svarer", badgeClass: "rounded-sm bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-700" };
+  }
+  if (availability?.status === "UNVERIFIABLE") {
+    return { label: "Kan ikke vurderes", title: "Teknisk sjekk er usikker", badgeClass: "rounded-sm bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-700" };
+  }
+  return { label: "Sjekkes", title: "Kontrollerer registrert URL", badgeClass: "rounded-sm bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-700" };
+}
+
 function LeadResultRow({
   batchSelectable,
   batchSelected,
@@ -4147,6 +4309,7 @@ function LeadResultRow({
   onToggleBatch,
   outreachStatus,
   savingNotRelevant,
+  websiteAvailability,
 }: Readonly<{
   batchSelectable: boolean;
   batchSelected: boolean;
@@ -4157,9 +4320,11 @@ function LeadResultRow({
   onToggleBatch: (selected: boolean) => void;
   outreachStatus: OutreachStatus | null;
   savingNotRelevant: boolean;
+  websiteAvailability?: WebsiteAvailability | null;
 }>) {
-  const priority = getLeadPriority(company);
-  const commercialOpportunity = getCommercialOpportunity(company);
+  const websiteAssessment = websiteAvailability === undefined ? null : websiteLeadListAssessment(websiteAvailability);
+  const priority = websiteAssessment ?? getLeadPriority(company);
+  const commercialOpportunity = websiteAssessment ?? getCommercialOpportunity(company);
   const contact = getBestContactPoint(company);
   const batchExcluded = isBatchExcluded(outreachStatus);
   const hasUnverifiedWebsiteSuggestion = company.websiteDiscovery?.status === "UNVERIFIED_SUGGESTION";
@@ -4192,6 +4357,14 @@ function LeadResultRow({
           <span className="mt-1 block text-[11px] font-medium text-[#52606D]">
             Etablert: {formatEstablishedDate(company.registrationDate)}
           </span>
+          {websiteAvailability !== undefined ? (
+            <span className="mt-1 block text-[11px] text-[#52606D]">
+              <span className="block font-semibold">Samlet vurdering</span>
+              <span className={websiteAvailability?.status === "PENDING_RECHECK" ? "text-amber-700" : ""}>
+                {websiteAvailabilityLabel(websiteAvailability)}
+              </span>
+            </span>
+          ) : null}
         </button>
       </div>
 
@@ -4270,6 +4443,7 @@ function OutreachCheckbox({
 }>) {
   const sentAlready = isOutreachSendBlocked(status);
   const markedNotRelevant = status?.status === "not_relevant";
+  const websiteClient = status?.status === "website_client";
   const [noteDraft, setNoteDraft] = useState(status?.note ?? "");
   const noteSuggestions = [
     "Sendt til firmapost",
@@ -4325,8 +4499,13 @@ function OutreachCheckbox({
               Markert som ikke aktuell
             </span>
           ) : null}
+          {websiteClient ? (
+            <span className="mt-1 block text-[11px] font-medium text-red-700">
+              Nettsidekunde – automatisk salgs-e-post er permanent sperret.
+            </span>
+          ) : null}
           <OutreachNoteEditor
-            editable={!sentAlready && !markedNotRelevant && !compact}
+            editable={!sentAlready && !markedNotRelevant && !websiteClient && !compact}
             note={status?.note ?? null}
             noteDraft={noteDraft}
             noteSuggestions={noteSuggestions}
@@ -4334,7 +4513,7 @@ function OutreachCheckbox({
             onPersist={persistNote}
             saving={saving}
           />
-          {!sentAlready && !markedNotRelevant ? (
+          {!sentAlready && !markedNotRelevant && !websiteClient ? (
             <span className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
@@ -4346,7 +4525,19 @@ function OutreachCheckbox({
               </button>
             </span>
           ) : null}
-          {(sentAlready || markedNotRelevant) && !compact ? (
+          {!websiteClient && !compact ? (
+            <span className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="rounded-sm border border-red-300 bg-white px-3 py-1.5 text-[11px] font-semibold text-red-800 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={saving}
+                onClick={() => onToggle(false, "Nettside levert – aldri automatisk salgs-e-post", "website_client")}
+              >
+                Merk som nettsidekunde · sperr e-post
+              </button>
+            </span>
+          ) : null}
+          {(sentAlready || markedNotRelevant) && !websiteClient && !compact ? (
             <span className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
@@ -4876,7 +5067,7 @@ function CompanyDetailView({
                     <p className="text-[12px] font-medium text-[#52606D]">Tilbudsmail</p>
                     <h4 className="mt-1 text-[17px] font-semibold text-[#1F2933]">Lag en personlig e-post</h4>
                     <p className="mt-2 max-w-2xl text-[14px] leading-7 text-[#52606D]">
-                      Malen fyller automatisk inn én sann og konkret observasjon fra BRREG-data. Kontroller teksten før e-posten sendes.
+                      Utkastet bruker tilgjengelige registerdata. For nettsider som ikke svarer, må funn og andre kundekanaler kontrolleres manuelt før teksten brukes.
                     </p>
                     <div className="mt-3 inline-flex rounded-sm border border-[#D9E2EC] bg-[#F8FBFF] px-3 py-2 text-[12px] font-semibold text-[#1F2933]">
                       Tilbudstype: {formatOutreachOfferType(offerType)}
@@ -4885,7 +5076,7 @@ function CompanyDetailView({
                       <p className="mt-3 max-w-2xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] font-medium leading-5 text-amber-800">
                         {automaticSendBlockReason
                           ?? (offerType === "website-unavailable-offer"
-                            ? "Nettsiden kontrolleres på nytt rett før automatisk sending. E-posten stoppes dersom siden svarer igjen."
+                            ? "Denne typen e-post er kun et manuelt utkast. Kontroller domenet og eventuelle andre kundekanaler på nytt før bruk."
                             : "E-posten bygger på et konkret, dokumentert funn fra nettsidesjekken.")}
                       </p>
                     </Show>
@@ -4960,7 +5151,7 @@ function CompanyDetailView({
                     </Show>
                     <Show when={needsPersonalObservation}>
                       <p className="rounded-sm border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] font-semibold text-amber-800">
-                        Personlig observasjon mangler. Generer e-postteksten på nytt før du åpner eller sender den.
+                        Manuell observasjon mangler. Rediger utkastet og kontroller fakta før du åpner det i e-post.
                       </p>
                     </Show>
                     <Show when={Boolean(emailSendError)}>

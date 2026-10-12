@@ -40,6 +40,7 @@ public class OutreachLogService {
     private static final String STATUS_SENT = "sent";
     private static final String STATUS_REVERTED = "reverted";
     private static final String STATUS_NOT_RELEVANT = "not_relevant";
+    private static final String STATUS_WEBSITE_CLIENT = "website_client";
     private static final String STATUS_REPLIED = "replied";
     private static final String STATUS_AUTO_REPLIED = "auto_replied";
     private static final String STATUS_BATCH_EXCLUDED = "batch_excluded";
@@ -57,6 +58,7 @@ public class OutreachLogService {
     private final List<OutreachLogEntry> indexedEntries = new ArrayList<>();
     private final Map<String, OutreachLogEntry> latestByOrgNumber = new LinkedHashMap<>();
     private final Set<String> everSentOrgNumbers = new HashSet<>();
+    private final Set<String> websiteClientOrgNumbers = new HashSet<>();
 
     @Autowired
     public OutreachLogService(
@@ -96,11 +98,15 @@ public class OutreachLogService {
     }
 
     public synchronized boolean isSendBlocked(String orgNumber) {
-        if (everSentOrgNumbers.contains(orgNumber)) {
+        if (everSentOrgNumbers.contains(orgNumber) || websiteClientOrgNumbers.contains(orgNumber)) {
             return true;
         }
         OutreachLogEntry latestEntry = latestByOrgNumber.get(orgNumber);
         return latestEntry != null && isBlockingDeliveryStatus(latestEntry.status());
+    }
+
+    public synchronized boolean isWebsiteClient(String orgNumber) {
+        return websiteClientOrgNumbers.contains(orgNumber);
     }
 
     public synchronized Map<String, OutreachStatusResponse> statusesFor(Collection<String> orgNumbers) {
@@ -253,7 +259,7 @@ public class OutreachLogService {
 
     public synchronized boolean reserveFollowUp(OutreachStatusRequest request) {
         validateRequest(request);
-        if (!isWithinFollowUpWindow(request.orgNumber())) {
+        if (isWebsiteClient(request.orgNumber()) || !isWithinFollowUpWindow(request.orgNumber())) {
             return false;
         }
         boolean alreadyAttempted = indexedEntries.stream().anyMatch(entry ->
@@ -364,6 +370,7 @@ public class OutreachLogService {
             case STATUS_SENT -> STATUS_SENT;
             case STATUS_REVERTED -> STATUS_REVERTED;
             case STATUS_NOT_RELEVANT -> STATUS_NOT_RELEVANT;
+            case STATUS_WEBSITE_CLIENT -> STATUS_WEBSITE_CLIENT;
             case STATUS_REPLIED -> STATUS_REPLIED;
             case STATUS_AUTO_REPLIED -> STATUS_AUTO_REPLIED;
             case STATUS_BATCH_EXCLUDED -> STATUS_BATCH_EXCLUDED;
@@ -571,6 +578,7 @@ public class OutreachLogService {
                 STATUS_SENT,
                 STATUS_REVERTED,
                 STATUS_NOT_RELEVANT,
+                STATUS_WEBSITE_CLIENT,
                 STATUS_REPLIED,
                 STATUS_AUTO_REPLIED,
                 STATUS_BATCH_EXCLUDED,
@@ -597,6 +605,7 @@ public class OutreachLogService {
         indexedEntries.clear();
         latestByOrgNumber.clear();
         everSentOrgNumbers.clear();
+        websiteClientOrgNumbers.clear();
         entries.stream()
                 .filter(Objects::nonNull)
                 .forEach(this::indexEntry);
@@ -606,6 +615,9 @@ public class OutreachLogService {
         indexedEntries.add(entry);
         if (STATUS_SENT.equalsIgnoreCase(entry.status())) {
             everSentOrgNumbers.add(entry.orgNumber());
+        }
+        if (STATUS_WEBSITE_CLIENT.equalsIgnoreCase(entry.status())) {
+            websiteClientOrgNumbers.add(entry.orgNumber());
         }
         OutreachLogEntry currentLatest = latestByOrgNumber.get(entry.orgNumber());
         if (currentLatest == null || !sortTimestamp(entry).isBefore(sortTimestamp(currentLatest))) {

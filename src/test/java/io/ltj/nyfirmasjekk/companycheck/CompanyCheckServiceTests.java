@@ -1483,6 +1483,64 @@ class CompanyCheckServiceTests {
         assertThat(result.totalPages()).isEqualTo(1);
     }
 
+    @Test
+    void nettsideleadsKreverSeksTilTolvMaanedersRegistreringOgKontaktdata() {
+        var eligible = websiteLeadEnhet("123456789", LocalDate.of(2025, Month.OCTOBER, 13), "post@eksempel.no", "eksempel.no");
+        var tooNew = websiteLeadEnhet("223456789", LocalDate.of(2025, Month.OCTOBER, 14), "post@ny.no", "ny.no");
+        var tooOld = websiteLeadEnhet("323456789", LocalDate.of(2025, Month.APRIL, 12), "post@gammel.no", "gammel.no");
+        var noEmail = websiteLeadEnhet("423456789", LocalDate.of(2025, Month.JULY, 1), null, "nettside.no");
+        var noWebsite = websiteLeadEnhet("523456789", LocalDate.of(2025, Month.JULY, 1), "post@epost.no", null);
+        var foreignEntity = new EnhetResponse(
+                "937510241", "POWERGO B.V.", new EnhetResponse.Organisasjonsform("UTLA", "Utenlandsk enhet"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"), List.of(),
+                "www.powergo.nl", "info@powergo.nl", null, null, false, false, false, true, true, 1, true, "2024",
+                LocalDate.of(2025, Month.JULY, 1), LocalDate.of(2025, Month.JULY, 1), null, null
+        );
+        var enheter = List.of(eligible, tooNew, tooOld, noEmail, noWebsite, foreignEntity);
+        var client = new StubBrregClient(
+                enheter.stream().collect(java.util.stream.Collectors.toMap(EnhetResponse::organisasjonsnummer, item -> item)),
+                Map.of(),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(enheter), new EnheterSearchResponse.Page(100, 6, 1, 0))
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, 25,
+                false, false, false, true), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789");
+        assertThat(client.lastSearchFilter()).containsEntry("fraRegistreringsdatoEnhetsregisteret", "2025-04-13")
+                .containsEntry("tilRegistreringsdatoEnhetsregisteret", "2025-10-13");
+    }
+
+    @Test
+    void nettsideleadsUtelukkerFacebookTekstOgSosialeProfilerFraOedelagtNettsideListe() {
+        LocalDate registrationDate = LocalDate.of(2025, Month.JULY, 1);
+        var bigImpress = websiteLeadEnhet("930713910", registrationDate, "kontakt@eksempel.no", "FacebookBigImpress");
+        var facebookProfile = websiteLeadEnhet("223456789", registrationDate, "kontakt@eksempel.no", "https://www.facebook.com/BigImpress");
+        var validDomain = websiteLeadEnhet("323456789", registrationDate, "kontakt@eksempel.no", "https://www.eksempel.no/");
+        var enheter = List.of(bigImpress, facebookProfile, validDomain);
+        var client = new StubBrregClient(
+                enheter.stream().collect(java.util.stream.Collectors.toMap(EnhetResponse::organisasjonsnummer, item -> item)),
+                Map.of(),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(enheter), new EnheterSearchResponse.Page(100, 3, 1, 0))
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, 25,
+                false, false, false, true), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("323456789");
+    }
+
+    private EnhetResponse websiteLeadEnhet(String orgNumber, LocalDate registrationDate, String email, String website) {
+        return new EnhetResponse(
+                orgNumber, "NETTSIDELEAD AS", new EnhetResponse.Organisasjonsform("AS", "Aksjeselskap"),
+                new EnhetResponse.Naeringskode("62.010", "Programmeringstjenester"), List.of(),
+                website, email, null, null, false, false, false, true, true, 1, true, "2024",
+                registrationDate, registrationDate, null, null
+        );
+    }
+
     private Clock fixedClock() {
         return Clock.fixed(Instant.parse("2026-04-13T10:15:30Z"), ZoneId.of("Europe/Oslo"));
     }

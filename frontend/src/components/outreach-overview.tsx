@@ -304,6 +304,7 @@ function formatPipelineStatus(entry: OutreachStatus) {
     case "replied": return "Svar mottatt";
     case "auto_replied": return "Autosvar mottatt";
     case "not_relevant": return "Ikke aktuell";
+    case "website_client": return "Nettsidekunde · e-post sperret";
     case "batch_excluded": return "Batch-sperret";
     case "reverted": return "Til vurdering";
     case "sending": return "Utsendelse reservert";

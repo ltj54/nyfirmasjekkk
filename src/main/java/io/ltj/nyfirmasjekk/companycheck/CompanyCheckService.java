@@ -843,8 +843,18 @@ public class CompanyCheckService {
     private Map<String, String> byggFilterMedNavn(CompanySearchRequest r, int p, int size, String navn, Map<String, String> extraParams, LocalDate upperRegistrationDate) {
         Map<String, String> f = new HashMap<>();
         f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
-        if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
-        if (upperRegistrationDate != null) f.put("tilRegistreringsdatoEnhetsregisteret", upperRegistrationDate.toString());
+        if (r.websiteLeadCohort()) {
+            f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusMonths(12).toString());
+            LocalDate cohortUpperDate = LocalDate.now(clock).minusMonths(6);
+            LocalDate effectiveUpperDate = cohortUpperDate;
+            if (upperRegistrationDate != null && upperRegistrationDate.isBefore(cohortUpperDate)) {
+                effectiveUpperDate = upperRegistrationDate;
+            }
+            f.put("tilRegistreringsdatoEnhetsregisteret", effectiveUpperDate.toString());
+        } else {
+            if (r.dager() > 0) f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusDays(r.dager()).toString());
+            if (upperRegistrationDate != null) f.put("tilRegistreringsdatoEnhetsregisteret", upperRegistrationDate.toString());
+        }
         if (hasText(navn)) f.put("navn", navn.trim());
         f.putAll(extraParams);
         f.put("sort", "registreringsdatoEnhetsregisteret,desc");
@@ -864,14 +874,31 @@ public class CompanyCheckService {
         return matcherOrganisasjonsform(enhet, request.organisasjonsform())
                 && matcherFylke(enhet, request.fylke())
                 && matcherKommune(enhet, request.kommune())
+                && matcherWebsiteLeadCohort(enhet, request)
                 && matcherKontaktfilter(enhet, request);
     }
 
-    private boolean matcherKontaktfilter(EnhetResponse enhet, CompanySearchRequest request) {
-        if (request.hasEmail() && !hasText(enhet.epostadresse())) {
+    private boolean matcherWebsiteLeadCohort(EnhetResponse enhet, CompanySearchRequest request) {
+        if (!request.websiteLeadCohort()) {
+            return true;
+        }
+        if (enhet.organisasjonsform() != null
+                && "UTLA".equalsIgnoreCase(enhet.organisasjonsform().kode())) {
             return false;
         }
-        if (request.hasWebsite() && !hasText(enhet.hjemmeside())) {
+        LocalDate registrationDate = enhet.registreringsdatoEnhetsregisteret();
+        LocalDate today = LocalDate.now(clock);
+        return registrationDate != null
+                && !registrationDate.isBefore(today.minusMonths(12))
+                && !registrationDate.isAfter(today.minusMonths(6))
+                && WebsiteLeadUrlPolicy.isPlausibleBusinessWebsite(enhet.hjemmeside());
+    }
+
+    private boolean matcherKontaktfilter(EnhetResponse enhet, CompanySearchRequest request) {
+        if ((request.hasEmail() || request.websiteLeadCohort()) && !hasText(enhet.epostadresse())) {
+            return false;
+        }
+        if ((request.hasWebsite() || request.websiteLeadCohort()) && !hasText(enhet.hjemmeside())) {
             return false;
         }
         return !request.missingWebsite() || !hasText(enhet.hjemmeside());

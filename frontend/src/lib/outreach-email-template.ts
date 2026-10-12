@@ -20,9 +20,10 @@ type OutreachEmailCompany = Pick<
 >;
 
 export const PERSONAL_OBSERVATION_PLACEHOLDER = "[Skriv én konkret observasjon om virksomheten her.]";
+export const WEBSITE_RESEARCH_PLACEHOLDER = "[Fyll inn hva du har kontrollert manuelt, og om virksomheten har en annen fungerende kontakt- eller bestillingsside.]";
 
 export function hasUnresolvedPersonalObservation(body: string) {
-  return body.includes(PERSONAL_OBSERVATION_PLACEHOLDER);
+  return body.includes(PERSONAL_OBSERVATION_PLACEHOLDER) || body.includes(WEBSITE_RESEARCH_PLACEHOLDER);
 }
 
 export function personalObservation(company: OutreachEmailCompany) {
@@ -170,10 +171,24 @@ type OutreachEmailTemplateConfig = {
 };
 
 function outreachEmailTemplateConfig(company: OutreachEmailCompany): OutreachEmailTemplateConfig {
+  if (isSharedOrganizationWebsiteForLocalChapter(company)) {
+    return {
+      heading: "E-postmal - lokallag med felles nettside",
+      subjectFallback: "Et spørsmål om {{localChapterDescription}}",
+      bodyFallback: defaultLocalChapterSharedWebsiteEmailTemplate,
+    };
+  }
   if (isRegisteredWebsiteUnavailable(company)) {
+    if (company.orgNumber === "837491312") {
+      return {
+        heading: "E-postmal - Audiograf Julie Johnsen",
+        subjectFallback: "Et spørsmål om merennlyd.no",
+        bodyFallback: defaultAudiografWebsiteEmailTemplate,
+      };
+    }
     return {
       heading: "E-postmal - registrert nettside svarer ikke",
-      subjectFallback: "Spørsmål om nettsiden til {{companyName}}",
+      subjectFallback: "Et spørsmål om {{registeredWebsite}}",
       bodyFallback: defaultRegisteredWebsiteUnavailableEmailTemplate,
     };
   }
@@ -212,10 +227,16 @@ export function websiteQualityMailSignalCode(company: Pick<OutreachEmailCompany,
 
 type OutreachEmailSendCompany = Pick<
   OutreachEmailCompany,
-  "name" | "organizationForm" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"
+  "name" | "organizationForm" | "municipality" | "naceCode" | "naceDescription" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"
 >;
 
 export function outreachEmailAutoSendBlockReason(company: OutreachEmailSendCompany) {
+  if (isSharedOrganizationWebsiteForLocalChapter(company)) {
+    return "Lokallaget bruker trolig hovedorganisasjonens nettside. Avklar hvem som eier og oppdaterer lokal informasjon før utkastet eventuelt brukes; ikke send automatisk.";
+  }
+  if (isRegisteredWebsiteUnavailable(company)) {
+    return "Denne typen henvendelse krever manuell research og personlig gjennomgang. Bruk et tilpasset utkast, ikke automatisk utsending.";
+  }
   const registeredWebsiteNeedsReview = Boolean(company.website)
     && company.websiteDiscovery?.status === "REGISTERED"
     && company.websiteDiscovery.verifiedReachable !== false
@@ -227,6 +248,27 @@ export function outreachEmailAutoSendBlockReason(company: OutreachEmailSendCompa
     return "Nettsidesjekken har ikke et konkret, godkjent funn som kan brukes i automatisk e-post.";
   }
   return null;
+}
+
+export function isSharedOrganizationWebsiteForLocalChapter(company: Pick<OutreachEmailCompany, "name" | "organizationForm" | "municipality" | "website" | "websiteDiscovery">) {
+  const discovery = company.websiteDiscovery;
+  if (company.organizationForm?.toUpperCase() !== "FLI"
+    || !/\b(lokallag|fylkeslag)\b/i.test(company.name)
+    || !company.website
+    || discovery?.status !== "REGISTERED"
+    || discovery.verifiedReachable !== true
+    || !discovery.pageTitle) {
+    return false;
+  }
+
+  const parentTitle = discovery.pageTitle.split(/\s[|·–—-]\s/)[0].trim();
+  const normalizedTitle = normalizeContextText(parentTitle).replace(/[^a-z0-9æøå]+/g, " ").trim();
+  const normalizedName = normalizeContextText(company.name).replace(/[^a-z0-9æøå]+/g, " ").trim();
+  const normalizedMunicipality = normalizeContextText(company.municipality ?? "").trim();
+  return normalizedTitle.split(" ").length >= 2
+    && normalizedName.startsWith(`${normalizedTitle} `)
+    && normalizedName.split(" ").length >= normalizedTitle.split(" ").length + 2
+    && (!normalizedMunicipality || !normalizedTitle.split(" ").includes(normalizedMunicipality));
 }
 
 type ApprovedWebsiteObservation = {
@@ -724,6 +766,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{senderWebsite}}": "https://www.ltj-production.no/",
     "{{websiteCheckSenderWebsite}}": "https://www.ltj-production.no/nettsidesjekk.html",
     "{{registeredWebsite}}": company.website?.trim() || "",
+    "{{localChapterDescription}}": localChapterDescription(company),
     "{{registeredWebsiteIntro}}": registeredWebsiteIntro(company),
     "{{websiteQualitySummary}}": company.websiteQuality?.summary ?? "",
     "{{websiteQualityMailLine}}": websiteQualityMailLine(company),
@@ -767,18 +810,28 @@ Med vennlig hilsen
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {{companyName}}. Det kan være midlertidig eller skyldes selve sjekken.
+Jeg så at {{registeredWebsite}} er oppgitt som nettside for {{companyName}}. Ved min kontroll fikk jeg ikke åpnet den som forventet. Det kan være midlertidig, så dette må bekreftes på nytt.
 
-Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobilvennlig nettside til en portal for bestillinger eller kundehenvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
+${WEBSITE_RESEARCH_PLACEHOLDER}
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
-
-Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
-
-Her kan dere se hvordan jeg jobber:
-{{senderWebsite}}
+Hvis adressen fortsatt skal brukes, kan jeg se nærmere på hva som må til for å få domenet og lenken videre til eksisterende tilbud til å fungere. Eventuelt arbeid avtaler vi først etter at årsaken er avklart.
 
 Er dette fortsatt riktig nettadresse for dere?
+
+Med vennlig hilsen
+{{senderName}}
+{{senderPhone}}
+{{senderEmail}}`;
+}
+
+function defaultAudiografWebsiteEmailTemplate() {
+  return `Hei Julie,
+
+Jeg så at www.merennlyd.no er oppgitt som nettside for Audiograf Julie Johnsen. Da jeg sjekket adressen 11. oktober 2026, fikk jeg sertifikatfeil. I en separat teknisk kontroll gikk www-adressen videre til merennlyd.no, som svarte med 404. Dette kan ha endret seg siden sjekken.
+
+Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Derfor ville jeg først undersøkt om det registrerte domenet kan rettes og lede folk trygt til siden dere allerede bruker – ikke foreslått en ny nettside uten å vite om dere trenger det.
+
+Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? Hvis ja, kan jeg sende en kort, uforpliktende vurdering av hva som bør kontrolleres.
 
 Med vennlig hilsen
 {{senderName}}
@@ -841,6 +894,33 @@ Med vennlig hilsen
 {{senderName}}
 {{senderPhone}}
 {{senderEmail}}`;
+}
+
+function defaultLocalChapterSharedWebsiteEmailTemplate() {
+  return `{{greetingLine}}
+
+Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted for organisasjonen, ikke nødvendigvis en side lokallaget selv styrer.
+
+Hvis dere ønsker å gjøre lokale aktiviteter og kontaktinformasjon enklere å finne, kan jeg se på muligheter innenfor løsningen dere allerede bruker, i samråd med dem som administrerer den. Jeg foreslår ikke å erstatte fellesnettstedet.
+
+Er det dere lokalt som bestemmer hvordan informasjonen om lokallaget presenteres på nettsiden?
+
+Med vennlig hilsen
+{{senderName}}
+{{senderPhone}}
+{{senderEmail}}`;
+}
+
+function localChapterDescription(company: OutreachEmailCompany) {
+  const chapterType = /\bfylkeslag\b/i.test(company.name) ? "fylkeslaget" : "lokallaget";
+  const parentTitle = company.websiteDiscovery?.pageTitle?.split(/\s[|·–—-]\s/)[0].trim() ?? "";
+  const nameAfterParent = company.name.toLowerCase().startsWith(parentTitle.toLowerCase())
+    ? company.name.slice(parentTitle.length)
+    : "";
+  const area = nameAfterParent.replace(/\b(lokallag|fylkeslag)\b/gi, "").trim();
+  const naturalArea = area.toLocaleLowerCase("nb-NO")
+    .replace(/^\p{L}/u, (letter) => letter.toLocaleUpperCase("nb-NO"));
+  return naturalArea ? `${chapterType} i ${naturalArea}` : `${chapterType} deres`;
 }
 
 function defaultOutreachEmailTemplate() {

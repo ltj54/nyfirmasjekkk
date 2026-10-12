@@ -1,13 +1,16 @@
 import type { CompanyEvent, CompanySummary, OutreachStatus, StructureSignal } from "@/lib/company-check";
-import { websiteQualityMailSignalCode } from "@/lib/outreach-email-template";
+import { isSharedOrganizationWebsiteForLocalChapter, websiteQualityMailSignalCode } from "@/lib/outreach-email-template";
 
 type StructureSignalSeverity = "HIGH" | "MEDIUM" | "INFO";
 
-type OutreachOfferCompany = Pick<CompanySummary, "name" | "organizationForm" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"> & {
+type OutreachOfferCompany = Pick<CompanySummary, "name" | "organizationForm" | "municipality" | "naceCode" | "salesSegment" | "website" | "websiteDiscovery" | "websiteQuality"> & {
   naceDescription?: string | null;
 };
 
 export function outreachOfferTypeForCompany(company: OutreachOfferCompany) {
+  if (isSharedOrganizationWebsiteForLocalChapter(company)) {
+    return "website-registered-review";
+  }
   if (company.website && company.websiteDiscovery?.status === "REGISTERED" && company.websiteDiscovery.verifiedReachable === false) {
     return "website-unavailable-offer";
   }

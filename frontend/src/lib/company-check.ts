@@ -35,6 +35,19 @@ export interface CompanySearchResponse {
   items: CompanySummary[];
 }
 
+export interface WebsiteAvailability {
+  orgNumber: string;
+  website: string | null;
+  status: "REACHABLE" | "PENDING_RECHECK" | "CONFIRMED_UNREACHABLE" | "UNVERIFIABLE";
+  reasonCode: string;
+  httpStatus: number | null;
+  firstCheckedAt: string | null;
+  lastCheckedAt: string | null;
+  nextCheckAt: string | null;
+  leadSuitability: "CANDIDATE" | "REVIEW" | "EXCLUDE";
+  leadSuitabilityReason: string;
+}
+
 export interface MetadataFiltersResponse {
   organizationForms: string[];
 }
@@ -71,19 +84,21 @@ export interface CompanyDetails extends CompanySummary {
   structureSignals: StructureSignal[];
 }
 
+export type SignalSeverity = "HIGH" | "MEDIUM" | "INFO";
+
 export interface CompanyEvent {
   type: string;
   title: string;
   date: string | null;
   source: string;
-  severity: "HIGH" | "MEDIUM" | "INFO";
+  severity: SignalSeverity;
 }
 
 export interface StructureSignal {
   code: string;
   title: string;
   detail: string;
-  severity: "HIGH" | "MEDIUM" | "INFO";
+  severity: SignalSeverity;
   source: string;
 }
 
@@ -128,7 +143,7 @@ export interface WebsiteQualitySignal {
   code: string;
   title: string;
   detail: string;
-  severity: "HIGH" | "MEDIUM" | "INFO";
+  severity: SignalSeverity;
 }
 
 export interface WebsiteInspectionResponse {
@@ -165,7 +180,7 @@ export interface BrregWebsiteMatch {
   matchReason: string;
 }
 
-export type OutreachStatusValue = "sent" | "replied" | "auto_replied" | "reverted" | "not_relevant" | "batch_excluded" | "sending" | "delivery_uncertain" | "delivery_failed" | null;
+export type OutreachStatusValue = "sent" | "replied" | "auto_replied" | "reverted" | "not_relevant" | "website_client" | "batch_excluded" | "sending" | "delivery_uncertain" | "delivery_failed" | null;
 
 export interface OutreachStatus {
   orgNumber: string;

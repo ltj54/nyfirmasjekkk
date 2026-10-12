@@ -19,6 +19,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Domenelinje: `{{domainLine}}`
 - Pris: `{{priceValue}}`
 - Registrert nettside-intro: `{{registeredWebsiteIntro}}`
+- Lokalavdeling på fellesnettsted: `{{localChapterDescription}}`
 - Dokumentert observasjon: `{{websiteQualityMailLine}}`
 - Kort konsekvens: `{{websiteQualityImpactLine}}`
 - Oppfølgingsspørsmål: `{{followUpQuestion}}` (velges ut fra typen første henvendelse i utsendelsesloggen)
@@ -64,6 +65,8 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Bruk nøyaktig ett konkret, dokumentert funn i forbedringsmailen.
 - Beskriv automatiske funn som signaler fra en førstesjekk, ikke som manuelt bekreftede feil. Ikke lov bedre Google-plassering eller påstå at kunder går tapt.
 - Registrert nettside uten et godkjent funn skal legges til manuell kontroll og ikke sendes automatisk.
+- Når et lokallag eller fylkeslag oppgir hovedorganisasjonens felles nettside, skal rapporten om hovedsiden ikke brukes som om lokallaget eier den. Lag bare et manuelt utkast som avklarer hvem som styrer den lokale informasjonen; ikke send automatisk.
+- Når registrert nettside ikke svarer, må et konkret utkast bygge på manuell kontroll av feilen og andre fungerende kontakt- eller bestillingskanaler. Ikke send slike meldinger automatisk, og ikke tilby en ny nettside eller oppgi fastpris som standard.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
 
 ## E-postmal
@@ -96,26 +99,38 @@ Med vennlig hilsen
 
 ## E-postmal - registrert nettside svarer ikke
 
-Emne: `Spørsmål om nettsiden til {{companyName}}`
+Emne: `Et spørsmål om {{registeredWebsite}}`
 
 {{greetingLine}}
 
-Jeg fikk ikke åpnet {{registeredWebsite}}, som er registrert som nettside for {{companyName}}. Det kan være midlertidig eller skyldes selve sjekken.
+Jeg så at {{registeredWebsite}} er oppgitt som nettside for {{companyName}}. Ved min kontroll fikk jeg ikke åpnet den som forventet. Det kan være midlertidig, så dette må bekreftes på nytt.
 
-Hvis dere ønsker en ny løsning, kan jeg hjelpe med alt fra en mobilvennlig nettside til en portal for bestillinger eller kundehenvendelser. Vi avklarer behovene sammen og legger vekt på at løsningen skal være enkel å bruke og behandle personopplysninger trygt.
+[Fyll inn hva du har kontrollert manuelt, og om virksomheten har en annen fungerende kontakt- eller bestillingsside.]
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi avklarer innhold og funksjoner i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis dere ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter.
-
-Hvis løsningen krever domene eller hosting, avklarer vi det sammen før oppstart.
-
-Her kan dere se hvordan jeg jobber:
-{{senderWebsite}}
+Hvis adressen fortsatt skal brukes, kan jeg se nærmere på hva som må til for å få domenet og lenken videre til eksisterende tilbud til å fungere. Eventuelt arbeid avtaler vi først etter at årsaken er avklart.
 
 Er dette fortsatt riktig nettadresse for dere?
 
 Med vennlig hilsen
 {{senderName}}  
 {{senderPhone}}  
+{{senderEmail}}
+
+## E-postmal - Audiograf Julie Johnsen
+
+Emne: `Et spørsmål om merennlyd.no`
+
+Hei Julie,
+
+Jeg så at www.merennlyd.no er oppgitt som nettside for Audiograf Julie Johnsen. Da jeg sjekket adressen 11. oktober 2026, fikk jeg sertifikatfeil. I en separat teknisk kontroll gikk www-adressen videre til merennlyd.no, som svarte med 404. Dette kan ha endret seg siden sjekken.
+
+Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Derfor ville jeg først undersøkt om det registrerte domenet kan rettes og lede folk trygt til siden dere allerede bruker – ikke foreslått en ny nettside uten å vite om dere trenger det.
+
+Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? Hvis ja, kan jeg sende en kort, uforpliktende vurdering av hva som bør kontrolleres.
+
+Med vennlig hilsen
+{{senderName}}
+{{senderPhone}}
 {{senderEmail}}
 
 ## E-postmal - nettside kan forbedres
@@ -163,6 +178,23 @@ Skal jeg sende en slik vurdering?
 Med vennlig hilsen
 {{senderName}}  
 {{senderPhone}}  
+{{senderEmail}}
+
+## E-postmal - lokallag med felles nettside
+
+Emne: `Et spørsmål om {{localChapterDescription}}`
+
+{{greetingLine}}
+
+Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted for organisasjonen, ikke nødvendigvis en side lokallaget selv styrer.
+
+Hvis dere ønsker å gjøre lokale aktiviteter og kontaktinformasjon enklere å finne, kan jeg se på muligheter innenfor løsningen dere allerede bruker, i samråd med dem som administrerer den. Jeg foreslår ikke å erstatte fellesnettstedet.
+
+Er det dere lokalt som bestemmer hvordan informasjonen om lokallaget presenteres på nettsiden?
+
+Med vennlig hilsen
+{{senderName}}
+{{senderPhone}}
 {{senderEmail}}
 
 ## Oppfølging etter 4–14 arbeidsdager

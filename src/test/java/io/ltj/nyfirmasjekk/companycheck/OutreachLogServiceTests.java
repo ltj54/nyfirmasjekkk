@@ -18,6 +18,35 @@ class OutreachLogServiceTests {
     Path tempDir;
 
     @Test
+    void websiteClientPermanentlyBlocksInitialAndFollowUpEmail() {
+        Path logPath = tempDir.resolve("outreach-log.jsonl");
+        Clock clock = Clock.fixed(Instant.parse("2026-10-11T08:53:00Z"), ZoneOffset.UTC);
+        OutreachLogService service = new OutreachLogService(
+                logPath, tempDir, tempDir.resolve("archive"), clock, new ObjectMapper()
+        );
+        OutreachStatusRequest client = new OutreachStatusRequest(
+                "123456789", "Kunde AS", "AS", false, "website_client", null,
+                "internal", "website-delivery", "Nettside levert"
+        );
+        service.register(client);
+        service.register(new OutreachStatusRequest(
+                "123456789", "Kunde AS", "AS", false, "reverted", null,
+                "internal", "website-delivery", "Senere statusendring"
+        ));
+
+        OutreachLogService restartedService = new OutreachLogService(
+                logPath, tempDir, tempDir.resolve("archive"), clock, new ObjectMapper()
+        );
+        assertThat(restartedService.isWebsiteClient("123456789")).isTrue();
+        assertThat(restartedService.isSendBlocked("123456789")).isTrue();
+        assertThat(restartedService.reserveSend(client)).isFalse();
+        assertThat(restartedService.reserveFollowUp(new OutreachStatusRequest(
+                "123456789", "Kunde AS", "AS", true, "sent", null,
+                "email", "website-follow-up", null
+        ))).isFalse();
+    }
+
+    @Test
     void registerSentStoresAndReturnsSentStatus() {
         OutreachLogService service = new OutreachLogService(
                 tempDir.resolve("outreach-log.jsonl"),

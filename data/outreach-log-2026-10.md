@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 562
-- Sendt: 273
+- Antall hendelser: 572
+- Sendt: 276
 - Angret: 0
-- Aktive kontaktede selskaper: 205
+- Aktive kontaktede selskaper: 208
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-12 | 938657971 | AKSEL RISER | ENK | email | website-offer |
+| 2026-10-12 | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | website-offer |
+| 2026-10-12 | 938620857 | HAMMER FOREDRAG | ENK | email | website-offer |
 | 2026-10-11 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-offer |
 | 2026-10-11 | 938624720 | BENDING SPOONS US INC | NUF | email | website-offer |
 | 2026-10-10 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-follow-up |
@@ -223,6 +226,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-12 09:00 | sent | 938657971 | AKSEL RISER | ENK | email | - |
+| 2026-10-12 09:00 | sending | 938657971 | AKSEL RISER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 09:00 | sent | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | - |
+| 2026-10-12 09:00 | sending | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-12 09:00 | sent | 938620857 | HAMMER FOREDRAG | ENK | email | - |
+| 2026-10-12 09:00 | sending | 938620857 | HAMMER FOREDRAG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-11 10:53 | website_client | 938423334 | FISKERIKANDIDAT GUNNAR DAVIDSSON | ENK | internal | Nettside publisert; aldri send automatisk salgs-e-post. CRM: Fiskerikandidat Gunnar Davidsson. |
+| 2026-10-11 10:52 | website_client | 938358311 | VARNETH MANAGEMENT NESS | ENK | internal | Nettside levert og betalt; aldri send automatisk salgs-e-post. CRM: Varneth Management Ness. |
+| 2026-10-11 10:52 | website_client | 938115729 | ZAGROS FORLAG OG OVERSETTELSE EISA BAZDAR | ENK | internal | Nettside levert og betalt; aldri send automatisk salgs-e-post. CRM: Zagros Forlag. |
+| 2026-10-11 10:52 | website_client | 937296355 | BREATHE SENJA & SERVICES HENRIKSEN | ENK | internal | Nettside levert og betalt; aldri send automatisk salgs-e-post. CRM: Breathe Senja. |
 | 2026-10-11 10:31 | sent | 938656150 | VINJE DIGITAL IMPACT | ENK | email | - |
 | 2026-10-11 10:31 | sending | 938656150 | VINJE DIGITAL IMPACT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-11 10:31 | sent | 938624720 | BENDING SPOONS US INC | NUF | email | - |

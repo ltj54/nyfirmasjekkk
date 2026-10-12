@@ -64,6 +64,7 @@ public class CompanyCheckController {
     private final InMemoryRateLimitService rateLimitService;
     private final MeterRegistry meterRegistry;
     private final WebsiteContentInspectionService websiteContentInspectionService;
+    private final WebsiteAvailabilityService websiteAvailabilityService;
 
     public CompanyCheckController(
             CompanyCheckService companyCheckService,
@@ -84,6 +85,7 @@ public class CompanyCheckController {
         this.rateLimitService = infrastructure.rateLimitService();
         this.meterRegistry = infrastructure.meterRegistry();
         this.websiteContentInspectionService = infrastructure.websiteContentInspectionService();
+        this.websiteAvailabilityService = infrastructure.websiteAvailabilityService();
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -110,6 +112,16 @@ public class CompanyCheckController {
     ) {
         var enhet = brregClient.hentEnhet(organisasjonsnummer);
         return mapper.toEvents(enhet);
+    }
+
+    @GetMapping("/{organisasjonsnummer}/website-availability")
+    public WebsiteAvailabilityResponse websiteAvailability(
+            @PathVariable
+            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
+            String organisasjonsnummer
+    ) {
+        rateLimitService.requireAllowed("website-availability", 240, Duration.ofMinutes(10));
+        return websiteAvailabilityService.check(organisasjonsnummer);
     }
 
     @GetMapping("/{organisasjonsnummer}/batch-eligibility")
@@ -268,7 +280,18 @@ public class CompanyCheckController {
     ) {
         adminAccessService.requireAdmin(adminToken);
         outreachEmailService.validate(request);
-        requireWebsiteStillUnavailable(organisasjonsnummer, request);
+        if ("website-unavailable-offer".equals(request.offerType())) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Utilgjengelige nettsider krever et individuelt, manuelt kontrollert utkast; automatisk utsending er sperret."
+            );
+        }
+        if (outreachLogService.isWebsiteClient(organisasjonsnummer)) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Virksomheten er nettsidekunde og kan aldri motta automatisk salgs-e-post."
+            );
+        }
         var outreachRequest = new OutreachStatusRequest(
                 organisasjonsnummer,
                 request.companyName(),
@@ -303,30 +326,6 @@ public class CompanyCheckController {
                     "SMTP-leveringen feilet eller fikk ukjent utfall. Ny utsendelse er sperret for å unngå duplikat."
             );
             throw exception;
-        }
-    }
-
-    private void requireWebsiteStillUnavailable(String organisasjonsnummer, OutreachEmailSendRequest request) {
-        if (!"website-unavailable-offer".equals(request.offerType())) {
-            return;
-        }
-
-        var enhet = brregClient.hentEnhet(organisasjonsnummer);
-        if (!hasText(enhet.hjemmeside())) {
-            throw new org.springframework.web.server.ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Utsending stoppet fordi registrert nettside ikke kunne kontrolleres på nytt."
-            );
-        }
-
-        var inspection = mapper.inspectWebsite(enhet.hjemmeside());
-        boolean stillUnavailable = inspection.websiteQuality().signals().stream()
-                .anyMatch(signal -> "TECHNICAL_FAILURE".equals(signal.code()));
-        if (!stillUnavailable) {
-            throw new org.springframework.web.server.ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Utsending stoppet fordi nettsiden svarte ved kontrollen rett før sending."
-            );
         }
     }
 
@@ -461,6 +460,7 @@ public class CompanyCheckController {
             @RequestParam(defaultValue = "false") boolean hasEmail,
             @RequestParam(defaultValue = "false") boolean hasWebsite,
             @RequestParam(defaultValue = "false") boolean missingWebsite,
+            @RequestParam(defaultValue = "false") boolean websiteLeadCohort,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
@@ -478,7 +478,8 @@ public class CompanyCheckController {
                     SEARCH_RESULT_SIZE,
                     hasEmail,
                     hasWebsite,
-                    missingWebsite
+                    missingWebsite,
+                    websiteLeadCohort
             );
 
             var searchPage = searchVisiblePage(request, page);
@@ -526,7 +527,8 @@ public class CompanyCheckController {
                             seenOrgNumbers,
                             requestedOffset,
                             visibleBeforePage,
-                            visibleItems
+                            visibleItems,
+                            request.websiteLeadCohort()
                     );
                     hasMoreBackendPages = backendPage + 1 < backendSearchPage.totalPages();
                     reachedEnd = !hasMoreBackendPages;
@@ -552,12 +554,15 @@ public class CompanyCheckController {
             Set<String> seenOrgNumbers,
             int requestedOffset,
             int visibleBeforePage,
-            List<CompanyCheck> visibleItems
+            List<CompanyCheck> visibleItems,
+            boolean websiteLeadCohort
     ) {
         int visibleCount = visibleBeforePage;
         for (CompanyCheck item : backendItems) {
             boolean isNewItem = seenOrgNumbers.add(item.organisasjonsnummer());
-            boolean isVisible = isNewItem && !isHiddenFromSearch(statusesByOrgNumber.get(item.organisasjonsnummer()));
+            OutreachStatusResponse status = statusesByOrgNumber.get(item.organisasjonsnummer());
+            boolean isVisible = isNewItem && !isHiddenFromSearch(status)
+                    && (!websiteLeadCohort || status == null || !status.everSent());
             if (isVisible) {
                 if (visibleCount >= requestedOffset && visibleItems.size() < SEARCH_RESULT_SIZE) {
                     visibleItems.add(item);
@@ -573,7 +578,8 @@ public class CompanyCheckController {
                 || "replied".equalsIgnoreCase(status.status())
                 || "auto_replied".equalsIgnoreCase(status.status())
                 || "delivery_failed".equalsIgnoreCase(status.status())
-                || "not_relevant".equalsIgnoreCase(status.status()));
+                || "not_relevant".equalsIgnoreCase(status.status())
+                || outreachLogService.isWebsiteClient(status.orgNumber()));
     }
 
     private String extractEmailDomain(String email) {
@@ -630,6 +636,7 @@ public class CompanyCheckController {
                 && !request.hasEmail()
                 && !request.hasWebsite()
                 && !request.missingWebsite()
+                && !request.websiteLeadCohort()
                 && !"RED".equalsIgnoreCase(request.score());
     }
 
@@ -645,7 +652,8 @@ public class CompanyCheckController {
                 request.resultSize(),
                 true,
                 false,
-                missingWebsite
+                missingWebsite,
+                request.websiteLeadCohort()
         );
     }
 

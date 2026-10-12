@@ -9,6 +9,7 @@ public record CompanyCheckControllerInfrastructure(
         AdminAccessService adminAccessService,
         InMemoryRateLimitService rateLimitService,
         MeterRegistry meterRegistry,
-        WebsiteContentInspectionService websiteContentInspectionService
+        WebsiteContentInspectionService websiteContentInspectionService,
+        WebsiteAvailabilityService websiteAvailabilityService
 ) {
 }

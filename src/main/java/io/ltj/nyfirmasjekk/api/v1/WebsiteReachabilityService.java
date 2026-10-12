@@ -5,11 +5,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpTimeoutException;
 import java.time.Duration;
+import javax.net.ssl.SSLException;
 
 @Service
 public class WebsiteReachabilityService {
@@ -34,31 +37,46 @@ public class WebsiteReachabilityService {
 
     @Cacheable(value = "websiteReachability", key = "#url")
     public boolean isReachable(String url) {
+        return probeNow(url).reachable();
+    }
+
+    /** Bypasses the six-hour reachability cache so a failed site can be independently rechecked. */
+    public WebsiteProbeResult probeNow(String url) {
         if (url == null || url.isBlank()) {
-            return false;
+            return new WebsiteProbeResult(false, "INVALID_URL", null);
         }
 
         try {
             var headResponse = sendFollowingSafeRedirects(url, "HEAD");
 
             if (isReachableStatus(headResponse.statusCode())) {
-                return true;
+                return new WebsiteProbeResult(true, "REACHABLE", headResponse.statusCode());
             }
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            return false;
+            return new WebsiteProbeResult(false, "INTERRUPTED", null);
         } catch (IOException | IllegalArgumentException exception) {
             // HEAD is not consistently supported; retry with GET below.
         }
 
         try {
             var getResponse = sendFollowingSafeRedirects(url, "GET");
-            return isReachableStatus(getResponse.statusCode());
+            int status = getResponse.statusCode();
+            return new WebsiteProbeResult(isReachableStatus(status),
+                    isReachableStatus(status) ? "REACHABLE" : "HTTP_ERROR", status);
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            return false;
-        } catch (IOException | IllegalArgumentException exception) {
-            return false;
+            return new WebsiteProbeResult(false, "INTERRUPTED", null);
+        } catch (HttpTimeoutException exception) {
+            return new WebsiteProbeResult(false, "TIMEOUT", null);
+        } catch (UnknownHostException exception) {
+            return new WebsiteProbeResult(false, "DNS_ERROR", null);
+        } catch (SSLException exception) {
+            return new WebsiteProbeResult(false, "TLS_ERROR", null);
+        } catch (IllegalArgumentException exception) {
+            return new WebsiteProbeResult(false, "INVALID_URL", null);
+        } catch (IOException exception) {
+            return new WebsiteProbeResult(false, "CONNECTION_ERROR", null);
         }
     }
 

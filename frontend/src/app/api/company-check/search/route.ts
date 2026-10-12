@@ -14,6 +14,7 @@ function buildSearchLogLine({
   hasEmail,
   hasWebsite,
   missingWebsite,
+  websiteLeadCohort,
   items,
   totalElements,
 }: {
@@ -26,23 +27,21 @@ function buildSearchLogLine({
   hasEmail: string | null;
   hasWebsite: string | null;
   missingWebsite: string | null;
+  websiteLeadCohort: string | null;
   items: number;
   totalElements: number;
 }) {
-  const parts = [`dager=${dager}`, `page=${page}`];
-
-  if (score) parts.push(`score=${score}`);
-  if (q) parts.push(`q=${q}`);
-  if (county) parts.push(`county=${county}`);
-  if (organizationForm) parts.push(`organizationForm=${organizationForm}`);
-  if (hasEmail === "true") parts.push("hasEmail=true");
-  if (hasWebsite === "true") parts.push("hasWebsite=true");
-  if (missingWebsite === "true") parts.push("missingWebsite=true");
-
-  parts.push(`items=${items}`);
-  parts.push(`totalElements=${totalElements}`);
-
-  return parts.join(" ");
+  const optionalParts = [
+    score && `score=${score}`,
+    q && `q=${q}`,
+    county && `county=${county}`,
+    organizationForm && `organizationForm=${organizationForm}`,
+    hasEmail === "true" && "hasEmail=true",
+    hasWebsite === "true" && "hasWebsite=true",
+    missingWebsite === "true" && "missingWebsite=true",
+    websiteLeadCohort === "true" && "websiteLeadCohort=true",
+  ].filter((part): part is string => typeof part === "string");
+  return [`dager=${dager}`, `page=${page}`, ...optionalParts, `items=${items}`, `totalElements=${totalElements}`].join(" ");
 }
 
 export async function GET(request: Request) {
@@ -56,6 +55,7 @@ export async function GET(request: Request) {
   const hasEmail = searchParams.get("hasEmail");
   const hasWebsite = searchParams.get("hasWebsite");
   const missingWebsite = searchParams.get("missingWebsite");
+  const websiteLeadCohort = searchParams.get("websiteLeadCohort");
   const page = searchParams.get("page") || "0";
 
   const params = new URLSearchParams();
@@ -68,6 +68,7 @@ export async function GET(request: Request) {
   if (hasEmail === "true") params.set("hasEmail", "true");
   if (hasWebsite === "true") params.set("hasWebsite", "true");
   if (missingWebsite === "true") params.set("missingWebsite", "true");
+  if (websiteLeadCohort === "true") params.set("websiteLeadCohort", "true");
 
   const url = `${backendBaseUrl}/api/company-check/search?${params.toString()}`;
 
@@ -91,6 +92,7 @@ export async function GET(request: Request) {
       hasEmail,
       hasWebsite,
       missingWebsite,
+      websiteLeadCohort,
       items: items.length,
       totalElements,
     })}`);
