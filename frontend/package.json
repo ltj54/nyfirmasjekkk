@@ -8,6 +8,7 @@
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
+    "test": "node --test tests/outreach-email-template.test.mjs",
     "lint": "eslint src"
   },
   "dependencies": {

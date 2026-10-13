@@ -133,6 +133,21 @@ Med vennlig hilsen
 {{senderPhone}}
 {{senderEmail}}
 
+## E-postmal - Audiograf Julie Johnsen - batch
+
+Hei Julie,
+
+Jeg så at www.merennlyd.no er oppgitt som nettadresse for Audiograf Julie Johnsen. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
+
+Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan jeg undersøke om nettadressen bør lede dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med en løsning som viser tjenestene og gjør det enkelt å bestille eller ta kontakt. Har dere allerede en nettside som skal bruke adressen, kan jeg se på hva som hindrer den i å vises.
+
+Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? I så fall kan jeg sende en kort, uforpliktende vurdering av hva som er mest aktuelt.
+
+Med vennlig hilsen
+{{senderName}}
+{{senderPhone}}
+{{senderEmail}}
+
 ## E-postmal - nettside kan forbedres
 
 Emne: `En observasjon om nettsiden til {{companyName}}`
