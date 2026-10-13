@@ -63,6 +63,17 @@ public class WebsiteAvailabilityService {
                 observation.issueUrl);
     }
 
+    public boolean stillUnreachableNow(String website) {
+        if (!WebsiteLeadUrlPolicy.isPlausibleBusinessWebsite(website)) {
+            return false;
+        }
+        String url = website.matches("(?i)^https?://.*") ? website.trim() : "https://" + website.trim();
+        WebsiteProbeResult probe = reachabilityService.probeNow(url);
+        return !probe.reachable()
+                && !"INVALID_URL".equals(probe.reasonCode())
+                && !"INTERRUPTED".equals(probe.reasonCode());
+    }
+
     private Observation nextObservation(String url, EnhetResponse company, Instant now, Observation previous) {
         if (previous != null) {
             Duration elapsed = Duration.between(previous.lastCheckedAt, now);

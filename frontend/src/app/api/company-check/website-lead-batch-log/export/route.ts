@@ -1,0 +1,27 @@
+import { NextResponse } from "next/server";
+
+import { backendHeaders } from "@/app/api/company-check/_lib/backend-fetch";
+
+const backendBaseUrl =
+  process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
+
+export async function GET() {
+  const url = `${backendBaseUrl}/api/company-check/website-lead-batch-log/export`;
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      headers: backendHeaders({ Accept: "application/x-ndjson" }),
+    });
+    const body = await response.text();
+    if (!response.ok) return new NextResponse(body, { status: response.status });
+    return new NextResponse(body, {
+      headers: {
+        "Content-Disposition": 'attachment; filename="website-lead-batch-log.jsonl"',
+        "Content-Type": "application/x-ndjson; charset=utf-8",
+      },
+    });
+  } catch (error) {
+    console.error("Website lead batch log fetch failed", error);
+    return NextResponse.json({ detail: "Klarte ikke hente nettsidelead-batchloggen." }, { status: 502 });
+  }
+}

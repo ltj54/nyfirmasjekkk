@@ -48,6 +48,7 @@ public class OutreachLogService {
     private static final String STATUS_DELIVERY_UNCERTAIN = "delivery_uncertain";
     private static final String STATUS_DELIVERY_FAILED = "delivery_failed";
     private static final String OFFER_TYPE_FOLLOW_UP = "website-follow-up";
+    private static final String OFFER_TYPE_WEBSITE_LEAD_BATCH = "website-lead-batch";
     private static final String OUTREACH_LOG_PREFIX = "outreach-log";
 
     private final Path logPath;
@@ -286,6 +287,7 @@ public class OutreachLogService {
                 .filter(entry -> orgNumber.equals(entry.orgNumber()))
                 .filter(entry -> STATUS_SENT.equalsIgnoreCase(entry.status()))
                 .filter(entry -> !OFFER_TYPE_FOLLOW_UP.equals(entry.offerType()))
+                .filter(entry -> !OFFER_TYPE_WEBSITE_LEAD_BATCH.equals(entry.offerType()))
                 .max(Comparator.comparing(OutreachLogEntry::timestamp))
                 .orElse(null);
         if (initialOffer == null) {

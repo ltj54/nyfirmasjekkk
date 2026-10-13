@@ -10,6 +10,7 @@ public record CompanyCheckControllerInfrastructure(
         InMemoryRateLimitService rateLimitService,
         MeterRegistry meterRegistry,
         WebsiteContentInspectionService websiteContentInspectionService,
-        WebsiteAvailabilityService websiteAvailabilityService
+        WebsiteAvailabilityService websiteAvailabilityService,
+        WebsiteLeadBatchLogService websiteLeadBatchLogService
 ) {
 }

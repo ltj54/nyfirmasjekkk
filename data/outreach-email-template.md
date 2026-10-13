@@ -66,7 +66,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Beskriv automatiske funn som signaler fra en førstesjekk, ikke som manuelt bekreftede feil. Ikke lov bedre Google-plassering eller påstå at kunder går tapt.
 - Registrert nettside uten et godkjent funn skal legges til manuell kontroll og ikke sendes automatisk.
 - Når et lokallag eller fylkeslag oppgir hovedorganisasjonens felles nettside, skal rapporten om hovedsiden ikke brukes som om lokallaget eier den. Lag bare et manuelt utkast som avklarer hvem som styrer den lokale informasjonen; ikke send automatisk.
-- Når registrert nettside ikke svarer, må et konkret utkast bygge på manuell kontroll av feilen og andre fungerende kontakt- eller bestillingskanaler. Ikke send slike meldinger automatisk, og ikke tilby en ny nettside eller oppgi fastpris som standard.
+- Når registrert nettside ikke svarer, må et manuelt utkast bygge på kontroll av adressen og andre fungerende kontakt- eller bestillingskanaler. Ikke anta at nettsiden finnes, eller at domenet bare er registrert; begge deler er mulige. Tilby å undersøke og rette en eksisterende løsning hvis det er aktuelt, eller å bygge en nettside eller app dersom adressen ennå ikke brukes og virksomheten ønsker det. Utsending i nettsidelead-batch krever eksplisitt bekreftelse og to adskilte tekniske sjekker; den manuelle plassholderen erstattes da med en nøktern setning om mulige alternative løsninger. Ikke oppgi fastpris før behov og omfang er avklart.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
 
 ## E-postmal
@@ -103,13 +103,13 @@ Emne: `Et spørsmål om {{registeredWebsite}}`
 
 {{greetingLine}}
 
-Jeg så at {{registeredWebsite}} er oppgitt som nettside for {{companyName}}. Ved min kontroll fikk jeg ikke åpnet den som forventet. Det kan være midlertidig, så dette må bekreftes på nytt.
+Jeg så at {{registeredWebsite}} er oppgitt som nettadresse for {{companyName}}. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
 
 [Fyll inn hva du har kontrollert manuelt, og om virksomheten har en annen fungerende kontakt- eller bestillingsside.]
 
-Hvis adressen fortsatt skal brukes, kan jeg se nærmere på hva som må til for å få domenet og lenken videre til eksisterende tilbud til å fungere. Eventuelt arbeid avtaler vi først etter at årsaken er avklart.
+Hvis dere allerede har en nettside eller app som skal bruke adressen, kan jeg undersøke hva som hindrer den i å vises og hjelpe med å rette det som er feil. Hvis adressen ennå ikke er tatt i bruk, kan jeg heller lage en nettside eller en enkel app ut fra det dere trenger. Vi avklarer behov og eventuelt arbeid før vi starter.
 
-Er dette fortsatt riktig nettadresse for dere?
+Vil dere at jeg sender en kort, uforpliktende vurdering av hva som er mest aktuelt for dere?
 
 Med vennlig hilsen
 {{senderName}}  
@@ -124,7 +124,7 @@ Hei Julie,
 
 Jeg så at www.merennlyd.no er oppgitt som nettside for Audiograf Julie Johnsen. Da jeg sjekket adressen 11. oktober 2026, fikk jeg sertifikatfeil. I en separat teknisk kontroll gikk www-adressen videre til merennlyd.no, som svarte med 404. Dette kan ha endret seg siden sjekken.
 
-Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Derfor ville jeg først undersøkt om det registrerte domenet kan rettes og lede folk trygt til siden dere allerede bruker – ikke foreslått en ny nettside uten å vite om dere trenger det.
+Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Hvis den dekker behovet deres, kan jeg undersøke om domenet kan rettes og lede folk trygt dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med å bygge en løsning rundt det dere trenger. Dette bør vi avklare før jeg foreslår konkret arbeid.
 
 Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? Hvis ja, kan jeg sende en kort, uforpliktende vurdering av hva som bør kontrolleres.
 

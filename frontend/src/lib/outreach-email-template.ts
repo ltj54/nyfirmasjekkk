@@ -137,6 +137,15 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
   return applyOutreachTemplate(cleanedTemplate, company);
 }
 
+export function buildWebsiteLeadBatchEmailBody(markdown: string, company: OutreachEmailCompany) {
+  const template = extractMarkdownSection(markdown, "E-postmal - registrert nettside svarer ikke")
+    ?? defaultRegisteredWebsiteUnavailableEmailTemplate();
+  return applyOutreachTemplate(removeMailSubjectLine(template), company).replace(
+    WEBSITE_RESEARCH_PLACEHOLDER,
+    "Hvis dere allerede bruker en annen nettside eller bestillingsløsning, tar vi selvsagt utgangspunkt i den.",
+  );
+}
+
 export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
   const template = extractMailSubject(markdown, "Oppfølging etter 4–14 arbeidsdager")
     ?? "Oppfølging: nettside for {{companyName}}";
@@ -810,13 +819,13 @@ Med vennlig hilsen
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg så at {{registeredWebsite}} er oppgitt som nettside for {{companyName}}. Ved min kontroll fikk jeg ikke åpnet den som forventet. Det kan være midlertidig, så dette må bekreftes på nytt.
+Jeg så at {{registeredWebsite}} er oppgitt som nettadresse for {{companyName}}. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
 
 ${WEBSITE_RESEARCH_PLACEHOLDER}
 
-Hvis adressen fortsatt skal brukes, kan jeg se nærmere på hva som må til for å få domenet og lenken videre til eksisterende tilbud til å fungere. Eventuelt arbeid avtaler vi først etter at årsaken er avklart.
+Hvis dere allerede har en nettside eller app som skal bruke adressen, kan jeg undersøke hva som hindrer den i å vises og hjelpe med å rette det som er feil. Hvis adressen ennå ikke er tatt i bruk, kan jeg heller lage en nettside eller en enkel app ut fra det dere trenger. Vi avklarer behov og eventuelt arbeid før vi starter.
 
-Er dette fortsatt riktig nettadresse for dere?
+Vil dere at jeg sender en kort, uforpliktende vurdering av hva som er mest aktuelt for dere?
 
 Med vennlig hilsen
 {{senderName}}
@@ -829,7 +838,7 @@ function defaultAudiografWebsiteEmailTemplate() {
 
 Jeg så at www.merennlyd.no er oppgitt som nettside for Audiograf Julie Johnsen. Da jeg sjekket adressen 11. oktober 2026, fikk jeg sertifikatfeil. I en separat teknisk kontroll gikk www-adressen videre til merennlyd.no, som svarte med 404. Dette kan ha endret seg siden sjekken.
 
-Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Derfor ville jeg først undersøkt om det registrerte domenet kan rettes og lede folk trygt til siden dere allerede bruker – ikke foreslått en ny nettside uten å vite om dere trenger det.
+Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Hvis den dekker behovet deres, kan jeg undersøke om domenet kan rettes og lede folk trygt dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med å bygge en løsning rundt det dere trenger. Dette bør vi avklare før jeg foreslår konkret arbeid.
 
 Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? Hvis ja, kan jeg sende en kort, uforpliktende vurdering av hva som bør kontrolleres.
 

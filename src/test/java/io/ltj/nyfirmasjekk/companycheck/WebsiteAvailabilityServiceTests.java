@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -131,6 +132,16 @@ class WebsiteAvailabilityServiceTests {
         assertEquals("UNVERIFIABLE", result.status());
         assertEquals("INVALID_WEBSITE_VALUE", result.reasonCode());
         assertNull(result.lastCheckedAt());
+    }
+
+    @Test
+    void freshSendCheckBlocksWhenWebsiteHasRecovered() {
+        when(reachabilityService.probeNow("https://example.no"))
+                .thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
+        var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
+
+        assertFalse(service.stillUnreachableNow("example.no"));
+        verify(reachabilityService, times(1)).probeNow("https://example.no");
     }
 
     private void givenWebsite(String website) {

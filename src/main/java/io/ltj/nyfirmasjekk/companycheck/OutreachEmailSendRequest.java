@@ -11,6 +11,7 @@ public record OutreachEmailSendRequest(
         String channel,
         String offerType,
         String evidenceCode,
-        String note
+        String note,
+        String batchId
 ) {
 }

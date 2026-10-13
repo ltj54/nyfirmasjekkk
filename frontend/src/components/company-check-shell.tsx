@@ -58,6 +58,7 @@ import {
   buildOutreachEmailBody,
   buildOutreachEmailHtml,
   buildOutreachEmailSubject,
+  buildWebsiteLeadBatchEmailBody,
   hasUnresolvedPersonalObservation,
   outreachEmailAutoSendBlockReason,
   websiteQualityMailLine,
@@ -305,12 +306,11 @@ function canSelectWebsiteLeadForEmail(
   outreachStatus: OutreachStatus | undefined,
 ) {
   return Boolean(company.email && company.website && availability)
-    && availability?.leadSuitability !== "EXCLUDE"
-    && availability?.status !== "PENDING_RECHECK"
-    && availability?.status !== "CONTACT_PATH_PENDING_RECHECK"
-    && availability?.status !== "UNVERIFIABLE"
+    && availability?.status === "CONFIRMED_UNREACHABLE"
+    && availability?.leadSuitability === "CANDIDATE"
     && !isOutreachSendBlocked(outreachStatus)
-    && outreachStatus?.status !== "not_relevant";
+    && outreachStatus?.status !== "not_relevant"
+    && outreachStatus?.status !== "batch_excluded";
 }
 
 function emailBatchBlockReason(company: Pick<CompanySummary, "email" | "website" | "websiteDiscovery">) {
@@ -480,6 +480,7 @@ export function CompanyCheckShell() {
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
   const [websiteLeadSelectionByOrg, setWebsiteLeadSelectionByOrg] = useState<Record<string, boolean>>({});
+  const [websiteLeadBatchReady, setWebsiteLeadBatchReady] = useState(false);
   const [batchValidationByOrg, setBatchValidationByOrg] = useState<Record<string, BatchValidation>>({});
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [isFollowUpBatchSending, setIsFollowUpBatchSending] = useState(false);
@@ -670,7 +671,9 @@ export function CompanyCheckShell() {
       const payload = (await response.json()) as { content?: string };
       const templateContent = payload.content ?? "";
       const subject = buildOutreachEmailSubject(templateContent, company);
-      const body = buildOutreachEmailBody(templateContent, company);
+      const body = websiteLeadCohort && isRegisteredWebsiteUnavailable(company)
+        ? buildWebsiteLeadBatchEmailBody(templateContent, company)
+        : buildOutreachEmailBody(templateContent, company);
 
       setGeneratedEmailByOrg((current) => ({
         ...current,
@@ -854,6 +857,114 @@ export function CompanyCheckShell() {
           ? `Batch ferdig. ${sentCount} e-poster sendt. ${skippedDuringRunCount} hoppet over etter kontroll av e-post- og nettsidestatus.`
           : `Batch ferdig. ${sentCount} e-poster sendt.`,
       );
+    } finally {
+      setIsBatchSending(false);
+    }
+  }
+
+  async function confirmWebsiteLeadBatch(companies: CompanySummary[]) {
+    if (isBatchSending || companies.length === 0) return false;
+    const readiness = await fetch("/api/company-check/website-lead-batch-log/export", { cache: "no-store" }).catch(() => null);
+    if (!readiness?.ok) {
+      window.alert("Nettsidelead-batch krever oppdatert backend. Start backend på nytt før utsending.");
+      return false;
+    }
+    if (companies.length > MAX_EMAIL_BATCH_SIZE) {
+      window.alert(`Velg maks ${MAX_EMAIL_BATCH_SIZE} virksomheter per utsending.`);
+      return false;
+    }
+    const names = companies.map((company) => company.name).join("\n");
+    return window.confirm(`Send individuelle e-poster til disse ${companies.length} nettsideleadene?\n\n${names}\n\nHver adresse kontrolleres på nytt. Sendte e-poster føres i egen nettsidelead-batchlogg. Fortsette?`);
+  }
+
+  async function fetchWebsiteLeadAvailabilityForBatch(orgNumber: string): Promise<WebsiteAvailability | null> {
+    const url = `/api/company-check/${orgNumber}/website-availability`;
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) return null;
+    let availability = await response.json() as WebsiteAvailability;
+    if (availability.status === "PENDING_RECHECK" && availability.nextCheckAt) {
+      const nextCheck = Date.parse(availability.nextCheckAt);
+      if (Number.isFinite(nextCheck)) {
+        await wait(Math.max(1_000, nextCheck - Date.now() + 1_000));
+        const recheckResponse = await fetch(url, { cache: "no-store" });
+        if (!recheckResponse.ok) return null;
+        availability = await recheckResponse.json() as WebsiteAvailability;
+      }
+    }
+    return availability;
+  }
+
+  async function sendWebsiteLeadBatchCompany(company: CompanySummary, template: string,
+                                             batchId: string): Promise<OutreachEmailSendResult> {
+    const details = await fetchCompanyDetailsForBatch(company.orgNumber);
+    if (!details?.email || !details.website || isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])) {
+      return "skipped";
+    }
+    const availability = await fetchWebsiteLeadAvailabilityForBatch(company.orgNumber);
+    if (availability?.status !== "CONFIRMED_UNREACHABLE" || availability.leadSuitability !== "CANDIDATE") {
+      return "skipped";
+    }
+    const subject = buildOutreachEmailSubject(template, details);
+    const body = buildWebsiteLeadBatchEmailBody(template, details);
+    if (hasUnresolvedPersonalObservation(body)) return "skipped";
+    const response = await fetch(`/api/company-check/${company.orgNumber}/send-outreach-email`, {
+      method: "POST",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: details.email,
+        subject,
+        body,
+        htmlBody: buildOutreachEmailHtml(body),
+        companyName: details.name,
+        organizationForm: details.organizationForm,
+        price: null,
+        channel: "email",
+        offerType: "website-lead-batch",
+        evidenceCode: null,
+        note: null,
+        batchId,
+      }),
+    });
+    if (response.status === 409) return "skipped";
+    if (!response.ok) return "failed";
+    const payload = (await response.json()) as { outreachStatus: OutreachStatus };
+    setOutreachStatusByOrg((current) => ({ ...current, [company.orgNumber]: payload.outreachStatus }));
+    setOutreachEntries((current) => [payload.outreachStatus, ...current]);
+    setWebsiteLeadSelectionByOrg((current) => ({ ...current, [company.orgNumber]: false }));
+    return "sent";
+  }
+
+  async function runWebsiteLeadBatch(companies: CompanySummary[]) {
+    if (!(await confirmWebsiteLeadBatch(companies))) return;
+    setIsBatchSending(true);
+    const batchId = crypto.randomUUID();
+    let sentCount = 0;
+    let skippedCount = 0;
+    try {
+      const templateResponse = await fetch("/api/outreach-email-template", { cache: "no-store" });
+      if (!templateResponse.ok) {
+        window.alert("Klarte ikke laste e-postmalen. Ingen e-post ble sendt.");
+        return;
+      }
+      const template = ((await templateResponse.json()) as { content?: string }).content ?? "";
+      for (const company of companies) {
+        const result = await sendWebsiteLeadBatchCompany(company, template, batchId);
+        if (result === "skipped") {
+          skippedCount += 1;
+          continue;
+        }
+        if (result === "failed") {
+          window.alert(`Batch stoppet ved ${company.name}. ${sentCount} sendt, ${skippedCount} hoppet over. Kontroller batchloggen før nytt forsøk.`);
+          return;
+        }
+        sentCount += 1;
+        if (sentCount < companies.length) await wait(EMAIL_BATCH_SEND_DELAY_MS);
+      }
+      window.alert(`Nettsidelead-batch ferdig. ${sentCount} sendt, ${skippedCount} hoppet over. Batch-ID: ${batchId}`);
+    } catch (error) {
+      console.error("Website lead batch failed", error);
+      window.alert(`Batch stoppet. ${sentCount} sendt, ${skippedCount} hoppet over. Kontroller batchloggen før nytt forsøk. Batch-ID: ${batchId}`);
     } finally {
       setIsBatchSending(false);
     }
@@ -1240,6 +1351,19 @@ export function CompanyCheckShell() {
       if (recheckTimer !== undefined) window.clearTimeout(recheckTimer);
     };
   }, [recentCompanies, websiteLeadCohort]);
+
+  useEffect(() => {
+    if (!websiteLeadCohort) return;
+    let cancelled = false;
+    void fetch("/api/company-check/website-lead-batch-log/export", { cache: "no-store" })
+      .then((response) => {
+        if (!cancelled) setWebsiteLeadBatchReady(response.ok);
+      })
+      .catch(() => {
+        if (!cancelled) setWebsiteLeadBatchReady(false);
+      });
+    return () => { cancelled = true; };
+  }, [websiteLeadCohort]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -1929,7 +2053,7 @@ export function CompanyCheckShell() {
                     Nettsideleads · registrert for 6–12 måneder siden
                   </button>
                   <Show when={websiteLeadCohort}>
-                    <span className="text-[12px] text-[#52606D]">Har e-post og registrert nettside. Kun vurderingsliste; ingen automatisk utsending.</span>
+                    <span className="text-[12px] text-[#52606D]">Har e-post og registrert nettside. Velg aktuelle mottakere og bekreft før batchutsending.</span>
                   </Show>
                 </div>
 
@@ -2301,6 +2425,7 @@ export function CompanyCheckShell() {
                     <Mail className="size-4" />
                     Oppfølging ({followUpEntries.length})
                   </Button>
+                  <Show when={!websiteLeadCohort}>
                   <label
                     className={`ml-1 inline-flex h-8 items-center gap-2 whitespace-nowrap text-[12px] font-semibold ${
                       choose(canUseEmailBatch, "cursor-pointer text-[#52606D]", "cursor-not-allowed text-[#9FB3C8]")
@@ -2343,6 +2468,30 @@ export function CompanyCheckShell() {
                     {choose(isBatchSending, "Sender batch...", "Kjør e-post batch")}
                     {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
                   </Button>
+                  </Show>
+                  <Show when={websiteLeadCohort}>
+                    {!websiteLeadBatchReady ? (
+                      <span className="text-[12px] text-amber-700">Start backend på nytt for å aktivere batchutsending.</span>
+                    ) : null}
+                    <a
+                      className="rounded-sm border border-[#BCCCDC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#334E68] hover:border-[#1F5FA9]"
+                      download="website-lead-batch-log.jsonl"
+                      href="/api/company-check/website-lead-batch-log/export"
+                    >
+                      Last ned batchlogg
+                    </a>
+                    <Button
+                      className="ml-auto rounded-sm border-[#1F5FA9] text-[12px] font-semibold"
+                      disabled={!websiteLeadBatchReady || selectedWebsiteLeadsOnPage.length === 0 || isBatchSending}
+                      onClick={() => void runWebsiteLeadBatch(selectedWebsiteLeadsOnPage)}
+                      size="sm"
+                      type="button"
+                      variant="outline"
+                      title={websiteLeadBatchReady ? undefined : "Oppdatert backend må startes før nettsidelead-batch kan brukes."}
+                    >
+                      {choose(isBatchSending, "Sender batch...", `Kjør e-post batch (${selectedWebsiteLeadsOnPage.length})`)}
+                    </Button>
+                  </Show>
                 </div>
               </div>
               <div className="overflow-hidden border border-[#D9E2EC] bg-white">
@@ -4390,7 +4539,7 @@ function WebsiteLeadSelectionToolbar({
         <span>Velg alle aktuelle på denne siden</span>
       </label>
       <span aria-live="polite">{selectedCount} av {eligibleCount} valgt for e-postvurdering</span>
-      <p className="w-full text-[#52606D]">Valget sender ingen e-post. Utkast og mottakere må kontrolleres før eventuell utsending.</p>
+      <p className="w-full text-[#52606D]">Avkryssing sender ingenting. Kontroller mottakerne og e-postutkastene før du kjører batchen.</p>
     </div>
   );
 }

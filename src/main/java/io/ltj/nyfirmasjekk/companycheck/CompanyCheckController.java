@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -45,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Validated
@@ -52,6 +55,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/company-check")
 public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
+    private static final String WEBSITE_LEAD_BATCH_OFFER_TYPE = "website-lead-batch";
     private static final int SEARCH_RESULT_SIZE = 25;
     private static final int MAX_IMPORT_BYTES = 2_000_000;
     private final CompanyCheckService companyCheckService;
@@ -65,6 +69,7 @@ public class CompanyCheckController {
     private final MeterRegistry meterRegistry;
     private final WebsiteContentInspectionService websiteContentInspectionService;
     private final WebsiteAvailabilityService websiteAvailabilityService;
+    private final WebsiteLeadBatchLogService websiteLeadBatchLogService;
 
     public CompanyCheckController(
             CompanyCheckService companyCheckService,
@@ -86,6 +91,7 @@ public class CompanyCheckController {
         this.meterRegistry = infrastructure.meterRegistry();
         this.websiteContentInspectionService = infrastructure.websiteContentInspectionService();
         this.websiteAvailabilityService = infrastructure.websiteAvailabilityService();
+        this.websiteLeadBatchLogService = infrastructure.websiteLeadBatchLogService();
     }
 
     @GetMapping("/{organisasjonsnummer}")
@@ -215,6 +221,17 @@ public class CompanyCheckController {
                 .body(outreachLogService.exportJsonl());
     }
 
+    @GetMapping(value = "/website-lead-batch-log/export", produces = "application/x-ndjson")
+    public ResponseEntity<String> exportWebsiteLeadBatchLog(
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+    ) {
+        adminAccessService.requireAdmin(adminToken);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/x-ndjson"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"website-lead-batch-log.jsonl\"")
+                .body(websiteLeadBatchLogService.exportJsonl());
+    }
+
     @PostMapping(value = "/outreach/import", consumes = MediaType.TEXT_PLAIN_VALUE)
     public OutreachImportResponse importOutreachLog(
             @RequestBody String jsonl,
@@ -280,11 +297,21 @@ public class CompanyCheckController {
     ) {
         adminAccessService.requireAdmin(adminToken);
         outreachEmailService.validate(request);
+        requireOutreachSendEligible(organisasjonsnummer, request);
+        var outreachRequest = createOutreachRequest(organisasjonsnummer, request);
+        reserveOutreachSend(outreachRequest);
+        return deliverOutreachEmail(organisasjonsnummer, request, outreachRequest);
+    }
+
+    private void requireOutreachSendEligible(String organisasjonsnummer, OutreachEmailSendRequest request) {
         if ("website-unavailable-offer".equals(request.offerType())) {
             throw new org.springframework.web.server.ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Utilgjengelige nettsider krever et individuelt, manuelt kontrollert utkast; automatisk utsending er sperret."
             );
+        }
+        if (WEBSITE_LEAD_BATCH_OFFER_TYPE.equals(request.offerType())) {
+            requireWebsiteLeadBatchEligible(organisasjonsnummer, request);
         }
         if (outreachLogService.isWebsiteClient(organisasjonsnummer)) {
             throw new org.springframework.web.server.ResponseStatusException(
@@ -292,7 +319,10 @@ public class CompanyCheckController {
                     "Virksomheten er nettsidekunde og kan aldri motta automatisk salgs-e-post."
             );
         }
-        var outreachRequest = new OutreachStatusRequest(
+    }
+
+    private OutreachStatusRequest createOutreachRequest(String organisasjonsnummer, OutreachEmailSendRequest request) {
+        return new OutreachStatusRequest(
                 organisasjonsnummer,
                 request.companyName(),
                 request.organizationForm(),
@@ -301,8 +331,11 @@ public class CompanyCheckController {
                 request.price(),
                 request.channel() == null || request.channel().isBlank() ? "email" : request.channel(),
                 request.offerType() == null || request.offerType().isBlank() ? "website-offer" : request.offerType(),
-                request.note()
+                WEBSITE_LEAD_BATCH_OFFER_TYPE.equals(request.offerType()) ? "Nettsidelead-batch " + request.batchId() : request.note()
         );
+    }
+
+    private void reserveOutreachSend(OutreachStatusRequest outreachRequest) {
         boolean followUp = "website-follow-up".equals(outreachRequest.offerType());
         boolean reserved = followUp
                 ? outreachLogService.reserveFollowUp(outreachRequest)
@@ -315,9 +348,15 @@ public class CompanyCheckController {
                             : "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse."
             );
         }
+    }
 
+    private OutreachEmailSendResponse deliverOutreachEmail(String organisasjonsnummer,
+                                                           OutreachEmailSendRequest request,
+                                                           OutreachStatusRequest outreachRequest) {
         try {
+            appendWebsiteLeadBatchEventIfNeeded(organisasjonsnummer, request, request.to(), "sending", null);
             String recipient = outreachEmailService.send(request);
+            appendWebsiteLeadBatchEventIfNeeded(organisasjonsnummer, request, recipient, "sent", null);
             var status = outreachLogService.register(outreachRequest);
             return new OutreachEmailSendResponse(true, recipient, request.subject(), status);
         } catch (RuntimeException exception) {
@@ -325,8 +364,74 @@ public class CompanyCheckController {
                     outreachRequest,
                     "SMTP-leveringen feilet eller fikk ukjent utfall. Ny utsendelse er sperret for å unngå duplikat."
             );
+            appendFailedWebsiteLeadBatchEvent(organisasjonsnummer, request, exception);
             throw exception;
         }
+    }
+
+    private void appendWebsiteLeadBatchEventIfNeeded(String organisasjonsnummer, OutreachEmailSendRequest request,
+                                                      String recipient, String status, String note) {
+        if (WEBSITE_LEAD_BATCH_OFFER_TYPE.equals(request.offerType())) {
+            websiteLeadBatchLogService.appendBatchEvent(request.batchId(), organisasjonsnummer, request.companyName(),
+                    recipient, request.subject(), status, note);
+        }
+    }
+
+    private void appendFailedWebsiteLeadBatchEvent(String organisasjonsnummer, OutreachEmailSendRequest request,
+                                                   RuntimeException exception) {
+        if (!WEBSITE_LEAD_BATCH_OFFER_TYPE.equals(request.offerType())) {
+            return;
+        }
+        try {
+            appendWebsiteLeadBatchEventIfNeeded(organisasjonsnummer, request, request.to(),
+                    "delivery_uncertain", exception.getMessage());
+        } catch (RuntimeException logException) {
+            log.error("Klarte ikke skrive nettsidelead-batchlogg for {}", organisasjonsnummer, logException);
+        }
+    }
+
+    private void requireWebsiteLeadBatchEligible(String orgNumber, OutreachEmailSendRequest request) {
+        requireValidWebsiteLeadBatchDraft(request);
+        EnhetResponse company = brregClient.hentEnhet(orgNumber);
+        if (!isEligibleWebsiteLeadCompany(orgNumber, company, request)) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.CONFLICT,
+                    "Virksomheten oppfyller ikke kravene for nettsidelead-batch.");
+        }
+        WebsiteAvailabilityResponse availability = websiteAvailabilityService.check(orgNumber);
+        if (!"CONFIRMED_UNREACHABLE".equals(availability.status())
+                || !"CANDIDATE".equals(availability.leadSuitability())
+                || !websiteAvailabilityService.stillUnreachableNow(company.hjemmeside())) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.CONFLICT,
+                    "Nettsiden er ikke bekreftet utilgjengelig ved to adskilte sjekker og en ny kontroll før utsending.");
+        }
+    }
+
+    private void requireValidWebsiteLeadBatchDraft(OutreachEmailSendRequest request) {
+        try {
+            UUID.fromString(request.batchId());
+        } catch (RuntimeException exception) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST, "Ugyldig batch-ID.");
+        }
+        if (request.body().contains("[Fyll inn") || request.body().contains("[Skriv én konkret observasjon")) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST, "Uferdig e-postutkast kan ikke sendes.");
+        }
+    }
+
+    private boolean isEligibleWebsiteLeadCompany(String orgNumber, EnhetResponse company,
+                                                 OutreachEmailSendRequest request) {
+        LocalDate registrationDate = company.registreringsdatoEnhetsregisteret();
+        LocalDate today = LocalDate.now(ZoneId.of("Europe/Oslo"));
+        boolean inCohort = registrationDate != null
+                && !registrationDate.isBefore(today.minusMonths(12))
+                && !registrationDate.isAfter(today.minusMonths(6));
+        boolean hasValidWebsite = WebsiteLeadUrlPolicy.isPlausibleBusinessWebsite(company.hjemmeside());
+        boolean hasMatchingEmail = company.epostadresse() != null
+                && company.epostadresse().trim().equalsIgnoreCase(request.to().trim());
+        boolean notForeign = company.organisasjonsform() == null
+                || !"UTLA".equalsIgnoreCase(company.organisasjonsform().kode());
+        String outreachStatus = outreachLogService.statusFor(orgNumber).status();
+        return inCohort && hasValidWebsite && hasMatchingEmail && notForeign
+                && !"not_relevant".equals(outreachStatus) && !"batch_excluded".equals(outreachStatus);
     }
 
     @GetMapping("/filters")

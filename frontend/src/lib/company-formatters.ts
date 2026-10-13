@@ -55,6 +55,8 @@ export function formatOutreachOfferType(value: string | null | undefined) {
   switch (value) {
     case "website-unavailable-offer":
       return "Nettside svarer ikke";
+    case "website-lead-batch":
+      return "Nettsidelead-batch";
     case "website-improvement-offer":
       return "Nettside kan forbedres";
     case "website-registered-review":
@@ -110,6 +112,7 @@ export function getOutreachEntriesDueForFollowUp(entries: OutreachStatus[]) {
 
   return getLatestOutreachEntriesByOrg(entries).filter((entry) => {
     if (!["sent", "auto_replied"].includes(entry.status ?? "")
+      || entry.offerType === "website-lead-batch"
       || followUpAttemptedOrgNumbers.has(entry.orgNumber)
       || /oppfølging sendt|avsluttet|ikke interessert|tilbud sendt|kunde/i.test(entry.note ?? "")) {
       return false;
@@ -131,6 +134,7 @@ export function getLatestInitialOfferSentAtByOrg(entries: OutreachStatus[]) {
     if (
       entry.status === "sent"
       && entry.offerType !== "website-follow-up"
+      && entry.offerType !== "website-lead-batch"
       && sentAt
       && !sentAtByOrg.has(entry.orgNumber)
     ) {
