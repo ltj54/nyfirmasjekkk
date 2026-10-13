@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 645
-- Sendt: 312
+- Antall hendelser: 649
+- Sendt: 314
 - Angret: 0
-- Aktive kontaktede selskaper: 228
+- Aktive kontaktede selskaper: 230
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-13 | 937510764 | ARAA | FLI | email | website-lead-batch |
+| 2026-10-13 | 837522102 | MELHUS GAINS DEAL | ENK | email | website-lead-batch |
 | 2026-10-13 | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | website-follow-up |
 | 2026-10-13 | 938631387 | SMEVOLD MEDIA | ENK | email | website-follow-up |
 | 2026-10-13 | 938601534 | AROS SPED AB | NUF | email | website-follow-up |
@@ -246,6 +248,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-13 11:34 | sent | 937510764 | ARAA | FLI | email | Nettsidelead-batch f0b0e6c6-090f-48ca-8e08-46cafe1dbc31 |
+| 2026-10-13 11:34 | sending | 937510764 | ARAA | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-13 11:34 | sent | 837522102 | MELHUS GAINS DEAL | ENK | email | Nettsidelead-batch f0b0e6c6-090f-48ca-8e08-46cafe1dbc31 |
+| 2026-10-13 11:34 | sending | 837522102 | MELHUS GAINS DEAL | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-13 09:58 | sent | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-13 09:58 | sending | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-13 09:58 | sent | 938631387 | SMEVOLD MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
