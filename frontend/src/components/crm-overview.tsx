@@ -49,6 +49,22 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "Kvernmo Halibut",
+    previewUrl: "https://ltj54.github.io/kvernmo-halibut/",
+    contact: "Bjørne Kvernmo",
+    email: "Ikke avklart",
+    organizationNumber: "938 584 346",
+    proposalDate: "14.10.2026",
+    dateLabel: "Første konseptutkast publisert",
+    outreach: "Positiv interesse – Bjørne ønsker tilbud på nettside",
+    progress: "Prosjekt under utvikling. En offentlig forhåndsvisning er laget som uforpliktende konsept; innhold og bilder er ikke godkjent av Bjørne.",
+    nextStep: "Gjennomgå konseptet med Bjørne og avklare bilder, innhold, domene og vilkår før eventuell endelig leveranse. Ingen automatisk oppfølging.",
+    invoice: "Ikke fakturert",
+    agreement: "Internt avtaleutkast finnes lokalt, men er ikke sendt eller inngått.",
+    agreementStatus: "draft",
+    status: "working",
+  },
+  {
     name: "Henden Autotuning",
     inactiveDate: "05.10.2026",
     contact: "Fredrik Henden",
