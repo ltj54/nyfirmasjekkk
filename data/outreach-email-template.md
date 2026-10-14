@@ -44,13 +44,17 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 ## Regler for generering
 
 - Hold e-posten kort, med korte avsnitt og ett enkelt spørsmål til slutt.
+- Presenter avsenderen kort og si hvorfor du tar kontakt, uten å gi inntrykk av et eksisterende kundeforhold.
+- Ikke anta at mottakeren trenger en nettside, har mistet kunder eller ønsker å erstatte løsningen de bruker. Gjør det enkelt å takke nei eller la være å svare.
+- Skill tydelig mellom en gratis, kort skisse/vurdering og betalt utvikling eller retting. Eventuelt arbeid avtales på forhånd.
+- Unngå lange lister over funksjoner, tjenester, priser og tekniske feil i den første kontakten.
 - Skriv på norsk bokmål. Bruk «dere» og «deres» konsekvent om virksomheten, også når hilsenen bruker kontaktpersonens fornavn.
 - Ikke bruk overdreven salgstone.
 - Ikke påstå ting du ikke vet sikkert.
 - Hvis kontaktperson mangler, skriv til selskapet generelt.
 - Hvis telefon mangler, ikke nevn telefon.
 - Ikke prøv å overbevise i første e-post. Målet er å få svar.
-- `[Skriv én konkret observasjon om virksomheten her.]` erstattes automatisk med en naturlig, virksomhetsspesifikk åpning. Næringskode og BRREG skal ikke nevnes i den ferdige e-posten.
+- `[Skriv én konkret observasjon om virksomheten her.]` erstattes automatisk med en nøktern åpning som navngir virksomheten. Ikke finn på en personlig observasjon eller påstå at nettsiden er manuelt gjennomgått. Næringskode og BRREG skal ikke nevnes i den ferdige e-posten.
 - Bruk næringskode og salgsgruppe internt for å tilpasse teksten til virksomhetstypen, men skriv for mottakeren – ikke som et registerutdrag.
 - For landbruk og jordbruk: fremhev at nettsiden kan vise tjenester, geografisk område og kontaktmuligheter for gårdbrukere. Ikke finn på konkrete tjenester som ikke er oppgitt.
 - Skriv selskapsnavn med naturlig bruk av store og små bokstaver.
@@ -66,7 +70,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Beskriv automatiske funn som signaler fra en førstesjekk, ikke som manuelt bekreftede feil. Ikke lov bedre Google-plassering eller påstå at kunder går tapt.
 - Registrert nettside uten et godkjent funn skal legges til manuell kontroll og ikke sendes automatisk.
 - Når et lokallag eller fylkeslag oppgir hovedorganisasjonens felles nettside, skal rapporten om hovedsiden ikke brukes som om lokallaget eier den. Lag bare et manuelt utkast som avklarer hvem som styrer den lokale informasjonen; ikke send automatisk.
-- Når registrert nettside ikke svarer, må et manuelt utkast bygge på kontroll av adressen og andre fungerende kontakt- eller bestillingskanaler. Ikke anta at nettsiden finnes, eller at domenet bare er registrert; begge deler er mulige. Tilby å undersøke og rette en eksisterende løsning hvis det er aktuelt, eller å bygge en nettside eller app dersom adressen ennå ikke brukes og virksomheten ønsker det. Utsending i nettsidelead-batch krever eksplisitt bekreftelse og to adskilte tekniske sjekker; den manuelle plassholderen erstattes da med en nøktern setning om mulige alternative løsninger. Ikke oppgi fastpris før behov og omfang er avklart.
+- Når registrert nettside ikke svarer, må et manuelt utkast bygge på kontroll av adressen og andre fungerende kontakt- eller bestillingskanaler. Ikke anta at nettsiden finnes, eller at domenet bare er registrert; begge deler er mulige. Tilby å undersøke og rette en eksisterende løsning hvis det er aktuelt, eller å bygge en nettside eller app dersom adressen ennå ikke brukes og virksomheten ønsker det. Utsending i nettsidelead-batch krever eksplisitt bekreftelse og to adskilte tekniske sjekker; den manuelle plassholderen fjernes da, siden batchen ikke kan hevde manuell kontroll. Ikke oppgi fastpris før behov og omfang er avklart.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
 
 ## E-postmal
@@ -77,20 +81,11 @@ Emne: `Nettside for {{companyName}}?`
 
 [Skriv én konkret observasjon om virksomheten her.]
 
-{{salesSegmentPitch}}
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
 
-Jeg kan hjelpe dere med en ryddig, mobilvennlig nettside som viser hva dere tilbyr og gjør det enkelt for kunder å ta kontakt.
+En avtalt grunnløsning koster {{priceValue}} kr, inkludert utvikling og publisering. Vi avklarer innhold og eventuelle andre kostnader før noe arbeid starter.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi blir enige om innhold og funksjoner før arbeidet starter, og kan bygge videre senere hvis dere ønsker det.
-
-Jeg følger også opp etter levering og hjelper med oppdateringer når det er behov, så dere har noen å kontakte også etter at nettsiden er ferdig.
-
-For en vanlig nettside er et eget, betalt webhotell som regel ikke nødvendig. Et eventuelt domene og andre nødvendige tjenester avklarer vi sammen.
-
-Her kan dere se hvordan jeg arbeider:
-{{senderWebsite}}
-
-Kan jeg sende et kort, gratis og uforpliktende forslag til hvordan nettsiden deres kan se ut og hva den kan inneholde?
+Vil dere at jeg sender en slik skisse?
 
 Med vennlig hilsen
 {{senderName}}
@@ -103,13 +98,13 @@ Emne: `Et spørsmål om {{registeredWebsite}}`
 
 {{greetingLine}}
 
-Jeg så at {{registeredWebsite}} er oppgitt som nettadresse for {{companyName}}. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så {{registeredWebsite}} oppført som nettadresse for {{companyName}}, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig, og jeg vet ikke om dere bruker en annen adresse.
 
 [Fyll inn hva du har kontrollert manuelt, og om virksomheten har en annen fungerende kontakt- eller bestillingsside.]
 
-Hvis dere allerede har en nettside eller app som skal bruke adressen, kan jeg undersøke hva som hindrer den i å vises og hjelpe med å rette det som er feil. Hvis adressen ennå ikke er tatt i bruk, kan jeg heller lage en nettside eller en enkel app ut fra det dere trenger. Vi avklarer behov og eventuelt arbeid før vi starter.
+Hvis dere vil bruke adressen, kan jeg se nærmere på hva som hindrer den i å åpnes. Hvis dere planlegger en ny nettside eller enkel app, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
-Vil dere at jeg sender en kort, uforpliktende vurdering av hva som er mest aktuelt for dere?
+Er det relevant at jeg sender en kort vurdering?
 
 Med vennlig hilsen
 {{senderName}}  
@@ -122,11 +117,11 @@ Emne: `Et spørsmål om merennlyd.no`
 
 Hei Julie,
 
-Jeg så at www.merennlyd.no er oppgitt som nettside for Audiograf Julie Johnsen. Da jeg sjekket adressen 11. oktober 2026, fikk jeg sertifikatfeil. I en separat teknisk kontroll gikk www-adressen videre til merennlyd.no, som svarte med 404. Dette kan ha endret seg siden sjekken.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
 
-Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Hvis den dekker behovet deres, kan jeg undersøke om domenet kan rettes og lede folk trygt dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med å bygge en løsning rundt det dere trenger. Dette bør vi avklare før jeg foreslår konkret arbeid.
+Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan det hende at adressen bare trenger å kobles til den. Hvis dere ønsker en egen nettside, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
-Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? Hvis ja, kan jeg sende en kort, uforpliktende vurdering av hva som bør kontrolleres.
+Vil dere at jeg ser nærmere på adressen og sender en kort vurdering?
 
 Med vennlig hilsen
 {{senderName}}
@@ -137,11 +132,11 @@ Med vennlig hilsen
 
 Hei Julie,
 
-Jeg så at www.merennlyd.no er oppgitt som nettadresse for Audiograf Julie Johnsen. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
 
-Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan jeg undersøke om nettadressen bør lede dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med en løsning som viser tjenestene og gjør det enkelt å bestille eller ta kontakt. Har dere allerede en nettside som skal bruke adressen, kan jeg se på hva som hindrer den i å vises.
+Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan det hende at adressen bare trenger å kobles til den. Hvis dere ønsker en egen nettside, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
-Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? I så fall kan jeg sende en kort, uforpliktende vurdering av hva som er mest aktuelt.
+Vil dere at jeg ser nærmere på adressen og sender en kort vurdering?
 
 Med vennlig hilsen
 {{senderName}}
@@ -154,19 +149,13 @@ Emne: `En observasjon om nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-En automatisk førstesjekk av nettsiden til {{companyName}} ga følgende signal:
+Jeg heter Lars og lager nettsider i LTJ Production. En automatisk førstesjekk av nettsiden til {{companyName}} ga dette mulige funnet:
 
 {{websiteQualityMailLine}}
-{{websiteQualityImpactLine}}
 
-Funnet bør kontrolleres manuelt før vi konkluderer med at noe bør endres.
+Jeg har ikke kontrollert det manuelt, så det kan være uproblematisk. En kort vurdering er gratis; eventuelle endringer avtaler vi på forhånd.
 
-Jeg kan først sende en kort, gratis vurdering med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
-
-Her er et eksempel på hva jeg ser etter:
-{{websiteCheckSenderWebsite}}
-
-Skal jeg sende en slik uforpliktende vurdering?
+Vil dere at jeg ser nærmere på det?
 
 Med vennlig hilsen
 {{senderName}}  
@@ -179,16 +168,11 @@ Emne: `Nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-Jeg kom over nettsideadressen til {{companyName}} og vil høre om dere ønsker en kort vurdering av siden.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg kom over nettsiden til {{companyName}} og lurte på om dere ønsker en kort vurdering av innhold, mobilvisning og kontaktmuligheter.
 
-Jeg ser blant annet på tydelig innhold, mobilbruk, kontaktmuligheter og om siden er enkel å bruke for flest mulig.
+Den første vurderingen er gratis. Eventuelle endringer avtaler vi på forhånd.
 
-Den første vurderingen er gratis og uforpliktende, med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
-
-Her kan dere se hva sjekken omfatter:
-{{websiteCheckSenderWebsite}}
-
-Skal jeg sende en slik vurdering?
+Er det aktuelt?
 
 Med vennlig hilsen
 {{senderName}}  
@@ -201,11 +185,11 @@ Emne: `Et spørsmål om {{localChapterDescription}}`
 
 {{greetingLine}}
 
-Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted for organisasjonen, ikke nødvendigvis en side lokallaget selv styrer.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted, så jeg vet ikke hvem som styrer den lokale informasjonen.
 
-Hvis dere ønsker å gjøre lokale aktiviteter og kontaktinformasjon enklere å finne, kan jeg se på muligheter innenfor løsningen dere allerede bruker, i samråd med dem som administrerer den. Jeg foreslår ikke å erstatte fellesnettstedet.
+Hvis dere ønsker det, kan jeg se på muligheter innenfor løsningen dere allerede bruker. Jeg foreslår ikke å erstatte fellesnettstedet.
 
-Er det dere lokalt som bestemmer hvordan informasjonen om lokallaget presenteres på nettsiden?
+Er det dere lokalt som bestemmer hvordan informasjonen presenteres?
 
 Med vennlig hilsen
 {{senderName}}
@@ -220,11 +204,11 @@ Emne: `Oppfølging: nettside for {{companyName}}`
 
 {{greetingLine}}
 
-Ville bare følge opp e-posten min om nettsiden til {{companyName}}.
+Jeg følger opp e-posten min om nettsiden til {{companyName}} én gang.
 
 {{followUpQuestion}}
 
-Hvis det ikke er aktuelt, er det helt i orden. Jeg lar saken ligge dersom jeg ikke hører fra dere.
+Hvis det ikke er aktuelt, trenger dere ikke svare. Jeg kontakter dere ikke igjen om dette.
 
 Med vennlig hilsen
 {{senderName}}

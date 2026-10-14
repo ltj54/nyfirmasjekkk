@@ -145,8 +145,8 @@ export function buildWebsiteLeadBatchEmailBody(markdown: string, company: Outrea
     ?? defaultRegisteredWebsiteUnavailableEmailTemplate();
   return applyOutreachTemplate(removeMailSubjectLine(template), company).replace(
     WEBSITE_RESEARCH_PLACEHOLDER,
-    "Hvis dere allerede bruker en annen nettside eller bestillingsløsning, tar vi selvsagt utgangspunkt i den.",
-  );
+    "",
+  ).replace(/\n{3,}/g, "\n\n");
 }
 
 export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
@@ -199,7 +199,7 @@ function outreachEmailTemplateConfig(company: OutreachEmailCompany): OutreachEma
         subjectFallback: "Et spørsmål om merennlyd.no",
         bodyFallback: defaultAudiografWebsiteEmailTemplate,
         batchHeading: "E-postmal - Audiograf Julie Johnsen - batch",
-        batchBodyFallback: defaultAudiografBatchWebsiteEmailTemplate,
+        batchBodyFallback: defaultAudiografWebsiteEmailTemplate,
       };
     }
     return {
@@ -803,19 +803,13 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
 function defaultWebsiteQualityOpportunityEmailTemplate() {
   return `{{greetingLine}}
 
-En automatisk førstesjekk av nettsiden til {{companyName}} ga følgende signal:
+Jeg heter Lars og lager nettsider i LTJ Production. En automatisk førstesjekk av nettsiden til {{companyName}} ga dette mulige funnet:
 
 {{websiteQualityMailLine}}
-{{websiteQualityImpactLine}}
 
-Funnet bør kontrolleres manuelt før vi konkluderer med at noe bør endres.
+Jeg har ikke kontrollert det manuelt, så det kan være uproblematisk. En kort vurdering er gratis; eventuelle endringer avtaler vi på forhånd.
 
-Jeg kan først sende en kort, gratis vurdering med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
-
-Her er et eksempel på hva jeg ser etter:
-{{websiteCheckSenderWebsite}}
-
-Skal jeg sende en slik uforpliktende vurdering?
+Vil dere at jeg ser nærmere på det?
 
 Med vennlig hilsen
 {{senderName}}
@@ -826,13 +820,13 @@ Med vennlig hilsen
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg så at {{registeredWebsite}} er oppgitt som nettadresse for {{companyName}}. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så {{registeredWebsite}} oppført som nettadresse for {{companyName}}, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig, og jeg vet ikke om dere bruker en annen adresse.
 
 ${WEBSITE_RESEARCH_PLACEHOLDER}
 
-Hvis dere allerede har en nettside eller app som skal bruke adressen, kan jeg undersøke hva som hindrer den i å vises og hjelpe med å rette det som er feil. Hvis adressen ennå ikke er tatt i bruk, kan jeg heller lage en nettside eller en enkel app ut fra det dere trenger. Vi avklarer behov og eventuelt arbeid før vi starter.
+Hvis dere vil bruke adressen, kan jeg se nærmere på hva som hindrer den i å åpnes. Hvis dere planlegger en ny nettside eller enkel app, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
-Vil dere at jeg sender en kort, uforpliktende vurdering av hva som er mest aktuelt for dere?
+Er det relevant at jeg sender en kort vurdering?
 
 Med vennlig hilsen
 {{senderName}}
@@ -843,26 +837,11 @@ Med vennlig hilsen
 function defaultAudiografWebsiteEmailTemplate() {
   return `Hei Julie,
 
-Jeg så at www.merennlyd.no er oppgitt som nettside for Audiograf Julie Johnsen. Da jeg sjekket adressen 11. oktober 2026, fikk jeg sertifikatfeil. I en separat teknisk kontroll gikk www-adressen videre til merennlyd.no, som svarte med 404. Dette kan ha endret seg siden sjekken.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
 
-Jeg fant også bestillingssiden deres hos SumUp, der kunder kan se tjenestene og bestille time. Hvis den dekker behovet deres, kan jeg undersøke om domenet kan rettes og lede folk trygt dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med å bygge en løsning rundt det dere trenger. Dette bør vi avklare før jeg foreslår konkret arbeid.
+Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan det hende at adressen bare trenger å kobles til den. Hvis dere ønsker en egen nettside, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
-Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? Hvis ja, kan jeg sende en kort, uforpliktende vurdering av hva som bør kontrolleres.
-
-Med vennlig hilsen
-{{senderName}}
-{{senderPhone}}
-{{senderEmail}}`;
-}
-
-function defaultAudiografBatchWebsiteEmailTemplate() {
-  return `Hei Julie,
-
-Jeg så at www.merennlyd.no er oppgitt som nettadresse for Audiograf Julie Johnsen. Da jeg sjekket, fikk jeg ikke opp en tilgjengelig side. Det kan være midlertidig, eller dere kan være i gang med å sette opp noe.
-
-Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan jeg undersøke om nettadressen bør lede dit. Hvis dere heller ønsker en egen nettside eller app, kan jeg hjelpe med en løsning som viser tjenestene og gjør det enkelt å bestille eller ta kontakt. Har dere allerede en nettside som skal bruke adressen, kan jeg se på hva som hindrer den i å vises.
-
-Er merennlyd.no fortsatt ment å være adressen kundene skal bruke? I så fall kan jeg sende en kort, uforpliktende vurdering av hva som er mest aktuelt.
+Vil dere at jeg ser nærmere på adressen og sender en kort vurdering?
 
 Med vennlig hilsen
 {{senderName}}
@@ -910,16 +889,11 @@ function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany
 function defaultRegisteredWebsiteReviewEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg kom over nettsideadressen til {{companyName}} og vil høre om dere ønsker en kort vurdering av siden.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg kom over nettsiden til {{companyName}} og lurte på om dere ønsker en kort vurdering av innhold, mobilvisning og kontaktmuligheter.
 
-Jeg ser blant annet på tydelig innhold, mobilbruk, kontaktmuligheter og om siden er enkel å bruke for flest mulig.
+Den første vurderingen er gratis. Eventuelle endringer avtaler vi på forhånd.
 
-Den første vurderingen er gratis og uforpliktende, med noen konkrete forbedringsforslag. Eventuelt videre arbeid avtaler vi på forhånd.
-
-Her kan dere se hva sjekken omfatter:
-{{websiteCheckSenderWebsite}}
-
-Skal jeg sende en slik vurdering?
+Er det aktuelt?
 
 Med vennlig hilsen
 {{senderName}}
@@ -930,11 +904,11 @@ Med vennlig hilsen
 function defaultLocalChapterSharedWebsiteEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted for organisasjonen, ikke nødvendigvis en side lokallaget selv styrer.
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted, så jeg vet ikke hvem som styrer den lokale informasjonen.
 
-Hvis dere ønsker å gjøre lokale aktiviteter og kontaktinformasjon enklere å finne, kan jeg se på muligheter innenfor løsningen dere allerede bruker, i samråd med dem som administrerer den. Jeg foreslår ikke å erstatte fellesnettstedet.
+Hvis dere ønsker det, kan jeg se på muligheter innenfor løsningen dere allerede bruker. Jeg foreslår ikke å erstatte fellesnettstedet.
 
-Er det dere lokalt som bestemmer hvordan informasjonen om lokallaget presenteres på nettsiden?
+Er det dere lokalt som bestemmer hvordan informasjonen presenteres?
 
 Med vennlig hilsen
 {{senderName}}
@@ -959,20 +933,11 @@ function defaultOutreachEmailTemplate() {
 
 ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
-{{salesSegmentPitch}}
+Jeg heter Lars og lager nettsider i LTJ Production. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
 
-Jeg kan hjelpe dere med en ryddig, mobilvennlig nettside som viser hva dere tilbyr og gjør det enkelt for kunder å ta kontakt.
+En avtalt grunnløsning koster {{priceValue}} kr, inkludert utvikling og publisering. Vi avklarer innhold og eventuelle andre kostnader før noe arbeid starter.
 
-En avtalt grunnløsning koster fast {{priceValue}} kr, inkludert utvikling, tilpasning av innhold og publisering. Vi blir enige om innhold og funksjoner før arbeidet starter, og kan bygge videre senere hvis dere ønsker det.
-
-Jeg følger også opp etter levering og hjelper med oppdateringer når det er behov, så dere har noen å kontakte også etter at nettsiden er ferdig.
-
-For en vanlig nettside er et eget, betalt webhotell som regel ikke nødvendig. Et eventuelt domene og andre nødvendige tjenester avklarer vi sammen.
-
-Her kan dere se hvordan jeg arbeider:
-{{senderWebsite}}
-
-Kan jeg sende et kort, gratis og uforpliktende forslag til hvordan nettsiden deres kan se ut og hva den kan inneholde?
+Vil dere at jeg sender en slik skisse?
 
 Med vennlig hilsen
 {{senderName}}
@@ -983,11 +948,11 @@ Med vennlig hilsen
 function defaultFollowUpEmailTemplate() {
   return `{{greetingLine}}
 
-Ville bare følge opp e-posten min om nettsiden til {{companyName}}.
+Jeg følger opp e-posten min om nettsiden til {{companyName}} én gang.
 
 {{followUpQuestion}}
 
-Hvis det ikke er aktuelt, er det helt i orden. Jeg lar saken ligge dersom jeg ikke hører fra dere.
+Hvis det ikke er aktuelt, trenger dere ikke svare. Jeg kontakter dere ikke igjen om dette.
 
 Med vennlig hilsen
 {{senderName}}
