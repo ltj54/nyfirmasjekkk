@@ -134,7 +134,7 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
   const config = outreachEmailTemplateConfig(company);
   const template = extractMarkdownSection(markdown, config.heading) ?? config.bodyFallback();
   const cleanedTemplate = removeMailSubjectLine(template);
-  return applyOutreachTemplate(cleanedTemplate, company);
+  return withSenderOrganizationNumber(applyOutreachTemplate(cleanedTemplate, company));
 }
 
 export function buildWebsiteLeadBatchEmailBody(markdown: string, company: OutreachEmailCompany) {
@@ -143,10 +143,11 @@ export function buildWebsiteLeadBatchEmailBody(markdown: string, company: Outrea
   const template = extractMarkdownSection(markdown, heading)
     ?? config.batchBodyFallback?.()
     ?? defaultRegisteredWebsiteUnavailableEmailTemplate();
-  return applyOutreachTemplate(removeMailSubjectLine(template), company).replace(
+  const body = applyOutreachTemplate(removeMailSubjectLine(template), company).replace(
     WEBSITE_RESEARCH_PLACEHOLDER,
     "",
   ).replace(/\n{3,}/g, "\n\n");
+  return withSenderOrganizationNumber(body);
 }
 
 export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
@@ -159,7 +160,16 @@ export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailC
   const template = extractMarkdownSection(markdown, "Oppfølging etter 4–14 arbeidsdager")
     ?? defaultFollowUpEmailTemplate();
   const body = removeMailSubjectLine(template).replaceAll("{{followUpQuestion}}", followUpQuestion(originalOfferType));
-  return applyOutreachTemplate(body, company);
+  return withSenderOrganizationNumber(applyOutreachTemplate(body, company));
+}
+
+const SENDER_ORGANIZATION_NUMBER = "Org.nr. 838 632 122";
+
+function withSenderOrganizationNumber(body: string) {
+  const trimmed = body.trimEnd();
+  return trimmed.includes(SENDER_ORGANIZATION_NUMBER)
+    ? trimmed
+    : `${trimmed}\n${SENDER_ORGANIZATION_NUMBER}`;
 }
 
 function followUpQuestion(originalOfferType: string | null | undefined) {
@@ -779,6 +789,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
     "{{senderName}}": "Lars Johannessen",
     "{{senderPhone}}": "977 24 209",
     "{{senderEmail}}": "kontakt@ltj-production.no",
+    "{{senderOrganizationNumber}}": SENDER_ORGANIZATION_NUMBER,
     "{{senderWebsite}}": "https://www.ltj-production.no/",
     "{{websiteCheckSenderWebsite}}": "https://www.ltj-production.no/nettsidesjekk.html",
     "{{registeredWebsite}}": company.website?.trim() || "",

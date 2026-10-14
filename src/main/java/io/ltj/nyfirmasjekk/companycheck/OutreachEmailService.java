@@ -18,6 +18,7 @@ import java.util.Set;
 
 @Service
 public class OutreachEmailService {
+    private static final String SENDER_ORGANIZATION_NUMBER = "Org.nr. 838 632 122";
     private static final Set<String> APPROVED_WEBSITE_EMAIL_EVIDENCE = Set.of(
             "WEAK_CONTACT_POINT",
             "CONTACT_DETAILS_NOT_VISIBLE",
@@ -63,7 +64,8 @@ public class OutreachEmailService {
             helper.setReplyTo(replyTo);
             helper.setTo(recipient);
             helper.setSubject(request.subject().trim());
-            helper.setText(request.body().trim(), htmlOrPlain(request));
+            String plainBody = withSenderOrganizationNumber(request.body());
+            helper.setText(plainBody, htmlOrPlain(request, plainBody));
             mailSender.send(message);
             return recipient;
         } catch (MessagingException | UnsupportedEncodingException | MailException exception) {
@@ -78,11 +80,23 @@ public class OutreachEmailService {
         return request.to().trim();
     }
 
-    private String htmlOrPlain(OutreachEmailSendRequest request) {
+    String htmlOrPlain(OutreachEmailSendRequest request, String plainBody) {
         if (request.htmlBody() == null || request.htmlBody().isBlank()) {
-            return request.body().trim().replace("\n", "<br>");
+            return plainBody.replace("\n", "<br>");
         }
-        return request.htmlBody().trim();
+        String htmlBody = request.htmlBody().trim();
+        if (htmlBody.contains(SENDER_ORGANIZATION_NUMBER)) {
+            return htmlBody;
+        }
+        return htmlBody + "<p>" + SENDER_ORGANIZATION_NUMBER + "</p>";
+    }
+
+    static String withSenderOrganizationNumber(String body) {
+        String trimmed = body.trim();
+        if (trimmed.contains(SENDER_ORGANIZATION_NUMBER)) {
+            return trimmed;
+        }
+        return trimmed + "\n" + SENDER_ORGANIZATION_NUMBER;
     }
 
     void validate(OutreachEmailSendRequest request) {

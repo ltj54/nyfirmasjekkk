@@ -4,15 +4,32 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 649
-- Sendt: 314
+- Antall hendelser: 683
+- Sendt: 331
 - Angret: 0
-- Aktive kontaktede selskaper: 230
+- Aktive kontaktede selskaper: 247
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-14 | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | website-offer |
+| 2026-10-14 | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | website-offer |
+| 2026-10-14 | 938644780 | RAMADAN SERVICE | ENK | email | website-offer |
+| 2026-10-14 | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | website-offer |
+| 2026-10-14 | 938670013 | SKJØNNEBERG AS | AS | email | website-offer |
+| 2026-10-14 | 938641374 | NK TRANSPORT B.V. | NUF | email | website-offer |
+| 2026-10-14 | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | website-offer |
+| 2026-10-14 | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | website-offer |
+| 2026-10-14 | 938574324 | CYVI AB NUF | NUF | email | website-offer |
+| 2026-10-14 | 938641048 | BOTANIKA AS | AS | email | website-offer |
+| 2026-10-14 | 938460531 | APPLIED | FLI | email | website-offer |
+| 2026-10-14 | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | website-offer |
+| 2026-10-14 | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | website-offer |
+| 2026-10-14 | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | website-offer |
+| 2026-10-14 | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | website-offer |
+| 2026-10-14 | 938673209 | INGRID STØEN LEGE | ENK | email | website-offer |
+| 2026-10-14 | 938604401 | GRØNNINGEN UTLEIE | ENK | email | website-offer |
 | 2026-10-13 | 937510764 | ARAA | FLI | email | website-lead-batch |
 | 2026-10-13 | 837522102 | MELHUS GAINS DEAL | ENK | email | website-lead-batch |
 | 2026-10-13 | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | website-follow-up |
@@ -248,6 +265,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-14 11:40 | sent | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | - |
+| 2026-10-14 11:40 | sending | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | - |
+| 2026-10-14 11:40 | sending | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938644780 | RAMADAN SERVICE | ENK | email | - |
+| 2026-10-14 11:40 | sending | 938644780 | RAMADAN SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | - |
+| 2026-10-14 11:40 | sending | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938670013 | SKJØNNEBERG AS | AS | email | - |
+| 2026-10-14 11:40 | sending | 938670013 | SKJØNNEBERG AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938641374 | NK TRANSPORT B.V. | NUF | email | - |
+| 2026-10-14 11:40 | sending | 938641374 | NK TRANSPORT B.V. | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | - |
+| 2026-10-14 11:40 | sending | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | - |
+| 2026-10-14 11:40 | sending | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938574324 | CYVI AB NUF | NUF | email | - |
+| 2026-10-14 11:40 | sending | 938574324 | CYVI AB NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938641048 | BOTANIKA AS | AS | email | - |
+| 2026-10-14 11:40 | sending | 938641048 | BOTANIKA AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:40 | sent | 938460531 | APPLIED | FLI | email | - |
+| 2026-10-14 11:40 | sending | 938460531 | APPLIED | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:39 | sent | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | - |
+| 2026-10-14 11:39 | sending | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:39 | sent | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | - |
+| 2026-10-14 11:39 | sending | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:39 | sent | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | - |
+| 2026-10-14 11:39 | sending | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:39 | sent | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | - |
+| 2026-10-14 11:39 | sending | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:39 | sent | 938673209 | INGRID STØEN LEGE | ENK | email | - |
+| 2026-10-14 11:39 | sending | 938673209 | INGRID STØEN LEGE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-14 11:39 | sent | 938604401 | GRØNNINGEN UTLEIE | ENK | email | - |
+| 2026-10-14 11:39 | sending | 938604401 | GRØNNINGEN UTLEIE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-13 11:34 | sent | 937510764 | ARAA | FLI | email | Nettsidelead-batch f0b0e6c6-090f-48ca-8e08-46cafe1dbc31 |
 | 2026-10-13 11:34 | sending | 937510764 | ARAA | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-13 11:34 | sent | 837522102 | MELHUS GAINS DEAL | ENK | email | Nettsidelead-batch f0b0e6c6-090f-48ca-8e08-46cafe1dbc31 |

@@ -18,6 +18,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Domeneeksempel: `{{domainExample}}`
 - Domenelinje: `{{domainLine}}`
 - Pris: `{{priceValue}}`
+- Avsenders organisasjonsnummer: `{{senderOrganizationNumber}}` (LTJ Production, 838 632 122)
 - Registrert nettside-intro: `{{registeredWebsiteIntro}}`
 - Lokalavdeling på fellesnettsted: `{{localChapterDescription}}`
 - Dokumentert observasjon: `{{websiteQualityMailLine}}`
@@ -72,6 +73,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Når et lokallag eller fylkeslag oppgir hovedorganisasjonens felles nettside, skal rapporten om hovedsiden ikke brukes som om lokallaget eier den. Lag bare et manuelt utkast som avklarer hvem som styrer den lokale informasjonen; ikke send automatisk.
 - Når registrert nettside ikke svarer, må et manuelt utkast bygge på kontroll av adressen og andre fungerende kontakt- eller bestillingskanaler. Ikke anta at nettsiden finnes, eller at domenet bare er registrert; begge deler er mulige. Tilby å undersøke og rette en eksisterende løsning hvis det er aktuelt, eller å bygge en nettside eller app dersom adressen ennå ikke brukes og virksomheten ønsker det. Utsending i nettsidelead-batch krever eksplisitt bekreftelse og to adskilte tekniske sjekker; den manuelle plassholderen fjernes da, siden batchen ikke kan hevde manuell kontroll. Ikke oppgi fastpris før behov og omfang er avklart.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
+- Avslutt alle e-poster med `Org.nr. 838 632 122` i signaturen, også oppfølginger og nettsidelead-batcher.
 
 ## E-postmal
 
@@ -91,6 +93,7 @@ Med vennlig hilsen
 {{senderName}}
 {{senderPhone}}
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## E-postmal - registrert nettside svarer ikke
 
@@ -110,6 +113,7 @@ Med vennlig hilsen
 {{senderName}}  
 {{senderPhone}}  
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## E-postmal - Audiograf Julie Johnsen
 
@@ -127,6 +131,7 @@ Med vennlig hilsen
 {{senderName}}
 {{senderPhone}}
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## E-postmal - Audiograf Julie Johnsen - batch
 
@@ -142,6 +147,7 @@ Med vennlig hilsen
 {{senderName}}
 {{senderPhone}}
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## E-postmal - nettside kan forbedres
 
@@ -161,6 +167,7 @@ Med vennlig hilsen
 {{senderName}}  
 {{senderPhone}}  
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## E-postmal - registrert nettside bør vurderes manuelt
 
@@ -178,6 +185,7 @@ Med vennlig hilsen
 {{senderName}}  
 {{senderPhone}}  
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## E-postmal - lokallag med felles nettside
 
@@ -195,6 +203,7 @@ Med vennlig hilsen
 {{senderName}}
 {{senderPhone}}
 {{senderEmail}}
+{{senderOrganizationNumber}}
 
 ## Oppfølging etter 4–14 arbeidsdager
 
@@ -214,3 +223,4 @@ Med vennlig hilsen
 {{senderName}}
 {{senderPhone}}
 {{senderEmail}}
+{{senderOrganizationNumber}}

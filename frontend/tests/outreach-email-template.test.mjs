@@ -34,6 +34,7 @@ test("batch uses the approved Audiograf message, without stale technical claims"
   assert.doesNotMatch(body, /11\. oktober 2026|sertifikatfeil|svarte med 404/);
   assert.doesNotMatch(body, /mistet kunder|må gjøre/);
   assert.equal(hasUnresolvedPersonalObservation(body), false);
+  assert.match(body, /Org\.nr\. 838 632 122$/);
 });
 
 test("batch keeps the cautious generic message for other unavailable websites", () => {
@@ -54,6 +55,7 @@ test("batch keeps the cautious generic message for other unavailable websites", 
   assert.doesNotMatch(body, /SumUp/);
   assert.match(body, /eventuelt arbeid avtaler vi på forhånd/);
   assert.equal(hasUnresolvedPersonalObservation(body), false);
+  assert.match(body, /Org\.nr\. 838 632 122$/);
 });
 
 test("batch falls back to the approved Audiograf message if the template section is missing", () => {
@@ -65,7 +67,9 @@ test("batch falls back to the approved Audiograf message if the template section
     websiteDiscovery: unavailableWebsite,
   };
 
-  assert.match(buildWebsiteLeadBatchEmailBody("", company), /bestillingssiden hos SumUp/);
+  const body = buildWebsiteLeadBatchEmailBody("", company);
+  assert.match(body, /bestillingssiden hos SumUp/);
+  assert.match(body, /Org\.nr\. 838 632 122$/);
 });
 
 test("first contact is short and separates the free sketch from paid work", () => {
@@ -83,6 +87,8 @@ test("first contact is short and separates the free sketch from paid work", () =
   assert.match(body, /før noe arbeid starter/);
   assert.doesNotMatch(body, /webhotell|AI|kunder går tapt/);
   assert.ok(body.split(/\s+/).length < 110);
+  assert.match(body, /Org\.nr\. 838 632 122$/);
+  assert.equal(body.match(/Org\.nr\. 838 632 122/g)?.length, 1);
 });
 
 test("quality outreach labels the finding as unverified", () => {
@@ -111,4 +117,5 @@ test("the single follow-up promises no further contact", () => {
   const body = buildFollowUpEmailBody(template, company, "website-offer");
   assert.match(body, /én gang/);
   assert.match(body, /Jeg kontakter dere ikke igjen om dette/);
+  assert.match(body, /Org\.nr\. 838 632 122$/);
 });

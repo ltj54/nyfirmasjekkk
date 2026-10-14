@@ -1,6 +1,11 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Building2, CalendarDays, ExternalLink, FileText, Globe2, MapPin, Phone, ReceiptText, UserRound } from "lucide-react";
 
-type ProjectStatus = "working" | "waiting" | "payment" | "completed" | "inactive";
+import { crmProjectId, isoDateFromNorwegian, norwegianDateFromIso, osloToday, type CrmEventKind, type CrmEventRecord } from "@/lib/crm-events";
+
+type ProjectStatus = "working" | "waiting" | "delivered" | "payment" | "completed" | "inactive";
 type AgreementStatus = "required" | "draft" | "signed" | "not-used";
 
 type CrmEvent = { date: string; label: string };
@@ -32,6 +37,7 @@ type CrmProject = {
   invoiceDate?: string;
   invoiceDueDate?: string;
   deliveryConfirmedDate?: string;
+  deliveryComplete?: boolean;
   paymentDate?: string;
   invoiceNumber?: string;
   invoiceFile?: string;
@@ -132,13 +138,18 @@ const projects: CrmProject[] = [
     sentProposalDate: "23.09.2026",
     followUpDate: "02.10.2026",
     deliveryConfirmedDate: "06.10.2026",
-    outreach: "Leveransen ferdig – fakturering avventer",
-    progress: "Nettsiden er publisert på davidsson.no. Lars opplyste 06.10.2026 at alt ved leveransen er i orden, og at faktura er eneste gjenstående punkt. Lars opplyste også at LTJ-Production ennå ikke er registrert som enkeltpersonforetak eller i Merverdiavgiftsregisteret. Ingen ytterligere purring er planlagt.",
-    nextStep: "Avklar registrering av fakturautsteder og korrekt oppgjørsform. Avtalt grunnpris er 1 990 kr uten MVA. Registrer fakturanummer, dato og forfall først når faktura faktisk er utstedt; flytt deretter saken til avventer betaling.",
-    invoice: "Ikke fakturert · 1 990 kr uten MVA · avventer fakturautsteder",
+    deliveryComplete: true,
+    outreach: "Nettsiden levert – faktura sendt 14.10.2026",
+    progress: "Nettsiden er publisert på davidsson.no. Lars bekreftet at leveransen er i orden. LTJ PRODUCTION JOHANNESSEN er registrert med org.nr. 838 632 122, og faktura 2026-004 er sendt til Gunnar.",
+    nextStep: "Avvent betaling på 1 990 kr innen 28.10.2026. Registrer betalingsdato først når innbetalingen er bekreftet. Ingen automatisk purring er planlagt.",
+    invoiceDate: "14.10.2026",
+    invoiceDueDate: "28.10.2026",
+    invoiceAmount: 1990,
+    invoiceNumber: "2026-004",
+    invoice: "Sendt · 1 990 kr · forfall 28.10.2026",
     agreement: "Avtaleutkast ligger i prosjektet, men er ikke sendt eller inngått.",
     agreementStatus: "draft",
-    status: "working",
+    status: "payment",
   },
   {
     name: "Varneth Management Ness",
@@ -150,6 +161,7 @@ const projects: CrmProject[] = [
     dateLabel: "Henvendelse",
     replyDate: "09.09.2026 kl. 15:20",
     paymentDate: "22.09.2026",
+    deliveryComplete: true,
     outreach: "Kunde godkjent – publisert",
     progress: "Publisert på varneth.eu. Norsk/engelsk forside med KI-musikk, Broken Veil, Black Veil Hart, rådgivning, publishing og kontaktløsning.",
     nextStep: "Betaling på 1 990 kr mottatt 22.09.2026. Eventuelle innholdsendringer håndteres manuelt.",
@@ -216,8 +228,8 @@ const projects: CrmProject[] = [
     agreementStatus: "not-used",
     status: "inactive",
   },
-  { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", invoiceAmount: 1990, invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.", agreementStatus: "not-used", status: "completed" },
-  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", paymentDate: "18.09.2026", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceAmount: 1990, invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Betalt · 1 990 kr", agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.", agreementStatus: "not-used", status: "completed" },
+  { name: "Breathe Senja", domain: "www.breathesenja.com", contact: "Roland Henriksen", email: "roland.henriksen75@gmail.com", proposalDate: "06.07.2026", paymentDate: "20.07.2026", deliveryComplete: true, invoiceAmount: 1990, invoiceNumber: "2026-001", invoiceFile: "/invoices/faktura-2026-001-breathe-senja-betalt.pdf", outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoice: "Betalt · 1 990 kr", agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.", agreementStatus: "not-used", status: "completed" },
+  { name: "Zagros Forlag", domain: "www.zagrosforlag.no", contact: "Eisa Bazyar", email: "post@zagrosforlag.no", proposalDate: "13.08.2026", paymentDate: "18.09.2026", deliveryComplete: true, outreach: "Kunde godkjent", progress: "Ferdig – endelig domene og Formspree i bruk", provider: "Formspree", invoiceAmount: 1990, invoiceNumber: "2026-002", invoiceFile: "/invoices/faktura-2026-002-zagros-forlag.pdf", invoice: "Betalt · 1 990 kr", agreement: "Ikke brukt – prosjektet ble ferdigstilt før avtalerutinen ble innført.", agreementStatus: "not-used", status: "completed" },
   { name: "Minde Momentum", domain: "minde-momentum.ltj-production.no", domainRemoved: "03.09.2026", contact: "Liv Minde", email: "livminde8@gmail.com", proposalDate: "18.08.2026", outreach: "Arkivert i GitHub – ingen avklaring mottatt", progress: "Lokal kopi ligger i minde-momentum_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi og kan slettes senere dersom det ikke lenger trengs.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
   { name: "Skifjelds Håndverk", domain: "skifjelds-handverk.ltj-production.no", domainRemoved: "03.09.2026", contact: "Terje Skifjeld", email: "terje_skifjeld@yahoo.no", proposalDate: "25.08.2026", followUpDate: "27.08.2026", responseDeadline: "02.09.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i skifjelds-handverk_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
   { name: "Casa Latina Trondheim", domain: "casa-latina-trondheim.ltj-production.no", domainRemoved: "08.09.2026", contact: "Sandra Yineth Morales Guerrero", email: "sandraymorales30@gmail.com", proposalDate: "26.08.2026", outreach: "Arkivert i GitHub – ingen svar mottatt", progress: "Lokal kopi ligger i casa-latina-trondheim_FJERNET-GITHUB. GitHub-repositoriet er arkivert som sikkerhetskopi.", invoice: "Ikke fakturert", agreement: "Ikke brukt – prosjektet ble ikke videreført.", agreementStatus: "not-used", status: "inactive" },
@@ -230,8 +242,9 @@ const statusGroups: ReadonlyArray<{
 }> = [
   { status: "working", label: "Under arbeid", tone: "border-blue-200 bg-blue-50", badge: "bg-blue-100 text-blue-900" },
   { status: "waiting", label: "Avventer kunden", tone: "border-yellow-200 bg-yellow-50", badge: "bg-yellow-100 text-yellow-900" },
+  { status: "delivered", label: "Levert · ikke fakturert", tone: "border-teal-200 bg-teal-50", badge: "bg-teal-100 text-teal-900" },
   { status: "payment", label: "Avventer betaling", tone: "border-orange-200 bg-orange-50", badge: "bg-orange-100 text-orange-900" },
-  { status: "completed", label: "Ferdig og betalt", tone: "border-emerald-200 bg-emerald-50", badge: "bg-emerald-100 text-emerald-900", collapsed: true },
+  { status: "completed", label: "Betalt", tone: "border-emerald-200 bg-emerald-50", badge: "bg-emerald-100 text-emerald-900", collapsed: true },
   { status: "inactive", label: "På vent / arkivert", tone: "border-slate-200 bg-white", badge: "bg-slate-100 text-slate-700", collapsed: true },
 ];
 
@@ -264,6 +277,38 @@ function deadlineFor(project: CrmProject): string | undefined {
   return undefined;
 }
 
+function delivered(project: CrmProject): boolean {
+  return Boolean(project.deliveryComplete || project.deliveryConfirmedDate) || project.status === "delivered";
+}
+
+function applyCrmEvents(project: CrmProject, events: CrmEventRecord[]): CrmProject {
+  const updated = { ...project };
+  for (const event of events) {
+    if (event.projectId !== crmProjectId(project.name, project.organizationNumber)) continue;
+    if (event.kind === "delivery_confirmed") {
+      updated.deliveryConfirmedDate = event.date;
+      updated.deliveryComplete = true;
+      if (updated.status === "working" || updated.status === "waiting") updated.status = "delivered";
+    }
+    if (event.kind === "invoice_sent") {
+      updated.invoiceDate = event.date;
+      updated.invoiceDueDate = event.dueDate;
+      updated.invoiceNumber = event.invoiceNumber;
+      updated.invoiceAmount = event.invoiceAmount;
+      updated.invoice = `Sendt · ${money(event.invoiceAmount ?? 0)} · forfall ${event.dueDate}`;
+      updated.nextStep = `Avvent betaling innen ${event.dueDate}. Registrer betalingsdato først når innbetalingen er bekreftet. Ingen automatisk purring.`;
+      updated.status = "payment";
+    }
+    if (event.kind === "payment_received") {
+      updated.paymentDate = event.date;
+      updated.invoice = `Betalt · ${money(updated.invoiceAmount ?? 0)}`;
+      updated.nextStep = `Betaling mottatt ${event.date}. Eventuelle nye oppdrag håndteres manuelt.`;
+      updated.status = "completed";
+    }
+  }
+  return updated;
+}
+
 function compareProjects(a: CrmProject, b: CrmProject): number {
   const firstDeadline = deadlineFor(a);
   const secondDeadline = deadlineFor(b);
@@ -281,21 +326,72 @@ function money(amount: number): string {
 }
 
 export function CrmOverview() {
-  const outstanding = projects.filter((project) => project.status === "payment")
+  const [events, setEvents] = useState<CrmEventRecord[]>([]);
+  const [loadError, setLoadError] = useState("");
+  const [busyProject, setBusyProject] = useState("");
+  const [saveError, setSaveError] = useState("");
+  const [canEdit, setCanEdit] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/crm-events", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Kunne ikke lese CRM-loggen.");
+        return response.json() as Promise<{ events: CrmEventRecord[] }>;
+      })
+      .then((result) => {
+        if (active) {
+          setEvents(result.events);
+          setCanEdit(["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname));
+        }
+      })
+      .catch(() => { if (active) setLoadError("CRM-loggen er utilgjengelig. Registrering er slått av til den kan leses."); });
+    return () => { active = false; };
+  }, []);
+
+  const currentProjects = projects.map((project) => applyCrmEvents(project, events));
+  const outstanding = currentProjects.filter((project) => project.status === "payment")
     .reduce((total, project) => total + (project.invoiceAmount ?? 0), 0);
-  const paid = projects.filter((project) => project.paymentDate)
+  const paid = currentProjects.filter((project) => project.paymentDate)
     .reduce((total, project) => total + (project.invoiceAmount ?? 0), 0);
+
+  async function saveEvent(event: Omit<CrmEventRecord, "recordedAt">) {
+    setSaveError("");
+    setBusyProject(event.projectId);
+    try {
+      const response = await fetch("/api/crm-events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(event),
+      });
+      const result = await response.json() as { event?: CrmEventRecord; error?: string };
+      const savedEvent = result.event;
+      if (!response.ok || !savedEvent) {
+        setSaveError(result.error ?? "Kunne ikke lagre hendelsen.");
+        return false;
+      }
+      setEvents((previous) => [...previous, savedEvent]);
+      return true;
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : "Kunne ikke lagre hendelsen.");
+      return false;
+    } finally {
+      setBusyProject("");
+    }
+  }
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6" id="crm">
       <header className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">CRM · {projects.length} prosjekter</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">CRM · {currentProjects.length} prosjekter</p>
         <h1 className="mt-1 text-2xl font-semibold text-slate-900">Prosjekter og kunder</h1>
-        <p className="mt-2 text-sm text-slate-600">Status først, nærmeste registrerte frist deretter. Nye prosjekter skal ha en tilpasset avtale før endelig levering eller løpende drift.</p>
-        <nav aria-label="Prosjektstatuser" className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+        <p className="mt-2 text-sm text-slate-600">Leveranse og betaling vises hver for seg. CRM-registrering sender ingen e-post eller purring.</p>
+        {loadError ? <p role="alert" className="mt-3 text-sm text-red-800">{loadError}</p> : null}
+        {saveError ? <p role="alert" className="mt-3 text-sm text-red-800">{saveError}</p> : null}
+        <nav aria-label="Prosjektstatuser" className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
           {statusGroups.map((group) => (
             <a href={`#crm-${group.status}`} key={group.status} className={`rounded-lg border p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 ${group.tone}`}>
-              <span className="block text-xl font-semibold text-slate-900">{projects.filter((project) => project.status === group.status).length}</span>
+              <span className="block text-xl font-semibold text-slate-900">{currentProjects.filter((project) => project.status === group.status).length}</span>
               <span className="text-slate-700">{group.label}</span>
             </a>
           ))}
@@ -303,13 +399,13 @@ export function CrmOverview() {
         <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-3 border-t border-slate-200 pt-4">
           <div><dt className="text-xs text-slate-600">Utestående fakturert</dt><dd className="text-lg font-semibold text-orange-900">{money(outstanding)}</dd></div>
           <div><dt className="text-xs text-slate-600">Totalt betalt</dt><dd className="text-lg font-semibold text-emerald-900">{money(paid)}</dd></div>
-          <div><dt className="text-xs text-slate-600">Avtaler inngått</dt><dd className="text-lg font-semibold text-blue-900">{projects.filter((project) => project.agreementStatus === "signed").length}</dd></div>
+          <div><dt className="text-xs text-slate-600">Avtaler inngått</dt><dd className="text-lg font-semibold text-blue-900">{currentProjects.filter((project) => project.agreementStatus === "signed").length}</dd></div>
         </dl>
       </header>
 
       <div className="mt-6 space-y-5">
         {statusGroups.map((group) => {
-          const grouped = projects.filter((project) => project.status === group.status).sort(compareProjects);
+          const grouped = currentProjects.filter((project) => project.status === group.status).sort(compareProjects);
           return (
             <details key={group.status} id={`crm-${group.status}`} open={!group.collapsed} className="scroll-mt-6 rounded-xl border border-slate-200 bg-white">
               <summary className="cursor-pointer rounded-xl px-5 py-4 text-base font-semibold text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2">
@@ -317,7 +413,7 @@ export function CrmOverview() {
                 <span className="ml-3 text-sm font-normal text-slate-600">{grouped.length} prosjekter</span>
               </summary>
               <div className="grid gap-4 px-4 pb-4 lg:grid-cols-2">
-                {grouped.map((project) => <ProjectCard key={project.name} project={project} group={group} />)}
+                {grouped.map((project) => <ProjectCard key={project.name} project={project} group={group} canEdit={canEdit && !loadError} busy={busyProject === crmProjectId(project.name, project.organizationNumber)} onSave={saveEvent} />)}
                 {grouped.length === 0 ? <p className="p-2 text-sm text-slate-500">Ingen prosjekter i denne gruppen.</p> : null}
               </div>
             </details>
@@ -329,12 +425,16 @@ export function CrmOverview() {
   );
 }
 
-function ProjectCard({ project, group }: Readonly<{
+function ProjectCard({ project, group, canEdit, busy, onSave }: Readonly<{
   project: CrmProject; group: (typeof statusGroups)[number];
+  canEdit: boolean; busy: boolean;
+  onSave: (event: Omit<CrmEventRecord, "recordedAt">) => Promise<boolean>;
 }>) {
   const history = historyFor(project);
   const latest = history[0];
   const deadline = deadlineFor(project);
+  const overdue = project.status === "payment" && Boolean(project.invoiceDueDate)
+    && isoDateFromNorwegian(project.invoiceDueDate!) < osloToday();
   const fallback = project.status === "completed" ? "Ingen utestående betaling."
     : "Ingen aktiv oppfølging planlagt.";
   return (
@@ -345,6 +445,10 @@ function ProjectCard({ project, group }: Readonly<{
         ? <a href={`mailto:${project.email}`} className="mt-1 block break-all text-sm text-blue-800 underline underline-offset-2">{project.email}</a>
         : <p className="mt-1 text-sm text-slate-500">E-post: {project.email}</p>}
       <span className={`mt-3 inline-block rounded-md px-2 py-1 text-xs font-semibold ${group.badge}`}>{group.label}</span>
+      <span className={`ml-2 mt-3 inline-block rounded-md px-2 py-1 text-xs font-semibold ${delivered(project) ? "bg-teal-100 text-teal-900" : "bg-slate-100 text-slate-700"}`}>
+        Leveranse: {delivered(project) ? "Levert" : "Ikke registrert levert"}
+      </span>
+      {overdue ? <span className="ml-2 inline-block rounded-md bg-red-100 px-2 py-1 text-xs font-semibold text-red-900">Forfalt · manuell vurdering</span> : null}
       <dl className="mt-4 space-y-3 text-sm">
         <Row icon={CalendarDays} label="Sist datert" value={`${latest.date} · ${latest.label}`} />
         {deadline ? <Row icon={CalendarDays} label={project.status === "payment" ? "Forfall" : "Svarfrist"} value={deadline} /> : null}
@@ -353,6 +457,7 @@ function ProjectCard({ project, group }: Readonly<{
         <Row icon={ReceiptText} label="Fakturering" value={project.invoice} />
         {project.invoiceNumber ? <Row icon={ReceiptText} label="Fakturanr." value={project.invoiceNumber} /> : null}
       </dl>
+      {canEdit ? <CrmActions project={project} busy={busy} onSave={onSave} /> : null}
       <div className="mt-4 flex flex-col items-start gap-2 border-t border-slate-200 pt-3 text-sm">
         <ProjectWebsite domain={project.domain} domainRemoved={project.domainRemoved} />
         {project.previewRemoved ? <p className="break-all text-slate-500">Forslag avpublisert {project.previewRemoved} · {project.previewUrl}</p> : null}
@@ -367,6 +472,75 @@ function ProjectCard({ project, group }: Readonly<{
         </ol>
       </details>
     </article>
+  );
+}
+
+function CrmActions({ project, busy, onSave }: Readonly<{
+  project: CrmProject;
+  busy: boolean;
+  onSave: (event: Omit<CrmEventRecord, "recordedAt">) => Promise<boolean>;
+}>) {
+  const [action, setAction] = useState<CrmEventKind | null>(null);
+  const [date, setDate] = useState(osloToday);
+  const [dueDate, setDueDate] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState("");
+  const [amount, setAmount] = useState("");
+  const projectId = crmProjectId(project.name, project.organizationNumber);
+  const canMarkDelivered = !delivered(project) && project.status !== "inactive";
+  const canMarkInvoiceSent = !project.invoiceNumber && project.status !== "inactive";
+  const canMarkPaid = project.status === "payment" && !project.paymentDate;
+  if (!canMarkDelivered && !canMarkInvoiceSent && !canMarkPaid) return null;
+
+  async function submit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!action) return;
+    const record: Omit<CrmEventRecord, "recordedAt"> = {
+      projectId,
+      kind: action,
+      date: norwegianDateFromIso(date),
+    };
+    if (action === "invoice_sent") {
+      record.invoiceNumber = invoiceNumber.trim();
+      record.invoiceAmount = Number(amount.replace(",", "."));
+      record.dueDate = norwegianDateFromIso(dueDate);
+    }
+    if (await onSave(record)) setAction(null);
+  }
+
+  return (
+    <div className="mt-4 border-t border-slate-200 pt-3 text-sm">
+      <p className="font-medium text-slate-800">Registrer hendelse manuelt</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {canMarkDelivered ? <button type="button" onClick={() => setAction("delivery_confirmed")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Leveranse ferdig</button> : null}
+        {canMarkInvoiceSent ? <button type="button" onClick={() => setAction("invoice_sent")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Faktura sendt</button> : null}
+        {canMarkPaid ? <button type="button" onClick={() => setAction("payment_received")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Betaling mottatt</button> : null}
+      </div>
+      {action ? (
+        <form onSubmit={(event) => void submit(event)} className="mt-3 space-y-3 rounded-md border border-slate-200 bg-white p-3">
+          <p className="text-xs text-slate-600">Dette registrerer bare det som allerede har skjedd. Ingen e-post, faktura eller purring sendes.{action === "payment_received" ? " Bruk dette når hele fakturaen er betalt." : ""}</p>
+          <label className="block font-medium text-slate-700"><span className="block">Dato</span>
+            <input required type="date" value={date} onChange={(event) => setDate(event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-2 py-1.5" />
+          </label>
+          {action === "invoice_sent" ? (
+            <div className="grid gap-3 sm:grid-cols-3">
+              <label className="font-medium text-slate-700"><span className="block">Fakturanummer</span>
+                <input required pattern="[0-9]{4}-[0-9]{3,}" value={invoiceNumber} onChange={(event) => setInvoiceNumber(event.target.value)} placeholder="2026-005" className="mt-1 block w-full rounded-md border border-slate-300 px-2 py-1.5" />
+              </label>
+              <label className="font-medium text-slate-700"><span className="block">Beløp i kr</span>
+                <input required type="number" min="0.01" step="0.01" value={amount} onChange={(event) => setAmount(event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-2 py-1.5" />
+              </label>
+              <label className="font-medium text-slate-700"><span className="block">Forfallsdato</span>
+                <input required type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-2 py-1.5" />
+              </label>
+            </div>
+          ) : null}
+          <div className="flex gap-2">
+            <button type="submit" disabled={busy} className="rounded-md bg-blue-700 px-3 py-1.5 font-medium text-white disabled:opacity-50">{busy ? "Lagrer …" : "Lagre i CRM"}</button>
+            <button type="button" onClick={() => setAction(null)} className="rounded-md border border-slate-300 px-3 py-1.5">Avbryt</button>
+          </div>
+        </form>
+      ) : null}
+    </div>
   );
 }
 
