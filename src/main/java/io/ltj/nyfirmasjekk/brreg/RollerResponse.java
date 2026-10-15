@@ -1,6 +1,7 @@
 package io.ltj.nyfirmasjekk.brreg;
 
 import java.util.List;
+import java.time.LocalDate;
 
 public record RollerResponse(List<Rollegruppe> rollegrupper) {
 
@@ -19,7 +20,10 @@ public record RollerResponse(List<Rollegruppe> rollegrupper) {
     public record Rolletype(String kode, String beskrivelse) {
     }
 
-    public record Person(Personnavn navn) {
+    public record Person(Personnavn navn, LocalDate fodselsdato) {
+        public Person(Personnavn navn) {
+            this(navn, null);
+        }
     }
 
     public record Personnavn(String fornavn, String mellomnavn, String etternavn) {

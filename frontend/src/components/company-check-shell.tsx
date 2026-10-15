@@ -116,6 +116,7 @@ const countyOptions = [
   "Østfold",
 ];
 type WorkspaceTab = "leads" | "website" | "outreach" | "crm";
+type ContactAge = { name: string; age: number };
 type BatchValidation = {
   status: "checking" | "blocked" | "ready";
   reason?: string;
@@ -458,6 +459,7 @@ export function CompanyCheckShell() {
   const [selectedCompany, setSelectedCompany] = useState<CompanyDetails | null>(null);
   const [selectedWebsiteInspection, setSelectedWebsiteInspection] = useState<WebsiteInspectionResponse | null>(null);
   const [recentCompanies, setRecentCompanies] = useState<CompanySummary[]>([]);
+  const [contactAgesByOrg, setContactAgesByOrg] = useState<Record<string, ContactAge>>({});
   const [websiteAvailabilityByOrg, setWebsiteAvailabilityByOrg] = useState<Record<string, WebsiteAvailability>>({});
   const [metadata, setMetadata] = useState<MetadataFiltersResponse>({
     organizationForms: [],
@@ -1301,6 +1303,25 @@ export function CompanyCheckShell() {
   useEffect(() => {
     runRefreshRecent();
   }, [backendReady, initialResultsReady, daysFilter, websiteLeadCohort, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, debouncedNameFilter]);
+
+  useEffect(() => {
+    if (recentCompanies.length === 0) return;
+    const controller = new AbortController();
+    const orgNumbers = recentCompanies.map((company) => company.orgNumber);
+    void fetch("/api/company-check/contact-ages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orgNumbers),
+      signal: controller.signal,
+    }).then(async (response) => {
+      if (!response.ok) return;
+      const ages = await response.json() as Record<string, ContactAge>;
+      if (!controller.signal.aborted) setContactAgesByOrg(ages);
+    }).catch(() => {
+      // Ages are optional; an unavailable lookup must not block the lead list.
+    });
+    return () => controller.abort();
+  }, [recentCompanies]);
 
   useEffect(() => {
     if (!websiteLeadCohort || recentCompanies.length === 0) return;
@@ -2540,6 +2561,7 @@ export function CompanyCheckShell() {
                   return <LeadResultRow
                     key={company.orgNumber}
                     company={company}
+                    contactAge={contactAgesByOrg[company.orgNumber]}
                     websiteAvailability={websiteLeadCohort ? websiteAvailabilityByOrg[company.orgNumber] ?? null : undefined}
                     onClick={() => void openCompanyDetails(company.orgNumber)}
                     onMarkNotRelevant={() => void markLeadNotRelevant(company)}
@@ -4551,6 +4573,7 @@ function LeadResultRow({
   showSelectionCheckbox,
   batchValidation,
   company,
+  contactAge,
   onClick,
   onMarkNotRelevant,
   onToggleBatch,
@@ -4564,6 +4587,7 @@ function LeadResultRow({
   showSelectionCheckbox: boolean;
   batchValidation: BatchValidation | null;
   company: CompanySummary;
+  contactAge?: ContactAge;
   onClick: () => void;
   onMarkNotRelevant: () => void;
   onToggleBatch: (selected: boolean) => void;
@@ -4608,6 +4632,7 @@ function LeadResultRow({
           <span className="mt-1 block text-[11px] font-medium text-[#52606D]">
             Etablert: {formatEstablishedDate(company.registrationDate)}
           </span>
+          <LeadContactAge contactAge={contactAge} />
           {websiteAvailability !== undefined ? (
             <span className="mt-1 block text-[11px] text-[#52606D]">
               <span className="block font-semibold">Samlet vurdering</span>
@@ -4677,6 +4702,15 @@ function LeadResultRow({
         </p>
       ) : null}
     </div>
+  );
+}
+
+function LeadContactAge({ contactAge }: Readonly<{ contactAge?: ContactAge }>) {
+  if (!contactAge) return null;
+  return (
+    <span className="mt-1 block truncate text-[11px] text-[#52606D]" title="Alder beregnet fra fødselsdato i Brønnøysundregistrenes rolledata">
+      {contactAge.name} · {contactAge.age} år
+    </span>
   );
 }
 
