@@ -18,7 +18,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Domeneeksempel: `{{domainExample}}`
 - Domenelinje: `{{domainLine}}`
 - Pris: `{{priceValue}}`
-- Avsenders organisasjonsnummer: `{{senderOrganizationNumber}}` (LTJ Production, 838 632 122)
+- Avsenders organisasjonsnummer: `{{senderOrganizationNumber}}` (838 632 122)
 - Registrert nettside-intro: `{{registeredWebsiteIntro}}`
 - Lokalavdeling på fellesnettsted: `{{localChapterDescription}}`
 - Dokumentert observasjon: `{{websiteQualityMailLine}}`
@@ -73,7 +73,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Når et lokallag eller fylkeslag oppgir hovedorganisasjonens felles nettside, skal rapporten om hovedsiden ikke brukes som om lokallaget eier den. Lag bare et manuelt utkast som avklarer hvem som styrer den lokale informasjonen; ikke send automatisk.
 - Når registrert nettside ikke svarer, må et manuelt utkast bygge på kontroll av adressen og andre fungerende kontakt- eller bestillingskanaler. Ikke anta at nettsiden finnes, eller at domenet bare er registrert; begge deler er mulige. Tilby å undersøke og rette en eksisterende løsning hvis det er aktuelt, eller å bygge en nettside eller app dersom adressen ennå ikke brukes og virksomheten ønsker det. Utsending i nettsidelead-batch krever eksplisitt bekreftelse og to adskilte tekniske sjekker; den manuelle plassholderen fjernes da, siden batchen ikke kan hevde manuell kontroll. Ikke oppgi fastpris før behov og omfang er avklart.
 - Ikke ramse opp tekniske detaljer som DMARC, SPF, DKIM, sikkerhetsheadere eller tredjepartsscripts før mottakeren har bedt om mer.
-- Avslutt alle e-poster med `Org.nr. 838 632 122` i signaturen, også oppfølginger og nettsidelead-batcher.
+- Avslutt alle e-poster med signaturen nedenfor, også oppfølginger og nettsidelead-batcher. Behold de to innledende mellomrommene på hver signaturlinje etter hilsenen.
 
 ## E-postmal
 
@@ -83,17 +83,18 @@ Emne: `Nettside for {{companyName}}?`
 
 [Skriv én konkret observasjon om virksomheten her.]
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
+Jeg heter Lars og lager nettsider. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
 
 En avtalt grunnløsning koster {{priceValue}} kr, inkludert utvikling og publisering. Vi avklarer innhold og eventuelle andre kostnader før noe arbeid starter.
 
 Vil dere at jeg sender en slik skisse?
 
 Med vennlig hilsen
-{{senderName}}
-{{senderPhone}}
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## E-postmal - registrert nettside svarer ikke
 
@@ -101,7 +102,7 @@ Emne: `Et spørsmål om {{registeredWebsite}}`
 
 {{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så {{registeredWebsite}} oppført som nettadresse for {{companyName}}, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig, og jeg vet ikke om dere bruker en annen adresse.
+Jeg heter Lars og lager nettsider. Jeg så {{registeredWebsite}} oppført som nettadresse for {{companyName}}, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig, og jeg vet ikke om dere bruker en annen adresse.
 
 [Fyll inn hva du har kontrollert manuelt, og om virksomheten har en annen fungerende kontakt- eller bestillingsside.]
 
@@ -110,10 +111,11 @@ Hvis dere vil bruke adressen, kan jeg se nærmere på hva som hindrer den i å �
 Er det relevant at jeg sender en kort vurdering?
 
 Med vennlig hilsen
-{{senderName}}  
-{{senderPhone}}  
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## E-postmal - Audiograf Julie Johnsen
 
@@ -121,33 +123,35 @@ Emne: `Et spørsmål om merennlyd.no`
 
 Hei Julie,
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
+Jeg heter Lars og lager nettsider. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
 
 Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan det hende at adressen bare trenger å kobles til den. Hvis dere ønsker en egen nettside, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
 Vil dere at jeg ser nærmere på adressen og sender en kort vurdering?
 
 Med vennlig hilsen
-{{senderName}}
-{{senderPhone}}
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## E-postmal - Audiograf Julie Johnsen - batch
 
 Hei Julie,
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
+Jeg heter Lars og lager nettsider. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
 
 Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan det hende at adressen bare trenger å kobles til den. Hvis dere ønsker en egen nettside, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
 Vil dere at jeg ser nærmere på adressen og sender en kort vurdering?
 
 Med vennlig hilsen
-{{senderName}}
-{{senderPhone}}
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## E-postmal - nettside kan forbedres
 
@@ -155,7 +159,7 @@ Emne: `En observasjon om nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. En automatisk førstesjekk av nettsiden til {{companyName}} ga dette mulige funnet:
+Jeg heter Lars og lager nettsider. En automatisk førstesjekk av nettsiden til {{companyName}} ga dette mulige funnet:
 
 {{websiteQualityMailLine}}
 
@@ -164,10 +168,11 @@ Jeg har ikke kontrollert det manuelt, så det kan være uproblematisk. En kort v
 Vil dere at jeg ser nærmere på det?
 
 Med vennlig hilsen
-{{senderName}}  
-{{senderPhone}}  
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## E-postmal - registrert nettside bør vurderes manuelt
 
@@ -175,17 +180,18 @@ Emne: `Nettsiden til {{companyName}}`
 
 {{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg kom over nettsiden til {{companyName}} og lurte på om dere ønsker en kort vurdering av innhold, mobilvisning og kontaktmuligheter.
+Jeg heter Lars og lager nettsider. Jeg kom over nettsiden til {{companyName}} og lurte på om dere ønsker en kort vurdering av innhold, mobilvisning og kontaktmuligheter.
 
 Den første vurderingen er gratis. Eventuelle endringer avtaler vi på forhånd.
 
 Er det aktuelt?
 
 Med vennlig hilsen
-{{senderName}}  
-{{senderPhone}}  
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## E-postmal - lokallag med felles nettside
 
@@ -193,17 +199,18 @@ Emne: `Et spørsmål om {{localChapterDescription}}`
 
 {{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted, så jeg vet ikke hvem som styrer den lokale informasjonen.
+Jeg heter Lars og lager nettsider. Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted, så jeg vet ikke hvem som styrer den lokale informasjonen.
 
 Hvis dere ønsker det, kan jeg se på muligheter innenfor løsningen dere allerede bruker. Jeg foreslår ikke å erstatte fellesnettstedet.
 
 Er det dere lokalt som bestemmer hvordan informasjonen presenteres?
 
 Med vennlig hilsen
-{{senderName}}
-{{senderPhone}}
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}
 
 ## Oppfølging etter 4–14 arbeidsdager
 
@@ -220,7 +227,8 @@ Jeg følger opp e-posten min om nettsiden til {{companyName}} én gang.
 Hvis det ikke er aktuelt, trenger dere ikke svare. Jeg kontakter dere ikke igjen om dette.
 
 Med vennlig hilsen
-{{senderName}}
-{{senderPhone}}
-{{senderEmail}}
-{{senderOrganizationNumber}}
+  {{senderName}}
+  {{senderWebsite}}
+  {{senderPhone}}
+  {{senderEmail}}
+  {{senderOrganizationNumber}}

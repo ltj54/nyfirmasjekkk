@@ -134,7 +134,7 @@ export function buildOutreachEmailBody(markdown: string, company: OutreachEmailC
   const config = outreachEmailTemplateConfig(company);
   const template = extractMarkdownSection(markdown, config.heading) ?? config.bodyFallback();
   const cleanedTemplate = removeMailSubjectLine(template);
-  return withSenderOrganizationNumber(applyOutreachTemplate(cleanedTemplate, company));
+  return withSenderSignature(applyOutreachTemplate(cleanedTemplate, company));
 }
 
 export function buildWebsiteLeadBatchEmailBody(markdown: string, company: OutreachEmailCompany) {
@@ -147,7 +147,7 @@ export function buildWebsiteLeadBatchEmailBody(markdown: string, company: Outrea
     WEBSITE_RESEARCH_PLACEHOLDER,
     "",
   ).replace(/\n{3,}/g, "\n\n");
-  return withSenderOrganizationNumber(body);
+  return withSenderSignature(body);
 }
 
 export function buildFollowUpEmailSubject(markdown: string, company: OutreachEmailCompany) {
@@ -160,16 +160,24 @@ export function buildFollowUpEmailBody(markdown: string, company: OutreachEmailC
   const template = extractMarkdownSection(markdown, "Oppfølging etter 4–14 arbeidsdager")
     ?? defaultFollowUpEmailTemplate();
   const body = removeMailSubjectLine(template).replaceAll("{{followUpQuestion}}", followUpQuestion(originalOfferType));
-  return withSenderOrganizationNumber(applyOutreachTemplate(body, company));
+  return withSenderSignature(applyOutreachTemplate(body, company));
 }
 
 const SENDER_ORGANIZATION_NUMBER = "Org.nr. 838 632 122";
+const SENDER_SIGNATURE = [
+  "Med vennlig hilsen",
+  "  Lars Johannessen",
+  "  https://www.ltj-production.no/",
+  "  977 24 209",
+  "  kontakt@ltj-production.no",
+  `  ${SENDER_ORGANIZATION_NUMBER}`,
+].join("\n");
 
-function withSenderOrganizationNumber(body: string) {
-  const trimmed = body.trimEnd();
-  return trimmed.includes(SENDER_ORGANIZATION_NUMBER)
-    ? trimmed
-    : `${trimmed}\n${SENDER_ORGANIZATION_NUMBER}`;
+function withSenderSignature(body: string) {
+  const trimmed = body.replaceAll("\r\n", "\n").trimEnd();
+  const signatureStart = trimmed.lastIndexOf("\nMed vennlig hilsen");
+  const content = signatureStart >= 0 ? trimmed.slice(0, signatureStart).trimEnd() : trimmed;
+  return `${content}\n\n${SENDER_SIGNATURE}`;
 }
 
 function followUpQuestion(originalOfferType: string | null | undefined) {
@@ -701,8 +709,8 @@ function collectSignatureBlock(lines: string[], startIndex: number) {
 
   const block: string[] = [];
   for (let index = startIndex; index < lines.length; index += 1) {
-    const line = lines[index].trim();
-    if (!line) {
+    const line = lines[index].trimEnd();
+    if (!line.trim()) {
       continue;
     }
     block.push(line);
@@ -711,13 +719,16 @@ function collectSignatureBlock(lines: string[], startIndex: number) {
 }
 
 function renderInlineHtml(line: string) {
-  if (isEmailAddress(line)) {
-    return `<a href="mailto:${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a>`;
+  const indentation = /^ */.exec(line)?.[0].length ?? 0;
+  const content = line.trimStart();
+  const prefix = "&nbsp;".repeat(indentation);
+  if (isEmailAddress(content)) {
+    return `${prefix}<a href="mailto:${escapeHtml(content)}" style="color: #1F5FA9;">${escapeHtml(content)}</a>`;
   }
-  if (isHttpUrl(line)) {
-    return `<a href="${escapeHtml(line)}" style="color: #1F5FA9;">${escapeHtml(line)}</a>`;
+  if (isHttpUrl(content)) {
+    return `${prefix}<a href="${escapeHtml(content)}" style="color: #1F5FA9;">${escapeHtml(content)}</a>`;
   }
-  return escapeHtml(line);
+  return `${prefix}${escapeHtml(content)}`;
 }
 
 function extractMailSubject(markdown: string, heading = "E-postmal") {
@@ -814,7 +825,7 @@ function applyOutreachTemplate(template: string, company: OutreachEmailCompany) 
 function defaultWebsiteQualityOpportunityEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. En automatisk førstesjekk av nettsiden til {{companyName}} ga dette mulige funnet:
+Jeg heter Lars og lager nettsider. En automatisk førstesjekk av nettsiden til {{companyName}} ga dette mulige funnet:
 
 {{websiteQualityMailLine}}
 
@@ -831,7 +842,7 @@ Med vennlig hilsen
 function defaultRegisteredWebsiteUnavailableEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så {{registeredWebsite}} oppført som nettadresse for {{companyName}}, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig, og jeg vet ikke om dere bruker en annen adresse.
+Jeg heter Lars og lager nettsider. Jeg så {{registeredWebsite}} oppført som nettadresse for {{companyName}}, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig, og jeg vet ikke om dere bruker en annen adresse.
 
 ${WEBSITE_RESEARCH_PLACEHOLDER}
 
@@ -848,7 +859,7 @@ Med vennlig hilsen
 function defaultAudiografWebsiteEmailTemplate() {
   return `Hei Julie,
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
+Jeg heter Lars og lager nettsider. Jeg så www.merennlyd.no oppført som nettadresse for Audiograf Julie Johnsen, men fikk ikke åpnet den ved en teknisk sjekk. Det kan være midlertidig.
 
 Hvis dere fortsatt bruker bestillingssiden hos SumUp, kan det hende at adressen bare trenger å kobles til den. Hvis dere ønsker en egen nettside, kan jeg hjelpe med det også. En kort vurdering er gratis; eventuelt arbeid avtaler vi på forhånd.
 
@@ -900,7 +911,7 @@ function isRegulatedOrEstablishedWebsiteOwner(company: Pick<OutreachEmailCompany
 function defaultRegisteredWebsiteReviewEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg kom over nettsiden til {{companyName}} og lurte på om dere ønsker en kort vurdering av innhold, mobilvisning og kontaktmuligheter.
+Jeg heter Lars og lager nettsider. Jeg kom over nettsiden til {{companyName}} og lurte på om dere ønsker en kort vurdering av innhold, mobilvisning og kontaktmuligheter.
 
 Den første vurderingen er gratis. Eventuelle endringer avtaler vi på forhånd.
 
@@ -915,7 +926,7 @@ Med vennlig hilsen
 function defaultLocalChapterSharedWebsiteEmailTemplate() {
   return `{{greetingLine}}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted, så jeg vet ikke hvem som styrer den lokale informasjonen.
+Jeg heter Lars og lager nettsider. Jeg så at {{localChapterDescription}} oppgir {{registeredWebsite}} som nettside. Det ser ut til å være et felles nettsted, så jeg vet ikke hvem som styrer den lokale informasjonen.
 
 Hvis dere ønsker det, kan jeg se på muligheter innenfor løsningen dere allerede bruker. Jeg foreslår ikke å erstatte fellesnettstedet.
 
@@ -944,7 +955,7 @@ function defaultOutreachEmailTemplate() {
 
 ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
-Jeg heter Lars og lager nettsider i LTJ Production. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
+Jeg heter Lars og lager nettsider. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
 
 En avtalt grunnløsning koster {{priceValue}} kr, inkludert utvikling og publisering. Vi avklarer innhold og eventuelle andre kostnader før noe arbeid starter.
 

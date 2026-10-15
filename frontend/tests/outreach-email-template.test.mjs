@@ -4,12 +4,14 @@ import test from "node:test";
 import {
   buildFollowUpEmailBody,
   buildOutreachEmailBody,
+  buildOutreachEmailHtml,
   buildOutreachEmailSubject,
   buildWebsiteLeadBatchEmailBody,
   hasUnresolvedPersonalObservation,
 } from "../src/lib/outreach-email-template.ts";
 
 const template = readFileSync(new URL("../../data/outreach-email-template.md", import.meta.url), "utf8");
+const signature = "Med vennlig hilsen\n  Lars Johannessen\n  https://www.ltj-production.no/\n  977 24 209\n  kontakt@ltj-production.no\n  Org.nr. 838 632 122";
 
 const unavailableWebsite = {
   status: "REGISTERED",
@@ -35,6 +37,8 @@ test("batch uses the approved Audiograf message, without stale technical claims"
   assert.doesNotMatch(body, /mistet kunder|må gjøre/);
   assert.equal(hasUnresolvedPersonalObservation(body), false);
   assert.match(body, /Org\.nr\. 838 632 122$/);
+  assert.ok(body.endsWith(signature));
+  assert.doesNotMatch(body, /LTJ Production/);
 });
 
 test("batch keeps the cautious generic message for other unavailable websites", () => {
@@ -56,6 +60,7 @@ test("batch keeps the cautious generic message for other unavailable websites", 
   assert.match(body, /eventuelt arbeid avtaler vi på forhånd/);
   assert.equal(hasUnresolvedPersonalObservation(body), false);
   assert.match(body, /Org\.nr\. 838 632 122$/);
+  assert.ok(body.endsWith(signature));
 });
 
 test("batch falls back to the approved Audiograf message if the template section is missing", () => {
@@ -70,6 +75,7 @@ test("batch falls back to the approved Audiograf message if the template section
   const body = buildWebsiteLeadBatchEmailBody("", company);
   assert.match(body, /bestillingssiden hos SumUp/);
   assert.match(body, /Org\.nr\. 838 632 122$/);
+  assert.ok(body.endsWith(signature));
 });
 
 test("first contact is short and separates the free sketch from paid work", () => {
@@ -89,6 +95,11 @@ test("first contact is short and separates the free sketch from paid work", () =
   assert.ok(body.split(/\s+/).length < 110);
   assert.match(body, /Org\.nr\. 838 632 122$/);
   assert.equal(body.match(/Org\.nr\. 838 632 122/g)?.length, 1);
+  assert.ok(body.endsWith(signature));
+  assert.doesNotMatch(body, /LTJ Production/);
+  const html = buildOutreachEmailHtml(body);
+  assert.match(html, /&nbsp;&nbsp;Lars Johannessen/);
+  assert.match(html, /href="https:\/\/www\.ltj-production\.no\/"/);
 });
 
 test("quality outreach labels the finding as unverified", () => {
@@ -118,4 +129,5 @@ test("the single follow-up promises no further contact", () => {
   assert.match(body, /én gang/);
   assert.match(body, /Jeg kontakter dere ikke igjen om dette/);
   assert.match(body, /Org\.nr\. 838 632 122$/);
+  assert.ok(body.endsWith(signature));
 });

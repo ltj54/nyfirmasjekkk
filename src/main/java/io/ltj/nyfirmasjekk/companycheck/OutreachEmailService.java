@@ -19,6 +19,19 @@ import java.util.Set;
 @Service
 public class OutreachEmailService {
     private static final String SENDER_ORGANIZATION_NUMBER = "Org.nr. 838 632 122";
+    private static final String SENDER_WEBSITE = "https://www.ltj-production.no/";
+    private static final String SENDER_SIGNATURE = "Med vennlig hilsen\n"
+            + "  Lars Johannessen\n"
+            + "  " + SENDER_WEBSITE + "\n"
+            + "  977 24 209\n"
+            + "  kontakt@ltj-production.no\n"
+            + "  " + SENDER_ORGANIZATION_NUMBER;
+    private static final String SENDER_SIGNATURE_HTML = "<p>Med vennlig hilsen<br>"
+            + "&nbsp;&nbsp;Lars Johannessen<br>"
+            + "&nbsp;&nbsp;<a href=\"" + SENDER_WEBSITE + "\">" + SENDER_WEBSITE + "</a><br>"
+            + "&nbsp;&nbsp;977 24 209<br>"
+            + "&nbsp;&nbsp;kontakt@ltj-production.no<br>"
+            + "&nbsp;&nbsp;" + SENDER_ORGANIZATION_NUMBER + "</p>";
     private static final Set<String> APPROVED_WEBSITE_EMAIL_EVIDENCE = Set.of(
             "WEAK_CONTACT_POINT",
             "CONTACT_DETAILS_NOT_VISIBLE",
@@ -64,7 +77,7 @@ public class OutreachEmailService {
             helper.setReplyTo(replyTo);
             helper.setTo(recipient);
             helper.setSubject(request.subject().trim());
-            String plainBody = withSenderOrganizationNumber(request.body());
+            String plainBody = withSenderSignature(request.body());
             helper.setText(plainBody, htmlOrPlain(request, plainBody));
             mailSender.send(message);
             return recipient;
@@ -82,21 +95,26 @@ public class OutreachEmailService {
 
     String htmlOrPlain(OutreachEmailSendRequest request, String plainBody) {
         if (request.htmlBody() == null || request.htmlBody().isBlank()) {
-            return plainBody.replace("\n", "<br>");
+            return plainBody.replace("  ", "&nbsp;&nbsp;").replace("\n", "<br>");
         }
         String htmlBody = request.htmlBody().trim();
-        if (htmlBody.contains(SENDER_ORGANIZATION_NUMBER)) {
+        if (htmlBody.contains(SENDER_WEBSITE) && htmlBody.contains(SENDER_ORGANIZATION_NUMBER)) {
             return htmlBody;
         }
-        return htmlBody + "<p>" + SENDER_ORGANIZATION_NUMBER + "</p>";
+        int signoffIndex = htmlBody.lastIndexOf("Med vennlig hilsen");
+        int paragraphStart = htmlBody.lastIndexOf("<p", signoffIndex);
+        int paragraphEnd = htmlBody.indexOf("</p>", signoffIndex);
+        if (signoffIndex >= 0 && paragraphStart >= 0 && paragraphEnd >= 0) {
+            return htmlBody.substring(0, paragraphStart) + SENDER_SIGNATURE_HTML + htmlBody.substring(paragraphEnd + 4);
+        }
+        return htmlBody + SENDER_SIGNATURE_HTML;
     }
 
-    static String withSenderOrganizationNumber(String body) {
-        String trimmed = body.trim();
-        if (trimmed.contains(SENDER_ORGANIZATION_NUMBER)) {
-            return trimmed;
-        }
-        return trimmed + "\n" + SENDER_ORGANIZATION_NUMBER;
+    static String withSenderSignature(String body) {
+        String trimmed = body.replace("\r\n", "\n").stripTrailing();
+        int signoffIndex = trimmed.lastIndexOf("\nMed vennlig hilsen");
+        String content = signoffIndex >= 0 ? trimmed.substring(0, signoffIndex).stripTrailing() : trimmed;
+        return content + "\n\n" + SENDER_SIGNATURE;
     }
 
     void validate(OutreachEmailSendRequest request) {
