@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 744
+- Antall hendelser: 745
 - Sendt: 361
 - Angret: 0
-- Aktive kontaktede selskaper: 256
+- Aktive kontaktede selskaper: 255
 
 ## Aktive kontaktede selskaper
 
@@ -52,7 +52,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-14 | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | website-offer |
 | 2026-10-14 | 938574324 | CYVI AB NUF | NUF | email | website-offer |
 | 2026-10-14 | 938641048 | BOTANIKA AS | AS | email | website-offer |
-| 2026-10-14 | 938460531 | APPLIED | FLI | email | website-offer |
 | 2026-10-14 | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | website-offer |
 | 2026-10-14 | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | website-offer |
 | 2026-10-14 | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | website-offer |
@@ -274,6 +273,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-15 10:25 | not_relevant | 938460531 | APPLIED | FLI | email | Lukas van Veen svarte 14.10.2026 kl. 19:27 at de ikke er interessert i å betale for nettside. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-14 16:09 | not_relevant | 938677166 | GULVLAGERET APS | UTLA | email | Niels Andersen svarte 14.10.2026 kl. 16:06: De har allerede en nettside underveis og er ikke interessert. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-14 16:06 | sent | 938628602 | CODING CLASSES BY PAYAL AGGARWAL | ENK | email | - |
 | 2026-10-14 16:06 | sending | 938628602 | CODING CLASSES BY PAYAL AGGARWAL | ENK | email | Utsendelse reservert før SMTP-levering. |
