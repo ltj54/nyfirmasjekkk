@@ -4,15 +4,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 818
-- Sendt: 397
+- Antall hendelser: 830
+- Sendt: 403
 - Angret: 0
-- Aktive kontaktede selskaper: 258
+- Aktive kontaktede selskaper: 264
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-15 | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | website-offer |
+| 2026-10-15 | 938684456 | VANG CONSULTING | ENK | email | website-offer |
+| 2026-10-15 | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | website-offer |
+| 2026-10-15 | 938652880 | LISTA LYD JOHANSEN | ENK | email | website-offer |
+| 2026-10-15 | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | website-offer |
+| 2026-10-15 | 938684030 | FELIX SCHWARTE | UTLA | email | website-offer |
 | 2026-10-15 | 938647577 | REIDAR BERGE | ENK | email | website-follow-up |
 | 2026-10-15 | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | website-follow-up |
 | 2026-10-15 | 938614040 | ASMELASH MALING OG HÅNDTVERKSTJENESTER | ENK | email | website-follow-up |
@@ -276,6 +282,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-15 13:19 | sent | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | - |
+| 2026-10-15 13:19 | sending | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-15 13:19 | sent | 938684456 | VANG CONSULTING | ENK | email | - |
+| 2026-10-15 13:19 | sending | 938684456 | VANG CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-15 13:19 | sent | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | - |
+| 2026-10-15 13:19 | sending | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-15 13:19 | sent | 938652880 | LISTA LYD JOHANSEN | ENK | email | - |
+| 2026-10-15 13:19 | sending | 938652880 | LISTA LYD JOHANSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-15 13:19 | sent | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | - |
+| 2026-10-15 13:19 | sending | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-15 13:19 | sent | 938684030 | FELIX SCHWARTE | UTLA | email | - |
+| 2026-10-15 13:19 | sending | 938684030 | FELIX SCHWARTE | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-15 10:58 | sent | 938647577 | REIDAR BERGE | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-15 10:58 | sending | 938647577 | REIDAR BERGE | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-15 10:58 | sent | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
