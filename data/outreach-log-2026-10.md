@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 830
-- Sendt: 403
+- Antall hendelser: 832
+- Sendt: 404
 - Angret: 0
-- Aktive kontaktede selskaper: 264
+- Aktive kontaktede selskaper: 265
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-15 | 937414382 | FRED PALLESENS XPARAGON | ENK | email | website-lead-batch |
 | 2026-10-15 | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | website-offer |
 | 2026-10-15 | 938684456 | VANG CONSULTING | ENK | email | website-offer |
 | 2026-10-15 | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | website-offer |
@@ -282,6 +283,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-15 15:01 | sent | 937414382 | FRED PALLESENS XPARAGON | ENK | email | Nettsidelead-batch 824bae55-e2d5-4adb-ad93-f089ada22846 |
+| 2026-10-15 15:01 | sending | 937414382 | FRED PALLESENS XPARAGON | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-15 13:19 | sent | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | - |
 | 2026-10-15 13:19 | sending | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-15 13:19 | sent | 938684456 | VANG CONSULTING | ENK | email | - |
