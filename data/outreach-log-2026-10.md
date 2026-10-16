@@ -4,15 +4,38 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 840
-- Sendt: 408
+- Antall hendelser: 886
+- Sendt: 431
 - Angret: 0
-- Aktive kontaktede selskaper: 269
+- Aktive kontaktede selskaper: 276
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-16 | 938624720 | BENDING SPOONS US INC | NUF | email | website-follow-up |
+| 2026-10-16 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-follow-up |
+| 2026-10-16 | 938620857 | HAMMER FOREDRAG | ENK | email | website-follow-up |
+| 2026-10-16 | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | website-follow-up |
+| 2026-10-16 | 938657971 | AKSEL RISER | ENK | email | website-follow-up |
+| 2026-10-16 | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | website-follow-up |
+| 2026-10-16 | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | website-follow-up |
+| 2026-10-16 | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | website-follow-up |
+| 2026-10-16 | 938660573 | MONA BADAWY | ENK | email | website-follow-up |
+| 2026-10-16 | 938622868 | NOAH BREDESEN | ENK | email | website-follow-up |
+| 2026-10-16 | 838658962 | PIA HAUGEN MEDIA | ENK | email | website-follow-up |
+| 2026-10-16 | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | website-follow-up |
+| 2026-10-16 | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | website-follow-up |
+| 2026-10-16 | 938622884 | ØYEN ELEKTROENERGI | ENK | email | website-follow-up |
+| 2026-10-16 | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | website-follow-up |
+| 2026-10-16 | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | website-follow-up |
+| 2026-10-16 | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | website-offer |
+| 2026-10-16 | 938688907 | GJESDAL SÆTHER | ENK | email | website-offer |
+| 2026-10-16 | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | website-offer |
+| 2026-10-16 | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | website-offer |
+| 2026-10-16 | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | website-offer |
+| 2026-10-16 | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | website-offer |
+| 2026-10-16 | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | website-offer |
 | 2026-10-15 | 838570682 | TOURISTENFAHRTEN | FLI | email | website-offer |
 | 2026-10-15 | 938688435 | RINGSJØ | ENK | email | website-offer |
 | 2026-10-15 | 938687862 | HORGI INVEST AS | AS | email | website-offer |
@@ -131,22 +154,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-13 | 838624472 | BACHMANN | ENK | email | website-offer |
 | 2026-10-13 | 938665346 | KARI-ANNE PEDERSEN | ENK | email | website-offer |
 | 2026-10-13 | 938665931 | KALLONEN MOTION OY | UTLA | email | website-offer |
-| 2026-10-12 | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | website-offer |
-| 2026-10-12 | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | website-offer |
-| 2026-10-12 | 938622884 | ØYEN ELEKTROENERGI | ENK | email | website-offer |
-| 2026-10-12 | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | website-offer |
-| 2026-10-12 | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | website-offer |
-| 2026-10-12 | 838658962 | PIA HAUGEN MEDIA | ENK | email | website-offer |
-| 2026-10-12 | 938622868 | NOAH BREDESEN | ENK | email | website-offer |
-| 2026-10-12 | 938660573 | MONA BADAWY | ENK | email | website-offer |
-| 2026-10-12 | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | website-offer |
-| 2026-10-12 | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | website-offer |
-| 2026-10-12 | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | website-offer |
-| 2026-10-12 | 938657971 | AKSEL RISER | ENK | email | website-offer |
-| 2026-10-12 | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | website-offer |
-| 2026-10-12 | 938620857 | HAMMER FOREDRAG | ENK | email | website-offer |
-| 2026-10-11 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-offer |
-| 2026-10-11 | 938624720 | BENDING SPOONS US INC | NUF | email | website-offer |
 | 2026-10-10 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-follow-up |
 | 2026-10-10 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-follow-up |
 | 2026-10-10 | 938584346 | KVERNMO HALIBUT | ENK | email | website-follow-up |
@@ -287,6 +294,52 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-16 09:54 | sent | 938624720 | BENDING SPOONS US INC | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:54 | sending | 938624720 | BENDING SPOONS US INC | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:54 | sent | 938656150 | VINJE DIGITAL IMPACT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:54 | sending | 938656150 | VINJE DIGITAL IMPACT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938620857 | HAMMER FOREDRAG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938620857 | HAMMER FOREDRAG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938617961 | MÅSEIDVÅG MA-MAAS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938657971 | AKSEL RISER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938657971 | AKSEL RISER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 838506992 | CHERNYSHOV ARCHIVE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 838623182 | FAISAL VICTOR SHAWAHNA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 838660282 | JPR CONSTRUCTION WORKS | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938660573 | MONA BADAWY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938660573 | MONA BADAWY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938622868 | NOAH BREDESEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938622868 | NOAH BREDESEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 838658962 | PIA HAUGEN MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 838658962 | PIA HAUGEN MEDIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 838626602 | STADSKRAFT -TONE RØNNING VIKE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938622272 | STUSVIK RETORIKK OG TEKNIKK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938622884 | ØYEN ELEKTROENERGI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938622884 | ØYEN ELEKTROENERGI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-16 09:53 | sending | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | - |
+| 2026-10-16 09:53 | sending | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938688907 | GJESDAL SÆTHER | ENK | email | - |
+| 2026-10-16 09:53 | sending | 938688907 | GJESDAL SÆTHER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-16 09:53 | sent | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | - |
+| 2026-10-16 09:53 | sending | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-16 09:52 | sent | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | - |
+| 2026-10-16 09:52 | sending | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-16 09:52 | sent | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | - |
+| 2026-10-16 09:52 | sending | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-16 09:52 | sent | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | - |
+| 2026-10-16 09:52 | sending | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-16 09:52 | sent | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | - |
+| 2026-10-16 09:52 | sending | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-15 21:47 | sent | 838570682 | TOURISTENFAHRTEN | FLI | email | - |
 | 2026-10-15 21:47 | sending | 838570682 | TOURISTENFAHRTEN | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-15 21:47 | sent | 938688435 | RINGSJØ | ENK | email | - |
