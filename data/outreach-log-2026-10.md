@@ -4,15 +4,37 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 886
-- Sendt: 431
+- Antall hendelser: 933
+- Sendt: 453
 - Angret: 0
-- Aktive kontaktede selskaper: 276
+- Aktive kontaktede selskaper: 289
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-17 | 938665931 | KALLONEN MOTION OY | UTLA | email | website-follow-up |
+| 2026-10-17 | 938665346 | KARI-ANNE PEDERSEN | ENK | email | website-follow-up |
+| 2026-10-17 | 838624472 | BACHMANN | ENK | email | website-follow-up |
+| 2026-10-17 | 938572119 | JPR CONSTRUCTION WORKS NUF | NUF | email | website-follow-up |
+| 2026-10-17 | 938573344 | PRP-NDT, SIA NUF | NUF | email | website-follow-up |
+| 2026-10-17 | 938515352 | ROMEO FOOD GROUP AS | AS | email | website-follow-up |
+| 2026-10-17 | 938495211 | SÉRUMI AS | AS | email | website-follow-up |
+| 2026-10-17 | 938555664 | FORENINGEN VILLHEIMA | FLI | email | website-follow-up |
+| 2026-10-17 | 838479952 | LIVING AROMA MINISTRIES | FLI | email | website-follow-up |
+| 2026-10-17 | 938695849 | TALE MONGE HEIMDAL | ENK | email | website-offer |
+| 2026-10-17 | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | website-offer |
+| 2026-10-17 | 938661219 | REHMAN FIRDAUS | ENK | email | website-offer |
+| 2026-10-17 | 938578680 | SANA HEALTH | FLI | email | website-offer |
+| 2026-10-17 | 938695814 | FIX ABAKSINS | ENK | email | website-offer |
+| 2026-10-17 | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | website-offer |
+| 2026-10-17 | 938657637 | SPORT OG IDRETTSMASSASJE DEDPRAKHON | ENK | email | website-offer |
+| 2026-10-17 | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | website-offer |
+| 2026-10-17 | 938682798 | P/R TVILLINGHAV DA | PRE | email | website-offer |
+| 2026-10-17 | 938659699 | LARS BERNAAS NORDANG | ENK | email | website-offer |
+| 2026-10-17 | 938659982 | GUBHAGE BLOMSTER | ENK | email | website-offer |
+| 2026-10-17 | 938663831 | ELSABI TRANSPORT | ENK | email | website-offer |
+| 2026-10-17 | 938689822 | BART HEYLEN SL | UTLA | email | website-offer |
 | 2026-10-16 | 938624720 | BENDING SPOONS US INC | NUF | email | website-follow-up |
 | 2026-10-16 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-follow-up |
 | 2026-10-16 | 938620857 | HAMMER FOREDRAG | ENK | email | website-follow-up |
@@ -145,15 +167,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-13 | 938587744 | KNUDSEN KRAN OG MEK | ENK | email | website-follow-up |
 | 2026-10-13 | 938599629 | QAMAR AFTAB | ENK | email | website-follow-up |
 | 2026-10-13 | 938526788 | SAFE I SHELF DRILLING | FLI | email | website-follow-up |
-| 2026-10-13 | 838479952 | LIVING AROMA MINISTRIES | FLI | email | website-offer |
-| 2026-10-13 | 938555664 | FORENINGEN VILLHEIMA | FLI | email | website-offer |
-| 2026-10-13 | 938495211 | SÉRUMI AS | AS | email | website-offer |
-| 2026-10-13 | 938515352 | ROMEO FOOD GROUP AS | AS | email | website-offer |
-| 2026-10-13 | 938573344 | PRP-NDT, SIA NUF | NUF | email | website-offer |
-| 2026-10-13 | 938572119 | JPR CONSTRUCTION WORKS NUF | NUF | email | website-offer |
-| 2026-10-13 | 838624472 | BACHMANN | ENK | email | website-offer |
-| 2026-10-13 | 938665346 | KARI-ANNE PEDERSEN | ENK | email | website-offer |
-| 2026-10-13 | 938665931 | KALLONEN MOTION OY | UTLA | email | website-offer |
 | 2026-10-10 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-follow-up |
 | 2026-10-10 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-follow-up |
 | 2026-10-10 | 938584346 | KVERNMO HALIBUT | ENK | email | website-follow-up |
@@ -294,6 +307,53 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-17 10:49 | sent | 938665931 | KALLONEN MOTION OY | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938665931 | KALLONEN MOTION OY | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 938665346 | KARI-ANNE PEDERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938665346 | KARI-ANNE PEDERSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 838624472 | BACHMANN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 838624472 | BACHMANN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 938572119 | JPR CONSTRUCTION WORKS NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938572119 | JPR CONSTRUCTION WORKS NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 938573344 | PRP-NDT, SIA NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938573344 | PRP-NDT, SIA NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 938515352 | ROMEO FOOD GROUP AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938515352 | ROMEO FOOD GROUP AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 938495211 | SÉRUMI AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938495211 | SÉRUMI AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 938555664 | FORENINGEN VILLHEIMA | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 938555664 | FORENINGEN VILLHEIMA | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:49 | sent | 838479952 | LIVING AROMA MINISTRIES | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-17 10:49 | sending | 838479952 | LIVING AROMA MINISTRIES | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-17 10:48 | not_relevant | 938673551 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-17 10:48 | sent | 938695849 | TALE MONGE HEIMDAL | ENK | email | - |
+| 2026-10-17 10:48 | sending | 938695849 | TALE MONGE HEIMDAL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:48 | sent | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | - |
+| 2026-10-17 10:48 | sending | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:48 | sent | 938661219 | REHMAN FIRDAUS | ENK | email | - |
+| 2026-10-17 10:48 | sending | 938661219 | REHMAN FIRDAUS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:48 | sent | 938578680 | SANA HEALTH | FLI | email | - |
+| 2026-10-17 10:48 | sending | 938578680 | SANA HEALTH | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:48 | sent | 938695814 | FIX ABAKSINS | ENK | email | - |
+| 2026-10-17 10:48 | sending | 938695814 | FIX ABAKSINS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:48 | sent | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | - |
+| 2026-10-17 10:48 | sending | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938657637 | SPORT OG IDRETTSMASSASJE DEDPRAKHON | ENK | email | - |
+| 2026-10-17 10:47 | sending | 938657637 | SPORT OG IDRETTSMASSASJE DEDPRAKHON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | - |
+| 2026-10-17 10:47 | sending | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938682798 | P/R TVILLINGHAV DA | PRE | email | - |
+| 2026-10-17 10:47 | sending | 938682798 | P/R TVILLINGHAV DA | PRE | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938659699 | LARS BERNAAS NORDANG | ENK | email | - |
+| 2026-10-17 10:47 | sending | 938659699 | LARS BERNAAS NORDANG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938659982 | GUBHAGE BLOMSTER | ENK | email | - |
+| 2026-10-17 10:47 | sending | 938659982 | GUBHAGE BLOMSTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938663831 | ELSABI TRANSPORT | ENK | email | - |
+| 2026-10-17 10:47 | sending | 938663831 | ELSABI TRANSPORT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | sent | 938689822 | BART HEYLEN SL | UTLA | email | - |
+| 2026-10-17 10:47 | sending | 938689822 | BART HEYLEN SL | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-17 10:47 | not_relevant | 938695709 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-17 10:46 | not_relevant | 938625026 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-16 09:54 | sent | 938624720 | BENDING SPOONS US INC | NUF | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-16 09:54 | sending | 938624720 | BENDING SPOONS US INC | NUF | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-16 09:54 | sent | 938656150 | VINJE DIGITAL IMPACT | ENK | email | Oppfølging sendt – avslutt hvis stille |
