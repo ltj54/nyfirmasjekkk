@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 933
+- Antall hendelser: 936
 - Sendt: 453
 - Angret: 0
 - Aktive kontaktede selskaper: 289
@@ -307,6 +307,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-17 11:56 | not_relevant | 938582351 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-17 11:56 | not_relevant | 938503516 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-17 11:56 | not_relevant | 838657362 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-17 10:49 | sent | 938665931 | KALLONEN MOTION OY | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-17 10:49 | sending | 938665931 | KALLONEN MOTION OY | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-17 10:49 | sent | 938665346 | KARI-ANNE PEDERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
