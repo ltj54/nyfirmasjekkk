@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 938
+- Antall hendelser: 939
 - Sendt: 453
 - Angret: 0
-- Aktive kontaktede selskaper: 287
+- Aktive kontaktede selskaper: 286
 
 ## Aktive kontaktede selskaper
 
@@ -167,7 +167,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-13 | 938526788 | SAFE I SHELF DRILLING | FLI | email | website-follow-up |
 | 2026-10-10 | 938586373 | FLOWITHROW ASHDOWN | ENK | email | website-follow-up |
 | 2026-10-10 | 938580278 | GULBRANDSEN BRAND | ENK | email | website-follow-up |
-| 2026-10-10 | 938584346 | KVERNMO HALIBUT | ENK | email | website-follow-up |
 | 2026-10-10 | 938586004 | LEKNES SECURITY | ENK | email | website-follow-up |
 | 2026-10-10 | 938623872 | M.L.C MIDDELDORP BEHEER B.V. | UTLA | email | website-follow-up |
 | 2026-10-10 | 938584567 | MYHRER FIKSER | ENK | email | website-follow-up |
@@ -305,6 +304,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 10:47 | replied | 938584346 | KVERNMO HALIBUT | ENK | email | Bjørne Kvernmo har svart positivt på nettsideforslaget. Aktiv, manuell dialog og konseptprosjekt under utvikling; ingen automatisk oppfølging eller purring. |
 | 2026-10-18 09:37 | not_relevant | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | Kristin Gromsrud svarte nei takk 17.10.2026 kl. 16:11. Sønnen jobber med noe av det samme og skal hjelpe henne. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-18 09:33 | not_relevant | 938649421 | RØDAHL PROSJEKTUTVIKLING OG SAMSKAPING | ENK | email | Helle Vujic Rødahl svarte nei takk 17.10.2026 kl. 15:07. Foretaket ble registrert kun for å fakturere et fast oppdrag; nettside er ikke aktuelt. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-17 11:56 | not_relevant | 938582351 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
