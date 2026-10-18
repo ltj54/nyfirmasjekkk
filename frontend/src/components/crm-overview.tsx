@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Building2, CalendarDays, ExternalLink, FileText, Globe2, MapPin, Phone, ReceiptText, UserRound } from "lucide-react";
 
 import { crmProjectId, isoDateFromNorwegian, norwegianDateFromIso, osloToday, type CrmEventKind, type CrmEventRecord } from "@/lib/crm-events";
+import { MailboxReview } from "@/components/mailbox-review";
 
 type ProjectStatus = "working" | "waiting" | "delivered" | "payment" | "completed" | "inactive";
 type AgreementStatus = "required" | "draft" | "signed" | "not-used";
@@ -418,6 +419,8 @@ export function CrmOverview() {
           <div><dt className="text-xs text-slate-600">Avtaler inngått</dt><dd className="text-lg font-semibold text-blue-900">{currentProjects.filter((project) => project.agreementStatus === "signed").length}</dd></div>
         </dl>
       </header>
+
+      {canEdit ? <MailboxReview /> : null}
 
       <div className="mt-6 space-y-5">
         {statusGroups.map((group) => {

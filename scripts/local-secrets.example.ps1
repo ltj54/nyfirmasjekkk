@@ -2,6 +2,7 @@
 # scripts/local-secrets.ps1 is ignored by Git.
 
 $env:APP_MAIL_PASSWORD = ""
+$env:APP_MAIL_READ_TOKEN = "" # Required for manual, read-only mailbox access. Use a long random value.
 
 # Optional test override. Leave empty when automatic e-mail should go to the company address.
 $env:APP_MAIL_TEST_RECIPIENT = ""
