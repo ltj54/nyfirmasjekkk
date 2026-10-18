@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 939
-- Sendt: 453
+- Antall hendelser: 955
+- Sendt: 461
 - Angret: 0
-- Aktive kontaktede selskaper: 286
+- Aktive kontaktede selskaper: 294
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | website-offer |
+| 2026-10-18 | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | website-offer |
+| 2026-10-18 | 938695253 | JENSEN BYGGKONSULT | ENK | email | website-offer |
+| 2026-10-18 | 938697809 | TANNHJULET EIDE | ENK | email | website-offer |
+| 2026-10-18 | 938697779 | THU ROSLAND BYGG | ENK | email | website-offer |
+| 2026-10-18 | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | website-offer |
+| 2026-10-18 | 938593191 | CLEANFRIEND APS | NUF | email | website-offer |
+| 2026-10-18 | 938649197 | BART HEYLEN SL | NUF | email | website-offer |
 | 2026-10-17 | 938665931 | KALLONEN MOTION OY | UTLA | email | website-follow-up |
 | 2026-10-17 | 938665346 | KARI-ANNE PEDERSEN | ENK | email | website-follow-up |
 | 2026-10-17 | 838624472 | BACHMANN | ENK | email | website-follow-up |
@@ -304,6 +312,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 10:51 | sent | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | - |
+| 2026-10-18 10:51 | sending | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:51 | sent | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | - |
+| 2026-10-18 10:51 | sending | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:51 | sent | 938695253 | JENSEN BYGGKONSULT | ENK | email | - |
+| 2026-10-18 10:51 | sending | 938695253 | JENSEN BYGGKONSULT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:51 | sent | 938697809 | TANNHJULET EIDE | ENK | email | - |
+| 2026-10-18 10:51 | sending | 938697809 | TANNHJULET EIDE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:51 | sent | 938697779 | THU ROSLAND BYGG | ENK | email | - |
+| 2026-10-18 10:51 | sending | 938697779 | THU ROSLAND BYGG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:51 | sent | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | - |
+| 2026-10-18 10:51 | sending | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:51 | sent | 938593191 | CLEANFRIEND APS | NUF | email | - |
+| 2026-10-18 10:51 | sending | 938593191 | CLEANFRIEND APS | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 10:50 | sent | 938649197 | BART HEYLEN SL | NUF | email | - |
+| 2026-10-18 10:50 | sending | 938649197 | BART HEYLEN SL | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-18 10:47 | replied | 938584346 | KVERNMO HALIBUT | ENK | email | Bjørne Kvernmo har svart positivt på nettsideforslaget. Aktiv, manuell dialog og konseptprosjekt under utvikling; ingen automatisk oppfølging eller purring. |
 | 2026-10-18 09:37 | not_relevant | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | Kristin Gromsrud svarte nei takk 17.10.2026 kl. 16:11. Sønnen jobber med noe av det samme og skal hjelpe henne. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-18 09:33 | not_relevant | 938649421 | RØDAHL PROSJEKTUTVIKLING OG SAMSKAPING | ENK | email | Helle Vujic Rødahl svarte nei takk 17.10.2026 kl. 15:07. Foretaket ble registrert kun for å fakturere et fast oppdrag; nettside er ikke aktuelt. Ingen videre oppfølging eller utsendelse. |
