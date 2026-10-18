@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 956
-- Sendt: 461
+- Antall hendelser: 962
+- Sendt: 464
 - Angret: 0
-- Aktive kontaktede selskaper: 293
+- Aktive kontaktede selskaper: 296
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | website-offer |
+| 2026-10-18 | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | website-offer |
+| 2026-10-18 | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | website-offer |
 | 2026-10-18 | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | website-offer |
 | 2026-10-18 | 938695253 | JENSEN BYGGKONSULT | ENK | email | website-offer |
 | 2026-10-18 | 938697809 | TANNHJULET EIDE | ENK | email | website-offer |
@@ -311,6 +314,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 23:18 | sent | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | - |
+| 2026-10-18 23:18 | sending | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 23:18 | sent | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | - |
+| 2026-10-18 23:18 | sending | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-18 23:18 | sent | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | - |
+| 2026-10-18 23:18 | sending | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-18 22:32 | replied | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | Gabriel Moldovan svarte 18.10.2026 kl. 19:43: Interessert i nettside, men ikke nå. Han har flere ting å få på plass og tar selv kontakt når tiden er inne. Ingen automatisk oppfølging eller purring. |
 | 2026-10-18 10:51 | sent | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | - |
 | 2026-10-18 10:51 | sending | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
