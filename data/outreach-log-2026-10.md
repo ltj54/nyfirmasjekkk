@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 936
+- Antall hendelser: 938
 - Sendt: 453
 - Angret: 0
-- Aktive kontaktede selskaper: 289
+- Aktive kontaktede selskaper: 287
 
 ## Aktive kontaktede selskaper
 
@@ -67,7 +67,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-15 | 938684456 | VANG CONSULTING | ENK | email | website-offer |
 | 2026-10-15 | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | website-offer |
 | 2026-10-15 | 938652880 | LISTA LYD JOHANSEN | ENK | email | website-offer |
-| 2026-10-15 | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | website-offer |
 | 2026-10-15 | 938684030 | FELIX SCHWARTE | UTLA | email | website-offer |
 | 2026-10-15 | 938647577 | REIDAR BERGE | ENK | email | website-follow-up |
 | 2026-10-15 | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | website-follow-up |
@@ -110,7 +109,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-14 | 938677204 | ULOZAS MARINE | ENK | email | website-offer |
 | 2026-10-14 | 938648182 | TVINDE FIRST AID | ENK | email | website-offer |
 | 2026-10-14 | 938675163 | SWEETS BY POYA | ENK | email | website-offer |
-| 2026-10-14 | 938649421 | RØDAHL PROSJEKTUTVIKLING OG SAMSKAPING | ENK | email | website-offer |
 | 2026-10-14 | 938639094 | PB TORVIK COACHING OG TERAPI | ENK | email | website-offer |
 | 2026-10-14 | 938639078 | MAGAR SERVICETJENESTER | ENK | email | website-offer |
 | 2026-10-14 | 938647666 | HILSTAD FOTO | ENK | email | website-offer |
@@ -307,6 +305,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 09:37 | not_relevant | 938653313 | GROMSRUD HEALTH INSPIRE | ENK | email | Kristin Gromsrud svarte nei takk 17.10.2026 kl. 16:11. Sønnen jobber med noe av det samme og skal hjelpe henne. Ingen videre oppfølging eller utsendelse. |
+| 2026-10-18 09:33 | not_relevant | 938649421 | RØDAHL PROSJEKTUTVIKLING OG SAMSKAPING | ENK | email | Helle Vujic Rødahl svarte nei takk 17.10.2026 kl. 15:07. Foretaket ble registrert kun for å fakturere et fast oppdrag; nettside er ikke aktuelt. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-17 11:56 | not_relevant | 938582351 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-17 11:56 | not_relevant | 938503516 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-17 11:56 | not_relevant | 838657362 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
