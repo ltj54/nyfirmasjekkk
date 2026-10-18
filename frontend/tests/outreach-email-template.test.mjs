@@ -89,8 +89,10 @@ test("first contact is short and separates the free sketch from paid work", () =
   const body = buildOutreachEmailBody(template, company);
   assert.match(body, /^Hei Anne,/);
   assert.match(body, /kort, gratis skisse/);
-  assert.match(body, /1 990 kr, inkludert utvikling og publisering/);
-  assert.match(body, /før noe arbeid starter/);
+  assert.match(body, /fastpris 1 990 kr/);
+  assert.match(body, /utvikling, tilpasning av innholdet vi blir enige om og publisering/);
+  assert.match(body, /Jeg fakturerer ikke noe utover fastprisen/);
+  assert.doesNotMatch(body, /eventuelle andre kostnader/);
   assert.doesNotMatch(body, /webhotell|AI|kunder går tapt/);
   assert.ok(body.split(/\s+/).length < 110);
   assert.match(body, /Org\.nr\. 838 632 122$/);

@@ -4,17 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 955
+- Antall hendelser: 956
 - Sendt: 461
 - Angret: 0
-- Aktive kontaktede selskaper: 294
+- Aktive kontaktede selskaper: 293
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
 | 2026-10-18 | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | website-offer |
-| 2026-10-18 | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | website-offer |
 | 2026-10-18 | 938695253 | JENSEN BYGGKONSULT | ENK | email | website-offer |
 | 2026-10-18 | 938697809 | TANNHJULET EIDE | ENK | email | website-offer |
 | 2026-10-18 | 938697779 | THU ROSLAND BYGG | ENK | email | website-offer |
@@ -312,6 +311,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 22:32 | replied | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | Gabriel Moldovan svarte 18.10.2026 kl. 19:43: Interessert i nettside, men ikke nå. Han har flere ting å få på plass og tar selv kontakt når tiden er inne. Ingen automatisk oppfølging eller purring. |
 | 2026-10-18 10:51 | sent | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | - |
 | 2026-10-18 10:51 | sending | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-18 10:51 | sent | 938698074 | VARETRANSPORT GABRIEL MOLDOVAN | ENK | email | - |

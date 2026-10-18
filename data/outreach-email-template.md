@@ -65,7 +65,7 @@ Bruk denne malen som grunnlag når en tilbudsmail om nettside skal genereres.
 - Fortell at kunden får oppfølging og hjelp med oppdateringer etter levering, uten å love ubegrensede gratis oppdateringer.
 - For en vanlig nettside er et eget, betalt webhotell som regel ikke nødvendig. Eventuelt domene og andre nødvendige tjenester avklares sammen med kunden.
 - Universell utforming og personvern med fokus på GDPR inngår i planleggingen. Ikke lov full etterlevelse uten at krav, faktisk løsning og kundens bruk er vurdert.
-- Fastprisen på {{priceValue}} kr gjelder en avtalt grunnløsning, inkludert utvikling, tilpasning av innhold og publisering. Grunnløsningen er ikke begrenset til én side; innhold og funksjoner avklares i en kravspesifikasjon. Vi kan starte med grunnløsningen og se på flere funksjoner senere hvis kunden ønsker det. Vi avklarer alltid hva som skal lages før arbeidet starter. Eventuelle eksterne kostnader avklares tydelig før oppstart.
+- Fastprisen på {{priceValue}} kr gjelder en avtalt grunnløsning, inkludert utvikling, tilpasning av innhold og publisering. Grunnløsningen er ikke begrenset til én side; innhold og funksjoner avklares før arbeidet starter. Ikke antyd at prisen normalt øker eller at det kommer tillegg på fakturaen fra Lars. Valgfritt domene eller nye funksjoner senere er egne valg og skal ikke trekkes inn i første henvendelse.
 - En gratis nettsidevurdering er en kort innledende vurdering med forbedringsforslag. Den inkluderer ikke retting eller en full gjennomgang.
 - Bruk nøyaktig ett konkret, dokumentert funn i forbedringsmailen.
 - Beskriv automatiske funn som signaler fra en førstesjekk, ikke som manuelt bekreftede feil. Ikke lov bedre Google-plassering eller påstå at kunder går tapt.
@@ -85,7 +85,7 @@ Emne: `Nettside for {{companyName}}?`
 
 Jeg heter Lars og lager nettsider. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
 
-En avtalt grunnløsning koster {{priceValue}} kr, inkludert utvikling og publisering. Vi avklarer innhold og eventuelle andre kostnader før noe arbeid starter.
+En avtalt grunnløsning har fastpris {{priceValue}} kr. Det inkluderer utvikling, tilpasning av innholdet vi blir enige om og publisering. Jeg fakturerer ikke noe utover fastprisen.
 
 Vil dere at jeg sender en slik skisse?
 

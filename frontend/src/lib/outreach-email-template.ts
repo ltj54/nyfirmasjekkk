@@ -957,7 +957,7 @@ ${PERSONAL_OBSERVATION_PLACEHOLDER}
 
 Jeg heter Lars og lager nettsider. Jeg vet ikke om dere allerede har en løsning på plass. Hvis dette er aktuelt, kan jeg sende en kort, gratis skisse til en enkel nettside.
 
-En avtalt grunnløsning koster {{priceValue}} kr, inkludert utvikling og publisering. Vi avklarer innhold og eventuelle andre kostnader før noe arbeid starter.
+En avtalt grunnløsning har fastpris {{priceValue}} kr. Det inkluderer utvikling, tilpasning av innholdet vi blir enige om og publisering. Jeg fakturerer ikke noe utover fastprisen.
 
 Vil dere at jeg sender en slik skisse?
 
