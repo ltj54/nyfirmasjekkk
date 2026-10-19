@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 970
-- Sendt: 467
+- Antall hendelser: 984
+- Sendt: 474
 - Angret: 0
-- Aktive kontaktede selskaper: 299
+- Aktive kontaktede selskaper: 306
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-19 | 938613133 | FRISØR DORI GERMEAU | ENK | email | website-offer |
+| 2026-10-19 | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | website-offer |
+| 2026-10-19 | 938669953 | TRAN TRADING | ENK | email | website-offer |
+| 2026-10-19 | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | website-offer |
+| 2026-10-19 | 938664730 | DIGIHOSE HVITÅS | ENK | email | website-offer |
+| 2026-10-19 | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | website-offer |
+| 2026-10-19 | 838664032 | AURORA STANGE STUDIO | ENK | email | website-offer |
 | 2026-10-19 | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | website-lead-batch |
 | 2026-10-19 | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | website-offer |
 | 2026-10-19 | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | website-offer |
@@ -317,6 +324,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-19 12:34 | sent | 938613133 | FRISØR DORI GERMEAU | ENK | email | - |
+| 2026-10-19 12:34 | sending | 938613133 | FRISØR DORI GERMEAU | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 12:34 | sent | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | - |
+| 2026-10-19 12:34 | sending | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 12:34 | sent | 938669953 | TRAN TRADING | ENK | email | - |
+| 2026-10-19 12:34 | sending | 938669953 | TRAN TRADING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 12:34 | sent | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | - |
+| 2026-10-19 12:34 | sending | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 12:34 | sent | 938664730 | DIGIHOSE HVITÅS | ENK | email | - |
+| 2026-10-19 12:34 | sending | 938664730 | DIGIHOSE HVITÅS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 12:34 | sent | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | - |
+| 2026-10-19 12:34 | sending | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 12:34 | sent | 838664032 | AURORA STANGE STUDIO | ENK | email | - |
+| 2026-10-19 12:34 | sending | 838664032 | AURORA STANGE STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-19 09:03 | sent | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | Nettsidelead-batch 359ab635-aece-4b4f-b4e4-0c9fe86e0cbd |
 | 2026-10-19 09:03 | sending | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-19 09:03 | not_relevant | 937454368 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
