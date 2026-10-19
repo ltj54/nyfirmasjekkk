@@ -1513,6 +1513,27 @@ class CompanyCheckServiceTests {
     }
 
     @Test
+    void nettsideleadsKanAvgrensesTilSeksTilSjuMaaneder() {
+        var withinWindow = websiteLeadEnhet("123456789", LocalDate.of(2025, Month.SEPTEMBER, 13), "post@innenfor.no", "innenfor.no");
+        var tooOld = websiteLeadEnhet("223456789", LocalDate.of(2025, Month.SEPTEMBER, 12), "post@eldre.no", "eldre.no");
+        var tooNew = websiteLeadEnhet("323456789", LocalDate.of(2025, Month.OCTOBER, 14), "post@nyere.no", "nyere.no");
+        var enheter = List.of(withinWindow, tooOld, tooNew);
+        var client = new StubBrregClient(
+                enheter.stream().collect(java.util.stream.Collectors.toMap(EnhetResponse::organisasjonsnummer, item -> item)),
+                Map.of(),
+                new EnheterSearchResponse(new EnheterSearchResponse.Embedded(enheter), new EnheterSearchResponse.Page(100, 3, 1, 0))
+        );
+        var service = new CompanyCheckService(client, fixedClock(), ActorRiskService.noOp(), announcementService);
+
+        var result = service.sokPage(new CompanySearchRequest(null, 0, null, null, null, null, null, 25,
+                false, false, false, true, 7), 0);
+
+        assertThat(result.items()).extracting(CompanyCheck::organisasjonsnummer).containsExactly("123456789");
+        assertThat(client.lastSearchFilter()).containsEntry("fraRegistreringsdatoEnhetsregisteret", "2025-09-13")
+                .containsEntry("tilRegistreringsdatoEnhetsregisteret", "2025-10-13");
+    }
+
+    @Test
     void nettsideleadsUtelukkerFacebookTekstOgSosialeProfilerFraOedelagtNettsideListe() {
         LocalDate registrationDate = LocalDate.of(2025, Month.JULY, 1);
         var bigImpress = websiteLeadEnhet("930713910", registrationDate, "kontakt@eksempel.no", "FacebookBigImpress");

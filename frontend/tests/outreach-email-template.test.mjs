@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { compareWebsiteLeadQuality } from "../src/lib/company-lead-scoring.ts";
 import {
   buildFollowUpEmailBody,
   buildOutreachEmailBody,
@@ -17,6 +18,19 @@ const unavailableWebsite = {
   status: "REGISTERED",
   verifiedReachable: false,
 };
+
+test("unreachable website ranks ahead of newer reachable leads before pagination", () => {
+  const newer = { orgNumber: "111111111", name: "NYERE AS", registrationDate: "2026-04-10" };
+  const bohdan = { orgNumber: "937298358", name: "BOHDAN SEAFOOD CONNECT", registrationDate: "2026-03-26" };
+  const availability = {
+    [newer.orgNumber]: { status: "REACHABLE", leadSuitability: "REVIEW" },
+    [bohdan.orgNumber]: { status: "CONFIRMED_UNREACHABLE", leadSuitability: "CANDIDATE" },
+  };
+
+  const ranked = [newer, bohdan].sort((left, right) => compareWebsiteLeadQuality(left, right, availability));
+  assert.equal(ranked[0].orgNumber, bohdan.orgNumber);
+  assert.equal(ranked.slice(0, 1)[0].orgNumber, bohdan.orgNumber);
+});
 
 test("batch uses the approved Audiograf message, without stale technical claims", () => {
   const company = {

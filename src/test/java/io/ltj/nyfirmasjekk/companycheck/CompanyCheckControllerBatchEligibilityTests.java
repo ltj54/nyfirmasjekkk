@@ -22,28 +22,19 @@ class CompanyCheckControllerBatchEligibilityTests {
     private CompanyApiV1Mapper mapper;
     private BrregClient brregClient;
     private WebsiteContentInspectionService websiteContentInspectionService;
-    private CompanyCheckController controller;
+    private BatchEmailEligibilityController controller;
 
     @BeforeEach
     void setUp() {
         mapper = mock(CompanyApiV1Mapper.class);
         brregClient = mock(BrregClient.class);
         websiteContentInspectionService = mock(WebsiteContentInspectionService.class);
-        controller = new CompanyCheckController(
-                null,
-                mapper,
+        controller = new BatchEmailEligibilityController(
                 brregClient,
-                null,
+                mapper,
+                websiteContentInspectionService,
                 mock(OutreachLogService.class),
-                null,
-                new CompanyCheckControllerInfrastructure(
-                        null,
-                        mock(InMemoryRateLimitService.class),
-                        null,
-                        websiteContentInspectionService,
-                        mock(WebsiteAvailabilityService.class),
-                        mock(WebsiteLeadBatchLogService.class)
-                )
+                mock(InMemoryRateLimitService.class)
         );
     }
 

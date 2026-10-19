@@ -9,7 +9,6 @@ import io.ltj.nyfirmasjekk.api.v1.CompanySearchResponse;
 import io.ltj.nyfirmasjekk.api.v1.CompanySummary;
 import io.ltj.nyfirmasjekk.api.v1.BrregWebsiteMatch;
 import io.ltj.nyfirmasjekk.api.v1.WebsiteInspectionResponse;
-import io.ltj.nyfirmasjekk.api.v1.WebsiteContentInspectionService;
 import io.ltj.nyfirmasjekk.brreg.EnhetResponse;
 import io.ltj.nyfirmasjekk.brreg.BrregClient;
 import io.ltj.nyfirmasjekk.brreg.BrregClientException;
@@ -43,7 +42,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -57,6 +55,7 @@ public class CompanyCheckController {
     private static final Logger log = LoggerFactory.getLogger(CompanyCheckController.class);
     private static final String WEBSITE_LEAD_BATCH_OFFER_TYPE = "website-lead-batch";
     private static final int SEARCH_RESULT_SIZE = 25;
+    private static final int WEBSITE_LEAD_RANKING_SIZE = 500;
     private static final int MAX_IMPORT_BYTES = 2_000_000;
     private final CompanyCheckService companyCheckService;
     private final CompanyApiV1Mapper mapper;
@@ -67,7 +66,6 @@ public class CompanyCheckController {
     private final AdminAccessService adminAccessService;
     private final InMemoryRateLimitService rateLimitService;
     private final MeterRegistry meterRegistry;
-    private final WebsiteContentInspectionService websiteContentInspectionService;
     private final WebsiteAvailabilityService websiteAvailabilityService;
     private final WebsiteLeadBatchLogService websiteLeadBatchLogService;
 
@@ -89,7 +87,6 @@ public class CompanyCheckController {
         this.adminAccessService = infrastructure.adminAccessService();
         this.rateLimitService = infrastructure.rateLimitService();
         this.meterRegistry = infrastructure.meterRegistry();
-        this.websiteContentInspectionService = infrastructure.websiteContentInspectionService();
         this.websiteAvailabilityService = infrastructure.websiteAvailabilityService();
         this.websiteLeadBatchLogService = infrastructure.websiteLeadBatchLogService();
     }
@@ -126,69 +123,8 @@ public class CompanyCheckController {
             @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
             String organisasjonsnummer
     ) {
-        rateLimitService.requireAllowed("website-availability", 240, Duration.ofMinutes(10));
+        rateLimitService.requireAllowed("website-availability", 1_200, Duration.ofMinutes(10));
         return websiteAvailabilityService.check(organisasjonsnummer);
-    }
-
-    @GetMapping("/{organisasjonsnummer}/batch-eligibility")
-    public BatchEmailEligibilityResponse batchEligibility(
-            @PathVariable
-            @Pattern(regexp = "\\d{9}", message = "Organisasjonsnummer må være ni siffer")
-            String organisasjonsnummer
-    ) {
-        rateLimitService.requireAllowed("company-batch-eligibility", 240, Duration.ofMinutes(10));
-        if (outreachLogService.isSendBlocked(organisasjonsnummer)) {
-            return new BatchEmailEligibilityResponse(
-                    organisasjonsnummer,
-                    false,
-                    "Virksomheten har allerede en sendt eller uavklart nettsidehenvendelse.",
-                    null
-            );
-        }
-        var enhet = brregClient.hentEnhet(organisasjonsnummer);
-        if (!hasText(enhet.epostadresse())) {
-            return new BatchEmailEligibilityResponse(
-                    organisasjonsnummer,
-                    false,
-                    "Mangler e-postadresse.",
-                    null
-            );
-        }
-        if (hasText(enhet.hjemmeside())) {
-            var inspection = mapper.inspectWebsite(enhet.hjemmeside());
-            boolean unavailable = inspection.websiteQuality().signals().stream()
-                    .anyMatch(signal -> "TECHNICAL_FAILURE".equals(signal.code()));
-            if (unavailable) {
-                return new BatchEmailEligibilityResponse(
-                        organisasjonsnummer,
-                        true,
-                        null,
-                        enhet.hjemmeside()
-                );
-            }
-            return new BatchEmailEligibilityResponse(
-                    organisasjonsnummer,
-                    false,
-                    "Registrert nettside svarer: " + enhet.hjemmeside(),
-                    enhet.hjemmeside()
-            );
-        }
-
-        String emailDomain = extractEmailDomain(enhet.epostadresse());
-        if (hasText(emailDomain) && !isGenericEmailDomain(emailDomain)) {
-            String candidate = "https://" + emailDomain;
-            var contentMatch = websiteContentInspectionService.inspect(candidate, enhet.navn(), null);
-            if (contentMatch.matched()) {
-                return new BatchEmailEligibilityResponse(
-                        organisasjonsnummer,
-                        false,
-                        "Nettsiden " + candidate + " har innhold som matcher virksomhetsnavnet.",
-                        candidate
-                );
-            }
-        }
-
-        return new BatchEmailEligibilityResponse(organisasjonsnummer, true, null, null);
     }
 
     @GetMapping("/{organisasjonsnummer}/outreach-status")
@@ -566,12 +502,15 @@ public class CompanyCheckController {
             @RequestParam(defaultValue = "false") boolean hasWebsite,
             @RequestParam(defaultValue = "false") boolean missingWebsite,
             @RequestParam(defaultValue = "false") boolean websiteLeadCohort,
+            @RequestParam(defaultValue = "false") boolean websiteLeadRanking,
+            @RequestParam(defaultValue = "7") int websiteLeadOldestMonths,
             @RequestParam(defaultValue = "0") int page
     ) {
         meterRegistry.counter("company_check_search_requests_total").increment();
         return meterRegistry.timer("company_check_search_timer", "score", score == null ? "ALL" : score).record(() -> {
             long startedAt = System.nanoTime();
             String effectiveOrganisasjonsform = firstNonBlank(organisasjonsform, organizationForm);
+            int resultSize = websiteLeadCohort && websiteLeadRanking ? WEBSITE_LEAD_RANKING_SIZE : SEARCH_RESULT_SIZE;
             var request = new CompanySearchRequest(
                     navn,
                     dager,
@@ -580,11 +519,12 @@ public class CompanyCheckController {
                     naeringskode,
                     effectiveOrganisasjonsform,
                     score,
-                    SEARCH_RESULT_SIZE,
+                    resultSize,
                     hasEmail,
                     hasWebsite,
                     missingWebsite,
-                    websiteLeadCohort
+                    websiteLeadCohort,
+                    websiteLeadOldestMonths == 12 ? 12 : 7
             );
 
             var searchPage = searchVisiblePage(request, page);
@@ -605,7 +545,8 @@ public class CompanyCheckController {
     }
 
     private CompanySearchPage searchVisiblePage(CompanySearchRequest request, int page) {
-        int requestedOffset = Math.max(page, 0) * SEARCH_RESULT_SIZE;
+        int resultSize = request.resultSize();
+        int requestedOffset = Math.max(page, 0) * resultSize;
         int visibleBeforePage = 0;
         boolean reachedEnd = false;
         List<CompanyCheck> visibleItems = new ArrayList<>();
@@ -616,7 +557,7 @@ public class CompanyCheckController {
             reachedEnd = false;
             boolean hasMoreBackendPages = true;
 
-            while (visibleItems.size() < SEARCH_RESULT_SIZE && hasMoreBackendPages) {
+            while (visibleItems.size() < resultSize && hasMoreBackendPages) {
                 CompanySearchPage backendSearchPage = companyCheckService.sokPage(searchRequest, backendPage);
                 List<CompanyCheck> backendItems = backendSearchPage.items();
                 if (backendItems.isEmpty()) {
@@ -630,10 +571,8 @@ public class CompanyCheckController {
                             backendItems,
                             statusesByOrgNumber,
                             seenOrgNumbers,
-                            requestedOffset,
-                            visibleBeforePage,
                             visibleItems,
-                            request.websiteLeadCohort()
+                            new VisiblePageContext(requestedOffset, visibleBeforePage, resultSize, request.websiteLeadCohort())
                     );
                     hasMoreBackendPages = backendPage + 1 < backendSearchPage.totalPages();
                     reachedEnd = !hasMoreBackendPages;
@@ -641,41 +580,43 @@ public class CompanyCheckController {
                 }
             }
 
-            if (visibleItems.size() >= SEARCH_RESULT_SIZE) {
+            if (visibleItems.size() >= resultSize) {
                 break;
             }
         }
 
-        long totalElements = !reachedEnd && visibleItems.size() == SEARCH_RESULT_SIZE
+        long totalElements = !reachedEnd && visibleItems.size() == resultSize
                 ? (long) requestedOffset + visibleItems.size() + 1
                 : visibleBeforePage;
-        int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / SEARCH_RESULT_SIZE);
-        return new CompanySearchPage(visibleItems, Math.max(page, 0), SEARCH_RESULT_SIZE, totalElements, totalPages);
+        int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / resultSize);
+        return new CompanySearchPage(visibleItems, Math.max(page, 0), resultSize, totalElements, totalPages);
     }
 
     private int collectVisibleItems(
             List<CompanyCheck> backendItems,
             Map<String, OutreachStatusResponse> statusesByOrgNumber,
             Set<String> seenOrgNumbers,
-            int requestedOffset,
-            int visibleBeforePage,
             List<CompanyCheck> visibleItems,
-            boolean websiteLeadCohort
+            VisiblePageContext context
     ) {
-        int visibleCount = visibleBeforePage;
+        int visibleCount = context.visibleBeforePage();
         for (CompanyCheck item : backendItems) {
             boolean isNewItem = seenOrgNumbers.add(item.organisasjonsnummer());
             OutreachStatusResponse status = statusesByOrgNumber.get(item.organisasjonsnummer());
             boolean isVisible = isNewItem && !isHiddenFromSearch(status)
-                    && (!websiteLeadCohort || status == null || !status.everSent());
+                    && (!context.websiteLeadCohort() || status == null || !status.everSent());
             if (isVisible) {
-                if (visibleCount >= requestedOffset && visibleItems.size() < SEARCH_RESULT_SIZE) {
+                if (visibleCount >= context.requestedOffset() && visibleItems.size() < context.resultSize()) {
                     visibleItems.add(item);
                 }
                 visibleCount += 1;
             }
         }
         return visibleCount;
+    }
+
+    private record VisiblePageContext(int requestedOffset, int visibleBeforePage, int resultSize,
+                                      boolean websiteLeadCohort) {
     }
 
     private boolean isHiddenFromSearch(OutreachStatusResponse status) {
@@ -685,33 +626,6 @@ public class CompanyCheckController {
                 || "delivery_failed".equalsIgnoreCase(status.status())
                 || "not_relevant".equalsIgnoreCase(status.status())
                 || outreachLogService.isWebsiteClient(status.orgNumber()));
-    }
-
-    private String extractEmailDomain(String email) {
-        if (!hasText(email) || !email.contains("@")) {
-            return null;
-        }
-        return email.substring(email.indexOf('@') + 1).trim().toLowerCase(Locale.ROOT);
-    }
-
-    private boolean isGenericEmailDomain(String emailDomain) {
-        return Set.of(
-                "gmail.com",
-                "gmail.no",
-                "outlook.com",
-                "outlook.no",
-                "hotmail.com",
-                "hotmail.no",
-                "live.com",
-                "live.no",
-                "icloud.com",
-                "me.com",
-                "online.no",
-                "yahoo.com",
-                "yahoo.no",
-                "proton.me",
-                "protonmail.com"
-        ).contains(emailDomain);
     }
 
     private boolean hasText(String value) {
@@ -758,7 +672,8 @@ public class CompanyCheckController {
                 true,
                 false,
                 missingWebsite,
-                request.websiteLeadCohort()
+                request.websiteLeadCohort(),
+                request.websiteLeadOldestMonths()
         );
     }
 

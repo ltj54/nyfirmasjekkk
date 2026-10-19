@@ -31,17 +31,40 @@ function buildSearchLogLine({
   items: number;
   totalElements: number;
 }) {
-  const optionalParts = [
-    score && `score=${score}`,
-    q && `q=${q}`,
-    county && `county=${county}`,
-    organizationForm && `organizationForm=${organizationForm}`,
-    hasEmail === "true" && "hasEmail=true",
-    hasWebsite === "true" && "hasWebsite=true",
-    missingWebsite === "true" && "missingWebsite=true",
-    websiteLeadCohort === "true" && "websiteLeadCohort=true",
-  ].filter((part): part is string => typeof part === "string");
+  const logFields = {
+    score,
+    q,
+    county,
+    organizationForm,
+    hasEmail,
+    hasWebsite,
+    missingWebsite,
+    websiteLeadCohort,
+  };
+  const optionalParts = Object.entries(logFields)
+    .filter(([, value]) => value !== null && value !== "false" && value !== "")
+    .map(([key, value]) => `${key}=${value}`);
   return [`dager=${dager}`, `page=${page}`, ...optionalParts, `items=${items}`, `totalElements=${totalElements}`].join(" ");
+}
+
+function buildBackendSearchParams(searchParams: URLSearchParams) {
+  const params = new URLSearchParams({
+    dager: searchParams.get("dager") || "0",
+    page: searchParams.get("page") || "0",
+  });
+  const namedParams = { q: "navn", county: "fylke", organizationForm: "organisasjonsform", score: "score" };
+  Object.entries(namedParams).forEach(([source, target]) => {
+    const value = searchParams.get(source);
+    if (value) params.set(target, value);
+  });
+  ["hasEmail", "hasWebsite", "missingWebsite", "websiteLeadCohort"].forEach((name) => {
+    if (searchParams.get(name) === "true") params.set(name, "true");
+  });
+  if (params.get("websiteLeadCohort") === "true") {
+    if (searchParams.get("websiteLeadRanking") === "true") params.set("websiteLeadRanking", "true");
+    params.set("websiteLeadOldestMonths", searchParams.get("websiteLeadOldestMonths") === "12" ? "12" : "7");
+  }
+  return params;
 }
 
 export async function GET(request: Request) {
@@ -58,17 +81,7 @@ export async function GET(request: Request) {
   const websiteLeadCohort = searchParams.get("websiteLeadCohort");
   const page = searchParams.get("page") || "0";
 
-  const params = new URLSearchParams();
-  params.set("dager", dager);
-  params.set("page", page);
-  if (q) params.set("navn", q);
-  if (county) params.set("fylke", county);
-  if (organizationForm) params.set("organisasjonsform", organizationForm);
-  if (score) params.set("score", score);
-  if (hasEmail === "true") params.set("hasEmail", "true");
-  if (hasWebsite === "true") params.set("hasWebsite", "true");
-  if (missingWebsite === "true") params.set("missingWebsite", "true");
-  if (websiteLeadCohort === "true") params.set("websiteLeadCohort", "true");
+  const params = buildBackendSearchParams(searchParams);
 
   const url = `${backendBaseUrl}/api/company-check/search?${params.toString()}`;
 

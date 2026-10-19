@@ -28,7 +28,7 @@ class CompanyCheckControllerWebsiteLeadBatchTests {
         WebsiteAvailabilityService availability = mock(WebsiteAvailabilityService.class);
         CompanyCheckController controller = new CompanyCheckController(
                 null, null, brreg, null, outreach, email,
-                new CompanyCheckControllerInfrastructure(mock(AdminAccessService.class), null, null, null, availability,
+                new CompanyCheckControllerInfrastructure(mock(AdminAccessService.class), null, null, availability,
                         mock(WebsiteLeadBatchLogService.class)));
         when(brreg.hentEnhet(ORG_NUMBER)).thenReturn(company());
         when(outreach.statusFor(ORG_NUMBER)).thenReturn(new OutreachStatusResponse(

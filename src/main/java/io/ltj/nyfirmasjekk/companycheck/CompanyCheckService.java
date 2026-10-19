@@ -279,13 +279,9 @@ public class CompanyCheckService {
     }
 
     private List<CompanyCheck> deduplicateMatches(List<CompanyCheck> candidates, Map<String, CompanyCheck> seenMatches) {
-        List<CompanyCheck> uniqueMatches = new ArrayList<>();
-        for (CompanyCheck candidate : candidates) {
-            if (seenMatches.putIfAbsent(candidate.organisasjonsnummer(), candidate) == null) {
-                uniqueMatches.add(candidate);
-            }
-        }
-        return uniqueMatches;
+        return candidates.stream()
+                .filter(candidate -> seenMatches.putIfAbsent(candidate.organisasjonsnummer(), candidate) == null)
+                .toList();
     }
 
     private void addRequestedPageSlice(
@@ -844,7 +840,7 @@ public class CompanyCheckService {
         Map<String, String> f = new HashMap<>();
         f.put("size", String.valueOf(size)); f.put("page", String.valueOf(p));
         if (r.websiteLeadCohort()) {
-            f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusMonths(12).toString());
+            f.put("fraRegistreringsdatoEnhetsregisteret", LocalDate.now(clock).minusMonths(r.websiteLeadOldestMonths()).toString());
             LocalDate cohortUpperDate = LocalDate.now(clock).minusMonths(6);
             LocalDate effectiveUpperDate = cohortUpperDate;
             if (upperRegistrationDate != null && upperRegistrationDate.isBefore(cohortUpperDate)) {
@@ -889,7 +885,7 @@ public class CompanyCheckService {
         LocalDate registrationDate = enhet.registreringsdatoEnhetsregisteret();
         LocalDate today = LocalDate.now(clock);
         return registrationDate != null
-                && !registrationDate.isBefore(today.minusMonths(12))
+                && !registrationDate.isBefore(today.minusMonths(request.websiteLeadOldestMonths()))
                 && !registrationDate.isAfter(today.minusMonths(6))
                 && WebsiteLeadUrlPolicy.isPlausibleBusinessWebsite(enhet.hjemmeside());
     }

@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 962
-- Sendt: 464
+- Antall hendelser: 970
+- Sendt: 467
 - Angret: 0
-- Aktive kontaktede selskaper: 296
+- Aktive kontaktede selskaper: 299
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-19 | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | website-lead-batch |
+| 2026-10-19 | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | website-offer |
+| 2026-10-19 | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | website-offer |
 | 2026-10-18 | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | website-offer |
 | 2026-10-18 | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | website-offer |
 | 2026-10-18 | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | website-offer |
@@ -314,6 +317,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-19 09:03 | sent | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | Nettsidelead-batch 359ab635-aece-4b4f-b4e4-0c9fe86e0cbd |
+| 2026-10-19 09:03 | sending | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 09:03 | not_relevant | 937454368 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-19 09:03 | not_relevant | 837491312 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-10-19 08:16 | sent | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | - |
+| 2026-10-19 08:16 | sending | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 08:16 | sent | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | - |
+| 2026-10-19 08:16 | sending | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-18 23:18 | sent | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | - |
 | 2026-10-18 23:18 | sending | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-18 23:18 | sent | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | - |

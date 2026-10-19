@@ -414,6 +414,7 @@ function websiteSignalSeverityLabel(severity: WebsiteQualitySignal["severity"]) 
 type RecentSearchOptions = {
   daysFilter: string;
   websiteLeadCohort: boolean;
+  websiteLeadOldestMonths: 7 | 12;
   page: number;
   countyFilter: string;
   organizationFormFilter: string;
@@ -432,7 +433,10 @@ function recentSearchParams(options: RecentSearchOptions) {
   if (options.selectedLegend) params.set("score", options.selectedLegend);
   if (options.nameFilter) params.set("navn", options.nameFilter);
   if (options.quickFilters.includes("HAS_EMAIL")) params.set("hasEmail", "true");
-  if (options.websiteLeadCohort) params.set("websiteLeadCohort", "true");
+  if (options.websiteLeadCohort) {
+    params.set("websiteLeadCohort", "true");
+    params.set("websiteLeadOldestMonths", String(options.websiteLeadOldestMonths));
+  }
 
   const hasWebsite = options.quickFilters.includes("HAS_WEBSITE");
   const missingWebsite = options.quickFilters.includes("MISSING_WEBSITE");
@@ -452,6 +456,189 @@ function normalizeRecentSearchResponse(data: CompanySummary[] | { items?: Compan
   return { items: data.items ?? [], totalPages: data.totalPages ?? 0 };
 }
 
+const WEBSITE_LEAD_PAGE_SIZE = 25;
+const WEBSITE_CHECK_CONCURRENCY = 20;
+
+async function runSequentially<T>(items: T[], action: (item: T, index: number) => Promise<boolean>): Promise<boolean> {
+  async function visit(index: number): Promise<boolean> {
+    if (index >= items.length) return true;
+    if (!(await action(items[index], index))) return false;
+    return visit(index + 1);
+  }
+  return visit(0);
+}
+
+async function checkWebsiteLead(company: CompanySummary, signal: AbortSignal): Promise<WebsiteAvailability | null> {
+  if (!company.website || company.organizationForm?.toUpperCase() === "UTLA") return null;
+  try {
+    const response = await fetch(`/api/company-check/${company.orgNumber}/website-availability`, {
+      cache: "no-store",
+      signal,
+    });
+    return response.ok ? await response.json() as WebsiteAvailability : null;
+  } catch {
+    return null;
+  }
+}
+
+async function checkWebsiteLeadBatch(
+  companies: CompanySummary[],
+  signal: AbortSignal,
+  onProgress: (checked: number) => void,
+) {
+  const results: WebsiteAvailability[] = [];
+  async function checkChunk(index: number): Promise<void> {
+    if (index >= companies.length || signal.aborted) return;
+    const batch = await Promise.all(companies.slice(index, index + WEBSITE_CHECK_CONCURRENCY)
+      .map((company) => checkWebsiteLead(company, signal)));
+    results.push(...batch.filter((result): result is WebsiteAvailability => result !== null));
+    onProgress(Math.min(index + WEBSITE_CHECK_CONCURRENCY, companies.length));
+    return checkChunk(index + WEBSITE_CHECK_CONCURRENCY);
+  }
+  await checkChunk(0);
+  return results;
+}
+
+async function waitForWebsiteRecheck(checks: WebsiteAvailability[], signal: AbortSignal) {
+  const latestNextCheck = Math.max(...checks.map((result) => Date.parse(result.nextCheckAt ?? "")));
+  const delay = Number.isFinite(latestNextCheck) ? Math.max(1000, latestNextCheck - Date.now() + 1000) : 31_000;
+  await new Promise<void>((resolve) => {
+    const timeoutId = window.setTimeout(resolve, delay);
+    signal.addEventListener("abort", () => {
+      window.clearTimeout(timeoutId);
+      resolve();
+    }, { once: true });
+  });
+}
+
+async function loadWebsiteLeadCandidates(
+  firstPage: { items: CompanySummary[]; totalPages: number },
+  params: URLSearchParams,
+  signal: AbortSignal,
+  onProgress: (count: number) => void,
+) {
+  const byOrgNumber = new Map(firstPage.items.map((company) => [company.orgNumber, company]));
+  async function loadPage(backendPage: number, backendTotalPages: number): Promise<void> {
+    if (backendPage >= backendTotalPages || signal.aborted) return;
+    params.set("page", String(backendPage));
+    const response = await fetch(`/api/company-check/search?${params.toString()}`, { signal });
+    if (!response.ok) throw new Error("Kunne ikke hente hele nettsidelead-listen.");
+    const data = await response.json() as CompanySummary[] | { items?: CompanySummary[]; totalPages?: number };
+    const nextPage = normalizeRecentSearchResponse(data);
+    nextPage.items.forEach((company) => byOrgNumber.set(company.orgNumber, company));
+    onProgress(byOrgNumber.size);
+    return loadPage(backendPage + 1, nextPage.totalPages);
+  }
+  await loadPage(1, firstPage.totalPages);
+  return [...byOrgNumber.values()];
+}
+
+async function evaluateWebsiteLeadCandidates(
+  companies: CompanySummary[],
+  signal: AbortSignal,
+  onProgress: (message: string) => void,
+) {
+  const candidates = companies.filter((company) => company.website && company.organizationForm?.toUpperCase() !== "UTLA");
+  onProgress(`Sjekker nettsidene: 0 av ${candidates.length} …`);
+  const checks = await checkWebsiteLeadBatch(candidates, signal, (checked) => {
+    onProgress(`Sjekker nettsidene: ${checked} av ${candidates.length} …`);
+  });
+  if (signal.aborted) return null;
+  const pending = checks.filter((result) => result.status === "PENDING_RECHECK"
+    || result.status === "CONTACT_PATH_PENDING_RECHECK");
+  if (pending.length > 0) {
+    onProgress(`Venter på kontroll nummer to for ${pending.length} nettsider …`);
+    await waitForWebsiteRecheck(pending, signal);
+    const pendingOrgNumbers = new Set(pending.map((result) => result.orgNumber));
+    const pendingCompanies = candidates.filter((company) => pendingOrgNumbers.has(company.orgNumber));
+    checks.push(...await checkWebsiteLeadBatch(pendingCompanies, signal, () => {}));
+  }
+  if (signal.aborted) return null;
+  const checkedOrgNumbers = new Set(checks.map((result) => result.orgNumber));
+  const missingCompanies = candidates.filter((company) => !checkedOrgNumbers.has(company.orgNumber));
+  if (missingCompanies.length > 0) {
+    onProgress(`Prøver ${missingCompanies.length} ubekreftede nettsider på nytt …`);
+    checks.push(...await checkWebsiteLeadBatch(missingCompanies, signal, () => {}));
+  }
+  if (signal.aborted) return null;
+  return {
+    availability: Object.fromEntries(checks.map((result) => [result.orgNumber, result])),
+    unverifiedCount: candidates.length - new Set(checks.map((result) => result.orgNumber)).size,
+  };
+}
+
+function selectVisibleLeadCompanies(options: {
+  recentCompanies: CompanySummary[];
+  selectedLegend: keyof typeof legendDetails | null;
+  websiteLeadCohort: boolean;
+  canUseEmailBatch: boolean;
+  showBatchExcluded: boolean;
+  quickFilters: LeadQuickFilter[];
+  outreachStatusByOrg: Record<string, OutreachStatus>;
+  batchValidationByOrg: Record<string, BatchValidation>;
+  websiteAvailabilityByOrg: Record<string, WebsiteAvailability>;
+}) {
+  const filteredCompanies = applyLeadQuickFilters((options.selectedLegend
+    ? options.recentCompanies.filter((company) => company.scoreColor === options.selectedLegend)
+    : options.recentCompanies
+  ).filter((company) => !options.websiteLeadCohort || company.organizationForm?.toUpperCase() !== "UTLA"),
+  options.outreachStatusByOrg, options.quickFilters.filter((filter) => filter !== "NOT_SENT"))
+    .sort(leadSortComparator(options.websiteLeadCohort, options.canUseEmailBatch, options.websiteAvailabilityByOrg));
+  const visibleSearchCompanies = filteredCompanies.filter((company) => {
+    const outreachStatus = options.outreachStatusByOrg[company.orgNumber];
+    const batchBlocked = options.batchValidationByOrg[company.orgNumber]?.status === "blocked";
+    return !isOutreachSendBlocked(outreachStatus)
+      && outreachStatus?.status !== "not_relevant"
+      && ((options.canUseEmailBatch && options.showBatchExcluded) || !batchBlocked);
+  });
+  return { filteredCompanies, visibleSearchCompanies };
+}
+
+function selectBatchCompanies(options: {
+  visibleSearchCompanies: CompanySummary[];
+  canUseEmailBatch: boolean;
+  batchSelectionByOrg: Record<string, boolean>;
+  batchValidationByOrg: Record<string, BatchValidation>;
+  outreachStatusByOrg: Record<string, OutreachStatus>;
+}) {
+  if (!options.canUseEmailBatch) return [];
+  return options.visibleSearchCompanies.filter((company) =>
+    options.batchSelectionByOrg[company.orgNumber]
+    && canSelectEmailBatchCandidate(company)
+    && options.batchValidationByOrg[company.orgNumber]?.status !== "blocked"
+    && !isOutreachSendBlocked(options.outreachStatusByOrg[company.orgNumber]));
+}
+
+function selectWebsiteLeadPage(options: {
+  websiteLeadCohort: boolean;
+  visibleSearchCompanies: CompanySummary[];
+  filteredCompanies: CompanySummary[];
+  page: number;
+  totalPages: number;
+  websiteAvailabilityByOrg: Record<string, WebsiteAvailability>;
+  outreachStatusByOrg: Record<string, OutreachStatus>;
+}) {
+  const visiblePageCompanies = options.websiteLeadCohort
+    ? options.visibleSearchCompanies.slice(options.page * WEBSITE_LEAD_PAGE_SIZE,
+      (options.page + 1) * WEBSITE_LEAD_PAGE_SIZE)
+    : options.visibleSearchCompanies;
+  const displayedTotalPages = options.websiteLeadCohort
+    ? Math.ceil(options.visibleSearchCompanies.length / WEBSITE_LEAD_PAGE_SIZE)
+    : options.totalPages;
+  const selectableWebsiteLeads = options.websiteLeadCohort
+    ? visiblePageCompanies.filter((company) => canSelectWebsiteLeadForEmail(
+      company,
+      options.websiteAvailabilityByOrg[company.orgNumber],
+      options.outreachStatusByOrg[company.orgNumber],
+    ))
+    : [];
+  const pendingWebsiteCheckCount = options.websiteLeadCohort
+    ? options.filteredCompanies.filter((company) => options.websiteAvailabilityByOrg[company.orgNumber]?.status === "PENDING_RECHECK"
+      || options.websiteAvailabilityByOrg[company.orgNumber]?.status === "CONTACT_PATH_PENDING_RECHECK").length
+    : 0;
+  return { visiblePageCompanies, displayedTotalPages, selectableWebsiteLeads, pendingWebsiteCheckCount };
+}
+
 export function CompanyCheckShell() {
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("leads");
   const [backendReady, setBackendReady] = useState(false);
@@ -466,10 +653,13 @@ export function CompanyCheckShell() {
   });
   const [error, setError] = useState<string | null>(null);
   const [isListLoading, setIsListLoading] = useState(false);
+  const [websiteRankingProgress, setWebsiteRankingProgress] = useState("");
+  const [unverifiedWebsiteCount, setUnverifiedWebsiteCount] = useState(0);
   const [listLoadProgress, setListLoadProgress] = useState(0);
   const [listLoadSeconds, setListLoadSeconds] = useState(0);
   const [daysFilter, setDaysFilter] = useState("5");
   const [websiteLeadCohort, setWebsiteLeadCohort] = useState(false);
+  const [websiteLeadOldestMonths, setWebsiteLeadOldestMonths] = useState<7 | 12>(7);
   const [countyFilter, setCountyFilter] = useState("");
   const [organizationFormFilter, setOrganizationFormFilter] = useState("");
   const [selectedLegend, setSelectedLegend] = useState<keyof typeof legendDetails | null>(null);
@@ -503,6 +693,15 @@ export function CompanyCheckShell() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const latestListRequestId = useRef(0);
+  const listAbortControllerRef = useRef<AbortController | null>(null);
+  const websiteLeadDatasetKeyRef = useRef<string | null>(null);
+  const websiteLeadCacheRef = useRef<{
+    key: string;
+    loadedAt: number;
+    items: CompanySummary[];
+    availability: Record<string, WebsiteAvailability>;
+    unverifiedCount: number;
+  } | null>(null);
   const hasDetailHistoryEntryRef = useRef(false);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const dialogTriggerRef = useRef<HTMLElement | null>(null);
@@ -838,21 +1037,23 @@ export function CompanyCheckShell() {
       let sentCount = 0;
       let skippedDuringRunCount = 0;
 
-      for (const company of sendableCompanies) {
+      const completed = await runSequentially(sendableCompanies, async (company) => {
         const sendResult = await processBatchCompany(company, templateContent);
         if (sendResult === "skipped") {
           skippedDuringRunCount += 1;
-          continue;
+          return true;
         }
         if (sendResult === "failed") {
           window.alert(`Batch stoppet. Klarte ikke sende e-post til ${company.name}. ${sentCount} sendt før stopp.`);
-          return;
+          return false;
         }
         sentCount += 1;
         if (sentCount < sendableCompanies.length) {
           await wait(EMAIL_BATCH_SEND_DELAY_MS);
         }
-      }
+        return true;
+      });
+      if (!completed) return;
 
       window.alert(
         skippedDuringRunCount > 0
@@ -950,19 +1151,21 @@ export function CompanyCheckShell() {
         return;
       }
       const template = ((await templateResponse.json()) as { content?: string }).content ?? "";
-      for (const company of companies) {
+      const completed = await runSequentially(companies, async (company) => {
         const result = await sendWebsiteLeadBatchCompany(company, template, batchId);
         if (result === "skipped") {
           skippedCount += 1;
-          continue;
+          return true;
         }
         if (result === "failed") {
           window.alert(`Batch stoppet ved ${company.name}. ${sentCount} sendt, ${skippedCount} hoppet over. Kontroller batchloggen før nytt forsøk.`);
-          return;
+          return false;
         }
         sentCount += 1;
         if (sentCount < companies.length) await wait(EMAIL_BATCH_SEND_DELAY_MS);
-      }
+        return true;
+      });
+      if (!completed) return;
       window.alert(`Nettsidelead-batch ferdig. ${sentCount} sendt, ${skippedCount} hoppet over. Batch-ID: ${batchId}`);
     } catch (error) {
       console.error("Website lead batch failed", error);
@@ -1227,6 +1430,78 @@ export function CompanyCheckShell() {
     }
   }
 
+  function restoreWebsiteLeadRanking(datasetKey: string, pageNum: number) {
+    if (websiteLeadDatasetKeyRef.current === datasetKey) {
+      setPage(pageNum);
+      return true;
+    }
+    const cachedRanking = websiteLeadCacheRef.current;
+    if (cachedRanking?.key !== datasetKey || Date.now() - cachedRanking.loadedAt >= 30 * 60_000) return false;
+    websiteLeadDatasetKeyRef.current = datasetKey;
+    setRecentCompanies(cachedRanking.items);
+    setWebsiteAvailabilityByOrg(cachedRanking.availability);
+    setUnverifiedWebsiteCount(cachedRanking.unverifiedCount);
+    setPage(pageNum);
+    setTotalPages(Math.ceil(cachedRanking.items.length / WEBSITE_LEAD_PAGE_SIZE));
+    setError(null);
+    setIsListLoading(false);
+    return true;
+  }
+
+  async function rankWebsiteLeadResults(
+    firstPage: { items: CompanySummary[]; totalPages: number },
+    params: URLSearchParams,
+    signal: AbortSignal,
+    requestId: number,
+    datasetKey: string,
+  ) {
+    const items = await loadWebsiteLeadCandidates(firstPage, params, signal, (count) => {
+      if (requestId === latestListRequestId.current) setWebsiteRankingProgress(`Hentet ${count} nettsideleads …`);
+    });
+    if (requestId !== latestListRequestId.current || signal.aborted) return null;
+    const assessment = await evaluateWebsiteLeadCandidates(items, signal, (message) => {
+      if (requestId === latestListRequestId.current) setWebsiteRankingProgress(message);
+    });
+    if (requestId !== latestListRequestId.current || !assessment) return null;
+    setUnverifiedWebsiteCount(assessment.unverifiedCount);
+    setWebsiteAvailabilityByOrg(assessment.availability);
+    websiteLeadCacheRef.current = { key: datasetKey, loadedAt: Date.now(), items,
+      availability: assessment.availability, unverifiedCount: assessment.unverifiedCount };
+    websiteLeadDatasetKeyRef.current = datasetKey;
+    return items;
+  }
+
+  async function applyRecentSearchResponse(
+    response: Response,
+    options: { pageNum: number; requestId: number; controller: AbortController; params: URLSearchParams;
+      websiteLeadCohort: boolean; datasetKey: string },
+  ) {
+    if (response.status === 502) {
+      const payload = await response.json().catch(() => null);
+      if (options.requestId !== latestListRequestId.current) return;
+      setRecentCompanies([]);
+      setTotalPages(0);
+      setError(payload?.title ?? "Backend starter fortsatt. Prøv igjen om et øyeblikk.");
+      return;
+    }
+    if (!response.ok) {
+      setError("Kunne ikke hente trefflisten. Prøv igjen.");
+      return;
+    }
+    const data = await response.json() as CompanySummary[] | { items?: CompanySummary[]; totalPages?: number };
+    if (options.requestId !== latestListRequestId.current || options.controller.signal.aborted) return;
+    const firstPage = normalizeRecentSearchResponse(data);
+    const items = options.websiteLeadCohort
+      ? await rankWebsiteLeadResults(firstPage, options.params, options.controller.signal,
+        options.requestId, options.datasetKey)
+      : firstPage.items;
+    if (!items) return;
+    setRecentCompanies(items);
+    setPage(options.pageNum);
+    setTotalPages(options.websiteLeadCohort ? Math.ceil(items.length / WEBSITE_LEAD_PAGE_SIZE) : firstPage.totalPages);
+    setError(null);
+  }
+
   async function fetchRecent(
     pageNum = 0,
     overrides?: {
@@ -1243,49 +1518,47 @@ export function CompanyCheckShell() {
     }
 
     const requestId = ++latestListRequestId.current;
-    setIsListLoading(true);
+    listAbortControllerRef.current?.abort();
+    const controller = new AbortController();
+    listAbortControllerRef.current = controller;
     const effectiveDaysFilter = overrides?.daysFilter ?? daysFilter;
     const effectiveCountyFilter = overrides?.countyFilter ?? countyFilter;
     const effectiveOrganizationFormFilter = overrides?.organizationFormFilter ?? organizationFormFilter;
     const effectiveSelectedLegend = overrides?.selectedLegend === undefined ? selectedLegend : overrides.selectedLegend;
     const effectiveNameFilter = overrides?.nameFilter ?? debouncedNameFilter;
+    const effectiveWebsiteLeadCohort = overrides?.websiteLeadCohort ?? websiteLeadCohort;
     const params = recentSearchParams({
       daysFilter: effectiveDaysFilter,
-      websiteLeadCohort: overrides?.websiteLeadCohort ?? websiteLeadCohort,
-      page: pageNum,
+      websiteLeadCohort: effectiveWebsiteLeadCohort,
+      websiteLeadOldestMonths,
+      page: effectiveWebsiteLeadCohort ? 0 : pageNum,
       countyFilter: effectiveCountyFilter,
       organizationFormFilter: effectiveOrganizationFormFilter,
       selectedLegend: effectiveSelectedLegend,
       nameFilter: effectiveNameFilter,
       quickFilters: leadQuickFilters,
     });
+    if (effectiveWebsiteLeadCohort) params.set("websiteLeadRanking", "true");
+    const datasetKey = params.toString();
+    if (effectiveWebsiteLeadCohort && restoreWebsiteLeadRanking(datasetKey, pageNum)) return;
+    websiteLeadDatasetKeyRef.current = null;
+    setIsListLoading(true);
+    setUnverifiedWebsiteCount(0);
+    setWebsiteRankingProgress(effectiveWebsiteLeadCohort ? "Henter alle nettsideleads før rangering …" : "");
 
     try {
-      const response = await fetch(`/api/company-check/search?${params.toString()}`);
-      if (response.ok) {
-        const data = await response.json() as CompanySummary[] | { items?: CompanySummary[]; totalPages?: number };
-        if (requestId !== latestListRequestId.current) {
-          return;
-        }
-        const { items, totalPages: nextTotalPages } = normalizeRecentSearchResponse(data);
-        setRecentCompanies(items);
-        setPage(pageNum);
-        setTotalPages(nextTotalPages);
-        setError(null);
-      } else if (response.status === 502) {
-        const payload = await response.json().catch(() => null);
-        if (requestId !== latestListRequestId.current) {
-          return;
-        }
-        setRecentCompanies([]);
-        setTotalPages(0);
-        setError(payload?.title ?? "Backend starter fortsatt. Prøv igjen om et øyeblikk.");
-      }
+      const response = await fetch(`/api/company-check/search?${params.toString()}`, { signal: controller.signal });
+      await applyRecentSearchResponse(response, { pageNum, requestId, controller, params,
+        websiteLeadCohort: effectiveWebsiteLeadCohort, datasetKey });
     } catch (err) {
-      console.error("Failed to fetch recent companies", err);
+      if (requestId === latestListRequestId.current && !controller.signal.aborted) {
+        console.error("Failed to fetch recent companies", err);
+        setError(err instanceof Error ? err.message : "Kunne ikke rangere nettsideleads.");
+      }
     } finally {
       if (requestId === latestListRequestId.current) {
         setIsListLoading(false);
+        setWebsiteRankingProgress("");
       }
     }
   }
@@ -1302,12 +1575,20 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     runRefreshRecent();
-  }, [backendReady, initialResultsReady, daysFilter, websiteLeadCohort, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, debouncedNameFilter]);
+  }, [backendReady, initialResultsReady, daysFilter, websiteLeadCohort, websiteLeadOldestMonths, countyFilter, organizationFormFilter, selectedLegend, leadQuickFilters, debouncedNameFilter]);
 
   useEffect(() => {
     if (recentCompanies.length === 0) return;
     const controller = new AbortController();
-    const orgNumbers = recentCompanies.map((company) => company.orgNumber);
+    const rankedCompanies = websiteLeadCohort
+      ? applyLeadQuickFilters(recentCompanies, outreachStatusByOrg, leadQuickFilters)
+        .filter((company) => !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber]))
+        .sort((left, right) => compareWebsiteLeadQuality(left, right, websiteAvailabilityByOrg))
+      : recentCompanies;
+    const companiesForAge = websiteLeadCohort
+      ? rankedCompanies.slice(page * WEBSITE_LEAD_PAGE_SIZE, (page + 1) * WEBSITE_LEAD_PAGE_SIZE)
+      : rankedCompanies;
+    const orgNumbers = companiesForAge.map((company) => company.orgNumber);
     void fetch("/api/company-check/contact-ages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1321,57 +1602,7 @@ export function CompanyCheckShell() {
       // Ages are optional; an unavailable lookup must not block the lead list.
     });
     return () => controller.abort();
-  }, [recentCompanies]);
-
-  useEffect(() => {
-    if (!websiteLeadCohort || recentCompanies.length === 0) return;
-    let cancelled = false;
-    let recheckTimer: number | undefined;
-    const orgNumbers = recentCompanies
-      .filter((company) => company.website && company.organizationForm?.toUpperCase() !== "UTLA")
-      .map((company) => company.orgNumber);
-
-    async function checkOne(orgNumber: string) {
-      try {
-        const response = await fetch(`/api/company-check/${orgNumber}/website-availability`, { cache: "no-store" });
-        if (!response.ok) return null;
-        return await response.json() as WebsiteAvailability;
-      } catch {
-        return null;
-      }
-    }
-
-    async function checkAll(numbers: string[]) {
-      const checked: WebsiteAvailability[] = [];
-      for (let index = 0; index < numbers.length && !cancelled; index += 5) {
-        const batch = await Promise.all(numbers.slice(index, index + 5).map(checkOne));
-        if (cancelled) return [];
-        const valid = batch.filter((result): result is WebsiteAvailability => result !== null);
-        checked.push(...valid);
-        setWebsiteAvailabilityByOrg((current) => ({
-          ...current,
-          ...Object.fromEntries(valid.map((result) => [result.orgNumber, result])),
-        }));
-      }
-      return checked;
-    }
-
-    void checkAll(orgNumbers).then((checked) => {
-      const pending = checked.filter((result) => result.status === "PENDING_RECHECK"
-        || result.status === "CONTACT_PATH_PENDING_RECHECK");
-      if (cancelled || pending.length === 0) return;
-      const latestNextCheck = Math.max(...pending.map((result) => Date.parse(result.nextCheckAt ?? "")));
-      const delay = Number.isFinite(latestNextCheck) ? Math.max(1000, latestNextCheck - Date.now() + 1000) : 31_000;
-      recheckTimer = window.setTimeout(() => {
-        void checkAll(pending.map((result) => result.orgNumber));
-      }, delay);
-    });
-
-    return () => {
-      cancelled = true;
-      if (recheckTimer !== undefined) window.clearTimeout(recheckTimer);
-    };
-  }, [recentCompanies, websiteLeadCohort]);
+  }, [recentCompanies, page, websiteLeadCohort, outreachStatusByOrg, leadQuickFilters, websiteAvailabilityByOrg]);
 
   useEffect(() => {
     if (!websiteLeadCohort) return;
@@ -1671,11 +1902,11 @@ export function CompanyCheckShell() {
       let sentCount = 0;
       let skippedCount = 0;
 
-      for (const entry of entries) {
+      const completed = await runSequentially(entries, async (entry) => {
         const company = await fetchCompanyDetailsForBatch(entry.orgNumber);
         if (!company?.email) {
           skippedCount += 1;
-          continue;
+          return true;
         }
         const subject = buildFollowUpEmailSubject(content, company);
         const body = buildFollowUpEmailBody(content, company, entry.offerType);
@@ -1699,14 +1930,16 @@ export function CompanyCheckShell() {
         });
         if (!response.ok) {
           window.alert(`Oppfølgingsbatch stoppet ved ${company.name}. ${sentCount} sendt før stopp.`);
-          return;
+          return false;
         }
         const payload = (await response.json()) as { to: string; outreachStatus: OutreachStatus };
         setOutreachStatusByOrg((current) => ({ ...current, [company.orgNumber]: payload.outreachStatus }));
         setOutreachEntries((current) => [payload.outreachStatus, ...current]);
         sentCount += 1;
         if (sentCount < entries.length) await wait(EMAIL_BATCH_SEND_DELAY_MS);
-      }
+        return true;
+      });
+      if (!completed) return;
 
       window.alert(skippedCount > 0
         ? `Oppfølgingsbatch ferdig. ${sentCount} sendt og ${skippedCount} hoppet over fordi e-post manglet.`
@@ -1798,53 +2031,30 @@ export function CompanyCheckShell() {
   const canUseEmailBatch = !websiteLeadCohort && leadQuickFilters.includes("HAS_EMAIL")
     && (leadQuickFilters.includes("MISSING_WEBSITE") || leadQuickFilters.includes("HAS_WEBSITE"));
   const followUpEntries = getOutreachEntriesDueForFollowUp(outreachEntries);
-  const listQuickFilters = leadQuickFilters.filter((filter) => filter !== "NOT_SENT");
-  const filteredCompanies = applyLeadQuickFilters((selectedLegend
-    ? recentCompanies.filter((company) => company.scoreColor === selectedLegend)
-    : recentCompanies
-  ).filter((company) => !websiteLeadCohort || company.organizationForm?.toUpperCase() !== "UTLA"), outreachStatusByOrg, listQuickFilters)
-    .sort(leadSortComparator(websiteLeadCohort, canUseEmailBatch, websiteAvailabilityByOrg));
-  const visibleSearchCompanies = filteredCompanies.filter((company) => {
-    const outreachStatus = outreachStatusByOrg[company.orgNumber];
-    const batchBlocked = batchValidationByOrg[company.orgNumber]?.status === "blocked";
-    return !isOutreachSendBlocked(outreachStatus)
-      && outreachStatus?.status !== "not_relevant"
-      && ((canUseEmailBatch && showBatchExcluded) || !batchBlocked);
+  const { filteredCompanies, visibleSearchCompanies } = selectVisibleLeadCompanies({
+    recentCompanies, selectedLegend, websiteLeadCohort, canUseEmailBatch, showBatchExcluded,
+    quickFilters: leadQuickFilters, outreachStatusByOrg, batchValidationByOrg, websiteAvailabilityByOrg,
   });
-  const selectableWebsiteLeads = websiteLeadCohort
-    ? visibleSearchCompanies.filter((company) => canSelectWebsiteLeadForEmail(
-      company,
-      websiteAvailabilityByOrg[company.orgNumber],
-      outreachStatusByOrg[company.orgNumber],
-    ))
-    : [];
+  const { visiblePageCompanies, displayedTotalPages, selectableWebsiteLeads, pendingWebsiteCheckCount } =
+    selectWebsiteLeadPage({ websiteLeadCohort, visibleSearchCompanies, filteredCompanies, page, totalPages,
+      websiteAvailabilityByOrg, outreachStatusByOrg });
   const selectedWebsiteLeadsOnPage = selectableWebsiteLeads.filter(
     (company) => websiteLeadSelectionByOrg[company.orgNumber],
   );
-  const selectedBatchCompanies = canUseEmailBatch
-    ? visibleSearchCompanies.filter((company) =>
-      batchSelectionByOrg[company.orgNumber]
-      && canSelectEmailBatchCandidate(company)
-      && batchValidationByOrg[company.orgNumber]?.status !== "blocked"
-      && !isOutreachSendBlocked(outreachStatusByOrg[company.orgNumber])
-    )
-    : [];
+  const selectedBatchCompanies = selectBatchCompanies({
+    visibleSearchCompanies, canUseEmailBatch, batchSelectionByOrg, batchValidationByOrg, outreachStatusByOrg,
+  });
   const sendableBatchCount = selectedBatchCompanies.filter((company) => Boolean(company.email)).length;
   const hiddenByOutreachCount = filteredCompanies.length - visibleSearchCompanies.length;
-  const pendingWebsiteCheckCount = websiteLeadCohort
-    ? filteredCompanies.filter((company) => !websiteAvailabilityByOrg[company.orgNumber]
-      || websiteAvailabilityByOrg[company.orgNumber].status === "PENDING_RECHECK"
-      || websiteAvailabilityByOrg[company.orgNumber].status === "CONTACT_PATH_PENDING_RECHECK").length
-    : 0;
   const visibleBatchValidationKey = canUseEmailBatch
     ? visibleSearchCompanies
       .filter((company) => company.email && canSelectEmailBatchCandidate(company))
       .map((company) => company.orgNumber)
       .join("|")
     : "";
-  const resultsSummary = websiteLeadCohort
-    ? "Registrert for 6–12 måneder siden · har e-post og nettside · uten UTLA · rangert etter nettsidevurdering på denne siden"
-    : buildResultsSummary(daysFilter, countyFilter, organizationFormFilter, metadata.organizationForms, selectedLegend);
+  const resultsSummary = choose(websiteLeadCohort,
+    `Registrert for 6–${websiteLeadOldestMonths} måneder siden · har e-post og nettside · uten UTLA · rangert samlet for innlastede treff`,
+    buildResultsSummary(daysFilter, countyFilter, organizationFormFilter, metadata.organizationForms, selectedLegend));
   const filterButtonDisabled = !initialResultsReady || isListLoading;
 
   useEffect(() => {
@@ -1864,25 +2074,22 @@ export function CompanyCheckShell() {
     });
 
     async function validateVisibleBatchCandidates() {
-      for (const company of companiesToValidate) {
-        if (cancelled) {
-          return;
-        }
+      await runSequentially(companiesToValidate, async (company) => {
+        if (cancelled) return false;
         setBatchValidationByOrg((current) => ({
           ...current,
           [company.orgNumber]: { status: "checking", startedAt: Date.now() },
         }));
         const validation = await validateCompanyForBatchSelection(company);
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return false;
         setBatchValidationByOrg((current) => ({
           ...current,
           [company.orgNumber]: validation.reason
             ? { status: "blocked", reason: validation.reason ?? undefined }
             : { status: "ready" },
         }));
-      }
+        return true;
+      });
     }
 
     void validateVisibleBatchCandidates();
@@ -2055,12 +2262,16 @@ export function CompanyCheckShell() {
                     disabled={filterButtonDisabled}
                     onClick={() => {
                       if (websiteLeadCohort) {
+                        websiteLeadDatasetKeyRef.current = null;
                         setWebsiteLeadCohort(false);
                         setDaysFilter("5");
                         setLeadQuickFilters(["HAS_EMAIL"]);
                         return;
                       }
+                      websiteLeadDatasetKeyRef.current = null;
                       setWebsiteLeadCohort(true);
+                      setWebsiteLeadOldestMonths(7);
+                      setWebsiteLeadSelectionByOrg({});
                       setDaysFilter("0");
                       setCountyFilter("");
                       setOrganizationFormFilter("");
@@ -2071,10 +2282,32 @@ export function CompanyCheckShell() {
                     }}
                     type="button"
                   >
-                    Nettsideleads · registrert for 6–12 måneder siden
+                    Nettsideleads · registrert for 6–{websiteLeadOldestMonths} måneder siden
                   </button>
                   <Show when={websiteLeadCohort}>
-                    <span className="text-[12px] text-[#52606D]">Har e-post og registrert nettside. Velg aktuelle mottakere og bekreft før batchutsending.</span>
+                    <div className="flex flex-wrap items-center gap-2 text-[12px] text-[#52606D]">
+                      <span>Periode:</span>
+                      {([7, 12] as const).map((months) => (
+                        <button
+                          key={months}
+                          aria-pressed={websiteLeadOldestMonths === months}
+                          className={`rounded-sm border px-2 py-1 font-medium ${websiteLeadOldestMonths === months
+                            ? "border-[#1F5FA9] bg-[#E6F0FA] text-[#1F5FA9]"
+                            : "border-[#BCCCDC] bg-white text-[#52606D] hover:border-[#1F5FA9]"}`}
+                          disabled={filterButtonDisabled}
+                          onClick={() => {
+                            websiteLeadDatasetKeyRef.current = null;
+                            setWebsiteLeadSelectionByOrg({});
+                            setPage(0);
+                            setWebsiteLeadOldestMonths(months);
+                          }}
+                          type="button"
+                        >
+                          6–{months} måneder
+                        </button>
+                      ))}
+                      <span>Har e-post og registrert nettside. Velg aktuelle mottakere og bekreft før batchutsending.</span>
+                    </div>
                   </Show>
                 </div>
 
@@ -2295,15 +2528,32 @@ export function CompanyCheckShell() {
                   <div className="mb-3 flex items-center justify-between gap-4">
                     <div>
                       <p className="text-[12px] font-medium text-[#52606D]">
-                        Søker i registerdata
+                        {websiteLeadCohort ? "Rangerer nettsideleads" : "Søker i registerdata"}
                       </p>
                       <p className="mt-1 text-[14px] font-medium text-[#52606D]">
-                        {choose(listLoadSeconds < 8, "Henter første treffliste.", "Søket er fortsatt i gang. Filteret jobber mot mange selskaper.")}
+                        {websiteLeadCohort
+                          ? websiteRankingProgress
+                          : choose(listLoadSeconds < 8, "Henter første treffliste.", "Søket er fortsatt i gang. Filteret jobber mot mange selskaper.")}
                       </p>
                     </div>
-                    <p className="whitespace-nowrap text-[12px] font-bold text-[#52606D]">
-                      {listLoadSeconds}s
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <p className="whitespace-nowrap text-[12px] font-bold text-[#52606D]">{listLoadSeconds}s</p>
+                      {websiteLeadCohort ? (
+                        <button
+                          type="button"
+                          className="text-[12px] font-semibold text-[#1F5FA9] underline"
+                          onClick={() => {
+                            listAbortControllerRef.current?.abort();
+                            websiteLeadDatasetKeyRef.current = null;
+                            setWebsiteLeadCohort(false);
+                            setDaysFilter("5");
+                            setLeadQuickFilters(["HAS_EMAIL"]);
+                          }}
+                        >
+                          Avbryt vurdering
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                   <div className="h-2 overflow-hidden bg-[#E4E7EB]">
                     <div
@@ -2319,11 +2569,14 @@ export function CompanyCheckShell() {
                   <h2 className="text-[22px] font-semibold tracking-tight text-[#1F2933]">{choose(websiteLeadCohort, "Nettsideleads til vurdering", "Dagens håndplukkede kandidater")}</h2>
                   <p className="mt-1 text-[14px] font-medium leading-6 text-[#52606D]">{resultsSummary}</p>
                   <p className="mt-2 text-[12px] font-medium leading-5 text-[#52606D]">
-                    Viser {visibleSearchCompanies.length} aktuelle treff på denne siden
+                    Viser {visiblePageCompanies.length} av {visibleSearchCompanies.length} aktuelle treff
                     {choose(hiddenByOutreachCount > 0, ` (${hiddenByOutreachCount} skjult fordi de er sendt eller ikke aktuelle).`, ".")}
                   </p>
                   {websiteLeadCohort && pendingWebsiteCheckCount > 0 ? (
                     <p className="mt-1 text-[12px] text-[#52606D]">{pendingWebsiteCheckCount} URL-er venter på første eller andre sjekk.</p>
+                  ) : null}
+                  {websiteLeadCohort && unverifiedWebsiteCount > 0 ? (
+                    <p className="mt-1 text-[12px] text-amber-700">{unverifiedWebsiteCount} nettsider kunne ikke sjekkes og ligger sist i rangeringen.</p>
                   ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -2338,20 +2591,20 @@ export function CompanyCheckShell() {
                         Forrige
                       </Button>
                       <span className="min-w-24 text-center text-sm font-medium">
-                        Side {choose(totalPages > 0, page + 1, 0)} av {Math.max(totalPages, 0)}
+                        Side {choose(displayedTotalPages > 0, page + 1, 0)} av {displayedTotalPages}
                       </span>
                       <Button
                         variant="outline"
                         size="sm"
-                        disabled={page + 1 >= totalPages || isListLoading}
+                        disabled={page + 1 >= displayedTotalPages || isListLoading}
                         onClick={() => void fetchRecent(page + 1)}
                       >
                         Neste
                       </Button>
                     </div>
-                    <Show when={totalPages > 1}>
+                    <Show when={displayedTotalPages > 1}>
                       <div className="flex max-w-[360px] flex-wrap justify-center gap-1">
-                        {paginationItems(page, totalPages).map((item) =>
+                        {paginationItems(page, displayedTotalPages).map((item) =>
                           typeof item === "string" ? (
                             <span
                               key={item}
@@ -2529,7 +2782,7 @@ export function CompanyCheckShell() {
                     selectedCount={selectedWebsiteLeadsOnPage.length}
                   />
                 </Show>
-                <Show when={!isListLoading && visibleSearchCompanies.length > 0}>
+                <Show when={!isListLoading && visiblePageCompanies.length > 0}>
                   <div className="hidden grid-cols-[minmax(210px,1.3fr)_minmax(160px,1fr)_minmax(150px,.9fr)_minmax(180px,1fr)_minmax(140px,.8fr)_44px] gap-4 border-b border-[#D9E2EC] bg-[#F8FBFF] px-4 py-2.5 text-[11px] font-semibold uppercase text-[#52606D] lg:grid">
                     <span>Virksomhet</span>
                     <span>Virksomhetstype</span>
@@ -2540,7 +2793,7 @@ export function CompanyCheckShell() {
                   </div>
                 </Show>
               <LeadResultsBody
-                companies={visibleSearchCompanies}
+                companies={visiblePageCompanies}
                 hasLoadedCompanies={recentCompanies.length > 0}
                 isLoading={isListLoading}
                 onReset={() => {
