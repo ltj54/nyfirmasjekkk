@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 984
-- Sendt: 474
+- Antall hendelser: 990
+- Sendt: 477
 - Angret: 0
-- Aktive kontaktede selskaper: 306
+- Aktive kontaktede selskaper: 309
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-19 | 838628192 | IKOTTOSEN HOLDING AS | AS | email | website-offer |
+| 2026-10-19 | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | website-offer |
+| 2026-10-19 | 938703841 | SIA REOVANT | UTLA | email | website-offer |
 | 2026-10-19 | 938613133 | FRISØR DORI GERMEAU | ENK | email | website-offer |
 | 2026-10-19 | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | website-offer |
 | 2026-10-19 | 938669953 | TRAN TRADING | ENK | email | website-offer |
@@ -324,6 +327,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-19 22:51 | sent | 838628192 | IKOTTOSEN HOLDING AS | AS | email | - |
+| 2026-10-19 22:51 | sending | 838628192 | IKOTTOSEN HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 22:51 | sent | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | - |
+| 2026-10-19 22:51 | sending | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-19 22:51 | sent | 938703841 | SIA REOVANT | UTLA | email | - |
+| 2026-10-19 22:51 | sending | 938703841 | SIA REOVANT | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-19 12:34 | sent | 938613133 | FRISØR DORI GERMEAU | ENK | email | - |
 | 2026-10-19 12:34 | sending | 938613133 | FRISØR DORI GERMEAU | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-19 12:34 | sent | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | - |
