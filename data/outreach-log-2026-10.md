@@ -4,15 +4,49 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 990
-- Sendt: 477
+- Antall hendelser: 1058
+- Sendt: 511
 - Angret: 0
-- Aktive kontaktede selskaper: 309
+- Aktive kontaktede selskaper: 319
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-20 | 938604401 | GRØNNINGEN UTLEIE | ENK | email | website-follow-up |
+| 2026-10-20 | 938673209 | INGRID STØEN LEGE | ENK | email | website-follow-up |
+| 2026-10-20 | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | website-follow-up |
+| 2026-10-20 | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | website-follow-up |
+| 2026-10-20 | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | website-follow-up |
+| 2026-10-20 | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | website-follow-up |
+| 2026-10-20 | 938641048 | BOTANIKA AS | AS | email | website-follow-up |
+| 2026-10-20 | 938574324 | CYVI AB NUF | NUF | email | website-follow-up |
+| 2026-10-20 | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | website-follow-up |
+| 2026-10-20 | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | website-follow-up |
+| 2026-10-20 | 938641374 | NK TRANSPORT B.V. | NUF | email | website-follow-up |
+| 2026-10-20 | 938670013 | SKJØNNEBERG AS | AS | email | website-follow-up |
+| 2026-10-20 | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | website-follow-up |
+| 2026-10-20 | 938644780 | RAMADAN SERVICE | ENK | email | website-follow-up |
+| 2026-10-20 | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | website-follow-up |
+| 2026-10-20 | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | website-follow-up |
+| 2026-10-20 | 938647666 | HILSTAD FOTO | ENK | email | website-follow-up |
+| 2026-10-20 | 938639078 | MAGAR SERVICETJENESTER | ENK | email | website-follow-up |
+| 2026-10-20 | 938639094 | PB TORVIK COACHING OG TERAPI | ENK | email | website-follow-up |
+| 2026-10-20 | 938675163 | SWEETS BY POYA | ENK | email | website-follow-up |
+| 2026-10-20 | 938648182 | TVINDE FIRST AID | ENK | email | website-follow-up |
+| 2026-10-20 | 938677204 | ULOZAS MARINE | ENK | email | website-follow-up |
+| 2026-10-20 | 938658870 | ÅRSVOLL RÅD OG RADDEL | ENK | email | website-follow-up |
+| 2026-10-20 | 938628602 | CODING CLASSES BY PAYAL AGGARWAL | ENK | email | website-follow-up |
+| 2026-10-20 | 938707073 | CHRISTIAN LERVIK | ENK | email | website-offer |
+| 2026-10-20 | 938705569 | HELGEN HER OG NÅ | ENK | email | website-offer |
+| 2026-10-20 | 938706425 | BYGGNOR PRO AS | AS | email | website-offer |
+| 2026-10-20 | 937538200 | BAB SOLUTIONS SA | SA | email | website-offer |
+| 2026-10-20 | 938703531 | PANOM THAIFOOD LILLEHAMMER STENE | ENK | email | website-offer |
+| 2026-10-20 | 938593604 | NEXUS | FLI | email | website-offer |
+| 2026-10-20 | 938675198 | SCANDITALES - TARU UUSINOKA | ENK | email | website-offer |
+| 2026-10-20 | 938708096 | NORGE ENTRPRENEUR LTD | UTLA | email | website-offer |
+| 2026-10-20 | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | website-offer |
+| 2026-10-20 | 938599157 | DARDANIA DRAMMEN | FLI | email | website-offer |
 | 2026-10-19 | 838628192 | IKOTTOSEN HOLDING AS | AS | email | website-offer |
 | 2026-10-19 | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | website-offer |
 | 2026-10-19 | 938703841 | SIA REOVANT | UTLA | email | website-offer |
@@ -127,14 +161,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-15 | 938680604 | PHAM HJEMMEGLANS | ENK | email | website-offer |
 | 2026-10-15 | 938680493 | ÅRSVOLL SERVICE | ENK | email | website-offer |
 | 2026-10-15 | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | website-offer |
-| 2026-10-14 | 938628602 | CODING CLASSES BY PAYAL AGGARWAL | ENK | email | website-offer |
-| 2026-10-14 | 938658870 | ÅRSVOLL SERVICE | ENK | email | website-offer |
-| 2026-10-14 | 938677204 | ULOZAS MARINE | ENK | email | website-offer |
-| 2026-10-14 | 938648182 | TVINDE FIRST AID | ENK | email | website-offer |
-| 2026-10-14 | 938675163 | SWEETS BY POYA | ENK | email | website-offer |
-| 2026-10-14 | 938639094 | PB TORVIK COACHING OG TERAPI | ENK | email | website-offer |
-| 2026-10-14 | 938639078 | MAGAR SERVICETJENESTER | ENK | email | website-offer |
-| 2026-10-14 | 938647666 | HILSTAD FOTO | ENK | email | website-offer |
 | 2026-10-14 | 937088884 | ODOO SA NUF | NUF | email | website-follow-up |
 | 2026-10-14 | 838603262 | MARIE RØSSLAND GUSTAVSEN | ENK | email | website-follow-up |
 | 2026-10-14 | 938613605 | MARJAVARA JOSEFSEN | ENK | email | website-follow-up |
@@ -155,22 +181,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-14 | 938639582 | WAMMER UNDERHOLDNING | ENK | email | website-follow-up |
 | 2026-10-14 | 938609764 | BALIZ INVEST AS | AS | email | website-follow-up |
 | 2026-10-14 | 938637407 | FAM NESSET HOLDING AS | AS | email | website-follow-up |
-| 2026-10-14 | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | website-offer |
-| 2026-10-14 | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | website-offer |
-| 2026-10-14 | 938644780 | RAMADAN SERVICE | ENK | email | website-offer |
-| 2026-10-14 | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | website-offer |
-| 2026-10-14 | 938670013 | SKJØNNEBERG AS | AS | email | website-offer |
-| 2026-10-14 | 938641374 | NK TRANSPORT B.V. | NUF | email | website-offer |
-| 2026-10-14 | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | website-offer |
-| 2026-10-14 | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | website-offer |
-| 2026-10-14 | 938574324 | CYVI AB NUF | NUF | email | website-offer |
-| 2026-10-14 | 938641048 | BOTANIKA AS | AS | email | website-offer |
-| 2026-10-14 | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | website-offer |
-| 2026-10-14 | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | website-offer |
-| 2026-10-14 | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | website-offer |
-| 2026-10-14 | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | website-offer |
-| 2026-10-14 | 938673209 | INGRID STØEN LEGE | ENK | email | website-offer |
-| 2026-10-14 | 938604401 | GRØNNINGEN UTLEIE | ENK | email | website-offer |
 | 2026-10-13 | 937510764 | ARAA | FLI | email | website-lead-batch |
 | 2026-10-13 | 837522102 | MELHUS GAINS DEAL | ENK | email | website-lead-batch |
 | 2026-10-13 | 938632081 | GAMLEGARDEN1912, LANGSTEIN | ENK | email | website-follow-up |
@@ -327,6 +337,74 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-20 11:12 | sent | 938604401 | GRØNNINGEN UTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:12 | sending | 938604401 | GRØNNINGEN UTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:12 | sent | 938673209 | INGRID STØEN LEGE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:12 | sending | 938673209 | INGRID STØEN LEGE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:12 | sent | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:12 | sending | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:12 | sent | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:12 | sending | 838632122 | LTJ PRODUCTION JOHANNESSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:12 | sent | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:12 | sending | 938663556 | TOON ONGEWOON ENGINEERING | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:12 | sent | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:12 | sending | 930779377 | VISTEKROSSEN 1-13 VELFORENING | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938641048 | BOTANIKA AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938641048 | BOTANIKA AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938574324 | CYVI AB NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938574324 | CYVI AB NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938667977 | KIRSTINE BORGERSRUD TØNSBERG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938523827 | KORINNE LANCETTE ESSENTIELLE BY KORINNE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938641374 | NK TRANSPORT B.V. | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938641374 | NK TRANSPORT B.V. | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938670013 | SKJØNNEBERG AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938670013 | SKJØNNEBERG AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938672334 | SERVICEFIX TER HOVHANNISYAN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938644780 | RAMADAN SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938644780 | RAMADAN SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938639531 | MARTIN SÆTRE THOMMESEN UNDERHOLDNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938543526 | SAMEIET THERESES GATE 31 A-G | ESEK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938647666 | HILSTAD FOTO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938647666 | HILSTAD FOTO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938639078 | MAGAR SERVICETJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938639078 | MAGAR SERVICETJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938639094 | PB TORVIK COACHING OG TERAPI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938639094 | PB TORVIK COACHING OG TERAPI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938675163 | SWEETS BY POYA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938675163 | SWEETS BY POYA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938648182 | TVINDE FIRST AID | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938648182 | TVINDE FIRST AID | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938677204 | ULOZAS MARINE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938677204 | ULOZAS MARINE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938658870 | ÅRSVOLL RÅD OG RADDEL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938658870 | ÅRSVOLL RÅD OG RADDEL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:11 | sent | 938628602 | CODING CLASSES BY PAYAL AGGARWAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-20 11:11 | sending | 938628602 | CODING CLASSES BY PAYAL AGGARWAL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938707073 | CHRISTIAN LERVIK | ENK | email | - |
+| 2026-10-20 11:10 | sending | 938707073 | CHRISTIAN LERVIK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938705569 | HELGEN HER OG NÅ | ENK | email | - |
+| 2026-10-20 11:10 | sending | 938705569 | HELGEN HER OG NÅ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938706425 | BYGGNOR PRO AS | AS | email | - |
+| 2026-10-20 11:10 | sending | 938706425 | BYGGNOR PRO AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 937538200 | BAB SOLUTIONS SA | SA | email | - |
+| 2026-10-20 11:10 | sending | 937538200 | BAB SOLUTIONS SA | SA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938703531 | PANOM THAIFOOD LILLEHAMMER STENE | ENK | email | - |
+| 2026-10-20 11:10 | sending | 938703531 | PANOM THAIFOOD LILLEHAMMER STENE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938593604 | NEXUS | FLI | email | - |
+| 2026-10-20 11:10 | sending | 938593604 | NEXUS | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938675198 | SCANDITALES - TARU UUSINOKA | ENK | email | - |
+| 2026-10-20 11:10 | sending | 938675198 | SCANDITALES - TARU UUSINOKA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938708096 | NORGE ENTRPRENEUR LTD | UTLA | email | - |
+| 2026-10-20 11:10 | sending | 938708096 | NORGE ENTRPRENEUR LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | - |
+| 2026-10-20 11:10 | sending | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 11:10 | sent | 938599157 | DARDANIA DRAMMEN | FLI | email | - |
+| 2026-10-20 11:10 | sending | 938599157 | DARDANIA DRAMMEN | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-19 22:51 | sent | 838628192 | IKOTTOSEN HOLDING AS | AS | email | - |
 | 2026-10-19 22:51 | sending | 838628192 | IKOTTOSEN HOLDING AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-19 22:51 | sent | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | - |
