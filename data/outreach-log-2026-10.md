@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1058
-- Sendt: 511
+- Antall hendelser: 1066
+- Sendt: 515
 - Angret: 0
-- Aktive kontaktede selskaper: 319
+- Aktive kontaktede selskaper: 323
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-20 | 938715521 | FRIDA KRAFT | ENK | email | website-offer |
+| 2026-10-20 | 938333173 | DIGNIFY WORDS LIMITED NUF | NUF | email | website-offer |
+| 2026-10-20 | 938708916 | DIGNIFY WORDS LIMITED | UTLA | email | website-offer |
+| 2026-10-20 | 938677476 | ALBRETSEN STEINTØFT | ENK | email | website-offer |
 | 2026-10-20 | 938604401 | GRØNNINGEN UTLEIE | ENK | email | website-follow-up |
 | 2026-10-20 | 938673209 | INGRID STØEN LEGE | ENK | email | website-follow-up |
 | 2026-10-20 | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | website-follow-up |
@@ -337,6 +341,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-20 13:14 | sent | 938715521 | FRIDA KRAFT | ENK | email | - |
+| 2026-10-20 13:14 | sending | 938715521 | FRIDA KRAFT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 13:14 | sent | 938333173 | DIGNIFY WORDS LIMITED NUF | NUF | email | - |
+| 2026-10-20 13:14 | sending | 938333173 | DIGNIFY WORDS LIMITED NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 13:14 | sent | 938708916 | DIGNIFY WORDS LIMITED | UTLA | email | - |
+| 2026-10-20 13:14 | sending | 938708916 | DIGNIFY WORDS LIMITED | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-20 13:14 | sent | 938677476 | ALBRETSEN STEINTØFT | ENK | email | - |
+| 2026-10-20 13:14 | sending | 938677476 | ALBRETSEN STEINTØFT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-20 11:12 | sent | 938604401 | GRØNNINGEN UTLEIE | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-20 11:12 | sending | 938604401 | GRØNNINGEN UTLEIE | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-20 11:12 | sent | 938673209 | INGRID STØEN LEGE | ENK | email | Oppfølging sendt – avslutt hvis stille |
