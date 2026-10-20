@@ -23,6 +23,7 @@ type CrmProject = {
   agreement: string;
   agreementStatus: AgreementStatus;
   provider?: string;
+  hostingProvider?: string;
   contact: string;
   email: string;
   organizationNumber?: string;
@@ -36,11 +37,13 @@ type CrmProject = {
   responseDeadline?: string;
   domainRemoved?: string;
   invoiceDate?: string;
+  invoiceDraftDate?: string;
   invoiceDueDate?: string;
   deliveryConfirmedDate?: string;
   deliveryComplete?: boolean;
   paymentDate?: string;
   invoiceNumber?: string;
+  invoiceDraftNumber?: string;
   invoiceFile?: string;
   status: ProjectStatus;
   invoiceAmount?: number;
@@ -126,20 +129,28 @@ const projects: CrmProject[] = [
   },
   {
     name: "Idsøe Rådgivning",
-    previewUrl: "https://ltj54.github.io/idsoe-radgivning-nettside/index.html",
+    domain: "www.emidsoe.no",
+    hostingProvider: "Domeneshop (bestilt webhotell, ikke GitHub Pages)",
     contact: "Ella Maria Cosmovici Idsøe",
     email: "e.m.c.idsoe@naturfagsenteret.no",
+    organizationNumber: "838 270 352",
     phone: "+47 22 84 56 69",
+    address: "Neuberggata 6A, 0367 Oslo",
     proposalDate: "03.09.2026",
     dateLabel: "Henvendelse",
     replyDate: "09.10.2026 kl. 15:45",
-    outreach: "Positiv tilbakemelding – avventer nytt domene og e-postadresse",
-    progress: "Samtalen i uke 40 er gjennomført. Nettsiden er forenklet etter Ellas innspill, og tekstene for foreldre, barnehager, leger og psykologer er oppdatert på norsk og engelsk. Ella skrev 09.10.2026 at siden så ut som hun ønsket. De siste tilpasningene avventer nytt domene og ny e-postadresse.",
-    nextStep: "Avvent beskjed fra Ella om nytt domene og ny e-postadresse. Gjør deretter de siste tilpasningene og avklar endelig godkjenning før levering. Ingen e-post eller purring nå.",
-    invoice: "Ikke fakturert",
-    agreement: "Skal tilpasses og avtales før endelig levering eller drift. Ikke sendt.",
+    deliveryConfirmedDate: "20.10.2026",
+    deliveryComplete: true,
+    outreach: "Nettsiden overlevert – faktura klargjort, ikke sendt",
+    progress: "Lars bekreftet 20.10.2026 at Idsøe Rådgivning er overlevert på www.emidsoe.no. Nettsiden ligger på bestilt webhotell hos Domeneshop, ikke på GitHub Pages.",
+    nextStep: "Kontroller faktura 2026-005. Lars håndterer eventuell utsending selv. Ingen automatisk utsending eller purring.",
+    invoice: "Faktura 2026-005 klargjort · 1 990 kr · ikke sendt. Domene og webhotell separat.",
+    invoiceDraftNumber: "2026-005",
+    invoiceDraftDate: "20.10.2026",
+    invoiceAmount: 1990,
+    agreement: "Ingen signert avtale registrert i CRM. Avklar eventuelle driftsvilkår separat.",
     agreementStatus: "required",
-    status: "waiting",
+    status: "delivered",
   },
   {
     name: "Fiskerikandidat Gunnar Davidsson",
@@ -278,6 +289,7 @@ function historyFor(project: CrmProject): CrmEvent[] {
     { date: project.clarificationDate, label: "Avklaringsmail sendt" },
     { date: project.followUpDate, label: "Purring sendt" },
     { date: project.deliveryConfirmedDate, label: "Leveranse ferdig ifølge Lars" },
+    { date: project.invoiceDraftDate, label: "Faktura klargjort – ikke sendt" },
     { date: project.invoiceDate, label: "Faktura sendt" },
     { date: project.domainRemoved, label: "Nettside fjernet" },
     { date: project.paymentDate, label: "Betaling mottatt" },
@@ -298,32 +310,42 @@ function delivered(project: CrmProject): boolean {
   return Boolean(project.deliveryComplete || project.deliveryConfirmedDate) || project.status === "delivered";
 }
 
-function applyCrmEvents(project: CrmProject, events: CrmEventRecord[]): CrmProject {
-  const updated = { ...project };
-  for (const event of events) {
-    if (event.projectId !== crmProjectId(project.name, project.organizationNumber)) continue;
-    if (event.kind === "delivery_confirmed") {
-      updated.deliveryConfirmedDate = event.date;
-      updated.deliveryComplete = true;
-      if (updated.status === "working" || updated.status === "waiting") updated.status = "delivered";
-    }
-    if (event.kind === "invoice_sent") {
-      updated.invoiceDate = event.date;
-      updated.invoiceDueDate = event.dueDate;
-      updated.invoiceNumber = event.invoiceNumber;
-      updated.invoiceAmount = event.invoiceAmount;
-      updated.invoice = `Sendt · ${money(event.invoiceAmount ?? 0)} · forfall ${event.dueDate}`;
-      updated.nextStep = `Avvent betaling innen ${event.dueDate}. Registrer betalingsdato først når innbetalingen er bekreftet. Ingen automatisk purring.`;
-      updated.status = "payment";
-    }
-    if (event.kind === "payment_received") {
-      updated.paymentDate = event.date;
-      updated.invoice = `Betalt · ${money(updated.invoiceAmount ?? 0)}`;
-      updated.nextStep = `Betaling mottatt ${event.date}. Eventuelle nye oppdrag håndteres manuelt.`;
-      updated.status = "completed";
-    }
+function applyCrmEvent(project: CrmProject, event: CrmEventRecord): CrmProject {
+  switch (event.kind) {
+    case "delivery_confirmed":
+      return {
+        ...project,
+        deliveryConfirmedDate: event.date,
+        deliveryComplete: true,
+        status: project.status === "working" || project.status === "waiting" ? "delivered" : project.status,
+      };
+    case "invoice_sent":
+      return {
+        ...project,
+        invoiceDate: event.date,
+        invoiceDueDate: event.dueDate,
+        invoiceNumber: event.invoiceNumber,
+        invoiceAmount: event.invoiceAmount,
+        invoice: `Sendt · ${money(event.invoiceAmount ?? 0)} · forfall ${event.dueDate}`,
+        nextStep: `Avvent betaling innen ${event.dueDate}. Registrer betalingsdato først når innbetalingen er bekreftet. Ingen automatisk purring.`,
+        status: "payment",
+      };
+    case "payment_received":
+      return {
+        ...project,
+        paymentDate: event.date,
+        invoice: `Betalt · ${money(project.invoiceAmount ?? 0)}`,
+        nextStep: `Betaling mottatt ${event.date}. Eventuelle nye oppdrag håndteres manuelt.`,
+        status: "completed",
+      };
   }
-  return updated;
+}
+
+function applyCrmEvents(project: CrmProject, events: CrmEventRecord[]): CrmProject {
+  const projectId = crmProjectId(project.name, project.organizationNumber);
+  return events
+    .filter((event) => event.projectId === projectId)
+    .reduce((current, event) => applyCrmEvent(current, event), project);
 }
 
 function compareProjects(a: CrmProject, b: CrmProject): number {
@@ -452,37 +474,23 @@ function ProjectCard({ project, group, canEdit, busy, onSave }: Readonly<{
   const history = historyFor(project);
   const latest = history[0];
   const deadline = deadlineFor(project);
-  const overdue = project.status === "payment" && Boolean(project.invoiceDueDate)
-    && isoDateFromNorwegian(project.invoiceDueDate!) < osloToday();
-  const fallback = project.status === "completed" ? "Ingen utestående betaling."
-    : "Ingen aktiv oppfølging planlagt.";
+  const fallback = nextStepFallback(project);
   return (
     <article className={`min-w-0 rounded-lg border p-4 sm:p-5 ${group.tone}`}>
       <h3 className="text-lg font-semibold text-slate-900">{project.name}</h3>
-      <p className="mt-1 flex items-center gap-2 text-sm text-slate-700"><UserRound aria-hidden="true" className="size-4 shrink-0" />{project.contact}</p>
-      {project.email.includes("@")
-        ? <a href={`mailto:${project.email}`} className="mt-1 block break-all text-sm text-blue-800 underline underline-offset-2">{project.email}</a>
-        : <p className="mt-1 text-sm text-slate-500">E-post: {project.email}</p>}
-      <span className={`mt-3 inline-block rounded-md px-2 py-1 text-xs font-semibold ${group.badge}`}>{group.label}</span>
-      <span className={`ml-2 mt-3 inline-block rounded-md px-2 py-1 text-xs font-semibold ${delivered(project) ? "bg-teal-100 text-teal-900" : "bg-slate-100 text-slate-700"}`}>
-        Leveranse: {delivered(project) ? "Levert" : "Ikke registrert levert"}
-      </span>
-      {overdue ? <span className="ml-2 inline-block rounded-md bg-red-100 px-2 py-1 text-xs font-semibold text-red-900">Forfalt · manuell vurdering</span> : null}
+      <ProjectContact project={project} />
+      <ProjectStatusBadges project={project} group={group} />
       <dl className="mt-4 space-y-3 text-sm">
         <Row icon={CalendarDays} label="Sist datert" value={`${latest.date} · ${latest.label}`} />
-        {deadline ? <Row icon={CalendarDays} label={project.status === "payment" ? "Forfall" : "Svarfrist"} value={deadline} /> : null}
+        {deadline ? <Row icon={CalendarDays} label={deadlineLabel(project)} value={deadline} /> : null}
         <Row icon={FileText} label="Neste steg" value={project.nextStep ?? fallback} />
         <Row icon={FileText} label="Avtale" value={project.agreement} />
         <Row icon={ReceiptText} label="Fakturering" value={project.invoice} />
         {project.invoiceNumber ? <Row icon={ReceiptText} label="Fakturanr." value={project.invoiceNumber} /> : null}
+        {project.invoiceDraftNumber && !project.invoiceDate ? <Row icon={ReceiptText} label="Fakturautkast nr." value={project.invoiceDraftNumber} /> : null}
       </dl>
       {canEdit ? <CrmActions project={project} busy={busy} onSave={onSave} /> : null}
-      <div className="mt-4 flex flex-col items-start gap-2 border-t border-slate-200 pt-3 text-sm">
-        <ProjectWebsite domain={project.domain} domainRemoved={project.domainRemoved} />
-        {project.previewRemoved ? <p className="break-all text-slate-500">Forslag avpublisert {project.previewRemoved} · {project.previewUrl}</p> : null}
-        {project.previewUrl && !project.previewRemoved ? <a className="break-all text-blue-800 underline underline-offset-2" href={project.previewUrl} target="_blank" rel="noreferrer">Åpne forslag <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
-        {project.invoiceFile ? <a className="text-blue-800 underline underline-offset-2" href={project.invoiceFile} target="_blank" rel="noreferrer">Åpne faktura <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
-      </div>
+      <ProjectLinks project={project} />
       <details className="mt-4 border-t border-slate-200 pt-3">
         <summary className="cursor-pointer text-sm font-medium text-slate-700">Vis historikk og detaljer</summary>
         <ProjectDetails project={project} />
@@ -494,6 +502,57 @@ function ProjectCard({ project, group, canEdit, busy, onSave }: Readonly<{
   );
 }
 
+function nextStepFallback(project: CrmProject): string {
+  return project.status === "completed" ? "Ingen utestående betaling." : "Ingen aktiv oppfølging planlagt.";
+}
+
+function deadlineLabel(project: CrmProject): string {
+  return project.status === "payment" ? "Forfall" : "Svarfrist";
+}
+
+function invoiceIsOverdue(project: CrmProject): boolean {
+  if (project.status !== "payment" || !project.invoiceDueDate) return false;
+  return isoDateFromNorwegian(project.invoiceDueDate) < osloToday();
+}
+
+function ProjectContact({ project }: Readonly<{ project: CrmProject }>) {
+  return (
+    <>
+      <p className="mt-1 flex items-center gap-2 text-sm text-slate-700"><UserRound aria-hidden="true" className="size-4 shrink-0" />{project.contact}</p>
+      {project.email.includes("@")
+        ? <a href={`mailto:${project.email}`} className="mt-1 block break-all text-sm text-blue-800 underline underline-offset-2">{project.email}</a>
+        : <p className="mt-1 text-sm text-slate-500">E-post: {project.email}</p>}
+    </>
+  );
+}
+
+function ProjectStatusBadges({ project, group }: Readonly<{
+  project: CrmProject;
+  group: (typeof statusGroups)[number];
+}>) {
+  const isDelivered = delivered(project);
+  const deliveryTone = isDelivered ? "bg-teal-100 text-teal-900" : "bg-slate-100 text-slate-700";
+  const deliveryLabel = isDelivered ? "Levert" : "Ikke registrert levert";
+  return (
+    <>
+      <span className={`mt-3 inline-block rounded-md px-2 py-1 text-xs font-semibold ${group.badge}`}>{group.label}</span>
+      <span className={`ml-2 mt-3 inline-block rounded-md px-2 py-1 text-xs font-semibold ${deliveryTone}`}>Leveranse: {deliveryLabel}</span>
+      {invoiceIsOverdue(project) ? <span className="ml-2 inline-block rounded-md bg-red-100 px-2 py-1 text-xs font-semibold text-red-900">Forfalt · manuell vurdering</span> : null}
+    </>
+  );
+}
+
+function ProjectLinks({ project }: Readonly<{ project: CrmProject }>) {
+  return (
+    <div className="mt-4 flex flex-col items-start gap-2 border-t border-slate-200 pt-3 text-sm">
+      <ProjectWebsite domain={project.domain} domainRemoved={project.domainRemoved} />
+      {project.previewRemoved ? <p className="break-all text-slate-500">Forslag avpublisert {project.previewRemoved} · {project.previewUrl}</p> : null}
+      {project.previewUrl && !project.previewRemoved ? <a className="break-all text-blue-800 underline underline-offset-2" href={project.previewUrl} target="_blank" rel="noreferrer">Åpne forslag <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
+      {project.invoiceFile ? <a className="text-blue-800 underline underline-offset-2" href={project.invoiceFile} target="_blank" rel="noreferrer">Åpne faktura <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
+    </div>
+  );
+}
+
 function CrmActions({ project, busy, onSave }: Readonly<{
   project: CrmProject;
   busy: boolean;
@@ -502,11 +561,11 @@ function CrmActions({ project, busy, onSave }: Readonly<{
   const [action, setAction] = useState<CrmEventKind | null>(null);
   const [date, setDate] = useState(osloToday);
   const [dueDate, setDueDate] = useState("");
-  const [invoiceNumber, setInvoiceNumber] = useState("");
-  const [amount, setAmount] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState(project.invoiceDraftNumber ?? "");
+  const [amount, setAmount] = useState(project.invoiceAmount?.toString() ?? "");
   const projectId = crmProjectId(project.name, project.organizationNumber);
   const canMarkDelivered = !delivered(project) && project.status !== "inactive";
-  const canMarkInvoiceSent = !project.invoiceNumber && project.status !== "inactive";
+  const canMarkInvoiceSent = !project.invoiceDate && project.status !== "inactive";
   const canMarkPaid = project.status === "payment" && !project.paymentDate;
   if (!canMarkDelivered && !canMarkInvoiceSent && !canMarkPaid) return null;
 
@@ -572,6 +631,7 @@ function ProjectDetails({ project }: Readonly<{ project: CrmProject }>) {
       {project.phone ? <Row icon={Phone} label="Telefon" value={project.phone} /> : null}
       {project.address ? <Row icon={MapPin} label="Adresse" value={project.address} /> : null}
       {project.provider ? <Row icon={Globe2} label="Skjema" value={project.provider} /> : null}
+      {project.hostingProvider ? <Row icon={Globe2} label="Webhotell" value={project.hostingProvider} /> : null}
       {project.invoiceDueDate ? <Row icon={CalendarDays} label="Forfallsdato" value={project.invoiceDueDate} /> : null}
       {project.responseDeadline ? <Row icon={CalendarDays} label="Svarfrist" value={project.responseDeadline} /> : null}
     </dl>
