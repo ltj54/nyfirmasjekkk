@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1126
-- Sendt: 545
+- Antall hendelser: 1132
+- Sendt: 548
 - Angret: 0
-- Aktive kontaktede selskaper: 340
+- Aktive kontaktede selskaper: 343
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | website-offer |
+| 2026-10-21 | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | website-offer |
+| 2026-10-21 | 938721831 | JANINA ANKE AASEN | ENK | email | website-offer |
 | 2026-10-21 | 937414323 | NODEA AS | AS | email | website-lead-batch |
 | 2026-10-21 | 937566387 | ELLINA SINGH | ENK | email | website-lead-batch |
 | 2026-10-21 | 937569858 | LILLEIT BOCIEK | ENK | email | website-lead-batch |
@@ -358,6 +361,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 11:33 | sent | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | - |
+| 2026-10-21 11:33 | sending | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 11:33 | sent | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | - |
+| 2026-10-21 11:33 | sending | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 11:33 | sent | 938721831 | JANINA ANKE AASEN | ENK | email | - |
+| 2026-10-21 11:33 | sending | 938721831 | JANINA ANKE AASEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 10:09 | sent | 937414323 | NODEA AS | AS | email | Nettsidelead-batch c6521c0e-4e33-46c9-9943-68a966950d10 |
 | 2026-10-21 10:09 | sending | 937414323 | NODEA AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 10:09 | sent | 937566387 | ELLINA SINGH | ENK | email | Nettsidelead-batch c6521c0e-4e33-46c9-9943-68a966950d10 |
