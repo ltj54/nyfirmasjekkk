@@ -5,6 +5,7 @@ import { Building2, CalendarDays, ExternalLink, FileText, Globe2, MapPin, Phone,
 
 import { crmProjectId, isoDateFromNorwegian, norwegianDateFromIso, osloToday, type CrmEventKind, type CrmEventRecord } from "@/lib/crm-events";
 import { MailboxReview } from "@/components/mailbox-review";
+import { CrmManualCases } from "@/components/crm-manual-cases";
 
 type ProjectStatus = "working" | "waiting" | "delivered" | "payment" | "completed" | "inactive";
 type AgreementStatus = "required" | "draft" | "signed" | "not-used";
@@ -441,6 +442,8 @@ export function CrmOverview() {
           <div><dt className="text-xs text-slate-600">Avtaler inngått</dt><dd className="text-lg font-semibold text-blue-900">{currentProjects.filter((project) => project.agreementStatus === "signed").length}</dd></div>
         </dl>
       </header>
+
+      <CrmManualCases />
 
       {canEdit ? <MailboxReview /> : null}
 

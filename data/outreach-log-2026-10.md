@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1141
+- Antall hendelser: 1145
 - Sendt: 552
 - Angret: 0
-- Aktive kontaktede selskaper: 347
+- Aktive kontaktede selskaper: 343
 
 ## Aktive kontaktede selskaper
 
@@ -32,7 +32,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-21 | 938680469 | RUTERPARTNER AHMADZAI | ENK | email | website-follow-up |
 | 2026-10-21 | 938684030 | FELIX SCHWARTE | UTLA | email | website-follow-up |
 | 2026-10-21 | 938652880 | LISTA LYD JOHANSEN | ENK | email | website-follow-up |
-| 2026-10-21 | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | website-follow-up |
 | 2026-10-21 | 938684456 | VANG CONSULTING | ENK | email | website-follow-up |
 | 2026-10-21 | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | website-follow-up |
 | 2026-10-21 | 938686602 | WILLES LANDBRUK | ENK | email | website-follow-up |
@@ -126,7 +125,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-17 | 938578680 | SANA HEALTH | FLI | email | website-offer |
 | 2026-10-17 | 938695814 | FIX ABAKSINS | ENK | email | website-offer |
 | 2026-10-17 | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | website-offer |
-| 2026-10-17 | 938657637 | SPORT OG IDRETTSMASSASJE DEDPRAKHON | ENK | email | website-offer |
 | 2026-10-17 | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | website-offer |
 | 2026-10-17 | 938682798 | P/R TVILLINGHAV DA | PRE | email | website-offer |
 | 2026-10-17 | 938659699 | LARS BERNAAS NORDANG | ENK | email | website-offer |
@@ -198,7 +196,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-14 | 938636354 | JAKOBSSON DETALJER | ENK | email | website-follow-up |
 | 2026-10-14 | 838602002 | KNUT RØNNINGENE PRESTASJONSUTVIKLING | ENK | email | website-follow-up |
 | 2026-10-14 | 938634149 | KR SAFETY LIMITED | UTLA | email | website-follow-up |
-| 2026-10-14 | 938534101 | MANDERA PARTNERS GROUP | FLI | email | website-follow-up |
 | 2026-10-14 | 938634777 | STUDIO STRÄNG | ENK | email | website-follow-up |
 | 2026-10-14 | 838601952 | ELINA ANDERSEN - HUDTERAPEUT - ELART | ENK | email | website-follow-up |
 | 2026-10-14 | 938605513 | VERDIEFFEKT VÅGE | ENK | email | website-follow-up |
@@ -339,7 +336,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-02 | 938570701 | AUTO ISHCHENKO | ENK | email | website-follow-up |
 | 2026-10-02 | 938570051 | HÅKON MINDREBØE MEKANISKE TJENESTER | ENK | email | website-follow-up |
 | 2026-10-02 | 938286531 | SASTRANSITION OÜ NUF | NUF | email | website-follow-up |
-| 2026-10-02 | 938570264 | R ØKSNES | ENK | email | website-follow-up |
 | 2026-10-02 | 938569746 | SÆTRUM | ENK | email | website-follow-up |
 | 2026-10-01 | 938527008 | BARE TORSTEIN DAVIDSEN | ENK | email | website-follow-up |
 | 2026-10-01 | 938562431 | PFC EUROPE HOLDING GMBH | UTLA | email | website-follow-up |
@@ -365,6 +361,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 20:27 | replied | 938570264 | R ØKSNES | ENK | email | Ruben Lund Øksnes svarte 02.10.2026 kl. 09:47: Nettside er ikke aktuelt akkurat nå. Han kommer selv tilbake dersom det blir aktuelt. Hele e-posten er bevart i manuell CRM-sak r-oksnes-2026-10-02. Ingen automatisk oppfølging, purring eller ny henvendelse er planlagt. |
+| 2026-10-21 20:18 | replied | 938534101 | MANDERA PARTNERS GROUP | FLI | email | Svar fra magnusgk1@icloud.com, innlimt av Lars 21.10.2026: Allerede godt i gang med nettsideprosessen, men ønsker å beholde e-post og kontakt fordi det kan bli relevant på sikt. Registrert som manuell CRM-sak mandera-partners-group-2026-10-15 med hele innlimte e-posten. Ingen avtalt kontaktfrist, automatisk oppfølging eller utsending. |
+| 2026-10-21 20:14 | replied | 938657637 | SPORT OG IDRETTSMASSASJE DEDPRAKHON | ENK | email | Svar fra Klaus Diersmann, innlimt av Lars 21.10.2026: Har lest henvendelsen og må snakke med «sjefen» om den. Avventer intern avklaring, uten avtalt oppfølgingsfrist. Kun manuell vurdering; ingen automatisk oppfølging. Hele e-posten er bevart i CRM-sak sport-idrettsmassasje-dedprakhon-2026-10-20. |
+| 2026-10-21 20:10 | replied | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | Svar mottatt 21.10.2026 kl. 09:03 fra Roald Erik Olsen: Ikke behov for nettside nå. Lagrer kontaktinformasjonen dersom behovet blir aktuelt. Ingen ny kontakt om dette er lovet. Avventer kundens initiativ; ingen automatisk oppfølging. Hele innlimte e-posten bevares i CRM-sak olsen-geomatikk-2026-10-21. |
 | 2026-10-21 18:57 | sent | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | - |
 | 2026-10-21 18:57 | sending | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 18:57 | sent | 938727562 | VEDVIK HOME | ENK | email | - |
