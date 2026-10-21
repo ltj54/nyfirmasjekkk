@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1132
-- Sendt: 548
+- Antall hendelser: 1141
+- Sendt: 552
 - Angret: 0
-- Aktive kontaktede selskaper: 343
+- Aktive kontaktede selskaper: 347
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | website-offer |
+| 2026-10-21 | 938727562 | VEDVIK HOME | ENK | email | website-offer |
+| 2026-10-21 | 938607907 | MIDNATTSOLDAGAN | FLI | email | website-offer |
+| 2026-10-21 | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | website-offer |
 | 2026-10-21 | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | website-offer |
 | 2026-10-21 | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | website-offer |
 | 2026-10-21 | 938721831 | JANINA ANKE AASEN | ENK | email | website-offer |
@@ -361,6 +365,15 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 18:57 | sent | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | - |
+| 2026-10-21 18:57 | sending | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 18:57 | sent | 938727562 | VEDVIK HOME | ENK | email | - |
+| 2026-10-21 18:57 | sending | 938727562 | VEDVIK HOME | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 18:57 | sent | 938607907 | MIDNATTSOLDAGAN | FLI | email | - |
+| 2026-10-21 18:57 | sending | 938607907 | MIDNATTSOLDAGAN | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 18:57 | sent | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | - |
+| 2026-10-21 18:57 | sending | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 18:57 | not_relevant | 938728119 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-21 11:33 | sent | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | - |
 | 2026-10-21 11:33 | sending | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 11:33 | sent | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | - |
