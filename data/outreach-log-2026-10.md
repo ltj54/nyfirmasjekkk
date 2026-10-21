@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1066
-- Sendt: 515
+- Antall hendelser: 1114
+- Sendt: 539
 - Angret: 0
-- Aktive kontaktede selskaper: 323
+- Aktive kontaktede selskaper: 334
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | website-follow-up |
+| 2026-10-21 | 938680493 | ÅRSVOLL SERVICE | ENK | email | website-follow-up |
+| 2026-10-21 | 938680604 | PHAM HJEMMEGLANS | ENK | email | website-follow-up |
+| 2026-10-21 | 938680469 | RUTERPARTNER AHMADZAI | ENK | email | website-follow-up |
+| 2026-10-21 | 938684030 | FELIX SCHWARTE | UTLA | email | website-follow-up |
+| 2026-10-21 | 938652880 | LISTA LYD JOHANSEN | ENK | email | website-follow-up |
+| 2026-10-21 | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | website-follow-up |
+| 2026-10-21 | 938684456 | VANG CONSULTING | ENK | email | website-follow-up |
+| 2026-10-21 | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | website-follow-up |
+| 2026-10-21 | 938686602 | WILLES LANDBRUK | ENK | email | website-follow-up |
+| 2026-10-21 | 938687862 | HORGI INVEST AS | AS | email | website-follow-up |
+| 2026-10-21 | 938688435 | RINGSJØ | ENK | email | website-follow-up |
+| 2026-10-21 | 838570682 | TOURISTENFAHRTEN | FLI | email | website-follow-up |
+| 2026-10-21 | 938684723 | PRONAVIA REITER | ENK | email | website-offer |
+| 2026-10-21 | 938655820 | LØLAND - MASKIN | ENK | email | website-offer |
+| 2026-10-21 | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | website-offer |
+| 2026-10-21 | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | website-offer |
+| 2026-10-21 | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | website-offer |
+| 2026-10-21 | 838682332 | STENHAUG GÅRD | ENK | email | website-offer |
+| 2026-10-21 | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | website-offer |
+| 2026-10-21 | 938680558 | IDEN UNDERVISNING | ENK | email | website-offer |
+| 2026-10-21 | 938680663 | HJEMGAARD HANDEL | ENK | email | website-offer |
+| 2026-10-21 | 938680388 | ENSTAD RESEARCH | ENK | email | website-offer |
+| 2026-10-21 | 838688942 | A&AMOTOR AHMED | ENK | email | website-offer |
 | 2026-10-20 | 938715521 | FRIDA KRAFT | ENK | email | website-offer |
 | 2026-10-20 | 938333173 | DIGNIFY WORDS LIMITED NUF | NUF | email | website-offer |
 | 2026-10-20 | 938708916 | DIGNIFY WORDS LIMITED | UTLA | email | website-offer |
@@ -119,16 +143,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-16 | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | website-offer |
 | 2026-10-16 | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | website-offer |
 | 2026-10-16 | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | website-offer |
-| 2026-10-15 | 838570682 | TOURISTENFAHRTEN | FLI | email | website-offer |
-| 2026-10-15 | 938688435 | RINGSJØ | ENK | email | website-offer |
-| 2026-10-15 | 938687862 | HORGI INVEST AS | AS | email | website-offer |
-| 2026-10-15 | 938686602 | WILLES LANDBRUK | ENK | email | website-offer |
 | 2026-10-15 | 937414382 | FRED PALLESENS XPARAGON | ENK | email | website-lead-batch |
-| 2026-10-15 | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | website-offer |
-| 2026-10-15 | 938684456 | VANG CONSULTING | ENK | email | website-offer |
-| 2026-10-15 | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | website-offer |
-| 2026-10-15 | 938652880 | LISTA LYD JOHANSEN | ENK | email | website-offer |
-| 2026-10-15 | 938684030 | FELIX SCHWARTE | UTLA | email | website-offer |
 | 2026-10-15 | 938647577 | REIDAR BERGE | ENK | email | website-follow-up |
 | 2026-10-15 | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | website-follow-up |
 | 2026-10-15 | 938614040 | ASMELASH MALING OG HÅNDTVERKSTJENESTER | ENK | email | website-follow-up |
@@ -161,10 +176,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-15 | 938646880 | BASBAS & NILSEN GÅ GODE FØTTER | ENK | email | website-follow-up |
 | 2026-10-15 | 938638799 | HÅKON JOHAN HAUGEN | ENK | email | website-follow-up |
 | 2026-10-15 | 938644810 | LEGE EMMA WESTIN | ENK | email | website-follow-up |
-| 2026-10-15 | 938680469 | RUTERPARTNER AHMADZAI | ENK | email | website-offer |
-| 2026-10-15 | 938680604 | PHAM HJEMMEGLANS | ENK | email | website-offer |
-| 2026-10-15 | 938680493 | ÅRSVOLL SERVICE | ENK | email | website-offer |
-| 2026-10-15 | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | website-offer |
 | 2026-10-14 | 937088884 | ODOO SA NUF | NUF | email | website-follow-up |
 | 2026-10-14 | 838603262 | MARIE RØSSLAND GUSTAVSEN | ENK | email | website-follow-up |
 | 2026-10-14 | 938613605 | MARJAVARA JOSEFSEN | ENK | email | website-follow-up |
@@ -341,6 +352,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 08:53 | sent | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:53 | sending | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:53 | sent | 938680493 | ÅRSVOLL SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:53 | sending | 938680493 | ÅRSVOLL SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:53 | sent | 938680604 | PHAM HJEMMEGLANS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:53 | sending | 938680604 | PHAM HJEMMEGLANS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:53 | sent | 938680469 | RUTERPARTNER AHMADZAI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:53 | sending | 938680469 | RUTERPARTNER AHMADZAI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:53 | sent | 938684030 | FELIX SCHWARTE | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:53 | sending | 938684030 | FELIX SCHWARTE | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938652880 | LISTA LYD JOHANSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938652880 | LISTA LYD JOHANSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938651752 | OLSEN GEOMATIKK & ANLEGGSPARTNER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938684456 | VANG CONSULTING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938684456 | VANG CONSULTING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938649316 | TOON ONGEWOON ENGINEERING | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938686602 | WILLES LANDBRUK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938686602 | WILLES LANDBRUK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938687862 | HORGI INVEST AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938687862 | HORGI INVEST AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938688435 | RINGSJØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 938688435 | RINGSJØ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 838570682 | TOURISTENFAHRTEN | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-21 08:52 | sending | 838570682 | TOURISTENFAHRTEN | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938684723 | PRONAVIA REITER | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938684723 | PRONAVIA REITER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938655820 | LØLAND - MASKIN | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938655820 | LØLAND - MASKIN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | - |
+| 2026-10-21 08:52 | sending | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 838682332 | STENHAUG GÅRD | ENK | email | - |
+| 2026-10-21 08:52 | sending | 838682332 | STENHAUG GÅRD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938680558 | IDEN UNDERVISNING | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938680558 | IDEN UNDERVISNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938680663 | HJEMGAARD HANDEL | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938680663 | HJEMGAARD HANDEL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 938680388 | ENSTAD RESEARCH | ENK | email | - |
+| 2026-10-21 08:52 | sending | 938680388 | ENSTAD RESEARCH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 08:52 | sent | 838688942 | A&AMOTOR AHMED | ENK | email | - |
+| 2026-10-21 08:52 | sending | 838688942 | A&AMOTOR AHMED | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-20 13:14 | sent | 938715521 | FRIDA KRAFT | ENK | email | - |
 | 2026-10-20 13:14 | sending | 938715521 | FRIDA KRAFT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-20 13:14 | sent | 938333173 | DIGNIFY WORDS LIMITED NUF | NUF | email | - |
