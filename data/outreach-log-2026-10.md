@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1120
-- Sendt: 542
+- Antall hendelser: 1126
+- Sendt: 545
 - Angret: 0
-- Aktive kontaktede selskaper: 337
+- Aktive kontaktede selskaper: 340
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 | 937414323 | NODEA AS | AS | email | website-lead-batch |
+| 2026-10-21 | 937566387 | ELLINA SINGH | ENK | email | website-lead-batch |
+| 2026-10-21 | 937569858 | LILLEIT BOCIEK | ENK | email | website-lead-batch |
 | 2026-10-21 | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | website-offer |
 | 2026-10-21 | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | website-offer |
 | 2026-10-21 | 938721491 | ROY ÅGE ISAKSEN | ENK | email | website-offer |
@@ -355,6 +358,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 10:09 | sent | 937414323 | NODEA AS | AS | email | Nettsidelead-batch c6521c0e-4e33-46c9-9943-68a966950d10 |
+| 2026-10-21 10:09 | sending | 937414323 | NODEA AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 10:09 | sent | 937566387 | ELLINA SINGH | ENK | email | Nettsidelead-batch c6521c0e-4e33-46c9-9943-68a966950d10 |
+| 2026-10-21 10:09 | sending | 937566387 | ELLINA SINGH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 10:09 | sent | 937569858 | LILLEIT BOCIEK | ENK | email | Nettsidelead-batch c6521c0e-4e33-46c9-9943-68a966950d10 |
+| 2026-10-21 10:09 | sending | 937569858 | LILLEIT BOCIEK | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 10:00 | sent | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | - |
 | 2026-10-21 10:00 | sending | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 10:00 | sent | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | - |
