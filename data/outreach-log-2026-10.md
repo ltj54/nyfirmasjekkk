@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1114
-- Sendt: 539
+- Antall hendelser: 1120
+- Sendt: 542
 - Angret: 0
-- Aktive kontaktede selskaper: 334
+- Aktive kontaktede selskaper: 337
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | website-offer |
+| 2026-10-21 | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | website-offer |
+| 2026-10-21 | 938721491 | ROY ÅGE ISAKSEN | ENK | email | website-offer |
 | 2026-10-21 | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | website-follow-up |
 | 2026-10-21 | 938680493 | ÅRSVOLL SERVICE | ENK | email | website-follow-up |
 | 2026-10-21 | 938680604 | PHAM HJEMMEGLANS | ENK | email | website-follow-up |
@@ -352,6 +355,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-21 10:00 | sent | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | - |
+| 2026-10-21 10:00 | sending | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 10:00 | sent | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | - |
+| 2026-10-21 10:00 | sending | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-21 10:00 | sent | 938721491 | ROY ÅGE ISAKSEN | ENK | email | - |
+| 2026-10-21 10:00 | sending | 938721491 | ROY ÅGE ISAKSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 08:53 | sent | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-21 08:53 | sending | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-21 08:53 | sent | 938680493 | ÅRSVOLL SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
