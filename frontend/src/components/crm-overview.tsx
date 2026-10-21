@@ -443,8 +443,6 @@ export function CrmOverview() {
         </dl>
       </header>
 
-      <CrmManualCases />
-
       {canEdit ? <MailboxReview /> : null}
 
       <div className="mt-6 space-y-5">
@@ -465,6 +463,7 @@ export function CrmOverview() {
         })}
       </div>
       <p className="mt-5 text-xs text-slate-500">Oversikten oppretter ingen automatiske purringer. Frister og neste steg gjelder manuell oppfølging.</p>
+      <CrmManualCases />
     </section>
   );
 }
