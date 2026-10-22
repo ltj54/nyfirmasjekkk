@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1165
-- Sendt: 562
+- Antall hendelser: 1213
+- Sendt: 586
 - Angret: 0
-- Aktive kontaktede selskaper: 346
+- Aktive kontaktede selskaper: 370
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-22 | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | website-lead-batch |
+| 2026-10-22 | 936934897 | SMAART SOLUTION AS | AS | email | website-lead-batch |
+| 2026-10-22 | 936900704 | GÅSERØD RACING | ENK | email | website-lead-batch |
+| 2026-10-22 | 936944833 | DIN-FOTTERAPEUT AS | AS | email | website-lead-batch |
+| 2026-10-22 | 936952976 | BASECAMP KRISTNE SKOLE SARPSBORG AS | AS | email | website-lead-batch |
+| 2026-10-22 | 936952992 | BASECAMP KRISTNE SKOLE NORDRE FOLLO AS | AS | email | website-lead-batch |
+| 2026-10-22 | 936951856 | REKDAL UTLEIE AS | AS | email | website-lead-batch |
+| 2026-10-22 | 936988113 | VALKNER | ENK | email | website-lead-batch |
+| 2026-10-22 | 936996299 | HELGELAND PEDAGOGIKK & KINESIOLOGI, PER OPLAND | ENK | email | website-lead-batch |
+| 2026-10-22 | 937024622 | VEDØY | ENK | email | website-lead-batch |
+| 2026-10-22 | 836966732 | TAMMY AWADH | ENK | email | website-lead-batch |
+| 2026-10-22 | 936981828 | ELSA ANNIKKI KNUDSENS VEILEDNINGSTJENESTE | ENK | email | website-lead-batch |
+| 2026-10-22 | 937069472 | NORSWIM FRØYNA SERVICE AS | AS | email | website-lead-batch |
+| 2026-10-22 | 937080972 | NORDICS DA | DA | email | website-lead-batch |
+| 2026-10-22 | 937118309 | HOUSE OF MILANO - MAIA SCHAU | ENK | email | website-lead-batch |
+| 2026-10-22 | 837156432 | SVENDSEN SETERNES GÅRD | ENK | email | website-lead-batch |
+| 2026-10-22 | 937179316 | BRICS NORWAY | FLI | email | website-lead-batch |
+| 2026-10-22 | 937180799 | RÅSTOFF | FLI | email | website-lead-batch |
+| 2026-10-22 | 937146086 | PUSTFORLIVET AV ERIKSEN | ENK | email | website-lead-batch |
+| 2026-10-22 | 937154127 | ADIGARTS - AUSTAD DIGITAL ART STUDIO | ENK | email | website-lead-batch |
+| 2026-10-22 | 937182147 | SLAGVERKER NILSSEN | ENK | email | website-lead-batch |
+| 2026-10-22 | 937253559 | VARDR PARTNERS DA | DA | email | website-lead-batch |
+| 2026-10-22 | 937281781 | ELAB RECORDS LARSEN | ENK | email | website-lead-batch |
+| 2026-10-22 | 937310854 | CYBERDOMENE OSEID | ENK | email | website-lead-batch |
 | 2026-10-22 | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | website-follow-up |
 | 2026-10-22 | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | website-follow-up |
 | 2026-10-22 | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | website-follow-up |
@@ -364,6 +388,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-22 10:49 | sent | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:49 | sending | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:49 | sent | 936934897 | SMAART SOLUTION AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:49 | sending | 936934897 | SMAART SOLUTION AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:49 | sent | 936900704 | GÅSERØD RACING | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:49 | sending | 936900704 | GÅSERØD RACING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:49 | sent | 936944833 | DIN-FOTTERAPEUT AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:49 | sending | 936944833 | DIN-FOTTERAPEUT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:49 | sent | 936952976 | BASECAMP KRISTNE SKOLE SARPSBORG AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:49 | sending | 936952976 | BASECAMP KRISTNE SKOLE SARPSBORG AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:49 | sent | 936952992 | BASECAMP KRISTNE SKOLE NORDRE FOLLO AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:49 | sending | 936952992 | BASECAMP KRISTNE SKOLE NORDRE FOLLO AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 936951856 | REKDAL UTLEIE AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 936951856 | REKDAL UTLEIE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 936988113 | VALKNER | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 936988113 | VALKNER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 936996299 | HELGELAND PEDAGOGIKK & KINESIOLOGI, PER OPLAND | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 936996299 | HELGELAND PEDAGOGIKK & KINESIOLOGI, PER OPLAND | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 937024622 | VEDØY | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 937024622 | VEDØY | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 836966732 | TAMMY AWADH | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 836966732 | TAMMY AWADH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 936981828 | ELSA ANNIKKI KNUDSENS VEILEDNINGSTJENESTE | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 936981828 | ELSA ANNIKKI KNUDSENS VEILEDNINGSTJENESTE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 937069472 | NORSWIM FRØYNA SERVICE AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 937069472 | NORSWIM FRØYNA SERVICE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 937080972 | NORDICS DA | DA | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 937080972 | NORDICS DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:48 | sent | 937118309 | HOUSE OF MILANO - MAIA SCHAU | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:48 | sending | 937118309 | HOUSE OF MILANO - MAIA SCHAU | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 837156432 | SVENDSEN SETERNES GÅRD | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 837156432 | SVENDSEN SETERNES GÅRD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937179316 | BRICS NORWAY | FLI | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937179316 | BRICS NORWAY | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937180799 | RÅSTOFF | FLI | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937180799 | RÅSTOFF | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937146086 | PUSTFORLIVET AV ERIKSEN | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937146086 | PUSTFORLIVET AV ERIKSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937154127 | ADIGARTS - AUSTAD DIGITAL ART STUDIO | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937154127 | ADIGARTS - AUSTAD DIGITAL ART STUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937182147 | SLAGVERKER NILSSEN | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937182147 | SLAGVERKER NILSSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937253559 | VARDR PARTNERS DA | DA | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937253559 | VARDR PARTNERS DA | DA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937281781 | ELAB RECORDS LARSEN | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937281781 | ELAB RECORDS LARSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 10:47 | sent | 937310854 | CYBERDOMENE OSEID | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
+| 2026-10-22 10:47 | sending | 937310854 | CYBERDOMENE OSEID | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-22 07:55 | sent | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-22 07:55 | sending | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-22 07:55 | sent | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
