@@ -4,15 +4,25 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1145
-- Sendt: 552
+- Antall hendelser: 1165
+- Sendt: 562
 - Angret: 0
-- Aktive kontaktede selskaper: 343
+- Aktive kontaktede selskaper: 346
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-22 | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | website-follow-up |
+| 2026-10-22 | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | website-follow-up |
+| 2026-10-22 | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | website-follow-up |
+| 2026-10-22 | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | website-follow-up |
+| 2026-10-22 | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | website-follow-up |
+| 2026-10-22 | 938688907 | GJESDAL SÆTHER | ENK | email | website-follow-up |
+| 2026-10-22 | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | website-follow-up |
+| 2026-10-22 | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | website-offer |
+| 2026-10-22 | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | website-offer |
+| 2026-10-22 | 938656800 | E.N. BLIX | ENK | email | website-offer |
 | 2026-10-21 | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | website-offer |
 | 2026-10-21 | 938727562 | VEDVIK HOME | ENK | email | website-offer |
 | 2026-10-21 | 938607907 | MIDNATTSOLDAGAN | FLI | email | website-offer |
@@ -147,13 +157,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-16 | 938622884 | ØYEN ELEKTROENERGI | ENK | email | website-follow-up |
 | 2026-10-16 | 938634033 | HANDYMAN ARTUR KORNACKI | ENK | email | website-follow-up |
 | 2026-10-16 | 938626944 | BROVCHENKO FOTO & VIDEO | ENK | email | website-follow-up |
-| 2026-10-16 | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | website-offer |
-| 2026-10-16 | 938688907 | GJESDAL SÆTHER | ENK | email | website-offer |
-| 2026-10-16 | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | website-offer |
-| 2026-10-16 | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | website-offer |
-| 2026-10-16 | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | website-offer |
-| 2026-10-16 | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | website-offer |
-| 2026-10-16 | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | website-offer |
 | 2026-10-15 | 937414382 | FRED PALLESENS XPARAGON | ENK | email | website-lead-batch |
 | 2026-10-15 | 938647577 | REIDAR BERGE | ENK | email | website-follow-up |
 | 2026-10-15 | 938608407 | ARDITA BERISHA TANNPLEIE | ENK | email | website-follow-up |
@@ -361,6 +364,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-22 07:55 | sent | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 838656552 | DIS NORDIC DESIGN BY ERICHSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:55 | sent | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 938656754 | HALFDAN TATTOO, POULSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:55 | sent | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 938659338 | RESCUE-MED. UNDERVISNING ATT:ROGER HANSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:55 | sent | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 938658005 | SOLTVEIT TATTOO4YOU | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:55 | sent | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:55 | sent | 938688907 | GJESDAL SÆTHER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 938688907 | GJESDAL SÆTHER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:55 | sent | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-22 07:55 | sending | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-22 07:54 | sent | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | - |
+| 2026-10-22 07:54 | sending | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 07:54 | sent | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | - |
+| 2026-10-22 07:54 | sending | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-22 07:54 | sent | 938656800 | E.N. BLIX | ENK | email | - |
+| 2026-10-22 07:54 | sending | 938656800 | E.N. BLIX | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-21 20:27 | replied | 938570264 | R ØKSNES | ENK | email | Ruben Lund Øksnes svarte 02.10.2026 kl. 09:47: Nettside er ikke aktuelt akkurat nå. Han kommer selv tilbake dersom det blir aktuelt. Hele e-posten er bevart i manuell CRM-sak r-oksnes-2026-10-02. Ingen automatisk oppfølging, purring eller ny henvendelse er planlagt. |
 | 2026-10-21 20:18 | replied | 938534101 | MANDERA PARTNERS GROUP | FLI | email | Svar fra magnusgk1@icloud.com, innlimt av Lars 21.10.2026: Allerede godt i gang med nettsideprosessen, men ønsker å beholde e-post og kontakt fordi det kan bli relevant på sikt. Registrert som manuell CRM-sak mandera-partners-group-2026-10-15 med hele innlimte e-posten. Ingen avtalt kontaktfrist, automatisk oppfølging eller utsending. |
 | 2026-10-21 20:14 | replied | 938657637 | SPORT OG IDRETTSMASSASJE DEDPRAKHON | ENK | email | Svar fra Klaus Diersmann, innlimt av Lars 21.10.2026: Har lest henvendelsen og må snakke med «sjefen» om den. Avventer intern avklaring, uten avtalt oppfølgingsfrist. Kun manuell vurdering; ingen automatisk oppfølging. Hele e-posten er bevart i CRM-sak sport-idrettsmassasje-dedprakhon-2026-10-20. |
