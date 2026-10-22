@@ -4,17 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1213
+- Antall hendelser: 1214
 - Sendt: 586
 - Angret: 0
-- Aktive kontaktede selskaper: 370
+- Aktive kontaktede selskaper: 369
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
 | 2026-10-22 | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | website-lead-batch |
-| 2026-10-22 | 936934897 | SMAART SOLUTION AS | AS | email | website-lead-batch |
 | 2026-10-22 | 936900704 | GÅSERØD RACING | ENK | email | website-lead-batch |
 | 2026-10-22 | 936944833 | DIN-FOTTERAPEUT AS | AS | email | website-lead-batch |
 | 2026-10-22 | 936952976 | BASECAMP KRISTNE SKOLE SARPSBORG AS | AS | email | website-lead-batch |
@@ -388,6 +387,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-22 11:07 | replied | 936934897 | SMAART SOLUTION AS | AS | email | Mikael Øysahl svarte 22.10.2026 kl. 10:52 at https://smaartsolution.com åpner uten problemer. Ny direkte HTTPS-sjekk samme dag ga HTTP 200. Opprinnelig feilårsak er uavklart; ingen bekreftet kjøpsinteresse. Ingen videre salgsoppfølging, automatisk purring eller utsending. Hele innlimte e-posten er bevart i CRM-sak smaart-solution-2026-10-22. |
 | 2026-10-22 10:49 | sent | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
 | 2026-10-22 10:49 | sending | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-22 10:49 | sent | 936934897 | SMAART SOLUTION AS | AS | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |

@@ -138,5 +138,19 @@
     "contactPolicy": "closed",
     "reviewDate": null,
     "sourceFile": "linus-anderssen-2026-10-01.txt"
+  },
+  {
+    "id": "smaart-solution-2026-10-22",
+    "companyName": "Smaart Solution AS",
+    "orgNumber": "936934897",
+    "contactName": "Mikael Øysahl",
+    "email": "smaartsolutionas@gmail.com",
+    "receivedAt": "2026-10-22T10:52:00+02:00",
+    "status": "Korrigering av nettsidesjekk – nettsiden svarer nå",
+    "summary": "Mikael opplyser at han ikke har problemer med å åpne https://smaartsolution.com. Ny direkte HTTPS-sjekk fra Lars sin maskin 22.10.2026 ga HTTP 200 og nettsideinnhold. Årsaken til den opprinnelige feilen er ikke avklart, og tilgjengelighetsproblemet kan ikke bekreftes nå. Svaret uttrykker ikke kjøpsinteresse. Kontaktadressen er hentet fra utsendelsesloggen; avsenderadressen står ikke i det innlimte svaret.",
+    "nextStep": "Ingen videre salgsoppfølging eller ny utsending. Bevar kundens korrigering og gjennomgå den opprinnelige tekniske sjekken internt før tilsvarende funn brukes i nye henvendelser.",
+    "contactPolicy": "closed",
+    "reviewDate": null,
+    "sourceFile": "smaart-solution-2026-10-22.txt"
   }
 ]
