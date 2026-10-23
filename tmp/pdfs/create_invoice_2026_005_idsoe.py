@@ -1,7 +1,6 @@
-"""Create the next numbered invoice for Idsøe Rådgivning without sending it."""
+"""Create invoice 2026-005 for Idsøe Rådgivning without sending it."""
 
 from pathlib import Path
-import re
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -10,18 +9,8 @@ from reportlab.pdfgen import canvas
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = ROOT / "output" / "pdf"
-numbers = []
-for path in OUTPUT_DIR.glob("faktura-2026-*.pdf"):
-    match = re.fullmatch(r"faktura-2026-(\d{3})-.*\.pdf", path.name)
-    if match:
-        numbers.append(int(match.group(1)))
-if sorted(numbers) != [1, 2, 3, 4]:
-    raise SystemExit(f"Unexpected invoice sequence: {sorted(numbers)}")
-
-number = f"2026-{max(numbers) + 1:03d}"
+number = "2026-005"
 destination = OUTPUT_DIR / f"faktura-{number}-idsoe-radgivning.pdf"
-if destination.exists():
-    raise SystemExit(f"Invoice already exists: {destination}")
 
 width, height = A4
 navy = colors.HexColor("#1b2c48")
@@ -69,9 +58,9 @@ box_y = height - 326
 c.setFillColor(light)
 c.roundRect(left, box_y, right_edge - left, 72, 9, fill=1, stroke=0)
 for x, label, value in [
-    (left + 15, "FAKTURADATO", "20.10.2026"),
+    (left + 15, "FAKTURADATO", "23.10.2026"),
     (left + 175, "LEVERANSE", "20.10.2026"),
-    (left + 340, "FORFALL", "03.11.2026"),
+    (left + 340, "FORFALL", "06.11.2026"),
 ]:
     t(x, box_y + 49, label, 9, True, muted)
     t(x, box_y + 26, value, 12, True)
@@ -83,16 +72,16 @@ right(right_edge, table_top, "BELØP", 9, True, muted)
 c.setStrokeColor(line)
 c.line(left, table_top - 12, right_edge, table_top - 12)
 t(left, table_top - 39, "Nettside for Idsøe Rådgivning", 11, True)
-t(left, table_top - 58, "Utvikling, innholdstilpasning og publisering på emidsoe.no", 9.5)
+t(left, table_top - 58, "Utvikling, innholdstilpasning og norsk og engelsk versjon.", 9.5)
+t(left, table_top - 73, "Teknisk oppsett og publisering på emidsoe.no.", 9.5)
 right(right_edge - 134, table_top - 43, "1")
-right(right_edge, table_top - 43, "1 990,00 kr")
-c.line(left, table_top - 79, right_edge, table_top - 79)
+right(right_edge, table_top - 43, "3 000,00 kr")
+c.line(left, table_top - 92, right_edge, table_top - 92)
 
-total_y = table_top - 121
+total_y = table_top - 134
 right(right_edge - 140, total_y, "Å BETALE", 11, True)
-right(right_edge, total_y, "1 990,00 kr", 16, True)
+right(right_edge, total_y, "3 000,00 kr", 16, True)
 t(left, total_y - 2, "Ikke registrert i Merverdiavgiftsregisteret.", 9, False, muted)
-t(left, total_y - 22, "Domene og webhotell faktureres separat.", 9, False, muted)
 
 payment_y = total_y - 120
 c.setFillColor(light)
