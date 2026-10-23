@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1304
+- Antall hendelser: 1306
 - Sendt: 631
 - Angret: 0
-- Aktive kontaktede selskaper: 381
+- Aktive kontaktede selskaper: 379
 
 ## Aktive kontaktede selskaper
 
@@ -15,7 +15,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | --- | --- | --- | --- | --- | --- |
 | 2026-10-23 | 938689822 | BART HEYLEN SL | UTLA | email | website-follow-up |
 | 2026-10-23 | 938659982 | GUBHAGE BLOMSTER | ENK | email | website-follow-up |
-| 2026-10-23 | 938659699 | LARS BERNAAS NORDANG | ENK | email | website-follow-up |
 | 2026-10-23 | 938682798 | P/R TVILLINGHAV DA | PRE | email | website-follow-up |
 | 2026-10-23 | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | website-follow-up |
 | 2026-10-23 | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | website-follow-up |
@@ -39,7 +38,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-23 | 838664032 | AURORA STANGE STUDIO | ENK | email | website-follow-up |
 | 2026-10-23 | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | website-follow-up |
 | 2026-10-23 | 938664730 | DIGIHOSE HVITÅS | ENK | email | website-follow-up |
-| 2026-10-23 | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | website-follow-up |
 | 2026-10-23 | 938669953 | TRAN TRADING | ENK | email | website-follow-up |
 | 2026-10-23 | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | website-follow-up |
 | 2026-10-23 | 938613133 | FRISØR DORI GERMEAU | ENK | email | website-follow-up |
@@ -399,6 +397,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-23 12:39 | replied | 938659699 | LARS BERNAAS NORDANG | ENK | email | Svar mottatt 23.10.2026: Mulig interesse, men usikker på nytten for virksomheten. Registrert for manuell vurdering; ingen automatisk oppfølging. |
+| 2026-10-23 12:35 | replied | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | Svar mottatt 23.10.2026: Ikke behov nå; Joakim tar selv kontakt dersom det blir aktuelt. Registrert som manuell sak uten videre oppfølging. |
 | 2026-10-23 11:55 | sent | 938689822 | BART HEYLEN SL | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-23 11:55 | sending | 938689822 | BART HEYLEN SL | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-23 11:55 | sent | 938659982 | GUBHAGE BLOMSTER | ENK | email | Oppfølging sendt – avslutt hvis stille |

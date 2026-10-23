@@ -152,5 +152,33 @@
     "contactPolicy": "closed",
     "reviewDate": null,
     "sourceFile": "smaart-solution-2026-10-22.txt"
+  },
+  {
+    "id": "skjevelnes-kompetanse-2026-10-23",
+    "companyName": "Skjevelnes Kompetanse",
+    "orgNumber": "938671125",
+    "contactName": "Joakim Holm Skjevelnes",
+    "email": "joakim_jamfot@hotmail.com",
+    "receivedAt": "2026-10-23T11:55:00+02:00",
+    "status": "Ikke behov nå – tar selv kontakt senere",
+    "summary": "Joakim har for øyeblikket ikke behov for nettside fordi tjenesten foreløpig leveres til en etablert bedrift. Han har Lars på radaren og sier at han selv tar kontakt så snart nettside blir aktuelt. Det er ikke avtalt noen oppfølgingsdato.",
+    "nextStep": "Avvent at Joakim selv tar kontakt dersom behovet oppstår. Saken beholdes for intern oversikt. Ingen automatisk oppfølging, purring eller ny henvendelse er planlagt.",
+    "contactPolicy": "await_customer",
+    "reviewDate": null,
+    "sourceFile": "skjevelnes-kompetanse-2026-10-23.txt"
+  },
+  {
+    "id": "lars-bernaas-nordang-2026-10-23",
+    "companyName": "Lars Bernaas Nordang",
+    "orgNumber": "938659699",
+    "contactName": "Lars Nordang",
+    "email": "lars.nordang@gmail.com",
+    "receivedAt": "2026-10-23T12:27:00+02:00",
+    "status": "Mulig interesse – usikker på nytten",
+    "summary": "Lars Nordang kan være interessert i nettside, men er usikker på om det vil være relevant for virksomheten. Svaret er positivt og uavklart, og gir grunnlag for et konkret, tilpasset forslag etter manuell vurdering. Han har ikke bestilt noe eller avtalt en oppfølgingsdato. Navnet «Lars-Erik» står i den opprinnelige hilsenen, mens svaret er signert Lars Nordang.",
+    "nextStep": "Vurder virksomhetens aktivitet og utform et kort svar som forklarer konkret hvilken nytte en enkel nettside eventuelt kan ha. Lars avgjør selv om og når svaret skal sendes. Ingen automatisk oppfølging eller utsending.",
+    "contactPolicy": "manual_review",
+    "reviewDate": null,
+    "sourceFile": "lars-bernaas-nordang-2026-10-23.txt"
   }
 ]
