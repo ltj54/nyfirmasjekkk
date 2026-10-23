@@ -4,15 +4,27 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1214
-- Sendt: 586
+- Antall hendelser: 1238
+- Sendt: 598
 - Angret: 0
-- Aktive kontaktede selskaper: 369
+- Aktive kontaktede selskaper: 381
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-23 | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | website-offer |
+| 2026-10-23 | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | website-offer |
+| 2026-10-23 | 938731853 | SANDUM HYTTESERVICE | ENK | email | website-offer |
+| 2026-10-23 | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | website-offer |
+| 2026-10-23 | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | website-offer |
+| 2026-10-23 | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | website-offer |
+| 2026-10-23 | 938694893 | AMANDA KLIPPEN | ENK | email | website-offer |
+| 2026-10-23 | 938361517 | TERRAINGRID AS | AS | email | website-offer |
+| 2026-10-23 | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | website-offer |
+| 2026-10-23 | 938698031 | JERPSTAD UNDERVISNING | ENK | email | website-offer |
+| 2026-10-23 | 938738505 | FIXPART EUROPE B.V. | UTLA | email | website-offer |
+| 2026-10-23 | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | website-offer |
 | 2026-10-22 | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | website-lead-batch |
 | 2026-10-22 | 936900704 | GÅSERØD RACING | ENK | email | website-lead-batch |
 | 2026-10-22 | 936944833 | DIN-FOTTERAPEUT AS | AS | email | website-lead-batch |
@@ -387,6 +399,30 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-23 11:51 | sent | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | - |
+| 2026-10-23 11:51 | sending | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | - |
+| 2026-10-23 11:51 | sending | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938731853 | SANDUM HYTTESERVICE | ENK | email | - |
+| 2026-10-23 11:51 | sending | 938731853 | SANDUM HYTTESERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | - |
+| 2026-10-23 11:51 | sending | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | - |
+| 2026-10-23 11:51 | sending | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | - |
+| 2026-10-23 11:51 | sending | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938694893 | AMANDA KLIPPEN | ENK | email | - |
+| 2026-10-23 11:51 | sending | 938694893 | AMANDA KLIPPEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938361517 | TERRAINGRID AS | AS | email | - |
+| 2026-10-23 11:51 | sending | 938361517 | TERRAINGRID AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | - |
+| 2026-10-23 11:51 | sending | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938698031 | JERPSTAD UNDERVISNING | ENK | email | - |
+| 2026-10-23 11:51 | sending | 938698031 | JERPSTAD UNDERVISNING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 938738505 | FIXPART EUROPE B.V. | UTLA | email | - |
+| 2026-10-23 11:51 | sending | 938738505 | FIXPART EUROPE B.V. | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-23 11:51 | sent | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | - |
+| 2026-10-23 11:51 | sending | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-22 11:07 | replied | 936934897 | SMAART SOLUTION AS | AS | email | Mikael Øysahl svarte 22.10.2026 kl. 10:52 at https://smaartsolution.com åpner uten problemer. Ny direkte HTTPS-sjekk samme dag ga HTTP 200. Opprinnelig feilårsak er uavklart; ingen bekreftet kjøpsinteresse. Ingen videre salgsoppfølging, automatisk purring eller utsending. Hele innlimte e-posten er bevart i CRM-sak smaart-solution-2026-10-22. |
 | 2026-10-22 10:49 | sent | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | Nettsidelead-batch b31e8b1b-c7c0-4d8a-8280-11f6dcb9ee98 |
 | 2026-10-22 10:49 | sending | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | Utsendelse reservert før SMTP-levering. |
