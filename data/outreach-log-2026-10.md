@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1238
-- Sendt: 598
+- Antall hendelser: 1304
+- Sendt: 631
 - Angret: 0
 - Aktive kontaktede selskaper: 381
 
@@ -13,6 +13,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-23 | 938689822 | BART HEYLEN SL | UTLA | email | website-follow-up |
+| 2026-10-23 | 938659982 | GUBHAGE BLOMSTER | ENK | email | website-follow-up |
+| 2026-10-23 | 938659699 | LARS BERNAAS NORDANG | ENK | email | website-follow-up |
+| 2026-10-23 | 938682798 | P/R TVILLINGHAV DA | PRE | email | website-follow-up |
+| 2026-10-23 | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | website-follow-up |
+| 2026-10-23 | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | website-follow-up |
+| 2026-10-23 | 938695814 | FIX ABAKSINS | ENK | email | website-follow-up |
+| 2026-10-23 | 938578680 | SANA HEALTH | FLI | email | website-follow-up |
+| 2026-10-23 | 938661219 | REHMAN FIRDAUS | ENK | email | website-follow-up |
+| 2026-10-23 | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | website-follow-up |
+| 2026-10-23 | 938695849 | TALE MONGE HEIMDAL | ENK | email | website-follow-up |
+| 2026-10-23 | 938649197 | BART HEYLEN SL | NUF | email | website-follow-up |
+| 2026-10-23 | 938593191 | CLEANFRIEND APS | NUF | email | website-follow-up |
+| 2026-10-23 | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | website-follow-up |
+| 2026-10-23 | 938697779 | THU ROSLAND BYGG | ENK | email | website-follow-up |
+| 2026-10-23 | 938697809 | TANNHJULET EIDE | ENK | email | website-follow-up |
+| 2026-10-23 | 938695253 | JENSEN BYGGKONSULT | ENK | email | website-follow-up |
+| 2026-10-23 | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | website-follow-up |
+| 2026-10-23 | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | website-follow-up |
+| 2026-10-23 | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | website-follow-up |
+| 2026-10-23 | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | website-follow-up |
+| 2026-10-23 | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | website-follow-up |
+| 2026-10-23 | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | website-follow-up |
+| 2026-10-23 | 838664032 | AURORA STANGE STUDIO | ENK | email | website-follow-up |
+| 2026-10-23 | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | website-follow-up |
+| 2026-10-23 | 938664730 | DIGIHOSE HVITÅS | ENK | email | website-follow-up |
+| 2026-10-23 | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | website-follow-up |
+| 2026-10-23 | 938669953 | TRAN TRADING | ENK | email | website-follow-up |
+| 2026-10-23 | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | website-follow-up |
+| 2026-10-23 | 938613133 | FRISØR DORI GERMEAU | ENK | email | website-follow-up |
+| 2026-10-23 | 938703841 | SIA REOVANT | UTLA | email | website-follow-up |
+| 2026-10-23 | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | website-follow-up |
+| 2026-10-23 | 838628192 | IKOTTOSEN HOLDING AS | AS | email | website-follow-up |
 | 2026-10-23 | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | website-offer |
 | 2026-10-23 | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | website-offer |
 | 2026-10-23 | 938731853 | SANDUM HYTTESERVICE | ENK | email | website-offer |
@@ -132,29 +165,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-20 | 938708096 | NORGE ENTRPRENEUR LTD | UTLA | email | website-offer |
 | 2026-10-20 | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | website-offer |
 | 2026-10-20 | 938599157 | DARDANIA DRAMMEN | FLI | email | website-offer |
-| 2026-10-19 | 838628192 | IKOTTOSEN HOLDING AS | AS | email | website-offer |
-| 2026-10-19 | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | website-offer |
-| 2026-10-19 | 938703841 | SIA REOVANT | UTLA | email | website-offer |
-| 2026-10-19 | 938613133 | FRISØR DORI GERMEAU | ENK | email | website-offer |
-| 2026-10-19 | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | website-offer |
-| 2026-10-19 | 938669953 | TRAN TRADING | ENK | email | website-offer |
-| 2026-10-19 | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | website-offer |
-| 2026-10-19 | 938664730 | DIGIHOSE HVITÅS | ENK | email | website-offer |
-| 2026-10-19 | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | website-offer |
-| 2026-10-19 | 838664032 | AURORA STANGE STUDIO | ENK | email | website-offer |
 | 2026-10-19 | 937298358 | BOHDAN SEAFOOD CONNECT | ENK | email | website-lead-batch |
-| 2026-10-19 | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | website-offer |
-| 2026-10-19 | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | website-offer |
-| 2026-10-18 | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | website-offer |
-| 2026-10-18 | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | website-offer |
-| 2026-10-18 | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | website-offer |
-| 2026-10-18 | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | website-offer |
-| 2026-10-18 | 938695253 | JENSEN BYGGKONSULT | ENK | email | website-offer |
-| 2026-10-18 | 938697809 | TANNHJULET EIDE | ENK | email | website-offer |
-| 2026-10-18 | 938697779 | THU ROSLAND BYGG | ENK | email | website-offer |
-| 2026-10-18 | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | website-offer |
-| 2026-10-18 | 938593191 | CLEANFRIEND APS | NUF | email | website-offer |
-| 2026-10-18 | 938649197 | BART HEYLEN SL | NUF | email | website-offer |
 | 2026-10-17 | 938665931 | KALLONEN MOTION OY | UTLA | email | website-follow-up |
 | 2026-10-17 | 938665346 | KARI-ANNE PEDERSEN | ENK | email | website-follow-up |
 | 2026-10-17 | 838624472 | BACHMANN | ENK | email | website-follow-up |
@@ -164,18 +175,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-17 | 938495211 | SÉRUMI AS | AS | email | website-follow-up |
 | 2026-10-17 | 938555664 | FORENINGEN VILLHEIMA | FLI | email | website-follow-up |
 | 2026-10-17 | 838479952 | LIVING AROMA MINISTRIES | FLI | email | website-follow-up |
-| 2026-10-17 | 938695849 | TALE MONGE HEIMDAL | ENK | email | website-offer |
-| 2026-10-17 | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | website-offer |
-| 2026-10-17 | 938661219 | REHMAN FIRDAUS | ENK | email | website-offer |
-| 2026-10-17 | 938578680 | SANA HEALTH | FLI | email | website-offer |
-| 2026-10-17 | 938695814 | FIX ABAKSINS | ENK | email | website-offer |
-| 2026-10-17 | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | website-offer |
-| 2026-10-17 | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | website-offer |
-| 2026-10-17 | 938682798 | P/R TVILLINGHAV DA | PRE | email | website-offer |
-| 2026-10-17 | 938659699 | LARS BERNAAS NORDANG | ENK | email | website-offer |
-| 2026-10-17 | 938659982 | GUBHAGE BLOMSTER | ENK | email | website-offer |
 | 2026-10-17 | 938663831 | ELSABI TRANSPORT | ENK | email | website-offer |
-| 2026-10-17 | 938689822 | BART HEYLEN SL | UTLA | email | website-offer |
 | 2026-10-16 | 938624720 | BENDING SPOONS US INC | NUF | email | website-follow-up |
 | 2026-10-16 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-follow-up |
 | 2026-10-16 | 938620857 | HAMMER FOREDRAG | ENK | email | website-follow-up |
@@ -399,6 +399,72 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-23 11:55 | sent | 938689822 | BART HEYLEN SL | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:55 | sending | 938689822 | BART HEYLEN SL | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:55 | sent | 938659982 | GUBHAGE BLOMSTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:55 | sending | 938659982 | GUBHAGE BLOMSTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:55 | sent | 938659699 | LARS BERNAAS NORDANG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:55 | sending | 938659699 | LARS BERNAAS NORDANG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938682798 | P/R TVILLINGHAV DA | PRE | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938682798 | P/R TVILLINGHAV DA | PRE | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938669848 | PAUL JOHANSSON BYGG & TRADING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938581053 | SØNDRE OG MYRAN INNBYGGERFORENING | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938695814 | FIX ABAKSINS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938695814 | FIX ABAKSINS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938578680 | SANA HEALTH | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938578680 | SANA HEALTH | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938661219 | REHMAN FIRDAUS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938661219 | REHMAN FIRDAUS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938690960 | FLÅTEN INVEST NARVIK AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938695849 | TALE MONGE HEIMDAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938695849 | TALE MONGE HEIMDAL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938649197 | BART HEYLEN SL | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938649197 | BART HEYLEN SL | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:54 | sent | 938593191 | CLEANFRIEND APS | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:54 | sending | 938593191 | CLEANFRIEND APS | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938697124 | KVARMASTØLEN SKOG OG EIGEDOM - ANDERS K. AALVIK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938697779 | THU ROSLAND BYGG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938697779 | THU ROSLAND BYGG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938697809 | TANNHJULET EIDE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938697809 | TANNHJULET EIDE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938695253 | JENSEN BYGGKONSULT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938695253 | JENSEN BYGGKONSULT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938698295 | DRØIVOLDSMO ARBEIDER ENK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938699119 | MERHAWIT AMARE GEBREMARIAM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 838698972 | MUSIKER TIM MARTIN NORRUD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938699429 | SOFIE KVALVIK PT & MUSKELTERAPEUT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938663874 | BYGG OG EIENDOMSERVICE VARGA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938663629 | SOLHAUG PRIVATUNDERVISNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 838664032 | AURORA STANGE STUDIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 838664032 | AURORA STANGE STUDIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:53 | sending | 938671230 | BARANOVSKA PRINT STUDIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:53 | sent | 938664730 | DIGIHOSE HVITÅS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938664730 | DIGIHOSE HVITÅS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938671125 | SKJEVELNES KOMPETANSE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 938669953 | TRAN TRADING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938669953 | TRAN TRADING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938589380 | CHAMPAGNEBALLKOMITEEN VED DET UTDANNINGSVITENSKAPELIGE FAKULTET | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 938613133 | FRISØR DORI GERMEAU | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938613133 | FRISØR DORI GERMEAU | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 938703841 | SIA REOVANT | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938703841 | SIA REOVANT | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-23 11:52 | sent | 838628192 | IKOTTOSEN HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-23 11:52 | sending | 838628192 | IKOTTOSEN HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-23 11:51 | sent | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | - |
 | 2026-10-23 11:51 | sending | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-23 11:51 | sent | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | - |
