@@ -54,6 +54,23 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "LBN",
+    previewUrl: "https://ltj54.github.io/lars-bernaas-nordang/",
+    contact: "Lars Bernaas Nordang",
+    email: "lars.nordang@gmail.com",
+    organizationNumber: "938 659 699",
+    proposalDate: "23.10.2026",
+    dateLabel: "Positiv interesse mottatt",
+    sentProposalDate: "24.10.2026 kl. 13:42",
+    outreach: "Første nettsideforslag sendt – avventer gjennomgang fra Lars",
+    progress: "Engelskspråklig prøveversjon er publisert med mottatte bilder og varegrupper. Lars er bedt om å kontrollere produktnavn, tekst, bilder og hva virksomheten helst vil vise eller selge. Forslaget er ikke en endelig leveranse.",
+    nextStep: "Avvent tilbakemelding fra Lars om innhold, varegrupper, bilder og ønsket videre retning. Ingen automatisk oppfølging eller purring.",
+    invoice: "Ikke fakturert",
+    agreement: "Internt avtaleutkast finnes lokalt, men pris, omfang, domene og drift er ikke avtalt.",
+    agreementStatus: "draft",
+    status: "waiting",
+  },
+  {
     name: "Kvernmo Halibut",
     previewUrl: "https://ltj54.github.io/kvernmo-halibut/",
     contact: "Bjørne Kvernmo",
