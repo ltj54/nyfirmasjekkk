@@ -5,7 +5,8 @@ import { Building2, CalendarDays, ExternalLink, FileText, Globe2, MapPin, Phone,
 
 import { crmProjectId, isoDateFromNorwegian, norwegianDateFromIso, osloToday, type CrmEventKind, type CrmEventRecord } from "@/lib/crm-events";
 import { MailboxReview } from "@/components/mailbox-review";
-import { CrmManualCases } from "@/components/crm-manual-cases";
+import { CrmManualCases, ProjectManualEmails } from "@/components/crm-manual-cases";
+import { casesForProject, normalizeOrganizationNumber, type CrmManualCaseWithEmail } from "@/lib/crm-manual-cases";
 
 type ProjectStatus = "working" | "waiting" | "delivered" | "payment" | "completed" | "inactive";
 type AgreementStatus = "required" | "draft" | "signed" | "not-used";
@@ -385,6 +386,9 @@ function money(amount: number): string {
 
 export function CrmOverview() {
   const [events, setEvents] = useState<CrmEventRecord[]>([]);
+  const [manualCases, setManualCases] = useState<CrmManualCaseWithEmail[]>([]);
+  const [manualCasesError, setManualCasesError] = useState("");
+  const [manualCasesLoading, setManualCasesLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [busyProject, setBusyProject] = useState("");
   const [saveError, setSaveError] = useState("");
@@ -407,7 +411,28 @@ export function CrmOverview() {
     return () => { active = false; };
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    async function loadManualCases() {
+      try {
+        const response = await fetch("/api/crm-manual-cases", { cache: "no-store", signal: controller.signal });
+        const body = await response.json() as { cases?: CrmManualCaseWithEmail[]; error?: string };
+        if (response.ok && body.cases) setManualCases(body.cases);
+        else setManualCasesError(body.error ?? "Kunne ikke lese manuelle CRM-saker.");
+      } catch {
+        if (!controller.signal.aborted) setManualCasesError("Manuelle CRM-saker er utilgjengelige akkurat nå.");
+      } finally {
+        if (!controller.signal.aborted) setManualCasesLoading(false);
+      }
+    }
+    void loadManualCases();
+    return () => controller.abort();
+  }, []);
+
   const currentProjects = projects.map((project) => applyCrmEvents(project, events));
+  const projectOrganizationNumbers = new Set(currentProjects
+    .map((project) => normalizeOrganizationNumber(project.organizationNumber))
+    .filter((orgNumber): orgNumber is string => Boolean(orgNumber)));
   const outstanding = currentProjects.filter((project) => project.status === "payment")
     .reduce((total, project) => total + (project.invoiceAmount ?? 0), 0);
   const paid = currentProjects.filter((project) => project.paymentDate)
@@ -473,7 +498,7 @@ export function CrmOverview() {
                 <span className="ml-3 text-sm font-normal text-slate-600">{grouped.length} prosjekter</span>
               </summary>
               <div className="grid gap-4 px-4 pb-4 lg:grid-cols-2">
-                {grouped.map((project) => <ProjectCard key={project.name} project={project} group={group} canEdit={canEdit && !loadError} busy={busyProject === crmProjectId(project.name, project.organizationNumber)} onSave={saveEvent} />)}
+                {grouped.map((project) => <ProjectCard key={project.name} project={project} group={group} manualCases={casesForProject(manualCases, project.organizationNumber)} canEdit={canEdit && !loadError} busy={busyProject === crmProjectId(project.name, project.organizationNumber)} onSave={saveEvent} />)}
                 {grouped.length === 0 ? <p className="p-2 text-sm text-slate-500">Ingen prosjekter i denne gruppen.</p> : null}
               </div>
             </details>
@@ -481,13 +506,14 @@ export function CrmOverview() {
         })}
       </div>
       <p className="mt-5 text-xs text-slate-500">Oversikten oppretter ingen automatiske purringer. Frister og neste steg gjelder manuell oppfølging.</p>
-      <CrmManualCases />
+      <CrmManualCases cases={manualCases} error={manualCasesError} loading={manualCasesLoading} projectOrganizationNumbers={projectOrganizationNumbers} />
     </section>
   );
 }
 
-function ProjectCard({ project, group, canEdit, busy, onSave }: Readonly<{
+function ProjectCard({ project, group, manualCases, canEdit, busy, onSave }: Readonly<{
   project: CrmProject; group: (typeof statusGroups)[number];
+  manualCases: CrmManualCaseWithEmail[];
   canEdit: boolean; busy: boolean;
   onSave: (event: Omit<CrmEventRecord, "recordedAt">) => Promise<boolean>;
 }>) {
@@ -518,6 +544,7 @@ function ProjectCard({ project, group, canEdit, busy, onSave }: Readonly<{
           {history.map((event) => <li key={event.label}><span className="font-medium">{event.date}</span> · {event.label}</li>)}
         </ol>
       </details>
+      <ProjectManualEmails cases={manualCases} />
     </article>
   );
 }

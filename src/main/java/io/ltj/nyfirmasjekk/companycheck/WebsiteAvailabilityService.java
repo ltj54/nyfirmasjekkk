@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -68,7 +70,7 @@ public class WebsiteAvailabilityService {
             return false;
         }
         String url = website.matches("(?i)^https?://.*") ? website.trim() : "https://" + website.trim();
-        WebsiteProbeResult probe = reachabilityService.probeNow(url);
+        WebsiteProbeResult probe = probeWebsite(url).result();
         return !probe.reachable()
                 && !"INVALID_URL".equals(probe.reasonCode())
                 && !"INTERRUPTED".equals(probe.reasonCode());
@@ -83,10 +85,11 @@ public class WebsiteAvailabilityService {
             }
         }
 
-        WebsiteProbeResult probe = reachabilityService.probeNow(url);
+        WebsiteProbeAttempt attempt = probeWebsite(url);
+        WebsiteProbeResult probe = attempt.result();
         if (probe.reachable()) {
-            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = contentInspectionService.fetchSnapshot(url);
-            return observeReachableWebsite(url, company, now, previous, probe, snapshot);
+            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = contentInspectionService.fetchSnapshot(attempt.url());
+            return observeReachableWebsite(attempt.url(), company, now, previous, probe, snapshot);
         }
         if ("INVALID_URL".equals(probe.reasonCode()) || "INTERRUPTED".equals(probe.reasonCode())) {
             return new Observation(UNVERIFIABLE, probe.reasonCode(), probe.httpStatus(), now, now,
@@ -99,6 +102,40 @@ public class WebsiteAvailabilityService {
         }
         return new Observation(PENDING_RECHECK, probe.reasonCode(), probe.httpStatus(), now, now,
                 WebsiteLeadSuitabilityPolicy.assess(company, PENDING_RECHECK, null, null), null);
+    }
+
+    private WebsiteProbeAttempt probeWebsite(String url) {
+        WebsiteProbeResult primary = reachabilityService.probeNow(url);
+        if (primary.reachable()) {
+            return new WebsiteProbeAttempt(url, primary);
+        }
+        String alternateUrl = alternateWwwUrl(url);
+        if (alternateUrl == null) {
+            return new WebsiteProbeAttempt(url, primary);
+        }
+        WebsiteProbeResult alternate = reachabilityService.probeNow(alternateUrl);
+        if (alternate.reachable()) {
+            return new WebsiteProbeAttempt(alternateUrl,
+                    new WebsiteProbeResult(true, "REACHABLE_ALTERNATE_HOST", alternate.httpStatus()));
+        }
+        return new WebsiteProbeAttempt(url, primary);
+    }
+
+    private String alternateWwwUrl(String url) {
+        try {
+            URI uri = URI.create(url);
+            String host = uri.getHost();
+            if (host == null || host.isBlank()) {
+                return null;
+            }
+            String alternateHost = host.regionMatches(true, 0, "www.", 0, 4)
+                    ? host.substring(4)
+                    : "www." + host;
+            return new URI(uri.getScheme(), uri.getUserInfo(), alternateHost, uri.getPort(),
+                    uri.getPath(), uri.getQuery(), uri.getFragment()).toString();
+        } catch (IllegalArgumentException | URISyntaxException exception) {
+            return null;
+        }
     }
 
     private Observation observeReachableWebsite(String url, EnhetResponse company, Instant now, Observation previous,
@@ -130,5 +167,8 @@ public class WebsiteAvailabilityService {
     private record Observation(String status, String reasonCode, Integer httpStatus,
                                Instant firstCheckedAt, Instant lastCheckedAt,
                                WebsiteLeadSuitabilityPolicy.Assessment suitability, String issueUrl) {
+    }
+
+    private record WebsiteProbeAttempt(String url, WebsiteProbeResult result) {
     }
 }

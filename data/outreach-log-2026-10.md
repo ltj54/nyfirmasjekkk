@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1352
-- Sendt: 654
+- Antall hendelser: 1358
+- Sendt: 657
 - Angret: 0
-- Aktive kontaktede selskaper: 388
+- Aktive kontaktede selskaper: 391
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-25 | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | website-lead-batch |
+| 2026-10-25 | 937312237 | THU TEAM BUILDING | ENK | email | website-lead-batch |
+| 2026-10-25 | 937379900 | JANSFJORD KULTURHÅNDVERK | FLI | email | website-lead-batch |
 | 2026-10-25 | 938746044 | ENGDAHL PRESTASJON | ENK | email | website-offer |
 | 2026-10-25 | 938746133 | OLE BIRGER NYGÅRD | ENK | email | website-offer |
 | 2026-10-25 | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | website-offer |
@@ -406,6 +409,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-25 10:00 | sent | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | Nettsidelead-batch 4778f172-f055-4956-8a44-3052c0c1eb37 |
+| 2026-10-25 10:00 | sending | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-25 10:00 | sent | 937312237 | THU TEAM BUILDING | ENK | email | Nettsidelead-batch 4778f172-f055-4956-8a44-3052c0c1eb37 |
+| 2026-10-25 10:00 | sending | 937312237 | THU TEAM BUILDING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-25 10:00 | sent | 937379900 | JANSFJORD KULTURHÅNDVERK | FLI | email | Nettsidelead-batch 4778f172-f055-4956-8a44-3052c0c1eb37 |
+| 2026-10-25 10:00 | sending | 937379900 | JANSFJORD KULTURHÅNDVERK | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-25 09:27 | sent | 938746044 | ENGDAHL PRESTASJON | ENK | email | - |
 | 2026-10-25 09:27 | sending | 938746044 | ENGDAHL PRESTASJON | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-25 09:27 | sent | 938746133 | OLE BIRGER NYGÅRD | ENK | email | - |

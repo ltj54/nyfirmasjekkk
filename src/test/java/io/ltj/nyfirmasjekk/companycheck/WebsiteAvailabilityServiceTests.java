@@ -38,6 +38,8 @@ class WebsiteAvailabilityServiceTests {
         givenWebsite("www.example.no");
         when(reachabilityService.probeNow("https://www.example.no"))
                 .thenReturn(new WebsiteProbeResult(false, "TLS_ERROR", null));
+        when(reachabilityService.probeNow("https://example.no"))
+                .thenReturn(new WebsiteProbeResult(false, "TLS_ERROR", null));
         var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
 
         var first = service.check("123456789");
@@ -53,6 +55,7 @@ class WebsiteAvailabilityServiceTests {
         assertEquals("CONFIRMED_UNREACHABLE", confirmed.status());
         assertEquals(first.firstCheckedAt(), confirmed.firstCheckedAt());
         verify(reachabilityService, times(2)).probeNow("https://www.example.no");
+        verify(reachabilityService, times(2)).probeNow("https://example.no");
     }
 
     @Test
@@ -61,11 +64,30 @@ class WebsiteAvailabilityServiceTests {
         when(reachabilityService.probeNow("https://example.no"))
                 .thenReturn(new WebsiteProbeResult(false, "TIMEOUT", null),
                         new WebsiteProbeResult(true, "REACHABLE", 200));
+        when(reachabilityService.probeNow("https://www.example.no"))
+                .thenReturn(new WebsiteProbeResult(false, "TIMEOUT", null));
         var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
 
         assertEquals("PENDING_RECHECK", service.check("123456789").status());
         now.set(now.get().plusSeconds(30));
         assertEquals("REACHABLE", service.check("123456789").status());
+    }
+
+    @Test
+    void reachableApexDomainClearsTlsFailureOnRegisteredWwwHost() {
+        givenWebsite("www.ingengjeld.no");
+        when(reachabilityService.probeNow("https://www.ingengjeld.no"))
+                .thenReturn(new WebsiteProbeResult(false, "TLS_ERROR", null));
+        when(reachabilityService.probeNow("https://ingengjeld.no"))
+                .thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
+        var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
+
+        var result = service.check("123456789");
+
+        assertEquals("REACHABLE", result.status());
+        assertEquals("REACHABLE_ALTERNATE_HOST", result.reasonCode());
+        assertEquals(200, result.httpStatus());
+        verify(contentInspectionService).fetchSnapshot("https://ingengjeld.no");
     }
 
     @Test
