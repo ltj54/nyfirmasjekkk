@@ -4,15 +4,20 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1342
-- Sendt: 649
+- Antall hendelser: 1352
+- Sendt: 654
 - Angret: 0
-- Aktive kontaktede selskaper: 383
+- Aktive kontaktede selskaper: 388
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-25 | 938746044 | ENGDAHL PRESTASJON | ENK | email | website-offer |
+| 2026-10-25 | 938746133 | OLE BIRGER NYGÅRD | ENK | email | website-offer |
+| 2026-10-25 | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | website-offer |
+| 2026-10-25 | 938510016 | PAJALA WELDERS AB NUF | NUF | email | website-offer |
+| 2026-10-25 | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | website-offer |
 | 2026-10-24 | 938599157 | DARDANIA DRAMMEN | FLI | email | website-follow-up |
 | 2026-10-24 | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | website-follow-up |
 | 2026-10-24 | 938708096 | NORGE ENTREPRENEUR LTD | UTLA | email | website-follow-up |
@@ -401,6 +406,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-25 09:27 | sent | 938746044 | ENGDAHL PRESTASJON | ENK | email | - |
+| 2026-10-25 09:27 | sending | 938746044 | ENGDAHL PRESTASJON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-25 09:27 | sent | 938746133 | OLE BIRGER NYGÅRD | ENK | email | - |
+| 2026-10-25 09:27 | sending | 938746133 | OLE BIRGER NYGÅRD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-25 09:27 | sent | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | - |
+| 2026-10-25 09:27 | sending | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-25 09:27 | sent | 938510016 | PAJALA WELDERS AB NUF | NUF | email | - |
+| 2026-10-25 09:27 | sending | 938510016 | PAJALA WELDERS AB NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-25 09:27 | sent | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | - |
+| 2026-10-25 09:27 | sending | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-24 11:57 | sent | 938599157 | DARDANIA DRAMMEN | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-24 11:57 | sending | 938599157 | DARDANIA DRAMMEN | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-24 11:57 | sent | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | Oppfølging sendt – avslutt hvis stille |
