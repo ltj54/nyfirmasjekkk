@@ -4,15 +4,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1364
-- Sendt: 660
+- Antall hendelser: 1376
+- Sendt: 666
 - Angret: 0
-- Aktive kontaktede selskaper: 394
+- Aktive kontaktede selskaper: 400
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | website-offer |
+| 2026-10-26 | 838725082 | LLM AS | AS | email | website-offer |
+| 2026-10-26 | 938705194 | HELGESEN DRIFT | ENK | email | website-offer |
+| 2026-10-26 | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | website-offer |
+| 2026-10-26 | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | website-offer |
+| 2026-10-26 | 938702500 | BAKKEN AUDIT AND ADVISORY | ENK | email | website-offer |
 | 2026-10-26 | 938747229 | SIGNATURE ALHASAN | ENK | email | website-offer |
 | 2026-10-26 | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | website-offer |
 | 2026-10-26 | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | website-offer |
@@ -412,6 +418,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 14:33 | sent | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | - |
+| 2026-10-26 14:33 | sending | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 14:33 | sent | 838725082 | LLM AS | AS | email | - |
+| 2026-10-26 14:33 | sending | 838725082 | LLM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 14:33 | sent | 938705194 | HELGESEN DRIFT | ENK | email | - |
+| 2026-10-26 14:33 | sending | 938705194 | HELGESEN DRIFT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 14:33 | sent | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | - |
+| 2026-10-26 14:33 | sending | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 14:33 | sent | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | - |
+| 2026-10-26 14:33 | sending | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 14:33 | sent | 938702500 | BAKKEN AUDIT AND ADVISORY | ENK | email | - |
+| 2026-10-26 14:33 | sending | 938702500 | BAKKEN AUDIT AND ADVISORY | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-26 08:56 | sent | 938747229 | SIGNATURE ALHASAN | ENK | email | - |
 | 2026-10-26 08:56 | sending | 938747229 | SIGNATURE ALHASAN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-26 08:56 | sent | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | - |
