@@ -4,15 +4,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1378
-- Sendt: 666
+- Antall hendelser: 1381
+- Sendt: 667
 - Angret: 0
-- Aktive kontaktede selskaper: 398
+- Aktive kontaktede selskaper: 399
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 | 936889441 | STEINSVIK GARD | ENK | email | website-lead-batch |
 | 2026-10-26 | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | website-offer |
 | 2026-10-26 | 838725082 | LLM AS | AS | email | website-offer |
 | 2026-10-26 | 938705194 | HELGESEN DRIFT | ENK | email | website-offer |
@@ -416,6 +417,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 15:48 | sent | 936889441 | STEINSVIK GARD | ENK | email | Nettsidelead-batch c0fde561-eb67-439d-99e3-09139ad45f20 |
+| 2026-10-26 15:48 | sending | 936889441 | STEINSVIK GARD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 15:46 | not_relevant | 937265646 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-26 15:01 | not_relevant | 938702500 | BAKKEN AUDIT AND ADVISORY | ENK | email | Morris Bakken svarte 26.10.2026 kl. 14:47: Nei takk, jeg har ikke behov. Ingen videre oppfølging eller utsendelse. |
 | 2026-10-26 14:42 | not_relevant | 938663831 | ELSABI TRANSPORT | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-26 14:33 | sent | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | - |

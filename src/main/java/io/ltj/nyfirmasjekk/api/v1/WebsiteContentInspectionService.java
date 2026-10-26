@@ -70,6 +70,10 @@ public class WebsiteContentInspectionService {
         return WebsiteContentSnapshotFetcher.fetch(url, false);
     }
 
+    public WebsiteAvailabilitySnapshot fetchAvailabilitySnapshot(String url) {
+        return WebsiteContentSnapshotFetcher.fetchAvailability(url);
+    }
+
     public WebsiteContentSnapshot fetchExtendedSnapshot(String url) {
         return WebsiteContentSnapshotFetcher.fetch(url, true);
     }
@@ -181,6 +185,9 @@ public class WebsiteContentInspectionService {
                 .replaceAll("[^a-z0-9@. ]", " ")
                 .replaceAll("\\s+", " ")
                 .trim();
+    }
+
+    public record WebsiteAvailabilitySnapshot(String html, String title, String bodyText, String finalUrl) {
     }
 
     public record WebsiteContentSnapshot(

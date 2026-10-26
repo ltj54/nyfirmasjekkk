@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -87,7 +88,7 @@ class WebsiteAvailabilityServiceTests {
         assertEquals("REACHABLE", result.status());
         assertEquals("REACHABLE_ALTERNATE_HOST", result.reasonCode());
         assertEquals(200, result.httpStatus());
-        verify(contentInspectionService).fetchSnapshot("https://ingengjeld.no");
+        verify(contentInspectionService).fetchAvailabilitySnapshot("https://ingengjeld.no");
     }
 
     @Test
@@ -95,9 +96,9 @@ class WebsiteAvailabilityServiceTests {
         givenWebsite("example.no");
         String homepage = "https://example.no";
         String booking = "https://example.no/bestill-time";
-        var snapshot = new WebsiteContentInspectionService.WebsiteContentSnapshot(
-                "Hjem", "Bestill time", "<a href='/bestill-time'>Bestill time</a>", null, null, null, null);
-        when(contentInspectionService.fetchSnapshot(homepage)).thenReturn(snapshot);
+        var snapshot = new WebsiteContentInspectionService.WebsiteAvailabilitySnapshot(
+                "<a href='/bestill-time'>Bestill time</a>", "Hjem", "Bestill time", homepage);
+        when(contentInspectionService.fetchAvailabilitySnapshot(homepage)).thenReturn(snapshot);
         when(reachabilityService.probeNow(homepage)).thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
         when(reachabilityService.probeNow(booking)).thenReturn(new WebsiteProbeResult(false, "HTTP_ERROR", 404));
         var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
@@ -116,13 +117,32 @@ class WebsiteAvailabilityServiceTests {
     }
 
     @Test
+    void contactLinkUsesFinalUrlAfterHomepageRedirect() {
+        givenWebsite("www.slick9.no");
+        String registeredUrl = "https://www.slick9.no";
+        String contactUrl = "https://slick9.com/contact";
+        var snapshot = mock(WebsiteContentInspectionService.WebsiteAvailabilitySnapshot.class);
+        when(snapshot.html()).thenReturn("<a href='/contact'>Contact</a>");
+        when(snapshot.finalUrl()).thenReturn("https://slick9.com/");
+        when(contentInspectionService.fetchAvailabilitySnapshot(registeredUrl)).thenReturn(snapshot);
+        when(reachabilityService.probeNow(registeredUrl)).thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
+        when(reachabilityService.probeNow(contactUrl)).thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
+        var service = new WebsiteAvailabilityService(brregClient, reachabilityService, contentInspectionService, clock);
+
+        assertEquals("REACHABLE", service.check("123456789").status());
+        verify(reachabilityService).probeNow(contactUrl);
+        verify(reachabilityService, never()).probeNow("https://www.slick9.no/contact");
+        verify(contentInspectionService, never()).fetchSnapshot(registeredUrl);
+    }
+
+    @Test
     void repairedBookingLinkClearsPendingFinding() {
         givenWebsite("example.no");
         String homepage = "https://example.no";
         String booking = "https://example.no/booking";
-        var snapshot = new WebsiteContentInspectionService.WebsiteContentSnapshot(
-                "Hjem", "Booking", "<a href='/booking'>Booking</a>", null, null, null, null);
-        when(contentInspectionService.fetchSnapshot(homepage)).thenReturn(snapshot);
+        var snapshot = new WebsiteContentInspectionService.WebsiteAvailabilitySnapshot(
+                "<a href='/booking'>Booking</a>", "Hjem", "Booking", homepage);
+        when(contentInspectionService.fetchAvailabilitySnapshot(homepage)).thenReturn(snapshot);
         when(reachabilityService.probeNow(homepage)).thenReturn(new WebsiteProbeResult(true, "REACHABLE", 200));
         when(reachabilityService.probeNow(booking)).thenReturn(
                 new WebsiteProbeResult(false, "HTTP_ERROR", 404),

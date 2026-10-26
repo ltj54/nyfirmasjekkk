@@ -88,7 +88,8 @@ public class WebsiteAvailabilityService {
         WebsiteProbeAttempt attempt = probeWebsite(url);
         WebsiteProbeResult probe = attempt.result();
         if (probe.reachable()) {
-            WebsiteContentInspectionService.WebsiteContentSnapshot snapshot = contentInspectionService.fetchSnapshot(attempt.url());
+            WebsiteContentInspectionService.WebsiteAvailabilitySnapshot snapshot =
+                    contentInspectionService.fetchAvailabilitySnapshot(attempt.url());
             return observeReachableWebsite(attempt.url(), company, now, previous, probe, snapshot);
         }
         if ("INVALID_URL".equals(probe.reasonCode()) || "INTERRUPTED".equals(probe.reasonCode())) {
@@ -140,8 +141,10 @@ public class WebsiteAvailabilityService {
 
     private Observation observeReachableWebsite(String url, EnhetResponse company, Instant now, Observation previous,
                                                 WebsiteProbeResult websiteProbe,
-                                                WebsiteContentInspectionService.WebsiteContentSnapshot snapshot) {
-        String contactUrl = snapshot == null ? null : WebsiteContactPathPolicy.priorityUrl(snapshot.html(), url);
+                                                WebsiteContentInspectionService.WebsiteAvailabilitySnapshot snapshot) {
+        String pageUrl = snapshot != null && snapshot.finalUrl() != null && !snapshot.finalUrl().isBlank()
+                ? snapshot.finalUrl() : url;
+        String contactUrl = snapshot == null ? null : WebsiteContactPathPolicy.priorityUrl(snapshot.html(), pageUrl);
         if (contactUrl != null) {
             WebsiteProbeResult contactProbe = reachabilityService.probeNow(contactUrl);
             if (WebsiteContactPathPolicy.isConfirmedFailure(contactProbe.reasonCode(), contactProbe.httpStatus())) {

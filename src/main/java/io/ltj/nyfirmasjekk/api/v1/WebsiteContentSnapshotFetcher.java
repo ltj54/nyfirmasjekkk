@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -65,13 +66,13 @@ public class WebsiteContentSnapshotFetcher {
     private static final String PATH_TERMS = "/terms";
     private static final String PATH_TJENESTER = "/tjenester";
     private static final String PATH_VILKAR = "/vilkar";
-    private static final String PATH_VILKAR_ACCENTED = "/vilkår";
     private static final String PATH_WP_ADMIN = "/wp-admin";
     private static final String ROBOTS_TXT_PATH = "/robots.txt";
     private static final String TERM_PRIVACY = "privacy";
     private static final String TERM_PERSONVERN = "personvern";
     private static final String TERM_POLICY = "policy";
     private static final String TERM_RETUR = "retur";
+    private static final String TERM_REFUND = "refund";
     private static final String TERM_VILLKOR = "villkor";
     private static final String TERM_VILKAR = "vilkår";
     private static final Pattern ACCESSIBILITY_VIOLATION_PATTERN = Pattern.compile("brudd\\s++p[åa]\\s++(\\d++)\\s++av\\s++(\\d++)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
@@ -80,6 +81,7 @@ public class WebsiteContentSnapshotFetcher {
             Pattern.compile("\\b(?:width|min-width)\\s*+:\\s*+[1-9]\\d{3,}+px", Pattern.CASE_INSENSITIVE)
     );
     private static final Pattern OUTLINE_NONE_PATTERN = Pattern.compile("outline\\s*:\\s*(?:0|none)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern QUOTED_CONTENT_PATTERN = Pattern.compile("['\"]([^'\"]*+)['\"]");
     private static final java.util.List<Pattern> CMS_VERSION_PATTERNS = java.util.List.of(
             Pattern.compile("wordpress\\s+\\d+\\.\\d", Pattern.CASE_INSENSITIVE),
             Pattern.compile("wp-(?:includes|content)/[^?\\s]++\\?ver=\\d+\\.\\d", Pattern.CASE_INSENSITIVE),
@@ -111,7 +113,7 @@ public class WebsiteContentSnapshotFetcher {
             PATH_PRIVACY,
             PATH_COOKIES,
             PATH_VILKAR,
-            PATH_VILKAR_ACCENTED,
+            rootedPath(TERM_VILKAR),
             PATH_TERMS,
             PATH_TJENESTER,
             PATH_SERVICES,
@@ -128,6 +130,29 @@ public class WebsiteContentSnapshotFetcher {
             "/arbeidshelsesjekken",
             "/arbeidshelseradaren"
     );
+
+    private static String rootedPath(String segment) {
+        return "/" + segment;
+    }
+
+    static WebsiteContentInspectionService.WebsiteAvailabilitySnapshot fetchAvailability(String url) {
+        if (url == null || url.isBlank()) {
+            return null;
+        }
+        try {
+            Connection.Response response = executeSafeJsoup(url);
+            Document document = response.parse();
+            String bodyText = document.body().text();
+            if (bodyText.length() > 4000) {
+                bodyText = bodyText.substring(0, 4000);
+            }
+            return new WebsiteContentInspectionService.WebsiteAvailabilitySnapshot(
+                    document.outerHtml(), document.title(), bodyText, response.url().toString());
+        } catch (IOException | IllegalArgumentException exception) {
+            return null;
+        }
+    }
+
     static WebsiteContentInspectionService.WebsiteContentSnapshot fetch(String url, boolean extended) {
         if (url == null || url.isBlank()) {
             return null;
@@ -220,7 +245,7 @@ public class WebsiteContentSnapshotFetcher {
             boolean thirdPartyFormSignal = hasAny(htmlSnapshot, "typeform.com", "jotform", "hubspot", "mailchimp", "calendly", "forms.gle");
             boolean ecommerceSignal = hasEcommerceSignal(document, htmlSnapshot);
             boolean termsLink = hasLinkOrText(document, bodyText, "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", TERM_POLICY, "salgsbetingelser", "kjopsvilkar", "kjøpsvilkår", "kopvillkor", "köpvillkor", "allmanna villkor", "allmänna villkor");
-            boolean returnInfo = hasLinkOrText(document, bodyText, TERM_RETUR, "angrerett", "angerratt", "ångerrätt", "reklamasjon", "reklamation", "return", "refund", "aterbetalning", "återbetalning", "byte");
+            boolean returnInfo = hasLinkOrText(document, bodyText, TERM_RETUR, "angrerett", "angerratt", "ångerrätt", "reklamasjon", "reklamation", "return", TERM_REFUND, "aterbetalning", "återbetalning", "byte");
             boolean deliveryInfo = hasLinkOrText(document, bodyText, "frakt", "levering", "leverans", "shipping", "delivery");
             boolean cartOrCheckoutSignal = hasCartOrCheckoutSignal(document, htmlSnapshot);
             boolean platformDomainSignal = hasPlatformDomainSignal(response.url().toString());
@@ -258,7 +283,7 @@ public class WebsiteContentSnapshotFetcher {
             boolean outdatedJavascriptLibrarySignal = hasOutdatedJavascriptLibrarySignal(htmlSnapshot);
             DnsSecurityResult dnsSecurityResult = dnsSecurityResult(response.url().getHost());
             TlsCertificateResult tlsCertificateResult = tlsCertificateResult(response.url().toString());
-            boolean httpRedirectsToHttps = httpRedirectsToHttps(response.url().getHost());
+            boolean httpRedirectsToHttps = httpRedirectsToHttps(response.url().toString());
             boolean securityTxtSignal = hasSecurityTxt(response.url().toString());
             boolean robotsSensitivePathSignal = robotsSensitivePathSignal(response.url().toString());
             LinkCheckResult linkCheckResult = checkInternalLinks(document, response.url().toString());
@@ -837,16 +862,14 @@ public class WebsiteContentSnapshotFetcher {
                 "/dashboard");
     }
 
-    private static int apiEndpointReferenceCount(Document document, String html) {
+    static int apiEndpointReferenceCount(Document document, String html) {
         Set<String> references = new java.util.LinkedHashSet<>();
         document.select(SELECTOR_URL_ATTRIBUTES).forEach(element -> {
             addIfApiReference(references, element.attr("href"));
             addIfApiReference(references, element.attr("src"));
             addIfApiReference(references, element.attr(ATTRIBUTE_ACTION));
         });
-        java.util.regex.Matcher matcher = java.util.regex.Pattern
-                .compile("['\"]([^'\"]*(?:/api/|/wp-json/|graphql|rest/)[^'\"]*)['\"]", java.util.regex.Pattern.CASE_INSENSITIVE)
-                .matcher(html == null ? "" : html);
+        Matcher matcher = QUOTED_CONTENT_PATTERN.matcher(html == null ? "" : html);
         while (matcher.find() && references.size() < 20) {
             addIfApiReference(references, matcher.group(1));
         }
@@ -1130,13 +1153,15 @@ public class WebsiteContentSnapshotFetcher {
         }
     }
 
-    private static boolean httpRedirectsToHttps(String host) {
-        if (host == null || host.isBlank()) {
+    private static boolean httpRedirectsToHttps(String finalUrl) {
+        if (finalUrl == null || finalUrl.isBlank()) {
             return false;
         }
         try {
-            SafeWebTargetPolicy.requirePublicHost(host);
-            HttpURLConnection connection = (HttpURLConnection) URI.create("http://" + host).toURL().openConnection();
+            URI inspectedUri = SafeWebTargetPolicy.requirePublicHttpUri(finalUrl);
+            URI httpUri = new URI("http", null, inspectedUri.getHost(), -1,
+                    inspectedUri.getPath(), null, null);
+            HttpURLConnection connection = (HttpURLConnection) httpUri.toURL().openConnection();
             connection.setRequestMethod("HEAD");
             connection.setInstanceFollowRedirects(false);
             connection.setConnectTimeout(1200);
@@ -1145,7 +1170,7 @@ public class WebsiteContentSnapshotFetcher {
             int status = connection.getResponseCode();
             String location = connection.getHeaderField(HEADER_LOCATION);
             return status >= 300 && status < 400 && location != null && location.toLowerCase(Locale.ROOT).startsWith(HTTPS_PREFIX);
-        } catch (IOException | IllegalArgumentException exception) {
+        } catch (IOException | IllegalArgumentException | URISyntaxException exception) {
             return false;
         }
     }
@@ -1165,13 +1190,9 @@ public class WebsiteContentSnapshotFetcher {
     }
 
     private static boolean robotsSensitivePathSignal(String finalUrl) {
-        return robotsSensitivePathSignal(finalUrl, ROBOTS_TXT_PATH);
-    }
-
-    private static boolean robotsSensitivePathSignal(String finalUrl, String robotsPath) {
         URI baseUri = URI.create(finalUrl);
         String origin = origin(baseUri);
-        String robots = readSmallTextResource(origin + robotsPath);
+        String robots = readSmallTextResource(origin + ROBOTS_TXT_PATH);
         if (robots.isBlank()) {
             return false;
         }
@@ -1200,7 +1221,7 @@ public class WebsiteContentSnapshotFetcher {
     private static ExtendedCrawlResult extendedCrawl(Document document, String baseUrl) {
         return extendedCrawl(document, baseUrl,
                 WebsiteContentSnapshotFetcher::readSmallHtmlResource,
-                WebsiteContentSnapshotFetcher::readSmallTextResource, ROBOTS_TXT_PATH);
+                WebsiteContentSnapshotFetcher::readSmallTextResource);
     }
 
     static ExtendedCrawlResult extendedCrawl(
@@ -1208,16 +1229,6 @@ public class WebsiteContentSnapshotFetcher {
             String baseUrl,
             UnaryOperator<String> htmlReader,
             UnaryOperator<String> textReader
-    ) {
-        return extendedCrawl(document, baseUrl, htmlReader, textReader, ROBOTS_TXT_PATH);
-    }
-
-    static ExtendedCrawlResult extendedCrawl(
-            Document document,
-            String baseUrl,
-            UnaryOperator<String> htmlReader,
-            UnaryOperator<String> textReader,
-            String robotsPath
     ) {
         URI baseUri;
         try {
@@ -1259,7 +1270,7 @@ public class WebsiteContentSnapshotFetcher {
         Set<String> visited = new java.util.LinkedHashSet<>();
         Set<String> fingerprints = new java.util.HashSet<>();
         fingerprints.add(contentFingerprint(document));
-        String robots = textReader.apply(origin + robotsPath);
+        String robots = textReader.apply(origin + ROBOTS_TXT_PATH);
         long deadlineNanos = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(EXTENDED_CRAWL_TOTAL_MS);
         int attempts = 0;
 
@@ -1398,7 +1409,8 @@ public class WebsiteContentSnapshotFetcher {
         String normalized = url.toLowerCase(Locale.ROOT);
         if (hasAny(normalized, PATH_PERSONVERN, PATH_PRIVACY, PATH_COOKIES, "/gdpr")) return 100;
         if (hasAny(normalized, PATH_KONTAKT, PATH_CONTACT)) return 95;
-        if (hasAny(normalized, PATH_VILKAR, PATH_VILKAR_ACCENTED, PATH_TERMS, "/retur", "/refund")) return 90;
+        if (hasAny(normalized, PATH_VILKAR, rootedPath(TERM_VILKAR), PATH_TERMS,
+                rootedPath(TERM_RETUR), rootedPath(TERM_REFUND))) return 90;
         if (hasAny(normalized, "/om-oss", PATH_ABOUT, PATH_TEAM, PATH_MENNESKENE)) return 80;
         if (hasAny(normalized, PATH_TJENESTER, PATH_SERVICES, "/produkt", PATH_PRICING, PATH_PRIS)) return 70;
         if (hasAny(normalized, "/faq", PATH_REFERANSER, PATH_CASE, PATH_PROSJEKTER)) return 60;
@@ -1721,7 +1733,7 @@ public class WebsiteContentSnapshotFetcher {
             privacyPageFound |= hasAny(searchableContent, TERM_PERSONVERN, TERM_PRIVACY, "gdpr", "datenschutz", "integritetspolicy");
             contactPageFound |= hasAny(searchableContent, "kontakt", "contact", "kundeservice", "support");
             aboutPageFound |= hasAny(searchableContent, "om-oss", "about", "om oss", "hvem vi er", "about us");
-            termsPageFound |= hasAny(searchableContent, "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", "conditions", TERM_POLICY, TERM_RETUR, "refund");
+            termsPageFound |= hasAny(searchableContent, "vilkar", TERM_VILKAR, TERM_VILLKOR, "terms", "conditions", TERM_POLICY, TERM_RETUR, TERM_REFUND);
             faqPageFound |= hasAny(searchableContent, "faq", "ofte stilte", "sporsmal", "spørsmål", "questions");
             pricingSignal |= hasAny(normalizedContent, "pris", "priser", "pricing", "abonnement", "subscription", "gratis prøve", "free trial", "demo");
             dataHandlingPageFound |= hasAny(normalizedContent, "datahåndtering", "datahandtering", "databehandling", "databehandler", "personopplysninger", "arbeidsmiljødata", "arbeidsmiljodata");

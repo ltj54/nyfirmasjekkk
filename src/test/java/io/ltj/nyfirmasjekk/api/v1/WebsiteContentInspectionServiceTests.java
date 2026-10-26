@@ -1,5 +1,6 @@
 package io.ltj.nyfirmasjekk.api.v1;
 
+import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,6 +69,14 @@ class WebsiteContentInspectionServiceTests {
                 """;
 
         assertThat(WebsiteContentSnapshotFetcher.detectBuilder(null, html)).isNull();
+    }
+
+    @Test
+    void apiReferanserFinnesILenkerOgSitertSkriptUtenKomplisertRegex() {
+        String html = "<a href='/api/items'>API</a><script>const endpoint = 'https://example.no/graphql';"
+                + "const unrelated = '" + "x".repeat(50_000) + "';</script>";
+
+        assertThat(WebsiteContentSnapshotFetcher.apiEndpointReferenceCount(Jsoup.parse(html), html)).isEqualTo(2);
     }
 
     private static final class StubWebsiteContentInspectionService extends WebsiteContentInspectionService {
