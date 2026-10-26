@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1358
-- Sendt: 657
+- Antall hendelser: 1364
+- Sendt: 660
 - Angret: 0
-- Aktive kontaktede selskaper: 391
+- Aktive kontaktede selskaper: 394
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 | 938747229 | SIGNATURE ALHASAN | ENK | email | website-offer |
+| 2026-10-26 | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | website-offer |
+| 2026-10-26 | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | website-offer |
 | 2026-10-25 | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | website-lead-batch |
 | 2026-10-25 | 937312237 | THU TEAM BUILDING | ENK | email | website-lead-batch |
 | 2026-10-25 | 937379900 | JANSFJORD KULTURHÅNDVERK | FLI | email | website-lead-batch |
@@ -409,6 +412,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 08:56 | sent | 938747229 | SIGNATURE ALHASAN | ENK | email | - |
+| 2026-10-26 08:56 | sending | 938747229 | SIGNATURE ALHASAN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 08:56 | sent | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | - |
+| 2026-10-26 08:56 | sending | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-26 08:56 | sent | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | - |
+| 2026-10-26 08:56 | sending | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-25 10:00 | sent | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | Nettsidelead-batch 4778f172-f055-4956-8a44-3052c0c1eb37 |
 | 2026-10-25 10:00 | sending | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-25 10:00 | sent | 937312237 | THU TEAM BUILDING | ENK | email | Nettsidelead-batch 4778f172-f055-4956-8a44-3052c0c1eb37 |
