@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1376
+- Antall hendelser: 1378
 - Sendt: 666
 - Angret: 0
-- Aktive kontaktede selskaper: 400
+- Aktive kontaktede selskaper: 398
 
 ## Aktive kontaktede selskaper
 
@@ -18,7 +18,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-26 | 938705194 | HELGESEN DRIFT | ENK | email | website-offer |
 | 2026-10-26 | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | website-offer |
 | 2026-10-26 | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | website-offer |
-| 2026-10-26 | 938702500 | BAKKEN AUDIT AND ADVISORY | ENK | email | website-offer |
 | 2026-10-26 | 938747229 | SIGNATURE ALHASAN | ENK | email | website-offer |
 | 2026-10-26 | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | website-offer |
 | 2026-10-26 | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | website-offer |
@@ -194,7 +193,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-17 | 938495211 | SÉRUMI AS | AS | email | website-follow-up |
 | 2026-10-17 | 938555664 | FORENINGEN VILLHEIMA | FLI | email | website-follow-up |
 | 2026-10-17 | 838479952 | LIVING AROMA MINISTRIES | FLI | email | website-follow-up |
-| 2026-10-17 | 938663831 | ELSABI TRANSPORT | ENK | email | website-offer |
 | 2026-10-16 | 938624720 | BENDING SPOONS US INC | NUF | email | website-follow-up |
 | 2026-10-16 | 938656150 | VINJE DIGITAL IMPACT | ENK | email | website-follow-up |
 | 2026-10-16 | 938620857 | HAMMER FOREDRAG | ENK | email | website-follow-up |
@@ -418,6 +416,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 15:01 | not_relevant | 938702500 | BAKKEN AUDIT AND ADVISORY | ENK | email | Morris Bakken svarte 26.10.2026 kl. 14:47: Nei takk, jeg har ikke behov. Ingen videre oppfølging eller utsendelse. |
+| 2026-10-26 14:42 | not_relevant | 938663831 | ELSABI TRANSPORT | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-10-26 14:33 | sent | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | - |
 | 2026-10-26 14:33 | sending | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-26 14:33 | sent | 838725082 | LLM AS | AS | email | - |
