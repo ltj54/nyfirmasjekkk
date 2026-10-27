@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Download, FileUp, Mail, RefreshCw, Settings2, XCircle } from "lucide-react";
 
 import type { OutreachStatus } from "@/lib/company-check";
@@ -13,7 +13,7 @@ import {
   getOutreachEntriesDueForFollowUp,
   getOutreachSortValue,
 } from "@/lib/company-formatters";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 type PipelineTone = "review" | "contacted" | "followup" | "inactive";
 
@@ -46,7 +46,7 @@ export function OutreachOverview({
   const [showAdministration, setShowAdministration] = useState(false);
   const [eventLimit, setEventLimit] = useState(20);
   const [markingBatchByOrg, setMarkingBatchByOrg] = useState<Record<string, boolean>>({});
-  const [selectedFollowUpByOrg, setSelectedFollowUpByOrg] = useState<Record<string, boolean>>({});
+  const [followUpSelection, setFollowUpSelection] = useState<{ key: string; byOrg: Record<string, boolean> }>({ key: "", byOrg: {} });
   const logEntries = [...entries].sort((left, right) => getOutreachSortValue(right).localeCompare(getOutreachSortValue(left)));
   const latestEntries = getLatestOutreachEntriesByOrg(logEntries);
   const initialOfferSentAtByOrg = getLatestInitialOfferSentAtByOrg(logEntries);
@@ -59,17 +59,14 @@ export function OutreachOverview({
   );
   const notRelevantEntries = latestEntries.filter((entry) => entry.status === "not_relevant" || entry.status === "delivery_failed");
   const followUpKey = followUpEntries.map((entry) => entry.orgNumber).join("|");
-  const selectedFollowUpEntries = followUpEntries.filter((entry) => selectedFollowUpByOrg[entry.orgNumber]);
-
-  useEffect(() => {
-    setSelectedFollowUpByOrg((current) => {
-      const validSelected = followUpEntries.filter((entry) => current[entry.orgNumber]).slice(0, 10);
-      const selected = validSelected.length > 0 ? validSelected : followUpEntries.slice(0, 10);
+  const selectedFollowUpByOrg = followUpSelection.key === followUpKey
+    ? followUpSelection.byOrg
+    : (() => {
+      const previouslySelected = followUpEntries.filter((entry) => followUpSelection.byOrg[entry.orgNumber]).slice(0, 10);
+      const selected = previouslySelected.length > 0 ? previouslySelected : followUpEntries.slice(0, 10);
       return Object.fromEntries(selected.map((entry) => [entry.orgNumber, true]));
-    });
-  // The serialized key changes only when the follow-up queue changes.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followUpKey]);
+    })();
+  const selectedFollowUpEntries = followUpEntries.filter((entry) => selectedFollowUpByOrg[entry.orgNumber]);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-8" id="outreach">
@@ -132,7 +129,10 @@ export function OutreachOverview({
                       checked={selected}
                       className="mt-0.5 size-4"
                       disabled={isFollowUpBatchSending || isMarking || selectionLimitReached}
-                      onChange={(event) => setSelectedFollowUpByOrg((current) => ({ ...current, [entry.orgNumber]: event.target.checked }))}
+                      onChange={(event) => setFollowUpSelection({
+                        key: followUpKey,
+                        byOrg: { ...selectedFollowUpByOrg, [entry.orgNumber]: event.target.checked },
+                      })}
                       type="checkbox"
                     />
                     <span className="min-w-0">
@@ -178,10 +178,10 @@ export function OutreachOverview({
               <p className="mt-1 text-[13px] text-[#52606D]">{logEntries.length} lagrede hendelser. Import og eksport endrer den underliggende loggen.</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button className="rounded-sm" onClick={() => { window.location.href = "/api/company-check/outreach/export"; }} type="button" variant="outline">
+              <a className={buttonVariants({ className: "rounded-sm", variant: "outline" })} download href="/api/company-check/outreach/export">
                 <Download className="size-4" />
                 Eksporter
-              </Button>
+              </a>
               <input
                 ref={importInputRef}
                 accept=".jsonl,application/x-ndjson,text/plain"

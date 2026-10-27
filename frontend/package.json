@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('.next', { recursive: true, force: true })\"",
-    "dev": "next dev --webpack",
-    "dev:turbo": "next dev --turbo",
+    "dev": "next dev --webpack -H 127.0.0.1",
+    "dev:turbo": "next dev --turbo -H 127.0.0.1",
     "build": "next build",
-    "start": "next start",
-    "test": "node --test tests/outreach-email-template.test.mjs",
+    "start": "next start -H 127.0.0.1",
+    "test": "node --test",
     "lint": "eslint src"
   },
   "dependencies": {

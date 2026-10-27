@@ -1,6 +1,6 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -16,7 +16,7 @@ class WebsiteLeadBatchLogServiceTests {
     Path temporaryDirectory;
 
     @Test
-    void skriverEgenJsonlLoggMedBatchIdOgStatus() throws Exception {
+    void skriverEgenJsonlLoggMedBatchIdOgStatus() {
         Path logPath = temporaryDirectory.resolve("website-lead-batch-log.jsonl");
         ObjectMapper mapper = new ObjectMapper();
         Clock clock = Clock.fixed(Instant.parse("2026-10-13T10:00:00Z"), ZoneOffset.UTC);
@@ -29,8 +29,8 @@ class WebsiteLeadBatchLogServiceTests {
 
         String[] lines = service.exportJsonl().trim().split("\\R");
         assertThat(lines).hasSize(2);
-        assertThat(mapper.readTree(lines[0]).get("batchId").asText()).isEqualTo("batch-1");
-        assertThat(mapper.readTree(lines[1]).get("status").asText()).isEqualTo("sent");
-        assertThat(mapper.readTree(lines[1]).get("timestamp").asText()).isEqualTo("2026-10-13T10:00:00Z");
+        assertThat(mapper.readTree(lines[0]).get("batchId").asString()).isEqualTo("batch-1");
+        assertThat(mapper.readTree(lines[1]).get("status").asString()).isEqualTo("sent");
+        assertThat(mapper.readTree(lines[1]).get("timestamp").asString()).isEqualTo("2026-10-13T10:00:00Z");
     }
 }

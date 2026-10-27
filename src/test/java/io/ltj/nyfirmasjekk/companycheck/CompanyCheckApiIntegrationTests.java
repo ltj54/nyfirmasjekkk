@@ -10,7 +10,7 @@ import io.ltj.nyfirmasjekk.brreg.RollerResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
@@ -96,6 +96,20 @@ class CompanyCheckApiIntegrationTests {
     void hentDetaljerMedUgyldigOrgnrReturnerer400() throws Exception {
         mockMvc.perform(get("/api/company-check/123"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void browserRequestCannotPostDirectlyToBackend() throws Exception {
+        mockMvc.perform(post("/api/company-check/outreach-statuses")
+                        .header("Origin", "https://example.invalid")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("[]"))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(post("/api/company-check/outreach-statuses")
+                        .header("Sec-Fetch-Site", "cross-site")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("[]"))
+                .andExpect(status().isForbidden());
     }
 
     @Test

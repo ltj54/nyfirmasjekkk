@@ -3,7 +3,7 @@ import { backendHeaders } from "../../_lib/backend-fetch";
 
 const backendBaseUrl =
   process.env.BACKEND_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8080";
-const BACKEND_TIMEOUT_MS = 8_000;
+const BACKEND_TIMEOUT_MS = 15_000;
 
 export async function GET(
   request: Request,

@@ -1,7 +1,8 @@
 package io.ltj.nyfirmasjekk.companycheck;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -536,7 +537,7 @@ public class OutreachLogService {
     private OutreachLogEntry parseEntry(String line) {
         try {
             return objectMapper.readValue(line, OutreachLogEntry.class);
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             log.warn("Ignorerer ugyldig linje i utsendelseslogg: {}", line);
             return null;
         }
@@ -559,7 +560,7 @@ public class OutreachLogService {
             OutreachLogEntry entry = objectMapper.readValue(line, OutreachLogEntry.class);
             validateImportedEntry(entry);
             return entry;
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             throw new IllegalArgumentException("Importfilen inneholder ugyldig JSONL", exception);
         }
     }
@@ -656,7 +657,7 @@ public class OutreachLogService {
     private String serializeEntry(OutreachLogEntry entry) {
         try {
             return objectMapper.writeValueAsString(entry) + System.lineSeparator();
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             throw new IllegalStateException("Klarte ikke serialisere outreach-logg", exception);
         }
     }

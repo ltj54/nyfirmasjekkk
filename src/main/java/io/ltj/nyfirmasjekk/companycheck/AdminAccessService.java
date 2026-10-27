@@ -13,8 +13,19 @@ import java.security.NoSuchAlgorithmException;
 public class AdminAccessService {
     private final String adminToken;
 
-    public AdminAccessService(@Value("${company-check.admin-token:}") String adminToken) {
+    public AdminAccessService(
+            @Value("${company-check.admin-token:}") String adminToken,
+            @Value("${server.address:}") String serverAddress
+    ) {
         this.adminToken = adminToken == null ? "" : adminToken.trim();
+        String bindAddress = serverAddress == null ? "" : serverAddress.trim();
+        if (this.adminToken.isBlank() && !isLoopback(bindAddress)) {
+            throw new IllegalStateException("Admin-token kreves når backend ikke er bundet til loopback.");
+        }
+    }
+
+    private static boolean isLoopback(String address) {
+        return "127.0.0.1".equals(address) || "::1".equals(address) || "0:0:0:0:0:0:0:1".equals(address);
     }
 
     public void requireAdmin(String providedToken) {
