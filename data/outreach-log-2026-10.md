@@ -4,15 +4,40 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1381
-- Sendt: 667
+- Antall hendelser: 1431
+- Sendt: 692
 - Angret: 0
-- Aktive kontaktede selskaper: 399
+- Aktive kontaktede selskaper: 403
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-27 | 838688942 | A&AMOTOR AHMED | ENK | email | website-follow-up |
+| 2026-10-27 | 938680388 | ENSTAD RESEARCH | ENK | email | website-follow-up |
+| 2026-10-27 | 938680663 | HJEMGAARD HANDEL | ENK | email | website-follow-up |
+| 2026-10-27 | 938680558 | IDEN UNDERVISNING | ENK | email | website-follow-up |
+| 2026-10-27 | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | website-follow-up |
+| 2026-10-27 | 838682332 | STENHAUG GÅRD | ENK | email | website-follow-up |
+| 2026-10-27 | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | website-follow-up |
+| 2026-10-27 | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | website-follow-up |
+| 2026-10-27 | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | website-follow-up |
+| 2026-10-27 | 938655820 | LØLAND - MASKIN | ENK | email | website-follow-up |
+| 2026-10-27 | 938684723 | PRONAVIA REITER | ENK | email | website-follow-up |
+| 2026-10-27 | 938721491 | ROY ÅGE ISAKSEN | ENK | email | website-follow-up |
+| 2026-10-27 | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | website-follow-up |
+| 2026-10-27 | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | website-follow-up |
+| 2026-10-27 | 938721831 | JANINA ANKE AASEN | ENK | email | website-follow-up |
+| 2026-10-27 | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | website-follow-up |
+| 2026-10-27 | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | website-follow-up |
+| 2026-10-27 | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | website-follow-up |
+| 2026-10-27 | 938607907 | MIDNATTSOLDAGAN | FLI | email | website-follow-up |
+| 2026-10-27 | 938727562 | VEDVIK HOME | ENK | email | website-follow-up |
+| 2026-10-27 | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | website-follow-up |
+| 2026-10-27 | 938428689 | STRAVERS TORENKRANEN B.V. NUF | NUF | email | website-offer |
+| 2026-10-27 | 938601496 | KYNDRYL DANMARK APS | NUF | email | website-offer |
+| 2026-10-27 | 938749477 | KYNDRYL DANMARK APS | UTLA | email | website-offer |
+| 2026-10-27 | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | website-offer |
 | 2026-10-26 | 936889441 | STEINSVIK GARD | ENK | email | website-lead-batch |
 | 2026-10-26 | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | website-offer |
 | 2026-10-26 | 838725082 | LLM AS | AS | email | website-offer |
@@ -124,19 +149,9 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-22 | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | website-offer |
 | 2026-10-22 | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | website-offer |
 | 2026-10-22 | 938656800 | E.N. BLIX | ENK | email | website-offer |
-| 2026-10-21 | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | website-offer |
-| 2026-10-21 | 938727562 | VEDVIK HOME | ENK | email | website-offer |
-| 2026-10-21 | 938607907 | MIDNATTSOLDAGAN | FLI | email | website-offer |
-| 2026-10-21 | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | website-offer |
-| 2026-10-21 | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | website-offer |
-| 2026-10-21 | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | website-offer |
-| 2026-10-21 | 938721831 | JANINA ANKE AASEN | ENK | email | website-offer |
 | 2026-10-21 | 937414323 | NODEA AS | AS | email | website-lead-batch |
 | 2026-10-21 | 937566387 | ELLINA SINGH | ENK | email | website-lead-batch |
 | 2026-10-21 | 937569858 | LILLEIT BOCIEK | ENK | email | website-lead-batch |
-| 2026-10-21 | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | website-offer |
-| 2026-10-21 | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | website-offer |
-| 2026-10-21 | 938721491 | ROY ÅGE ISAKSEN | ENK | email | website-offer |
 | 2026-10-21 | 938681740 | KVICKS KRAN & MASKINTJÄNST AB | UTLA | email | website-follow-up |
 | 2026-10-21 | 938680493 | ÅRSVOLL SERVICE | ENK | email | website-follow-up |
 | 2026-10-21 | 938680604 | PHAM HJEMMEGLANS | ENK | email | website-follow-up |
@@ -149,17 +164,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-21 | 938687862 | HORGI INVEST AS | AS | email | website-follow-up |
 | 2026-10-21 | 938688435 | RINGSJØ | ENK | email | website-follow-up |
 | 2026-10-21 | 838570682 | TOURISTENFAHRTEN | FLI | email | website-follow-up |
-| 2026-10-21 | 938684723 | PRONAVIA REITER | ENK | email | website-offer |
-| 2026-10-21 | 938655820 | LØLAND - MASKIN | ENK | email | website-offer |
-| 2026-10-21 | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | website-offer |
-| 2026-10-21 | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | website-offer |
-| 2026-10-21 | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | website-offer |
-| 2026-10-21 | 838682332 | STENHAUG GÅRD | ENK | email | website-offer |
-| 2026-10-21 | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | website-offer |
-| 2026-10-21 | 938680558 | IDEN UNDERVISNING | ENK | email | website-offer |
-| 2026-10-21 | 938680663 | HJEMGAARD HANDEL | ENK | email | website-offer |
-| 2026-10-21 | 938680388 | ENSTAD RESEARCH | ENK | email | website-offer |
-| 2026-10-21 | 838688942 | A&AMOTOR AHMED | ENK | email | website-offer |
 | 2026-10-20 | 938604401 | GRØNNINGEN UTLEIE | ENK | email | website-follow-up |
 | 2026-10-20 | 938673209 | INGRID STØEN LEGE | ENK | email | website-follow-up |
 | 2026-10-20 | 938637814 | LAURITZEN FORFATTER OG FOREDRAG | ENK | email | website-follow-up |
@@ -417,6 +421,56 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-27 08:34 | sent | 838688942 | A&AMOTOR AHMED | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:34 | sending | 838688942 | A&AMOTOR AHMED | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938680388 | ENSTAD RESEARCH | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938680388 | ENSTAD RESEARCH | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938680663 | HJEMGAARD HANDEL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938680663 | HJEMGAARD HANDEL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938680558 | IDEN UNDERVISNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938680558 | IDEN UNDERVISNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938684596 | KONSULENT ELSE MARIE MOE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 838682332 | STENHAUG GÅRD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 838682332 | STENHAUG GÅRD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938680361 | TOMMY HOKHOLT TRANSPORT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938515085 | HOVSLAGER H.G. GUDMUNDSSON | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938666024 | SOLARPLAZA INTERNATIONAL B.V. | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938655820 | LØLAND - MASKIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938655820 | LØLAND - MASKIN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938684723 | PRONAVIA REITER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938684723 | PRONAVIA REITER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938721491 | ROY ÅGE ISAKSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938721491 | ROY ÅGE ISAKSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938680914 | TROND OHNSTAD CONSULTING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938721777 | VASYLE MALING OG OPPUSSING CALIN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938721831 | JANINA ANKE AASEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938721831 | JANINA ANKE AASEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:33 | sent | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:33 | sending | 938722463 | WIGGEN FOU OG INNOVASJON | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:32 | sending | 938722226 | BONITA FIGUR V / H. RODRIGUEZ SUAREZ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:32 | sending | 938695571 | GHEZAL ANASS-EL-TAHAR FAST DELIVERY | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938607907 | MIDNATTSOLDAGAN | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:32 | sending | 938607907 | MIDNATTSOLDAGAN | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938727562 | VEDVIK HOME | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:32 | sending | 938727562 | VEDVIK HOME | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-27 08:32 | sending | 938725365 | PEREIRA SPRÅKTJENESTER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938428689 | STRAVERS TORENKRANEN B.V. NUF | NUF | email | - |
+| 2026-10-27 08:32 | sending | 938428689 | STRAVERS TORENKRANEN B.V. NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938601496 | KYNDRYL DANMARK APS | NUF | email | - |
+| 2026-10-27 08:32 | sending | 938601496 | KYNDRYL DANMARK APS | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938749477 | KYNDRYL DANMARK APS | UTLA | email | - |
+| 2026-10-27 08:32 | sending | 938749477 | KYNDRYL DANMARK APS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-27 08:32 | sent | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | - |
+| 2026-10-27 08:32 | sending | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-26 15:48 | sent | 936889441 | STEINSVIK GARD | ENK | email | Nettsidelead-batch c0fde561-eb67-439d-99e3-09139ad45f20 |
 | 2026-10-26 15:48 | sending | 936889441 | STEINSVIK GARD | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-26 15:46 | not_relevant | 937265646 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
