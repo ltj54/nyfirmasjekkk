@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
+import Link from "next/link";
 import {
   Building2,
   BriefcaseBusiness,
@@ -210,7 +211,7 @@ const leadQuickFilterOptions: Array<{ value: LeadQuickFilter; label: string }> =
   { value: "NOT_RELEVANT", label: "Ikke aktuell" },
 ];
 const EMAIL_BATCH_SEND_DELAY_MS = 1_000;
-const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 12_000;
+const EMAIL_BATCH_VALIDATION_TIMEOUT_MS = 18_000;
 const MAX_EMAIL_BATCH_SIZE = 25;
 const MAX_FOLLOW_UP_BATCH_SIZE = 10;
 type OutreachStatusOverride = "sent" | "reverted" | "not_relevant" | "website_client" | "batch_excluded";
@@ -238,6 +239,10 @@ function RenderCollection<T>({
 
 function choose<T>(condition: boolean, whenTrue: T, whenFalse: T): T {
   return condition ? whenTrue : whenFalse;
+}
+
+function allConditions(...conditions: boolean[]): boolean {
+  return conditions.every(Boolean);
 }
 
 function selectedWebsiteFilter(filters: LeadQuickFilter[]): WebsiteQuickFilter {
@@ -544,16 +549,6 @@ async function evaluateWebsiteLeadCandidates(
     onProgress(`Sjekker nettsidene: ${checked} av ${candidates.length} …`);
   });
   if (signal.aborted) return null;
-  const pending = checks.filter((result) => result.status === "PENDING_RECHECK"
-    || result.status === "CONTACT_PATH_PENDING_RECHECK");
-  if (pending.length > 0) {
-    onProgress(`Venter på kontroll nummer to for ${pending.length} nettsider …`);
-    await waitForWebsiteRecheck(pending, signal);
-    const pendingOrgNumbers = new Set(pending.map((result) => result.orgNumber));
-    const pendingCompanies = candidates.filter((company) => pendingOrgNumbers.has(company.orgNumber));
-    checks.push(...await checkWebsiteLeadBatch(pendingCompanies, signal, () => {}));
-  }
-  if (signal.aborted) return null;
   const checkedOrgNumbers = new Set(checks.map((result) => result.orgNumber));
   const missingCompanies = candidates.filter((company) => !checkedOrgNumbers.has(company.orgNumber));
   if (missingCompanies.length > 0) {
@@ -561,9 +556,14 @@ async function evaluateWebsiteLeadCandidates(
     checks.push(...await checkWebsiteLeadBatch(missingCompanies, signal, () => {}));
   }
   if (signal.aborted) return null;
+  const pendingChecks = checks.filter((result) => result.status === "PENDING_RECHECK"
+    || result.status === "CONTACT_PATH_PENDING_RECHECK");
+  const pendingOrgNumbers = new Set(pendingChecks.map((result) => result.orgNumber));
   return {
     availability: Object.fromEntries(checks.map((result) => [result.orgNumber, result])),
     unverifiedCount: candidates.length - new Set(checks.map((result) => result.orgNumber)).size,
+    pendingChecks,
+    pendingCompanies: candidates.filter((company) => pendingOrgNumbers.has(company.orgNumber)),
   };
 }
 
@@ -655,8 +655,9 @@ export function CompanyCheckShell() {
   const [isListLoading, setIsListLoading] = useState(false);
   const [websiteRankingProgress, setWebsiteRankingProgress] = useState("");
   const [unverifiedWebsiteCount, setUnverifiedWebsiteCount] = useState(0);
-  const [listLoadProgress, setListLoadProgress] = useState(0);
-  const [listLoadSeconds, setListLoadSeconds] = useState(0);
+  const [listLoadElapsedMs, setListLoadElapsedMs] = useState(0);
+  const listLoadSeconds = choose(isListLoading, Math.floor(listLoadElapsedMs / 1000), 0);
+  const listLoadProgress = choose(isListLoading, estimateListProgress(listLoadElapsedMs), 0);
   const [daysFilter, setDaysFilter] = useState("5");
   const [websiteLeadCohort, setWebsiteLeadCohort] = useState(false);
   const [websiteLeadOldestMonths, setWebsiteLeadOldestMonths] = useState<7 | 12>(7);
@@ -668,7 +669,7 @@ export function CompanyCheckShell() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showBatchExcluded, setShowBatchExcluded] = useState(true);
   const [leadQuickFilters, setLeadQuickFilters] = useState<LeadQuickFilter[]>(["HAS_EMAIL"]);
-  const [selectedCompanyEvents, setSelectedCompanyEvents] = useState<CompanyEvent[]>([]);
+  const [selectedCompanyEventData, setSelectedCompanyEventData] = useState<{ orgNumber: string; events: CompanyEvent[] } | null>(null);
   const [outreachStatusByOrg, setOutreachStatusByOrg] = useState<Record<string, OutreachStatus>>({});
   const [batchSelectionByOrg, setBatchSelectionByOrg] = useState<Record<string, boolean>>({});
   const [websiteLeadSelectionByOrg, setWebsiteLeadSelectionByOrg] = useState<Record<string, boolean>>({});
@@ -694,6 +695,7 @@ export function CompanyCheckShell() {
   const [totalPages, setTotalPages] = useState(0);
   const latestListRequestId = useRef(0);
   const listAbortControllerRef = useRef<AbortController | null>(null);
+  const skipFirstRefreshAfterHydrationRef = useRef(true);
   const websiteLeadDatasetKeyRef = useRef<string | null>(null);
   const websiteLeadCacheRef = useRef<{
     key: string;
@@ -1374,20 +1376,14 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     if (!isListLoading) {
-      setListLoadProgress(0);
-      setListLoadSeconds(0);
       return;
     }
 
     const startedAt = Date.now();
     const updateProgress = () => {
-      const elapsedMs = Date.now() - startedAt;
-      const elapsedSeconds = Math.floor(elapsedMs / 1000);
-      setListLoadSeconds(elapsedSeconds);
-      setListLoadProgress(estimateListProgress(elapsedMs));
+      setListLoadElapsedMs(Date.now() - startedAt);
     };
 
-    updateProgress();
     const intervalId = setInterval(updateProgress, 200);
 
     return () => {
@@ -1396,6 +1392,7 @@ export function CompanyCheckShell() {
   }, [isListLoading]);
 
   async function hydrateLandingData() {
+    setListLoadElapsedMs(0);
     setIsListLoading(true);
 
     try {
@@ -1430,11 +1427,7 @@ export function CompanyCheckShell() {
     }
   }
 
-  function restoreWebsiteLeadRanking(datasetKey: string, pageNum: number) {
-    if (websiteLeadDatasetKeyRef.current === datasetKey) {
-      setPage(pageNum);
-      return true;
-    }
+  function restoreWebsiteLeadRanking(datasetKey: string, pageNum: number, signal: AbortSignal, requestId: number) {
     const cachedRanking = websiteLeadCacheRef.current;
     if (cachedRanking?.key !== datasetKey || Date.now() - cachedRanking.loadedAt >= 30 * 60_000) return false;
     websiteLeadDatasetKeyRef.current = datasetKey;
@@ -1445,7 +1438,33 @@ export function CompanyCheckShell() {
     setTotalPages(Math.ceil(cachedRanking.items.length / WEBSITE_LEAD_PAGE_SIZE));
     setError(null);
     setIsListLoading(false);
+    const pendingChecks = Object.values(cachedRanking.availability).filter((result) =>
+      result.status === "PENDING_RECHECK" || result.status === "CONTACT_PATH_PENDING_RECHECK");
+    const pendingOrgNumbers = new Set(pendingChecks.map((result) => result.orgNumber));
+    const pendingCompanies = cachedRanking.items.filter((company) => pendingOrgNumbers.has(company.orgNumber));
+    void recheckPendingWebsiteLeadRanking(pendingChecks, pendingCompanies, signal, requestId, datasetKey);
     return true;
+  }
+
+  async function recheckPendingWebsiteLeadRanking(
+    pendingChecks: WebsiteAvailability[],
+    pendingCompanies: CompanySummary[],
+    signal: AbortSignal,
+    requestId: number,
+    datasetKey: string,
+  ) {
+    if (pendingChecks.length === 0) return;
+    await waitForWebsiteRecheck(pendingChecks, signal);
+    if (signal.aborted || requestId !== latestListRequestId.current) return;
+    const rechecks = await checkWebsiteLeadBatch(pendingCompanies, signal, () => {});
+    if (signal.aborted || requestId !== latestListRequestId.current) return;
+    const updates = Object.fromEntries(rechecks.map((result) => [result.orgNumber, result]));
+    setWebsiteAvailabilityByOrg((current) => ({ ...current, ...updates }));
+    const cachedRanking = websiteLeadCacheRef.current;
+    if (cachedRanking?.key === datasetKey) {
+      websiteLeadCacheRef.current = { ...cachedRanking,
+        availability: { ...cachedRanking.availability, ...updates } };
+    }
   }
 
   async function rankWebsiteLeadResults(
@@ -1468,6 +1487,8 @@ export function CompanyCheckShell() {
     websiteLeadCacheRef.current = { key: datasetKey, loadedAt: Date.now(), items,
       availability: assessment.availability, unverifiedCount: assessment.unverifiedCount };
     websiteLeadDatasetKeyRef.current = datasetKey;
+    void recheckPendingWebsiteLeadRanking(assessment.pendingChecks, assessment.pendingCompanies,
+      signal, requestId, datasetKey);
     return items;
   }
 
@@ -1540,8 +1561,9 @@ export function CompanyCheckShell() {
     });
     if (effectiveWebsiteLeadCohort) params.set("websiteLeadRanking", "true");
     const datasetKey = params.toString();
-    if (effectiveWebsiteLeadCohort && restoreWebsiteLeadRanking(datasetKey, pageNum)) return;
+    if (effectiveWebsiteLeadCohort && restoreWebsiteLeadRanking(datasetKey, pageNum, controller.signal, requestId)) return;
     websiteLeadDatasetKeyRef.current = null;
+    setListLoadElapsedMs(0);
     setIsListLoading(true);
     setUnverifiedWebsiteCount(0);
     setWebsiteRankingProgress(effectiveWebsiteLeadCohort ? "Henter alle nettsideleads før rangering …" : "");
@@ -1568,9 +1590,12 @@ export function CompanyCheckShell() {
   });
 
   const runRefreshRecent = useEffectEvent(() => {
-    if (backendReady && initialResultsReady) {
-      void fetchRecent(0);
+    if (!backendReady || !initialResultsReady) return;
+    if (skipFirstRefreshAfterHydrationRef.current) {
+      skipFirstRefreshAfterHydrationRef.current = false;
+      return;
     }
+    void fetchRecent(0);
   });
 
   useEffect(() => {
@@ -1627,7 +1652,6 @@ export function CompanyCheckShell() {
 
   useEffect(() => {
     if (!backendReady || !selectedCompany) {
-      setSelectedCompanyEvents([]);
       return;
     }
 
@@ -1646,7 +1670,10 @@ export function CompanyCheckShell() {
 
         const eventsPayload = eventsResponse.ok ? await eventsResponse.json() : [];
 
-        setSelectedCompanyEvents(Array.isArray(eventsPayload) ? (eventsPayload as CompanyEvent[]) : []);
+        setSelectedCompanyEventData({
+          orgNumber,
+          events: Array.isArray(eventsPayload) ? (eventsPayload as CompanyEvent[]) : [],
+        });
       } catch (err) {
         console.error("Failed to fetch company detail extras", err);
       }
@@ -1664,7 +1691,10 @@ export function CompanyCheckShell() {
       return;
     }
 
-    void fetchOutreachStatuses(recentCompanies.map((company) => company.orgNumber));
+    const timeoutId = window.setTimeout(() => {
+      void fetchOutreachStatuses(recentCompanies.map((company) => company.orgNumber));
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [backendReady, recentCompanies]);
 
   useEffect(() => {
@@ -1672,7 +1702,10 @@ export function CompanyCheckShell() {
       return;
     }
 
-    void fetchOutreachStatuses([selectedCompany.orgNumber]);
+    const timeoutId = window.setTimeout(() => {
+      void fetchOutreachStatuses([selectedCompany.orgNumber]);
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [backendReady, selectedCompany]);
 
   useEffect(() => {
@@ -1680,7 +1713,10 @@ export function CompanyCheckShell() {
       return;
     }
 
-    void fetchOutreachStatuses(selectedWebsiteInspection.brregMatches.map((match) => match.orgNumber));
+    const timeoutId = window.setTimeout(() => {
+      void fetchOutreachStatuses(selectedWebsiteInspection.brregMatches.map((match) => match.orgNumber));
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [backendReady, selectedWebsiteInspection]);
 
   useEffect(() => {
@@ -2180,6 +2216,10 @@ export function CompanyCheckShell() {
               label="CRM"
               onClick={() => setActiveTab("crm")}
             />
+            <Link href="/sverige" className="flex shrink-0 items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-[#52606D] hover:bg-slate-100">
+              <Globe aria-hidden="true" className="size-4" />
+              Sverige · pilot
+            </Link>
           </nav>
         </div>
       </header>
@@ -2528,17 +2568,16 @@ export function CompanyCheckShell() {
                   <div className="mb-3 flex items-center justify-between gap-4">
                     <div>
                       <p className="text-[12px] font-medium text-[#52606D]">
-                        {websiteLeadCohort ? "Rangerer nettsideleads" : "Søker i registerdata"}
+                        {choose(websiteLeadCohort, "Rangerer nettsideleads", "Søker i registerdata")}
                       </p>
                       <p className="mt-1 text-[14px] font-medium text-[#52606D]">
-                        {websiteLeadCohort
-                          ? websiteRankingProgress
-                          : choose(listLoadSeconds < 8, "Henter første treffliste.", "Søket er fortsatt i gang. Filteret jobber mot mange selskaper.")}
+                        {choose(websiteLeadCohort, websiteRankingProgress,
+                          choose(listLoadSeconds < 8, "Henter første treffliste.", "Søket er fortsatt i gang. Filteret jobber mot mange selskaper."))}
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
                       <p className="whitespace-nowrap text-[12px] font-bold text-[#52606D]">{listLoadSeconds}s</p>
-                      {websiteLeadCohort ? (
+                      <Show when={websiteLeadCohort}>
                         <button
                           type="button"
                           className="text-[12px] font-semibold text-[#1F5FA9] underline"
@@ -2552,7 +2591,7 @@ export function CompanyCheckShell() {
                         >
                           Avbryt vurdering
                         </button>
-                      ) : null}
+                      </Show>
                     </div>
                   </div>
                   <div className="h-2 overflow-hidden bg-[#E4E7EB]">
@@ -2572,12 +2611,12 @@ export function CompanyCheckShell() {
                     Viser {visiblePageCompanies.length} av {visibleSearchCompanies.length} aktuelle treff
                     {choose(hiddenByOutreachCount > 0, ` (${hiddenByOutreachCount} skjult fordi de er sendt eller ikke aktuelle).`, ".")}
                   </p>
-                  {websiteLeadCohort && pendingWebsiteCheckCount > 0 ? (
+                  <Show when={allConditions(websiteLeadCohort, pendingWebsiteCheckCount > 0)}>
                     <p className="mt-1 text-[12px] text-[#52606D]">{pendingWebsiteCheckCount} URL-er venter på første eller andre sjekk.</p>
-                  ) : null}
-                  {websiteLeadCohort && unverifiedWebsiteCount > 0 ? (
+                  </Show>
+                  <Show when={allConditions(websiteLeadCohort, unverifiedWebsiteCount > 0)}>
                     <p className="mt-1 text-[12px] text-amber-700">{unverifiedWebsiteCount} nettsider kunne ikke sjekkes og ligger sist i rangeringen.</p>
-                  ) : null}
+                  </Show>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex flex-col gap-2 border border-[#D9E2EC] bg-white px-2 py-2">
@@ -2740,13 +2779,13 @@ export function CompanyCheckShell() {
                     variant="outline"
                   >
                     {choose(isBatchSending, "Sender batch...", "Kjør e-post batch")}
-                    {selectedBatchCompanies.length > 0 ? ` (${sendableBatchCount}/${selectedBatchCompanies.length})` : ""}
+                    {choose(selectedBatchCompanies.length > 0, ` (${sendableBatchCount}/${selectedBatchCompanies.length})`, "")}
                   </Button>
                   </Show>
                   <Show when={websiteLeadCohort}>
-                    {!websiteLeadBatchReady ? (
+                    <Show when={!websiteLeadBatchReady}>
                       <span className="text-[12px] text-amber-700">Start backend på nytt for å aktivere batchutsending.</span>
-                    ) : null}
+                    </Show>
                     <a
                       className="rounded-sm border border-[#BCCCDC] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#334E68] hover:border-[#1F5FA9]"
                       download="website-lead-batch-log.jsonl"
@@ -2761,7 +2800,7 @@ export function CompanyCheckShell() {
                       size="sm"
                       type="button"
                       variant="outline"
-                      title={websiteLeadBatchReady ? undefined : "Oppdatert backend må startes før nettsidelead-batch kan brukes."}
+                      title={choose(websiteLeadBatchReady, undefined, "Oppdatert backend må startes før nettsidelead-batch kan brukes.")}
                     >
                       {choose(isBatchSending, "Sender batch...", `Kjør e-post batch (${selectedWebsiteLeadsOnPage.length})`)}
                     </Button>
@@ -2852,8 +2891,11 @@ export function CompanyCheckShell() {
             tabIndex={-1}
           >
             <CompanyDetailView
+              key={`${selectedCompany.orgNumber}:${selectedCompany.website ?? ""}`}
               company={selectedCompany}
-              events={choose(selectedCompanyEvents.length > 0, selectedCompanyEvents, selectedCompany.events)}
+              events={selectedCompanyEventData?.orgNumber === selectedCompany.orgNumber && selectedCompanyEventData.events.length > 0
+                ? selectedCompanyEventData.events
+                : selectedCompany.events}
               generatedEmail={generatedEmailByOrg[selectedCompany.orgNumber] ?? null}
               generatingEmail={Boolean(generatingEmailByOrg[selectedCompany.orgNumber])}
               emailSendError={emailSendErrorByOrg[selectedCompany.orgNumber] ?? null}
@@ -2911,11 +2953,7 @@ function WebsiteInspectionDetail({
   onBack: () => void;
   onOutreachEmailSent: (status: OutreachStatus) => void;
 }>) {
-  const [currentInspection, setCurrentInspection] = useState(inspection);
-
-  useEffect(() => {
-    setCurrentInspection(inspection);
-  }, [inspection]);
+  const currentInspection = inspection;
 
   return (
     <article className="bg-white">
@@ -5236,10 +5274,10 @@ function CompanyDetailView({
   const StatusIcon = config.icon;
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedHtmlEmail, setCopiedHtmlEmail] = useState(false);
-  const [currentWebsiteQuality, setCurrentWebsiteQuality] = useState(company.websiteQuality);
-  const [extendedWebsiteQualityLoading, setExtendedWebsiteQualityLoading] = useState(false);
+  const [extendedWebsiteQuality, setExtendedWebsiteQuality] = useState<WebsiteQualityAssessment | null>(null);
+  const [extendedWebsiteQualityLoading, setExtendedWebsiteQualityLoading] = useState(Boolean(company.website));
   const [extendedWebsiteQualityError, setExtendedWebsiteQualityError] = useState<string | null>(null);
-  const extendedWebsiteQualityRequestKeyRef = useRef<string | null>(null);
+  const currentWebsiteQuality = extendedWebsiteQuality ?? company.websiteQuality;
 
   const scoreLabel = leadPriority.label;
   const scoreReasons = company.score?.reasons || [];
@@ -5269,31 +5307,15 @@ function CompanyDetailView({
     ? `mailto:${company.email}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`
     : null;
   useEffect(() => {
-    setCurrentWebsiteQuality(company.websiteQuality);
-    setExtendedWebsiteQualityError(null);
-    setExtendedWebsiteQualityLoading(false);
-
     if (!company.website) {
-      extendedWebsiteQualityRequestKeyRef.current = null;
       return;
     }
 
-    const requestKey = `${company.orgNumber}:${normalizeWebsiteUrl(company.website)}`;
-    if (extendedWebsiteQualityRequestKeyRef.current === requestKey) {
-      return;
-    }
-
-    extendedWebsiteQualityRequestKeyRef.current = requestKey;
-    void runExtendedCompanyWebsiteInspection(company.website);
-  }, [company.orgNumber, company.website, company.websiteQuality]);
-
-  async function runExtendedCompanyWebsiteInspection(website: string) {
-    setExtendedWebsiteQualityLoading(true);
-    setExtendedWebsiteQualityError(null);
-    try {
-      const response = await fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(normalizeWebsiteUrl(website))}`, {
-        cache: "no-store",
-      });
+    const controller = new AbortController();
+    void fetch(`/api/company-check/website-inspection/extended?url=${encodeURIComponent(normalizeWebsiteUrl(company.website))}`, {
+      cache: "no-store",
+      signal: controller.signal,
+    }).then(async (response) => {
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Failed to run extended company website inspection", errorText);
@@ -5301,14 +5323,16 @@ function CompanyDetailView({
         return;
       }
       const payload = (await response.json()) as WebsiteInspectionResponse;
-      setCurrentWebsiteQuality(payload.websiteQuality);
-    } catch (error) {
+      setExtendedWebsiteQuality(payload.websiteQuality);
+    }).catch((error) => {
+      if (controller.signal.aborted) return;
       console.error("Failed to run extended company website inspection", error);
       setExtendedWebsiteQualityError("Klarte ikke kjøre utvidet nettsidesjekk.");
-    } finally {
-      setExtendedWebsiteQualityLoading(false);
-    }
-  }
+    }).finally(() => {
+      if (!controller.signal.aborted) setExtendedWebsiteQualityLoading(false);
+    });
+    return () => controller.abort();
+  }, [company.website]);
 
   async function handleCopyGeneratedEmail() {
     if (!generatedEmailText) {

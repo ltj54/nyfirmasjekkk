@@ -14,7 +14,49 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000) with your browser to see the result.
+
+The CRM is local-only: the Next.js scripts and Spring backend bind to `127.0.0.1`.
+API writes require a same-origin browser request. Do not publish this app on a public
+hostname without separate authentication for the UI and API.
+
+## Sverige-pilot
+
+Åpne `/sverige` eller velg «Sverige · pilot» i navigasjonen. Piloten leser et
+begrenset utvalg fra SCBs allmänna företagsregister, kun etter manuelt klikk.
+Den lagrer ikke resultatene og har ingen kobling til e-post, CRM eller norske leads.
+
+Tilgangsstatus 27.10.2026: SCB har godkjent forespørselen etter manuell
+registrering og signering via Visma Addo. API-nøkkelen er mottatt. SCB opplyser
+at tilgangen er kostnadsfri, at nøkkelen kan bruke inntil 30 minutter på å bli
+aktivert, og at den er aktiv i to år fra utstedelsesdatoen. API-et oppdateres
+hver natt mellom kl. 04.00 og 04.30 og er ikke tilgjengelig i dette tidsrommet.
+Nøkkel, fødselsdato og personnummer skal ikke lagres i prosjektet eller chatten.
+Ingen automatisk oppfølging er planlagt.
+
+1. Legg `SCB_API_KEY=din_nøkkel` i `frontend/.env.local` (ignorert av Git).
+   Behold nøkkelen lokalt; bruk ikke `NEXT_PUBLIC_`-prefiks.
+2. Start frontend på nytt, åpne `/sverige`, og trykk «Hent inntil 10 svenske AB».
+
+Tilgang er foreløpig bare aktiv fra lokal app med samme origin. Nøkkelen brukes
+bare av serveren. Ingen registerkall skjer ved sidevisning. Hvert klikk leser
+første side med maks 10 selskaper i juridisk form 49 (övriga aktiebolag), deretter
+full detalj for disse, sekvensielt med 300 ms mellom kall. Maks 11 SCB-kall per
+klikk, ingen automatisk retry eller traversering av hele registeret.
+
+Dette er en integrasjonstest, ikke et representativt eller nyregistrert leadutvalg.
+SCBs `regDat` er registreringsdato i SCBs register, ikke nødvendigvis stiftelsesdato.
+Nettside finnes ikke i JE-kontrakten og undersøkes ikke i denne piloten.
+Reservasjons- og statuskoder vises som råkoder inntil de er tolket mot SCBs kodetabeller.
+Oppgitt e-post er ikke validert for levering. Norske filtre, prioritet og
+utsendelsesregler skal ikke brukes på de svenske oppføringene.
+
+API-kontrakt kontrollert 21.10.2026:
+<https://apiafr.scb.se/swagger/v1/swagger.json>.
+SCB-dokumentasjon: <https://apiafr.scb.se/scalar/>.
+
+Integrasjonstester med simulerte SCB-svar:
+`node --test tests/sweden-pilot.test.mjs`.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
