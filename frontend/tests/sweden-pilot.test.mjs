@@ -11,11 +11,23 @@ function company(index = 0, overrides = {}) {
   return {
     peOrgNr: `16${orgNr}`, orgNr, jurform: "49", namn: `Fiktivt Testbolag ${index} AB`,
     postAdress: { postOrt: "Testort" }, epost: "info@example.invalid",
-    regDat: "2026-04-21T00:00:00Z", ftgStat: "1", epostSparrTyp: 3,
+    regDat: "2026-04-21T00:00:00Z", startDat: "2026-04-20T00:00:00Z",
+    ftgStat: "1", epostSparrTyp: 1, reklamSparrTyp: 1, fSkattStat: "1", momsStat: "1",
+    anstKl: "0", omsKl: "1", aeAnt: 1,
     naringsgrenar: [{ naringsgren: "62010", rangordning: 1 }],
     ...overrides,
   };
 }
+
+const codeTables = new Map([
+  ["ftgstatkoder", [{ kod: "1", klartext: "Verksamt företag" }, { kod: "9", klartext: "Ej verksamt företag" }]],
+  ["epostsparrtypkoder", [{ kod: 1, klartext: "Tar emot e-postreklam" }, { kod: 2, klartext: "Har frånsagt sig e-postreklam" }]],
+  ["reklamsparrtypkoder", [{ kod: 1, klartext: "Tar emot reklam" }, { kod: 2, klartext: "Har frånsagt sig reklam" }]],
+  ["fskattstatkoder", [{ kod: 1, klartext: "Registrerad för F-skatt" }]],
+  ["momsstatkoder", [{ kod: 1, klartext: "Momsregistrerad" }]],
+  ["anstklkoder", [{ kod: 0, klartext: "0 anställda" }]],
+  ["omsklkoder", [{ kod: 1, klartext: "0–499 tkr" }]],
+]);
 
 function mockScb(rows, overrides = {}) {
   const calls = [];
@@ -25,6 +37,8 @@ function mockScb(rows, overrides = {}) {
     assert.equal(options.headers["X-API-Key"], key);
     assert.equal(options.redirect, "error");
     calls.push(url);
+    const codeTable = codeTables.get(url.pathname.split("/").at(-1));
+    if (codeTable) return Response.json(codeTable);
     if (url.pathname.endsWith("/juridiskform/49")) return Response.json({ jes: rows });
     const id = url.pathname.split("/").at(-2);
     const row = rows.find((entry) => entry.peOrgNr === id);
@@ -49,10 +63,14 @@ test("sample stays bounded, reads sequentially and never follows pagination", as
   };
   const result = await fetchSwedishPilot(key, { fetcher: serialFetcher, pause });
   assert.equal(result.companies.length, 10);
-  assert.equal(calls.length, 11);
+  assert.equal(calls.length, 18);
   assert.equal(peak, 1);
   assert.equal(result.withEmail, 10);
   assert.equal(result.companies[0].id, "SE:5560000000");
+  assert.equal(result.companies[0].statusLabel, "Verksamt företag");
+  assert.equal(result.companies[0].emailReservationLabel, "Tar emot e-postreklam");
+  assert.equal(result.companies[0].employeeClassLabel, "0 anställda");
+  assert.equal(result.companies[0].contactAssessment, "eligible");
   assert.doesNotMatch(JSON.stringify(result), /test-key-never-returned|peOrgNr|website/);
 });
 
@@ -63,6 +81,19 @@ test("missing contact data and unknown reservation codes remain unknown", async 
   assert.equal(result.withEmail, 0);
   assert.equal(result.withRegistrationDate, 0);
   assert.equal(result.companies[0].emailReservationCode, null);
+  assert.equal(result.companies[0].emailReservationLabel, "Ikke oppgitt");
+  assert.equal(result.companies[0].contactAssessment, "unknown");
+});
+
+test("inactive companies and marketing reservations are blocked conservatively", async () => {
+  const rows = [
+    company(0, { ftgStat: "9" }),
+    company(1, { epostSparrTyp: 2 }),
+    company(2, { reklamSparrTyp: 2 }),
+  ];
+  const { fetcher } = mockScb(rows);
+  const result = await fetchSwedishPilot(key, { fetcher, pause });
+  assert.deepEqual(result.companies.map((entry) => entry.contactAssessment), ["inactive", "blocked", "blocked"]);
 });
 
 test("identity mismatches and non-AB records abort instead of becoming leads", async () => {
@@ -93,5 +124,5 @@ test("missing API key makes no network requests", async () => {
 
 test("changed response contract fails visibly rather than returning a false empty list", async () => {
   const fetcher = async () => Response.json({ companies: [] });
-  await assert.rejects(fetchSwedishPilot(key, { fetcher, pause }), /mangler virksomhetslisten/);
+  await assert.rejects(fetchSwedishPilot(key, { fetcher, pause }), /ugyldig kodetabell/);
 });

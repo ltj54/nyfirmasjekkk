@@ -40,14 +40,18 @@ Ingen automatisk oppfølging er planlagt.
 
 Tilgang er foreløpig bare aktiv fra lokal app med samme origin. Nøkkelen brukes
 bare av serveren. Ingen registerkall skjer ved sidevisning. Hvert klikk leser
-første side med maks 10 selskaper i juridisk form 49 (övriga aktiebolag), deretter
-full detalj for disse, sekvensielt med 300 ms mellom kall. Maks 11 SCB-kall per
-klikk, ingen automatisk retry eller traversering av hele registeret.
+syv relevante kodetabeller, første side med maks 10 selskaper i juridisk form 49
+(övriga aktiebolag), og deretter full detalj for disse, sekvensielt med 300 ms
+mellom kall. Maks 18 SCB-kall per klikk, ingen automatisk retry eller traversering
+av hele registeret. Bare aktive virksomheter med oppgitt e-post og eksplisitt
+kode 1 (ingen sperre) både for e-post og generell reklame merkes «Kan vurderes».
+Ukjent status behandles som sperret fra kontakt.
 
 Dette er en integrasjonstest, ikke et representativt eller nyregistrert leadutvalg.
 SCBs `regDat` er registreringsdato i SCBs register, ikke nødvendigvis stiftelsesdato.
 Nettside finnes ikke i JE-kontrakten og undersøkes ikke i denne piloten.
-Reservasjons- og statuskoder vises som råkoder inntil de er tolket mot SCBs kodetabeller.
+Reservasjons-, status-, skatte-, MVA-, ansatt- og omsetningskoder oversettes fra
+SCBs kodetabeller ved hver manuelle prøvehenting.
 Oppgitt e-post er ikke validert for levering. Norske filtre, prioritet og
 utsendelsesregler skal ikke brukes på de svenske oppføringene.
 

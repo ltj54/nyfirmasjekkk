@@ -4,17 +4,37 @@ import { useState } from "react";
 
 import type { SwedishPilotCompany, SwedishPilotResult } from "@/lib/sweden-pilot";
 
+function contactStatusClass(assessment: SwedishPilotCompany["contactAssessment"]): string {
+  if (assessment === "eligible") return "bg-emerald-50 text-emerald-800";
+  if (assessment === "unknown") return "bg-amber-50 text-amber-800";
+  return "bg-rose-50 text-rose-800";
+}
+
+function contactStatusLabel(assessment: SwedishPilotCompany["contactAssessment"]): string {
+  if (assessment === "eligible") return "Kan vurderes";
+  if (assessment === "blocked") return "Reservert mot kontakt";
+  if (assessment === "inactive") return "Ikke aktiv";
+  return "Uavklart – ikke kontakt";
+}
+
 function CompanyCard({ company }: Readonly<{ company: SwedishPilotCompany }>) {
-  const reservation = company.emailReservationCode === null ? "Ikke oppgitt" : `SCB-kode ${company.emailReservationCode} · må avklares`;
+  const statusClass = contactStatusClass(company.contactAssessment);
+  const statusLabel = contactStatusLabel(company.contactAssessment);
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5">
       <h2 className="font-semibold text-slate-900">{company.name}</h2>
       <p className="mt-1 text-sm text-slate-500">{company.id} · AB · {company.city || "Ukjent sted"}</p>
+      <p className={`mt-3 inline-flex rounded px-2 py-1 text-xs font-semibold ${statusClass}`}>{statusLabel}</p>
+      <p className="mt-2 text-xs text-slate-600">{company.contactAssessmentReason}</p>
       <dl className="mt-4 space-y-2 text-sm">
         <div><dt className="text-slate-500">Registrert i SCBs foretaksregister</dt><dd>{company.registrationDate || "Ikke oppgitt"}</dd></div>
+        <div><dt className="text-slate-500">Aktivitetsperiode</dt><dd>{company.startDate || "Ukjent startdato"}{company.endDate ? ` – ${company.endDate}` : ""}</dd></div>
         <div><dt className="text-slate-500">E-post i registeret</dt><dd className="break-all">{company.email || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Reservasjon mot e-postreklame</dt><dd>{reservation}</dd></div>
-        <div><dt className="text-slate-500">Virksomhetsstatus</dt><dd>SCB-kode {company.statusCode || "ikke oppgitt"}</dd></div>
+        <div><dt className="text-slate-500">Reservasjon mot e-postreklame</dt><dd>{company.emailReservationLabel}</dd></div>
+        <div><dt className="text-slate-500">Generell reklamereservasjon</dt><dd>{company.advertisingReservationLabel}</dd></div>
+        <div><dt className="text-slate-500">Virksomhetsstatus</dt><dd>{company.statusLabel}</dd></div>
+        <div><dt className="text-slate-500">F-skatt / MVA</dt><dd>{company.fTaxStatusLabel} · {company.vatStatusLabel}</dd></div>
+        <div><dt className="text-slate-500">Størrelse</dt><dd>{company.employeeClassLabel} · {company.turnoverClassLabel} · {company.workplaceCount ?? "Ukjent antall"} arbeidssteder</dd></div>
         <div><dt className="text-slate-500">Bransje (SNI)</dt><dd>{company.industryCodes.join(", ") || "Ikke oppgitt"}</dd></div>
         <div><dt className="text-slate-500">Nettside</dt><dd>Ikke undersøkt</dd></div>
       </dl>
