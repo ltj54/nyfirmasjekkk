@@ -4,15 +4,37 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1431
-- Sendt: 692
+- Antall hendelser: 1475
+- Sendt: 714
 - Angret: 0
-- Aktive kontaktede selskaper: 403
+- Aktive kontaktede selskaper: 422
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 | 938656800 | E.N. BLIX | ENK | email | website-follow-up |
+| 2026-10-28 | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | website-follow-up |
+| 2026-10-28 | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | website-follow-up |
+| 2026-10-28 | 938590052 | EIERSEKSJONSSAMEIET ORRFUGLVEIEN 10 | ESEK | email | website-offer |
+| 2026-10-28 | 938764956 | ØYSTEIN SOLDAL MUSIKK & PRODUKSJON | ENK | email | website-offer |
+| 2026-10-28 | 938766827 | SØRBYE PRODUCTION ENK | ENK | email | website-offer |
+| 2026-10-28 | 938765510 | JON G. OLSEN KONSULENT | ENK | email | website-offer |
+| 2026-10-28 | 938760969 | VIHARR AS | AS | email | website-offer |
+| 2026-10-28 | 938638349 | FORENINGEN FRIVILLIGHUSET GAMLEBYEN | FLI | email | website-offer |
+| 2026-10-28 | 938765545 | NTINA-NDINA MALERSERVICE | ENK | email | website-offer |
+| 2026-10-28 | 938719047 | HANDY FLOTTORP | ENK | email | website-offer |
+| 2026-10-28 | 938699305 | VAN STRALEN VS LANDSKAP | ENK | email | website-offer |
+| 2026-10-28 | 938760950 | NORTHLYS AS | AS | email | website-offer |
+| 2026-10-28 | 938662614 | NAPS POWER APS NUF | NUF | email | website-offer |
+| 2026-10-28 | 938525854 | MALGORZATA NADROWSKA | ENK | email | website-offer |
+| 2026-10-28 | 838755062 | JOHAN HAUKÅS-GAUTERUD | ENK | email | website-offer |
+| 2026-10-28 | 938706883 | JKK FOODIN WALACH | ENK | email | website-offer |
+| 2026-10-28 | 938659427 | GLOSTER MEP LIMITED | NUF | email | website-offer |
+| 2026-10-28 | 938758948 | EFO INTERNATIONAL AB | UTLA | email | website-offer |
+| 2026-10-28 | 938612803 | SOLE & SOUL BY N. ABERLE | ENK | email | website-offer |
+| 2026-10-28 | 938638330 | NESET VELFORENING | FLI | email | website-offer |
+| 2026-10-28 | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | website-offer |
 | 2026-10-27 | 838688942 | A&AMOTOR AHMED | ENK | email | website-follow-up |
 | 2026-10-27 | 938680388 | ENSTAD RESEARCH | ENK | email | website-follow-up |
 | 2026-10-27 | 938680663 | HJEMGAARD HANDEL | ENK | email | website-follow-up |
@@ -146,9 +168,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-22 | 938358974 | NØSTERLIA UTVIKLING DA | DA | email | website-follow-up |
 | 2026-10-22 | 938688907 | GJESDAL SÆTHER | ENK | email | website-follow-up |
 | 2026-10-22 | 938656959 | VALERIA SOBILA RENHOLD SERVICE | ENK | email | website-follow-up |
-| 2026-10-22 | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | website-offer |
-| 2026-10-22 | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | website-offer |
-| 2026-10-22 | 938656800 | E.N. BLIX | ENK | email | website-offer |
 | 2026-10-21 | 937414323 | NODEA AS | AS | email | website-lead-batch |
 | 2026-10-21 | 937566387 | ELLINA SINGH | ENK | email | website-lead-batch |
 | 2026-10-21 | 937569858 | LILLEIT BOCIEK | ENK | email | website-lead-batch |
@@ -421,6 +440,50 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 11:34 | sent | 938656800 | E.N. BLIX | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-28 11:34 | sending | 938656800 | E.N. BLIX | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-28 11:34 | sent | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-28 11:34 | sending | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-28 11:34 | sent | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-28 11:34 | sending | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-28 11:34 | sent | 938590052 | EIERSEKSJONSSAMEIET ORRFUGLVEIEN 10 | ESEK | email | - |
+| 2026-10-28 11:34 | sending | 938590052 | EIERSEKSJONSSAMEIET ORRFUGLVEIEN 10 | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938764956 | ØYSTEIN SOLDAL MUSIKK & PRODUKSJON | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938764956 | ØYSTEIN SOLDAL MUSIKK & PRODUKSJON | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938766827 | SØRBYE PRODUCTION ENK | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938766827 | SØRBYE PRODUCTION ENK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938765510 | JON G. OLSEN KONSULENT | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938765510 | JON G. OLSEN KONSULENT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938760969 | VIHARR AS | AS | email | - |
+| 2026-10-28 11:33 | sending | 938760969 | VIHARR AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938638349 | FORENINGEN FRIVILLIGHUSET GAMLEBYEN | FLI | email | - |
+| 2026-10-28 11:33 | sending | 938638349 | FORENINGEN FRIVILLIGHUSET GAMLEBYEN | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938765545 | NTINA-NDINA MALERSERVICE | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938765545 | NTINA-NDINA MALERSERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938719047 | HANDY FLOTTORP | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938719047 | HANDY FLOTTORP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938699305 | VAN STRALEN VS LANDSKAP | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938699305 | VAN STRALEN VS LANDSKAP | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938760950 | NORTHLYS AS | AS | email | - |
+| 2026-10-28 11:33 | sending | 938760950 | NORTHLYS AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938662614 | NAPS POWER APS NUF | NUF | email | - |
+| 2026-10-28 11:33 | sending | 938662614 | NAPS POWER APS NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938525854 | MALGORZATA NADROWSKA | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938525854 | MALGORZATA NADROWSKA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 838755062 | JOHAN HAUKÅS-GAUTERUD | ENK | email | - |
+| 2026-10-28 11:33 | sending | 838755062 | JOHAN HAUKÅS-GAUTERUD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938706883 | JKK FOODIN WALACH | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938706883 | JKK FOODIN WALACH | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938659427 | GLOSTER MEP LIMITED | NUF | email | - |
+| 2026-10-28 11:33 | sending | 938659427 | GLOSTER MEP LIMITED | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938758948 | EFO INTERNATIONAL AB | UTLA | email | - |
+| 2026-10-28 11:33 | sending | 938758948 | EFO INTERNATIONAL AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938612803 | SOLE & SOUL BY N. ABERLE | ENK | email | - |
+| 2026-10-28 11:33 | sending | 938612803 | SOLE & SOUL BY N. ABERLE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938638330 | NESET VELFORENING | FLI | email | - |
+| 2026-10-28 11:33 | sending | 938638330 | NESET VELFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 11:33 | sent | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | - |
+| 2026-10-28 11:33 | sending | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-27 08:34 | sent | 838688942 | A&AMOTOR AHMED | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-27 08:34 | sending | 838688942 | A&AMOTOR AHMED | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-27 08:33 | sent | 938680388 | ENSTAD RESEARCH | ENK | email | Oppfølging sendt – avslutt hvis stille |
