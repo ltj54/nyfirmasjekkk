@@ -55,6 +55,24 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "Arena Consult",
+    previewUrl: "https://ltj54.github.io/arena-consult/",
+    contact: "Finn Jarl Treider",
+    email: "finnjarl@outlook.com",
+    organizationNumber: "938 698 171",
+    phone: "+47 416 27 277",
+    proposalDate: "28.10.2026",
+    dateLabel: "Første skisse publisert",
+    replyDate: "28.10.2026 kl. 14:00",
+    outreach: "Finn ønsker en egen nettside og har bedt om en skisse. Testlenken er ikke sendt til ham.",
+    progress: String.raw`Uforpliktende skisse laget i C:\Prosjekt\arena-consult og publisert på GitHub Pages. Innhold og visuell retning er ikke godkjent av Finn. Ingen bestilling eller endelig leveranse er avtalt.`,
+    nextStep: "Se gjennom skissen selv før eventuell manuell oversendelse til Finn. Avklar hovedfokus og omfang hvis han ønsker å gå videre. Ingen automatisk oppfølging.",
+    invoice: "Ikke fakturert",
+    agreement: "Internt avtaleutkast finnes lokalt. Fastpris 1 990 kr er nevnt, men omfang, domene og drift er ikke avtalt.",
+    agreementStatus: "draft",
+    status: "working",
+  },
+  {
     name: "LBN",
     previewUrl: "https://ltj54.github.io/lars-bernaas-nordang/",
     contact: "Lars Bernaas Nordang",
