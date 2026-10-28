@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1476
-- Sendt: 714
+- Antall hendelser: 1484
+- Sendt: 718
 - Angret: 0
-- Aktive kontaktede selskaper: 421
+- Aktive kontaktede selskaper: 425
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 | 938642990 | SOGNDAL BRÅKEKLUBB | FLI | email | website-offer |
+| 2026-10-28 | 938770468 | VIKTOR GLATTHARD CONSULTING | ENK | email | website-offer |
+| 2026-10-28 | 938643970 | KOMEBACK | FLI | email | website-offer |
+| 2026-10-28 | 938416699 | GODFARFOSS GRUNNEIERLAG | FLI | email | website-offer |
 | 2026-10-28 | 938656800 | E.N. BLIX | ENK | email | website-follow-up |
 | 2026-10-28 | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | website-follow-up |
 | 2026-10-28 | 838728642 | MARIE LIEN BACKSTRØM | ENK | email | website-follow-up |
@@ -439,6 +443,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 17:24 | sent | 938642990 | SOGNDAL BRÅKEKLUBB | FLI | email | - |
+| 2026-10-28 17:24 | sending | 938642990 | SOGNDAL BRÅKEKLUBB | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 17:24 | sent | 938770468 | VIKTOR GLATTHARD CONSULTING | ENK | email | - |
+| 2026-10-28 17:24 | sending | 938770468 | VIKTOR GLATTHARD CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 17:24 | sent | 938643970 | KOMEBACK | FLI | email | - |
+| 2026-10-28 17:24 | sending | 938643970 | KOMEBACK | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 17:24 | sent | 938416699 | GODFARFOSS GRUNNEIERLAG | FLI | email | - |
+| 2026-10-28 17:24 | sending | 938416699 | GODFARFOSS GRUNNEIERLAG | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-28 16:05 | replied | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | Finn svarte 28.10.2026 at han ønsker egen nettside. Skisse er laget, men testlenken er ikke sendt. Ingen automatisk eller manuell oppfølging planlagt. |
 | 2026-10-28 11:34 | sent | 938656800 | E.N. BLIX | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-28 11:34 | sending | 938656800 | E.N. BLIX | ENK | email | Oppfølging reservert før SMTP-levering. |
