@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1484
-- Sendt: 718
+- Antall hendelser: 1492
+- Sendt: 722
 - Angret: 0
-- Aktive kontaktede selskaper: 425
+- Aktive kontaktede selskaper: 429
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 | 838773222 | SUNNIVA TOTINO | ENK | email | website-offer |
+| 2026-10-28 | 938772991 | JENSEN GEODATA | ENK | email | website-offer |
+| 2026-10-28 | 938773580 | A ARBACIAUSKAS | ENK | email | website-offer |
+| 2026-10-28 | 838639402 | VOKALENSEMBLET OG KORET AMULET | FLI | email | website-offer |
 | 2026-10-28 | 938642990 | SOGNDAL BRÅKEKLUBB | FLI | email | website-offer |
 | 2026-10-28 | 938770468 | VIKTOR GLATTHARD CONSULTING | ENK | email | website-offer |
 | 2026-10-28 | 938643970 | KOMEBACK | FLI | email | website-offer |
@@ -443,6 +447,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 23:35 | sent | 838773222 | SUNNIVA TOTINO | ENK | email | - |
+| 2026-10-28 23:35 | sending | 838773222 | SUNNIVA TOTINO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 23:35 | sent | 938772991 | JENSEN GEODATA | ENK | email | - |
+| 2026-10-28 23:35 | sending | 938772991 | JENSEN GEODATA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 23:35 | sent | 938773580 | A ARBACIAUSKAS | ENK | email | - |
+| 2026-10-28 23:35 | sending | 938773580 | A ARBACIAUSKAS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-28 23:35 | sent | 838639402 | VOKALENSEMBLET OG KORET AMULET | FLI | email | - |
+| 2026-10-28 23:35 | sending | 838639402 | VOKALENSEMBLET OG KORET AMULET | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-28 17:24 | sent | 938642990 | SOGNDAL BRÅKEKLUBB | FLI | email | - |
 | 2026-10-28 17:24 | sending | 938642990 | SOGNDAL BRÅKEKLUBB | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-28 17:24 | sent | 938770468 | VIKTOR GLATTHARD CONSULTING | ENK | email | - |
