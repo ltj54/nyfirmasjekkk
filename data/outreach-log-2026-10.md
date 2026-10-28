@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1475
+- Antall hendelser: 1476
 - Sendt: 714
 - Angret: 0
-- Aktive kontaktede selskaper: 422
+- Aktive kontaktede selskaper: 421
 
 ## Aktive kontaktede selskaper
 
@@ -68,7 +68,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-26 | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | website-offer |
 | 2026-10-26 | 938747229 | SIGNATURE ALHASAN | ENK | email | website-offer |
 | 2026-10-26 | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | website-offer |
-| 2026-10-26 | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | website-offer |
 | 2026-10-25 | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | website-lead-batch |
 | 2026-10-25 | 937312237 | THU TEAM BUILDING | ENK | email | website-lead-batch |
 | 2026-10-25 | 937379900 | JANSFJORD KULTURHÅNDVERK | FLI | email | website-lead-batch |
@@ -440,6 +439,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-28 16:05 | replied | 938698171 | ARENA CONSULT FOREDRAG EVENT TREIDER | ENK | email | Finn svarte 28.10.2026 at han ønsker egen nettside. Skisse er laget, men testlenken er ikke sendt. Ingen automatisk eller manuell oppfølging planlagt. |
 | 2026-10-28 11:34 | sent | 938656800 | E.N. BLIX | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-28 11:34 | sending | 938656800 | E.N. BLIX | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-28 11:34 | sent | 938728712 | SLYNGSTAD TJENESTELEVERANSER | ENK | email | Oppfølging sendt – avslutt hvis stille |

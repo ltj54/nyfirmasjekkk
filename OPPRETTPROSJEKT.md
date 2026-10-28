@@ -69,6 +69,7 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 - Legg gjerne en kort `AGENTS.md` i det nye prosjektet som gjentar: selvstendige stier, ingen Sites, offentlig GitHub Pages som standardmål for første forhåndsvisning, og ingen automatisk eller senere commit/push uten uttrykkelig bestilling. Dette gjør reglene tilgjengelige når prosjektet åpnes i et nytt vindu.
 - Når denne rutinen kjøres, opprett eller oppdater ett CRM-kort for prosjektet i nyfirmasjekk. Bruk kjent virksomhetsidentitet og lokal prosjektsti, samt verifisert testlenke når den finnes. Unngå dubletter ved å kontrollere eksisterende kort først.
 - Skill tydelig mellom skisse, kundens svar, inngått avtale, levering, fakturering og betaling. Uavklarte forhold skal stå som uavklart; en publisert forhåndsvisning er ikke en bestilling eller en sendt skisse. Ikke opprett automatisk e-post, purring eller oppfølgingshendelse.
+- Et nytt prosjekt og CRM-kort skal som standard holdes utenfor alle automatiske utsendelses- og oppfølgingslister. Registrer kundesvar i eksisterende utsendelseslogg når det finnes en tidligere henvendelse, slik at en planlagt automatisk oppfølging stoppes. Ikke sett manuell oppfølgingsdato eller foreslå ny kontakt bare fordi en forhåndsvisning er laget. Tidligere manuelle saker for samme virksomhet skal knyttes som historikk til prosjektkortet, ikke vises som en ekstra oppfølgingssak.
 
 ## 7. Førstegangspublisering til GitHub Pages
 
@@ -90,7 +91,7 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 4. Kontroller at ingen Sites-konfigurasjon eller automatisk commit/push er lagt inn. En kontrollert første commit/push til GitHub Pages er tillatt og forventet når prosjektet ikke er bestilt som bare lokalt.
 5. Kontroller at `AVTALEUTKAST_NETTSIDE_OG_DRIFT.md` finnes og er tilpasset kjente kunde- og prosjektopplysninger uten oppdiktede vilkår.
 6. Hvis prosjektet har kjørbar kode, prøv relevante oppstarts-/byggkommandoer. Et rent dokumentasjonsprosjekt trenger ikke en kunstig applikasjon eller testpakke.
-7. Kontroller at nøyaktig ett CRM-kort finnes for prosjektet, med riktig status og uten å antyde at skissen er sendt eller bestilt når den ikke er det.
+7. Kontroller at nøyaktig ett CRM-kort finnes for prosjektet, med riktig status og uten å antyde at skissen er sendt eller bestilt når den ikke er det. Kontroller også at tidligere utsendelse ikke kan gi automatisk oppfølging, og at det ikke finnes en separat manuell oppfølgingssak for samme prosjekt.
 8. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, den verifiserte offentlige GitHub Pages-lenken, CRM-kortet og nøyaktig hvilken commit/push som ble gjort. Hvis Lars ba om bare lokal klargjøring, oppgi tydelig at repository, commit, push og publisering ikke er utført.
 
 Ved senere avvikling brukes `SLETTERUTINER.md` i nyfirmasjekk-prosjektet.

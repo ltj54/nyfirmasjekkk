@@ -174,10 +174,10 @@
     "contactName": "Lars Nordang",
     "email": "lars.nordang@gmail.com",
     "receivedAt": "2026-10-23T12:27:00+02:00",
-    "status": "Mulig interesse – usikker på nytten",
-    "summary": "Lars Nordang kan være interessert i nettside, men er usikker på om det vil være relevant for virksomheten. Svaret er positivt og uavklart, og gir grunnlag for et konkret, tilpasset forslag etter manuell vurdering. Han har ikke bestilt noe eller avtalt en oppfølgingsdato. Navnet «Lars-Erik» står i den opprinnelige hilsenen, mens svaret er signert Lars Nordang.",
-    "nextStep": "Vurder virksomhetens aktivitet og utform et kort svar som forklarer konkret hvilken nytte en enkel nettside eventuelt kan ha. Lars avgjør selv om og når svaret skal sendes. Ingen automatisk oppfølging eller utsending.",
-    "contactPolicy": "manual_review",
+    "status": "Forslag sendt – historikk under prosjektet LBN",
+    "summary": "Lars Nordang uttrykte interesse, og et eget prøveprosjekt ble senere laget. Forslag ble sendt 24.10.2026. Denne eldre manuelle saken beholdes bare som historikk under CRM-prosjektet LBN, ikke som en egen oppfølgingssak.",
+    "nextStep": "Ingen ny kontakt eller oppfølging fra denne saken. Eventuell videre dialog håndteres bare etter en ny, konkret beslutning fra Lars.",
+    "contactPolicy": "closed",
     "reviewDate": null,
     "sourceFile": "lars-bernaas-nordang-2026-10-23.txt"
   }
