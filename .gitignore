@@ -42,6 +42,9 @@ out/
 
 ### Runtime locks ###
 /data/nyfirmasjekk-dev.lock
+/data/scb/
+/tmp/sweden-bulk-inspection/
+**/__pycache__/
 
 ### Local secrets ###
 /scripts/local-secrets.ps1

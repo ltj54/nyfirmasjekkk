@@ -18,8 +18,10 @@ export async function POST(request: Request) {
   busy = true;
   try {
     return Response.json(await fetchSwedishPilot(apiKey), { headers: { "Cache-Control": "no-store" } });
-  } catch {
-    return Response.json({ error: "Kunne ikke hente prøveutvalget fra SCB. Kontroller API-tilgangen eller prøv igjen senere." }, { status: 502 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Kunne ikke hente prøveutvalget fra SCB.";
+    console.error("SCB-prøvehenting feilet", message);
+    return Response.json({ error: message }, { status: 502 });
   } finally {
     busy = false;
   }
