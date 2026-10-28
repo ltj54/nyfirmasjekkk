@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { fetchSwedishPilot } from "../src/lib/sweden-pilot.ts";
+import { enrichRecentSwedishCompanies, fetchSwedishPilot } from "../src/lib/sweden-pilot.ts";
 
 const key = "test-key-never-returned";
 const pause = async () => {};
@@ -125,4 +125,33 @@ test("missing API key makes no network requests", async () => {
 test("changed response contract fails visibly rather than returning a false empty list", async () => {
   const fetcher = async () => Response.json({ companies: [] });
   await assert.rejects(fetchSwedishPilot(key, { fetcher, pause }), /ugyldig kodetabell/);
+});
+
+test("recent enrichment checks only requested companies and keeps missing SCB records unresolved", async () => {
+  const first = company(0);
+  const blocked = company(1, { epostSparrTyp: 2 });
+  const { calls, fetcher } = mockScb([first, blocked]);
+  const checked = await enrichRecentSwedishCompanies(key, [first.orgNr, blocked.orgNr], { fetcher, pause });
+  assert.equal(calls.length, 9);
+  assert.deepEqual(checked.companies.map((entry) => entry.contactAssessment), ["eligible", "blocked"]);
+  assert.equal(checked.companies[0].email, "info@example.invalid");
+  assert.deepEqual(checked.unavailableOrgNumbers, []);
+  assert.doesNotMatch(JSON.stringify(checked), /test-key-never-returned/);
+
+  const missingOrg = "5596090075";
+  const missingFetcher = async (input, options) => {
+    const url = new URL(input);
+    assert.equal(options.headers["X-API-Key"], key);
+    const table = codeTables.get(url.pathname.split("/").at(-1));
+    return table ? Response.json(table) : new Response(null, { status: 404 });
+  };
+  const missing = await enrichRecentSwedishCompanies(key, [missingOrg], { fetcher: missingFetcher, pause });
+  assert.deepEqual(missing.unavailableOrgNumbers, [missingOrg]);
+  assert.deepEqual(missing.companies, []);
+});
+
+test("recent enrichment rejects unbounded or duplicate requests before network access", async () => {
+  const fetcher = async () => assert.fail("invalid requests must not call SCB");
+  await assert.rejects(enrichRecentSwedishCompanies(key, ["5596090075", "5596090075"], { fetcher, pause }), /1–25 ulike/);
+  await assert.rejects(enrichRecentSwedishCompanies(key, Array.from({ length: 26 }, (_, index) => String(5596090000 + index)), { fetcher, pause }), /1–25 ulike/);
 });

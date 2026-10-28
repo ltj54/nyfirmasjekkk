@@ -36,6 +36,12 @@ export type SwedishPilotResult = {
   withRegistrationDate: number;
 };
 
+export type SwedishRecentEnrichment = {
+  companies: SwedishPilotCompany[];
+  unavailableOrgNumbers: string[];
+  fetchedAt: string;
+};
+
 type Dependencies = {
   fetcher?: typeof fetch;
   pause?: () => Promise<void>;
@@ -225,4 +231,52 @@ export async function fetchSwedishPilot(apiKey: string, dependencies: Dependenci
     withEmail: companies.filter((company) => company.email).length,
     withRegistrationDate: companies.filter((company) => company.registrationDate).length,
   };
+}
+
+/** Manually enriches one visible page only; no email or CRM action is performed. */
+export async function enrichRecentSwedishCompanies(
+  apiKey: string,
+  orgNumbers: string[],
+  dependencies: Dependencies = {},
+): Promise<SwedishRecentEnrichment> {
+  if (!apiKey.trim()) throw new Error("SCB-tilgang er ikke satt opp ennå.");
+  if (orgNumbers.length < 1 || orgNumbers.length > 25 || new Set(orgNumbers).size !== orgNumbers.length
+    || orgNumbers.some((number) => !/^\d{10}$/.test(number))) {
+    throw new Error("SCB-sjekken kan bare gjelde 1–25 ulike svenske organisasjonsnumre.");
+  }
+  const fetcher = dependencies.fetcher ?? fetch;
+  const pause = dependencies.pause ?? (() => new Promise<void>((resolve) => setTimeout(resolve, 300)));
+  async function readScb(resource: string): Promise<{ status: number; body?: unknown }> {
+    await pause();
+    const response = await fetcher(`${SCB_BASE_URL}${resource}`, {
+      headers: { "X-API-Key": apiKey, Accept: "application/json" },
+      cache: "no-store",
+      redirect: "error",
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (response.status === 404) return { status: 404 };
+    if (!response.ok) throw new Error(upstreamError(response.status));
+    return { status: response.status, body: await response.json() };
+  }
+  const codeTableEntries = await CODE_TABLE_RESOURCES.reduce<Promise<Array<[keyof ScbCodeTables, CodeTable]>>>(
+    async (pendingEntries, [name, resource]) => {
+      const entries = await pendingEntries;
+      const response = await readScb(resource);
+      return [...entries, [name, parseCodeTable(response.body)]];
+    },
+    Promise.resolve([]),
+  );
+  const tables = Object.fromEntries(codeTableEntries) as ScbCodeTables;
+  const checked = await orgNumbers.reduce<Promise<{ companies: SwedishPilotCompany[]; unavailableOrgNumbers: string[] }>>(
+    async (pending, orgNumber) => {
+      const previous = await pending;
+      const expectedId = `16${orgNumber}`;
+      const response = await readScb(`juridiskaenheter/${expectedId}/full`);
+      if (response.status === 404) previous.unavailableOrgNumbers.push(orgNumber);
+      else previous.companies.push(normalizeCompany(response.body, expectedId, tables));
+      return previous;
+    },
+    Promise.resolve({ companies: [], unavailableOrgNumbers: [] }),
+  );
+  return { ...checked, fetchedAt: new Date().toISOString() };
 }

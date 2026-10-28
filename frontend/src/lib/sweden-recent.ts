@@ -21,9 +21,18 @@ export type SwedishRecentCompany = {
 
 export type SwedishRecentResult = {
   companies: SwedishRecentCompany[];
+  soleProprietorships: SwedishRecentSoleProprietorship[];
   fetchedAt: string;
   cutoffDate: string;
   sourceFileModifiedAt: string;
+};
+
+export type SwedishRecentSoleProprietorship = {
+  id: string;
+  name: string;
+  registrationDate: string;
+  businessDescription: string;
+  postalCity: string;
 };
 
 type RecentCache = SwedishRecentResult & { archiveSize: number };
@@ -97,7 +106,7 @@ function postalCity(value: unknown): string {
   return parts.length >= 3 ? parts[2].trim() : "";
 }
 
-export async function scanRecentSwedishCompanies(archive: string, cutoffDate: string): Promise<SwedishRecentCompany[]> {
+export async function scanRecentSwedishCompanies(archive: string, cutoffDate: string): Promise<Pick<SwedishRecentResult, "companies" | "soleProprietorships">> {
   const directory = await unzipper.Open.file(archive);
   const entry = directory.files.find((file) => file.type === "File" && file.path.endsWith(".txt"));
   if (!entry) throw new Error("Bolagsverkets arkiv mangler den forventede datafilen.");
@@ -106,13 +115,27 @@ export async function scanRecentSwedishCompanies(archive: string, cutoffDate: st
     mapHeaders: ({ header }) => header.replace(/^\uFEFF/, ""),
   }));
   const companies: SwedishRecentCompany[] = [];
+  const soleProprietorships: SwedishRecentSoleProprietorship[] = [];
   for await (const rawRow of parser) {
     const row = rawRow as Record<string, unknown>;
     const registrationDate = validIsoDate(row.registreringsdatum);
-    if (plainValue(row.organisationsform) !== "AB-ORGFO" || !registrationDate || registrationDate < cutoffDate) continue;
-    const orgNumber = beforeMarker(row.organisationsidentitet);
+    if (!registrationDate || registrationDate < cutoffDate) continue;
+    const form = plainValue(row.organisationsform);
+    if (form !== "AB-ORGFO" && form !== "E-ORGFO") continue;
     const name = beforeMarker(row.organisationsnamn);
-    if (!/^\d{10}$/.test(orgNumber) || !name) continue;
+    if (!name) continue;
+    if (form === "E-ORGFO") {
+      soleProprietorships.push({
+        id: `E:${soleProprietorships.length + 1}`,
+        name,
+        registrationDate,
+        businessDescription: plainValue(row.verksamhetsbeskrivning),
+        postalCity: postalCity(row.postadress),
+      });
+      continue;
+    }
+    const orgNumber = beforeMarker(row.organisationsidentitet);
+    if (!/^\d{10}$/.test(orgNumber)) continue;
     companies.push({
       id: `SE:${orgNumber}`,
       orgNumber,
@@ -122,8 +145,9 @@ export async function scanRecentSwedishCompanies(archive: string, cutoffDate: st
       postalCity: postalCity(row.postadress),
     });
   }
-  return companies.sort((left, right) => right.registrationDate.localeCompare(left.registrationDate)
-    || left.name.localeCompare(right.name, "sv"));
+  const newestFirst = (left: { registrationDate: string; name: string }, right: { registrationDate: string; name: string }) =>
+    right.registrationDate.localeCompare(left.registrationDate) || left.name.localeCompare(right.name, "sv");
+  return { companies: companies.toSorted(newestFirst), soleProprietorships: soleProprietorships.toSorted(newestFirst) };
 }
 
 export function sevenDayCutoff(now = new Date()): string {
@@ -142,14 +166,16 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
     if (cached.cutoffDate === cutoffDate
       && cached.sourceFileModifiedAt === source.modifiedAt
       && cached.archiveSize === sourceStat.size
-      && Array.isArray(cached.companies)) {
+      && Array.isArray(cached.companies)
+      && Array.isArray(cached.soleProprietorships)) {
       return cached;
     }
   } catch {
     // A missing or stale cache is rebuilt from the local official bulk file.
   }
+  const records = await scanRecentSwedishCompanies(source.archive, cutoffDate);
   const result: RecentCache = {
-    companies: await scanRecentSwedishCompanies(source.archive, cutoffDate),
+    ...records,
     cutoffDate,
     sourceFileModifiedAt: source.modifiedAt,
     fetchedAt: now.toISOString(),
