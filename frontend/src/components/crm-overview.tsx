@@ -392,6 +392,7 @@ export function CrmOverview() {
   const [loadError, setLoadError] = useState("");
   const [busyProject, setBusyProject] = useState("");
   const [saveError, setSaveError] = useState("");
+  const [saveErrorProject, setSaveErrorProject] = useState("");
   const [canEdit, setCanEdit] = useState(false);
 
   useEffect(() => {
@@ -440,6 +441,7 @@ export function CrmOverview() {
 
   async function saveEvent(event: Omit<CrmEventRecord, "recordedAt">) {
     setSaveError("");
+    setSaveErrorProject("");
     setBusyProject(event.projectId);
     try {
       const response = await fetch("/api/crm-events", {
@@ -451,12 +453,14 @@ export function CrmOverview() {
       const savedEvent = result.event;
       if (!response.ok || !savedEvent) {
         setSaveError(result.error ?? "Kunne ikke lagre hendelsen.");
+        setSaveErrorProject(event.projectId);
         return false;
       }
       setEvents((previous) => [...previous, savedEvent]);
       return true;
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : "Kunne ikke lagre hendelsen.");
+      setSaveErrorProject(event.projectId);
       return false;
     } finally {
       setBusyProject("");
@@ -489,21 +493,7 @@ export function CrmOverview() {
       {canEdit ? <MailboxReview /> : null}
 
       <div className="mt-6 space-y-5">
-        {statusGroups.map((group) => {
-          const grouped = currentProjects.filter((project) => project.status === group.status).sort(compareProjects);
-          return (
-            <details key={group.status} id={`crm-${group.status}`} open={!group.collapsed} className="scroll-mt-6 rounded-xl border border-slate-200 bg-white">
-              <summary className="cursor-pointer rounded-xl px-5 py-4 text-base font-semibold text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2">
-                <span className={`ml-2 rounded-md px-2 py-1 ${group.badge}`}>{group.label}</span>
-                <span className="ml-3 text-sm font-normal text-slate-600">{grouped.length} prosjekter</span>
-              </summary>
-              <div className="grid gap-4 px-4 pb-4 lg:grid-cols-2">
-                {grouped.map((project) => <ProjectCard key={project.name} project={project} group={group} manualCases={casesForProject(manualCases, project.organizationNumber)} canEdit={canEdit && !loadError} busy={busyProject === crmProjectId(project.name, project.organizationNumber)} onSave={saveEvent} />)}
-                {grouped.length === 0 ? <p className="p-2 text-sm text-slate-500">Ingen prosjekter i denne gruppen.</p> : null}
-              </div>
-            </details>
-          );
-        })}
+        {statusGroups.map((group) => <CrmProjectGroup key={group.status} group={group} projects={currentProjects} manualCases={manualCases} canEdit={canEdit && !loadError} busyProject={busyProject} saveError={saveError} saveErrorProject={saveErrorProject} onSave={saveEvent} />)}
       </div>
       <p className="mt-5 text-xs text-slate-500">Oversikten oppretter ingen automatiske purringer. Frister og neste steg gjelder manuell oppfølging.</p>
       <CrmManualCases cases={manualCases} error={manualCasesError} loading={manualCasesLoading} projectOrganizationNumbers={projectOrganizationNumbers} />
@@ -511,10 +501,36 @@ export function CrmOverview() {
   );
 }
 
-function ProjectCard({ project, group, manualCases, canEdit, busy, onSave }: Readonly<{
+function CrmProjectGroup({ group, projects: allProjects, manualCases, canEdit, busyProject, saveError, saveErrorProject, onSave }: Readonly<{
+  group: (typeof statusGroups)[number];
+  projects: CrmProject[];
+  manualCases: CrmManualCaseWithEmail[];
+  canEdit: boolean;
+  busyProject: string;
+  saveError: string;
+  saveErrorProject: string;
+  onSave: (event: Omit<CrmEventRecord, "recordedAt">) => Promise<boolean>;
+}>) {
+  const grouped = allProjects.filter((project) => project.status === group.status).sort(compareProjects);
+  return (
+    <details id={`crm-${group.status}`} open={!group.collapsed} className="scroll-mt-6 rounded-xl border border-slate-200 bg-white">
+      <summary className="cursor-pointer rounded-xl px-5 py-4 text-base font-semibold text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2">
+        <span className={`ml-2 rounded-md px-2 py-1 ${group.badge}`}>{group.label}</span>
+        <span className="ml-3 text-sm font-normal text-slate-600">{grouped.length} prosjekter</span>
+      </summary>
+      <div className="grid gap-4 px-4 pb-4 lg:grid-cols-2">
+        {grouped.map((project) => <ProjectCard key={project.name} project={project} group={group} manualCases={casesForProject(manualCases, project.organizationNumber)} canEdit={canEdit} busy={busyProject === crmProjectId(project.name, project.organizationNumber)} saveError={saveErrorProject === crmProjectId(project.name, project.organizationNumber) ? saveError : ""} onSave={onSave} />)}
+        {grouped.length === 0 ? <p className="p-2 text-sm text-slate-500">Ingen prosjekter i denne gruppen.</p> : null}
+      </div>
+    </details>
+  );
+}
+
+function ProjectCard({ project, group, manualCases, canEdit, busy, saveError, onSave }: Readonly<{
   project: CrmProject; group: (typeof statusGroups)[number];
   manualCases: CrmManualCaseWithEmail[];
   canEdit: boolean; busy: boolean;
+  saveError: string;
   onSave: (event: Omit<CrmEventRecord, "recordedAt">) => Promise<boolean>;
 }>) {
   const history = historyFor(project);
@@ -535,7 +551,7 @@ function ProjectCard({ project, group, manualCases, canEdit, busy, onSave }: Rea
         {project.invoiceNumber ? <Row icon={ReceiptText} label="Fakturanr." value={project.invoiceNumber} /> : null}
         {project.invoiceDraftNumber && !project.invoiceDate ? <Row icon={ReceiptText} label="Fakturautkast nr." value={project.invoiceDraftNumber} /> : null}
       </dl>
-      {canEdit ? <CrmActions project={project} busy={busy} onSave={onSave} /> : null}
+      {canEdit ? <CrmActions project={project} busy={busy} saveError={saveError} onSave={onSave} /> : null}
       <ProjectLinks project={project} />
       <details className="mt-4 border-t border-slate-200 pt-3">
         <summary className="cursor-pointer text-sm font-medium text-slate-700">Vis historikk og detaljer</summary>
@@ -600,9 +616,25 @@ function ProjectLinks({ project }: Readonly<{ project: CrmProject }>) {
   );
 }
 
-function CrmActions({ project, busy, onSave }: Readonly<{
+function CrmActionButtons({ canMarkDelivered, canMarkInvoiceSent, canMarkPaid, onSelect }: Readonly<{
+  canMarkDelivered: boolean;
+  canMarkInvoiceSent: boolean;
+  canMarkPaid: boolean;
+  onSelect: (action: CrmEventKind) => void;
+}>) {
+  return (
+    <div className="mt-2 flex flex-wrap gap-2">
+      {canMarkDelivered ? <button type="button" onClick={() => onSelect("delivery_confirmed")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Leveranse ferdig</button> : null}
+      {canMarkInvoiceSent ? <button type="button" onClick={() => onSelect("invoice_sent")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Faktura sendt</button> : null}
+      {canMarkPaid ? <button type="button" onClick={() => onSelect("payment_received")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Betaling mottatt</button> : null}
+    </div>
+  );
+}
+
+function CrmActions({ project, busy, saveError, onSave }: Readonly<{
   project: CrmProject;
   busy: boolean;
+  saveError: string;
   onSave: (event: Omit<CrmEventRecord, "recordedAt">) => Promise<boolean>;
 }>) {
   const [action, setAction] = useState<CrmEventKind | null>(null);
@@ -635,11 +667,7 @@ function CrmActions({ project, busy, onSave }: Readonly<{
   return (
     <div className="mt-4 border-t border-slate-200 pt-3 text-sm">
       <p className="font-medium text-slate-800">Registrer hendelse manuelt</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {canMarkDelivered ? <button type="button" onClick={() => setAction("delivery_confirmed")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Leveranse ferdig</button> : null}
-        {canMarkInvoiceSent ? <button type="button" onClick={() => setAction("invoice_sent")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Faktura sendt</button> : null}
-        {canMarkPaid ? <button type="button" onClick={() => setAction("payment_received")} className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-blue-800 hover:bg-slate-50">Betaling mottatt</button> : null}
-      </div>
+      <CrmActionButtons canMarkDelivered={canMarkDelivered} canMarkInvoiceSent={canMarkInvoiceSent} canMarkPaid={canMarkPaid} onSelect={setAction} />
       {action ? (
         <form onSubmit={(event) => void submit(event)} className="mt-3 space-y-3 rounded-md border border-slate-200 bg-white p-3">
           <p className="text-xs text-slate-600">Dette registrerer bare det som allerede har skjedd. Ingen e-post, faktura eller purring sendes.{action === "payment_received" ? " Bruk dette når hele fakturaen er betalt." : ""}</p>
@@ -663,6 +691,7 @@ function CrmActions({ project, busy, onSave }: Readonly<{
             <button type="submit" disabled={busy} className="rounded-md bg-blue-700 px-3 py-1.5 font-medium text-white disabled:opacity-50">{busy ? "Lagrer …" : "Lagre i CRM"}</button>
             <button type="button" onClick={() => setAction(null)} className="rounded-md border border-slate-300 px-3 py-1.5">Avbryt</button>
           </div>
+          {saveError ? <p role="alert" className="text-sm text-red-800">{saveError}</p> : null}
         </form>
       ) : null}
     </div>

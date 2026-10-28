@@ -1,9 +1,10 @@
-import { appendFile, readFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { NextResponse } from "next/server";
 
 import { isoDateFromNorwegian, osloToday, type CrmEventRecord, validNorwegianDate } from "@/lib/crm-events";
+import { isLocalApiRequest } from "@/lib/local-api-access";
 
 export const runtime = "nodejs";
 
@@ -11,11 +12,6 @@ const eventFile = path.resolve(process.cwd(), "..", "data", "crm-events.jsonl");
 const existingInvoiceNumbers = new Set(["2026-001", "2026-002", "2026-003", "2026-004"]);
 const outstandingExistingProjects = new Set(["938423334"]);
 let pendingWrite: Promise<void> = Promise.resolve();
-
-function localRequest(request: Request): boolean {
-  const url = new URL(request.url);
-  return ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
-}
 
 async function readEvents(): Promise<CrmEventRecord[]> {
   try {
@@ -42,7 +38,9 @@ function validEvent(value: unknown): value is Omit<CrmEventRecord, "recordedAt">
 }
 
 export async function GET(request: Request) {
-  if (!localRequest(request)) return NextResponse.json({ error: "CRM er kun tilgjengelig lokalt." }, { status: 403 });
+  if (!isLocalApiRequest(request.headers.get("host"), request.method, request.headers.get("origin"))) {
+    return NextResponse.json({ error: "CRM er kun tilgjengelig lokalt." }, { status: 403 });
+  }
   try {
     return NextResponse.json({ events: await readEvents() }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
@@ -52,8 +50,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!localRequest(request) || !origin || origin !== new URL(request.url).origin) {
+  if (!isLocalApiRequest(request.headers.get("host"), request.method, request.headers.get("origin"))) {
     return NextResponse.json({ error: "CRM-endringer krever en lokal forespørsel fra appen." }, { status: 403 });
   }
   let body: unknown;
@@ -96,6 +93,7 @@ export async function POST(request: Request) {
         dueDate: submitted.dueDate,
       } : {}),
     };
+    await mkdir(path.dirname(eventFile), { recursive: true });
     await appendFile(eventFile, `${JSON.stringify(record)}\n`, "utf8");
     return record;
   });
