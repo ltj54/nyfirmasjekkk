@@ -262,6 +262,16 @@ export function sevenDayCutoff(now = new Date()): string {
   return cutoff.toISOString().slice(0, 10);
 }
 
+export function filterRecentByCutoff(
+  records: Pick<SwedishRecentResult, "companies" | "soleProprietorships">,
+  cutoffDate: string,
+): Pick<SwedishRecentResult, "companies" | "soleProprietorships"> {
+  return {
+    companies: records.companies.filter((company) => company.registrationDate >= cutoffDate),
+    soleProprietorships: records.soleProprietorships.filter((company) => company.registrationDate >= cutoffDate),
+  };
+}
+
 export async function loadRecentSwedishCompanies(now = new Date()): Promise<SwedishRecentResult> {
   const paths = dataPaths();
   const source = await ensureSwedishBulkFile({ now });
@@ -269,13 +279,20 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
   const cutoffDate = sevenDayCutoff(now);
   try {
     const cached = JSON.parse(await readFile(/* turbopackIgnore: true */ paths.cache, "utf8")) as RecentCache;
-    if (cached.cutoffDate === cutoffDate
+    if (cached.cutoffDate <= cutoffDate
       && cached.schemaVersion === RECENT_CACHE_SCHEMA_VERSION
       && cached.sourceFileModifiedAt === source.modifiedAt
       && cached.archiveSize === sourceStat.size
       && Array.isArray(cached.companies)
       && Array.isArray(cached.soleProprietorships)) {
-      return { ...cached, sourceCheckedAt: source.checkedAt, sourceWarning: source.warning };
+      return {
+        ...cached,
+        ...filterRecentByCutoff(cached, cutoffDate),
+        cutoffDate,
+        fetchedAt: now.toISOString(),
+        sourceCheckedAt: source.checkedAt,
+        sourceWarning: source.warning,
+      };
     }
   } catch {
     // A missing or stale cache is rebuilt from the local official bulk file.

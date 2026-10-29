@@ -4,7 +4,21 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { ensureSwedishBulkFile, swedishRegistrationStatus } from "../src/lib/sweden-recent.ts";
+import { ensureSwedishBulkFile, filterRecentByCutoff, swedishRegistrationStatus } from "../src/lib/sweden-recent.ts";
+
+test("reuses an older weekly-file selection for a newer seven-day cutoff", () => {
+  const records = {
+    companies: [
+      { registrationDate: "2026-10-21", name: "Older AB" },
+      { registrationDate: "2026-10-23", name: "Recent AB" },
+    ],
+    soleProprietorships: [{ registrationDate: "2026-10-22", name: "Recent sole proprietor" }],
+  };
+  assert.deepEqual(filterRecentByCutoff(records, "2026-10-22"), {
+    companies: [{ registrationDate: "2026-10-23", name: "Recent AB" }],
+    soleProprietorships: [{ registrationDate: "2026-10-22", name: "Recent sole proprietor" }],
+  });
+});
 
 test("reads deregistration and ongoing proceedings from Bolagsverket's bulk fields", () => {
   assert.deepEqual(swedishRegistrationStatus({
