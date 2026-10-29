@@ -1,5 +1,19 @@
 [
   {
+    "id": "aman-2026-10-29",
+    "companyName": "Assosiasjon For Muslimske Akademikere I Norge",
+    "orgNumber": "938609926",
+    "contactName": "Sana Pakatchi",
+    "email": "aman.offisiell@gmail.com",
+    "receivedAt": "2026-10-29T12:34:00+01:00",
+    "status": "Ikke aktuelt nå – tar selv kontakt ved behov",
+    "summary": "AMAN er fortsatt i oppstartsfasen og har andre prioriteringer nå. Sana skriver at en nettside kan bli aktuell senere, og at de gjerne tar kontakt dersom behovet melder seg. Dette er ingen bestilling eller avtale om ny henvendelse. E-postadressen er hentet fra signaturen i det innlimte svaret; From-feltet viser bare organisasjonens navn.",
+    "nextStep": "Avvent at AMAN selv tar kontakt. Bevar dialogen som en manuell sak uten oppfølgingsdato. Ingen automatisk oppfølging, purring eller ny salgsutsending.",
+    "contactPolicy": "await_customer",
+    "reviewDate": null,
+    "sourceFile": "aman-2026-10-29.txt"
+  },
+  {
     "id": "olsen-geomatikk-2026-10-21",
     "companyName": "Olsen Geomatikk & Anleggspartner",
     "orgNumber": "938651752",
