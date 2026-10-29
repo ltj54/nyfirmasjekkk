@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import type { WebsiteInspectionResponse } from "@/lib/company-check";
 import type { SwedishPilotCompany, SwedishPilotResult, SwedishRecentEnrichment } from "@/lib/sweden-pilot";
 import type { SwedishRecentCompany, SwedishRecentResult } from "@/lib/sweden-recent";
 import { pilotCompaniesWithEmail, recentCompaniesWithEmail } from "@/lib/sweden-lead-visibility";
@@ -167,7 +168,7 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
         <h2 className="font-semibold text-slate-900">Nye svenske virksomheter · siste 7 dager</h2>
         <p className="mt-2 text-sm text-slate-700">Henter nye AB fra Bolagsverkets bulkfil. Bare selskaper med e-post bekreftet hos SCB vises i listen etter kontroll. Dette er ikke kontaktklare leads.</p>
         <button type="button" disabled={recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentBusy ? "Leser registerfil …" : "Hent nye AB · siste 7 dager"}</button>
-        <p className="mt-3 text-sm text-slate-600">Bolagsverket oppgir ikke e-post i denne filen. Knappen kontrollerer SCB-data og undersøker mulige nettsideadresser for selskaper med e-post. Adressene må bekreftes manuelt. Enskild firma vises ikke fordi e-post ikke kontrolleres for dem. Ingen e-post sendes og ingen oppfølging opprettes.</p>
+        <p className="mt-3 text-sm text-slate-600">Bolagsverket oppgir ikke e-post i denne filen. Knappen kontrollerer SCB-data og undersøker mulige nettsideadresser for selskaper med e-post. Ukefilen gir også avregistrering og pågående avvikling, men er ikke en sanntidskontroll. Adressene må bekreftes manuelt. Enskild firma vises ikke fordi e-post ikke kontrolleres for dem. Ingen e-post sendes og ingen oppfølging opprettes.</p>
       </section>
       <div aria-live="polite" aria-busy={recentBusy}>
         {recentError ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{recentError}</p> : null}
@@ -206,6 +207,59 @@ function recentLeadStatus(detail: SwedishPilotCompany | undefined, unavailable: 
   if (detail) return `${contactStatusLabel(detail.contactAssessment)} – ${detail.contactAssessmentReason}`;
   if (unavailable) return "Ikke funnet hos SCB ennå – ingen e-post eller reservasjon kontrollert";
   return "Ikke SCB-kontrollert – ingen kontakt fra denne listen";
+}
+
+function registerStatus(company: SwedishRecentCompany): string {
+  if (company.deregistrationDate) {
+    const reason = company.deregistrationReason ? ` · ${company.deregistrationReason}` : "";
+    return `Avregistrert ${company.deregistrationDate}${reason} – ikke kontakt`;
+  }
+  if (company.deregistrationReason) return `Avregistreringsårsak: ${company.deregistrationReason} – ikke kontakt før manuell avklaring`;
+  if (company.ongoingProceedings?.length) {
+    const proceedings = company.ongoingProceedings.map((item) => {
+      const since = item.since ? ` fra ${item.since}` : "";
+      return `${item.label}${since}`;
+    }).join(", ");
+    return `${proceedings} – ikke kontakt før manuell avklaring`;
+  }
+  return "Ingen avregistrering eller pågående sak oppgitt i ukefilen";
+}
+
+function SwedishWebsiteInspection({ review }: Readonly<{ review?: WebsiteReview }>) {
+  const [inspection, setInspection] = useState<WebsiteInspectionResponse | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  if (review?.status !== "confirmed" || !review.url) return null;
+  async function inspect() {
+    if (!review?.url) return;
+    setBusy(true);
+    setError("");
+    setInspection(null);
+    try {
+      const response = await fetch(`/api/company-check/website-inspection?url=${encodeURIComponent(review.url)}`, { cache: "no-store" });
+      if (!response.ok) {
+        setError("Nettsidesjekken kunne ikke fullføres. Prøv igjen senere.");
+        return;
+      }
+      setInspection(await response.json() as WebsiteInspectionResponse);
+    } catch {
+      setError("Nettsidesjekken kunne ikke fullføres. Prøv igjen senere.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section className="mt-4 rounded border border-blue-200 bg-blue-50 p-3 text-sm">
+      <button type="button" disabled={busy} onClick={() => void inspect()} className="rounded bg-blue-800 px-3 py-2 text-white disabled:opacity-50">{busy ? "Sjekker nettsiden …" : "Sjekk bekreftet nettside"}</button>
+      <p className="mt-2 text-xs text-slate-600">Teknisk førstevurdering av adressen du bekreftet manuelt. Ingen e-post sendes. Funn må kontrolleres før de brukes overfor virksomheten.</p>
+      {error ? <p role="alert" className="mt-2 text-red-800">{error}</p> : null}
+      {inspection ? <div className="mt-3">
+        <p className="font-medium">{inspection.websiteQuality.label}: {inspection.websiteQuality.summary}</p>
+        {inspection.websiteQuality.signals.length > 0 ? <ul className="mt-2 list-disc space-y-1 pl-5">{inspection.websiteQuality.signals.slice(0, 6).map((signal) => <li key={signal.code}>{signal.title}: {signal.detail}</li>)}</ul> : null}
+        <p className="mt-2 text-xs text-slate-600">Analysen gjelder bare nettsiden, ikke selskapets registerstatus eller sikker tilhørighet utover din manuelle bekreftelse.</p>
+      </div> : null}
+    </section>
+  );
 }
 
 function WebsiteReviewEditor({ company, review, onSave }: Readonly<{
@@ -263,6 +317,7 @@ function RecentCompanyCard({ company, detail, unavailable, review, suggestions, 
   suggestions: SwedishWebsiteSuggestion[];
   onSaveWebsiteReview: (input: { orgNumber: string; status: WebsiteReviewStatus; url: string; note: string }) => Promise<string | null>;
 }>) {
+  const registerNeedsReview = Boolean(company.deregistrationDate || company.deregistrationReason || company.ongoingProceedings?.length);
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5">
       <h3 className="font-semibold text-slate-900">{company.name}</h3>
@@ -271,7 +326,8 @@ function RecentCompanyCard({ company, detail, unavailable, review, suggestions, 
         <div><dt className="text-slate-500">Registrert hos Bolagsverket</dt><dd>{company.registrationDate}</dd></div>
         <div><dt className="text-slate-500">Virksomhetsbeskrivelse</dt><dd>{company.businessDescription || "Ikke oppgitt"}</dd></div>
         <div><dt className="text-slate-500">E-post hos SCB</dt><dd className="break-all">{detail?.email || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Leadstatus</dt><dd>{recentLeadStatus(detail, unavailable)}</dd></div>
+        <div><dt className="text-slate-500">Registerstatus fra Bolagsverket</dt><dd>{registerStatus(company)}</dd></div>
+        <div><dt className="text-slate-500">Leadstatus</dt><dd>{registerNeedsReview ? "Ikke kontakt – registerstatus må avklares" : recentLeadStatus(detail, unavailable)}</dd></div>
         {detail ? <div><dt className="text-slate-500">Reservasjon / virksomhetsstatus</dt><dd>{detail.emailReservationLabel} · {detail.advertisingReservationLabel} · {detail.statusLabel}</dd></div> : null}
         <div><dt className="text-slate-500">Bransje (SNI 2025)</dt><dd>{detail ? detail.industryCodes.join(", ") || "Ikke oppgitt hos SCB" : "Ikke hentet fra SCB"}</dd></div>
         <div><dt className="text-slate-500">Nettside</dt><dd>{websiteReviewLabel(review)}{review?.url ? <> · <a href={review.url} target="_blank" rel="noreferrer" className="break-all text-blue-800 underline">{review.url}</a></> : null}</dd></div>
@@ -285,6 +341,7 @@ function RecentCompanyCard({ company, detail, unavailable, review, suggestions, 
         <p className="mt-2 text-xs text-amber-950">Et teknisk svar eller et e-postdomene beviser ikke at nettsiden tilhører virksomheten.</p>
       </div> : null}
       <WebsiteReviewEditor key={review?.reviewedAt ?? "new"} company={company} review={review} onSave={onSaveWebsiteReview} />
+      <SwedishWebsiteInspection key={review?.reviewedAt ?? "new"} review={review} />
     </article>
   );
 }
@@ -316,7 +373,7 @@ function RecentResults({ result, page, onPageChange, enriched, unavailable, conf
       <button type="button" disabled={!configured || enrichmentBusy || visible.length === 0} onClick={onEnrich} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{enrichmentBusy ? "Kontrollerer hos SCB og nettsider …" : "Kontroller e-post, SNI, reservasjon og nettsider for denne siden"}</button>
       {!configured ? <p className="mt-2 text-sm text-slate-600">SCB-nøkkelen må være konfigurert lokalt før kontroll.</p> : null}
       {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">{checkedCount === 0 ? "Ingen selskaper vises før e-post er kontrollert hos SCB." : "Ingen av de kontrollerte selskapene på denne siden har oppgitt e-post hos SCB."}</p> : null}
-      <p className="mt-2 text-sm text-slate-600">SCB kan mangle helt ferske registreringer. En oppgitt adresse er ikke kontrollert for levering eller automatisk godkjent for markedsføring.</p>
+      <p className="mt-2 text-sm text-slate-600">SCB kan mangle helt ferske registreringer. En oppgitt adresse er ikke kontrollert for levering eller automatisk godkjent for markedsføring. Registerstatus er fra Bolagsverkets ukentlige fil og kan ha endret seg etter siste oppdatering. <a href="https://bolagsverket.se/apierochoppnadata/hamtaforetagsinformation/nedladdningsbarafiler.2517.html" target="_blank" rel="noreferrer" className="text-blue-800 underline">Om Bolagsverkets datakilde ↗</a></p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">{withEmail.map((company) => <RecentCompanyCard key={company.id} company={company} detail={enriched[company.orgNumber]} unavailable={false} review={websiteReviews[company.orgNumber]} suggestions={websiteSuggestions[company.orgNumber] ?? []} onSaveWebsiteReview={onSaveWebsiteReview} />)}</div>
       {pageCount > 1 ? (
         <nav aria-label="Sider med nye svenske selskaper" className="mt-4 flex items-center gap-3">

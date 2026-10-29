@@ -4,7 +4,25 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { ensureSwedishBulkFile } from "../src/lib/sweden-recent.ts";
+import { ensureSwedishBulkFile, swedishRegistrationStatus } from "../src/lib/sweden-recent.ts";
+
+test("reads deregistration and ongoing proceedings from Bolagsverket's bulk fields", () => {
+  assert.deepEqual(swedishRegistrationStatus({
+    avregistreringsdatum: "2026-10-28",
+    avregistreringsorsak: "KKAV-AVORG",
+    pagandeAvvecklingsEllerOmstruktureringsforfarande: "KK-AVOMFO$2026-10-27|FR-AVOMFO$2026-10-26",
+  }), {
+    deregistrationDate: "2026-10-28",
+    deregistrationReason: "Konkurs",
+    ongoingProceedings: [
+      { code: "KK-AVOMFO", label: "Konkurs", since: "2026-10-27" },
+      { code: "FR-AVOMFO", label: "Foretaksrekonstruksjon", since: "2026-10-26" },
+    ],
+  });
+  assert.deepEqual(swedishRegistrationStatus({}), {
+    deregistrationDate: null, deregistrationReason: "", ongoingProceedings: [],
+  });
+});
 
 async function inTemporaryDirectory(callback) {
   const directory = await mkdtemp(path.join(os.tmpdir(), "sweden-bulk-test-"));

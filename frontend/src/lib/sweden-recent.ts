@@ -18,6 +18,33 @@ export type SwedishRecentCompany = {
   registrationDate: string;
   businessDescription: string;
   postalCity: string;
+  deregistrationDate: string | null;
+  deregistrationReason: string;
+  ongoingProceedings: SwedishProceeding[];
+};
+
+export type SwedishProceeding = { code: string; label: string; since: string | null };
+
+const PROCEEDING_LABELS: Readonly<Record<string, string>> = {
+  "AC-AVOMFO": "Akkordforhandling",
+  "DEOL-AVOMFO": "Deling – overdragende selskap",
+  "DEOT-AVOMFO": "Deling – overtakende selskap",
+  "FR-AVOMFO": "Foretaksrekonstruksjon",
+  "FUOL-AVOMFO": "Fusjon – overdragende selskap",
+  "FUOT-AVOMFO": "Fusjon – overtakende selskap",
+  "GROM-AVOMFO": "Grenseoverskridende omdanning",
+  "KK-AVOMFO": "Konkurs",
+  "LI-AVOMFO": "Likvidasjon",
+  "OM-AVOMFO": "Omdanning",
+  "RES-AVOMFO": "Resolusjon",
+};
+
+const DEREGISTRATION_LABELS: Readonly<Record<string, string>> = {
+  "KKAV-AVORG": "Konkurs",
+  "LIAV-AVORG": "Likvidasjon",
+  "FUAV-AVORG": "Fusjon",
+  "VERKUPP-AVORG": "Virksomheten har opphørt",
+  "ARSEED-AVORG": "Årsregnskap mangler",
 };
 
 export type SwedishRecentResult = {
@@ -38,7 +65,8 @@ export type SwedishRecentSoleProprietorship = {
   postalCity: string;
 };
 
-type RecentCache = SwedishRecentResult & { archiveSize: number };
+type RecentCache = SwedishRecentResult & { archiveSize: number; schemaVersion: number };
+const RECENT_CACHE_SCHEMA_VERSION = 2;
 type SourceCheck = { checkedAt: string; archiveSize: number };
 type BulkFileOptions = { now?: Date; fetcher?: typeof fetch; directory?: string };
 
@@ -164,6 +192,25 @@ function postalCity(value: unknown): string {
   return parts.length >= 3 ? parts[2].trim() : "";
 }
 
+function ongoingProceedings(value: unknown): SwedishProceeding[] {
+  return plainValue(value).split("|").filter(Boolean).map((item) => {
+    const [code, rawDate] = item.split("$");
+    const normalizedCode = code.trim();
+    return { code: normalizedCode, label: PROCEEDING_LABELS[normalizedCode] ?? `Ukjent statuskode ${normalizedCode}`,
+      since: validIsoDate(rawDate) };
+  });
+}
+
+export function swedishRegistrationStatus(row: Record<string, unknown>): Pick<SwedishRecentCompany,
+  "deregistrationDate" | "deregistrationReason" | "ongoingProceedings"> {
+  const reasonCode = plainValue(row.avregistreringsorsak);
+  return {
+    deregistrationDate: validIsoDate(row.avregistreringsdatum),
+    deregistrationReason: reasonCode ? DEREGISTRATION_LABELS[reasonCode] ?? `Kode ${reasonCode}` : "",
+    ongoingProceedings: ongoingProceedings(row.pagandeAvvecklingsEllerOmstruktureringsforfarande),
+  };
+}
+
 export async function scanRecentSwedishCompanies(archive: string, cutoffDate: string): Promise<Pick<SwedishRecentResult, "companies" | "soleProprietorships">> {
   const directory = await unzipper.Open.file(archive);
   const entry = directory.files.find((file) => file.type === "File" && file.path.endsWith(".txt"));
@@ -201,6 +248,7 @@ export async function scanRecentSwedishCompanies(archive: string, cutoffDate: st
       registrationDate,
       businessDescription: plainValue(row.verksamhetsbeskrivning),
       postalCity: postalCity(row.postadress),
+      ...swedishRegistrationStatus(row),
     });
   }
   const newestFirst = (left: { registrationDate: string; name: string }, right: { registrationDate: string; name: string }) =>
@@ -222,6 +270,7 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
   try {
     const cached = JSON.parse(await readFile(/* turbopackIgnore: true */ paths.cache, "utf8")) as RecentCache;
     if (cached.cutoffDate === cutoffDate
+      && cached.schemaVersion === RECENT_CACHE_SCHEMA_VERSION
       && cached.sourceFileModifiedAt === source.modifiedAt
       && cached.archiveSize === sourceStat.size
       && Array.isArray(cached.companies)
@@ -240,6 +289,7 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
     sourceWarning: source.warning,
     fetchedAt: now.toISOString(),
     archiveSize: sourceStat.size,
+    schemaVersion: RECENT_CACHE_SCHEMA_VERSION,
   };
   await writeFile(/* turbopackIgnore: true */ paths.cache, JSON.stringify(result), { encoding: "utf8", flag: "w" });
   return result;
