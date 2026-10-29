@@ -4,15 +4,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1516
-- Sendt: 734
+- Antall hendelser: 1534
+- Sendt: 743
 - Angret: 0
-- Aktive kontaktede selskaper: 429
+- Aktive kontaktede selskaper: 438
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-29 | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | website-offer |
+| 2026-10-29 | 938729484 | CREDO CONSULTING LARSEN | ENK | email | website-offer |
+| 2026-10-29 | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | website-offer |
+| 2026-10-29 | 938779295 | ÖNNEKÖPS KONSULT AB | UTLA | email | website-offer |
+| 2026-10-29 | 938777950 | SIA CONSTRUCTION | UTLA | email | website-offer |
+| 2026-10-29 | 838552722 | IONITA SOLID EIENDOMSERVICE. | ENK | email | website-offer |
+| 2026-10-29 | 938540659 | HÅP TIL CUBA | FLI | email | website-offer |
+| 2026-10-29 | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | website-offer |
+| 2026-10-29 | 938728828 | HAMMERSMARK VEKST | ENK | email | website-offer |
 | 2026-10-29 | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | website-follow-up |
 | 2026-10-29 | 938738505 | FIXPART EUROPE B.V. | UTLA | email | website-follow-up |
 | 2026-10-29 | 938698031 | JERPSTAD UNDERVISNING | ENK | email | website-follow-up |
@@ -447,6 +456,24 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-29 15:46 | sent | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | - |
+| 2026-10-29 15:46 | sending | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:46 | sent | 938729484 | CREDO CONSULTING LARSEN | ENK | email | - |
+| 2026-10-29 15:46 | sending | 938729484 | CREDO CONSULTING LARSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:46 | sent | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | - |
+| 2026-10-29 15:46 | sending | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:46 | sent | 938779295 | ÖNNEKÖPS KONSULT AB | UTLA | email | - |
+| 2026-10-29 15:46 | sending | 938779295 | ÖNNEKÖPS KONSULT AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:46 | sent | 938777950 | SIA CONSTRUCTION | UTLA | email | - |
+| 2026-10-29 15:46 | sending | 938777950 | SIA CONSTRUCTION | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:46 | sent | 838552722 | IONITA SOLID EIENDOMSERVICE. | ENK | email | - |
+| 2026-10-29 15:46 | sending | 838552722 | IONITA SOLID EIENDOMSERVICE. | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:46 | sent | 938540659 | HÅP TIL CUBA | FLI | email | - |
+| 2026-10-29 15:46 | sending | 938540659 | HÅP TIL CUBA | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:45 | sent | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | - |
+| 2026-10-29 15:45 | sending | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-29 15:45 | sent | 938728828 | HAMMERSMARK VEKST | ENK | email | - |
+| 2026-10-29 15:45 | sending | 938728828 | HAMMERSMARK VEKST | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-29 09:13 | sent | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-29 09:13 | sending | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-29 09:13 | sent | 938738505 | FIXPART EUROPE B.V. | UTLA | email | Oppfølging sendt – avslutt hvis stille |
