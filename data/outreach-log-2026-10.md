@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1512
-- Sendt: 732
+- Antall hendelser: 1516
+- Sendt: 734
 - Angret: 0
 - Aktive kontaktede selskaper: 429
 
@@ -13,6 +13,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-29 | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | website-follow-up |
+| 2026-10-29 | 938738505 | FIXPART EUROPE B.V. | UTLA | email | website-follow-up |
 | 2026-10-29 | 938698031 | JERPSTAD UNDERVISNING | ENK | email | website-follow-up |
 | 2026-10-29 | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | website-follow-up |
 | 2026-10-29 | 938361517 | TERRAINGRID AS | AS | email | website-follow-up |
@@ -143,8 +145,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-23 | 938703841 | SIA REOVANT | UTLA | email | website-follow-up |
 | 2026-10-23 | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | website-follow-up |
 | 2026-10-23 | 838628192 | IKOTTOSEN HOLDING AS | AS | email | website-follow-up |
-| 2026-10-23 | 938738505 | FIXPART EUROPE B.V. | UTLA | email | website-offer |
-| 2026-10-23 | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | website-offer |
 | 2026-10-22 | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | website-lead-batch |
 | 2026-10-22 | 936900704 | GÅSERØD RACING | ENK | email | website-lead-batch |
 | 2026-10-22 | 936944833 | DIN-FOTTERAPEUT AS | AS | email | website-lead-batch |
@@ -447,6 +447,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-29 09:13 | sent | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 09:13 | sending | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 09:13 | sent | 938738505 | FIXPART EUROPE B.V. | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 09:13 | sending | 938738505 | FIXPART EUROPE B.V. | UTLA | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-29 08:47 | sent | 938698031 | JERPSTAD UNDERVISNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-29 08:47 | sending | 938698031 | JERPSTAD UNDERVISNING | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-29 08:47 | sent | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
