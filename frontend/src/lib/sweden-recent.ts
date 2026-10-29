@@ -1,4 +1,4 @@
-import { createWriteStream } from "node:fs";
+import { createWriteStream, type Stats } from "node:fs";
 import { mkdir, readFile, rename, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
@@ -9,6 +9,7 @@ import unzipper from "unzipper";
 
 const BULK_URL = "https://vardefulla-datamangder.bolagsverket.se/bolagsverket/bolagsverket_bulkfil.zip";
 const MAX_DOWNLOAD_BYTES = 400_000_000;
+const SOURCE_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
 export type SwedishRecentCompany = {
   id: string;
@@ -25,6 +26,8 @@ export type SwedishRecentResult = {
   fetchedAt: string;
   cutoffDate: string;
   sourceFileModifiedAt: string;
+  sourceCheckedAt?: string;
+  sourceWarning?: string;
 };
 
 export type SwedishRecentSoleProprietorship = {
@@ -36,19 +39,24 @@ export type SwedishRecentSoleProprietorship = {
 };
 
 type RecentCache = SwedishRecentResult & { archiveSize: number };
+type SourceCheck = { checkedAt: string; archiveSize: number };
+type BulkFileOptions = { now?: Date; fetcher?: typeof fetch; directory?: string };
 
-function dataPaths() {
-  const directory = path.resolve(process.cwd(), "..", "data", "scb");
+function dataPaths(directory = path.resolve(process.cwd(), "..", "data", "scb")) {
   return {
     directory,
     archive: path.join(directory, "bolagsverket_bulkfil.zip"),
     partialArchive: path.join(directory, "bolagsverket_bulkfil.zip.part"),
     cache: path.join(directory, "recent-companies.json"),
+    sourceCheck: path.join(directory, "bulk-source-check.json"),
   };
 }
 
-async function downloadBulkFile(archive: string, partialArchive: string) {
-  const response = await fetch(BULK_URL, { cache: "no-store", redirect: "error", signal: AbortSignal.timeout(300_000) });
+async function downloadBulkFile(archive: string, partialArchive: string, fetcher: typeof fetch) {
+  await unlink(partialArchive).catch((error: NodeJS.ErrnoException) => {
+    if (error.code !== "ENOENT") throw error;
+  });
+  const response = await fetcher(BULK_URL, { cache: "no-store", redirect: "error", signal: AbortSignal.timeout(300_000) });
   if (!response.ok || !response.body) throw new Error(`Bolagsverket svarte med HTTP ${response.status}.`);
   const contentLength = Number(response.headers.get("content-length"));
   if (!Number.isFinite(contentLength) || contentLength <= 0 || contentLength > MAX_DOWNLOAD_BYTES) {
@@ -73,17 +81,67 @@ async function downloadBulkFile(archive: string, partialArchive: string) {
   }
 }
 
-export async function ensureSwedishBulkFile(): Promise<{ archive: string; modifiedAt: string }> {
-  const paths = dataPaths();
+async function readSourceCheck(file: string): Promise<SourceCheck | null> {
+  try {
+    const value = JSON.parse(await readFile(file, "utf8")) as Partial<SourceCheck>;
+    if (typeof value.checkedAt === "string" && Number.isFinite(value.archiveSize)) {
+      return { checkedAt: value.checkedAt, archiveSize: value.archiveSize as number };
+    }
+  } catch {
+    // A missing or invalid marker forces a fresh source check.
+  }
+  return null;
+}
+
+export async function ensureSwedishBulkFile(options: BulkFileOptions = {}): Promise<{
+  archive: string; modifiedAt: string; checkedAt: string; warning?: string;
+}> {
+  const paths = dataPaths(options.directory);
+  const now = options.now ?? new Date();
+  const fetcher = options.fetcher ?? fetch;
   await mkdir(paths.directory, { recursive: true });
-  let file;
+  let file = null;
   try {
     file = await stat(/* turbopackIgnore: true */ paths.archive);
-  } catch {
-    await downloadBulkFile(paths.archive, paths.partialArchive);
-    file = await stat(/* turbopackIgnore: true */ paths.archive);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }
-  return { archive: paths.archive, modifiedAt: file.mtime.toISOString() };
+  const previousCheck = await readSourceCheck(paths.sourceCheck);
+  const storedFileFallback = (storedFile: Stats) => ({
+    archive: paths.archive,
+    modifiedAt: storedFile.mtime.toISOString(),
+    checkedAt: previousCheck?.checkedAt ?? storedFile.mtime.toISOString(),
+    warning: "Kunne ikke bekrefte at Bolagsverkets fil er oppdatert. Viser sist lagrede fil.",
+  });
+  if (file && previousCheck?.archiveSize === file.size
+      && now.getTime() - Date.parse(previousCheck.checkedAt) < SOURCE_CHECK_INTERVAL_MS
+      && now.getTime() >= Date.parse(previousCheck.checkedAt)) {
+    return { archive: paths.archive, modifiedAt: file.mtime.toISOString(), checkedAt: previousCheck.checkedAt };
+  }
+
+  try {
+    if (file) {
+      const response = await fetcher(BULK_URL, {
+        method: "HEAD", cache: "no-store", redirect: "error", signal: AbortSignal.timeout(20_000),
+      });
+      if (!response.ok) return storedFileFallback(file);
+      const remoteSize = Number(response.headers.get("content-length"));
+      const remoteModified = Date.parse(response.headers.get("last-modified") ?? "");
+      if (remoteSize === file.size && Number.isFinite(remoteModified) && remoteModified <= file.mtime.getTime()) {
+        const checkedAt = now.toISOString();
+        await writeFile(paths.sourceCheck, JSON.stringify({ checkedAt, archiveSize: file.size }), "utf8");
+        return { archive: paths.archive, modifiedAt: file.mtime.toISOString(), checkedAt };
+      }
+    }
+    await downloadBulkFile(paths.archive, paths.partialArchive, fetcher);
+    file = await stat(/* turbopackIgnore: true */ paths.archive);
+    const checkedAt = now.toISOString();
+    await writeFile(paths.sourceCheck, JSON.stringify({ checkedAt, archiveSize: file.size }), "utf8");
+    return { archive: paths.archive, modifiedAt: file.mtime.toISOString(), checkedAt };
+  } catch (error) {
+    if (!file) throw error;
+    return storedFileFallback(file);
+  }
 }
 
 function plainValue(value: unknown): string {
@@ -158,7 +216,7 @@ export function sevenDayCutoff(now = new Date()): string {
 
 export async function loadRecentSwedishCompanies(now = new Date()): Promise<SwedishRecentResult> {
   const paths = dataPaths();
-  const source = await ensureSwedishBulkFile();
+  const source = await ensureSwedishBulkFile({ now });
   const sourceStat = await stat(/* turbopackIgnore: true */ source.archive);
   const cutoffDate = sevenDayCutoff(now);
   try {
@@ -168,7 +226,7 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
       && cached.archiveSize === sourceStat.size
       && Array.isArray(cached.companies)
       && Array.isArray(cached.soleProprietorships)) {
-      return cached;
+      return { ...cached, sourceCheckedAt: source.checkedAt, sourceWarning: source.warning };
     }
   } catch {
     // A missing or stale cache is rebuilt from the local official bulk file.
@@ -178,6 +236,8 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
     ...records,
     cutoffDate,
     sourceFileModifiedAt: source.modifiedAt,
+    sourceCheckedAt: source.checkedAt,
+    sourceWarning: source.warning,
     fetchedAt: now.toISOString(),
     archiveSize: sourceStat.size,
   };

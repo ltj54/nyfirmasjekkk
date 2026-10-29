@@ -1,3 +1,5 @@
+import type { SwedishWebsiteSuggestion } from "./sweden-website-suggestions";
+
 export const SWEDEN_PILOT_LIMIT = 10;
 const SCB_BASE_URL = "https://apiafr.scb.se/v1/";
 
@@ -40,6 +42,7 @@ export type SwedishRecentEnrichment = {
   companies: SwedishPilotCompany[];
   unavailableOrgNumbers: string[];
   fetchedAt: string;
+  websiteSuggestions?: Record<string, SwedishWebsiteSuggestion[]>;
 };
 
 type Dependencies = {

@@ -3,8 +3,10 @@
 import { useState } from "react";
 
 import type { SwedishPilotCompany, SwedishPilotResult, SwedishRecentEnrichment } from "@/lib/sweden-pilot";
-import type { SwedishRecentCompany, SwedishRecentResult, SwedishRecentSoleProprietorship } from "@/lib/sweden-recent";
+import type { SwedishRecentCompany, SwedishRecentResult } from "@/lib/sweden-recent";
+import { pilotCompaniesWithEmail, recentCompaniesWithEmail } from "@/lib/sweden-lead-visibility";
 import type { WebsiteReview, WebsiteReviewStatus } from "@/lib/sweden-websites";
+import type { SwedishWebsiteSuggestion } from "@/lib/sweden-website-suggestions";
 
 const RECENT_PAGE_SIZE = 25;
 
@@ -57,13 +59,13 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
   const [result, setResult] = useState<SwedishPilotResult | null>(null);
   const [recentResult, setRecentResult] = useState<SwedishRecentResult | null>(null);
   const [recentPage, setRecentPage] = useState(0);
-  const [solePage, setSolePage] = useState(0);
   const [busy, setBusy] = useState(false);
   const [recentBusy, setRecentBusy] = useState(false);
   const [enrichmentBusy, setEnrichmentBusy] = useState(false);
   const [enriched, setEnriched] = useState<Record<string, SwedishPilotCompany>>({});
   const [unavailable, setUnavailable] = useState<string[]>([]);
   const [websiteReviews, setWebsiteReviews] = useState<Record<string, WebsiteReview>>({});
+  const [websiteSuggestions, setWebsiteSuggestions] = useState<Record<string, SwedishWebsiteSuggestion[]>>({});
   const [error, setError] = useState("");
   const [recentError, setRecentError] = useState("");
 
@@ -76,9 +78,9 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
       if (response.ok) {
         setRecentResult(body);
         setRecentPage(0);
-        setSolePage(0);
         setEnriched({});
         setUnavailable([]);
+        setWebsiteSuggestions({});
         const reviewsResponse = await fetch("/api/sweden-website-reviews", { cache: "no-store" });
         if (reviewsResponse.ok) {
           const reviewsBody = await reviewsResponse.json() as { reviews: Record<string, WebsiteReview> };
@@ -135,6 +137,7 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
         ...body.companies.map((company) => [company.id.slice(3), company] as const),
       ]));
       setUnavailable((previous) => Array.from(new Set([...previous, ...body.unavailableOrgNumbers])));
+      setWebsiteSuggestions((previous) => ({ ...previous, ...body.websiteSuggestions }));
     } catch {
       setRecentError("Forbindelsen til SCB ble brutt. Prøv igjen senere.");
     } finally {
@@ -162,13 +165,13 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
     <>
       <section className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
         <h2 className="font-semibold text-slate-900">Nye svenske virksomheter · siste 7 dager</h2>
-        <p className="mt-2 text-sm text-slate-700">Henter AB og registrerte enskilda firmor fra Bolagsverkets ukentlige bulkfil. Formene vises separat. Dette er et første kandidatgrunnlag, ikke kontaktklare leads.</p>
-        <button type="button" disabled={recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentBusy ? "Leser registerfil …" : "Hent nye AB og enskild firma · siste 7 dager"}</button>
-        <p className="mt-3 text-sm text-slate-600">For AB kan du kontrollere e-post, SNI 2025 og reservasjonskoder hos SCB og registrere nettsider manuelt. Enskild firma vises bare med virksomhetsnavn og beskrivelse; personnummer, e-post og kontaktfunksjoner er utelatt. Ingen e-post sendes og ingen oppfølging opprettes.</p>
+        <p className="mt-2 text-sm text-slate-700">Henter nye AB fra Bolagsverkets bulkfil. Bare selskaper med e-post bekreftet hos SCB vises i listen etter kontroll. Dette er ikke kontaktklare leads.</p>
+        <button type="button" disabled={recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentBusy ? "Leser registerfil …" : "Hent nye AB · siste 7 dager"}</button>
+        <p className="mt-3 text-sm text-slate-600">Bolagsverket oppgir ikke e-post i denne filen. Knappen kontrollerer SCB-data og undersøker mulige nettsideadresser for selskaper med e-post. Adressene må bekreftes manuelt. Enskild firma vises ikke fordi e-post ikke kontrolleres for dem. Ingen e-post sendes og ingen oppfølging opprettes.</p>
       </section>
       <div aria-live="polite" aria-busy={recentBusy}>
         {recentError ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{recentError}</p> : null}
-        {recentResult ? <><RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} unavailable={unavailable} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} onSaveWebsiteReview={saveWebsiteReview} /><SoleProprietorshipResults result={recentResult} page={solePage} onPageChange={setSolePage} /></> : null}
+        {recentResult ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} unavailable={unavailable} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
       </div>
       <section className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5">
         <h2 className="font-semibold text-slate-900">Teknisk SCB-prøve</h2>
@@ -196,7 +199,7 @@ function websiteReviewLabel(review?: WebsiteReview): string {
   if (review?.status === "confirmed") return "Nettside bekreftet manuelt";
   if (review?.status === "candidate") return "Mulig nettside – ikke bekreftet";
   if (review?.status === "not_found") return "Ikke funnet ved manuell kontroll";
-  return "Nettside ikke undersøkt";
+  return "Ingen nettside bekreftet manuelt";
 }
 
 function recentLeadStatus(detail: SwedishPilotCompany | undefined, unavailable: boolean): string {
@@ -252,11 +255,12 @@ function WebsiteReviewEditor({ company, review, onSave }: Readonly<{
   );
 }
 
-function RecentCompanyCard({ company, detail, unavailable, review, onSaveWebsiteReview }: Readonly<{
+function RecentCompanyCard({ company, detail, unavailable, review, suggestions, onSaveWebsiteReview }: Readonly<{
   company: SwedishRecentCompany;
   detail?: SwedishPilotCompany;
   unavailable: boolean;
   review?: WebsiteReview;
+  suggestions: SwedishWebsiteSuggestion[];
   onSaveWebsiteReview: (input: { orgNumber: string; status: WebsiteReviewStatus; url: string; note: string }) => Promise<string | null>;
 }>) {
   return (
@@ -272,12 +276,20 @@ function RecentCompanyCard({ company, detail, unavailable, review, onSaveWebsite
         <div><dt className="text-slate-500">Bransje (SNI 2025)</dt><dd>{detail ? detail.industryCodes.join(", ") || "Ikke oppgitt hos SCB" : "Ikke hentet fra SCB"}</dd></div>
         <div><dt className="text-slate-500">Nettside</dt><dd>{websiteReviewLabel(review)}{review?.url ? <> · <a href={review.url} target="_blank" rel="noreferrer" className="break-all text-blue-800 underline">{review.url}</a></> : null}</dd></div>
       </dl>
+      {suggestions.length > 0 ? <div className="mt-4 rounded border border-amber-200 bg-amber-50 p-3 text-sm">
+        <p className="font-medium text-amber-950">Mulige nettsideadresser · ikke bekreftet tilhørighet</p>
+        <ul className="mt-2 space-y-2">{suggestions.map((suggestion) => <li key={suggestion.url}>
+          <a href={suggestion.url} target="_blank" rel="noreferrer" className="break-all text-blue-800 underline">{suggestion.url}</a>
+          <span className="ml-2 text-slate-700">{suggestion.basis} · {suggestion.status}{suggestion.httpStatus ? ` (HTTP ${suggestion.httpStatus})` : ""}</span>
+        </li>)}</ul>
+        <p className="mt-2 text-xs text-amber-950">Et teknisk svar eller et e-postdomene beviser ikke at nettsiden tilhører virksomheten.</p>
+      </div> : null}
       <WebsiteReviewEditor key={review?.reviewedAt ?? "new"} company={company} review={review} onSave={onSaveWebsiteReview} />
     </article>
   );
 }
 
-function RecentResults({ result, page, onPageChange, enriched, unavailable, configured, enrichmentBusy, onEnrich, websiteReviews, onSaveWebsiteReview }: Readonly<{
+function RecentResults({ result, page, onPageChange, enriched, unavailable, configured, enrichmentBusy, onEnrich, websiteReviews, websiteSuggestions, onSaveWebsiteReview }: Readonly<{
   result: SwedishRecentResult;
   page: number;
   onPageChange: (page: number) => void;
@@ -287,20 +299,25 @@ function RecentResults({ result, page, onPageChange, enriched, unavailable, conf
   enrichmentBusy: boolean;
   onEnrich: () => void;
   websiteReviews: Record<string, WebsiteReview>;
+  websiteSuggestions: Record<string, SwedishWebsiteSuggestion[]>;
   onSaveWebsiteReview: (input: { orgNumber: string; status: WebsiteReviewStatus; url: string; note: string }) => Promise<string | null>;
 }>) {
   const pageCount = Math.max(1, Math.ceil(result.companies.length / RECENT_PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
   const visible = result.companies.slice(safePage * RECENT_PAGE_SIZE, (safePage + 1) * RECENT_PAGE_SIZE);
+  const withEmail = recentCompaniesWithEmail(visible, enriched);
+  const checkedCount = visible.filter((company) => Boolean(enriched[company.orgNumber]) || unavailable.includes(company.orgNumber)).length;
   return (
     <section className="mt-6">
-      <h2 className="text-lg font-semibold text-slate-900">Nye svenske AB</h2>
-      <p className="mt-2 text-sm text-slate-600">{result.companies.length} registreringer fra og med {result.cutoffDate}. Registerfil sist endret {new Date(result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}.</p>
-      <p className="mt-2 text-sm text-slate-600">Viser {visible.length ? safePage * RECENT_PAGE_SIZE + 1 : 0}–{safePage * RECENT_PAGE_SIZE + visible.length} av {result.companies.length}.</p>
-      <button type="button" disabled={!configured || enrichmentBusy || visible.length === 0} onClick={onEnrich} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{enrichmentBusy ? "Kontrollerer hos SCB …" : "Kontroller e-post, SNI og reservasjon for denne siden"}</button>
+      <h2 className="text-lg font-semibold text-slate-900">Nye svenske AB med e-post</h2>
+      <p className="mt-2 text-sm text-slate-600">{result.companies.length} registreringer fra og med {result.cutoffDate}. Lokal registerfil lastet ned {new Date(result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}. Sist kontrollert mot Bolagsverket {new Date(result.sourceCheckedAt ?? result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}.</p>
+      {result.sourceWarning ? <output className="mt-2 block rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">{result.sourceWarning} Listen kan derfor mangle nyere registreringer.</output> : null}
+      <p className="mt-2 text-sm text-slate-600">Registerkandidater {visible.length ? safePage * RECENT_PAGE_SIZE + 1 : 0}–{safePage * RECENT_PAGE_SIZE + visible.length} av {result.companies.length}. {checkedCount} kontrollert på denne siden · {withEmail.length} med e-post vises.</p>
+      <button type="button" disabled={!configured || enrichmentBusy || visible.length === 0} onClick={onEnrich} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{enrichmentBusy ? "Kontrollerer hos SCB og nettsider …" : "Kontroller e-post, SNI, reservasjon og nettsider for denne siden"}</button>
       {!configured ? <p className="mt-2 text-sm text-slate-600">SCB-nøkkelen må være konfigurert lokalt før kontroll.</p> : null}
+      {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">{checkedCount === 0 ? "Ingen selskaper vises før e-post er kontrollert hos SCB." : "Ingen av de kontrollerte selskapene på denne siden har oppgitt e-post hos SCB."}</p> : null}
       <p className="mt-2 text-sm text-slate-600">SCB kan mangle helt ferske registreringer. En oppgitt adresse er ikke kontrollert for levering eller automatisk godkjent for markedsføring.</p>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((company) => <RecentCompanyCard key={company.id} company={company} detail={enriched[company.orgNumber]} unavailable={unavailable.includes(company.orgNumber)} review={websiteReviews[company.orgNumber]} onSaveWebsiteReview={onSaveWebsiteReview} />)}</div>
+      <div className="mt-4 grid gap-4 md:grid-cols-2">{withEmail.map((company) => <RecentCompanyCard key={company.id} company={company} detail={enriched[company.orgNumber]} unavailable={false} review={websiteReviews[company.orgNumber]} suggestions={websiteSuggestions[company.orgNumber] ?? []} onSaveWebsiteReview={onSaveWebsiteReview} />)}</div>
       {pageCount > 1 ? (
         <nav aria-label="Sider med nye svenske selskaper" className="mt-4 flex items-center gap-3">
           <button type="button" disabled={safePage === 0} onClick={() => onPageChange(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>
@@ -312,54 +329,15 @@ function RecentResults({ result, page, onPageChange, enriched, unavailable, conf
   );
 }
 
-function SoleProprietorshipCard({ company }: Readonly<{ company: SwedishRecentSoleProprietorship }>) {
-  return (
-    <article className="rounded-lg border border-slate-200 bg-white p-5">
-      <h3 className="font-semibold text-slate-900">{company.name}</h3>
-      <p className="mt-1 text-sm text-slate-500">Enskild firma · {company.postalCity || "Ukjent sted"}</p>
-      <dl className="mt-4 space-y-2 text-sm">
-        <div><dt className="text-slate-500">Registrert hos Bolagsverket</dt><dd>{company.registrationDate}</dd></div>
-        <div><dt className="text-slate-500">Virksomhetsbeskrivelse</dt><dd>{company.businessDescription || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Kontaktstatus</dt><dd>Kun registeroversikt – ikke kontrollert for e-post, reservasjon eller egnethet</dd></div>
-      </dl>
-    </article>
-  );
-}
-
-function SoleProprietorshipResults({ result, page, onPageChange }: Readonly<{
-  result: SwedishRecentResult;
-  page: number;
-  onPageChange: (page: number) => void;
-}>) {
-  const total = result.soleProprietorships.length;
-  const pageCount = Math.max(1, Math.ceil(total / RECENT_PAGE_SIZE));
-  const safePage = Math.min(page, pageCount - 1);
-  const visible = result.soleProprietorships.slice(safePage * RECENT_PAGE_SIZE, (safePage + 1) * RECENT_PAGE_SIZE);
-  return (
-    <section className="mt-8">
-      <h2 className="text-lg font-semibold text-slate-900">Nye svenske enskilda firmor</h2>
-      <p className="mt-2 text-sm text-slate-600">{total} registreringer fra og med {result.cutoffDate}. Bare virksomheter registrert hos Bolagsverket inngår. Personnummer vises ikke og lagres ikke i resultatlisten.</p>
-      <p className="mt-2 text-sm text-slate-600">Viser {visible.length ? safePage * RECENT_PAGE_SIZE + 1 : 0}–{safePage * RECENT_PAGE_SIZE + visible.length} av {total}. Dette er ikke en kontaktliste.</p>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((company) => <SoleProprietorshipCard key={company.id} company={company} />)}</div>
-      {pageCount > 1 ? (
-        <nav aria-label="Sider med nye svenske enskilda firmor" className="mt-4 flex items-center gap-3">
-          <button type="button" disabled={safePage === 0} onClick={() => onPageChange(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>
-          <span className="text-sm text-slate-600">Side {safePage + 1} av {pageCount}</span>
-          <button type="button" disabled={safePage + 1 >= pageCount} onClick={() => onPageChange(safePage + 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Neste</button>
-        </nav>
-      ) : null}
-    </section>
-  );
-}
-
 function PilotResults({ result }: Readonly<{ result: SwedishPilotResult }>) {
+  const withEmail = pilotCompaniesWithEmail(result.companies);
   return (
     <section className="mt-6">
       <h2 className="text-lg font-semibold text-slate-900">Datakvalitet i prøveutvalget</h2>
       <p className="mt-2 text-sm text-slate-600">{result.companies.length} oppføringer · {result.withEmail} med oppgitt e-post · {result.withRegistrationDate} med registreringsdato. Hentet {new Date(result.fetchedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}.</p>
       <p className="mt-2 text-sm text-slate-600">Oppgitt e-post er ikke kontrollert for levering. Virksomhetsstatus, reservasjoner og egnethet må avklares før eventuell kontakt vurderes.</p>
-      {result.companies.length === 0 ? <p className="mt-4 text-sm text-slate-600">SCB returnerte ingen oppføringer i prøveutvalget.</p> : null}
-      <div className="mt-4 grid gap-4 md:grid-cols-2">{result.companies.map((company) => <CompanyCard key={company.id} company={company} />)}</div>
+      {withEmail.length === 0 ? <p className="mt-4 text-sm text-slate-600">Ingen oppføringer med e-post i prøveutvalget.</p> : null}
+      <div className="mt-4 grid gap-4 md:grid-cols-2">{withEmail.map((company) => <CompanyCard key={company.id} company={company} />)}</div>
     </section>
   );
 }

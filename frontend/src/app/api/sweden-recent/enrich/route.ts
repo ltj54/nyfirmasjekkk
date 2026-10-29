@@ -1,5 +1,6 @@
 import { isLocalApiRequest } from "@/lib/local-api-access";
 import { enrichRecentSwedishCompanies } from "@/lib/sweden-pilot";
+import { discoverSwedishWebsiteSuggestions } from "@/lib/sweden-website-suggestions";
 
 export const runtime = "nodejs";
 export const maxDuration = 150;
@@ -27,7 +28,21 @@ export async function POST(request: Request) {
   }
   busy = true;
   try {
-    return Response.json(await enrichRecentSwedishCompanies(apiKey, orgNumbers),
+    const enrichment = await enrichRecentSwedishCompanies(apiKey, orgNumbers);
+    const companiesWithEmail = enrichment.companies.filter((company) => company.email.trim());
+    const groups = Array.from({ length: Math.ceil(companiesWithEmail.length / 5) }, (_, index) =>
+      companiesWithEmail.slice(index * 5, (index + 1) * 5));
+    const suggestionEntries = await groups.reduce<Promise<Array<readonly [string, Awaited<ReturnType<typeof discoverSwedishWebsiteSuggestions>>]>>>(
+      async (pending, group) => [
+        ...await pending,
+        ...await Promise.all(group.map(async (company) => [
+          company.id.slice(3),
+          await discoverSwedishWebsiteSuggestions(company.name, company.email),
+        ] as const)),
+      ],
+      Promise.resolve([]),
+    );
+    return Response.json({ ...enrichment, websiteSuggestions: Object.fromEntries(suggestionEntries) },
       { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "SCB-sjekken mislyktes.";
