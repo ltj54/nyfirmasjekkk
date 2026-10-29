@@ -4,8 +4,8 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1492
-- Sendt: 722
+- Antall hendelser: 1512
+- Sendt: 732
 - Angret: 0
 - Aktive kontaktede selskaper: 429
 
@@ -13,6 +13,16 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-29 | 938698031 | JERPSTAD UNDERVISNING | ENK | email | website-follow-up |
+| 2026-10-29 | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | website-follow-up |
+| 2026-10-29 | 938361517 | TERRAINGRID AS | AS | email | website-follow-up |
+| 2026-10-29 | 938694893 | AMANDA KLIPPEN | ENK | email | website-follow-up |
+| 2026-10-29 | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | website-follow-up |
+| 2026-10-29 | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | website-follow-up |
+| 2026-10-29 | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | website-follow-up |
+| 2026-10-29 | 938731853 | SANDUM HYTTESERVICE | ENK | email | website-follow-up |
+| 2026-10-29 | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | website-follow-up |
+| 2026-10-29 | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | website-follow-up |
 | 2026-10-28 | 838773222 | SUNNIVA TOTINO | ENK | email | website-offer |
 | 2026-10-28 | 938772991 | JENSEN GEODATA | ENK | email | website-offer |
 | 2026-10-28 | 938773580 | A ARBACIAUSKAS | ENK | email | website-offer |
@@ -133,16 +143,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-23 | 938703841 | SIA REOVANT | UTLA | email | website-follow-up |
 | 2026-10-23 | 938704945 | MIRICA NORDIC TRANSPORT | ENK | email | website-follow-up |
 | 2026-10-23 | 838628192 | IKOTTOSEN HOLDING AS | AS | email | website-follow-up |
-| 2026-10-23 | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | website-offer |
-| 2026-10-23 | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | website-offer |
-| 2026-10-23 | 938731853 | SANDUM HYTTESERVICE | ENK | email | website-offer |
-| 2026-10-23 | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | website-offer |
-| 2026-10-23 | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | website-offer |
-| 2026-10-23 | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | website-offer |
-| 2026-10-23 | 938694893 | AMANDA KLIPPEN | ENK | email | website-offer |
-| 2026-10-23 | 938361517 | TERRAINGRID AS | AS | email | website-offer |
-| 2026-10-23 | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | website-offer |
-| 2026-10-23 | 938698031 | JERPSTAD UNDERVISNING | ENK | email | website-offer |
 | 2026-10-23 | 938738505 | FIXPART EUROPE B.V. | UTLA | email | website-offer |
 | 2026-10-23 | 838738052 | FABRIEK COMMISSIONING LTD | UTLA | email | website-offer |
 | 2026-10-22 | 936908411 | SOLTVEDT PHOTOGRAPHY | ENK | email | website-lead-batch |
@@ -447,6 +447,26 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-29 08:47 | sent | 938698031 | JERPSTAD UNDERVISNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938698031 | JERPSTAD UNDERVISNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938697744 | MIRIAM RAVN PEDERSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938361517 | TERRAINGRID AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938361517 | TERRAINGRID AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938694893 | AMANDA KLIPPEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938694893 | AMANDA KLIPPEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938609926 | ASSOSIASJON FOR MUSLIMSKE AKADEMIKERE I NORGE | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938691711 | JULIE OVA RÅDGIVNING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938735883 | TRAPPFIXARN I ÖSTERSUND | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938731853 | SANDUM HYTTESERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938731853 | SANDUM HYTTESERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938736103 | GRØNBERG-MOSFJELL NAILS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-29 08:47 | sent | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-29 08:47 | sending | 938672776 | SAMEIET STABELLS GATE 12 | ESEK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-28 23:35 | sent | 838773222 | SUNNIVA TOTINO | ENK | email | - |
 | 2026-10-28 23:35 | sending | 838773222 | SUNNIVA TOTINO | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-28 23:35 | sent | 938772991 | JENSEN GEODATA | ENK | email | - |
