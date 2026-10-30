@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1588
-- Sendt: 770
+- Antall hendelser: 1604
+- Sendt: 778
 - Angret: 0
-- Aktive kontaktede selskaper: 450
+- Aktive kontaktede selskaper: 458
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-30 | 835451712 | ALSHAM ISLAMSK SENTER | FLI | email | website-offer |
+| 2026-10-30 | 938776601 | GT ODDEN INVEST AS | AS | email | website-offer |
+| 2026-10-30 | 938786453 | SYLVIA HERLAND BYSTRØM | ENK | email | website-offer |
+| 2026-10-30 | 938782210 | ØYSTEIN EKRHEIM | ENK | email | website-offer |
+| 2026-10-30 | 938665702 | TANNLEGE STOJKOVSKI | ENK | email | website-offer |
+| 2026-10-30 | 938660336 | SØRLANDSDAMENE 2029 | FLI | email | website-offer |
+| 2026-10-30 | 938744033 | JAN OTTO FAUSA | ENK | email | website-offer |
+| 2026-10-30 | 938786178 | DANIEL KORSMO | UTLA | email | website-offer |
 | 2026-10-30 | 938633266 | GLOSTER MEP GMBH | NUF | email | website-follow-up |
 | 2026-10-30 | 938744068 | GAVEGRUVA SIMONSEN | ENK | email | website-follow-up |
 | 2026-10-30 | 938726248 | SVEBERG FOTO | ENK | email | website-follow-up |
@@ -468,6 +476,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-30 16:08 | sent | 835451712 | ALSHAM ISLAMSK SENTER | FLI | email | - |
+| 2026-10-30 16:08 | sending | 835451712 | ALSHAM ISLAMSK SENTER | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:08 | sent | 938776601 | GT ODDEN INVEST AS | AS | email | - |
+| 2026-10-30 16:08 | sending | 938776601 | GT ODDEN INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:07 | sent | 938786453 | SYLVIA HERLAND BYSTRØM | ENK | email | - |
+| 2026-10-30 16:07 | sending | 938786453 | SYLVIA HERLAND BYSTRØM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:07 | sent | 938782210 | ØYSTEIN EKRHEIM | ENK | email | - |
+| 2026-10-30 16:07 | sending | 938782210 | ØYSTEIN EKRHEIM | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:07 | sent | 938665702 | TANNLEGE STOJKOVSKI | ENK | email | - |
+| 2026-10-30 16:07 | sending | 938665702 | TANNLEGE STOJKOVSKI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:07 | sent | 938660336 | SØRLANDSDAMENE 2029 | FLI | email | - |
+| 2026-10-30 16:07 | sending | 938660336 | SØRLANDSDAMENE 2029 | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:07 | sent | 938744033 | JAN OTTO FAUSA | ENK | email | - |
+| 2026-10-30 16:07 | sending | 938744033 | JAN OTTO FAUSA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 16:07 | sent | 938786178 | DANIEL KORSMO | UTLA | email | - |
+| 2026-10-30 16:07 | sending | 938786178 | DANIEL KORSMO | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-30 09:18 | sent | 938633266 | GLOSTER MEP GMBH | NUF | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-10-30 09:18 | sending | 938633266 | GLOSTER MEP GMBH | NUF | email | Oppfølging reservert før SMTP-levering. |
 | 2026-10-30 09:18 | sent | 938744068 | GAVEGRUVA SIMONSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
