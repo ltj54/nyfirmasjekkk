@@ -56,6 +56,7 @@ export type SwedishSoleEnrichment = {
 type Dependencies = {
   fetcher?: typeof fetch;
   pause?: () => Promise<void>;
+  onChecked?: () => void;
 };
 
 type CodeTable = ReadonlyMap<string, string>;
@@ -306,6 +307,7 @@ export async function enrichRecentSwedishCompanies(
       const response = await readScb(`juridiskaenheter/${expectedId}/full`);
       if (response.status === 404) previous.unavailableOrgNumbers.push(orgNumber);
       else previous.companies.push(normalizeCompany(response.body, expectedId, tables));
+      dependencies.onChecked?.();
       return previous;
     },
     Promise.resolve({ companies: [], unavailableOrgNumbers: [] }),
@@ -333,6 +335,7 @@ export async function enrichRecentSwedishSoleProprietorships(
       const response = await readScb(`juridiskaenheter/${scbId}/full`);
       if (response.status === 404) previous.unavailableIds.push(candidate.id);
       else previous.companies.push(normalizeSoleProprietorship(response.body, scbId, candidate, tables));
+      dependencies.onChecked?.();
       return previous;
     },
     Promise.resolve({ companies: [], unavailableIds: [] }),

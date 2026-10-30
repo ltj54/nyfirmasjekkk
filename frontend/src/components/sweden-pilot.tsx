@@ -3,8 +3,10 @@
 import { useState } from "react";
 
 import type { WebsiteInspectionResponse } from "@/lib/company-check";
-import type { SwedishPilotCompany, SwedishPilotResult, SwedishRecentEnrichment, SwedishSoleEnrichment } from "@/lib/sweden-pilot";
-import type { SwedishRecentCompany, SwedishRecentResult, SwedishRecentSoleProprietorship } from "@/lib/sweden-recent";
+import type { SwedishPilotCompany, SwedishPilotResult, SwedishRecentEnrichment } from "@/lib/sweden-pilot";
+import type { PreparedSwedishRecentResult } from "@/lib/sweden-prepared";
+import { readSwedishPreparationStream, type SwedishPreparationState } from "@/lib/sweden-preparation-stream";
+import type { SwedishRecentCompany, SwedishRecentSoleProprietorship } from "@/lib/sweden-recent";
 import { pilotCompaniesWithEmail, recentCompaniesWithEmail, soleProprietorshipsWithEmail } from "@/lib/sweden-lead-visibility";
 import type { WebsiteReview, WebsiteReviewStatus } from "@/lib/sweden-websites";
 import type { SwedishWebsiteSuggestion } from "@/lib/sweden-website-suggestions";
@@ -56,49 +58,95 @@ function CompanyCard({ company }: Readonly<{ company: SwedishPilotCompany }>) {
   );
 }
 
+function preparationPhaseLabel(phase: SwedishPreparationState["phase"]): string {
+  if (phase === "source") return "Laster ned eller leser Bolagsverkets registerfil …";
+  if (phase === "checking_ab") return "Kontrollerer AB hos SCB …";
+  if (phase === "resolving_sole") return "Finner E-oppføringene i registerfilen …";
+  if (phase === "checking_sole") return "Kontrollerer E hos SCB …";
+  if (phase === "saving") return "Lagrer klargjort liste …";
+  return "Klargjøringen er fullført.";
+}
+
+function SwedishPreparationProgressBar({ state }: Readonly<{ state: SwedishPreparationState }>) {
+  const determinate = state.phase !== "source";
+  let percentage = 0;
+  if (state.total > 0) percentage = Math.round((state.completed / state.total) * 100);
+  else if (state.phase === "complete") percentage = 100;
+  return <div className="mt-4 rounded-lg border border-emerald-200 bg-white p-4">
+    <p className="text-sm font-medium text-slate-800">{preparationPhaseLabel(state.phase)}</p>
+    <progress aria-label="Fremdrift for svensk registerklargjøring" max={100} value={determinate ? percentage : undefined}
+      className="mt-2 h-3 w-full accent-emerald-700" />
+    <p className="mt-1 text-xs text-slate-600">{determinate ? `${state.completed} av ${state.total} kandidater kontrollert hos SCB` : "Antall kandidater blir kjent når registerfilen er lest."}</p>
+    {state.phase === "resolving_sole" ? <div className="mt-3 border-t border-slate-200 pt-3">
+      <p className="text-xs text-slate-700">Leser stor registerfil for E: {state.scanPercent ?? 0} %</p>
+      <progress aria-label="Fremdrift for lesing av E-oppføringer" max={100} value={state.scanPercent ?? 0}
+        className="mt-1 h-2 w-full accent-blue-700" />
+    </div> : null}
+  </div>;
+}
+
+function SwedishPreparationSummary({ result }: Readonly<{ result: PreparedSwedishRecentResult }>) {
+  const checked = result.prepared.checkedAbCount + result.prepared.checkedSoleCount;
+  const withEmail = result.companies.length + result.soleProprietorships.length;
+  const unavailable = result.prepared.unavailableAbCount + result.prepared.unavailableSoleCount;
+  const withoutEmail = checked - withEmail - unavailable;
+  const summary = result.prepared.summaryIncomplete
+    ? `${withEmail} med oppgitt e-post beholdt; ${checked - withEmail} øvrige er ikke med i listen. Fordelingen mellom manglende e-post og manglende SCB-treff er ikke bevart fra den forrige klargjøringen.`
+    : `${withEmail} med oppgitt e-post beholdt; ${withoutEmail} uten e-post utelatt; ${unavailable} ikke funnet hos SCB.`;
+  return <div aria-live="polite" className="mt-4 rounded-lg border border-emerald-300 bg-white p-4 text-sm text-slate-800">
+    <p className="font-semibold">Klargjøringen er fullført</p>
+    <p className="mt-1">{result.prepared.reusedCache ? "Brukte den klargjorte lokale listen og oppdaterte 7-dagersutvalget." : "Leste registerfilen og kontrollerte kandidatene hos SCB."}</p>
+    <p className="mt-1">{result.prepared.checkedAbCount} AB og {result.prepared.checkedSoleCount} E i dagens 7-dagersutvalg. {summary}</p>
+    <p className="mt-1 text-xs text-slate-600">SCB-data kontrollert {new Date(result.prepared.preparedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}. Opplysningene kan ha endret seg; reservasjoner må kontrolleres på nytt før eventuell kontakt. E-postadressene er ikke leveringskontrollert, og ingen kontakt er sendt.</p>
+  </div>;
+}
+
 export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
   const [result, setResult] = useState<SwedishPilotResult | null>(null);
-  const [recentResult, setRecentResult] = useState<SwedishRecentResult | null>(null);
+  const [recentResult, setRecentResult] = useState<PreparedSwedishRecentResult | null>(null);
   const [recentPage, setRecentPage] = useState(0);
   const [busy, setBusy] = useState(false);
   const [recentBusy, setRecentBusy] = useState(false);
+  const [recentProgress, setRecentProgress] = useState<SwedishPreparationState | null>(null);
   const [enrichmentBusy, setEnrichmentBusy] = useState(false);
-  const [soleEnrichmentBusy, setSoleEnrichmentBusy] = useState(false);
   const [enriched, setEnriched] = useState<Record<string, SwedishPilotCompany>>({});
   const [soleEnriched, setSoleEnriched] = useState<Record<string, SwedishPilotCompany>>({});
-  const [unavailable, setUnavailable] = useState<string[]>([]);
-  const [soleUnavailable, setSoleUnavailable] = useState<string[]>([]);
   const [websiteReviews, setWebsiteReviews] = useState<Record<string, WebsiteReview>>({});
   const [websiteSuggestions, setWebsiteSuggestions] = useState<Record<string, SwedishWebsiteSuggestion[]>>({});
   const [error, setError] = useState("");
   const [recentError, setRecentError] = useState("");
-  const [soleError, setSoleError] = useState("");
 
   async function loadRecent() {
     setRecentBusy(true);
     setRecentError("");
+    setRecentProgress({ phase: "source", completed: 0, total: 0 });
+    setRecentResult(null);
     try {
       const response = await fetch("/api/sweden-recent", { method: "POST", cache: "no-store" });
-      const body = await response.json() as SwedishRecentResult & { error?: string };
-      if (response.ok) {
-        setRecentResult(body);
-        setRecentPage(0);
-        setEnriched({});
-        setSoleEnriched({});
-        setUnavailable([]);
-        setSoleUnavailable([]);
-        setSoleError("");
-        setWebsiteSuggestions({});
+      if (!response.ok) {
+        const errorBody = await response.json() as { error?: string };
+        setRecentError(errorBody.error ?? "Kunne ikke hente nye svenske selskaper.");
+        setRecentProgress(null);
+        return;
+      }
+      const result = await readSwedishPreparationStream(response.body, setRecentProgress);
+      setRecentResult(result);
+      setRecentPage(0);
+      setEnriched(Object.fromEntries(result.enrichment.companies.map((company) => [company.id.slice(3), company])));
+      setSoleEnriched(Object.fromEntries(result.enrichment.soleProprietorships.map((company) => [company.id, company])));
+      setWebsiteSuggestions({});
+      try {
         const reviewsResponse = await fetch("/api/sweden-website-reviews", { cache: "no-store" });
         if (reviewsResponse.ok) {
           const reviewsBody = await reviewsResponse.json() as { reviews: Record<string, WebsiteReview> };
           setWebsiteReviews(reviewsBody.reviews);
         }
-      } else {
-        setRecentError(body.error ?? "Kunne ikke hente nye svenske selskaper.");
+      } catch {
+        // The prepared list is still complete when optional manual website reviews are unavailable.
       }
-    } catch {
-      setRecentError("Forbindelsen ble brutt. Prøv igjen når appen er tilgjengelig.");
+    } catch (error) {
+      setRecentError(error instanceof Error ? error.message : "Forbindelsen ble brutt. Prøv igjen når appen er tilgjengelig.");
+      setRecentProgress(null);
     } finally {
       setRecentBusy(false);
     }
@@ -144,37 +192,11 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
         ...Object.entries(previous),
         ...body.companies.map((company) => [company.id.slice(3), company] as const),
       ]));
-      setUnavailable((previous) => Array.from(new Set([...previous, ...body.unavailableOrgNumbers])));
       setWebsiteSuggestions((previous) => ({ ...previous, ...body.websiteSuggestions }));
     } catch {
       setRecentError("Forbindelsen til SCB ble brutt. Prøv igjen senere.");
     } finally {
       setEnrichmentBusy(false);
-    }
-  }
-
-  async function enrichSoleProprietorships() {
-    if (!recentResult || !configured) return;
-    setSoleEnrichmentBusy(true);
-    setSoleError("");
-    try {
-      const response = await fetch("/api/sweden-recent/enrich-sole", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cutoffDate: recentResult.cutoffDate, sourceFileModifiedAt: recentResult.sourceFileModifiedAt }),
-        cache: "no-store",
-      });
-      const body = await response.json() as SwedishSoleEnrichment & { error?: string };
-      if (!response.ok) {
-        setSoleError(body.error ?? "Kunne ikke kontrollere E hos SCB.");
-        return;
-      }
-      setSoleEnriched(Object.fromEntries(body.companies.map((company) => [company.id, company])));
-      setSoleUnavailable(body.unavailableIds);
-    } catch {
-      setSoleError("Forbindelsen til SCB ble brutt. Prøv igjen senere.");
-    } finally {
-      setSoleEnrichmentBusy(false);
     }
   }
 
@@ -198,14 +220,16 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
     <>
       <section className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
         <h2 className="font-semibold text-slate-900">Nye svenske virksomheter · siste 7 dager</h2>
-        <p className="mt-2 text-sm text-slate-700">Henter nye AB og registrerte enkeltpersonforetak (E) fra Bolagsverkets bulkfil. Bare virksomheter med e-post bekreftet hos SCB vises etter kontroll. Dette er ikke kontaktklare leads.</p>
-        <button type="button" disabled={recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentBusy ? "Leser registerfil …" : "Hent nye AB og E · siste 7 dager"}</button>
-        <p className="mt-3 text-sm text-slate-600">Første gjennomgang av en ny registerfil kan ta et par minutter. Senere hentinger bruker et lokalt utvalg så lenge kildefilen er uendret. E-post og reservasjonsstatus kontrolleres separat hos SCB, kun når du trykker på en kontrollknapp. E-identifikatoren vises ikke og lagres ikke i resultatfilen, men Bolagsverkets nedlastede råfil inneholder personnummer og ligger lokalt. Ingen e-post sendes og ingen oppfølging opprettes.</p>
+        <p className="mt-2 text-sm text-slate-700">Henter nye AB og registrerte enkeltpersonforetak (E) fra Bolagsverkets bulkfil, kontrollerer dem hos SCB og viser bare virksomheter med oppgitt e-post. Dette er ikke kontaktklare leads.</p>
+        <button type="button" disabled={!configured || recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentBusy ? "Henter og klargjør listen …" : "Hent og klargjør nye AB og E · siste 7 dager"}</button>
+        <p className="mt-3 text-sm text-slate-600">Første kjøring for en ny bulkfil kan ta flere minutter. Så lenge kildefilen er uendret, gjenbrukes den klargjorte listen og filtreres til de siste 7 dagene uten ny full E-skanning eller SCB-kontroll. E-identifikatoren vises ikke og lagres ikke i resultatfilen, men Bolagsverkets nedlastede råfil inneholder personnummer og ligger lokalt. Ingen e-post sendes og ingen oppfølging opprettes.</p>
+        {recentProgress ? <SwedishPreparationProgressBar state={recentProgress} /> : null}
+        {recentResult && !recentBusy && !recentError ? <SwedishPreparationSummary result={recentResult} /> : null}
       </section>
       <div aria-live="polite" aria-busy={recentBusy}>
         {recentError ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{recentError}</p> : null}
-        {recentResult ? <SoleResults result={recentResult} enriched={soleEnriched} unavailable={soleUnavailable} configured={configured} busy={soleEnrichmentBusy} error={soleError} onEnrich={() => void enrichSoleProprietorships()} /> : null}
-        {recentResult ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} unavailable={unavailable} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
+        {recentResult ? <SoleResults result={recentResult} enriched={soleEnriched} /> : null}
+        {recentResult ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
       </div>
       <section className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5">
         <h2 className="font-semibold text-slate-900">Teknisk SCB-prøve</h2>
@@ -236,9 +260,8 @@ function websiteReviewLabel(review?: WebsiteReview): string {
   return "Ingen nettside bekreftet manuelt";
 }
 
-function recentLeadStatus(detail: SwedishPilotCompany | undefined, unavailable: boolean): string {
+function recentLeadStatus(detail: SwedishPilotCompany | undefined): string {
   if (detail) return `${contactStatusLabel(detail.contactAssessment)} – ${detail.contactAssessmentReason}`;
-  if (unavailable) return "Ikke funnet hos SCB ennå – ingen e-post eller reservasjon kontrollert";
   return "Ikke SCB-kontrollert – ingen kontakt fra denne listen";
 }
 
@@ -268,39 +291,27 @@ function SoleCard({ candidate, detail }: Readonly<{
   );
 }
 
-function SoleResults({ result, enriched, unavailable, configured, busy, error, onEnrich }: Readonly<{
-  result: SwedishRecentResult;
+function SoleResults({ result, enriched }: Readonly<{
+  result: PreparedSwedishRecentResult;
   enriched: Record<string, SwedishPilotCompany>;
-  unavailable: string[];
-  configured: boolean;
-  busy: boolean;
-  error: string;
-  onEnrich: () => void;
 }>) {
   const [page, setPage] = useState(0);
   const withEmail = soleProprietorshipsWithEmail(result.soleProprietorships, enriched);
-  const checkedCount = result.soleProprietorships.filter((candidate) => Boolean(enriched[candidate.id]) || unavailable.includes(candidate.id)).length;
   const pageCount = Math.max(1, Math.ceil(withEmail.length / RECENT_PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
   const visible = withEmail.slice(safePage * RECENT_PAGE_SIZE, (safePage + 1) * RECENT_PAGE_SIZE);
   return (
     <section className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5">
       <h2 className="text-lg font-semibold text-slate-900">Nye svenske E med e-post</h2>
-      <p className="mt-2 text-sm text-slate-600">{result.soleProprietorships.length} E-registreringer fra og med {result.cutoffDate} i Bolagsverkets ukefil. {checkedCount} kontrollert hos SCB · {withEmail.length} med e-post vises. Personnummer vises ikke og legges ikke i resultatfilen; nedlastet råfil inneholder dem. Utvalget omfatter bare E som er registrert hos Bolagsverket, ikke alle svenske enkeltpersonforetak.</p>
-      <button type="button" disabled={!configured || busy || result.soleProprietorships.length < 1 || result.soleProprietorships.length > 100}
-        onClick={onEnrich} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">
-        {busy ? "Kontrollerer E hos SCB …" : "Kontroller E-post, SNI og reservasjon for E"}
-      </button>
-      {result.soleProprietorships.length > 100 ? <p className="mt-2 text-sm text-amber-900">Mer enn 100 E-registreringer. Denne prøveversjonen gjør ingen delvise oppslag.</p> : null}
-      {error ? <p role="alert" className="mt-3 text-sm text-red-800">{error}</p> : null}
-      {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">{checkedCount === 0 ? "Ingen E vises før e-post og reservasjon er kontrollert hos SCB." : "Ingen av de kontrollerte E-registreringene har e-post hos SCB."}</p> : null}
+      <p className="mt-2 text-sm text-slate-600">{result.prepared.checkedSoleCount} E-registreringer fra og med {result.cutoffDate} ble kontrollert hos SCB · {withEmail.length} med e-post vises. Personnummer vises ikke og legges ikke i resultatfilen; nedlastet råfil inneholder dem. Utvalget omfatter bare E som er registrert hos Bolagsverket, ikke alle svenske enkeltpersonforetak.</p>
+      {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">Ingen av E-registreringene har oppgitt e-post hos SCB.</p> : null}
       {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} />)}</div> : null}
       {pageCount > 1 ? <nav aria-label="Sider med svenske E" className="mt-4 flex items-center gap-3">
         <button type="button" disabled={safePage === 0} onClick={() => setPage(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>
         <span className="text-sm text-slate-600">Side {safePage + 1} av {pageCount}</span>
         <button type="button" disabled={safePage + 1 >= pageCount} onClick={() => setPage(safePage + 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Neste</button>
       </nav> : null}
-      <p className="mt-3 text-xs text-slate-600">E-kontrollen leser hele kildefilen på nytt og kan ta noen minutter. Oppgitt e-post er ikke leveringskontrollert. Ingen e-post sendes eller CRM-sak opprettes her.</p>
+      <p className="mt-3 text-xs text-slate-600">Oppgitt e-post er ikke leveringskontrollert. Ingen e-post sendes eller CRM-sak opprettes her.</p>
     </section>
   );
 }
@@ -405,10 +416,9 @@ function WebsiteReviewEditor({ company, review, onSave }: Readonly<{
   );
 }
 
-function RecentCompanyCard({ company, detail, unavailable, review, suggestions, onSaveWebsiteReview }: Readonly<{
+function RecentCompanyCard({ company, detail, review, suggestions, onSaveWebsiteReview }: Readonly<{
   company: SwedishRecentCompany;
   detail?: SwedishPilotCompany;
-  unavailable: boolean;
   review?: WebsiteReview;
   suggestions: SwedishWebsiteSuggestion[];
   onSaveWebsiteReview: (input: { orgNumber: string; status: WebsiteReviewStatus; url: string; note: string }) => Promise<string | null>;
@@ -423,7 +433,7 @@ function RecentCompanyCard({ company, detail, unavailable, review, suggestions, 
         <div><dt className="text-slate-500">Virksomhetsbeskrivelse</dt><dd>{company.businessDescription || "Ikke oppgitt"}</dd></div>
         <div><dt className="text-slate-500">E-post hos SCB</dt><dd className="break-all">{detail?.email || "Ikke oppgitt"}</dd></div>
         <div><dt className="text-slate-500">Registerstatus fra Bolagsverket</dt><dd>{registerStatus(company)}</dd></div>
-        <div><dt className="text-slate-500">Leadstatus</dt><dd>{registerNeedsReview ? "Ikke kontakt – registerstatus må avklares" : recentLeadStatus(detail, unavailable)}</dd></div>
+        <div><dt className="text-slate-500">Leadstatus</dt><dd>{registerNeedsReview ? "Ikke kontakt – registerstatus må avklares" : recentLeadStatus(detail)}</dd></div>
         {detail ? <div><dt className="text-slate-500">Reservasjon / virksomhetsstatus</dt><dd>{detail.emailReservationLabel} · {detail.advertisingReservationLabel} · {detail.statusLabel}</dd></div> : null}
         <div><dt className="text-slate-500">Bransje (SNI 2025)</dt><dd>{detail ? detail.industryCodes.join(", ") || "Ikke oppgitt hos SCB" : "Ikke hentet fra SCB"}</dd></div>
         <div><dt className="text-slate-500">Nettside</dt><dd>{websiteReviewLabel(review)}{review?.url ? <> · <a href={review.url} target="_blank" rel="noreferrer" className="break-all text-blue-800 underline">{review.url}</a></> : null}</dd></div>
@@ -442,12 +452,11 @@ function RecentCompanyCard({ company, detail, unavailable, review, suggestions, 
   );
 }
 
-function RecentResults({ result, page, onPageChange, enriched, unavailable, configured, enrichmentBusy, onEnrich, websiteReviews, websiteSuggestions, onSaveWebsiteReview }: Readonly<{
-  result: SwedishRecentResult;
+function RecentResults({ result, page, onPageChange, enriched, configured, enrichmentBusy, onEnrich, websiteReviews, websiteSuggestions, onSaveWebsiteReview }: Readonly<{
+  result: PreparedSwedishRecentResult;
   page: number;
   onPageChange: (page: number) => void;
   enriched: Record<string, SwedishPilotCompany>;
-  unavailable: string[];
   configured: boolean;
   enrichmentBusy: boolean;
   onEnrich: () => void;
@@ -459,18 +468,17 @@ function RecentResults({ result, page, onPageChange, enriched, unavailable, conf
   const safePage = Math.min(page, pageCount - 1);
   const visible = result.companies.slice(safePage * RECENT_PAGE_SIZE, (safePage + 1) * RECENT_PAGE_SIZE);
   const withEmail = recentCompaniesWithEmail(visible, enriched);
-  const checkedCount = visible.filter((company) => Boolean(enriched[company.orgNumber]) || unavailable.includes(company.orgNumber)).length;
   return (
     <section className="mt-6">
       <h2 className="text-lg font-semibold text-slate-900">Nye svenske AB med e-post</h2>
-      <p className="mt-2 text-sm text-slate-600">{result.companies.length} registreringer fra og med {result.cutoffDate}. Lokal registerfil lastet ned {new Date(result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}. Sist kontrollert mot Bolagsverket {new Date(result.sourceCheckedAt ?? result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}.</p>
+      <p className="mt-2 text-sm text-slate-600">{result.prepared.checkedAbCount} registreringer fra og med {result.cutoffDate} ble kontrollert hos SCB · {result.companies.length} med e-post vises. Lokal registerfil lastet ned {new Date(result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}. Sist kontrollert mot Bolagsverket {new Date(result.sourceCheckedAt ?? result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}.</p>
       {result.sourceWarning ? <output className="mt-2 block rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">{result.sourceWarning} Listen kan derfor mangle nyere registreringer.</output> : null}
-      <p className="mt-2 text-sm text-slate-600">Registerkandidater {visible.length ? safePage * RECENT_PAGE_SIZE + 1 : 0}–{safePage * RECENT_PAGE_SIZE + visible.length} av {result.companies.length}. {checkedCount} kontrollert på denne siden · {withEmail.length} med e-post vises.</p>
-      <button type="button" disabled={!configured || enrichmentBusy || visible.length === 0} onClick={onEnrich} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{enrichmentBusy ? "Kontrollerer hos SCB og nettsider …" : "Kontroller e-post, SNI, reservasjon og nettsider for denne siden"}</button>
+      <p className="mt-2 text-sm text-slate-600">Viser {visible.length ? safePage * RECENT_PAGE_SIZE + 1 : 0}–{safePage * RECENT_PAGE_SIZE + visible.length} av {result.companies.length} AB med e-post.</p>
+      <button type="button" disabled={!configured || enrichmentBusy || visible.length === 0} onClick={onEnrich} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{enrichmentBusy ? "Undersøker mulige nettsider …" : "Undersøk mulige nettsider for denne siden"}</button>
       {!configured ? <p className="mt-2 text-sm text-slate-600">SCB-nøkkelen må være konfigurert lokalt før kontroll.</p> : null}
-      {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">{checkedCount === 0 ? "Ingen selskaper vises før e-post er kontrollert hos SCB." : "Ingen av de kontrollerte selskapene på denne siden har oppgitt e-post hos SCB."}</p> : null}
+      {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">Ingen AB med oppgitt e-post hos SCB i dette utvalget.</p> : null}
       <p className="mt-2 text-sm text-slate-600">SCB kan mangle helt ferske registreringer. En oppgitt adresse er ikke kontrollert for levering eller automatisk godkjent for markedsføring. Registerstatus er fra Bolagsverkets ukentlige fil og kan ha endret seg etter siste oppdatering. <a href="https://bolagsverket.se/apierochoppnadata/hamtaforetagsinformation/nedladdningsbarafiler.2517.html" target="_blank" rel="noreferrer" className="text-blue-800 underline">Om Bolagsverkets datakilde ↗</a></p>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">{withEmail.map((company) => <RecentCompanyCard key={company.id} company={company} detail={enriched[company.orgNumber]} unavailable={false} review={websiteReviews[company.orgNumber]} suggestions={websiteSuggestions[company.orgNumber] ?? []} onSaveWebsiteReview={onSaveWebsiteReview} />)}</div>
+      <div className="mt-4 grid gap-4 md:grid-cols-2">{withEmail.map((company) => <RecentCompanyCard key={company.id} company={company} detail={enriched[company.orgNumber]} review={websiteReviews[company.orgNumber]} suggestions={websiteSuggestions[company.orgNumber] ?? []} onSaveWebsiteReview={onSaveWebsiteReview} />)}</div>
       {pageCount > 1 ? (
         <nav aria-label="Sider med nye svenske selskaper" className="mt-4 flex items-center gap-3">
           <button type="button" disabled={safePage === 0} onClick={() => onPageChange(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>

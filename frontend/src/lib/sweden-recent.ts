@@ -1,7 +1,7 @@
 import { createWriteStream, type Stats } from "node:fs";
 import { mkdir, readFile, rename, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { Readable } from "node:stream";
+import { Readable, Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import csvParser from "csv-parser";
@@ -121,6 +121,13 @@ async function readSourceCheck(file: string): Promise<SourceCheck | null> {
   return null;
 }
 
+function recentLocalSource(file: Stats | null, previousCheck: SourceCheck | null, now: Date, archive: string) {
+  if (!file || !previousCheck || previousCheck.archiveSize !== file.size) return null;
+  const elapsed = now.getTime() - Date.parse(previousCheck.checkedAt);
+  if (!Number.isFinite(elapsed) || elapsed < 0 || elapsed >= SOURCE_CHECK_INTERVAL_MS) return null;
+  return { archive, modifiedAt: file.mtime.toISOString(), checkedAt: previousCheck.checkedAt };
+}
+
 export async function ensureSwedishBulkFile(options: BulkFileOptions = {}): Promise<{
   archive: string; modifiedAt: string; checkedAt: string; warning?: string;
 }> {
@@ -141,11 +148,8 @@ export async function ensureSwedishBulkFile(options: BulkFileOptions = {}): Prom
     checkedAt: previousCheck?.checkedAt ?? storedFile.mtime.toISOString(),
     warning: "Kunne ikke bekrefte at Bolagsverkets fil er oppdatert. Viser sist lagrede fil.",
   });
-  if (file && previousCheck?.archiveSize === file.size
-      && now.getTime() - Date.parse(previousCheck.checkedAt) < SOURCE_CHECK_INTERVAL_MS
-      && now.getTime() >= Date.parse(previousCheck.checkedAt)) {
-    return { archive: paths.archive, modifiedAt: file.mtime.toISOString(), checkedAt: previousCheck.checkedAt };
-  }
+  const recentSource = recentLocalSource(file, previousCheck, now, paths.archive);
+  if (recentSource) return recentSource;
 
   try {
     if (file) {
@@ -271,13 +275,31 @@ export async function resolveSoleProprietorshipIdentifiers(
   cutoffDate: string,
   candidates: SwedishRecentSoleProprietorship[],
   archive = dataPaths().archive,
+  onScanProgress?: (percent: number) => void,
 ): Promise<Array<{ candidate: SwedishRecentSoleProprietorship; scbId: string }>> {
   const wanted = new Map(candidates.map((candidate) => [candidate.id, candidate]));
   const found: Array<{ candidate: SwedishRecentSoleProprietorship; scbId: string }> = [];
   const directory = await unzipper.Open.file(archive);
   const entry = directory.files.find((file) => file.type === "File" && file.path.endsWith(".txt"));
   if (!entry) throw new Error("Bolagsverkets arkiv mangler den forventede datafilen.");
-  const parser = entry.stream().pipe(csvParser({
+  let source: Readable = entry.stream();
+  if (onScanProgress && entry.uncompressedSize > 0) {
+    let scannedBytes = 0;
+    let lastPercent = -1;
+    onScanProgress(0);
+    source = source.pipe(new Transform({
+      transform(chunk: Buffer, _encoding, callback) {
+        scannedBytes += chunk.length;
+        const percent = Math.min(99, Math.floor(scannedBytes * 100 / entry.uncompressedSize));
+        if (percent > lastPercent) {
+          lastPercent = percent;
+          onScanProgress(percent);
+        }
+        callback(null, chunk);
+      },
+    }));
+  }
+  const parser = source.pipe(csvParser({
     separator: ";",
     mapHeaders: ({ header }) => header.replace(/^\uFEFF/, ""),
   }));
@@ -297,6 +319,7 @@ export async function resolveSoleProprietorshipIdentifiers(
     if (wanted.size === 0) break;
   }
   if (wanted.size > 0) throw new Error("Noen E-oppføringer ble ikke funnet i registerfilen. Hent listen på nytt.");
+  onScanProgress?.(100);
   return found;
 }
 
