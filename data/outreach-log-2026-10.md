@@ -4,15 +4,42 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 1534
-- Sendt: 743
+- Antall hendelser: 1588
+- Sendt: 770
 - Angret: 0
-- Aktive kontaktede selskaper: 438
+- Aktive kontaktede selskaper: 450
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-30 | 938633266 | GLOSTER MEP GMBH | NUF | email | website-follow-up |
+| 2026-10-30 | 938744068 | GAVEGRUVA SIMONSEN | ENK | email | website-follow-up |
+| 2026-10-30 | 938726248 | SVEBERG FOTO | ENK | email | website-follow-up |
+| 2026-10-30 | 938648719 | SIN BOLIG AS | AS | email | website-follow-up |
+| 2026-10-30 | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | website-follow-up |
+| 2026-10-30 | 938510016 | PAJALA WELDERS AB NUF | NUF | email | website-follow-up |
+| 2026-10-30 | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | website-follow-up |
+| 2026-10-30 | 938746044 | ENGDAHL PRESTASJON | ENK | email | website-follow-up |
+| 2026-10-30 | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | website-follow-up |
+| 2026-10-30 | 938747229 | SIGNATURE ALHASAN | ENK | email | website-follow-up |
+| 2026-10-30 | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | website-follow-up |
+| 2026-10-30 | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | website-follow-up |
+| 2026-10-30 | 938705194 | HELGESEN DRIFT | ENK | email | website-follow-up |
+| 2026-10-30 | 838725082 | LLM AS | AS | email | website-follow-up |
+| 2026-10-30 | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | website-follow-up |
+| 2026-10-30 | 938782504 | STELLA JAHRMANN LAUVSTAD TRENINGSFORMIDLING | ENK | email | website-offer |
+| 2026-10-30 | 938782962 | SÖNNERLID PRODUCTIONS | ENK | email | website-offer |
+| 2026-10-30 | 938732078 | BADERIN ENERGIES CONSULTING | ENK | email | website-offer |
+| 2026-10-30 | 938535361 | SPOTT AS | AS | email | website-offer |
+| 2026-10-30 | 938522804 | SIA CONSTRUCTION NUF | NUF | email | website-offer |
+| 2026-10-30 | 938737436 | WENCHE KRISTIANSEN JOURNALISTIKK | ENK | email | website-offer |
+| 2026-10-30 | 937751486 | SAMEIET FELLESPARKEN HOLLENDERKVARTALET | SAM | email | website-offer |
+| 2026-10-30 | 938782822 | SAGAHAUGEN SVEIS & MEK | ENK | email | website-offer |
+| 2026-10-30 | 938737169 | NAILART HITRA BY KLINGENBERG | ENK | email | website-offer |
+| 2026-10-30 | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | website-offer |
+| 2026-10-30 | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | website-offer |
+| 2026-10-30 | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | website-offer |
 | 2026-10-29 | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | website-offer |
 | 2026-10-29 | 938729484 | CREDO CONSULTING LARSEN | ENK | email | website-offer |
 | 2026-10-29 | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | website-offer |
@@ -90,21 +117,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-27 | 938749477 | KYNDRYL DANMARK APS | UTLA | email | website-offer |
 | 2026-10-27 | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | website-offer |
 | 2026-10-26 | 936889441 | STEINSVIK GARD | ENK | email | website-lead-batch |
-| 2026-10-26 | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | website-offer |
-| 2026-10-26 | 838725082 | LLM AS | AS | email | website-offer |
-| 2026-10-26 | 938705194 | HELGESEN DRIFT | ENK | email | website-offer |
-| 2026-10-26 | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | website-offer |
-| 2026-10-26 | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | website-offer |
-| 2026-10-26 | 938747229 | SIGNATURE ALHASAN | ENK | email | website-offer |
-| 2026-10-26 | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | website-offer |
 | 2026-10-25 | 937127847 | REGENERATIV REVOLUSJON AS | AS | email | website-lead-batch |
 | 2026-10-25 | 937312237 | THU TEAM BUILDING | ENK | email | website-lead-batch |
 | 2026-10-25 | 937379900 | JANSFJORD KULTURHÅNDVERK | FLI | email | website-lead-batch |
-| 2026-10-25 | 938746044 | ENGDAHL PRESTASJON | ENK | email | website-offer |
 | 2026-10-25 | 938746133 | OLE BIRGER NYGÅRD | ENK | email | website-offer |
-| 2026-10-25 | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | website-offer |
-| 2026-10-25 | 938510016 | PAJALA WELDERS AB NUF | NUF | email | website-offer |
-| 2026-10-25 | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | website-offer |
 | 2026-10-24 | 938599157 | DARDANIA DRAMMEN | FLI | email | website-follow-up |
 | 2026-10-24 | 938676100 | EMILIE SUNDQUIST HUNDEVELVÆRE | ENK | email | website-follow-up |
 | 2026-10-24 | 938708096 | NORGE ENTREPRENEUR LTD | UTLA | email | website-follow-up |
@@ -119,10 +135,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-10-24 | 938708916 | DIGNIFY WORDS LIMITED | UTLA | email | website-follow-up |
 | 2026-10-24 | 938333173 | DIGNIFY WORDS LIMITED NUF | NUF | email | website-follow-up |
 | 2026-10-24 | 938715521 | FRIDA KRAFT | ENK | email | website-follow-up |
-| 2026-10-24 | 938648719 | SIN BOLIG AS | AS | email | website-offer |
-| 2026-10-24 | 938726248 | SVEBERG FOTO | ENK | email | website-offer |
-| 2026-10-24 | 938744068 | GAVEGRUVA SIMONSEN | ENK | email | website-offer |
-| 2026-10-24 | 938633266 | GLOSTER MEP GMBH | NUF | email | website-offer |
 | 2026-10-23 | 938689822 | BART HEYLEN SL | UTLA | email | website-follow-up |
 | 2026-10-23 | 938659982 | GUBHAGE BLOMSTER | ENK | email | website-follow-up |
 | 2026-10-23 | 938682798 | P/R TVILLINGHAV DA | PRE | email | website-follow-up |
@@ -456,6 +468,60 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-30 09:18 | sent | 938633266 | GLOSTER MEP GMBH | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:18 | sending | 938633266 | GLOSTER MEP GMBH | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:18 | sent | 938744068 | GAVEGRUVA SIMONSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:18 | sending | 938744068 | GAVEGRUVA SIMONSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:18 | sent | 938726248 | SVEBERG FOTO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:18 | sending | 938726248 | SVEBERG FOTO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:18 | sent | 938648719 | SIN BOLIG AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:18 | sending | 938648719 | SIN BOLIG AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:18 | sent | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:18 | sending | 838250572 | BRIMER LIEPAJA, LIEPAJAS SPECIALAS EKONOMISKAS ZONAS, AS NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:18 | sent | 938510016 | PAJALA WELDERS AB NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:18 | sending | 938510016 | PAJALA WELDERS AB NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 938742286 | LANDSJØÅSEN VASSVERK | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938746044 | ENGDAHL PRESTASJON | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 938746044 | ENGDAHL PRESTASJON | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 838698182 | TRØMBORG FARMEN MOTOR | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938747229 | SIGNATURE ALHASAN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 938747229 | SIGNATURE ALHASAN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 938702659 | HAUGE YOGA OG TERAPI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 938612846 | SÆTERNES MANGT OG MEGET | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938705194 | HELGESEN DRIFT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 938705194 | HELGESEN DRIFT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 838725082 | LLM AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 838725082 | LLM AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-10-30 09:17 | sending | 935750431 | GJØVIK KRISTELIGE STUDENTLAG | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938782504 | STELLA JAHRMANN LAUVSTAD TRENINGSFORMIDLING | ENK | email | - |
+| 2026-10-30 09:17 | sending | 938782504 | STELLA JAHRMANN LAUVSTAD TRENINGSFORMIDLING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938782962 | SÖNNERLID PRODUCTIONS | ENK | email | - |
+| 2026-10-30 09:17 | sending | 938782962 | SÖNNERLID PRODUCTIONS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938732078 | BADERIN ENERGIES CONSULTING | ENK | email | - |
+| 2026-10-30 09:17 | sending | 938732078 | BADERIN ENERGIES CONSULTING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938535361 | SPOTT AS | AS | email | - |
+| 2026-10-30 09:17 | sending | 938535361 | SPOTT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:17 | sent | 938522804 | SIA CONSTRUCTION NUF | NUF | email | - |
+| 2026-10-30 09:17 | sending | 938522804 | SIA CONSTRUCTION NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 938737436 | WENCHE KRISTIANSEN JOURNALISTIKK | ENK | email | - |
+| 2026-10-30 09:16 | sending | 938737436 | WENCHE KRISTIANSEN JOURNALISTIKK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 937751486 | SAMEIET FELLESPARKEN HOLLENDERKVARTALET | SAM | email | - |
+| 2026-10-30 09:16 | sending | 937751486 | SAMEIET FELLESPARKEN HOLLENDERKVARTALET | SAM | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 938782822 | SAGAHAUGEN SVEIS & MEK | ENK | email | - |
+| 2026-10-30 09:16 | sending | 938782822 | SAGAHAUGEN SVEIS & MEK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 938737169 | NAILART HITRA BY KLINGENBERG | ENK | email | - |
+| 2026-10-30 09:16 | sending | 938737169 | NAILART HITRA BY KLINGENBERG | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | - |
+| 2026-10-30 09:16 | sending | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | - |
+| 2026-10-30 09:16 | sending | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-10-30 09:16 | sent | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | - |
+| 2026-10-30 09:16 | sending | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-29 15:46 | sent | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | - |
 | 2026-10-29 15:46 | sending | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
 | 2026-10-29 15:46 | sent | 938729484 | CREDO CONSULTING LARSEN | ENK | email | - |
