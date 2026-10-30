@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { enrichRecentSwedishCompanies, fetchSwedishPilot } from "../src/lib/sweden-pilot.ts";
+import { enrichRecentSwedishCompanies, enrichRecentSwedishSoleProprietorships, fetchSwedishPilot } from "../src/lib/sweden-pilot.ts";
 
 const key = "test-key-never-returned";
 const pause = async () => {};
@@ -154,4 +154,45 @@ test("recent enrichment rejects unbounded or duplicate requests before network a
   const fetcher = async () => assert.fail("invalid requests must not call SCB");
   await assert.rejects(enrichRecentSwedishCompanies(key, ["5596090075", "5596090075"], { fetcher, pause }), /1–25 ulike/);
   await assert.rejects(enrichRecentSwedishCompanies(key, Array.from({ length: 26 }, (_, index) => String(5596090000 + index)), { fetcher, pause }), /1–25 ulike/);
+});
+
+test("E enrichment uses the identifier only in the SCB request, never in the returned lead", async () => {
+  const privateId = "198001010123";
+  const candidate = { id: "E:1", name: "Eksempel Enskild Firma", postalCity: "Stockholm" };
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    assert.equal(options.headers["X-API-Key"], key);
+    const table = codeTables.get(url.pathname.split("/").at(-1));
+    if (table) return Response.json(table);
+    assert.equal(url.pathname, `/v1/juridiskaenheter/${privateId}/full`);
+    return Response.json(company(0, { peOrgNr: privateId, jurform: "10", namn: "Testperson", epost: "firma@example.invalid" }));
+  };
+  const result = await enrichRecentSwedishSoleProprietorships(key, [{ candidate, scbId: privateId }], { fetcher, pause });
+  assert.equal(result.companies[0].id, "E:1");
+  assert.equal(result.companies[0].name, candidate.name);
+  assert.equal(result.companies[0].email, "firma@example.invalid");
+  assert.equal(result.companies[0].contactAssessment, "eligible");
+  assert.doesNotMatch(JSON.stringify(result), new RegExp(privateId));
+});
+
+test("E enrichment blocks reservations and rejects an identity mismatch", async () => {
+  const privateId = "198001010123";
+  const candidate = { id: "E:1", name: "Eksempel Enskild Firma", postalCity: "Stockholm" };
+  const reservedFetcher = async (input) => {
+    const table = codeTables.get(new URL(input).pathname.split("/").at(-1));
+    return table ? Response.json(table) : Response.json(company(0, {
+      peOrgNr: privateId, jurform: "10", namn: "Testperson", epostSparrTyp: 2,
+    }));
+  };
+  const reserved = await enrichRecentSwedishSoleProprietorships(key, [{ candidate, scbId: privateId }], { fetcher: reservedFetcher, pause });
+  assert.equal(reserved.companies[0].contactAssessment, "blocked");
+  const mismatchFetcher = async (input) => {
+    const table = codeTables.get(new URL(input).pathname.split("/").at(-1));
+    return table ? Response.json(table) : Response.json(company(0, {
+      peOrgNr: "198001010999", jurform: "10", navn: "Annen person",
+    }));
+  };
+  await assert.rejects(enrichRecentSwedishSoleProprietorships(key, [{ candidate, scbId: privateId }], {
+    fetcher: mismatchFetcher, pause,
+  }), /uventet identitet/);
 });

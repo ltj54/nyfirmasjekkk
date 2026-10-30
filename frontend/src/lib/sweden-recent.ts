@@ -256,6 +256,50 @@ export async function scanRecentSwedishCompanies(archive: string, cutoffDate: st
   return { companies: companies.toSorted(newestFirst), soleProprietorships: soleProprietorships.toSorted(newestFirst) };
 }
 
+function verifiedSoleIdentifier(row: Record<string, unknown>, candidate: SwedishRecentSoleProprietorship,
+  registrationDate: string, name: string): string | null {
+  if (candidate.name !== name || candidate.registrationDate !== registrationDate
+    || candidate.postalCity !== postalCity(row.postadress)) {
+    throw new Error("Registerfilen endret seg under E-kontrollen. Hent listen på nytt.");
+  }
+  const [scbId, identityType] = plainValue(row.organisationsidentitet).split("$");
+  return /^\d{12}$/.test(scbId) && identityType === "PERSON-IDORG" ? scbId : null;
+}
+
+/** Resolves E identifiers only for an explicit SCB check. Personal numbers are never cached or returned to the browser. */
+export async function resolveSoleProprietorshipIdentifiers(
+  cutoffDate: string,
+  candidates: SwedishRecentSoleProprietorship[],
+  archive = dataPaths().archive,
+): Promise<Array<{ candidate: SwedishRecentSoleProprietorship; scbId: string }>> {
+  const wanted = new Map(candidates.map((candidate) => [candidate.id, candidate]));
+  const found: Array<{ candidate: SwedishRecentSoleProprietorship; scbId: string }> = [];
+  const directory = await unzipper.Open.file(archive);
+  const entry = directory.files.find((file) => file.type === "File" && file.path.endsWith(".txt"));
+  if (!entry) throw new Error("Bolagsverkets arkiv mangler den forventede datafilen.");
+  const parser = entry.stream().pipe(csvParser({
+    separator: ";",
+    mapHeaders: ({ header }) => header.replace(/^\uFEFF/, ""),
+  }));
+  let index = 0;
+  for await (const rawRow of parser) {
+    const row = rawRow as Record<string, unknown>;
+    const registrationDate = validIsoDate(row.registreringsdatum);
+    if (!registrationDate || registrationDate < cutoffDate || plainValue(row.organisationsform) !== "E-ORGFO") continue;
+    const name = beforeMarker(row.organisationsnamn);
+    if (!name) continue;
+    index += 1;
+    const candidate = wanted.get(`E:${index}`);
+    if (!candidate) continue;
+    const scbId = verifiedSoleIdentifier(row, candidate, registrationDate, name);
+    if (scbId) found.push({ candidate, scbId });
+    wanted.delete(candidate.id);
+    if (wanted.size === 0) break;
+  }
+  if (wanted.size > 0) throw new Error("Noen E-oppføringer ble ikke funnet i registerfilen. Hent listen på nytt.");
+  return found;
+}
+
 export function sevenDayCutoff(now = new Date()): string {
   const cutoff = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   cutoff.setUTCDate(cutoff.getUTCDate() - 7);

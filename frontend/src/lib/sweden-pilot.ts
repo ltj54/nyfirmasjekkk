@@ -1,4 +1,5 @@
 import type { SwedishWebsiteSuggestion } from "./sweden-website-suggestions";
+import type { SwedishRecentSoleProprietorship } from "./sweden-recent";
 
 export const SWEDEN_PILOT_LIMIT = 10;
 const SCB_BASE_URL = "https://apiafr.scb.se/v1/";
@@ -41,6 +42,13 @@ export type SwedishPilotResult = {
 export type SwedishRecentEnrichment = {
   companies: SwedishPilotCompany[];
   unavailableOrgNumbers: string[];
+  fetchedAt: string;
+  websiteSuggestions?: Record<string, SwedishWebsiteSuggestion[]>;
+};
+
+export type SwedishSoleEnrichment = {
+  companies: SwedishPilotCompany[];
+  unavailableIds: string[];
   fetchedAt: string;
   websiteSuggestions?: Record<string, SwedishWebsiteSuggestion[]>;
 };
@@ -133,12 +141,7 @@ function contactAssessment(options: {
   return { contactAssessment: "eligible" as const, contactAssessmentReason: "Aktiv virksomhet med e-post og uten registrert e-post- eller reklamesperre. Må fortsatt vurderes manuelt." };
 }
 
-function normalizeCompany(value: unknown, expectedId: string, tables: ScbCodeTables): SwedishPilotCompany {
-  const row = object(value);
-  const id = text(row.orgNr);
-  if (row.jurform !== "49" || text(row.peOrgNr) !== expectedId || !/^\d{10}$/.test(id) || !text(row.namn)) {
-    throw new Error("SCB returnerte en uventet virksomhetstype eller identitet. Prøveutvalget ble avbrutt.");
-  }
+function normalizeScbRecord(row: Record<string, unknown>, tables: ScbCodeTables, publicId: string, name: string): SwedishPilotCompany {
   const address = object(row.postAdress);
   const industries = Array.isArray(row.naringsgrenar) ? row.naringsgrenar : [];
   const emailReservationCode = integer(row.epostSparrTyp);
@@ -150,8 +153,8 @@ function normalizeCompany(value: unknown, expectedId: string, tables: ScbCodeTab
   const turnoverClassCode = text(row.omsKl);
   const email = text(row.epost);
   return {
-    id: `SE:${id}`,
-    name: text(row.namn),
+    id: publicId,
+    name,
     city: text(address.postOrt),
     registrationDate: registrationDate(row.regDat),
     startDate: registrationDate(row.startDat),
@@ -182,10 +185,57 @@ function normalizeCompany(value: unknown, expectedId: string, tables: ScbCodeTab
   };
 }
 
+function normalizeCompany(value: unknown, expectedId: string, tables: ScbCodeTables): SwedishPilotCompany {
+  const row = object(value);
+  const id = text(row.orgNr);
+  if (row.jurform !== "49" || text(row.peOrgNr) !== expectedId || !/^\d{10}$/.test(id) || !text(row.namn)) {
+    throw new Error("SCB returnerte en uventet virksomhetstype eller identitet. Prøveutvalget ble avbrutt.");
+  }
+  return normalizeScbRecord(row, tables, `SE:${id}`, text(row.namn));
+}
+
+function normalizeSoleProprietorship(value: unknown, expectedId: string,
+  candidate: SwedishRecentSoleProprietorship, tables: ScbCodeTables): SwedishPilotCompany {
+  const row = object(value);
+  if (row.jurform !== "10" || text(row.peOrgNr) !== expectedId || !text(row.namn)) {
+    throw new Error("SCB returnerte en uventet identitet eller virksomhetsform. E-kontrollen ble avbrutt.");
+  }
+  return { ...normalizeScbRecord(row, tables, candidate.id, candidate.name), city: candidate.postalCity };
+}
+
 function upstreamError(status: number): string {
   if (status === 401 || status === 403) return "SCB avviste API-nøkkelen. Kontroller tilgangen hos SCB.";
   if (status === 429) return "SCB ber oss vente før neste forsøk. Ingen nye forsøk kjøres automatisk.";
   return `SCB er utilgjengelig akkurat nå (HTTP ${status}). Prøv igjen senere.`;
+}
+
+function createRecentScbReader(apiKey: string, dependencies: Dependencies) {
+  const fetcher = dependencies.fetcher ?? fetch;
+  const pause = dependencies.pause ?? (() => new Promise<void>((resolve) => setTimeout(resolve, 300)));
+  return async (resource: string): Promise<{ status: number; body?: unknown }> => {
+    await pause();
+    const response = await fetcher(`${SCB_BASE_URL}${resource}`, {
+      headers: { "X-API-Key": apiKey, Accept: "application/json" },
+      cache: "no-store",
+      redirect: "error",
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (response.status === 404) return { status: 404 };
+    if (!response.ok) throw new Error(upstreamError(response.status));
+    return { status: response.status, body: await response.json() };
+  };
+}
+
+async function loadRecentCodeTables(readScb: ReturnType<typeof createRecentScbReader>): Promise<ScbCodeTables> {
+  const entries = await CODE_TABLE_RESOURCES.reduce<Promise<Array<[keyof ScbCodeTables, CodeTable]>>>(
+    async (pendingEntries, [name, resource]) => {
+      const previous = await pendingEntries;
+      const response = await readScb(resource);
+      return [...previous, [name, parseCodeTable(response.body)]];
+    },
+    Promise.resolve([]),
+  );
+  return Object.fromEntries(entries) as ScbCodeTables;
 }
 
 /** Read-only, bounded sample: one AB list and at most ten full company lookups. */
@@ -247,29 +297,8 @@ export async function enrichRecentSwedishCompanies(
     || orgNumbers.some((number) => !/^\d{10}$/.test(number))) {
     throw new Error("SCB-sjekken kan bare gjelde 1–25 ulike svenske organisasjonsnumre.");
   }
-  const fetcher = dependencies.fetcher ?? fetch;
-  const pause = dependencies.pause ?? (() => new Promise<void>((resolve) => setTimeout(resolve, 300)));
-  async function readScb(resource: string): Promise<{ status: number; body?: unknown }> {
-    await pause();
-    const response = await fetcher(`${SCB_BASE_URL}${resource}`, {
-      headers: { "X-API-Key": apiKey, Accept: "application/json" },
-      cache: "no-store",
-      redirect: "error",
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (response.status === 404) return { status: 404 };
-    if (!response.ok) throw new Error(upstreamError(response.status));
-    return { status: response.status, body: await response.json() };
-  }
-  const codeTableEntries = await CODE_TABLE_RESOURCES.reduce<Promise<Array<[keyof ScbCodeTables, CodeTable]>>>(
-    async (pendingEntries, [name, resource]) => {
-      const entries = await pendingEntries;
-      const response = await readScb(resource);
-      return [...entries, [name, parseCodeTable(response.body)]];
-    },
-    Promise.resolve([]),
-  );
-  const tables = Object.fromEntries(codeTableEntries) as ScbCodeTables;
+  const readScb = createRecentScbReader(apiKey, dependencies);
+  const tables = await loadRecentCodeTables(readScb);
   const checked = await orgNumbers.reduce<Promise<{ companies: SwedishPilotCompany[]; unavailableOrgNumbers: string[] }>>(
     async (pending, orgNumber) => {
       const previous = await pending;
@@ -280,6 +309,33 @@ export async function enrichRecentSwedishCompanies(
       return previous;
     },
     Promise.resolve({ companies: [], unavailableOrgNumbers: [] }),
+  );
+  return { ...checked, fetchedAt: new Date().toISOString() };
+}
+
+/** Explicit, bounded E lookup. SCB personal identifiers stay inside this request and are absent from the result. */
+export async function enrichRecentSwedishSoleProprietorships(
+  apiKey: string,
+  lookups: Array<{ candidate: SwedishRecentSoleProprietorship; scbId: string }>,
+  dependencies: Dependencies = {},
+): Promise<SwedishSoleEnrichment> {
+  if (!apiKey.trim()) throw new Error("SCB-tilgang er ikke satt opp ennå.");
+  if (lookups.length < 1 || lookups.length > 100
+    || new Set(lookups.map(({ candidate }) => candidate.id)).size !== lookups.length
+    || lookups.some(({ candidate, scbId }) => !/^E:\d+$/.test(candidate.id) || !/^\d{12}$/.test(scbId))) {
+    throw new Error("E-kontrollen kan bare gjelde 1–100 ulike registreringer.");
+  }
+  const readScb = createRecentScbReader(apiKey, dependencies);
+  const tables = await loadRecentCodeTables(readScb);
+  const checked = await lookups.reduce<Promise<{ companies: SwedishPilotCompany[]; unavailableIds: string[] }>>(
+    async (pending, { candidate, scbId }) => {
+      const previous = await pending;
+      const response = await readScb(`juridiskaenheter/${scbId}/full`);
+      if (response.status === 404) previous.unavailableIds.push(candidate.id);
+      else previous.companies.push(normalizeSoleProprietorship(response.body, scbId, candidate, tables));
+      return previous;
+    },
+    Promise.resolve({ companies: [], unavailableIds: [] }),
   );
   return { ...checked, fetchedAt: new Date().toISOString() };
 }
