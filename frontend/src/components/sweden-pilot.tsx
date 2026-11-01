@@ -68,6 +68,7 @@ function preparationPhaseLabel(phase: SwedishPreparationState["phase"]): string 
 }
 
 function SwedishPreparationProgressBar({ state }: Readonly<{ state: SwedishPreparationState }>) {
+  if (state.phase !== "source" && state.total === 0) return null;
   const determinate = state.phase !== "source";
   let percentage = 0;
   if (state.total > 0) percentage = Math.round((state.completed / state.total) * 100);
@@ -85,8 +86,19 @@ function SwedishPreparationProgressBar({ state }: Readonly<{ state: SwedishPrepa
   </div>;
 }
 
+function SwedishEmptyRecentState({ result }: Readonly<{ result: PreparedSwedishRecentResult }>) {
+  const modifiedAt = new Date(result.sourceFileModifiedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" });
+  return <div aria-live="polite" className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-slate-800">
+    <p className="font-semibold">Ingen AB- eller E-registreringer i den siste tilgjengelige uken i filen</p>
+    <p className="mt-1">Datovinduet begynner {result.cutoffDate}. Nyeste AB- eller E-registrering i filen er {result.sourceLatestRegistrationDate ?? "ikke kjent"}. Kildefilen er sist endret {modifiedAt}.</p>
+    <p className="mt-1">Ingen SCB-oppslag ble gjort. Dette sier ikke at det ikke er registrert nye virksomheter i Sverige; en nyere bulkfil kan ennå mangle her. Trykk «Sjekk etter ny kildefil nå» for å kontrollere kilden igjen.</p>
+    {result.sourceWarning ? <p className="mt-2 font-medium text-amber-900">{result.sourceWarning}</p> : null}
+  </div>;
+}
+
 function SwedishPreparationSummary({ result }: Readonly<{ result: PreparedSwedishRecentResult }>) {
   const checked = result.prepared.checkedAbCount + result.prepared.checkedSoleCount;
+  if (checked === 0) return <SwedishEmptyRecentState result={result} />;
   const withEmail = result.companies.length + result.soleProprietorships.length;
   const unavailable = result.prepared.unavailableAbCount + result.prepared.unavailableSoleCount;
   const withoutEmail = checked - withEmail - unavailable;
@@ -95,10 +107,17 @@ function SwedishPreparationSummary({ result }: Readonly<{ result: PreparedSwedis
     : `${withEmail} med oppgitt e-post beholdt; ${withoutEmail} uten e-post utelatt; ${unavailable} ikke funnet hos SCB.`;
   return <div aria-live="polite" className="mt-4 rounded-lg border border-emerald-300 bg-white p-4 text-sm text-slate-800">
     <p className="font-semibold">Klargjøringen er fullført</p>
-    <p className="mt-1">{result.prepared.reusedCache ? "Brukte den klargjorte lokale listen og oppdaterte 7-dagersutvalget." : "Leste registerfilen og kontrollerte kandidatene hos SCB."}</p>
-    <p className="mt-1">{result.prepared.checkedAbCount} AB og {result.prepared.checkedSoleCount} E i dagens 7-dagersutvalg. {summary}</p>
+    <p className="mt-1">{result.prepared.reusedCache ? "Brukte den klargjorte lokale listen for denne kildefilen." : "Leste registerfilen og kontrollerte kandidatene hos SCB."}</p>
+    <p className="mt-1">{result.prepared.checkedAbCount} AB og {result.prepared.checkedSoleCount} E registrert fra {result.cutoffDate} til {result.sourceLatestRegistrationDate ?? "ukjent dato"}. {summary}</p>
+    <p className="mt-1 text-xs text-slate-600">Dette er siste tilgjengelige registreringsuke i kildefilen, ikke nødvendigvis de siste sju kalenderdagene.</p>
     <p className="mt-1 text-xs text-slate-600">SCB-data kontrollert {new Date(result.prepared.preparedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}. Opplysningene kan ha endret seg; reservasjoner må kontrolleres på nytt før eventuell kontakt. E-postadressene er ikke leveringskontrollert, og ingen kontakt er sendt.</p>
   </div>;
+}
+
+function recentButtonLabel(busy: boolean, emptySelection: boolean): string {
+  if (busy) return "Henter og klargjør listen …";
+  if (emptySelection) return "Sjekk etter ny kildefil nå";
+  return "Hent og klargjør siste tilgjengelige uke";
 }
 
 export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
@@ -115,6 +134,7 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
   const [websiteSuggestions, setWebsiteSuggestions] = useState<Record<string, SwedishWebsiteSuggestion[]>>({});
   const [error, setError] = useState("");
   const [recentError, setRecentError] = useState("");
+  const emptyRecentSelection = recentResult?.prepared.checkedAbCount === 0 && recentResult.prepared.checkedSoleCount === 0;
 
   async function loadRecent() {
     setRecentBusy(true);
@@ -219,17 +239,17 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
   return (
     <>
       <section className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-        <h2 className="font-semibold text-slate-900">Nye svenske virksomheter · siste 7 dager</h2>
+        <h2 className="font-semibold text-slate-900">Nye svenske virksomheter · siste tilgjengelige registreringsuke</h2>
         <p className="mt-2 text-sm text-slate-700">Henter nye AB og registrerte enkeltpersonforetak (E) fra Bolagsverkets bulkfil, kontrollerer dem hos SCB og viser bare virksomheter med oppgitt e-post. Dette er ikke kontaktklare leads.</p>
-        <button type="button" disabled={!configured || recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentBusy ? "Henter og klargjør listen …" : "Hent og klargjør nye AB og E · siste 7 dager"}</button>
-        <p className="mt-3 text-sm text-slate-600">Første kjøring for en ny bulkfil kan ta flere minutter. Så lenge kildefilen er uendret, gjenbrukes den klargjorte listen og filtreres til de siste 7 dagene uten ny full E-skanning eller SCB-kontroll. E-identifikatoren vises ikke og lagres ikke i resultatfilen, men Bolagsverkets nedlastede råfil inneholder personnummer og ligger lokalt. Ingen e-post sendes og ingen oppfølging opprettes.</p>
+        <button type="button" disabled={!configured || recentBusy} onClick={() => void loadRecent()} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{recentButtonLabel(recentBusy, emptyRecentSelection)}</button>
+        <p className="mt-3 text-sm text-slate-600">Første kjøring for en ny bulkfil kan ta flere minutter. Utvalget følger den nyeste AB- eller E-registreringen i filen og kan derfor være eldre enn sju kalenderdager. Så lenge kildefilen er uendret, gjenbrukes den klargjorte listen uten ny full E-skanning eller SCB-kontroll. E-identifikatoren vises ikke og lagres ikke i resultatfilen, men Bolagsverkets nedlastede råfil inneholder personnummer og ligger lokalt. Ingen e-post sendes og ingen oppfølging opprettes.</p>
         {recentProgress ? <SwedishPreparationProgressBar state={recentProgress} /> : null}
         {recentResult && !recentBusy && !recentError ? <SwedishPreparationSummary result={recentResult} /> : null}
       </section>
       <div aria-live="polite" aria-busy={recentBusy}>
         {recentError ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{recentError}</p> : null}
-        {recentResult ? <SoleResults result={recentResult} enriched={soleEnriched} /> : null}
-        {recentResult ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
+        {recentResult && recentResult.prepared.checkedSoleCount > 0 ? <SoleResults result={recentResult} enriched={soleEnriched} /> : null}
+        {recentResult && recentResult.prepared.checkedAbCount > 0 ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
       </div>
       <section className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5">
         <h2 className="font-semibold text-slate-900">Teknisk SCB-prøve</h2>

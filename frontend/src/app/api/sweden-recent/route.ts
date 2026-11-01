@@ -30,7 +30,7 @@ export function POST(request: Request) {
       send({ kind: "source" });
       void (async () => {
         try {
-          const recent = await loadRecentSwedishCompanies();
+          const recent = await loadRecentSwedishCompanies({ forceSourceCheck: true });
           const result = await prepareRecentSwedishCompanies(recent, apiKey, {
             onProgress: (progress) => send({ kind: "progress", progress }),
           });

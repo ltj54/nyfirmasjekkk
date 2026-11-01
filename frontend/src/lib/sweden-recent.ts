@@ -53,6 +53,7 @@ export type SwedishRecentResult = {
   fetchedAt: string;
   cutoffDate: string;
   sourceFileModifiedAt: string;
+  sourceLatestRegistrationDate?: string;
   sourceCheckedAt?: string;
   sourceWarning?: string;
 };
@@ -68,7 +69,7 @@ export type SwedishRecentSoleProprietorship = {
 type RecentCache = SwedishRecentResult & { archiveSize: number; schemaVersion: number };
 const RECENT_CACHE_SCHEMA_VERSION = 2;
 type SourceCheck = { checkedAt: string; archiveSize: number };
-type BulkFileOptions = { now?: Date; fetcher?: typeof fetch; directory?: string };
+type BulkFileOptions = { now?: Date; fetcher?: typeof fetch; directory?: string; forceCheck?: boolean };
 
 function dataPaths(directory = path.resolve(process.cwd(), "..", "data", "scb")) {
   return {
@@ -148,8 +149,10 @@ export async function ensureSwedishBulkFile(options: BulkFileOptions = {}): Prom
     checkedAt: previousCheck?.checkedAt ?? storedFile.mtime.toISOString(),
     warning: "Kunne ikke bekrefte at Bolagsverkets fil er oppdatert. Viser sist lagrede fil.",
   });
-  const recentSource = recentLocalSource(file, previousCheck, now, paths.archive);
-  if (recentSource) return recentSource;
+  if (!options.forceCheck) {
+    const recentSource = recentLocalSource(file, previousCheck, now, paths.archive);
+    if (recentSource) return recentSource;
+  }
 
   try {
     if (file) {
@@ -215,7 +218,19 @@ export function swedishRegistrationStatus(row: Record<string, unknown>): Pick<Sw
   };
 }
 
-export async function scanRecentSwedishCompanies(archive: string, cutoffDate: string): Promise<Pick<SwedishRecentResult, "companies" | "soleProprietorships">> {
+function newerRelevantDate(current: string, registrationDate: string | null, row: Record<string, unknown>): string {
+  if (!registrationDate || registrationDate <= current) return current;
+  const form = plainValue(row.organisationsform);
+  return form === "AB-ORGFO" || form === "E-ORGFO" ? registrationDate : current;
+}
+
+function newestCachedDate(records: Pick<SwedishRecentResult, "companies" | "soleProprietorships">): string | undefined {
+  const dates = [...records.companies, ...records.soleProprietorships].map((company) => company.registrationDate);
+  return dates.reduce((latest, date) => date > latest ? date : latest, "") || undefined;
+}
+
+export async function scanRecentSwedishCompanies(archive: string): Promise<Pick<SwedishRecentResult,
+  "companies" | "soleProprietorships" | "sourceLatestRegistrationDate">> {
   const directory = await unzipper.Open.file(archive);
   const entry = directory.files.find((file) => file.type === "File" && file.path.endsWith(".txt"));
   if (!entry) throw new Error("Bolagsverkets arkiv mangler den forventede datafilen.");
@@ -223,19 +238,27 @@ export async function scanRecentSwedishCompanies(archive: string, cutoffDate: st
     separator: ";",
     mapHeaders: ({ header }) => header.replace(/^\uFEFF/, ""),
   }));
-  const companies: SwedishRecentCompany[] = [];
-  const soleProprietorships: SwedishRecentSoleProprietorship[] = [];
+  let companies: SwedishRecentCompany[] = [];
+  let soleProprietorships: Omit<SwedishRecentSoleProprietorship, "id">[] = [];
+  let latestRegistrationDate = "";
+  let activeCutoff = "";
   for await (const rawRow of parser) {
     const row = rawRow as Record<string, unknown>;
     const registrationDate = validIsoDate(row.registreringsdatum);
-    if (!registrationDate || registrationDate < cutoffDate) continue;
+    const newLatestDate = newerRelevantDate(latestRegistrationDate, registrationDate, row);
+    if (newLatestDate !== latestRegistrationDate) {
+      latestRegistrationDate = newLatestDate;
+      activeCutoff = latestAvailableWeekCutoff(latestRegistrationDate);
+      companies = companies.filter((company) => company.registrationDate >= activeCutoff);
+      soleProprietorships = soleProprietorships.filter((company) => company.registrationDate >= activeCutoff);
+    }
+    if (!registrationDate || registrationDate < activeCutoff) continue;
     const form = plainValue(row.organisationsform);
     if (form !== "AB-ORGFO" && form !== "E-ORGFO") continue;
     const name = beforeMarker(row.organisationsnamn);
     if (!name) continue;
     if (form === "E-ORGFO") {
       soleProprietorships.push({
-        id: `E:${soleProprietorships.length + 1}`,
         name,
         registrationDate,
         businessDescription: plainValue(row.verksamhetsbeskrivning),
@@ -257,7 +280,11 @@ export async function scanRecentSwedishCompanies(archive: string, cutoffDate: st
   }
   const newestFirst = (left: { registrationDate: string; name: string }, right: { registrationDate: string; name: string }) =>
     right.registrationDate.localeCompare(left.registrationDate) || left.name.localeCompare(right.name, "sv");
-  return { companies: companies.toSorted(newestFirst), soleProprietorships: soleProprietorships.toSorted(newestFirst) };
+  const numberedSoleProprietorships = soleProprietorships.map((company, index) => ({
+    ...company, id: `E:${index + 1}`,
+  }));
+  return { companies: companies.toSorted(newestFirst), soleProprietorships: numberedSoleProprietorships.toSorted(newestFirst),
+    sourceLatestRegistrationDate: latestRegistrationDate || undefined };
 }
 
 function verifiedSoleIdentifier(row: Record<string, unknown>, candidate: SwedishRecentSoleProprietorship,
@@ -329,6 +356,10 @@ export function sevenDayCutoff(now = new Date()): string {
   return cutoff.toISOString().slice(0, 10);
 }
 
+export function latestAvailableWeekCutoff(latestRegistrationDate: string): string {
+  return sevenDayCutoff(new Date(`${latestRegistrationDate}T12:00:00Z`));
+}
+
 export function filterRecentByCutoff(
   records: Pick<SwedishRecentResult, "companies" | "soleProprietorships">,
   cutoffDate: string,
@@ -339,13 +370,18 @@ export function filterRecentByCutoff(
   };
 }
 
-export async function loadRecentSwedishCompanies(now = new Date()): Promise<SwedishRecentResult> {
-  const paths = dataPaths();
-  const source = await ensureSwedishBulkFile({ now });
+export async function loadRecentSwedishCompanies(options: {
+  now?: Date; forceSourceCheck?: boolean; directory?: string; fetcher?: typeof fetch;
+} = {}): Promise<SwedishRecentResult> {
+  const now = options.now ?? new Date();
+  const paths = dataPaths(options.directory);
+  const source = await ensureSwedishBulkFile({ now, forceCheck: options.forceSourceCheck,
+    directory: options.directory, fetcher: options.fetcher });
   const sourceStat = await stat(/* turbopackIgnore: true */ source.archive);
-  const cutoffDate = sevenDayCutoff(now);
   try {
     const cached = JSON.parse(await readFile(/* turbopackIgnore: true */ paths.cache, "utf8")) as RecentCache;
+    const cachedLatestDate = cached.sourceLatestRegistrationDate ?? newestCachedDate(cached);
+    const cutoffDate = cachedLatestDate ? latestAvailableWeekCutoff(cachedLatestDate) : sevenDayCutoff(now);
     if (cached.cutoffDate <= cutoffDate
       && cached.schemaVersion === RECENT_CACHE_SCHEMA_VERSION
       && cached.sourceFileModifiedAt === source.modifiedAt
@@ -359,12 +395,15 @@ export async function loadRecentSwedishCompanies(now = new Date()): Promise<Swed
         fetchedAt: now.toISOString(),
         sourceCheckedAt: source.checkedAt,
         sourceWarning: source.warning,
+        sourceLatestRegistrationDate: cachedLatestDate,
       };
     }
   } catch {
     // A missing or stale cache is rebuilt from the local official bulk file.
   }
-  const records = await scanRecentSwedishCompanies(source.archive, cutoffDate);
+  const records = await scanRecentSwedishCompanies(source.archive);
+  const cutoffDate = records.sourceLatestRegistrationDate
+    ? latestAvailableWeekCutoff(records.sourceLatestRegistrationDate) : sevenDayCutoff(now);
   const result: RecentCache = {
     ...records,
     cutoffDate,

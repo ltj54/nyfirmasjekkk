@@ -155,6 +155,7 @@ function reuseCache(cache: PreparedCache, recent: SwedishRecentResult): Prepared
       sole: summaryIncomplete ? 0 : cache.prepared.unavailableSoleCount };
   return {
     sourceFileModifiedAt: recent.sourceFileModifiedAt,
+    sourceLatestRegistrationDate: recent.sourceLatestRegistrationDate,
     cutoffDate: recent.cutoffDate,
     fetchedAt: recent.fetchedAt,
     sourceCheckedAt: recent.sourceCheckedAt,

@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, utimes, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, utimes, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { ensureSwedishBulkFile, filterRecentByCutoff, swedishRegistrationStatus } from "../src/lib/sweden-recent.ts";
+import { ensureSwedishBulkFile, filterRecentByCutoff, latestAvailableWeekCutoff, loadRecentSwedishCompanies, swedishRegistrationStatus } from "../src/lib/sweden-recent.ts";
+
+test("anchors the available week to the newest registration in the source, not today", () => {
+  assert.equal(latestAvailableWeekCutoff("2026-10-23"), "2026-10-16");
+});
 
 test("reuses an older weekly-file selection for a newer seven-day cutoff", () => {
   const records = {
@@ -66,6 +70,41 @@ test("checks the source daily without redownloading an unchanged bulk file", asy
     assert.equal(second.checkedAt, first.checkedAt);
     assert.equal(first.warning, undefined);
     assert.equal(await readFile(archive, "utf8"), "old-file");
+  });
+});
+
+test("an explicit refresh checks the source and retains its latest available registration week", async () => {
+  await inTemporaryDirectory(async (directory) => {
+    const archive = path.join(directory, "bolagsverket_bulkfil.zip");
+    await writeFile(archive, "old-file");
+    await utimes(archive, new Date("2026-10-27T10:00:00Z"), new Date("2026-10-27T10:00:00Z"));
+    const modifiedAt = (await stat(archive)).mtime.toISOString();
+    await writeFile(path.join(directory, "bulk-source-check.json"), JSON.stringify({
+      checkedAt: "2026-11-01T20:00:00.000Z", archiveSize: 8,
+    }));
+    await writeFile(path.join(directory, "recent-companies.json"), JSON.stringify({
+      companies: [{ id: "SE:5560000043", orgNumber: "5560000043", registrationDate: "2026-10-23" }],
+      soleProprietorships: [{ id: "E:1", name: "Ett E", registrationDate: "2026-10-22" }],
+      cutoffDate: "2026-10-16", sourceFileModifiedAt: modifiedAt,
+      archiveSize: 8, schemaVersion: 2, fetchedAt: "2026-10-29T10:00:00.000Z",
+    }));
+    let checks = 0;
+    const result = await loadRecentSwedishCompanies({
+      directory,
+      now: new Date("2026-11-01T22:00:00Z"),
+      forceSourceCheck: true,
+      fetcher: async () => {
+        checks += 1;
+        return new Response(null, { headers: {
+          "content-length": "8", "last-modified": "Mon, 26 Oct 2026 02:23:12 GMT",
+        } });
+      },
+    });
+    assert.equal(checks, 1);
+    assert.equal(result.cutoffDate, "2026-10-16");
+    assert.equal(result.sourceLatestRegistrationDate, "2026-10-23");
+    assert.equal(result.companies.length, 1);
+    assert.equal(result.soleProprietorships.length, 1);
   });
 });
 
