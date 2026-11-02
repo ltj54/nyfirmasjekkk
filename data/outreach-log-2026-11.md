@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 46
+- Antall hendelser: 47
 - Sendt: 23
 - Angret: 0
-- Aktive kontaktede selskaper: 23
+- Aktive kontaktede selskaper: 22
 
 ## Aktive kontaktede selskaper
 
@@ -18,7 +18,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-02 | 938793603 | LANGMOEN ALMASOU | ENK | email | website-offer |
 | 2026-11-02 | 938749744 | VIBEKE EK NORD | ENK | email | website-offer |
 | 2026-11-02 | 938795401 | STORELV-NORDHEIM MYRAN DRIFT | ENK | email | website-offer |
-| 2026-11-02 | 838750702 | IHA ARTS AND CRAFTS | ENK | email | website-offer |
 | 2026-11-02 | 838793312 | HAMMER MEDIA | ENK | email | website-offer |
 | 2026-11-02 | 938745269 | EIKSETH AUDIO | ENK | email | website-offer |
 | 2026-11-02 | 938746176 | MYRSETH WEB-OG-PC | ENK | email | website-offer |
@@ -41,6 +40,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-02 18:05 | replied | 838750702 | IHA ARTS AND CRAFTS | ENK | phone | Telefonisk svar 02.11.2026. Hamisi ba om et nettsideforslag. Aktiv prosjektdialog; ingen automatisk oppfølging. |
 | 2026-11-02 17:33 | sent | 938796661 | ISELIN RYE LITTERATUR | ENK | email | - |
 | 2026-11-02 17:33 | sending | 938796661 | ISELIN RYE LITTERATUR | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-02 17:33 | sent | 838790712 | OLE ELIAS HANSHUS | ENK | email | - |

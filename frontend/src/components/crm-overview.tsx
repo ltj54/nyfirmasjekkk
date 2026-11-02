@@ -55,6 +55,24 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "IHA Arts and Crafts",
+    previewUrl: "https://ltj54.github.io/iha-arts-and-crafts/",
+    contact: "Hamisi Kaingu Iha",
+    email: "iha.amaza@gmail.com",
+    organizationNumber: "838 750 702",
+    phone: "+47 938 73 400",
+    address: "Jegerveien 4B, 0777 Oslo",
+    proposalDate: "02.11.2026",
+    dateLabel: "Telefonsamtale – forslag lovet",
+    outreach: "Uforpliktende nettsideskisse under arbeid – ikke sendt",
+    progress: String.raw`Første kunstorienterte nettsideskisse opprettet i C:\Prosjekt\iha-arts-and-crafts. Skissen bruker ikke oppdiktede kunstverk og skal fylles med Hamisis egne, godkjente bilder og opplysninger dersom prosjektet går videre. Ingen bestilling, pris, domene, drift eller levering er avtalt.`,
+    nextStep: "Kontroller den offentlige forhåndsvisningen og utform en personlig e-post for Lars. Ikke send, purre eller opprett automatisk oppfølging.",
+    invoice: "Ikke fakturert",
+    agreement: "Internt avtaleutkast finnes lokalt, men pris, omfang, domene og drift er ikke avtalt.",
+    agreementStatus: "draft",
+    status: "working",
+  },
+  {
     name: "Arena Consult",
     previewUrl: "https://ltj54.github.io/arena-consult/",
     previewRemoved: "02.11.2026",
