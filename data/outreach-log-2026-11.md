@@ -4,15 +4,19 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 26
-- Sendt: 13
+- Antall hendelser: 34
+- Sendt: 17
 - Angret: 0
-- Aktive kontaktede selskaper: 13
+- Aktive kontaktede selskaper: 17
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-02 | 838793312 | HAMMER MEDIA | ENK | email | website-offer |
+| 2026-11-02 | 938745269 | EIKSETH AUDIO | ENK | email | website-offer |
+| 2026-11-02 | 938746176 | MYRSETH WEB-OG-PC | ENK | email | website-offer |
+| 2026-11-02 | 938746788 | BERHE | ENK | email | website-offer |
 | 2026-11-01 | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | website-follow-up |
 | 2026-11-01 | 938749477 | KYNDRYL DANMARK APS | UTLA | email | website-follow-up |
 | 2026-11-01 | 938601496 | KYNDRYL DANMARK APS | NUF | email | website-follow-up |
@@ -31,6 +35,14 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-02 09:02 | sent | 838793312 | HAMMER MEDIA | ENK | email | - |
+| 2026-11-02 09:02 | sending | 838793312 | HAMMER MEDIA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-02 09:02 | sent | 938745269 | EIKSETH AUDIO | ENK | email | - |
+| 2026-11-02 09:02 | sending | 938745269 | EIKSETH AUDIO | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-02 09:02 | sent | 938746176 | MYRSETH WEB-OG-PC | ENK | email | - |
+| 2026-11-02 09:02 | sending | 938746176 | MYRSETH WEB-OG-PC | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-02 09:02 | sent | 938746788 | BERHE | ENK | email | - |
+| 2026-11-02 09:02 | sending | 938746788 | BERHE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-01 23:13 | sent | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-01 23:13 | sending | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-11-01 23:13 | sent | 938749477 | KYNDRYL DANMARK APS | UTLA | email | Oppfølging sendt – avslutt hvis stille |
