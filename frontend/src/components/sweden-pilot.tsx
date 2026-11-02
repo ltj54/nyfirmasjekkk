@@ -3,22 +3,15 @@
 import { useState } from "react";
 
 import type { WebsiteInspectionResponse } from "@/lib/company-check";
-import type { SwedishPilotCompany, SwedishPilotResult, SwedishRecentEnrichment } from "@/lib/sweden-pilot";
+import type { SwedishPilotCompany, SwedishRecentEnrichment } from "@/lib/sweden-pilot";
 import type { PreparedSwedishRecentResult } from "@/lib/sweden-prepared";
 import { readSwedishPreparationStream, type SwedishPreparationState } from "@/lib/sweden-preparation-stream";
 import type { SwedishRecentCompany, SwedishRecentSoleProprietorship } from "@/lib/sweden-recent";
-import { pilotCompaniesWithEmail, recentCompaniesWithEmail, soleProprietorshipsWithEmail } from "@/lib/sweden-lead-visibility";
+import { recentCompaniesWithEmail, soleProprietorshipsWithEmail } from "@/lib/sweden-lead-visibility";
 import type { WebsiteReview, WebsiteReviewStatus } from "@/lib/sweden-websites";
 import type { SwedishWebsiteSuggestion } from "@/lib/sweden-website-suggestions";
 
 const RECENT_PAGE_SIZE = 25;
-
-function activityPeriod(company: SwedishPilotCompany): string {
-  if (company.statusCode === "1") return company.startDate ? `Aktiv fra ${company.startDate}` : "Aktiv · startdato ikke oppgitt";
-  if (company.startDate && company.endDate) return `${company.startDate} – ${company.endDate}`;
-  if (company.endDate) return `Avsluttet ${company.endDate}`;
-  return company.startDate ?? "Ikke oppgitt";
-}
 
 function contactStatusClass(assessment: SwedishPilotCompany["contactAssessment"]): string {
   if (assessment === "eligible") return "bg-emerald-50 text-emerald-800";
@@ -31,31 +24,6 @@ function contactStatusLabel(assessment: SwedishPilotCompany["contactAssessment"]
   if (assessment === "blocked") return "Reservert mot kontakt";
   if (assessment === "inactive") return "Ikke aktiv";
   return "Uavklart – ikke kontakt";
-}
-
-function CompanyCard({ company }: Readonly<{ company: SwedishPilotCompany }>) {
-  const statusClass = contactStatusClass(company.contactAssessment);
-  const statusLabel = contactStatusLabel(company.contactAssessment);
-  return (
-    <article className="rounded-lg border border-slate-200 bg-white p-5">
-      <h2 className="font-semibold text-slate-900">{company.name}</h2>
-      <p className="mt-1 text-sm text-slate-500">{company.id} · AB · {company.city || "Ukjent sted"}</p>
-      <p className={`mt-3 inline-flex rounded px-2 py-1 text-xs font-semibold ${statusClass}`}>{statusLabel}</p>
-      <p className="mt-2 text-xs text-slate-600">{company.contactAssessmentReason}</p>
-      <dl className="mt-4 space-y-2 text-sm">
-        <div><dt className="text-slate-500">Registrert i SCBs foretaksregister</dt><dd>{company.registrationDate || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Aktivitetsperiode</dt><dd>{activityPeriod(company)}</dd></div>
-        <div><dt className="text-slate-500">E-post i registeret</dt><dd className="break-all">{company.email || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Reservasjon mot e-postreklame</dt><dd>{company.emailReservationLabel}</dd></div>
-        <div><dt className="text-slate-500">Generell reklamereservasjon</dt><dd>{company.advertisingReservationLabel}</dd></div>
-        <div><dt className="text-slate-500">Virksomhetsstatus</dt><dd>{company.statusLabel}</dd></div>
-        <div><dt className="text-slate-500">F-skatt / MVA</dt><dd>{company.fTaxStatusLabel} · {company.vatStatusLabel}</dd></div>
-        <div><dt className="text-slate-500">Størrelse</dt><dd>{company.employeeClassLabel} · {company.turnoverClassLabel} · {company.workplaceCount ?? "Ukjent antall"} arbeidssteder</dd></div>
-        <div><dt className="text-slate-500">Bransje (SNI 2025)</dt><dd>{company.industryCodes.join(", ") || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Nettside</dt><dd>Ikke undersøkt</dd></div>
-      </dl>
-    </article>
-  );
 }
 
 function preparationPhaseLabel(phase: SwedishPreparationState["phase"]): string {
@@ -121,18 +89,16 @@ function recentButtonLabel(busy: boolean, emptySelection: boolean): string {
 }
 
 export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
-  const [result, setResult] = useState<SwedishPilotResult | null>(null);
   const [recentResult, setRecentResult] = useState<PreparedSwedishRecentResult | null>(null);
   const [recentPage, setRecentPage] = useState(0);
-  const [busy, setBusy] = useState(false);
   const [recentBusy, setRecentBusy] = useState(false);
   const [recentProgress, setRecentProgress] = useState<SwedishPreparationState | null>(null);
   const [enrichmentBusy, setEnrichmentBusy] = useState(false);
+  const [soleWebsiteBusy, setSoleWebsiteBusy] = useState(false);
   const [enriched, setEnriched] = useState<Record<string, SwedishPilotCompany>>({});
   const [soleEnriched, setSoleEnriched] = useState<Record<string, SwedishPilotCompany>>({});
   const [websiteReviews, setWebsiteReviews] = useState<Record<string, WebsiteReview>>({});
   const [websiteSuggestions, setWebsiteSuggestions] = useState<Record<string, SwedishWebsiteSuggestion[]>>({});
-  const [error, setError] = useState("");
   const [recentError, setRecentError] = useState("");
   const emptyRecentSelection = recentResult?.prepared.checkedAbCount === 0 && recentResult.prepared.checkedSoleCount === 0;
 
@@ -220,19 +186,28 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
     }
   }
 
-  async function loadSample() {
-    setBusy(true);
-    setError("");
-    setResult(null);
+  async function inspectVisibleSoleWebsites(ids: string[]) {
+    if (!recentResult || ids.length === 0) return;
+    setSoleWebsiteBusy(true);
+    setRecentError("");
     try {
-      const response = await fetch("/api/sweden-pilot", { method: "POST", cache: "no-store" });
-      const body = await response.json() as SwedishPilotResult & { error?: string };
-      if (response.ok) setResult(body);
-      else setError(body.error ?? "Kunne ikke hente prøveutvalget.");
+      const response = await fetch("/api/sweden-recent/website-suggestions-sole", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids, cutoffDate: recentResult.cutoffDate,
+          sourceFileModifiedAt: recentResult.sourceFileModifiedAt }),
+        cache: "no-store",
+      });
+      const body = await response.json() as { websiteSuggestions?: Record<string, SwedishWebsiteSuggestion[]>; error?: string };
+      if (!response.ok || !body.websiteSuggestions) {
+        setRecentError(body.error ?? "Kunne ikke undersøke mulige nettsider for E-virksomhetene.");
+        return;
+      }
+      setWebsiteSuggestions((previous) => ({ ...previous, ...body.websiteSuggestions }));
     } catch {
-      setError("Forbindelsen ble brutt. Prøv igjen når appen er tilgjengelig.");
+      setRecentError("Nettsidesøket ble avbrutt. Prøv igjen senere.");
     } finally {
-      setBusy(false);
+      setSoleWebsiteBusy(false);
     }
   }
 
@@ -248,26 +223,8 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
       </section>
       <div aria-live="polite" aria-busy={recentBusy}>
         {recentError ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{recentError}</p> : null}
-        {recentResult && recentResult.prepared.checkedSoleCount > 0 ? <SoleResults result={recentResult} enriched={soleEnriched} /> : null}
+        {recentResult && recentResult.prepared.checkedSoleCount > 0 ? <SoleResults result={recentResult} enriched={soleEnriched} websiteSuggestions={websiteSuggestions} websiteBusy={soleWebsiteBusy} onInvestigate={(ids) => void inspectVisibleSoleWebsites(ids)} /> : null}
         {recentResult && recentResult.prepared.checkedAbCount > 0 ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
-      </div>
-      <section className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5">
-        <h2 className="font-semibold text-slate-900">Teknisk SCB-prøve</h2>
-        <p className="mt-2 text-sm text-slate-700">Henting starter bare når du trykker på knappen. Resultatene beholdes i denne visningen til du forlater eller oppdaterer siden. Gjentatt henting kan gi samme utvalg.</p>
-        {!configured ? (
-          <div className="mt-3 space-y-2 text-sm text-slate-700">
-            <p>SCB godkjente API-tilgangen 27.10.2026. Nøkkelen er mottatt, men er ikke konfigurert i denne lokale installasjonen ennå.</p>
-            <p>Legg nøkkelen lokalt i <code>frontend/.env.local</code> som <code>SCB_API_KEY=din_nøkkel</code>, og start frontend på nytt. Nøkkelen skal ikke sendes i chatten, legges i kildekoden eller lagres i Git.</p>
-            <p>Ingen automatisk e-post, CRM-registrering eller oppfølging er satt opp.</p>
-          </div>
-        ) : null}
-        <button type="button" disabled={!configured || busy} onClick={() => void loadSample()} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">{busy ? "Henter prøveutvalg …" : "Hent inntil 10 svenske AB"}</button>
-        <p className="mt-3 text-sm text-slate-600">SCB oppgir ikke nettside i dette datasettet. Manglende nettadresse betyr derfor ikke at selskapet mangler nettside. Registreringsdatoen gjelder SCBs register og brukes foreløpig ikke til aldersfiltrering. API-et er normalt utilgjengelig under nattlig oppdatering kl. 04.00–04.30.</p>
-        <a href="https://www.scb.se/vara-tjanster/bestall-data-och-statistik/foretagsregistret/avgiftsfria-uppgifter-i-foretagsregistret/" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm text-blue-800 underline">Om SCBs datakilde og tilgang</a>
-      </section>
-      <div aria-live="polite" aria-busy={busy}>
-        {error ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{error}</p> : null}
-        {result ? <PilotResults result={result} /> : null}
       </div>
     </>
   );
@@ -285,10 +242,12 @@ function recentLeadStatus(detail: SwedishPilotCompany | undefined): string {
   return "Ikke SCB-kontrollert – ingen kontakt fra denne listen";
 }
 
-function SoleCard({ candidate, detail }: Readonly<{
+function SoleCard({ candidate, detail, suggestions }: Readonly<{
   candidate: SwedishRecentSoleProprietorship;
   detail: SwedishPilotCompany;
+  suggestions?: SwedishWebsiteSuggestion[];
 }>) {
+  const searchQuery = `${candidate.name} ${candidate.postalCity} webbplats`;
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5">
       <h3 className="font-semibold text-slate-900">{candidate.name}</h3>
@@ -305,15 +264,27 @@ function SoleCard({ candidate, detail }: Readonly<{
         <div><dt className="text-slate-500">F-skatt / MVA</dt><dd>{detail.fTaxStatusLabel} · {detail.vatStatusLabel}</dd></div>
         <div><dt className="text-slate-500">Størrelse</dt><dd>{detail.employeeClassLabel} · {detail.turnoverClassLabel}</dd></div>
         <div><dt className="text-slate-500">Bransje (SNI 2025)</dt><dd>{detail.industryCodes.join(", ") || "Ikke oppgitt"}</dd></div>
-        <div><dt className="text-slate-500">Nettside</dt><dd>Ikke undersøkt</dd></div>
+        <div><dt className="text-slate-500">Nettside</dt><dd>{suggestions ? "Mulige adresser undersøkt – tilhørighet ikke bekreftet" : "Ikke undersøkt"}</dd></div>
       </dl>
+      {suggestions ? <div className="mt-4 rounded border border-amber-200 bg-amber-50 p-3 text-sm">
+        <p className="font-medium text-amber-950">Mulige nettsideadresser · ikke bekreftet tilhørighet</p>
+        {suggestions.length > 0 ? <ul className="mt-2 space-y-2">{suggestions.map((suggestion) => <li key={suggestion.url}>
+          <a href={suggestion.url} target="_blank" rel="noreferrer" className="break-all text-blue-800 underline">{suggestion.url}</a>
+          <span className="ml-2 text-slate-700">{suggestion.basis} · {suggestion.status}{suggestion.httpStatus ? ` (HTTP ${suggestion.httpStatus})` : ""}</span>
+        </li>)}</ul> : <p className="mt-2 text-slate-700">Ingen treff i den begrensede domenesjekken. Virksomheten kan likevel ha nettside under et annet navn eller på en handelsplattform.</p>}
+        <a href={`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`} target="_blank" rel="noreferrer" className="mt-2 inline-block text-blue-800 underline">Søk manuelt på navn og sted ↗</a>
+        <p className="mt-2 text-xs text-amber-950">Et teknisk svar eller et e-postdomene beviser ikke at nettsiden tilhører virksomheten.</p>
+      </div> : null}
     </article>
   );
 }
 
-function SoleResults({ result, enriched }: Readonly<{
+function SoleResults({ result, enriched, websiteSuggestions, websiteBusy, onInvestigate }: Readonly<{
   result: PreparedSwedishRecentResult;
   enriched: Record<string, SwedishPilotCompany>;
+  websiteSuggestions: Record<string, SwedishWebsiteSuggestion[]>;
+  websiteBusy: boolean;
+  onInvestigate: (ids: string[]) => void;
 }>) {
   const [page, setPage] = useState(0);
   const withEmail = soleProprietorshipsWithEmail(result.soleProprietorships, enriched);
@@ -324,8 +295,9 @@ function SoleResults({ result, enriched }: Readonly<{
     <section className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5">
       <h2 className="text-lg font-semibold text-slate-900">Nye svenske E med e-post</h2>
       <p className="mt-2 text-sm text-slate-600">{result.prepared.checkedSoleCount} E-registreringer fra og med {result.cutoffDate} ble kontrollert hos SCB · {withEmail.length} med e-post vises. Personnummer vises ikke og legges ikke i resultatfilen; nedlastet råfil inneholder dem. Utvalget omfatter bare E som er registrert hos Bolagsverket, ikke alle svenske enkeltpersonforetak.</p>
+      {visible.length > 0 ? <button type="button" disabled={websiteBusy} onClick={() => onInvestigate(visible.map((company) => company.id))} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">{websiteBusy ? "Undersøker mulige nettsider …" : "Undersøk mulige nettsider for denne siden"}</button> : null}
       {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">Ingen av E-registreringene har oppgitt e-post hos SCB.</p> : null}
-      {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} />)}</div> : null}
+      {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} suggestions={websiteSuggestions[candidate.id]} />)}</div> : null}
       {pageCount > 1 ? <nav aria-label="Sider med svenske E" className="mt-4 flex items-center gap-3">
         <button type="button" disabled={safePage === 0} onClick={() => setPage(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>
         <span className="text-sm text-slate-600">Side {safePage + 1} av {pageCount}</span>
@@ -510,15 +482,3 @@ function RecentResults({ result, page, onPageChange, enriched, configured, enric
   );
 }
 
-function PilotResults({ result }: Readonly<{ result: SwedishPilotResult }>) {
-  const withEmail = pilotCompaniesWithEmail(result.companies);
-  return (
-    <section className="mt-6">
-      <h2 className="text-lg font-semibold text-slate-900">Datakvalitet i prøveutvalget</h2>
-      <p className="mt-2 text-sm text-slate-600">{result.companies.length} oppføringer · {result.withEmail} med oppgitt e-post · {result.withRegistrationDate} med registreringsdato. Hentet {new Date(result.fetchedAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}.</p>
-      <p className="mt-2 text-sm text-slate-600">Oppgitt e-post er ikke kontrollert for levering. Virksomhetsstatus, reservasjoner og egnethet må avklares før eventuell kontakt vurderes.</p>
-      {withEmail.length === 0 ? <p className="mt-4 text-sm text-slate-600">Ingen oppføringer med e-post i prøveutvalget.</p> : null}
-      <div className="mt-4 grid gap-4 md:grid-cols-2">{withEmail.map((company) => <CompanyCard key={company.id} company={company} />)}</div>
-    </section>
-  );
-}

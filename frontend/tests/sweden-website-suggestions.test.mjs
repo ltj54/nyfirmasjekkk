@@ -37,6 +37,16 @@ test("does not probe when SCB gives no email", async () => {
   assert.deepEqual(result, []);
 });
 
+test("a sole proprietorship with a shared email domain is not assigned an unverified website", async () => {
+  const checked = [];
+  const suggestions = await discoverSwedishWebsiteSuggestions("Junwear", "kent-e.andersson@hotmail.com", async (hostname) => {
+    checked.push(hostname);
+    return { status: "Ikke bekreftet", httpStatus: null };
+  });
+  assert.deepEqual(checked, ["junwear.se", "junwear.com"]);
+  assert.deepEqual(suggestions, []);
+});
+
 test("private and reserved IPv4 addresses are never eligible for a website probe", () => {
   for (const address of ["127.0.0.1", "10.0.0.1", "172.16.0.1", "192.168.1.1", "169.254.169.254", "100.64.0.1", "203.0.113.1", "224.0.0.1"]) {
     assert.equal(isPublicIpv4(address), false, address);
