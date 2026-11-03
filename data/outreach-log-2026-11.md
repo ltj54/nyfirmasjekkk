@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 124
+- Antall hendelser: 125
 - Sendt: 58
 - Angret: 0
-- Aktive kontaktede selskaper: 56
+- Aktive kontaktede selskaper: 55
 
 ## Aktive kontaktede selskaper
 
@@ -31,7 +31,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-03 | 938765510 | JON G. OLSEN KONSULENT | ENK | email | website-follow-up |
 | 2026-11-03 | 938766827 | SØRBYE PRODUCTION ENK | ENK | email | website-follow-up |
 | 2026-11-03 | 938764956 | ØYSTEIN SOLDAL MUSIKK & PRODUKSJON | ENK | email | website-follow-up |
-| 2026-11-03 | 938590052 | EIERSEKSJONSSAMEIET ORRFUGLVEIEN 10 | ESEK | email | website-follow-up |
 | 2026-11-03 | 938416699 | GODFARFOSS GRUNNEIERLAG | FLI | email | website-follow-up |
 | 2026-11-03 | 938643970 | KOMEBACK | FLI | email | website-follow-up |
 | 2026-11-03 | 938770468 | VIKTOR GLATTHARD CONSULTING | ENK | email | website-follow-up |
@@ -74,6 +73,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 10:43 | replied | 938590052 | EIERSEKSJONSSAMEIET ORRFUGLVEIEN 10 | ESEK | email | Karl Edmund Elvebakk svarte 03.11.2026 ja til gratis forslag. Lars har sendt avklaringsmail om formål og målgruppe. Aktiv dialog; ingen automatisk oppfølging. |
 | 2026-11-03 10:23 | not_relevant | 938752257 | TORVIK KONSULT | ENK | email | Avslo tilbudet uttrykkelig på e-post 03.11.2026: «nei takk». Ingen videre kontakt eller oppfølging. |
 | 2026-11-03 08:59 | sent | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-03 08:59 | sending | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | Oppfølging reservert før SMTP-levering. |

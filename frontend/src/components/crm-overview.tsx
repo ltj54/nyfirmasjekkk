@@ -55,6 +55,24 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "Eierseksjonssameiet Orrfuglveien 10",
+    contact: "Karl Edmund Elvebakk (AGIO Forvaltning)",
+    email: "post@agioforvaltning.no",
+    organizationNumber: "938 590 052",
+    phone: "+47 922 06 655",
+    proposalDate: "28.10.2026",
+    dateLabel: "Første henvendelse",
+    replyDate: "03.11.2026 kl. 09:01",
+    clarificationDate: "03.11.2026",
+    outreach: "Karl takket ja til gratis forslag – avklaringsmail sendt 03.11.2026",
+    progress: "Karl Edmund Elvebakk svarte positivt på oppfølgingsmailen og ønsket et gratis forslag. Han er forvaltningssjef i AGIO Forvaltning, som er registrert som forretningsfører for sameiet. Lars har sendt en avklaringsmail om forslaget skal gjelde sameiets nettside, og hvem siden først og fremst skal være nyttig for. Ingen skisse, bestilling eller avtale er registrert ennå.",
+    nextStep: "Avvent Karls svar på avklaringen. Lag først en uforpliktende skisse når formål og mottaker er tydeligere. Ingen automatisk oppfølging eller purring.",
+    invoice: "Ikke fakturert",
+    agreement: "Ingen avtale inngått – kun gratis forslag etter avklaring.",
+    agreementStatus: "not-used",
+    status: "waiting",
+  },
+  {
     name: "IHA Arts and Crafts",
     previewUrl: "https://ltj54.github.io/iha-arts-and-crafts/",
     contact: "Hamisi Kaingu Iha",
