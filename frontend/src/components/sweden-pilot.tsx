@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import type { WebsiteInspectionResponse } from "@/lib/company-check";
+import { SwedishEmailDraft } from "@/components/sweden-email-draft";
+import { swedishEmailDraftAvailability } from "@/lib/sweden-email-draft";
 import type { SwedishPilotCompany, SwedishRecentEnrichment } from "@/lib/sweden-pilot";
 import type { PreparedSwedishRecentResult } from "@/lib/sweden-prepared";
 import { readSwedishPreparationStream, type SwedishPreparationState } from "@/lib/sweden-preparation-stream";
@@ -242,17 +244,25 @@ function recentLeadStatus(detail: SwedishPilotCompany | undefined): string {
   return "Ikke SCB-kontrollert – ingen kontakt fra denne listen";
 }
 
-function SoleCard({ candidate, detail, suggestions }: Readonly<{
+function SoleCard({ candidate, detail, suggestions, selected, onSelectionChange }: Readonly<{
   candidate: SwedishRecentSoleProprietorship;
   detail: SwedishPilotCompany;
   suggestions?: SwedishWebsiteSuggestion[];
+  selected: boolean;
+  onSelectionChange: (id: string, selected: boolean) => void;
 }>) {
   const searchQuery = `${candidate.name} ${candidate.postalCity} webbplats`;
+  const draftAvailability = swedishEmailDraftAvailability(detail.contactAssessment, suggestions);
+  const websiteBlocksOffer = draftAvailability === "possible_website";
+  const websiteCheckNeeded = draftAvailability === "needs_website_check";
+  let leadLabel = contactStatusLabel(detail.contactAssessment);
+  if (websiteBlocksOffer) leadLabel = "Mulig nettside – tilbud sperret";
+  else if (websiteCheckNeeded) leadLabel = "Nettsidesjekk gjenstår";
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5">
       <h3 className="font-semibold text-slate-900">{candidate.name}</h3>
       <p className="mt-1 text-sm text-slate-500">E · Enskild näringsverksamhet · {candidate.postalCity || "Ukjent sted"}</p>
-      <p className={`mt-3 inline-flex rounded px-2 py-1 text-xs font-semibold ${contactStatusClass(detail.contactAssessment)}`}>{contactStatusLabel(detail.contactAssessment)}</p>
+      <p className={`mt-3 inline-flex rounded px-2 py-1 text-xs font-semibold ${websiteBlocksOffer || websiteCheckNeeded ? "bg-amber-50 text-amber-800" : contactStatusClass(detail.contactAssessment)}`}>{leadLabel}</p>
       <p className="mt-2 text-xs text-slate-600">{detail.contactAssessmentReason}</p>
       <dl className="mt-4 space-y-2 text-sm">
         <div><dt className="text-slate-500">Registrert hos Bolagsverket</dt><dd>{candidate.registrationDate}</dd></div>
@@ -275,6 +285,13 @@ function SoleCard({ candidate, detail, suggestions }: Readonly<{
         <a href={`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`} target="_blank" rel="noreferrer" className="mt-2 inline-block text-blue-800 underline">Søk manuelt på navn og sted ↗</a>
         <p className="mt-2 text-xs text-amber-950">Et teknisk svar eller et e-postdomene beviser ikke at nettsiden tilhører virksomheten.</p>
       </div> : null}
+      {websiteBlocksOffer ? <p className="mt-4 rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">E-postutkast sperret: En mulig nettsideadresse svarer. Kontroller tilhørigheten manuelt; denne siden lager ikke et tilbud om ny nettside for virksomheten.</p> : null}
+      {websiteCheckNeeded ? <p className="mt-4 text-xs text-slate-600">Undersøk mulige nettsider før et e-postutkast kan lages.</p> : null}
+      {draftAvailability === "available" ? <label className="mt-4 flex items-start gap-2 text-sm font-medium text-slate-800">
+        <input type="checkbox" checked={selected} onChange={(event) => onSelectionChange(candidate.id, event.target.checked)} className="mt-1" />
+        <span>Velg for manuell e-postvurdering</span>
+      </label> : null}
+      {draftAvailability === "available" ? <SwedishEmailDraft companyName={candidate.name} businessDescription={candidate.businessDescription} /> : null}
     </article>
   );
 }
@@ -287,7 +304,18 @@ function SoleResults({ result, enriched, websiteSuggestions, websiteBusy, onInve
   onInvestigate: (ids: string[]) => void;
 }>) {
   const [page, setPage] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const withEmail = soleProprietorshipsWithEmail(result.soleProprietorships, enriched);
+  const selected = withEmail.filter((candidate) => selectedIds.has(candidate.id)
+    && swedishEmailDraftAvailability(enriched[candidate.id].contactAssessment, websiteSuggestions[candidate.id]) === "available");
+  function changeSelection(id: string, isSelected: boolean) {
+    setSelectedIds((previous) => {
+      const next = new Set(previous);
+      if (isSelected) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
   const pageCount = Math.max(1, Math.ceil(withEmail.length / RECENT_PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
   const visible = withEmail.slice(safePage * RECENT_PAGE_SIZE, (safePage + 1) * RECENT_PAGE_SIZE);
@@ -295,9 +323,10 @@ function SoleResults({ result, enriched, websiteSuggestions, websiteBusy, onInve
     <section className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5">
       <h2 className="text-lg font-semibold text-slate-900">Nye svenske E med e-post</h2>
       <p className="mt-2 text-sm text-slate-600">{result.prepared.checkedSoleCount} E-registreringer fra og med {result.cutoffDate} ble kontrollert hos SCB · {withEmail.length} med e-post vises. Personnummer vises ikke og legges ikke i resultatfilen; nedlastet råfil inneholder dem. Utvalget omfatter bare E som er registrert hos Bolagsverket, ikke alle svenske enkeltpersonforetak.</p>
+      <p className="mt-2 text-sm text-slate-600">{selected.length} valgt for manuell e-postvurdering. Valget beholdes bare i denne visningen; ingen e-post sendes.</p>
       {visible.length > 0 ? <button type="button" disabled={websiteBusy} onClick={() => onInvestigate(visible.map((company) => company.id))} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">{websiteBusy ? "Undersøker mulige nettsider …" : "Undersøk mulige nettsider for denne siden"}</button> : null}
       {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">Ingen av E-registreringene har oppgitt e-post hos SCB.</p> : null}
-      {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} suggestions={websiteSuggestions[candidate.id]} />)}</div> : null}
+      {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} suggestions={websiteSuggestions[candidate.id]} selected={selected.some((item) => item.id === candidate.id)} onSelectionChange={changeSelection} />)}</div> : null}
       {pageCount > 1 ? <nav aria-label="Sider med svenske E" className="mt-4 flex items-center gap-3">
         <button type="button" disabled={safePage === 0} onClick={() => setPage(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>
         <span className="text-sm text-slate-600">Side {safePage + 1} av {pageCount}</span>
