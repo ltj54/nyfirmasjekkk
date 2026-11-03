@@ -4,15 +4,23 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 129
-- Sendt: 60
+- Antall hendelser: 145
+- Sendt: 68
 - Angret: 0
-- Aktive kontaktede selskaper: 57
+- Aktive kontaktede selskaper: 65
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 | 938802114 | HILLESTAD LØPECOACHING | ENK | email | website-offer |
+| 2026-11-03 | 938803293 | ESSENTCORE AS | AS | email | website-offer |
+| 2026-11-03 | 938806594 | TEGNER'N II OLA ALSVIK | ENK | email | website-offer |
+| 2026-11-03 | 938785945 | ALEPH CROSS AS | AS | email | website-offer |
+| 2026-11-03 | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | website-offer |
+| 2026-11-03 | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
+| 2026-11-03 | 838629342 | FJORDFRAMES BARDIC | ENK | email | website-offer |
+| 2026-11-03 | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | website-offer |
 | 2026-11-03 | 938798877 | TERJE ELVEN | ENK | email | website-offer |
 | 2026-11-03 | 938754470 | ARNESEN REGNSKAP | ENK | email | website-offer |
 | 2026-11-03 | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | website-follow-up |
@@ -75,6 +83,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 20:17 | sent | 938802114 | HILLESTAD LØPECOACHING | ENK | email | - |
+| 2026-11-03 20:17 | sending | 938802114 | HILLESTAD LØPECOACHING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 938803293 | ESSENTCORE AS | AS | email | - |
+| 2026-11-03 20:17 | sending | 938803293 | ESSENTCORE AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 938806594 | TEGNER'N II OLA ALSVIK | ENK | email | - |
+| 2026-11-03 20:17 | sending | 938806594 | TEGNER'N II OLA ALSVIK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 938785945 | ALEPH CROSS AS | AS | email | - |
+| 2026-11-03 20:17 | sending | 938785945 | ALEPH CROSS AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | - |
+| 2026-11-03 20:17 | sending | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | - |
+| 2026-11-03 20:17 | sending | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 838629342 | FJORDFRAMES BARDIC | ENK | email | - |
+| 2026-11-03 20:17 | sending | 838629342 | FJORDFRAMES BARDIC | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 20:17 | sent | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | - |
+| 2026-11-03 20:17 | sending | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-03 10:59 | sent | 938798877 | TERJE ELVEN | ENK | email | - |
 | 2026-11-03 10:59 | sending | 938798877 | TERJE ELVEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-03 10:59 | sent | 938754470 | ARNESEN REGNSKAP | ENK | email | - |
