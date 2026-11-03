@@ -33,6 +33,44 @@ Når oppgaven gjelder en vanlig nettside som kan publiseres statisk, er følgend
 - **ESLint** for kontroll av kodekvalitet. Tilgjengelighet skal også kontrolleres gjennom semantisk HTML, tastaturbruk, kontraster, bilder og relevante lint-regler.
 - **npm og Node.js** for pakkehåndtering, lokal utvikling og produksjonsbygg. Bruk prosjektets egen `package-lock.json`, og dokumenter nødvendige kommandoer i `README.md`.
 
+### Utforming som ikke ser KI-generert ut
+
+- Headeren skal som standard være **sticky** og forbli synlig når brukeren scroller. Bruk for eksempel `position: sticky`, `top: 0` og en gjennomtenkt `z-index`, med en dekkende eller lesbar bakgrunn. Kontroller at headeren fungerer på mobil, ikke hopper i høyde og ikke skjuler innhold eller ankerlenker. Bruk nødvendig `scroll-margin-top` eller tilsvarende på målseksjoner.
+- Ikke bruk dekorative seksjonsnumre som `01`, `02`, `03` eller lignende. De tilfører sjelden mening og er blitt et typisk generert designmønster.
+- Ikke fall tilbake på den samme oppskriften med enorm overskrift, tre like kort, nummererte seksjoner og en generell avslutningsknapp. Struktur, rytme, typografi og navigasjon skal velges ut fra den konkrete virksomheten og materialet som faktisk finnes.
+- Hver side skal ha minst ett tydelig særtrekk som springer ut av virksomheten: arbeidsprosess, materiale, sted, fag, produkter, bilder, tonefall eller måten kunden faktisk møter sine kunder på. Særtrekket skal påvirke både oppbygning og uttrykk, ikke bare nevnes i en overskrift.
+- Skriv kortere og mer konkret. Fjern setninger som kunne stått på en hvilken som helst nettside. Unngå særlig formuleringer som «skreddersydde løsninger», «vi brenner for», «din visjon», «reisen starter her», «der kvalitet møter ...», «mer enn bare ...», «opplev forskjellen», «i hjertet av», «med lidenskap for», «unik kombinasjon», «moderne og profesjonell» og andre ubegrunnede superlativer.
+- Ikke bruk ord som «unik», «ledende», «eksklusiv», «autentisk», «kvalitet» eller «profesjonell» som pynt. Bruk dem bare når innholdet viser konkret hva påstanden bygger på.
+- Foretrekk navn på faktiske tjenester, materialer, steder, arbeidsmåter og valg fremfor abstrakte løfter. «Vi reparerer tregulv i Bergen og omegn» er bedre enn «Vi skaper varige resultater med kvalitet i fokus».
+- Ikke dikt opp sitater, statistikk, kundegrunnlag, faglige egenskaper, historie eller personlighet for å gjøre siden mer levende. Når fakta eller kundemateriale mangler, skal designet tåle tomrommet og åpne spørsmål skal dokumenteres.
+- Varier komposisjonen mellom prosjekter. Et kunstprosjekt kan være billedstyrt og stille; en håndverker kan trenge tjenester, område og referanser først; en rådgiver kan trenge problem, metode og målgruppe. Ikke kopier tidligere kundeprosjekters visuelle signatur.
+- Les all synlig tekst høyt før ferdigstilling. Hvis teksten høres ut som reklamespråk Lars eller kunden ikke naturlig ville brukt, skriv den om. Målet er en tydelig menneskelig stemme, ikke maksimal mengde salgstekst.
+
+### Kontaktskjema og FormSubmit.co
+
+- **FormSubmit.co** er foreløpig standardvalget når en vanlig statisk nettside senere skal få et enkelt kontaktskjema uten egen backend.
+- I første skisse skal kontaktskjemaet bare gjøres visuelt og teknisk klart. Det skal ikke være koblet til FormSubmit.co, en mottakeradresse eller noen annen innsendingstjeneste.
+- Skjemaet skal ikke ha en aktiv `action` mot FormSubmit.co, og sendeknappen skal ikke kunne sende eller gjøre et nettverkskall. Bruk en deaktivert knapp eller `type="button"` uten sendehåndtering. Ikke vis en falsk bekreftelse på at noe er sendt.
+- Ikke legg kundens e-postadresse i et FormSubmit-endepunkt eller skjult felt før mottaker og aktivering er uttrykkelig avklart med Lars.
+- Ikke test skjemaet ved å sende en melding. Første reelle innsending kan utløse en e-post fra FormSubmit.co der mottakeren blir bedt om å aktivere eller godkjenne skjemaet. En slik e-post skal aldri utløses mens siden bare er et forslag.
+- Aktivering av FormSubmit.co er en separat, uttrykkelig handling etter at Lars har godkjent mottakeradressen og bedt om at skjemaet settes i drift. Aktivering inngår ikke automatisk i opprettelse, publisering eller utsending av en skisse.
+- Skjemaet skal som standard ha denne synlige strukturen og teksten, tilpasset samme språk som siden:
+
+```text
+Din melding
+Navn
+Hva heter du?
+E-post
+din@epost.no
+Melding
+Skriv meldingen din her …
+
+Send melding
+Skjemaet åpnes for innsending når kontakttjenesten er klar. Bruk e-postadressen ved siden av i mellomtiden.
+```
+
+- Bruk synlige og korrekt tilknyttede `label`-elementer, relevante `autocomplete`-verdier og tydelig deaktivert tilstand. Når skjemaet senere aktiveres, skal personvern, mottakeradresse, POST-innsending og nødvendige FormSubmit-innstillinger kontrolleres før publisering.
+
 Dette er et foretrukket utgangspunkt, ikke et krav dersom kundens behov tilsier en annen løsning. Backend, database, innlogging, CRM, betaling eller andre serverfunksjoner skal fortsatt velges og avklares ut fra kravspesifikasjonen; GitHub Pages alene kan ikke kjøre slike funksjoner.
 
 Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett Python-skript, virtuelt miljø, Python-hurtiglager eller Python-avhengigheter når Node/Next.js-verktøyene løser oppgaven. Bruk Python bare når en konkret oppgave krever det og nytten er tydelig dokumentert.
@@ -80,7 +118,7 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 - Backend, database og serverbaserte funksjoner trenger en egnet driftsløsning; avklar denne før publisering. Ikke anta at GitHub Pages kan kjøre dem.
 - Kontroller at bare nettstedets offentlige filer inngår i publiseringen.
 - Verifiser den faktiske nettadressen etter publisering, inkludert intern navigasjon og ressurser. Noter kundens testlenke når den er bekreftet.
-- Kontaktskjemaer skal ha en avklart mottaker og tjeneste før de aktiveres. En demonstrasjon skal tydelig fremstå som en demonstrasjon.
+- Kontaktskjemaer følger FormSubmit.co-rutinen i punkt 3: De skal bare klargjøres i første skisse, være ute av stand til å sende og tydelig fremstå som en demonstrasjon. Mottaker og aktivering skal avklares før FormSubmit.co kobles til, og ingen testinnsending eller godkjenningsmail skal utløses på forhånd.
 - Domenet skal eies av kunden når dette avtales. Ikke endre DNS eller eksisterende e-postoppsett som en del av å opprette et blankt prosjekt.
 
 ## 8. Kontroll og overlevering
@@ -92,6 +130,7 @@ Python skal ikke inngå i et vanlig nettsideprosjekt som standard. Ikke opprett 
 5. Kontroller at `AVTALEUTKAST_NETTSIDE_OG_DRIFT.md` finnes og er tilpasset kjente kunde- og prosjektopplysninger uten oppdiktede vilkår.
 6. Hvis prosjektet har kjørbar kode, prøv relevante oppstarts-/byggkommandoer. Et rent dokumentasjonsprosjekt trenger ikke en kunstig applikasjon eller testpakke.
 7. Kontroller at nøyaktig ett CRM-kort finnes for prosjektet, med riktig status og uten å antyde at skissen er sendt eller bestilt når den ikke er det. Kontroller også at tidligere utsendelse ikke kan gi automatisk oppfølging, og at det ikke finnes en separat manuell oppfølgingssak for samme prosjekt.
-8. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, den verifiserte offentlige GitHub Pages-lenken, CRM-kortet og nøyaktig hvilken commit/push som ble gjort. Hvis Lars ba om bare lokal klargjøring, oppgi tydelig at repository, commit, push og publisering ikke er utført.
+8. Kontroller sticky header ved scrolling på bred og smal skjerm, inkludert at menypunkter og ankerlenker ikke havner skjult under headeren. Søk i synlig tekst og layout etter dekorative seksjonsnumre, generiske salgsklisjeer og gjenbrukte KI-mønstre, og fjern dem før overlevering.
+9. Oppsummer konkret: opprettet mappe, hva som er klart, hva som er kontrollert, den verifiserte offentlige GitHub Pages-lenken, CRM-kortet og nøyaktig hvilken commit/push som ble gjort. Hvis Lars ba om bare lokal klargjøring, oppgi tydelig at repository, commit, push og publisering ikke er utført.
 
 Ved senere avvikling brukes `SLETTERUTINER.md` i nyfirmasjekk-prosjektet.

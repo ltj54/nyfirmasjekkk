@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 123
+- Antall hendelser: 124
 - Sendt: 58
 - Angret: 0
-- Aktive kontaktede selskaper: 57
+- Aktive kontaktede selskaper: 56
 
 ## Aktive kontaktede selskaper
 
@@ -45,7 +45,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-03 | 938799172 | NOOKORN SAMATKUN | ENK | email | website-offer |
 | 2026-11-03 | 938675260 | OSLO TCG- OG SPILLFORENING | FLI | email | website-offer |
 | 2026-11-03 | 938765790 | KYNDRYL CLIENT CENTER S.R.O | NUF | email | website-offer |
-| 2026-11-03 | 938752257 | TORVIK KONSULT | ENK | email | website-offer |
 | 2026-11-03 | 838702902 | TOR-VERNER GUTTORMSEN | ENK | email | website-offer |
 | 2026-11-03 | 938800332 | STORE LENS AB | UTLA | email | website-offer |
 | 2026-11-02 | 938796661 | ISELIN RYE LITTERATUR | ENK | email | website-offer |
@@ -75,6 +74,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 10:23 | not_relevant | 938752257 | TORVIK KONSULT | ENK | email | Avslo tilbudet uttrykkelig på e-post 03.11.2026: «nei takk». Ingen videre kontakt eller oppfølging. |
 | 2026-11-03 08:59 | sent | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-03 08:59 | sending | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | Oppfølging reservert før SMTP-levering. |
 | 2026-11-03 08:59 | sent | 938638330 | NESET VELFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
