@@ -4,15 +4,17 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 125
-- Sendt: 58
+- Antall hendelser: 129
+- Sendt: 60
 - Angret: 0
-- Aktive kontaktede selskaper: 55
+- Aktive kontaktede selskaper: 57
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 | 938798877 | TERJE ELVEN | ENK | email | website-offer |
+| 2026-11-03 | 938754470 | ARNESEN REGNSKAP | ENK | email | website-offer |
 | 2026-11-03 | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | website-follow-up |
 | 2026-11-03 | 938638330 | NESET VELFORENING | FLI | email | website-follow-up |
 | 2026-11-03 | 938612803 | SOLE & SOUL BY N. ABERLE | ENK | email | website-follow-up |
@@ -73,6 +75,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 10:59 | sent | 938798877 | TERJE ELVEN | ENK | email | - |
+| 2026-11-03 10:59 | sending | 938798877 | TERJE ELVEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-03 10:59 | sent | 938754470 | ARNESEN REGNSKAP | ENK | email | - |
+| 2026-11-03 10:59 | sending | 938754470 | ARNESEN REGNSKAP | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-03 10:43 | replied | 938590052 | EIERSEKSJONSSAMEIET ORRFUGLVEIEN 10 | ESEK | email | Karl Edmund Elvebakk svarte 03.11.2026 ja til gratis forslag. Lars har sendt avklaringsmail om formål og målgruppe. Aktiv dialog; ingen automatisk oppfølging. |
 | 2026-11-03 10:23 | not_relevant | 938752257 | TORVIK KONSULT | ENK | email | Avslo tilbudet uttrykkelig på e-post 03.11.2026: «nei takk». Ingen videre kontakt eller oppfølging. |
 | 2026-11-03 08:59 | sent | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | Oppfølging sendt – avslutt hvis stille |
