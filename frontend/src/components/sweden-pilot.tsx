@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { WebsiteInspectionResponse } from "@/lib/company-check";
 import { SwedishEmailDraft } from "@/components/sweden-email-draft";
@@ -10,6 +10,7 @@ import type { PreparedSwedishRecentResult } from "@/lib/sweden-prepared";
 import { readSwedishPreparationStream, type SwedishPreparationState } from "@/lib/sweden-preparation-stream";
 import type { SwedishRecentCompany, SwedishRecentSoleProprietorship } from "@/lib/sweden-recent";
 import { recentCompaniesWithEmail, soleProprietorshipsWithEmail } from "@/lib/sweden-lead-visibility";
+import type { SwedishOutreachRecord } from "@/lib/sweden-outreach-log";
 import type { WebsiteReview, WebsiteReviewStatus } from "@/lib/sweden-websites";
 import type { SwedishWebsiteSuggestion } from "@/lib/sweden-website-suggestions";
 
@@ -90,6 +91,29 @@ function recentButtonLabel(busy: boolean, emptySelection: boolean): string {
   return "Hent og klargjør siste tilgjengelige uke";
 }
 
+function SwedishOutreachLogPanel({ records, ready, error }: Readonly<{
+  records: SwedishOutreachRecord[];
+  ready: boolean;
+  error: string;
+}>) {
+  return <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
+    <h2 className="font-semibold text-slate-900">Svensk kontaktlogg · kun manuell registrering</h2>
+    <p className="mt-2 text-sm text-slate-600">Adskilt fra norsk e-post- og CRM-logg. Bare e-poster du selv bekrefter som sendt, lagres her. Appen sender ingen e-post.</p>
+    {error ? <p role="alert" className="mt-2 text-sm text-red-800">{error}</p> : null}
+    {!ready && !error ? <p className="mt-2 text-sm text-slate-600">Leser kontaktloggen …</p> : null}
+    {ready ? <>
+      <p className="mt-2 text-sm text-slate-700">{records.length} registrerte utsendelser.</p>
+      <a href="/api/sweden-outreach-log?export=1" className="mt-2 inline-block text-sm text-blue-800 underline">Last ned hele svensk kontaktlogg</a>
+      {records.length > 0 ? <details className="mt-3 text-sm"><summary className="cursor-pointer font-medium text-slate-800">Vis registrerte e-poster</summary>
+        <div className="mt-2 max-h-96 space-y-2 overflow-y-auto">{records.toReversed().map((record) => <details key={record.id} className="rounded border border-slate-200 p-2">
+          <summary className="cursor-pointer">{record.companyName} · {record.recipient} · {new Date(record.sentAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}</summary>
+          <p className="mt-2">Emne: {record.subject}</p><pre className="mt-2 whitespace-pre-wrap break-words font-sans">{record.body}</pre>
+        </details>)}</div>
+      </details> : null}
+    </> : null}
+  </section>;
+}
+
 export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
   const [recentResult, setRecentResult] = useState<PreparedSwedishRecentResult | null>(null);
   const [recentPage, setRecentPage] = useState(0);
@@ -102,7 +126,28 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
   const [websiteReviews, setWebsiteReviews] = useState<Record<string, WebsiteReview>>({});
   const [websiteSuggestions, setWebsiteSuggestions] = useState<Record<string, SwedishWebsiteSuggestion[]>>({});
   const [recentError, setRecentError] = useState("");
+  const [outreachRecords, setOutreachRecords] = useState<SwedishOutreachRecord[]>([]);
+  const [outreachLogReady, setOutreachLogReady] = useState(false);
+  const [outreachLogError, setOutreachLogError] = useState("");
   const emptyRecentSelection = recentResult?.prepared.checkedAbCount === 0 && recentResult.prepared.checkedSoleCount === 0;
+
+  useEffect(() => {
+    let active = true;
+    void fetch("/api/sweden-outreach-log", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Kunne ikke lese svensk kontaktlogg.");
+        return response.json() as Promise<{ records: SwedishOutreachRecord[] }>;
+      })
+      .then((body) => {
+        if (!active) return;
+        setOutreachRecords(body.records);
+        setOutreachLogReady(true);
+      })
+      .catch(() => {
+        if (active) setOutreachLogError("Svensk kontaktlogg er utilgjengelig. Registrering av utsendelser er sperret til loggen kan leses.");
+      });
+    return () => { active = false; };
+  }, []);
 
   async function loadRecent() {
     setRecentBusy(true);
@@ -223,9 +268,10 @@ export function SwedenPilot({ configured }: Readonly<{ configured: boolean }>) {
         {recentProgress ? <SwedishPreparationProgressBar state={recentProgress} /> : null}
         {recentResult && !recentBusy && !recentError ? <SwedishPreparationSummary result={recentResult} /> : null}
       </section>
+      <SwedishOutreachLogPanel records={outreachRecords} ready={outreachLogReady} error={outreachLogError} />
       <div aria-live="polite" aria-busy={recentBusy}>
         {recentError ? <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-900">{recentError}</p> : null}
-        {recentResult && recentResult.prepared.checkedSoleCount > 0 ? <SoleResults result={recentResult} enriched={soleEnriched} websiteSuggestions={websiteSuggestions} websiteBusy={soleWebsiteBusy} onInvestigate={(ids) => void inspectVisibleSoleWebsites(ids)} /> : null}
+        {recentResult && recentResult.prepared.checkedSoleCount > 0 ? <SoleResults result={recentResult} enriched={soleEnriched} websiteSuggestions={websiteSuggestions} websiteBusy={soleWebsiteBusy} onInvestigate={(ids) => void inspectVisibleSoleWebsites(ids)} outreachRecords={outreachRecords} outreachLogReady={outreachLogReady} onRecorded={(record) => setOutreachRecords((previous) => [...previous, record])} /> : null}
         {recentResult && recentResult.prepared.checkedAbCount > 0 ? <RecentResults result={recentResult} page={recentPage} onPageChange={setRecentPage} enriched={enriched} configured={configured} enrichmentBusy={enrichmentBusy} onEnrich={() => void enrichVisiblePage()} websiteReviews={websiteReviews} websiteSuggestions={websiteSuggestions} onSaveWebsiteReview={saveWebsiteReview} /> : null}
       </div>
     </>
@@ -244,12 +290,37 @@ function recentLeadStatus(detail: SwedishPilotCompany | undefined): string {
   return "Ikke SCB-kontrollert – ingen kontakt fra denne listen";
 }
 
-function SoleCard({ candidate, detail, suggestions, selected, onSelectionChange }: Readonly<{
+function SoleContactActions({ candidate, detail, availability, selected, onSelectionChange, sentRecord, outreachLogReady, onRecorded }: Readonly<{
+  candidate: SwedishRecentSoleProprietorship;
+  detail: SwedishPilotCompany;
+  availability: ReturnType<typeof swedishEmailDraftAvailability>;
+  selected: boolean;
+  onSelectionChange: (id: string, selected: boolean) => void;
+  sentRecord?: SwedishOutreachRecord;
+  outreachLogReady: boolean;
+  onRecorded: (record: SwedishOutreachRecord) => void;
+}>) {
+  if (sentRecord) return <p className="mt-4 rounded border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-950">E-post registrert sendt til {sentRecord.recipient} {new Date(sentRecord.sentAt).toLocaleString("nb-NO", { timeZone: "Europe/Oslo" })}. Ingen ny henvendelse foreslås her.</p>;
+  if (availability !== "available") return null;
+  if (!outreachLogReady) return <p className="mt-4 text-sm text-amber-800">Kontaktloggen må kunne leses før du kan vurdere utsendelse.</p>;
+  return <>
+    <label className="mt-4 flex items-start gap-2 text-sm font-medium text-slate-800">
+      <input type="checkbox" checked={selected} onChange={(event) => onSelectionChange(candidate.id, event.target.checked)} className="mt-1" />
+      <span>Velg for manuell e-postvurdering</span>
+    </label>
+    <SwedishEmailDraft companyName={candidate.name} businessDescription={candidate.businessDescription} recipient={detail.email} onRecorded={onRecorded} />
+  </>;
+}
+
+function SoleCard({ candidate, detail, suggestions, selected, onSelectionChange, sentRecord, outreachLogReady, onRecorded }: Readonly<{
   candidate: SwedishRecentSoleProprietorship;
   detail: SwedishPilotCompany;
   suggestions?: SwedishWebsiteSuggestion[];
   selected: boolean;
   onSelectionChange: (id: string, selected: boolean) => void;
+  sentRecord?: SwedishOutreachRecord;
+  outreachLogReady: boolean;
+  onRecorded: (record: SwedishOutreachRecord) => void;
 }>) {
   const searchQuery = `${candidate.name} ${candidate.postalCity} webbplats`;
   const draftAvailability = swedishEmailDraftAvailability(detail.contactAssessment, suggestions);
@@ -287,27 +358,49 @@ function SoleCard({ candidate, detail, suggestions, selected, onSelectionChange 
       </div> : null}
       {websiteBlocksOffer ? <p className="mt-4 rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">E-postutkast sperret: En mulig nettsideadresse svarer. Kontroller tilhørigheten manuelt; denne siden lager ikke et tilbud om ny nettside for virksomheten.</p> : null}
       {websiteCheckNeeded ? <p className="mt-4 text-xs text-slate-600">Undersøk mulige nettsider før et e-postutkast kan lages.</p> : null}
-      {draftAvailability === "available" ? <label className="mt-4 flex items-start gap-2 text-sm font-medium text-slate-800">
-        <input type="checkbox" checked={selected} onChange={(event) => onSelectionChange(candidate.id, event.target.checked)} className="mt-1" />
-        <span>Velg for manuell e-postvurdering</span>
-      </label> : null}
-      {draftAvailability === "available" ? <SwedishEmailDraft companyName={candidate.name} businessDescription={candidate.businessDescription} /> : null}
+      <SoleContactActions candidate={candidate} detail={detail} availability={draftAvailability} selected={selected} onSelectionChange={onSelectionChange} sentRecord={sentRecord} outreachLogReady={outreachLogReady} onRecorded={onRecorded} />
     </article>
   );
 }
 
-function SoleResults({ result, enriched, websiteSuggestions, websiteBusy, onInvestigate }: Readonly<{
+function sentRecordsBySoleCandidate(
+  candidates: SwedishRecentSoleProprietorship[],
+  enriched: Record<string, SwedishPilotCompany>,
+  records: SwedishOutreachRecord[],
+): Map<string, SwedishOutreachRecord | undefined> {
+  return new Map(candidates.map((candidate) => [candidate.id, records.find((record) =>
+    record.companyType === "E" && record.companyName.toLocaleLowerCase("sv-SE") === candidate.name.toLocaleLowerCase("sv-SE")
+    && record.recipient.toLocaleLowerCase("sv-SE") === enriched[candidate.id].email.toLocaleLowerCase("sv-SE"))]));
+}
+
+function selectedSoleCandidates(
+  candidates: SwedishRecentSoleProprietorship[],
+  selectedIds: Set<string>,
+  sentRecords: Map<string, SwedishOutreachRecord | undefined>,
+  enriched: Record<string, SwedishPilotCompany>,
+  websiteSuggestions: Record<string, SwedishWebsiteSuggestion[]>,
+  outreachLogReady: boolean,
+): SwedishRecentSoleProprietorship[] {
+  if (!outreachLogReady) return [];
+  return candidates.filter((candidate) => selectedIds.has(candidate.id) && !sentRecords.get(candidate.id)
+    && swedishEmailDraftAvailability(enriched[candidate.id].contactAssessment, websiteSuggestions[candidate.id]) === "available");
+}
+
+function SoleResults({ result, enriched, websiteSuggestions, websiteBusy, onInvestigate, outreachRecords, outreachLogReady, onRecorded }: Readonly<{
   result: PreparedSwedishRecentResult;
   enriched: Record<string, SwedishPilotCompany>;
   websiteSuggestions: Record<string, SwedishWebsiteSuggestion[]>;
   websiteBusy: boolean;
   onInvestigate: (ids: string[]) => void;
+  outreachRecords: SwedishOutreachRecord[];
+  outreachLogReady: boolean;
+  onRecorded: (record: SwedishOutreachRecord) => void;
 }>) {
   const [page, setPage] = useState(0);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const withEmail = soleProprietorshipsWithEmail(result.soleProprietorships, enriched);
-  const selected = withEmail.filter((candidate) => selectedIds.has(candidate.id)
-    && swedishEmailDraftAvailability(enriched[candidate.id].contactAssessment, websiteSuggestions[candidate.id]) === "available");
+  const sentByCandidate = sentRecordsBySoleCandidate(withEmail, enriched, outreachRecords);
+  const selected = selectedSoleCandidates(withEmail, selectedIds, sentByCandidate, enriched, websiteSuggestions, outreachLogReady);
   function changeSelection(id: string, isSelected: boolean) {
     setSelectedIds((previous) => {
       const next = new Set(previous);
@@ -326,7 +419,7 @@ function SoleResults({ result, enriched, websiteSuggestions, websiteBusy, onInve
       <p className="mt-2 text-sm text-slate-600">{selected.length} valgt for manuell e-postvurdering. Valget beholdes bare i denne visningen; ingen e-post sendes.</p>
       {visible.length > 0 ? <button type="button" disabled={websiteBusy} onClick={() => onInvestigate(visible.map((company) => company.id))} className="mt-4 rounded-lg bg-blue-800 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">{websiteBusy ? "Undersøker mulige nettsider …" : "Undersøk mulige nettsider for denne siden"}</button> : null}
       {withEmail.length === 0 ? <p className="mt-3 text-sm text-slate-600">Ingen av E-registreringene har oppgitt e-post hos SCB.</p> : null}
-      {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} suggestions={websiteSuggestions[candidate.id]} selected={selected.some((item) => item.id === candidate.id)} onSelectionChange={changeSelection} />)}</div> : null}
+      {withEmail.length > 0 ? <div className="mt-4 grid gap-4 md:grid-cols-2">{visible.map((candidate) => <SoleCard key={candidate.id} candidate={candidate} detail={enriched[candidate.id]} suggestions={websiteSuggestions[candidate.id]} selected={selected.some((item) => item.id === candidate.id)} onSelectionChange={changeSelection} sentRecord={sentByCandidate.get(candidate.id)} outreachLogReady={outreachLogReady} onRecorded={onRecorded} />)}</div> : null}
       {pageCount > 1 ? <nav aria-label="Sider med svenske E" className="mt-4 flex items-center gap-3">
         <button type="button" disabled={safePage === 0} onClick={() => setPage(safePage - 1)} className="rounded border border-slate-300 px-3 py-2 text-sm disabled:opacity-50">Forrige</button>
         <span className="text-sm text-slate-600">Side {safePage + 1} av {pageCount}</span>
