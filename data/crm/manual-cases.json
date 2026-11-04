@@ -6,9 +6,9 @@
     "contactName": "Karl Edmund Elvebakk",
     "email": "post@agioforvaltning.no",
     "receivedAt": "2026-11-03T09:01:00+01:00",
-    "status": "Ønsker gratis forslag – avklaringsmail sendt",
-    "summary": "Karl svarte ja til et gratis forslag etter oppfølgingsmailen. Han er forvaltningssjef i AGIO Forvaltning, som er registrert som sameiets forretningsfører. Lars har sendt en avklaringsmail om forslaget gjelder sameiet og hvem siden skal hjelpe. Ingen bestilling eller nettsideutvikling er avtalt.",
-    "nextStep": "Avvent Karls svar før en konkret skisse lages. Ingen automatisk oppfølging eller purring.",
+    "status": "Målgruppe avklart – testskisse laget, ikke sendt",
+    "summary": "Karl svarte ja til et gratis forslag. I nytt svar 04.11.2026 avklarte han at siden er for sameiet og primært skal hjelpe eiere, potensielle kjøpere og meglere. En uforpliktende testskisse er laget; ingen bestilling, avtale eller endelig leveranse er registrert.",
+    "nextStep": "Lars vurderer testskissen og bestemmer selv om den skal sendes til Karl. Ingen automatisk oppfølging eller purring.",
     "contactPolicy": "await_customer",
     "reviewDate": null,
     "sourceFile": "orrfuglveien-10-2026-11-03.txt"
