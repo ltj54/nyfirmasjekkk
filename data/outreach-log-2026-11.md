@@ -4,15 +4,35 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 146
-- Sendt: 68
+- Antall hendelser: 186
+- Sendt: 88
 - Angret: 0
-- Aktive kontaktede selskaper: 64
+- Aktive kontaktede selskaper: 84
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-04 | 938728828 | HAMMERSMARK VEKST | ENK | email | website-follow-up |
+| 2026-11-04 | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | website-follow-up |
+| 2026-11-04 | 938540659 | HÅP TIL CUBA | FLI | email | website-follow-up |
+| 2026-11-04 | 838552722 | IONITA SOLID EIENDOMSERVICE. | ENK | email | website-follow-up |
+| 2026-11-04 | 938777950 | SIA CONSTRUCTION | UTLA | email | website-follow-up |
+| 2026-11-04 | 938779295 | ÖNNEKÖPS KONSULT AB | UTLA | email | website-follow-up |
+| 2026-11-04 | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | website-follow-up |
+| 2026-11-04 | 938729484 | CREDO CONSULTING LARSEN | ENK | email | website-follow-up |
+| 2026-11-04 | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | website-follow-up |
+| 2026-11-04 | 937615159 | SYVERØDÅSEN ØVRE GRUNNEIERFORENING | FLI | email | website-offer |
+| 2026-11-04 | 938758603 | SKOGESTER SELGALL DA SILVA | ENK | email | website-offer |
+| 2026-11-04 | 838758932 | RIDE TRANSPORT ALI | ENK | email | website-offer |
+| 2026-11-04 | 938803897 | TANEMSMO YMSE TJENESTER | ENK | email | website-offer |
+| 2026-11-04 | 838804462 | OPEDAL RÅDGIVNING AB | UTLA | email | website-offer |
+| 2026-11-04 | 938803641 | KÄKKONSULT FREDRIK WIDAR AB | UTLA | email | website-offer |
+| 2026-11-04 | 938739579 | CSUKA HEIM & HAGE | ENK | email | website-offer |
+| 2026-11-04 | 838756972 | SHKEL | ENK | email | website-offer |
+| 2026-11-04 | 938758468 | NSABIMANA | ENK | email | website-offer |
+| 2026-11-04 | 938760691 | MEDI-FLOW BACK | ENK | email | website-offer |
+| 2026-11-04 | 938755205 | GJERTSEN LIVSKRAFT | ENK | email | website-offer |
 | 2026-11-03 | 938802114 | HILLESTAD LØPECOACHING | ENK | email | website-offer |
 | 2026-11-03 | 938803293 | ESSENTCORE AS | AS | email | website-offer |
 | 2026-11-03 | 938785945 | ALEPH CROSS AS | AS | email | website-offer |
@@ -82,6 +102,46 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-04 09:36 | sent | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938540659 | HÅP TIL CUBA | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938540659 | HÅP TIL CUBA | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 838552722 | IONITA SOLID EIENDOMSERVICE. | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 838552722 | IONITA SOLID EIENDOMSERVICE. | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938777950 | SIA CONSTRUCTION | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938777950 | SIA CONSTRUCTION | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938779295 | ÖNNEKÖPS KONSULT AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938779295 | ÖNNEKÖPS KONSULT AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938729484 | CREDO CONSULTING LARSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938729484 | CREDO CONSULTING LARSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:36 | sent | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-04 09:36 | sending | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-04 09:35 | sent | 937615159 | SYVERØDÅSEN ØVRE GRUNNEIERFORENING | FLI | email | - |
+| 2026-11-04 09:35 | sending | 937615159 | SYVERØDÅSEN ØVRE GRUNNEIERFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:35 | sent | 938758603 | SKOGESTER SELGALL DA SILVA | ENK | email | - |
+| 2026-11-04 09:35 | sending | 938758603 | SKOGESTER SELGALL DA SILVA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:35 | sent | 838758932 | RIDE TRANSPORT ALI | ENK | email | - |
+| 2026-11-04 09:35 | sending | 838758932 | RIDE TRANSPORT ALI | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:35 | sent | 938803897 | TANEMSMO YMSE TJENESTER | ENK | email | - |
+| 2026-11-04 09:35 | sending | 938803897 | TANEMSMO YMSE TJENESTER | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:35 | sent | 838804462 | OPEDAL RÅDGIVNING AB | UTLA | email | - |
+| 2026-11-04 09:35 | sending | 838804462 | OPEDAL RÅDGIVNING AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:35 | sent | 938803641 | KÄKKONSULT FREDRIK WIDAR AB | UTLA | email | - |
+| 2026-11-04 09:35 | sending | 938803641 | KÄKKONSULT FREDRIK WIDAR AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:34 | sent | 938739579 | CSUKA HEIM & HAGE | ENK | email | - |
+| 2026-11-04 09:34 | sending | 938739579 | CSUKA HEIM & HAGE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:34 | sent | 838756972 | SHKEL | ENK | email | - |
+| 2026-11-04 09:34 | sending | 838756972 | SHKEL | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:34 | sent | 938758468 | NSABIMANA | ENK | email | - |
+| 2026-11-04 09:34 | sending | 938758468 | NSABIMANA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:34 | sent | 938760691 | MEDI-FLOW BACK | ENK | email | - |
+| 2026-11-04 09:34 | sending | 938760691 | MEDI-FLOW BACK | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-04 09:34 | sent | 938755205 | GJERTSEN LIVSKRAFT | ENK | email | - |
+| 2026-11-04 09:34 | sending | 938755205 | GJERTSEN LIVSKRAFT | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-04 09:29 | not_relevant | 938806594 | TEGNER'N II OLA ALSVIK | ENK | email | Svar 04.11.2026 fra Ola Alsvik: Hjemmeside er ikke aktuelt. Virksomheten er liten og spesialisert; han er i praksis pensjonist og ønsker ikke bredere kundekrets. Ingen videre oppfølging. |
 | 2026-11-03 20:17 | sent | 938802114 | HILLESTAD LØPECOACHING | ENK | email | - |
 | 2026-11-03 20:17 | sending | 938802114 | HILLESTAD LØPECOACHING | ENK | email | Utsendelse reservert før SMTP-levering. |

@@ -22,7 +22,8 @@ export async function GET(request: Request) {
   try {
     const content = await readFile(path.join(caseDirectory, "manual-cases.json"), "utf8");
     const cases = JSON.parse(content) as CrmManualCase[];
-    return Response.json({ cases: await Promise.all(cases.map((manualCase) => readCaseWithEmail(manualCase))) }, { headers: { "Cache-Control": "no-store" } });
+    return Response.json({ cases: await Promise.all(cases.filter((manualCase) => !manualCase.hiddenFromCrm)
+      .map((manualCase) => readCaseWithEmail(manualCase))) }, { headers: { "Cache-Control": "no-store" } });
   } catch {
     return Response.json({ error: "Kunne ikke lese manuelle CRM-saker og original e-post." }, { status: 500 });
   }

@@ -146,12 +146,13 @@
     "contactName": "Fredrik Henden",
     "email": "fredrik.henden@yahoo.com",
     "receivedAt": "2026-10-02T09:47:00+02:00",
-    "status": "Arkivert – saken avsluttet 05.10.2026",
-    "summary": "Historisk positivt svar fra Fredrik: Ønsket en moderne, skalerbar nettbutikk fra start med tuningdeler, MaxxECU-produkter, ferdige og custom ledningsnett, 8HP-løsninger og komplette kit; kategorier og varianter; informasjonssider og custom-forespørsler; samt integrasjon mot Fiken. Ba om løsningsforslag, totalpris, løpende kostnader og vedlikehold. Eksisterende CRM og utsendelseslogg viser at Lars sendte avklaringsmail 02.10.2026, og at saken senere ble avsluttet 05.10.2026 før prosjektopprettelse eller utvikling. E-postadressen er hentet fra eksisterende CRM-kort. Dette innlimte svaret bevares som historikk og gjenåpner ikke saken.",
-    "nextStep": "Ingen videre kontakt, e-post eller purring. Saken forblir avsluttet som i eksisterende CRM-kort. En eventuell gjenåpning må avklares særskilt med Lars.",
+    "status": "Arkivert – fjernet fra CRM 04.11.2026",
+    "summary": "Historisk positivt svar fra Fredrik: Ønsket en moderne, skalerbar nettbutikk fra start med tuningdeler, MaxxECU-produkter, ferdige og custom ledningsnett, 8HP-løsninger og komplette kit; kategorier og varianter; informasjonssider og custom-forespørsler; samt integrasjon mot Fiken. Ba om løsningsforslag, totalpris, løpende kostnader og vedlikehold. Avklaringsmail ble sendt 02.10.2026, saken ble avsluttet 05.10.2026, og Lars sendte en kort manuell gjenåpning 02.11.2026. Ingen svar registrert per 04.11.2026. Ingen utvikling eller avtale ble startet. Original e-post og utsendelseshistorikk er bevart som arkiv.",
+    "nextStep": "Fjernet fra CRM etter Lars' beskjed 04.11.2026. Ingen videre kontakt, e-post eller purring. Eventuell gjenåpning krever særskilt beskjed fra Lars.",
     "contactPolicy": "closed",
     "reviewDate": null,
-    "sourceFile": "henden-autotuning-2026-10-02.txt"
+    "sourceFile": "henden-autotuning-2026-10-02.txt",
+    "hiddenFromCrm": true
   },
   {
     "id": "linus-anderssen-2026-10-01",

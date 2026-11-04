@@ -11,6 +11,7 @@ export type CrmManualCase = {
   contactPolicy: "await_customer" | "manual_review" | "closed";
   reviewDate: string | null;
   sourceFile: string;
+  hiddenFromCrm?: boolean;
 };
 
 export type CrmManualCaseWithEmail = CrmManualCase & { originalEmail: string };
@@ -26,5 +27,6 @@ export function casesForProject(cases: CrmManualCaseWithEmail[], organizationNum
 }
 
 export function casesWithoutProject(cases: CrmManualCaseWithEmail[], projectOrganizationNumbers: ReadonlySet<string>): CrmManualCaseWithEmail[] {
-  return cases.filter((manualCase) => !projectOrganizationNumbers.has(normalizeOrganizationNumber(manualCase.orgNumber)));
+  return cases.filter((manualCase) => !manualCase.hiddenFromCrm
+    && !projectOrganizationNumbers.has(normalizeOrganizationNumber(manualCase.orgNumber)));
 }
