@@ -55,6 +55,23 @@ type CrmProject = {
 
 const projects: CrmProject[] = [
   {
+    name: "Baderin Energies Consulting",
+    previewUrl: "https://ltj54.github.io/baderin-energies-consulting/",
+    contact: "Toyese Baderin",
+    email: "RINEnergies@gmail.com",
+    organizationNumber: "938 732 078",
+    proposalDate: "30.10.2026",
+    dateLabel: "Første e-post sendt",
+    replyDate: "04.11.2026 kl. 11:27",
+    outreach: "Toyese ønsker nettside og aksepterte 1 990 kr; Lars har svart. Ingen automatisk oppfølging.",
+    progress: String.raw`Engelsk førsteskisse er laget i C:\Prosjekt\baderin-energies-consulting og publisert som test. Skissen følger kundens oppgitte faser: konsept, studier, pre-FEED, FEED, EPCI og prosjektledelse. Testlenken er ikke sendt til Toyese ennå. Virksomheten er nå et ENK; «RINEnergies» er kun en fremtidig navneplan. E-post og to telefonnumre er mottatt, men offentlig kontaktpunkt, innhold, domene og drift må avklares før endelig publisering.`,
+    nextStep: "Lars gjennomgår testskissen og bestemmer når lenken skal sendes manuelt til Toyese. Avklar konkret tjenesteinnhold, eventuelle bilder/logo og hvilket telefonnummer som skal være offentlig. Ingen automatisk e-post eller purring.",
+    invoice: "Ikke fakturert · avtalt fastpris 1 990 kr",
+    agreement: "Toyese aksepterte fastprisen på e-post 04.11.2026. Internt avtaleutkast er ikke sendt eller signert; sluttomfang, domene og drift er ikke avklart.",
+    agreementStatus: "draft",
+    status: "working",
+  },
+  {
     name: "Eierseksjonssameiet Orrfuglveien 10",
     previewUrl: "https://ltj54.github.io/orrfuglveien-10/",
     contact: "Karl Edmund Elvebakk (AGIO Forvaltning)",

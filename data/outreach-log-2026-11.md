@@ -4,7 +4,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 186
+- Antall hendelser: 187
 - Sendt: 88
 - Angret: 0
 - Aktive kontaktede selskaper: 84
@@ -102,6 +102,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-04 13:13 | replied | 938732078 | BADERIN ENERGIES CONSULTING | ENK | email | Toyese Baderin svarte 04.11.2026 at han ønsker å starte utviklingen og aksepterer fastpris 1 990 kr. Han ønsker forhåndsvisninger og opplyser om energirådgivning fra konsept til EPCI. Aktiv kundedialog; ingen automatisk salgsoppfølging. |
 | 2026-11-04 09:36 | sent | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-04 09:36 | sending | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-11-04 09:36 | sent | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | Oppfølging sendt – avslutt hvis stille |
