@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 145
+- Antall hendelser: 146
 - Sendt: 68
 - Angret: 0
-- Aktive kontaktede selskaper: 65
+- Aktive kontaktede selskaper: 64
 
 ## Aktive kontaktede selskaper
 
@@ -15,7 +15,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | --- | --- | --- | --- | --- | --- |
 | 2026-11-03 | 938802114 | HILLESTAD LØPECOACHING | ENK | email | website-offer |
 | 2026-11-03 | 938803293 | ESSENTCORE AS | AS | email | website-offer |
-| 2026-11-03 | 938806594 | TEGNER'N II OLA ALSVIK | ENK | email | website-offer |
 | 2026-11-03 | 938785945 | ALEPH CROSS AS | AS | email | website-offer |
 | 2026-11-03 | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | website-offer |
 | 2026-11-03 | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
@@ -83,6 +82,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-04 09:29 | not_relevant | 938806594 | TEGNER'N II OLA ALSVIK | ENK | email | Svar 04.11.2026 fra Ola Alsvik: Hjemmeside er ikke aktuelt. Virksomheten er liten og spesialisert; han er i praksis pensjonist og ønsker ikke bredere kundekrets. Ingen videre oppfølging. |
 | 2026-11-03 20:17 | sent | 938802114 | HILLESTAD LØPECOACHING | ENK | email | - |
 | 2026-11-03 20:17 | sending | 938802114 | HILLESTAD LØPECOACHING | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-03 20:17 | sent | 938803293 | ESSENTCORE AS | AS | email | - |
