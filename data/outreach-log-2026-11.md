@@ -4,10 +4,10 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 187
+- Antall hendelser: 188
 - Sendt: 88
 - Angret: 0
-- Aktive kontaktede selskaper: 84
+- Aktive kontaktede selskaper: 83
 
 ## Aktive kontaktede selskaper
 
@@ -22,7 +22,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-04 | 938718148 | CRISTIANO LIE INVEST OG DRIFT | ENK | email | website-follow-up |
 | 2026-11-04 | 938729484 | CREDO CONSULTING LARSEN | ENK | email | website-follow-up |
 | 2026-11-04 | 938776563 | STEINAR ANDERSEN INVEST AS | AS | email | website-follow-up |
-| 2026-11-04 | 937615159 | SYVERØDÅSEN ØVRE GRUNNEIERFORENING | FLI | email | website-offer |
 | 2026-11-04 | 938758603 | SKOGESTER SELGALL DA SILVA | ENK | email | website-offer |
 | 2026-11-04 | 838758932 | RIDE TRANSPORT ALI | ENK | email | website-offer |
 | 2026-11-04 | 938803897 | TANEMSMO YMSE TJENESTER | ENK | email | website-offer |
@@ -102,6 +101,7 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-04 14:31 | not_relevant | 937615159 | SYVERØDÅSEN ØVRE GRUNNEIERFORENING | FLI | email | Siw Schei svarte «Nei takk» 04.11.2026 kl. 13:46. Ingen videre oppfølging eller ny salgsutsendelse. |
 | 2026-11-04 13:13 | replied | 938732078 | BADERIN ENERGIES CONSULTING | ENK | email | Toyese Baderin svarte 04.11.2026 at han ønsker å starte utviklingen og aksepterer fastpris 1 990 kr. Han ønsker forhåndsvisninger og opplyser om energirådgivning fra konsept til EPCI. Aktiv kundedialog; ingen automatisk salgsoppfølging. |
 | 2026-11-04 09:36 | sent | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-04 09:36 | sending | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging reservert før SMTP-levering. |
