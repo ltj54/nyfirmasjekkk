@@ -17,6 +17,7 @@ type CrmProject = {
   name: string;
   domain?: string;
   previewUrl?: string;
+  repositoryUrl?: string;
   previewRemoved?: string;
   inactiveDate?: string;
   outreach: string;
@@ -57,15 +58,16 @@ const projects: CrmProject[] = [
   {
     name: "Baderin Energies Consulting",
     previewUrl: "https://ltj54.github.io/baderin-energies-consulting/",
+    repositoryUrl: "https://github.com/ltj54/baderin-energies-consulting",
     contact: "Toyese Baderin",
     email: "RINEnergies@gmail.com",
     organizationNumber: "938 732 078",
     proposalDate: "30.10.2026",
     dateLabel: "Første e-post sendt",
     replyDate: "04.11.2026 kl. 11:27",
-    outreach: "Toyese ønsker nettside og aksepterte fastprisen på 1 990 kr. Første nettsideforslag er klart for manuell utsendelse; ingen automatisk oppfølging.",
-    progress: String.raw`Engelsk førsteskisse er laget i C:\Prosjekt\baderin-energies-consulting og publisert på https://ltj54.github.io/baderin-energies-consulting/. Skissen følger kundens oppgitte faser: konsept, studier, pre-FEED, FEED, EPCI og prosjektledelse. Forslaget er klart, men testlenken er ikke sendt til Toyese ennå. Virksomheten er nå et ENK; «RINEnergies» er kun en fremtidig navneplan. E-post og to telefonnumre er mottatt. Offentlig kontaktpunkt, endelig innhold, domene og drift må avklares med kunden.`,
-    nextStep: "Send testlenken manuelt til Toyese og be ham vurdere retning, tjenesteinnhold og uttrykk. Be samtidig om eventuelle bilder eller logo og avklar hvilket telefonnummer som skal være offentlig. Registrer utsendelsen i CRM først etter at e-posten faktisk er sendt.",
+    outreach: "Toyese ønsker nettside og aksepterte fastprisen på 1 990 kr. Første versjon er laget og klar til å vises; ingen automatisk oppfølging.",
+    progress: String.raw`Engelsk førsteskisse er laget i C:\Prosjekt\baderin-energies-consulting, lagret i https://github.com/ltj54/baderin-energies-consulting og publisert på https://ltj54.github.io/baderin-energies-consulting/. Skissen følger kundens oppgitte faser: konsept, studier, pre-FEED, FEED, EPCI og prosjektledelse. Lenken er klar, men e-posten er ikke sendt til Toyese ennå. Virksomheten er nå et ENK; «RINEnergies» er kun en fremtidig navneplan. E-post og to telefonnumre er mottatt. Tjenestebeskrivelser, uttrykk, eventuelle bilder/logo, offentlig kontaktpunkt, framtidig navnebruk, domene og drift kan videreutvikles og avklares med kunden.`,
+    nextStep: "Send forhåndsvisningen manuelt til Toyese og be ham vurdere om innholdet og retningen treffer. Avklar tjenestebeskrivelser, eventuelle bilder/logo og hvilket telefonnummer og e-post han vil vise offentlig. Registrer utsendelsen i CRM først etter at e-posten faktisk er sendt.",
     invoice: "Ikke fakturert · avtalt fastpris 1 990 kr",
     agreement: "Toyese aksepterte fastprisen på e-post 04.11.2026. Internt avtaleutkast er ikke sendt eller signert; sluttomfang, domene og drift er ikke avklart.",
     agreementStatus: "draft",
@@ -671,6 +673,7 @@ function ProjectLinks({ project }: Readonly<{ project: CrmProject }>) {
       <ProjectWebsite domain={project.domain} domainRemoved={project.domainRemoved} />
       {project.previewRemoved ? <p className="break-all text-slate-500">Forslag avpublisert {project.previewRemoved} · {project.previewUrl}</p> : null}
       {project.previewUrl && !project.previewRemoved ? <a className="break-all text-blue-800 underline underline-offset-2" href={project.previewUrl} target="_blank" rel="noreferrer">Åpne forslag <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
+      {project.repositoryUrl ? <a className="break-all text-blue-800 underline underline-offset-2" href={project.repositoryUrl} target="_blank" rel="noreferrer">Åpne GitHub-repositoriet <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
       {project.invoiceFile ? <a className="text-blue-800 underline underline-offset-2" href={project.invoiceFile} target="_blank" rel="noreferrer">Åpne faktura <ExternalLink aria-hidden="true" className="inline size-3" /></a> : null}
     </div>
   );
