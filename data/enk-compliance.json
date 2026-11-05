@@ -15,9 +15,9 @@
       "note": "Lokal, maskinell nummerering klargjort fra 2026-006. Utstedte fakturaer lagres i append-only register og sendes ikke automatisk."
     },
     "website_information": {
-      "status": "open",
-      "completedDate": "",
-      "note": ""
+      "status": "completed",
+      "completedDate": "2026-11-05",
+      "note": "Det skal stå LTJ PRODUCTION JOHANNESSEN og Org.nr. 838 632 122. Hilsen Skattesatan"
     },
     "advance_tax_2026_q4": {
       "status": "open",
@@ -30,5 +30,5 @@
       "note": ""
     }
   },
-  "updatedAt": "2026-11-05T09:33:12.307Z"
+  "updatedAt": "2026-11-05T11:11:54.196Z"
 }
