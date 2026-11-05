@@ -11,7 +11,7 @@ export const runtime = "nodejs";
 
 const eventFile = path.resolve(process.cwd(), "..", "data", "crm-events.jsonl");
 const existingInvoiceNumbers = new Set(["2026-001", "2026-002", "2026-003", "2026-004", "2026-005"]);
-const outstandingExistingProjects = new Set(["938423334"]);
+const existingProjectsWithInvoices = new Set(["938423334", "838270352"]);
 let pendingWrite: Promise<void> = Promise.resolve();
 
 async function readEvents(): Promise<CrmEventRecord[]> {
@@ -62,7 +62,7 @@ function assertPaymentCanBeRecorded(submitted: SubmittedEvent, projectEvents: Cr
   if (projectEvents.some((event) => event.kind === "payment_received")) {
     throw new Error("Betaling er allerede registrert for dette prosjektet.");
   }
-  if (!outstandingExistingProjects.has(submitted.projectId)
+  if (!existingProjectsWithInvoices.has(submitted.projectId)
     && !projectEvents.some((event) => event.kind === "invoice_sent")) {
     throw new Error("En sendt faktura må være registrert før betaling kan registreres.");
   }
