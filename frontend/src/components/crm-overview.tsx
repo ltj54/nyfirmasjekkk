@@ -6,7 +6,9 @@ import { Building2, CalendarDays, ExternalLink, FileText, Globe2, MapPin, Phone,
 import { crmProjectId, isoDateFromNorwegian, norwegianDateFromIso, osloToday, type CrmEventKind, type CrmEventRecord } from "@/lib/crm-events";
 import { MailboxReview } from "@/components/mailbox-review";
 import { CrmManualCases, ProjectManualEmails } from "@/components/crm-manual-cases";
+import { EnkComplianceOverview } from "@/components/enk-compliance-overview";
 import { casesForProject, normalizeOrganizationNumber, type CrmManualCaseWithEmail } from "@/lib/crm-manual-cases";
+import type { ComplianceInvoice } from "@/lib/enk-compliance";
 
 type ProjectStatus = "working" | "waiting" | "delivered" | "payment" | "completed" | "inactive";
 type AgreementStatus = "required" | "draft" | "signed" | "not-used";
@@ -51,6 +53,7 @@ type CrmProject = {
   status: ProjectStatus;
   invoiceAmount?: number;
   sentProposalDate?: string;
+  smsDate?: string;
   clarificationDate?: string;
 };
 
@@ -105,9 +108,10 @@ const projects: CrmProject[] = [
     proposalDate: "02.11.2026",
     dateLabel: "Telefonsamtale – forslag lovet",
     sentProposalDate: "03.11.2026",
-    outreach: "Uforpliktende nettsideskisse sendt 03.11.2026 – avventer Hamisi",
-    progress: String.raw`Første kunstorienterte nettsideskisse er publisert fra C:\Prosjekt\iha-arts-and-crafts og sendt til Hamisi 03.11.2026. Forslaget har norsk og engelsk visning, høstbilde, veibeskrivelse og et synlig, deaktivert meldingsskjema. Egne kunstbilder er ikke lagt inn; Hamisi skal velge og godkjenne verkene før eventuell videreføring. Ingen bestilling, pris, domene, drift eller levering er avtalt.`,
-    nextStep: "Avvent Hamisis tilbakemelding. Ingen automatisk oppfølging, purring eller ny e-post. Videre arbeid gjøres først etter et konkret svar fra Hamisi.",
+    smsDate: "05.11.2026",
+    outreach: "Uforpliktende nettsideskisse sendt 03.11.2026. Kort SMS med lenken og spørsmål om videreføring sendt 05.11.2026 – avventer Hamisi.",
+    progress: String.raw`Første kunstorienterte nettsideskisse er publisert fra C:\Prosjekt\iha-arts-and-crafts og sendt til Hamisi 03.11.2026. Forslaget har norsk og engelsk visning, høstbilde, veibeskrivelse og et synlig, deaktivert meldingsskjema. Egne kunstbilder er ikke lagt inn; Hamisi skal velge og godkjenne verkene før eventuell videreføring. Lars sendte en kort SMS 05.11.2026 med lenken og ba om en enkel tilbakemelding på om Hamisi ønsker å gå videre, trenger mer tid eller ikke vil fortsette. Ingen bestilling, pris, domene, drift eller levering er avtalt.`,
+    nextStep: "Avvent Hamisis svar på SMS-en. Ingen flere automatiske eller manuelle purringer foreløpig. Videre arbeid gjøres først etter et konkret svar fra Hamisi.",
     invoice: "Ikke fakturert",
     agreement: "Internt avtaleutkast finnes lokalt, men pris, omfang, domene og drift er ikke avtalt.",
     agreementStatus: "draft",
@@ -369,6 +373,7 @@ function historyFor(project: CrmProject): CrmEvent[] {
     { date: project.proposalDate, label: project.dateLabel ?? "Første registrerte dato" },
     { date: project.replyDate, label: "Svar mottatt" },
     { date: project.sentProposalDate, label: "Forslag sendt" },
+    { date: project.smsDate, label: "SMS sendt" },
     { date: project.clarificationDate, label: "Avklaringsmail sendt" },
     { date: project.followUpDate, label: "Purring sendt" },
     { date: project.deliveryConfirmedDate, label: "Leveranse ferdig ifølge Lars" },
@@ -501,6 +506,14 @@ export function CrmOverview() {
     .reduce((total, project) => total + (project.invoiceAmount ?? 0), 0);
   const paid = currentProjects.filter((project) => project.paymentDate)
     .reduce((total, project) => total + (project.invoiceAmount ?? 0), 0);
+  const complianceInvoices: ComplianceInvoice[] = currentProjects
+    .filter((project) => Boolean(project.invoiceNumber) && typeof project.invoiceAmount === "number")
+    .map((project) => ({
+      number: project.invoiceNumber!,
+      amount: project.invoiceAmount!,
+      invoiceDate: project.invoiceDate,
+      paymentDate: project.paymentDate,
+    }));
 
   async function saveEvent(event: Omit<CrmEventRecord, "recordedAt">) {
     setSaveError("");
@@ -552,6 +565,8 @@ export function CrmOverview() {
           <div><dt className="text-xs text-slate-600">Avtaler inngått</dt><dd className="text-lg font-semibold text-blue-900">{currentProjects.filter((project) => project.agreementStatus === "signed").length}</dd></div>
         </dl>
       </header>
+
+      <EnkComplianceOverview invoices={complianceInvoices} canEdit={canEdit && !loadError} />
 
       {canEdit ? <MailboxReview /> : null}
 

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "vatRegistered": false,
+  "vatRegistrationDate": "",
+  "hasEmployees": false,
+  "hasCashSales": false,
+  "hasAnnualAccountsObligation": false,
+  "expectedAnnualProfit": null,
+  "taxReserved": null,
+  "lastBookkeepingReconciled": "",
+  "tasks": {
+    "invoice_system": {
+      "status": "open",
+      "completedDate": "",
+      "note": ""
+    },
+    "website_information": {
+      "status": "open",
+      "completedDate": "",
+      "note": ""
+    },
+    "advance_tax_2026_q4": {
+      "status": "open",
+      "completedDate": "",
+      "note": ""
+    },
+    "tax_return_2026": {
+      "status": "open",
+      "completedDate": "",
+      "note": ""
+    }
+  },
+  "updatedAt": "2026-11-05T09:33:12.307Z"
+}
