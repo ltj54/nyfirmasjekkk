@@ -4,15 +4,22 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 251
-- Sendt: 119
+- Antall hendelser: 266
+- Sendt: 126
 - Angret: 0
-- Aktive kontaktede selskaper: 114
+- Aktive kontaktede selskaper: 121
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-05 | 938800510 | KA TEIGEN INVEST AS | AS | email | website-offer |
+| 2026-11-05 | 838563422 | HONEST FAST FOOD AS | AS | email | website-offer |
+| 2026-11-05 | 838818242 | ST LØKSLID | ENK | email | website-offer |
+| 2026-11-05 | 938818223 | LINDSTRØM FINANSKONSULT AB | UTLA | email | website-offer |
+| 2026-11-05 | 938818096 | DERWENT ENERGY SERVICES LTD | UTLA | email | website-offer |
+| 2026-11-05 | 838526292 | BLÅVEISTUNET VELFORENING | FLI | email | website-offer |
+| 2026-11-05 | 938707642 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA NUF | NUF | email | website-offer |
 | 2026-11-05 | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | website-follow-up |
 | 2026-11-05 | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | website-follow-up |
 | 2026-11-05 | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | website-follow-up |
@@ -132,6 +139,21 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-05 09:52 | not_relevant | 938806551 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-11-05 09:51 | sent | 938800510 | KA TEIGEN INVEST AS | AS | email | - |
+| 2026-11-05 09:51 | sending | 938800510 | KA TEIGEN INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:51 | sent | 838563422 | HONEST FAST FOOD AS | AS | email | - |
+| 2026-11-05 09:51 | sending | 838563422 | HONEST FAST FOOD AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:51 | sent | 838818242 | ST LØKSLID | ENK | email | - |
+| 2026-11-05 09:51 | sending | 838818242 | ST LØKSLID | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:51 | sent | 938818223 | LINDSTRØM FINANSKONSULT AB | UTLA | email | - |
+| 2026-11-05 09:51 | sending | 938818223 | LINDSTRØM FINANSKONSULT AB | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:51 | sent | 938818096 | DERWENT ENERGY SERVICES LTD | UTLA | email | - |
+| 2026-11-05 09:51 | sending | 938818096 | DERWENT ENERGY SERVICES LTD | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:51 | sent | 838526292 | BLÅVEISTUNET VELFORENING | FLI | email | - |
+| 2026-11-05 09:51 | sending | 838526292 | BLÅVEISTUNET VELFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:51 | sent | 938707642 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA NUF | NUF | email | - |
+| 2026-11-05 09:51 | sending | 938707642 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-05 09:32 | not_relevant | 938746133 | OLE BIRGER NYGÅRD | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-11-05 09:31 | sent | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-05 09:31 | sending | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | Oppfølging reservert før SMTP-levering. |
