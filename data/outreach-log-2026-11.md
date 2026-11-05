@@ -4,15 +4,18 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 266
-- Sendt: 126
+- Antall hendelser: 272
+- Sendt: 129
 - Angret: 0
-- Aktive kontaktede selskaper: 121
+- Aktive kontaktede selskaper: 124
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-05 | 938815569 | FULØP CREATIVE | ENK | email | website-offer |
+| 2026-11-05 | 938661146 | SØSTRENE AV DET HELLIGE KORS AV NHATRANG, SUNNIVA KOMMUNITET. | ANNA | email | website-offer |
+| 2026-11-05 | 938783063 | AUTOTEKNIKK HALDEN VED KARLSEN | ENK | email | website-offer |
 | 2026-11-05 | 938800510 | KA TEIGEN INVEST AS | AS | email | website-offer |
 | 2026-11-05 | 838563422 | HONEST FAST FOOD AS | AS | email | website-offer |
 | 2026-11-05 | 838818242 | ST LØKSLID | ENK | email | website-offer |
@@ -139,6 +142,12 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-05 13:04 | sent | 938815569 | FULØP CREATIVE | ENK | email | - |
+| 2026-11-05 13:04 | sending | 938815569 | FULØP CREATIVE | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 13:04 | sent | 938661146 | SØSTRENE AV DET HELLIGE KORS AV NHATRANG, SUNNIVA KOMMUNITET. | ANNA | email | - |
+| 2026-11-05 13:04 | sending | 938661146 | SØSTRENE AV DET HELLIGE KORS AV NHATRANG, SUNNIVA KOMMUNITET. | ANNA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 13:04 | sent | 938783063 | AUTOTEKNIKK HALDEN VED KARLSEN | ENK | email | - |
+| 2026-11-05 13:03 | sending | 938783063 | AUTOTEKNIKK HALDEN VED KARLSEN | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-05 09:52 | not_relevant | 938806551 | - | - | email | Ikke aktuell fra arbeidskø og oppfølging |
 | 2026-11-05 09:51 | sent | 938800510 | KA TEIGEN INVEST AS | AS | email | - |
 | 2026-11-05 09:51 | sending | 938800510 | KA TEIGEN INVEST AS | AS | email | Utsendelse reservert før SMTP-levering. |
