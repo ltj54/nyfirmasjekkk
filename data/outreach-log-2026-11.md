@@ -4,15 +4,46 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 188
-- Sendt: 88
+- Antall hendelser: 251
+- Sendt: 119
 - Angret: 0
-- Aktive kontaktede selskaper: 83
+- Aktive kontaktede selskaper: 114
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-05 | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | website-follow-up |
+| 2026-11-05 | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | website-follow-up |
+| 2026-11-05 | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | website-follow-up |
+| 2026-11-05 | 938737169 | NAILART HITRA BY KLINGENBERG | ENK | email | website-follow-up |
+| 2026-11-05 | 938782822 | SAGAHAUGEN SVEIS & MEK | ENK | email | website-follow-up |
+| 2026-11-05 | 937751486 | SAMEIET FELLESPARKEN HOLLENDERKVARTALET | SAM | email | website-follow-up |
+| 2026-11-05 | 938737436 | WENCHE KRISTIANSEN JOURNALISTIKK | ENK | email | website-follow-up |
+| 2026-11-05 | 938522804 | SIA CONSTRUCTION NUF | NUF | email | website-follow-up |
+| 2026-11-05 | 938535361 | SPOTT AS | AS | email | website-follow-up |
+| 2026-11-05 | 938782962 | SÖNNERLID PRODUCTIONS | ENK | email | website-follow-up |
+| 2026-11-05 | 938782504 | STELLA JAHRMANN LAUVSTAD TRENINGSFORMIDLING | ENK | email | website-follow-up |
+| 2026-11-05 | 938786178 | DANIEL KORSMO | UTLA | email | website-follow-up |
+| 2026-11-05 | 938744033 | JAN OTTO FAUSA | ENK | email | website-follow-up |
+| 2026-11-05 | 938660336 | SØRLANDSDAMENE 2029 | FLI | email | website-follow-up |
+| 2026-11-05 | 938665702 | TANNLEGE STOJKOVSKI | ENK | email | website-follow-up |
+| 2026-11-05 | 938782210 | ØYSTEIN EKRHEIM | ENK | email | website-follow-up |
+| 2026-11-05 | 938786453 | SYLVIA HERLAND BYSTRØM | ENK | email | website-follow-up |
+| 2026-11-05 | 938776601 | GT ODDEN INVEST AS | AS | email | website-follow-up |
+| 2026-11-05 | 835451712 | ALSHAM ISLAMSK SENTER | FLI | email | website-follow-up |
+| 2026-11-05 | 938666016 | SURNADALSØRA 30A | ESEK | email | website-offer |
+| 2026-11-05 | 838816142 | SANDVIK HANDEL AS | AS | email | website-offer |
+| 2026-11-05 | 938615462 | DOLVIKHAUGENE NORD VELFORENING | FLI | email | website-offer |
+| 2026-11-05 | 938817138 | BJØRNSEN SERVICES | ENK | email | website-offer |
+| 2026-11-05 | 938699038 | TANGENT 60 ALTA | FLI | email | website-offer |
+| 2026-11-05 | 938813825 | SKILLEXPERTEN PIKA GMBH | UTLA | email | website-offer |
+| 2026-11-05 | 938765537 | REALBYGG & LEVERING CONSTANTIN HOALA | ENK | email | website-offer |
+| 2026-11-05 | 938814147 | PROMEK FLEET RENTAL AS | AS | email | website-offer |
+| 2026-11-05 | 938810249 | N.A.T CONSULTING | UTLA | email | website-offer |
+| 2026-11-05 | 938816980 | ELVØY SJØMAT | ENK | email | website-offer |
+| 2026-11-05 | 938695423 | DRAMMEN PARANORMAL | FLI | email | website-offer |
+| 2026-11-05 | 938812292 | 66 NORD | TVAM | email | website-offer |
 | 2026-11-04 | 938728828 | HAMMERSMARK VEKST | ENK | email | website-follow-up |
 | 2026-11-04 | 938755175 | HAUGSETH TØMRING, FORSKALING OG REHABILITERING | ENK | email | website-follow-up |
 | 2026-11-04 | 938540659 | HÅP TIL CUBA | FLI | email | website-follow-up |
@@ -101,6 +132,69 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-05 09:32 | not_relevant | 938746133 | OLE BIRGER NYGÅRD | ENK | email | Ikke aktuell fra arbeidskø og oppfølging |
+| 2026-11-05 09:31 | sent | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938735697 | DRIVE4YOU-LOGISTICS MARIUSZ HOPPEL | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938734011 | GJØDINGSETER SKI OG SYKKELSERVICE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938783047 | LØKKA BARBERSTUE DAWOUD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938737169 | NAILART HITRA BY KLINGENBERG | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938737169 | NAILART HITRA BY KLINGENBERG | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938782822 | SAGAHAUGEN SVEIS & MEK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938782822 | SAGAHAUGEN SVEIS & MEK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 937751486 | SAMEIET FELLESPARKEN HOLLENDERKVARTALET | SAM | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 937751486 | SAMEIET FELLESPARKEN HOLLENDERKVARTALET | SAM | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938737436 | WENCHE KRISTIANSEN JOURNALISTIKK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938737436 | WENCHE KRISTIANSEN JOURNALISTIKK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938522804 | SIA CONSTRUCTION NUF | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938522804 | SIA CONSTRUCTION NUF | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938535361 | SPOTT AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938535361 | SPOTT AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938782962 | SÖNNERLID PRODUCTIONS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938782962 | SÖNNERLID PRODUCTIONS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938782504 | STELLA JAHRMANN LAUVSTAD TRENINGSFORMIDLING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938782504 | STELLA JAHRMANN LAUVSTAD TRENINGSFORMIDLING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938786178 | DANIEL KORSMO | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938786178 | DANIEL KORSMO | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938744033 | JAN OTTO FAUSA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938744033 | JAN OTTO FAUSA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938660336 | SØRLANDSDAMENE 2029 | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938660336 | SØRLANDSDAMENE 2029 | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938665702 | TANNLEGE STOJKOVSKI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938665702 | TANNLEGE STOJKOVSKI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938782210 | ØYSTEIN EKRHEIM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938782210 | ØYSTEIN EKRHEIM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938786453 | SYLVIA HERLAND BYSTRØM | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938786453 | SYLVIA HERLAND BYSTRØM | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 938776601 | GT ODDEN INVEST AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 938776601 | GT ODDEN INVEST AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:31 | sent | 835451712 | ALSHAM ISLAMSK SENTER | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-05 09:31 | sending | 835451712 | ALSHAM ISLAMSK SENTER | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938666016 | SURNADALSØRA 30A | ESEK | email | - |
+| 2026-11-05 09:30 | sending | 938666016 | SURNADALSØRA 30A | ESEK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 838816142 | SANDVIK HANDEL AS | AS | email | - |
+| 2026-11-05 09:30 | sending | 838816142 | SANDVIK HANDEL AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938615462 | DOLVIKHAUGENE NORD VELFORENING | FLI | email | - |
+| 2026-11-05 09:30 | sending | 938615462 | DOLVIKHAUGENE NORD VELFORENING | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938817138 | BJØRNSEN SERVICES | ENK | email | - |
+| 2026-11-05 09:30 | sending | 938817138 | BJØRNSEN SERVICES | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938699038 | TANGENT 60 ALTA | FLI | email | - |
+| 2026-11-05 09:30 | sending | 938699038 | TANGENT 60 ALTA | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938813825 | SKILLEXPERTEN PIKA GMBH | UTLA | email | - |
+| 2026-11-05 09:30 | sending | 938813825 | SKILLEXPERTEN PIKA GMBH | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938765537 | REALBYGG & LEVERING CONSTANTIN HOALA | ENK | email | - |
+| 2026-11-05 09:30 | sending | 938765537 | REALBYGG & LEVERING CONSTANTIN HOALA | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938814147 | PROMEK FLEET RENTAL AS | AS | email | - |
+| 2026-11-05 09:30 | sending | 938814147 | PROMEK FLEET RENTAL AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938810249 | N.A.T CONSULTING | UTLA | email | - |
+| 2026-11-05 09:30 | sending | 938810249 | N.A.T CONSULTING | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938816980 | ELVØY SJØMAT | ENK | email | - |
+| 2026-11-05 09:30 | sending | 938816980 | ELVØY SJØMAT | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938695423 | DRAMMEN PARANORMAL | FLI | email | - |
+| 2026-11-05 09:30 | sending | 938695423 | DRAMMEN PARANORMAL | FLI | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-05 09:30 | sent | 938812292 | 66 NORD | TVAM | email | - |
+| 2026-11-05 09:30 | sending | 938812292 | 66 NORD | TVAM | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-04 14:31 | not_relevant | 937615159 | SYVERØDÅSEN ØVRE GRUNNEIERFORENING | FLI | email | Siw Schei svarte «Nei takk» 04.11.2026 kl. 13:46. Ingen videre oppfølging eller ny salgsutsendelse. |
 | 2026-11-04 13:13 | replied | 938732078 | BADERIN ENERGIES CONSULTING | ENK | email | Toyese Baderin svarte 04.11.2026 at han ønsker å starte utviklingen og aksepterer fastpris 1 990 kr. Han ønsker forhåndsvisninger og opplyser om energirådgivning fra konsept til EPCI. Aktiv kundedialog; ingen automatisk salgsoppfølging. |
 | 2026-11-04 09:36 | sent | 938728828 | HAMMERSMARK VEKST | ENK | email | Oppfølging sendt – avslutt hvis stille |
