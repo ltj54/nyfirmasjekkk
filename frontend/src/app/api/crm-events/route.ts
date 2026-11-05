@@ -4,12 +4,13 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 
 import { isoDateFromNorwegian, osloToday, type CrmEventRecord, validNorwegianDate } from "@/lib/crm-events";
+import { readInvoiceRegister } from "@/lib/invoice-register-store";
 import { isLocalApiRequest } from "@/lib/local-api-access";
 
 export const runtime = "nodejs";
 
 const eventFile = path.resolve(process.cwd(), "..", "data", "crm-events.jsonl");
-const existingInvoiceNumbers = new Set(["2026-001", "2026-002", "2026-003", "2026-004"]);
+const existingInvoiceNumbers = new Set(["2026-001", "2026-002", "2026-003", "2026-004", "2026-005"]);
 const outstandingExistingProjects = new Set(["938423334"]);
 let pendingWrite: Promise<void> = Promise.resolve();
 
@@ -37,6 +38,68 @@ function validEvent(value: unknown): value is Omit<CrmEventRecord, "recordedAt">
     && isoDateFromNorwegian(event.dueDate) >= isoDateFromNorwegian(event.date);
 }
 
+type SubmittedEvent = Omit<CrmEventRecord, "recordedAt">;
+
+async function assertInvoiceCanBeRecorded(submitted: SubmittedEvent, events: CrmEventRecord[], projectEvents: CrmEventRecord[]) {
+  if (submitted.kind !== "invoice_sent") return;
+  if (projectEvents.some((event) => event.kind === "invoice_sent")) {
+    throw new Error("Faktura er allerede registrert som sendt for dette prosjektet.");
+  }
+  const numberAlreadyUsed = existingInvoiceNumbers.has(submitted.invoiceNumber!)
+    || events.some((event) => event.kind === "invoice_sent" && event.invoiceNumber === submitted.invoiceNumber);
+  if (numberAlreadyUsed) throw new Error("Fakturanummeret er allerede registrert.");
+
+  const issuedInvoice = (await readInvoiceRegister()).find((invoice) => invoice.invoiceNumber === submitted.invoiceNumber);
+  if (!issuedInvoice) throw new Error("Fakturanummeret finnes ikke i det låste fakturaregisteret.");
+  if (issuedInvoice.totalAmount !== submitted.invoiceAmount) throw new Error("Beløpet avviker fra det låste fakturaregisteret.");
+  const datesMatch = issuedInvoice.invoiceDate === isoDateFromNorwegian(submitted.date)
+    && issuedInvoice.dueDate === isoDateFromNorwegian(submitted.dueDate!);
+  if (!datesMatch) throw new Error("Datoene avviker fra det låste fakturaregisteret.");
+}
+
+function assertPaymentCanBeRecorded(submitted: SubmittedEvent, projectEvents: CrmEventRecord[]) {
+  if (submitted.kind !== "payment_received") return;
+  if (projectEvents.some((event) => event.kind === "payment_received")) {
+    throw new Error("Betaling er allerede registrert for dette prosjektet.");
+  }
+  if (!outstandingExistingProjects.has(submitted.projectId)
+    && !projectEvents.some((event) => event.kind === "invoice_sent")) {
+    throw new Error("En sendt faktura må være registrert før betaling kan registreres.");
+  }
+}
+
+function assertDeliveryCanBeRecorded(submitted: SubmittedEvent, projectEvents: CrmEventRecord[]) {
+  if (submitted.kind === "delivery_confirmed" && projectEvents.some((event) => event.kind === "delivery_confirmed")) {
+    throw new Error("Leveransen er allerede registrert som ferdig.");
+  }
+}
+
+function eventRecord(submitted: SubmittedEvent): CrmEventRecord {
+  return {
+    projectId: submitted.projectId,
+    kind: submitted.kind,
+    date: submitted.date,
+    recordedAt: new Date().toISOString(),
+    ...(submitted.kind === "invoice_sent" ? {
+      invoiceNumber: submitted.invoiceNumber,
+      invoiceAmount: submitted.invoiceAmount,
+      dueDate: submitted.dueDate,
+    } : {}),
+  };
+}
+
+async function saveSubmittedEvent(submitted: SubmittedEvent): Promise<CrmEventRecord> {
+  const events = await readEvents();
+  const projectEvents = events.filter((event) => event.projectId === submitted.projectId);
+  await assertInvoiceCanBeRecorded(submitted, events, projectEvents);
+  assertPaymentCanBeRecorded(submitted, projectEvents);
+  assertDeliveryCanBeRecorded(submitted, projectEvents);
+  const record = eventRecord(submitted);
+  await mkdir(path.dirname(eventFile), { recursive: true });
+  await appendFile(eventFile, `${JSON.stringify(record)}\n`, "utf8");
+  return record;
+}
+
 export async function GET(request: Request) {
   if (!isLocalApiRequest(request.headers.get("host"), request.method, request.headers.get("origin"))) {
     return NextResponse.json({ error: "CRM er kun tilgjengelig lokalt." }, { status: 403 });
@@ -61,47 +124,12 @@ export async function POST(request: Request) {
   }
   if (!validEvent(body)) return NextResponse.json({ error: "Ugyldige CRM-opplysninger." }, { status: 400 });
 
-  const submitted = body;
-  const save = pendingWrite.then(async () => {
-    const events = await readEvents();
-    const projectEvents = events.filter((event) => event.projectId === submitted.projectId);
-    if (submitted.kind === "invoice_sent" && projectEvents.some((event) => event.kind === "invoice_sent")) {
-      throw new Error("Faktura er allerede registrert som sendt for dette prosjektet.");
-    }
-    if (submitted.kind === "invoice_sent" && (existingInvoiceNumbers.has(submitted.invoiceNumber!)
-      || events.some((event) => event.kind === "invoice_sent" && event.invoiceNumber === submitted.invoiceNumber))) {
-      throw new Error("Fakturanummeret er allerede registrert.");
-    }
-    if (submitted.kind === "payment_received" && projectEvents.some((event) => event.kind === "payment_received")) {
-      throw new Error("Betaling er allerede registrert for dette prosjektet.");
-    }
-    if (submitted.kind === "payment_received" && !outstandingExistingProjects.has(submitted.projectId)
-      && !projectEvents.some((event) => event.kind === "invoice_sent")) {
-      throw new Error("En sendt faktura må være registrert før betaling kan registreres.");
-    }
-    if (submitted.kind === "delivery_confirmed" && projectEvents.some((event) => event.kind === "delivery_confirmed")) {
-      throw new Error("Leveransen er allerede registrert som ferdig.");
-    }
-    const record: CrmEventRecord = {
-      projectId: submitted.projectId,
-      kind: submitted.kind,
-      date: submitted.date,
-      recordedAt: new Date().toISOString(),
-      ...(submitted.kind === "invoice_sent" ? {
-        invoiceNumber: submitted.invoiceNumber,
-        invoiceAmount: submitted.invoiceAmount,
-        dueDate: submitted.dueDate,
-      } : {}),
-    };
-    await mkdir(path.dirname(eventFile), { recursive: true });
-    await appendFile(eventFile, `${JSON.stringify(record)}\n`, "utf8");
-    return record;
-  });
+  const save = pendingWrite.then(() => saveSubmittedEvent(body));
   pendingWrite = save.then(() => undefined, () => undefined);
   try {
     return NextResponse.json({ event: await save }, { status: 201 });
   } catch (error) {
-    if (error instanceof Error && error.message.includes("allerede registrert")) {
+    if (error instanceof Error && (error.message.includes("allerede registrert") || error.message.includes("fakturaregisteret"))) {
       return NextResponse.json({ error: error.message }, { status: 409 });
     }
     console.error("Failed to save CRM event", error);

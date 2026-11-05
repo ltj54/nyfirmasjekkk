@@ -10,9 +10,9 @@
   "lastBookkeepingReconciled": "",
   "tasks": {
     "invoice_system": {
-      "status": "open",
-      "completedDate": "",
-      "note": ""
+      "status": "completed",
+      "completedDate": "2026-11-05",
+      "note": "Lokal, maskinell nummerering klargjort fra 2026-006. Utstedte fakturaer lagres i append-only register og sendes ikke automatisk."
     },
     "website_information": {
       "status": "open",

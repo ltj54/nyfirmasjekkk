@@ -16,6 +16,7 @@ import {
   type EnkComplianceState,
 } from "@/lib/enk-compliance";
 import { osloToday } from "@/lib/crm-events";
+import { InvoiceNumberingControl } from "@/components/invoice-numbering-control";
 
 type Props = Readonly<{ invoices: ComplianceInvoice[]; canEdit: boolean }>;
 
@@ -32,7 +33,7 @@ type TaskDefinition = {
 const taskDefinitions: TaskDefinition[] = [
   {
     id: "invoice_system",
-    title: "Ta i bruk godkjent fakturanummerering",
+    title: "Ta i bruk maskinell fakturanummerering",
     due: "Før neste faktura",
     category: "Lovpålagt",
     explanation: "Fakturanummer skal tildeles automatisk av et fakturaprogram, eller komme fra forhåndsnummererte blanketter fra trykkeri.",
@@ -186,6 +187,7 @@ export function EnkComplianceOverview({ invoices, canEdit }: Props) {
         <VatTracker turnover={turnover} missingDates={missingDates} state={state} />
         <InvoiceControl invoices={invoices} missingDates={missingDates} sequentialNumbers={sequentialNumbers} />
       </div>
+      <div className="mt-4"><InvoiceNumberingControl canEdit={canEdit && !loading} /></div>
 
       <div className="mt-5">
         <h3 className="text-base font-semibold text-slate-950">Frister og kontrollpunkter</h3>
@@ -235,14 +237,23 @@ function ComplianceSummary({ state, turnover, suggestedTaxReserve }: Readonly<{ 
 function VatTracker({ turnover, missingDates, state }: Readonly<{ turnover: number; missingDates: number; state: EnkComplianceState }>) {
   const progress = percentage(turnover, VAT_REGISTRATION_THRESHOLD);
   const statusText = vatTrackerStatus(state, turnover);
+  const missingDateText = missingDates + " faktura(er) mangler fakturadato i CRM. Beløpet må derfor avstemmes mot regnskapet før det brukes som grunnlag for registrering.";
   return (
     <article className="rounded-lg border border-indigo-100 bg-white p-4">
-      <h3 className="flex items-center gap-2 font-semibold text-slate-950"><Calculator aria-hidden="true" className="size-5 text-indigo-700" />MVA-grense · rullerende 12 måneder</h3>
-      <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-200"><div className="h-full rounded-full bg-indigo-600" style={{ width: `${progress}%` }} /></div>
-      <div className="mt-2 flex justify-between text-sm"><strong>{money(turnover)}</strong><span>{money(VAT_REGISTRATION_THRESHOLD)}</span></div>
+      <h3 className="flex items-center gap-2 font-semibold text-slate-950">
+        <Calculator aria-hidden="true" className="size-5 text-indigo-700" />
+        MVA-grense · rullerende 12 måneder
+      </h3>
+      <p className="mt-3 text-sm text-slate-700">
+        Andel av registreringsgrensen: <strong>{progress} %</strong>
+      </p>
+      <div className="mt-2 flex justify-between text-sm">
+        <strong>{money(turnover)}</strong>
+        <span>{money(VAT_REGISTRATION_THRESHOLD)}</span>
+      </div>
       <p className="mt-2 text-sm text-slate-700">{statusText}</p>
       {turnover >= 40_000 && !state.vatRegistered ? <p className="mt-2 rounded-md bg-amber-50 p-2 text-sm font-medium text-amber-900">Nær registreringsgrensen. Avstem omsetningen mot regnskapet nå.</p> : null}
-      <p className="mt-2 text-xs text-slate-600">{missingDates} faktura(er) mangler fakturadato i CRM. Beløpet må derfor avstemmes mot regnskapet før det brukes som grunnlag for registrering.</p>
+      <p className="mt-2 text-xs text-slate-600">{missingDateText}</p>
       <a className="mt-3 inline-block text-sm text-blue-800 underline" href="https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere-endre-slette/" target="_blank" rel="noreferrer">Skatteetaten · MVA-registeret</a>
     </article>
   );
@@ -264,7 +275,7 @@ function InvoiceControl({ invoices, missingDates, sequentialNumbers }: Readonly<
       <ul className="mt-3 space-y-2 text-sm text-slate-700">
         <CheckLine ok={sequentialNumbers} text={`${invoices.length} fakturanumre registrert${sequentialNumbers ? " i sammenhengende rekkefølge" : " – kontroller nummerrekken"}.`} />
         <CheckLine ok={missingDates === 0} text={missingDates === 0 ? "Alle fakturadatoer er registrert i CRM." : `${missingDates} faktura(er) mangler fakturadato i CRM.`} />
-        <CheckLine ok={false} text="Godkjent automatisk fakturanummerering er ikke bekreftet." />
+        <CheckLine ok text="Maskinell fakturanummerering er klargjort fra 2026-006." />
       </ul>
       <details className="mt-3 text-sm text-slate-700"><summary className="cursor-pointer font-medium">Vis obligatoriske kontrollpunkter</summary><ul className="mt-2 list-disc space-y-1 pl-5"><li>Dato for salg og levering</li><li>Registrert foretaksnavn og organisasjonsnummer</li><li>Kundens navn og adresse eller organisasjonsnummer</li><li>Tydelig leveransebeskrivelse, pris, totalbeløp og betalingsfrist</li><li>«MVA» bare etter godkjent MVA-registrering</li><li>Feil i sendt faktura korrigeres med kreditnota</li></ul></details>
     </article>

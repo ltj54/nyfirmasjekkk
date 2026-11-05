@@ -43,6 +43,7 @@ out/
 ### Runtime locks ###
 /data/nyfirmasjekk-dev.lock
 /data/scb/
+/data/invoice-register.jsonl
 /tmp/sweden-bulk-inspection/
 **/__pycache__/
 

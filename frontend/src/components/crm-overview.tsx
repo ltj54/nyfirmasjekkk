@@ -755,7 +755,7 @@ function CrmActions({ project, busy, saveError, onSave }: Readonly<{
           </label>
           {action === "invoice_sent" ? (
             <div className="grid gap-3 sm:grid-cols-3">
-              <label className="font-medium text-slate-700"><span className="block">Fakturanummer</span>
+              <label className="font-medium text-slate-700"><span className="block">Fakturanummer fra fakturaregisteret</span>
                 <input required pattern="[0-9]{4}-[0-9]{3,}" value={invoiceNumber} onChange={(event) => setInvoiceNumber(event.target.value)} placeholder="2026-005" className="mt-1 block w-full rounded-md border border-slate-300 px-2 py-1.5" />
               </label>
               <label className="font-medium text-slate-700"><span className="block">Beløp i kr</span>
