@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 272
-- Sendt: 129
+- Antall hendelser: 320
+- Sendt: 153
 - Angret: 0
-- Aktive kontaktede selskaper: 124
+- Aktive kontaktede selskaper: 130
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-06 | 938793964 | FYSIO SOLLI | ENK | email | website-follow-up |
+| 2026-11-06 | 838732402 | CEETEC APS | NUF | email | website-follow-up |
+| 2026-11-06 | 938791392 | LOUISE TRAORE-SPEIN | ENK | email | website-follow-up |
+| 2026-11-06 | 938792607 | ÅSSIDEN GRILL SAEED MUNIR | ENK | email | website-follow-up |
+| 2026-11-06 | 938743436 | MARIANNE NÆRØ | ENK | email | website-follow-up |
+| 2026-11-06 | 938793913 | LISE ANITA MYHRE | ENK | email | website-follow-up |
+| 2026-11-06 | 938791678 | AFFEKTA OLONKIN | ENK | email | website-follow-up |
+| 2026-11-06 | 938791007 | ELZOGHBY CONSULTING | ENK | email | website-follow-up |
+| 2026-11-06 | 938682534 | GENVICO HOLDING AS | AS | email | website-follow-up |
+| 2026-11-06 | 938746788 | BERHE | ENK | email | website-follow-up |
+| 2026-11-06 | 938746176 | MYRSETH WEB-OG-PC | ENK | email | website-follow-up |
+| 2026-11-06 | 938745269 | EIKSETH AUDIO | ENK | email | website-follow-up |
+| 2026-11-06 | 838793312 | HAMMER MEDIA | ENK | email | website-follow-up |
+| 2026-11-06 | 938795401 | STORELV-NORDHEIM MYRAN DRIFT | ENK | email | website-follow-up |
+| 2026-11-06 | 938749744 | VIBEKE EK NORD | ENK | email | website-follow-up |
+| 2026-11-06 | 938793603 | LANGMOEN ALMASOU | ENK | email | website-follow-up |
+| 2026-11-06 | 838790712 | OLE ELIAS HANSHUS | ENK | email | website-follow-up |
+| 2026-11-06 | 938796661 | ISELIN RYE LITTERATUR | ENK | email | website-follow-up |
+| 2026-11-06 | 838824072 | OGORELICA BOKSING | ENK | email | website-offer |
+| 2026-11-06 | 938814198 | VALENTINE BARBOSA PAIVA | TVAM | email | website-offer |
+| 2026-11-06 | 938786747 | POLAR WEB GROUP PTY LTD NUF | NUF | email | website-offer |
+| 2026-11-06 | 938818800 | JW TAKST OG RÅDGIVNING AS | AS | email | website-offer |
+| 2026-11-06 | 938820783 | TRANSFLAT SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
+| 2026-11-06 | 938825599 | SIA STONEKS | UTLA | email | website-offer |
 | 2026-11-05 | 938815569 | FULØP CREATIVE | ENK | email | website-offer |
 | 2026-11-05 | 938661146 | SØSTRENE AV DET HELLIGE KORS AV NHATRANG, SUNNIVA KOMMUNITET. | ANNA | email | website-offer |
 | 2026-11-05 | 938783063 | AUTOTEKNIKK HALDEN VED KARLSEN | ENK | email | website-offer |
@@ -115,33 +139,63 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-03 | 938765790 | KYNDRYL CLIENT CENTER S.R.O | NUF | email | website-offer |
 | 2026-11-03 | 838702902 | TOR-VERNER GUTTORMSEN | ENK | email | website-offer |
 | 2026-11-03 | 938800332 | STORE LENS AB | UTLA | email | website-offer |
-| 2026-11-02 | 938796661 | ISELIN RYE LITTERATUR | ENK | email | website-offer |
-| 2026-11-02 | 838790712 | OLE ELIAS HANSHUS | ENK | email | website-offer |
-| 2026-11-02 | 938793603 | LANGMOEN ALMASOU | ENK | email | website-offer |
-| 2026-11-02 | 938749744 | VIBEKE EK NORD | ENK | email | website-offer |
-| 2026-11-02 | 938795401 | STORELV-NORDHEIM MYRAN DRIFT | ENK | email | website-offer |
-| 2026-11-02 | 838793312 | HAMMER MEDIA | ENK | email | website-offer |
-| 2026-11-02 | 938745269 | EIKSETH AUDIO | ENK | email | website-offer |
-| 2026-11-02 | 938746176 | MYRSETH WEB-OG-PC | ENK | email | website-offer |
-| 2026-11-02 | 938746788 | BERHE | ENK | email | website-offer |
 | 2026-11-01 | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | website-follow-up |
 | 2026-11-01 | 938749477 | KYNDRYL DANMARK APS | UTLA | email | website-follow-up |
 | 2026-11-01 | 938601496 | KYNDRYL DANMARK APS | NUF | email | website-follow-up |
 | 2026-11-01 | 938428689 | STRAVERS TORENKRANEN B.V. NUF | NUF | email | website-follow-up |
-| 2026-11-01 | 938682534 | GENVICO HOLDING AS | AS | email | website-offer |
-| 2026-11-01 | 938791007 | ELZOGHBY CONSULTING | ENK | email | website-offer |
-| 2026-11-01 | 938791678 | AFFEKTA OLONKIN | ENK | email | website-offer |
-| 2026-11-01 | 938793913 | LISE ANITA MYHRE | ENK | email | website-offer |
-| 2026-11-01 | 938743436 | MARIANNE NÆRØ | ENK | email | website-offer |
-| 2026-11-01 | 938792607 | ÅSSIDEN GRILL SAEED MUNIR | ENK | email | website-offer |
-| 2026-11-01 | 938791392 | LOUISE TRAORE-SPEIN | ENK | email | website-offer |
-| 2026-11-01 | 838732402 | CEETEC APS | NUF | email | website-offer |
-| 2026-11-01 | 938793964 | FYSIO SOLLI | ENK | email | website-offer |
 
 ## Hendelser
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-06 09:47 | sent | 938793964 | FYSIO SOLLI | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938793964 | FYSIO SOLLI | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 838732402 | CEETEC APS | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 838732402 | CEETEC APS | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938791392 | LOUISE TRAORE-SPEIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938791392 | LOUISE TRAORE-SPEIN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938792607 | ÅSSIDEN GRILL SAEED MUNIR | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938792607 | ÅSSIDEN GRILL SAEED MUNIR | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938743436 | MARIANNE NÆRØ | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938743436 | MARIANNE NÆRØ | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938793913 | LISE ANITA MYHRE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938793913 | LISE ANITA MYHRE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938791678 | AFFEKTA OLONKIN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938791678 | AFFEKTA OLONKIN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938791007 | ELZOGHBY CONSULTING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938791007 | ELZOGHBY CONSULTING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938682534 | GENVICO HOLDING AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938682534 | GENVICO HOLDING AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938746788 | BERHE | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938746788 | BERHE | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938746176 | MYRSETH WEB-OG-PC | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938746176 | MYRSETH WEB-OG-PC | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938745269 | EIKSETH AUDIO | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938745269 | EIKSETH AUDIO | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 838793312 | HAMMER MEDIA | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 838793312 | HAMMER MEDIA | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938795401 | STORELV-NORDHEIM MYRAN DRIFT | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938795401 | STORELV-NORDHEIM MYRAN DRIFT | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:47 | sent | 938749744 | VIBEKE EK NORD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:47 | sending | 938749744 | VIBEKE EK NORD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938793603 | LANGMOEN ALMASOU | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:46 | sending | 938793603 | LANGMOEN ALMASOU | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 838790712 | OLE ELIAS HANSHUS | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:46 | sending | 838790712 | OLE ELIAS HANSHUS | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938796661 | ISELIN RYE LITTERATUR | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-06 09:46 | sending | 938796661 | ISELIN RYE LITTERATUR | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 838824072 | OGORELICA BOKSING | ENK | email | - |
+| 2026-11-06 09:46 | sending | 838824072 | OGORELICA BOKSING | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938814198 | VALENTINE BARBOSA PAIVA | TVAM | email | - |
+| 2026-11-06 09:46 | sending | 938814198 | VALENTINE BARBOSA PAIVA | TVAM | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938786747 | POLAR WEB GROUP PTY LTD NUF | NUF | email | - |
+| 2026-11-06 09:46 | sending | 938786747 | POLAR WEB GROUP PTY LTD NUF | NUF | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938818800 | JW TAKST OG RÅDGIVNING AS | AS | email | - |
+| 2026-11-06 09:46 | sending | 938818800 | JW TAKST OG RÅDGIVNING AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938820783 | TRANSFLAT SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | - |
+| 2026-11-06 09:46 | sending | 938820783 | TRANSFLAT SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 09:46 | sent | 938825599 | SIA STONEKS | UTLA | email | - |
+| 2026-11-06 09:46 | sending | 938825599 | SIA STONEKS | UTLA | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-05 13:04 | sent | 938815569 | FULØP CREATIVE | ENK | email | - |
 | 2026-11-05 13:04 | sending | 938815569 | FULØP CREATIVE | ENK | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-05 13:04 | sent | 938661146 | SØSTRENE AV DET HELLIGE KORS AV NHATRANG, SUNNIVA KOMMUNITET. | ANNA | email | - |
