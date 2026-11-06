@@ -22,13 +22,13 @@
     "advance_tax_2026_q4": {
       "status": "open",
       "completedDate": "",
-      "note": ""
+      "note": "Kontrollert 06.11.2026 – ingen krav for 4. termin synlig. Sjekkes på nytt i slutten av november.» Skatteetaten sier faktura vanligvis kommer omtrent tre uker før fristen."
     },
     "tax_return_2026": {
       "status": "open",
       "completedDate": "",
-      "note": ""
+      "note": "«Gjelder inntektsåret 2026. Avstem fakturaer og bilag etter årsslutt; lever samlet skattemelding med næringsspesifikasjon innen 31.05.2027.» Marker Fullført først når den faktisk er sendt inn."
     }
   },
-  "updatedAt": "2026-11-05T11:11:54.196Z"
+  "updatedAt": "2026-11-06T09:30:25.470Z"
 }
