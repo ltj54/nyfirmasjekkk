@@ -1,5 +1,33 @@
 [
   {
+    "id": "arena-consult-2026-11-06",
+    "companyName": "Arena Consult Foredrag Event Treider",
+    "orgNumber": "938698171",
+    "contactName": "Finn Jarl Treider",
+    "email": "finnjarl@outlook.com",
+    "receivedAt": "2026-11-06T08:50:00+01:00",
+    "status": "Aktiv dialog – Finn kommer tilbake søndag",
+    "summary": "Finn skriver at han har et foredrag 07.11.2026 og derfor har fokus på dette. Han sier at han kommer tilbake søndag 08.11.2026. Saken er gjenåpnet etter kundens eget svar. Ingen bestilling eller avtale er inngått.",
+    "nextStep": "Avvent Finns tilbakemelding søndag 08.11.2026. Ingen automatisk purring eller e-post. Eventuell videre handling vurderes manuelt dersom svar uteblir.",
+    "contactPolicy": "await_customer",
+    "reviewDate": "08.11.2026",
+    "sourceFile": "arena-consult-2026-11-06.txt"
+  },
+  {
+    "id": "fellesparken-hollenderkvartalet-2026-11-05",
+    "companyName": "Sameiet Fellesparken Hollenderkvartalet",
+    "orgNumber": "937751486",
+    "contactName": "Bjørn Morten Olesen",
+    "email": "Ikke oppgitt i innlimt svar",
+    "receivedAt": "2026-11-05T14:30:00+01:00",
+    "status": "I etableringsfasen – kan komme tilbake senere",
+    "summary": "Bjørn Morten Olesen svarer at sameiet er i etableringsfasen og eventuelt vil komme tilbake til nettsideforslaget. Ingen bestilling eller avtalt oppfølging.",
+    "nextStep": "Avvent at Bjørn eller sameiet selv tar kontakt. Ingen automatisk oppfølging, purring eller ny salgsutsending.",
+    "contactPolicy": "await_customer",
+    "reviewDate": null,
+    "sourceFile": "fellesparken-hollenderkvartalet-2026-11-05.txt"
+  },
+  {
     "id": "orrfuglveien-10-2026-11-03",
     "companyName": "Eierseksjonssameiet Orrfuglveien 10",
     "orgNumber": "938590052",
