@@ -4,15 +4,39 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 ## Oppsummering
 
-- Antall hendelser: 320
-- Sendt: 153
+- Antall hendelser: 368
+- Sendt: 177
 - Angret: 0
-- Aktive kontaktede selskaper: 130
+- Aktive kontaktede selskaper: 138
 
 ## Aktive kontaktede selskaper
 
 | Dato | Org.nr | Selskap | Selskapsform | Kanal | Tilbud |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-07 | 938800332 | STORE LENS AB | UTLA | email | website-follow-up |
+| 2026-11-07 | 838702902 | TOR-VERNER GUTTORMSEN | ENK | email | website-follow-up |
+| 2026-11-07 | 938765790 | KYNDRYL CLIENT CENTER S.R.O | NUF | email | website-follow-up |
+| 2026-11-07 | 938675260 | OSLO TCG- OG SPILLFORENING | FLI | email | website-follow-up |
+| 2026-11-07 | 938799172 | NOOKORN SAMATKUN | ENK | email | website-follow-up |
+| 2026-11-07 | 938799792 | HOLTSMARK | ENK | email | website-follow-up |
+| 2026-11-07 | 938749027 | STIG TRONVOLD | ENK | email | website-follow-up |
+| 2026-11-07 | 938754470 | ARNESEN REGNSKAP | ENK | email | website-follow-up |
+| 2026-11-07 | 938798877 | TERJE ELVEN | ENK | email | website-follow-up |
+| 2026-11-07 | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | website-follow-up |
+| 2026-11-07 | 838629342 | FJORDFRAMES BARDIC | ENK | email | website-follow-up |
+| 2026-11-07 | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-follow-up |
+| 2026-11-07 | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | website-follow-up |
+| 2026-11-07 | 938785945 | ALEPH CROSS AS | AS | email | website-follow-up |
+| 2026-11-07 | 938803293 | ESSENTCORE AS | AS | email | website-follow-up |
+| 2026-11-07 | 938802114 | HILLESTAD LØPECOACHING | ENK | email | website-follow-up |
+| 2026-11-07 | 938768668 | TILDA OTTIS | ENK | email | website-offer |
+| 2026-11-07 | 936990142 | SAMEIET NORDRE VASSFARET SKOGSVEGLAG | SAM | email | website-offer |
+| 2026-11-07 | 938828903 | NORDICPATHEUROPE OÜ | UTLA | email | website-offer |
+| 2026-11-07 | 838687822 | HUMBORSTAD KJØTT AS | AS | email | website-offer |
+| 2026-11-06 | 938729972 | ABDUADHNOM AS | AS | email | website-offer |
+| 2026-11-06 | 938826617 | M S SAS | UTLA | email | website-offer |
+| 2026-11-06 | 938765456 | JOHANNE FORLAG RISBAKKEN | ENK | email | website-offer |
+| 2026-11-06 | 938405182 | ATELIER BYGG 5 | FLI | email | website-offer |
 | 2026-11-06 | 938793964 | FYSIO SOLLI | ENK | email | website-follow-up |
 | 2026-11-06 | 838732402 | CEETEC APS | NUF | email | website-follow-up |
 | 2026-11-06 | 938791392 | LOUISE TRAORE-SPEIN | ENK | email | website-follow-up |
@@ -97,15 +121,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-04 | 938758468 | NSABIMANA | ENK | email | website-offer |
 | 2026-11-04 | 938760691 | MEDI-FLOW BACK | ENK | email | website-offer |
 | 2026-11-04 | 938755205 | GJERTSEN LIVSKRAFT | ENK | email | website-offer |
-| 2026-11-03 | 938802114 | HILLESTAD LØPECOACHING | ENK | email | website-offer |
-| 2026-11-03 | 938803293 | ESSENTCORE AS | AS | email | website-offer |
-| 2026-11-03 | 938785945 | ALEPH CROSS AS | AS | email | website-offer |
-| 2026-11-03 | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | website-offer |
-| 2026-11-03 | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | website-offer |
-| 2026-11-03 | 838629342 | FJORDFRAMES BARDIC | ENK | email | website-offer |
-| 2026-11-03 | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | website-offer |
-| 2026-11-03 | 938798877 | TERJE ELVEN | ENK | email | website-offer |
-| 2026-11-03 | 938754470 | ARNESEN REGNSKAP | ENK | email | website-offer |
 | 2026-11-03 | 938631204 | KJERRINGØY BADSTULAUG | FLI | email | website-follow-up |
 | 2026-11-03 | 938638330 | NESET VELFORENING | FLI | email | website-follow-up |
 | 2026-11-03 | 938612803 | SOLE & SOUL BY N. ABERLE | ENK | email | website-follow-up |
@@ -132,13 +147,6 @@ Automatisk generert fra `outreach-log.jsonl`.
 | 2026-11-03 | 938773580 | A ARBACIAUSKAS | ENK | email | website-follow-up |
 | 2026-11-03 | 938772991 | JENSEN GEODATA | ENK | email | website-follow-up |
 | 2026-11-03 | 838773222 | SUNNIVA TOTINO | ENK | email | website-follow-up |
-| 2026-11-03 | 938749027 | STIG TRONVOLD | ENK | email | website-offer |
-| 2026-11-03 | 938799792 | HOLTSMARK | ENK | email | website-offer |
-| 2026-11-03 | 938799172 | NOOKORN SAMATKUN | ENK | email | website-offer |
-| 2026-11-03 | 938675260 | OSLO TCG- OG SPILLFORENING | FLI | email | website-offer |
-| 2026-11-03 | 938765790 | KYNDRYL CLIENT CENTER S.R.O | NUF | email | website-offer |
-| 2026-11-03 | 838702902 | TOR-VERNER GUTTORMSEN | ENK | email | website-offer |
-| 2026-11-03 | 938800332 | STORE LENS AB | UTLA | email | website-offer |
 | 2026-11-01 | 938704635 | AMALIE LOVISE KNÆDAL | ENK | email | website-follow-up |
 | 2026-11-01 | 938749477 | KYNDRYL DANMARK APS | UTLA | email | website-follow-up |
 | 2026-11-01 | 938601496 | KYNDRYL DANMARK APS | NUF | email | website-follow-up |
@@ -148,6 +156,54 @@ Automatisk generert fra `outreach-log.jsonl`.
 
 | Tidspunkt | Status | Org.nr | Selskap | Selskapsform | Kanal | Notat |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-07 11:55 | sent | 938800332 | STORE LENS AB | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938800332 | STORE LENS AB | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 838702902 | TOR-VERNER GUTTORMSEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 838702902 | TOR-VERNER GUTTORMSEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938765790 | KYNDRYL CLIENT CENTER S.R.O | NUF | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938765790 | KYNDRYL CLIENT CENTER S.R.O | NUF | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938675260 | OSLO TCG- OG SPILLFORENING | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938675260 | OSLO TCG- OG SPILLFORENING | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938799172 | NOOKORN SAMATKUN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938799172 | NOOKORN SAMATKUN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938799792 | HOLTSMARK | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938799792 | HOLTSMARK | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938749027 | STIG TRONVOLD | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938749027 | STIG TRONVOLD | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938754470 | ARNESEN REGNSKAP | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938754470 | ARNESEN REGNSKAP | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 938798877 | TERJE ELVEN | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 938798877 | TERJE ELVEN | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:55 | sent | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:55 | sending | 838737552 | EN - MIRIA LE DELLIOU | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 838629342 | FJORDFRAMES BARDIC | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:54 | sending | 838629342 | FJORDFRAMES BARDIC | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:54 | sending | 938801738 | KAMINOX SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA | UTLA | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:54 | sending | 938669287 | CORUS SAXOFONKVARTETT | FLI | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938785945 | ALEPH CROSS AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:54 | sending | 938785945 | ALEPH CROSS AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938803293 | ESSENTCORE AS | AS | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:54 | sending | 938803293 | ESSENTCORE AS | AS | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938802114 | HILLESTAD LØPECOACHING | ENK | email | Oppfølging sendt – avslutt hvis stille |
+| 2026-11-07 11:54 | sending | 938802114 | HILLESTAD LØPECOACHING | ENK | email | Oppfølging reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938768668 | TILDA OTTIS | ENK | email | - |
+| 2026-11-07 11:54 | sending | 938768668 | TILDA OTTIS | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 936990142 | SAMEIET NORDRE VASSFARET SKOGSVEGLAG | SAM | email | - |
+| 2026-11-07 11:54 | sending | 936990142 | SAMEIET NORDRE VASSFARET SKOGSVEGLAG | SAM | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 938828903 | NORDICPATHEUROPE OÜ | UTLA | email | - |
+| 2026-11-07 11:54 | sending | 938828903 | NORDICPATHEUROPE OÜ | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-07 11:54 | sent | 838687822 | HUMBORSTAD KJØTT AS | AS | email | - |
+| 2026-11-07 11:54 | sending | 838687822 | HUMBORSTAD KJØTT AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 14:25 | sent | 938729972 | ABDUADHNOM AS | AS | email | - |
+| 2026-11-06 14:25 | sending | 938729972 | ABDUADHNOM AS | AS | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 14:25 | sent | 938826617 | M S SAS | UTLA | email | - |
+| 2026-11-06 14:25 | sending | 938826617 | M S SAS | UTLA | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 14:25 | sent | 938765456 | JOHANNE FORLAG RISBAKKEN | ENK | email | - |
+| 2026-11-06 14:25 | sending | 938765456 | JOHANNE FORLAG RISBAKKEN | ENK | email | Utsendelse reservert før SMTP-levering. |
+| 2026-11-06 14:25 | sent | 938405182 | ATELIER BYGG 5 | FLI | email | - |
+| 2026-11-06 14:25 | sending | 938405182 | ATELIER BYGG 5 | FLI | email | Utsendelse reservert før SMTP-levering. |
 | 2026-11-06 09:47 | sent | 938793964 | FYSIO SOLLI | ENK | email | Oppfølging sendt – avslutt hvis stille |
 | 2026-11-06 09:47 | sending | 938793964 | FYSIO SOLLI | ENK | email | Oppfølging reservert før SMTP-levering. |
 | 2026-11-06 09:47 | sent | 838732402 | CEETEC APS | NUF | email | Oppfølging sendt – avslutt hvis stille |
