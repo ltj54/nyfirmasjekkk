@@ -1,5 +1,19 @@
 [
   {
+    "id": "johanne-forlag-risbakken-2026-11-06",
+    "companyName": "Johanne Forlag Risbakken",
+    "orgNumber": "938765456",
+    "contactName": "Jan Risbakken",
+    "email": "janrisbakken@hotmail.com",
+    "receivedAt": "2026-11-06T16:50:00+01:00",
+    "status": "Ikke aktuelt nå – kan bli aktuelt senere",
+    "summary": "Jan opplyser at forlaget skal gi ut én bok før jul og at flere bøker vil komme etter hvert. Nettside kan bli aktuelt senere, men ikke nå. Lars opplyste 07.11.2026 at han har sendt et hyggelig svar. Ordlyden i den sendte e-posten er ikke verifisert her. Jan har ikke bedt om ny kontakt eller avtalt oppfølging.",
+    "nextStep": "Avvent at Jan selv tar kontakt dersom nettside blir aktuelt. Ingen automatisk oppfølging, purring eller ny salgsutsending.",
+    "contactPolicy": "await_customer",
+    "reviewDate": null,
+    "sourceFile": "johanne-forlag-risbakken-2026-11-06.txt"
+  },
+  {
     "id": "arena-consult-2026-11-06",
     "companyName": "Arena Consult Foredrag Event Treider",
     "orgNumber": "938698171",
